@@ -31,8 +31,25 @@ using namespace JavaScriptCoreCPP;
 }
 
 - (void)testGlobalObject {
-  JSContext js_context   = js_context_group.CreateContext(JSExport<NativeGlobalObjectExample>::Class());
+  JSContext js_context   = js_context_group.CreateContext();
   auto global_object     = js_context.get_global_object();
+    
+  auto custom_global_object = js_context.CreateObject(JSExport<NativeGlobalObjectExample>::Class());
+  for (const auto& property_name : static_cast<std::vector<JSString>>(custom_global_object.GetPropertyNames())) {
+    global_object.SetProperty(property_name, custom_global_object.GetProperty(property_name));
+  }
+    
+  XCTAssertTrue(custom_global_object.HasProperty("require"));
+  XCTAssertTrue(custom_global_object.HasProperty("setTimeout"));
+  XCTAssertTrue(custom_global_object.HasProperty("clearTimeout"));
+  XCTAssertTrue(custom_global_object.HasProperty("setInterval"));
+  XCTAssertTrue(custom_global_object.HasProperty("clearInterval"));
+
+  XCTAssertTrue(global_object.HasProperty("require"));
+  XCTAssertTrue(global_object.HasProperty("setTimeout"));
+  XCTAssertTrue(global_object.HasProperty("clearTimeout"));
+  XCTAssertTrue(global_object.HasProperty("setInterval"));
+  XCTAssertTrue(global_object.HasProperty("clearInterval"));
 
   auto foo = js_context.CreateObject();
   
@@ -64,7 +81,7 @@ using namespace JavaScriptCoreCPP;
   for (const auto& property_name : static_cast<std::vector<JSString>>(global_object.GetPropertyNames())) {
     std::clog << "MDL: property_name = " << property_name << std::endl;
   }
-  
+
   JSString app_js = R"js(
   "use strict";
   var hello = require("hello");
@@ -80,7 +97,7 @@ using namespace JavaScriptCoreCPP;
   }
   )js";
   
-  auto global_object_ptr = global_object.GetPrivate<NativeGlobalObjectExample>();
+  auto global_object_ptr = custom_global_object.GetPrivate<NativeGlobalObjectExample>();
   XCTAssertNotEqual(nullptr, global_object_ptr);
   
   JSValue result = js_context.CreateNull();

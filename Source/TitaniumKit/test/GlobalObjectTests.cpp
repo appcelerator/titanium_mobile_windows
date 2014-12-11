@@ -32,8 +32,13 @@ class GlobalObjectTests : public testing::Test {
 
 
 TEST_F(GlobalObjectTests, require) {
-  JSContext js_context   = js_context_group.CreateContext(JSExport<NativeGlobalObjectExample>::Class());
+  JSContext js_context   = js_context_group.CreateContext();
   auto global_object     = js_context.get_global_object();
+    
+  auto custom_global_object = js_context.CreateObject(JSExport<NativeGlobalObjectExample>::Class());
+  for (const auto& property_name : static_cast<std::vector<JSString>>(custom_global_object.GetPropertyNames())) {
+    global_object.SetProperty(property_name, custom_global_object.GetProperty(property_name));
+  }
 
   auto foo = js_context.CreateObject();
   
@@ -81,7 +86,7 @@ TEST_F(GlobalObjectTests, require) {
   }
   )js";
   
-  auto global_object_ptr = global_object.GetPrivate<NativeGlobalObjectExample>();
+  auto global_object_ptr = custom_global_object.GetPrivate<NativeGlobalObjectExample>();
   XCTAssertNotEqual(nullptr, global_object_ptr);
   
   JSValue result = js_context.CreateNull();

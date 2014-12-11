@@ -229,11 +229,11 @@ namespace Titanium {
     TITANIUM_LOG_DEBUG("GlobalObject::JSExportInitialize");
     JSExport<GlobalObject>::SetClassVersion(1);
     JSExport<GlobalObject>::SetParent(JSExport<JSExportObject>::Class());
-    JSExport<GlobalObject>::AddFunctionProperty("require", std::mem_fn(&GlobalObject::requireArgumentValidator));
-    JSExport<GlobalObject>::AddFunctionProperty("setTimeout", std::mem_fn(&GlobalObject::setTimeoutArgumentValidator));
-    JSExport<GlobalObject>::AddFunctionProperty("clearTimeout", std::mem_fn(&GlobalObject::clearTimeoutArgumentValidator));
-    JSExport<GlobalObject>::AddFunctionProperty("setInterval", std::mem_fn(&GlobalObject::setIntervalArgumentValidator));
-    JSExport<GlobalObject>::AddFunctionProperty("clearInterval", std::mem_fn(&GlobalObject::clearIntervalArgumentValidator));
+    JSExport<GlobalObject>::AddFunctionProperty("require", std::mem_fn(&GlobalObject::requireArgumentValidator), true);
+    JSExport<GlobalObject>::AddFunctionProperty("setTimeout", std::mem_fn(&GlobalObject::setTimeoutArgumentValidator), true);
+    JSExport<GlobalObject>::AddFunctionProperty("clearTimeout", std::mem_fn(&GlobalObject::clearTimeoutArgumentValidator), true);
+    JSExport<GlobalObject>::AddFunctionProperty("setInterval", std::mem_fn(&GlobalObject::setIntervalArgumentValidator), true);
+    JSExport<GlobalObject>::AddFunctionProperty("clearInterval", std::mem_fn(&GlobalObject::clearIntervalArgumentValidator), true);
   }
   
   JSValue GlobalObject::requireArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object) {

@@ -31,8 +31,13 @@ using namespace JavaScriptCoreCPP;
 }
 
 - (void)testAPI {
-  JSContext js_context   = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
+  JSContext js_context   = js_context_group.CreateContext();
   auto global_object     = js_context.get_global_object();
+    
+  auto custom_global_object = js_context.CreateObject(JSExport<Titanium::GlobalObject>::Class());
+  for (const auto& property_name : static_cast<std::vector<JSString>>(custom_global_object.GetPropertyNames())) {
+    global_object.SetProperty(property_name, custom_global_object.GetProperty(property_name));
+  }
 
   XCTAssertFalse(global_object.HasProperty("Titanium"));
   auto Titanium = js_context.CreateObject();
