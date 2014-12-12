@@ -18,11 +18,11 @@ namespace Titanium {
 		: Module(rhs, arguments) {
 	}
 
-	JSString Platform::osname() const TITANIUM_NOEXCEPT{
+	std::string Platform::osname() const TITANIUM_NOEXCEPT{
 		return "Platform::osname: Unimplemented";
 	}
 
-	JSString Platform::createUUID() TITANIUM_NOEXCEPT{
+	std::string Platform::createUUID() TITANIUM_NOEXCEPT{
 		return "Platform::createUUID: Unimplemented";
 	}
 

@@ -44,7 +44,7 @@ namespace Titanium {
      
      @result void
      */
-    virtual void addEventListener(const JSString& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT final;
+    virtual void addEventListener(const std::string& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT final;
     
     /*!
      @method
@@ -67,7 +67,7 @@ namespace Titanium {
      
      @result void
      */
-    virtual void removeEventListener(const JSString& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT final;
+    virtual void removeEventListener(const std::string& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT final;
     
     /*!
      @method
@@ -99,7 +99,7 @@ namespace Titanium {
      
      @result void
      */
-    virtual void fireEvent(const JSString& name, const JSObject& event) const TITANIUM_NOEXCEPT final;
+    virtual void fireEvent(const std::string& name, const JSObject& event) const TITANIUM_NOEXCEPT final;
     
     Module(const JSContext& js_context)                          TITANIUM_NOEXCEPT;
     Module(const Module&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
@@ -134,7 +134,7 @@ namespace Titanium {
      
      @result void
      */
-    virtual void enableEvent(const JSString& event_name) TITANIUM_NOEXCEPT;
+    virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT;
     
     /*!
      @method
@@ -149,11 +149,11 @@ namespace Titanium {
      
      @result void
      */
-    virtual void disableEvent(const JSString& event_name) TITANIUM_NOEXCEPT;
+    virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT;
     
   private:
     
-    static unsigned eventListenerIndex(const JSObject& event_listener_list, const JSString& name, JSObject& callback) TITANIUM_NOEXCEPT;
+    static unsigned eventListenerIndex(const JSObject& event_listener_list, const std::string& name, JSObject& callback) TITANIUM_NOEXCEPT;
     
     JSObject event_listener_map__;
   };

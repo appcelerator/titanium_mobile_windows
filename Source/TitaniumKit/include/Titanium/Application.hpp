@@ -24,7 +24,7 @@ namespace Titanium {
     
     Application(const ApplicationBuilder& builder);
     
-    JSValue Run(const JSString& app_js);
+    JSValue Run(const std::string& app_js);
     
     JSContext get_context() const;
     

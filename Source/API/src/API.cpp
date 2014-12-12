@@ -23,7 +23,7 @@ namespace TitaniumWindows {
     TITANIUM_LOG_DEBUG("API::ctor CallAsConstructor");
   }
 
-  void API::log(const JSString& message) const TITANIUM_NOEXCEPT{
+  void API::log(const std::string& message) const TITANIUM_NOEXCEPT{
     TITANIUM_LOG_DEBUG("API::log");
     std::clog << message << std::endl;
   }

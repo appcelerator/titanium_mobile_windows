@@ -28,11 +28,11 @@ bool NativeFileExample::get_hidden() const TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::get_hidden");
   return false;
 }
-JSString NativeFileExample::get_name() const TITANIUM_NOEXCEPT {
+std::string NativeFileExample::get_name() const TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::get_name");
   return "";
 }
-JSString NativeFileExample::get_nativePath() const TITANIUM_NOEXCEPT {
+std::string NativeFileExample::get_nativePath() const TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::get_nativePath");
   return "";
 }
@@ -65,7 +65,7 @@ bool NativeFileExample::append(const JSValue& data) TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::append");
   return false;
 }
-bool NativeFileExample::copy(const JSString& dest) TITANIUM_NOEXCEPT {
+bool NativeFileExample::copy(const std::string& dest) TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::copy");
   return false;
 }
@@ -93,7 +93,7 @@ bool NativeFileExample::exists() TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::exists");
   return false;
 }
-JSString NativeFileExample::extension() TITANIUM_NOEXCEPT {
+std::string NativeFileExample::extension() TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::extension");
   return "";
 }
@@ -114,7 +114,7 @@ unsigned NativeFileExample::modificationTimestamp() TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::modificationTimestamp");
   return 0;
 }
-bool NativeFileExample::move(const JSString& newpath) TITANIUM_NOEXCEPT {
+bool NativeFileExample::move(const std::string& newpath) TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::move");
   return false;
 }
@@ -126,11 +126,11 @@ JSValue NativeFileExample::read() TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::read");
   return get_context().CreateNull();
 }
-bool NativeFileExample::rename(const JSString& newname) TITANIUM_NOEXCEPT {
+bool NativeFileExample::rename(const std::string& newname) TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::rename");
   return false;
 }
-JSString NativeFileExample::resolve() TITANIUM_NOEXCEPT {
+std::string NativeFileExample::resolve() TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeFileExample::resolve");
   return "";
 }

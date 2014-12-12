@@ -35,11 +35,11 @@ namespace Titanium {
     return mode_append__;
   }
 
-    JSString FilesystemModule::separator() const TITANIUM_NOEXCEPT {
+    std::string FilesystemModule::separator() const TITANIUM_NOEXCEPT {
     return "/";
   }
 
-  JSValue FilesystemModule::getFile(const JSString& path) TITANIUM_NOEXCEPT {
+  JSValue FilesystemModule::getFile(const std::string& path) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_DEBUG("Filesystem::getFile: ", path);
 
     JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
@@ -69,38 +69,38 @@ namespace Titanium {
     TITANIUM_LOG_WARN("File::isExternalStoragePresent: Unimplemented");
     return false;
   }
-  JSValue FilesystemModule::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const JSString& path) TITANIUM_NOEXCEPT {
+  JSValue FilesystemModule::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::openStream: Unimplemented");
     return get_context().CreateNull();
   }
-  JSString FilesystemModule::applicationCacheDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::applicationCacheDirectory() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::applicationCacheDirectory: Unimplemented");
     return "";
   }
-  JSString FilesystemModule::applicationDataDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::applicationDataDirectory() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::applicationDataDirectory: Unimplemented");
     return "";
   }
-  JSString FilesystemModule::applicationDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::applicationDirectory() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::applicationDirectory: Unimplemented");
     return "";
   }
-  JSString FilesystemModule::applicationSupportDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::applicationSupportDirectory() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::applicationSupportDirectory: Unimplemented");
     return "";
   }
-  JSString FilesystemModule::externalStorageDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::externalStorageDirectory() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::externalStorageDirectory: Unimplemented");
     return "";
   }
-  JSString FilesystemModule::lineEnding() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::lineEnding() const TITANIUM_NOEXCEPT {
     return "\n";
   }
-  JSString FilesystemModule::resourcesDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::resourcesDirectory() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::resourcesDirectory: Unimplemented");
     return "";
   }
-  JSString FilesystemModule::tempDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::tempDirectory() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::tempDirectory: Unimplemented");
     return "";
   }
@@ -148,13 +148,13 @@ namespace Titanium {
 
     JSValue sep_property = FS.GetProperty("separator");
     TITANIUM_ASSERT(sep_property.IsString()); // precondition
-    JSString separator = static_cast<JSString>(sep_property);
+    std::string separator = static_cast<std::string>(sep_property);
 
     // join paths with separator
     std::ostringstream oss;
     const auto size = arguments.size();
     for (unsigned i = 0; i < size; i++) {
-      oss << static_cast<JSString>(arguments.at(i));
+      oss << static_cast<std::string>(arguments.at(i));
       if (i + 1 < size) {
         oss << separator;
       }
@@ -182,7 +182,7 @@ namespace Titanium {
     TITANIUM_ASSERT(_1.IsString());
 
     const auto modes = Titanium::Filesystem::Constants::to_MODE(static_cast<std::underlying_type<Titanium::Filesystem::MODE>::type>(_0));
-    const JSString path = static_cast<JSString>(_1);
+    const std::string path = static_cast<std::string>(_1);
     return openStream(modes, path);
   }
 

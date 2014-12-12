@@ -48,21 +48,21 @@ namespace TitaniumWindows {
 
     static void JSExportInitialize();
 
-    virtual unsigned get_length() const TITANIUM_NOEXCEPT;
-    virtual JSObject get_file() const TITANIUM_NOEXCEPT;
-    virtual unsigned get_height() const TITANIUM_NOEXCEPT;
-    virtual JSString get_mimeType() const TITANIUM_NOEXCEPT;
-    virtual JSString get_nativePath() const TITANIUM_NOEXCEPT;
-    virtual unsigned get_size() const TITANIUM_NOEXCEPT;
-    virtual JSString get_text() const TITANIUM_NOEXCEPT;
-    virtual unsigned get_width() const TITANIUM_NOEXCEPT;
-    virtual void append(std::shared_ptr<Blob>&) TITANIUM_NOEXCEPT;
+    virtual unsigned get_length() const TITANIUM_NOEXCEPT override;
+    virtual JSObject get_file() const TITANIUM_NOEXCEPT override;
+    virtual unsigned get_height() const TITANIUM_NOEXCEPT override;
+    virtual std::string get_mimeType() const TITANIUM_NOEXCEPT override;
+    virtual std::string get_nativePath() const TITANIUM_NOEXCEPT override;
+    virtual unsigned get_size() const TITANIUM_NOEXCEPT override;
+    virtual std::string get_text() const TITANIUM_NOEXCEPT override;
+    virtual unsigned get_width() const TITANIUM_NOEXCEPT override;
+    virtual void append(std::shared_ptr<Titanium::Blob>&) TITANIUM_NOEXCEPT override;
 
   protected:
 
   private:
-    JSString path_;
-    JSString mimetype_;
+    std::string path_;
+    std::string mimetype_;
     unsigned width_;
     unsigned height_;
     BlobModule::TYPE type_;

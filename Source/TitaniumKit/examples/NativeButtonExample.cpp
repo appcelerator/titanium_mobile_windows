@@ -24,7 +24,7 @@ void NativeButtonExample::JSExportInitialize() {
 
 bool NativeButtonExample::setTitleArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT {
   assert(argument.IsString());
-  JSString title = static_cast<JSString>(argument);
+  std::string title = static_cast<std::string>(argument);
   TITANIUM_LOG_WARN("NativeButtonExample::setTitleArgumentValidator: title = ", title);
   set_title(argument);
   return true;

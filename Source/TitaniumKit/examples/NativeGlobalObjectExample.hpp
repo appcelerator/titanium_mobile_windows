@@ -23,9 +23,9 @@ using namespace JavaScriptCoreCPP;
 class NativeGlobalObjectExample final : public Titanium::GlobalObject, public JSExport<NativeGlobalObjectExample> {
   
 public:
-  
-  JSString get_example_resource() const                           TITANIUM_NOEXCEPT;
-  void     set_example_resource(const JSString& example_resource) TITANIUM_NOEXCEPT;
+
+  std::string get_example_resource() const                              TITANIUM_NOEXCEPT;
+  void        set_example_resource(const std::string& example_resource) TITANIUM_NOEXCEPT;
   
   
   NativeGlobalObjectExample(const JSContext& js_context)                                             TITANIUM_NOEXCEPT;
@@ -43,12 +43,12 @@ public:
   
 protected:
   
-  virtual JSString LoadResource(const JSString& moduleId) const TITANIUM_NOEXCEPT override final;
+  virtual std::string LoadResource(const std::string& moduleId) const TITANIUM_NOEXCEPT override final;
   virtual std::shared_ptr<Timer> CreateTimer(Callback_t callback, const std::chrono::milliseconds& interval) const TITANIUM_NOEXCEPT override final;
   
 private:
   
-  JSString example_resource__;
+  std::string example_resource__;
 };
 
 #endif // _TITANIUM_EXAMPLES_NATIVEGLOBALOBJECTEXAMPLE_HPP_

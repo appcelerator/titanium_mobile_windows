@@ -58,6 +58,6 @@ TEST_F(PlatformTests, logging) {
 
   auto result = js_context.JSEvaluateScript("Ti.Platform.osname;");
   XCTAssertTrue(result.IsString());
-  JSString SIZE = static_cast<JSString>(result);
+  std::string SIZE = static_cast<std::string>(result);
   XCTAssertEqual("osx", SIZE);
 }

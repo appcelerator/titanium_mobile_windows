@@ -20,10 +20,8 @@ void NativeAccelerometerExample::JSExportInitialize() {
   JSExport<NativeAccelerometerExample>::SetParent(JSExport<Titanium::Accelerometer>::Class());
 }
 
-void NativeAccelerometerExample::enableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
-  
+void NativeAccelerometerExample::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
 }
 
-void NativeAccelerometerExample::disableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
-  
+void NativeAccelerometerExample::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
 }

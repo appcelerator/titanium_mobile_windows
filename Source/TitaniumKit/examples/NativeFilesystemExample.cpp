@@ -20,7 +20,7 @@ void NativeFilesystemExample::JSExportInitialize() {
   JSExport<NativeFilesystemExample>::SetParent(JSExport<Titanium::FilesystemModule>::Class());
 }
 
-JSValue NativeFilesystemExample::getFile(const JSString&) TITANIUM_NOEXCEPT {
+JSValue NativeFilesystemExample::getFile(const std::string&) TITANIUM_NOEXCEPT {
   return get_context().CreateNull();
 }
 JSValue NativeFilesystemExample::createTempDirectory() TITANIUM_NOEXCEPT {
@@ -32,33 +32,33 @@ JSValue NativeFilesystemExample::createTempFile() TITANIUM_NOEXCEPT {
 bool NativeFilesystemExample::isExternalStoragePresent() TITANIUM_NOEXCEPT {
   return false;
 }
-JSValue NativeFilesystemExample::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const JSString& path) TITANIUM_NOEXCEPT {
+JSValue NativeFilesystemExample::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT {
   return get_context().CreateNull();
 }
-JSString NativeFilesystemExample::separator() const TITANIUM_NOEXCEPT {
+std::string NativeFilesystemExample::separator() const TITANIUM_NOEXCEPT {
   return "/";
 }
-JSString NativeFilesystemExample::applicationCacheDirectory() const TITANIUM_NOEXCEPT {
+std::string NativeFilesystemExample::applicationCacheDirectory() const TITANIUM_NOEXCEPT {
   return "";
 }
-JSString NativeFilesystemExample::applicationDataDirectory() const TITANIUM_NOEXCEPT {
+std::string NativeFilesystemExample::applicationDataDirectory() const TITANIUM_NOEXCEPT {
   return "";
 }
-JSString NativeFilesystemExample::applicationDirectory() const TITANIUM_NOEXCEPT {
+std::string NativeFilesystemExample::applicationDirectory() const TITANIUM_NOEXCEPT {
   return "";
 }
-JSString NativeFilesystemExample::applicationSupportDirectory() const TITANIUM_NOEXCEPT {
+std::string NativeFilesystemExample::applicationSupportDirectory() const TITANIUM_NOEXCEPT {
   return "";
 }
-JSString NativeFilesystemExample::externalStorageDirectory() const TITANIUM_NOEXCEPT {
+std::string NativeFilesystemExample::externalStorageDirectory() const TITANIUM_NOEXCEPT {
   return "";
 }
-JSString NativeFilesystemExample::lineEnding() const TITANIUM_NOEXCEPT {
+std::string NativeFilesystemExample::lineEnding() const TITANIUM_NOEXCEPT {
   return "\n";
 }
-JSString NativeFilesystemExample::resourcesDirectory() const TITANIUM_NOEXCEPT {
+std::string NativeFilesystemExample::resourcesDirectory() const TITANIUM_NOEXCEPT {
   return "";
 }
-JSString NativeFilesystemExample::tempDirectory() const TITANIUM_NOEXCEPT {
+std::string NativeFilesystemExample::tempDirectory() const TITANIUM_NOEXCEPT {
   return "";
 }

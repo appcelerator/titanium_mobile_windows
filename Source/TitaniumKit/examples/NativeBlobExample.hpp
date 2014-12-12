@@ -35,10 +35,10 @@ public:
   
   virtual unsigned get_length() const TITANIUM_NOEXCEPT;
   virtual unsigned get_height() const TITANIUM_NOEXCEPT;
-  virtual JSString get_mimeType() const TITANIUM_NOEXCEPT;
-  virtual JSString get_nativePath() const TITANIUM_NOEXCEPT;
+  virtual std::string get_mimeType() const TITANIUM_NOEXCEPT;
+  virtual std::string get_nativePath() const TITANIUM_NOEXCEPT;
   virtual unsigned get_size() const TITANIUM_NOEXCEPT;
-  virtual JSString get_text() const TITANIUM_NOEXCEPT;
+  virtual std::string get_text() const TITANIUM_NOEXCEPT;
   virtual unsigned get_width() const TITANIUM_NOEXCEPT;
   virtual void append(std::shared_ptr<Blob>&) TITANIUM_NOEXCEPT;
   

@@ -10,15 +10,15 @@
 #include "NativeGlobalObjectExample.hpp"
 #include "Titanium/detail/TiBase.hpp"
 
-JSString NativeGlobalObjectExample::get_example_resource() const TITANIUM_NOEXCEPT {
+std::string NativeGlobalObjectExample::get_example_resource() const TITANIUM_NOEXCEPT {
   return example_resource__;
 }
 
-void NativeGlobalObjectExample::set_example_resource(const JSString& example_resource) TITANIUM_NOEXCEPT {
+void NativeGlobalObjectExample::set_example_resource(const std::string& example_resource) TITANIUM_NOEXCEPT {
   example_resource__ = example_resource;
 }
 
-JSString NativeGlobalObjectExample::LoadResource(const JSString& moduleId) const TITANIUM_NOEXCEPT {
+std::string NativeGlobalObjectExample::LoadResource(const std::string& moduleId) const TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("GlobalObjectDelegateExample::LoadResource for ", moduleId);
   return example_resource__;
 }

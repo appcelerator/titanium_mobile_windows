@@ -22,8 +22,8 @@ namespace Titanium {
 
 	public:
 
-		virtual JSString osname() const TITANIUM_NOEXCEPT;
-		virtual JSString createUUID() TITANIUM_NOEXCEPT;
+		virtual std::string osname() const TITANIUM_NOEXCEPT;
+		virtual std::string createUUID() TITANIUM_NOEXCEPT;
 
 		Platform(const JSContext& js_context)                       TITANIUM_NOEXCEPT;
 		Platform(const Platform&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;

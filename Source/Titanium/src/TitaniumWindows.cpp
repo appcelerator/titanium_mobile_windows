@@ -29,7 +29,7 @@ namespace TitaniumWindows {
   Application::Application()
     : application__(Titanium::ApplicationBuilder(std::make_shared<JSClass>(JSExport<TitaniumWindows::GlobalObject>::Class()))
     .APIClass(std::make_shared<JSClass>(JSExport<TitaniumWindows::API>::Class()))
-	.PlatformClass(std::make_shared<JSClass>(JSExport<TitaniumWindows::Platform>::Class()))
+    .PlatformClass(std::make_shared<JSClass>(JSExport<TitaniumWindows::Platform>::Class()))
     .GestureClass(std::make_shared<JSClass>(JSExport<TitaniumWindows::Gesture>::Class()))
     .AccelerometerClass(std::make_shared<JSClass>(JSExport<TitaniumWindows::Accelerometer>::Class()))
     .ViewClass(std::make_shared<JSClass>(JSExport<TitaniumWindows::UI::View>::Class()))

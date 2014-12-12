@@ -55,7 +55,7 @@ namespace TitaniumWindows {
     bool View::setBackgroundColorArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT{
       TITANIUM_ASSERT(argument.IsString());
       bool result = false;
-      JSString backgroundColorName = static_cast<JSString>(argument);
+      std::string backgroundColorName = static_cast<std::string>(argument);
       TITANIUM_LOG_INFO("View::setBackgroundColorArgumentValidator: backgroundColor = ", backgroundColorName);
       const auto backgroundColor = ColorForName(backgroundColorName);
       canvas__->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(backgroundColor);

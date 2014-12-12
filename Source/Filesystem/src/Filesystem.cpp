@@ -32,7 +32,7 @@ namespace TitaniumWindows {
     JSExport<FilesystemModule>::SetParent(JSExport<Titanium::FilesystemModule>::Class());
   }
 
-  JSString FilesystemModule::separator() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::separator() const TITANIUM_NOEXCEPT {
     return "\\";
   }
 
@@ -59,12 +59,12 @@ namespace TitaniumWindows {
     return !this->externalStorageDirectory().empty();
   }
 
-  JSValue FilesystemModule::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const JSString& path) TITANIUM_NOEXCEPT {
+  JSValue FilesystemModule::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("Filesystem.openStream is not implemented yet");
     return get_context().CreateUndefined();
   }
 
-  JSString FilesystemModule::applicationCacheDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::applicationCacheDirectory() const TITANIUM_NOEXCEPT {
 #if WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP
     const auto value = Windows::Storage::ApplicationData::Current->LocalCacheFolder->Path;
     return TitaniumWindows::Utility::ConvertString(value);
@@ -74,17 +74,17 @@ namespace TitaniumWindows {
 #endif
   }
 
-  JSString FilesystemModule::applicationDataDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::applicationDataDirectory() const TITANIUM_NOEXCEPT {
     const auto value = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
     return TitaniumWindows::Utility::ConvertString(value);
   }
 
-  JSString FilesystemModule::applicationDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::applicationDirectory() const TITANIUM_NOEXCEPT {
     const auto value = Windows::ApplicationModel::Package::Current->InstalledLocation->Path;
     return TitaniumWindows::Utility::ConvertString(value);
   }
 
-  JSString FilesystemModule::applicationSupportDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::applicationSupportDirectory() const TITANIUM_NOEXCEPT {
     // Need to check exception here because this requires "Documents" capability
     try {
       const auto value = Windows::Storage::KnownFolders::DocumentsLibrary->Path;
@@ -94,7 +94,7 @@ namespace TitaniumWindows {
     }
   }
 
-  JSString FilesystemModule::externalStorageDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::externalStorageDirectory() const TITANIUM_NOEXCEPT {
     // Need to check exception here because this requires "Removable Storage" capability
     try {
       const auto value = Windows::Storage::KnownFolders::RemovableDevices->Path;
@@ -105,16 +105,16 @@ namespace TitaniumWindows {
     }
   }
 
-  JSString FilesystemModule::lineEnding() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::lineEnding() const TITANIUM_NOEXCEPT {
     return "\r\n";
   }
 
-  JSString FilesystemModule::resourcesDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::resourcesDirectory() const TITANIUM_NOEXCEPT {
 		const auto value = Windows::ApplicationModel::Package::Current->InstalledLocation->Path;
     return TitaniumWindows::Utility::ConvertString(value);
   }
 
-  JSString FilesystemModule::tempDirectory() const TITANIUM_NOEXCEPT {
+  std::string FilesystemModule::tempDirectory() const TITANIUM_NOEXCEPT {
     const auto value = Windows::Storage::ApplicationData::Current->TemporaryFolder->Path;
     return TitaniumWindows::Utility::ConvertString(value);
   }

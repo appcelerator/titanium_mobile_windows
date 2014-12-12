@@ -32,17 +32,17 @@ namespace TitaniumWindows {
     TITANIUM_LOG_DEBUG("Platform::ctor CallAsConstructor");
   }
 
-  JSString Platform::osname() const TITANIUM_NOEXCEPT{
+  std::string Platform::osname() const TITANIUM_NOEXCEPT{
     TITANIUM_LOG_DEBUG("Platform::osname");
 	return osname__;
   }
 
-  JSString Platform::createUUID() TITANIUM_NOEXCEPT{
+  std::string Platform::createUUID() TITANIUM_NOEXCEPT{
     TITANIUM_LOG_DEBUG("Platform::createUUID");
 	GUID gdn;
 	CoCreateGuid(&gdn);
 	::Platform::Guid guid(gdn);
-	JSString guid_str = std::string(guid.ToString()->Begin(), guid.ToString()->End());
+	std::string guid_str = std::string(guid.ToString()->Begin(), guid.ToString()->End());
 	return guid_str;
   }
 

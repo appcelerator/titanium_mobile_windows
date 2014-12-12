@@ -209,7 +209,7 @@ if (WIN32)
   set_property(TARGET TitaniumKit APPEND_STRING PROPERTY LINK_FLAGS_DEBUG "/OPT:NOREF /OPT:NOICF")
   
   # Fix error C1128: number of sections exceeded object file format limit
-  set_source_files_properties(src/UI/Constants.cpp APPEND_STRING PROPERTY COMPILE_FLAGS "/bigobj")
+  set_property(TARGET TitaniumKit APPEND_STRING PROPERTY COMPILE_FLAGS "/bigobj")
 endif()
 
 if (NOT TitaniumKit_DISABLE_TESTS)

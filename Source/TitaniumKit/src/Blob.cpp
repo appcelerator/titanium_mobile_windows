@@ -68,12 +68,12 @@ namespace Titanium {
     return 0;
   }
   
-  JSString Blob::get_mimeType() const TITANIUM_NOEXCEPT {
+  std::string Blob::get_mimeType() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("Blob::get_mimeType: Unimplemented");
     return "";
   }
   
-  JSString Blob::get_nativePath() const TITANIUM_NOEXCEPT {
+  std::string Blob::get_nativePath() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("Blob::get_nativePath: Unimplemented");
     return "";
   }
@@ -83,7 +83,7 @@ namespace Titanium {
     return 0;
   }
   
-  JSString Blob::get_text() const TITANIUM_NOEXCEPT {
+  std::string Blob::get_text() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("Blob::get_text: Unimplemented");
     return "";
   }

@@ -38,17 +38,17 @@ namespace TitaniumWindows {
     virtual JSValue createTempDirectory() TITANIUM_NOEXCEPT;
     virtual JSValue createTempFile() TITANIUM_NOEXCEPT;
     virtual bool isExternalStoragePresent() TITANIUM_NOEXCEPT;
-    virtual JSValue openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const JSString& path) TITANIUM_NOEXCEPT;
+    virtual JSValue openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT;
 
-    virtual JSString separator() const TITANIUM_NOEXCEPT;
-    virtual JSString applicationCacheDirectory() const TITANIUM_NOEXCEPT;
-    virtual JSString applicationDataDirectory() const TITANIUM_NOEXCEPT;
-    virtual JSString applicationDirectory() const TITANIUM_NOEXCEPT;
-    virtual JSString applicationSupportDirectory() const TITANIUM_NOEXCEPT;
-    virtual JSString externalStorageDirectory() const TITANIUM_NOEXCEPT;
-    virtual JSString lineEnding() const TITANIUM_NOEXCEPT;
-    virtual JSString resourcesDirectory() const TITANIUM_NOEXCEPT;
-    virtual JSString tempDirectory() const TITANIUM_NOEXCEPT;
+    virtual std::string separator() const TITANIUM_NOEXCEPT;
+    virtual std::string applicationCacheDirectory() const TITANIUM_NOEXCEPT;
+    virtual std::string applicationDataDirectory() const TITANIUM_NOEXCEPT;
+    virtual std::string applicationDirectory() const TITANIUM_NOEXCEPT;
+    virtual std::string applicationSupportDirectory() const TITANIUM_NOEXCEPT;
+    virtual std::string externalStorageDirectory() const TITANIUM_NOEXCEPT;
+    virtual std::string lineEnding() const TITANIUM_NOEXCEPT;
+    virtual std::string resourcesDirectory() const TITANIUM_NOEXCEPT;
+    virtual std::string tempDirectory() const TITANIUM_NOEXCEPT;
   protected:
 
   private:

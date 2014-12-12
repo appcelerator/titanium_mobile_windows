@@ -72,11 +72,11 @@ namespace Titanium { namespace Filesystem {
     TITANIUM_LOG_WARN("File::get_hidden: Unimplemented");
     return false;
   }
-  JSString File::get_name() const TITANIUM_NOEXCEPT {
+  std::string File::get_name() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::get_name: Unimplemented");
     return "";
   }
-  JSString File::get_nativePath() const TITANIUM_NOEXCEPT {
+  std::string File::get_nativePath() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::get_nativePath: Unimplemented");
     return "";
   }
@@ -109,7 +109,7 @@ namespace Titanium { namespace Filesystem {
     TITANIUM_LOG_WARN("File::append: Unimplemented");
     return false;
   }
-  bool File::copy(const JSString& dest) TITANIUM_NOEXCEPT {
+  bool File::copy(const std::string& dest) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::copy: Unimplemented");
     return false;
   }
@@ -137,7 +137,7 @@ namespace Titanium { namespace Filesystem {
     TITANIUM_LOG_WARN("File::exists: Unimplemented");
     return false;
   }
-  JSString File::extension() TITANIUM_NOEXCEPT {
+  std::string File::extension() TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::extension: Unimplemented");
     return "";
   }
@@ -158,7 +158,7 @@ namespace Titanium { namespace Filesystem {
     TITANIUM_LOG_WARN("File::modificationTimestamp: Unimplemented");
     return 0;
   }
-  bool File::move(const JSString& newpath) TITANIUM_NOEXCEPT {
+  bool File::move(const std::string& newpath) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::move: Unimplemented");
     return false;
   }
@@ -170,11 +170,11 @@ namespace Titanium { namespace Filesystem {
     TITANIUM_LOG_WARN("File::read: Unimplemented");
     return get_context().CreateNull();
   }
-  bool File::rename(const JSString& newname) TITANIUM_NOEXCEPT {
+  bool File::rename(const std::string& newname) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::rename: Unimplemented");
     return false;
   }
-  JSString File::resolve() TITANIUM_NOEXCEPT {
+  std::string File::resolve() TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("File::resolve: Unimplemented");
     return "";
   }
@@ -261,7 +261,7 @@ namespace Titanium { namespace Filesystem {
     }
     const auto _0 = arguments.at(0);
     TITANIUM_ASSERT(_0.IsString());
-    const auto destinationPath = static_cast<JSString>(_0);
+    const auto destinationPath = static_cast<std::string>(_0);
     return get_context().CreateBoolean(copy(destinationPath));
   }
   JSValue File::createDirectory_ArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT {
@@ -309,7 +309,7 @@ namespace Titanium { namespace Filesystem {
     }
     const auto _0 = arguments.at(0);
     TITANIUM_ASSERT(_0.IsString());
-    const auto newpath = static_cast<JSString>(_0);
+    const auto newpath = static_cast<std::string>(_0);
     return get_context().CreateBoolean(move(newpath));
   }
   JSValue File::open_ArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT {
@@ -330,7 +330,7 @@ namespace Titanium { namespace Filesystem {
     }
     const auto _0 = arguments.at(0);
     TITANIUM_ASSERT(_0.IsString());
-    const auto newname = static_cast<JSString>(_0);
+    const auto newname = static_cast<std::string>(_0);
     return get_context().CreateBoolean(rename(newname));
   }
   JSValue File::resolve_ArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT {

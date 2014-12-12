@@ -20,11 +20,11 @@ void NativeGestureExample::JSExportInitialize() {
   JSExport<NativeGestureExample>::SetParent(JSExport<Titanium::Gesture>::Class());
 }
 
-void NativeGestureExample::enableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+void NativeGestureExample::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
   
 }
 
-void NativeGestureExample::disableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+void NativeGestureExample::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
   
 }
 

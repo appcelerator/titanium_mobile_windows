@@ -15,7 +15,7 @@ NativePlatformExample::NativePlatformExample(const NativePlatformExample& rhs, c
 : Titanium::Platform(rhs, arguments) {
 }
 
-JSString NativePlatformExample::osname() const TITANIUM_NOEXCEPT {
+std::string NativePlatformExample::osname() const TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("PlatformDelegateExample::osname");
   return "osx";
 }

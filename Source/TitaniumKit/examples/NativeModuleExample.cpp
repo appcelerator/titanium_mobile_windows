@@ -25,11 +25,11 @@ JSValue NativeModuleExample::get_enabled() const {
   return enabled__;
 }
 
-JSString NativeModuleExample::get_event_name() const TITANIUM_NOEXCEPT {
+std::string NativeModuleExample::get_event_name() const TITANIUM_NOEXCEPT {
   return event_name__;
 }
 
-void NativeModuleExample::set_event_name(const JSString& event_name) TITANIUM_NOEXCEPT {
+void NativeModuleExample::set_event_name(const std::string& event_name) TITANIUM_NOEXCEPT {
   event_name__ = event_name;
 }
 
@@ -39,14 +39,14 @@ void NativeModuleExample::JSExportInitialize() {
   JSExport<NativeModuleExample>::AddValueProperty("enabled", std::mem_fn(&NativeModuleExample::get_enabled));
 }
 
-void NativeModuleExample::enableEvent(const JSString& eventName) TITANIUM_NOEXCEPT {
+void NativeModuleExample::enableEvent(const std::string& eventName) TITANIUM_NOEXCEPT {
   if (eventName == event_name__) {
     enabled__ = get_context().CreateBoolean(true);
   }
   TITANIUM_LOG_INFO("NativeModuleExample::enableEvent: event name = '", eventName, "', enabled = ", enabled__);
 }
 
-void NativeModuleExample::disableEvent(const JSString& eventName) TITANIUM_NOEXCEPT {
+void NativeModuleExample::disableEvent(const std::string& eventName) TITANIUM_NOEXCEPT {
   if (eventName == event_name__) {
     enabled__ = get_context().CreateBoolean(false);
   }

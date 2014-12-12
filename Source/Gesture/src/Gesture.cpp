@@ -55,7 +55,7 @@ namespace TitaniumWindows {
     JSExport<Gesture>::SetParent(JSExport<Titanium::Gesture>::Class());
   }
 
-  void Gesture::enableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+  void Gesture::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_DEBUG("TitaniumWindows::Gesture::enableEvent");
     if (event_name == "shake") {
       accelerometer_ = Windows::Devices::Sensors::Accelerometer::GetDefault();
@@ -109,7 +109,7 @@ namespace TitaniumWindows {
     }
   }
 
-  void Gesture::disableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+  void Gesture::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_DEBUG("TitaniumWindows::Gesture::disableEvent");
     if (event_name == "shake") {
       accelerometer_->ReadingChanged -= shake_event_;

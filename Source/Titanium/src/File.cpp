@@ -156,16 +156,16 @@ namespace TitaniumWindows { namespace Filesystem {
     using namespace Windows::Storage;
     return ((item->Attributes & FileAttributes::Normal) != FileAttributes::Normal);
   }
-  JSString File::get_name() const TITANIUM_NOEXCEPT {
+  std::string File::get_name() const TITANIUM_NOEXCEPT {
     return name_;
   }
-  JSString File::get_nativePath() const TITANIUM_NOEXCEPT {
+  std::string File::get_nativePath() const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_DEBUG("TitaniumWindows::File::get_nativePath");
     return path_;
   }
   JSValue File::get_parent() const TITANIUM_NOEXCEPT {
     const std::string path = path_;
-    const JSString parent = path.substr(0, path.find_last_of("\\"));
+    const std::string parent = path.substr(0, path.find_last_of("\\"));
 
     auto File = get_context().CreateObject(JSExport<Titanium::Filesystem::File>::Class());
     return File.CallAsConstructor(parent);
@@ -209,7 +209,7 @@ namespace TitaniumWindows { namespace Filesystem {
     return false;
   }
 
-  bool File::copy(const JSString& destinationPath) TITANIUM_NOEXCEPT {
+  bool File::copy(const std::string& destinationPath) TITANIUM_NOEXCEPT {
     // copy will never work for folder
     if (isFolder()) {
       return false;
@@ -307,7 +307,7 @@ namespace TitaniumWindows { namespace Filesystem {
     return (getStorageItem() != nullptr);
   }
 
-  JSString File::extension() TITANIUM_NOEXCEPT {
+  std::string File::extension() TITANIUM_NOEXCEPT {
     const std::string path = path_;
     return path.substr(path.find_last_of(".") + 1);
   }
@@ -377,7 +377,7 @@ namespace TitaniumWindows { namespace Filesystem {
       return TitaniumWindows::Utility::GetMSecSinceEpoch(prop->DateModified);
     }
   }
-  bool File::move(const JSString& newpath) TITANIUM_NOEXCEPT {
+  bool File::move(const std::string& newpath) TITANIUM_NOEXCEPT {
     // if this item is folder, call rename
     if (isFolder()) {
       return this->rename(newpath);
@@ -434,7 +434,7 @@ namespace TitaniumWindows { namespace Filesystem {
 
     return blob;
   }
-  bool File::rename(const JSString& desiredName) TITANIUM_NOEXCEPT {
+  bool File::rename(const std::string& desiredName) TITANIUM_NOEXCEPT {
     auto item = getStorageItem();
     concurrency::event event;
     bool result = false;
@@ -452,7 +452,7 @@ namespace TitaniumWindows { namespace Filesystem {
 
     return result;
   }
-  JSString File::resolve() TITANIUM_NOEXCEPT {
+  std::string File::resolve() TITANIUM_NOEXCEPT {
     return path_;
   }
   unsigned File::spaceAvailable() TITANIUM_NOEXCEPT {
@@ -494,7 +494,7 @@ namespace TitaniumWindows { namespace Filesystem {
     Streams::IBuffer^ buffer = nullptr;
 
     if (data.IsString()) {
-      const auto content = static_cast<JSString>(data);
+      const auto content = static_cast<std::string>(data);
       buffer = getBufferFromString(content, append, file_);
     } else if (data.IsObject()) {
       JSObject obj = data;

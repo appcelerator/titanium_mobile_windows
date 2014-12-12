@@ -28,7 +28,7 @@ namespace TitaniumWindows {
     JSExport<Accelerometer>::SetParent(JSExport<Titanium::Accelerometer>::Class());
   }
 
-  void Accelerometer::enableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+  void Accelerometer::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
 	  TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::enableEvent: (event name '", event_name, "'");
 	  if (event_name == "update") {
 			  accelerometer_ = Windows::Devices::Sensors::Accelerometer::GetDefault();
@@ -80,7 +80,7 @@ namespace TitaniumWindows {
 	  }
   }
 
-  void Accelerometer::disableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+  void Accelerometer::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
 	  TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::disableEvent: (event name '", event_name, "'");
 	  if (event_name == "update") {
 		  accelerometer_->ReadingChanged -= update_event_;

@@ -40,11 +40,11 @@ namespace TitaniumWindows {
 
   protected:
 
-    virtual JSString osname() const TITANIUM_NOEXCEPT override final;
-	virtual JSString createUUID() TITANIUM_NOEXCEPT override final;
+    virtual std::string osname() const TITANIUM_NOEXCEPT override final;
+	virtual std::string createUUID() TITANIUM_NOEXCEPT override final;
 	
   private:
-    JSString osname__;
+    std::string osname__;
 	
   };
 

@@ -26,8 +26,8 @@ public:
   
   JSValue get_enabled() const;
   
-  JSString get_event_name() const                    TITANIUM_NOEXCEPT;
-  void     set_event_name(const JSString& event_name) TITANIUM_NOEXCEPT;
+  std::string get_event_name() const                        TITANIUM_NOEXCEPT;
+  void        set_event_name(const std::string& event_name) TITANIUM_NOEXCEPT;
   
   NativeModuleExample(const JSContext& js_context)                                       TITANIUM_NOEXCEPT;
   NativeModuleExample(const NativeModuleExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
@@ -44,13 +44,13 @@ public:
   
 protected:
   
-  virtual void  enableEvent(const JSString& event_name) TITANIUM_NOEXCEPT override final;
-  virtual void disableEvent(const JSString& event_name) TITANIUM_NOEXCEPT override final;
+  virtual void  enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
+  virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
   
 private:
   
-  JSString event_name__;
-  JSValue  enabled__;
+  std::string event_name__;
+  JSValue     enabled__;
 };
 
 #endif // _TITANIUM_EXAMPLES_NATIVEMODULEEXAMPLE_HPP_

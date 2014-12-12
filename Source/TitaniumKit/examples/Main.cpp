@@ -24,7 +24,7 @@
 int main () {
   using namespace JavaScriptCoreCPP;
 
-  JSString app_js = R"js(
+  std::string app_js = R"js(
 'use strict';
 
 var button = Ti.UI.createButton({

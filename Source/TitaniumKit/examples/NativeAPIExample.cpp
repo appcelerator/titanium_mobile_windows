@@ -18,7 +18,7 @@ NativeAPIExample::NativeAPIExample(const NativeAPIExample& rhs, const std::vecto
 : Titanium::API(rhs, arguments) {
 }
 
-void NativeAPIExample::log(const JSString& message) const TITANIUM_NOEXCEPT {
+void NativeAPIExample::log(const std::string& message) const TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("APIDelegateExample::log");
   std::clog << message << std::endl;
 }

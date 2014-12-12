@@ -39,7 +39,7 @@ public:
   
 protected:
   
-  virtual void log(const JSString& message) const TITANIUM_NOEXCEPT override final;
+  virtual void log(const std::string& message) const TITANIUM_NOEXCEPT override final;
 };
 
 #endif // _TITANIUM_EXAMPLES_NATIVEAPIEXAMPLE_HPP_

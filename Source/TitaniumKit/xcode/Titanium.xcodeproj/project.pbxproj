@@ -65,9 +65,7 @@
 		C9BED2261A28F4CD00CFF800 /* Constants.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C9BED2251A28F4CD00CFF800 /* Constants.hpp */; };
 		C9E6AFB81A13043300FED053 /* Titanium.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C9E6AFB71A13043300FED053 /* Titanium.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9E6AFBA1A13044100FED053 /* TiLoggerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9E6AFB91A13044100FED053 /* TiLoggerTests.mm */; };
-		C9E6AFDA1A13E25E00FED053 /* libJavaScriptCoreCPP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9E6AFD51A13E23300FED053 /* libJavaScriptCoreCPP.a */; };
 		C9E6AFE21A13F73A00FED053 /* libTitanium.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C97454491A02A2B000CB4CA9 /* libTitanium.a */; };
-		C9E6AFE31A13F74100FED053 /* libJavaScriptCoreCPP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9E6AFD51A13E23300FED053 /* libJavaScriptCoreCPP.a */; };
 		C9E6AFE41A13F74B00FED053 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C97454761A02B1E100CB4CA9 /* JavaScriptCore.framework */; };
 		C9E6AFE61A13F93800FED053 /* GlobalObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6AFCD1A13DF3000FED053 /* GlobalObject.cpp */; };
 		C9E6AFE71A13F93F00FED053 /* TiBase.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C9E6AFBC1A13D36500FED053 /* TiBase.hpp */; };
@@ -82,6 +80,7 @@
 		C9E6AFF01A13F96000FED053 /* TiLoggerPimpl.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C9E6AFC21A13D36500FED053 /* TiLoggerPimpl.hpp */; };
 		C9E6AFF11A13F96400FED053 /* TiLoggerPimpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6AFC51A13D37900FED053 /* TiLoggerPimpl.cpp */; };
 		C9E6AFF61A158AD000FED053 /* GlobalObjectTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9E6AFF51A158AD000FED053 /* GlobalObjectTests.mm */; };
+		C9F56B301A3A077E0028DA21 /* libJavaScriptCoreCPP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9F56B2F1A3A077E0028DA21 /* libJavaScriptCoreCPP.a */; };
 		F908310F1A2EA3AC00CB810B /* Blob.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F908310E1A2EA3AC00CB810B /* Blob.hpp */; };
 		F90831121A2EA3B500CB810B /* Blob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F90831111A2EA3B500CB810B /* Blob.cpp */; };
 		F90831151A2EA3FA00CB810B /* NativeBlobExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F90831131A2EA3FA00CB810B /* NativeBlobExample.cpp */; };
@@ -103,27 +102,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C9E6AFD41A13E23300FED053 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C9E6AFCF1A13E23300FED053 /* JavaScriptCoreCPP.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C936FD3119CB95BE0082CB08;
-			remoteInfo = JavaScriptCoreCPP;
-		};
-		C9E6AFD61A13E23300FED053 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C9E6AFCF1A13E23300FED053 /* JavaScriptCoreCPP.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C936FD4D19CB961A0082CB08;
-			remoteInfo = JavaScriptCoreCPPTests;
-		};
-		C9E6AFD81A13E25800FED053 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C9E6AFCF1A13E23300FED053 /* JavaScriptCoreCPP.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = C936FD3019CB95BE0082CB08;
-			remoteInfo = JavaScriptCoreCPP;
-		};
 		C9E6AFE01A13F73400FED053 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C97454411A02A2B000CB4CA9 /* Project object */;
@@ -212,8 +190,8 @@
 		C9E6AFC51A13D37900FED053 /* TiLoggerPimpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TiLoggerPimpl.cpp; path = src/detail/TiLoggerPimpl.cpp; sourceTree = "<group>"; };
 		C9E6AFC61A13D37900FED053 /* TiBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TiBase.cpp; path = src/detail/TiBase.cpp; sourceTree = "<group>"; };
 		C9E6AFCD1A13DF3000FED053 /* GlobalObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GlobalObject.cpp; path = src/GlobalObject.cpp; sourceTree = "<group>"; };
-		C9E6AFCF1A13E23300FED053 /* JavaScriptCoreCPP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JavaScriptCoreCPP.xcodeproj; path = ../../JavaScriptCoreCPP/xcode/JavaScriptCoreCPP.xcodeproj; sourceTree = "<group>"; };
 		C9E6AFF51A158AD000FED053 /* GlobalObjectTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GlobalObjectTests.mm; sourceTree = "<group>"; };
+		C9F56B2F1A3A077E0028DA21 /* libJavaScriptCoreCPP.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libJavaScriptCoreCPP.a; path = "../../../../../../../../Library/Developer/Xcode/DerivedData/Titanium-adwvecqnihfrkjbkawqsskevoqyg/Build/Products/Debug/libJavaScriptCoreCPP.a"; sourceTree = "<group>"; };
 		F908310E1A2EA3AC00CB810B /* Blob.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Blob.hpp; path = include/Titanium/Blob.hpp; sourceTree = "<group>"; };
 		F90831111A2EA3B500CB810B /* Blob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Blob.cpp; path = src/Blob.cpp; sourceTree = "<group>"; };
 		F90831131A2EA3FA00CB810B /* NativeBlobExample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeBlobExample.cpp; sourceTree = "<group>"; };
@@ -239,7 +217,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9E6AFDA1A13E25E00FED053 /* libJavaScriptCoreCPP.a in Frameworks */,
+				C9F56B301A3A077E0028DA21 /* libJavaScriptCoreCPP.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,7 +226,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9E6AFE41A13F74B00FED053 /* JavaScriptCore.framework in Frameworks */,
-				C9E6AFE31A13F74100FED053 /* libJavaScriptCoreCPP.a in Frameworks */,
 				C9E6AFE21A13F73A00FED053 /* libTitanium.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -319,7 +296,7 @@
 		C97454401A02A2B000CB4CA9 = {
 			isa = PBXGroup;
 			children = (
-				C9E6AFCF1A13E23300FED053 /* JavaScriptCoreCPP.xcodeproj */,
+				C9F56B2F1A3A077E0028DA21 /* libJavaScriptCoreCPP.a */,
 				C97454761A02B1E100CB4CA9 /* JavaScriptCore.framework */,
 				C974544B1A02A2B000CB4CA9 /* Titanium */,
 				C9E6AFCA1A13D38700FED053 /* TiLogger */,
@@ -432,15 +409,6 @@
 			name = detail;
 			sourceTree = "<group>";
 		};
-		C9E6AFD01A13E23300FED053 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				C9E6AFD51A13E23300FED053 /* libJavaScriptCoreCPP.a */,
-				C9E6AFD71A13E23300FED053 /* JavaScriptCoreCPPTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		F9B47E771A2EF15A0052879A /* Filesystem */ = {
 			isa = PBXGroup;
 			children = (
@@ -517,7 +485,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C9E6AFD91A13E25800FED053 /* PBXTargetDependency */,
 			);
 			name = Titanium;
 			productName = Titanium;
@@ -569,12 +536,6 @@
 			mainGroup = C97454401A02A2B000CB4CA9;
 			productRefGroup = C974544A1A02A2B000CB4CA9 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = C9E6AFD01A13E23300FED053 /* Products */;
-					ProjectRef = C9E6AFCF1A13E23300FED053 /* JavaScriptCoreCPP.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				C97454481A02A2B000CB4CA9 /* Titanium */,
@@ -582,23 +543,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		C9E6AFD51A13E23300FED053 /* libJavaScriptCoreCPP.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libJavaScriptCoreCPP.a;
-			remoteRef = C9E6AFD41A13E23300FED053 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C9E6AFD71A13E23300FED053 /* JavaScriptCoreCPPTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = JavaScriptCoreCPPTests.xctest;
-			remoteRef = C9E6AFD61A13E23300FED053 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C97454621A02A40A00CB4CA9 /* Resources */ = {
@@ -676,11 +620,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C9E6AFD91A13E25800FED053 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = JavaScriptCoreCPP;
-			targetProxy = C9E6AFD81A13E25800FED053 /* PBXContainerItemProxy */;
-		};
 		C9E6AFE11A13F73400FED053 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C97454481A02A2B000CB4CA9 /* Titanium */;
@@ -780,6 +719,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/matt/Documents/Appcelerator/src/Appcelerator/titanium_mobile_windows/Source/JavaScriptCoreCPP/xcode/build/Debug,
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Titanium-adwvecqnihfrkjbkawqsskevoqyg/Build/Products/Debug",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -795,6 +735,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/matt/Documents/Appcelerator/src/Appcelerator/titanium_mobile_windows/Source/JavaScriptCoreCPP/xcode/build/Debug,
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Titanium-adwvecqnihfrkjbkawqsskevoqyg/Build/Products/Debug",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

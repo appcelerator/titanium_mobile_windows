@@ -75,11 +75,11 @@ namespace TitaniumWindows {
     return height_;
   }
 
-  JSString Blob::get_mimeType() const TITANIUM_NOEXCEPT {
+  std::string Blob::get_mimeType() const TITANIUM_NOEXCEPT {
     return mimetype_;
   }
 
-  JSString Blob::get_nativePath() const TITANIUM_NOEXCEPT {
+  std::string Blob::get_nativePath() const TITANIUM_NOEXCEPT {
     return path_;
   }
 
@@ -91,7 +91,7 @@ namespace TitaniumWindows {
     }
   }
 
-  JSString Blob::get_text() const TITANIUM_NOEXCEPT {
+  std::string Blob::get_text() const TITANIUM_NOEXCEPT {
     if (type_ == BlobModule::TYPE::IMAGE) {
       return "";
     } else {
@@ -103,8 +103,8 @@ namespace TitaniumWindows {
     return width_;
   }
 
-  void Blob::append(std::shared_ptr<Blob>& other) TITANIUM_NOEXCEPT {
-    auto blob = other.get();
+    void Blob::append(std::shared_ptr<Titanium::Blob>& other) TITANIUM_NOEXCEPT{
+    auto blob = std::dynamic_pointer_cast<Blob>(other).get();
     const auto b = blob->getData();
     data_.reserve(data_.size() + b.size());
     data_.insert(data_.end(), b.begin(), b.end());

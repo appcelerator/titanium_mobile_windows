@@ -79,11 +79,11 @@ namespace Titanium {
     return get_context().CreateBoolean(isPortrait);
   };
   
-  void Gesture::enableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+  void Gesture::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("Ti::Gesture::enableEvent: Unimplemented (event name '", event_name, "'");
   }
   
-  void Gesture::disableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+  void Gesture::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("Ti::Gesture::disableEvent: Unimplemented (event name '", event_name, "'");
   }
 

@@ -25,7 +25,7 @@
 using namespace JavaScriptCoreCPP;
 
 TEST(ApplicationTests, build_and_run) {
-  JSString app_js = R"js(
+  std::string app_js = R"js(
   'use strict';
   
   var view = Ti.UI.createView({

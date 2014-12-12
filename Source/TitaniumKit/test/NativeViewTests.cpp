@@ -89,7 +89,7 @@ TEST_F(ViewTests, basic_functionality) {
   UI.SetProperty("Button", js_context.CreateObject(JSExport<Titanium::UI::Button>::Class()));
   XCTAssertTrue(UI.HasProperty("Button"));
 
-  JSString app_js = R"js(
+  std::string app_js = R"js(
   'use strict';
   
   var view = Ti.UI.createView({

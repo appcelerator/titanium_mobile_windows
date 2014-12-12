@@ -30,12 +30,12 @@ unsigned NativeBlobExample::get_height() const TITANIUM_NOEXCEPT {
   return 0;
 }
 
-JSString NativeBlobExample::get_mimeType() const TITANIUM_NOEXCEPT {
+std::string NativeBlobExample::get_mimeType() const TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeBlobExample::get_mimeType");
   return "";
 }
 
-JSString NativeBlobExample::get_nativePath() const TITANIUM_NOEXCEPT {
+std::string NativeBlobExample::get_nativePath() const TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeBlobExample::get_nativePath");
   return "";
 }
@@ -45,7 +45,7 @@ unsigned NativeBlobExample::get_size() const TITANIUM_NOEXCEPT {
   return 0;
 }
 
-JSString NativeBlobExample::get_text() const TITANIUM_NOEXCEPT {
+std::string NativeBlobExample::get_text() const TITANIUM_NOEXCEPT {
   TITANIUM_LOG_DEBUG("NativeBlobExample::get_text");
   return "";
 }

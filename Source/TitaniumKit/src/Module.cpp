@@ -22,7 +22,7 @@ namespace Titanium {
   , event_listener_map__(rhs.event_listener_map__) {
   }
   
-  void Module::addEventListener(const JSString& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT{
+  void Module::addEventListener(const std::string& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT{
     TITANIUM_LOG_DEBUG("Module::addEventListener: '", name, "' (this = ", reinterpret_cast<std::intptr_t>(this), ")");
     if (!callback.IsFunction()) {
       TITANIUM_LOG_WARN("Module::addEventListener: Listener is not a function for event '", name, "'");
@@ -60,7 +60,7 @@ namespace Titanium {
     }
   }
   
-  void Module::removeEventListener(const JSString& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT{
+  void Module::removeEventListener(const std::string& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT{
     TITANIUM_LOG_DEBUG("Module::removeEventListener: '", name, "' (this = ", reinterpret_cast<std::intptr_t>(this), ")");
     if (!callback.IsFunction()) {
       TITANIUM_LOG_WARN("Module::removeEventListener: callback is not a function for event '", name, "'");
@@ -114,7 +114,7 @@ namespace Titanium {
     }
   }
   
-  void Module::fireEvent(const JSString& name, const JSObject& event) const TITANIUM_NOEXCEPT {
+  void Module::fireEvent(const std::string& name, const JSObject& event) const TITANIUM_NOEXCEPT {
     TITANIUM_LOG_DEBUG("Module::fireEvent: '", name, "' (this = ", reinterpret_cast<std::intptr_t>(this), ")");
     
     if (!event_listener_map__.HasProperty(name)) {
@@ -160,15 +160,15 @@ namespace Titanium {
     }
   }
   
-  void Module::enableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+  void Module::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("Module::enableEvent: Unimplemented (event name '", event_name, "'");
   }
   
-  void Module::disableEvent(const JSString& event_name) TITANIUM_NOEXCEPT {
+  void Module::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
     TITANIUM_LOG_WARN("Module::disableEvent: Unimplemented (event name '", event_name, "'");
   }
   
-  unsigned Module::eventListenerIndex(const JSObject& event_listener_list, const JSString& name, JSObject& callback) TITANIUM_NOEXCEPT {
+  unsigned Module::eventListenerIndex(const JSObject& event_listener_list, const std::string& name, JSObject& callback) TITANIUM_NOEXCEPT {
     unsigned index = 0;
     bool found = false;
     const auto event_listener_count = event_listener_list.GetPropertyNames().GetCount();
@@ -216,7 +216,7 @@ namespace Titanium {
     const auto _1 = arguments.at(1);
     TITANIUM_ASSERT(_0.IsString());
     TITANIUM_ASSERT(_1.IsObject());
-    JSString name = static_cast<JSString>(_0);
+    std::string name = static_cast<std::string>(_0);
     JSObject callback = _1;
     TITANIUM_ASSERT(callback.IsFunction());
     addEventListener(name, callback, this_object);
@@ -231,7 +231,7 @@ namespace Titanium {
     const auto _1 = arguments.at(1);
     TITANIUM_ASSERT(_0.IsString());
     TITANIUM_ASSERT(_1.IsObject());
-    JSString name = static_cast<JSString>(_0);
+    std::string name = static_cast<std::string>(_0);
     JSObject callback = _1;
     TITANIUM_ASSERT(callback.IsFunction());
     removeEventListener(name, callback, this_object);
@@ -257,7 +257,7 @@ namespace Titanium {
     const auto _1 = arguments.at(1);
     TITANIUM_ASSERT(_0.IsString());
     TITANIUM_ASSERT(_1.IsObject());
-    JSString name = static_cast<JSString>(_0);
+    std::string name = static_cast<std::string>(_0);
     JSObject event = _1;
     //fireEvent(name, event, this_object);
     fireEvent(name, event);

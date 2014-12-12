@@ -35,7 +35,7 @@ public:
   
 protected:
   
-  virtual JSString osname() const TITANIUM_NOEXCEPT override final;
+  virtual std::string osname() const TITANIUM_NOEXCEPT override final;
 };
 
 #endif // _TITANIUM_EXAMPLES_NATIVEPLATFORMEXAMPLE_HPP_

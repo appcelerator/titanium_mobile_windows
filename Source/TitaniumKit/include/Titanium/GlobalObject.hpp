@@ -87,7 +87,7 @@ namespace Titanium {
      
      @result Exported exports object of the required module (Object).
      */
-    virtual JSObject xrequire(const JSString& moduleId) TITANIUM_NOEXCEPT final;
+    virtual JSObject xrequire(const std::string& moduleId) TITANIUM_NOEXCEPT final;
     
     /*!
      @method
@@ -259,7 +259,7 @@ namespace Titanium {
     
   protected:
     
-    virtual JSString LoadResource(const JSString& moduleId) const TITANIUM_NOEXCEPT;
+    virtual std::string LoadResource(const std::string& moduleId) const TITANIUM_NOEXCEPT;
     
     /*!
      @method

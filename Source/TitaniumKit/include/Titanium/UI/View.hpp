@@ -76,7 +76,7 @@ namespace Titanium { namespace UI {
     //
     // assert(argument.IsString());
     // bool result = false;
-    // JSString backgroundColor = static_cast<JSString>(argument);
+    // std::string backgroundColor = static_cast<std::string>(argument);
     // Set the native view's background color to backgroundColor.
     // set_backgroundColor(argument);
     // result = true;
