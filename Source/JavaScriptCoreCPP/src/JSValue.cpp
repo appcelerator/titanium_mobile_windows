@@ -247,7 +247,6 @@ namespace JavaScriptCoreCPP {
     
     JAVASCRIPTCORECPP_LOG_DEBUG("JSValue:: release ", js_value_ref__);
     JSValueUnprotect(js_context__, js_value_ref__);
-    js_context__   = rhs.js_context__;
     js_value_ref__ = rhs.js_value_ref__;
     JAVASCRIPTCORECPP_LOG_DEBUG("JSValue:: retain ", js_value_ref__);
     JSValueProtect(js_context__, js_value_ref__);
@@ -265,7 +264,6 @@ namespace JavaScriptCoreCPP {
 
     JAVASCRIPTCORECPP_LOG_DEBUG("JSValue:: release ", js_value_ref__);
     JSValueUnprotect(js_context__, js_value_ref__);
-    js_context__   = std::move(rhs.js_context__);
     js_value_ref__ = rhs.js_value_ref__;
     JAVASCRIPTCORECPP_LOG_DEBUG("JSValue:: retain ", js_value_ref__);
     JSValueProtect(js_context__, js_value_ref__);
