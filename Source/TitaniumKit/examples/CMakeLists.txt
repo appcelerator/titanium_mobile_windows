@@ -1,13 +1,12 @@
 # TitaniumKit
-# Author: Matthew D. Langston
 #
 # Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
 # Licensed under the terms of the Apache Public License.
 # Please see the LICENSE included with this distribution for details.
 
 # if(WIN32)
-#   get_target_property(JavaScriptCoreCPP_DLL_LOCATION JavaScriptCoreCPP LOCATION)
-#   file(COPY ${JavaScriptCoreCPP_DLL_LOCATION} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#   get_target_property(HAL_DLL_LOCATION HAL LOCATION)
+#   file(COPY ${HAL_DLL_LOCATION} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 # endif()
 
 set(SOURCE_examples

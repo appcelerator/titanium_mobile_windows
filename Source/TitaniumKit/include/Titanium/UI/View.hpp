@@ -1,6 +1,5 @@
 /**
  * TitaniumKit
- * Author: Matthew D. Langston
  *
  * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
@@ -16,7 +15,7 @@
 
 namespace Titanium { namespace UI {
   
-  using namespace JavaScriptCoreCPP;
+  using namespace HAL;
   
   class View;
   

@@ -14,7 +14,7 @@
 
 namespace TitaniumWindows {
 
-  using namespace JavaScriptCoreCPP;
+  using namespace HAL;
 
   /*!
     @class

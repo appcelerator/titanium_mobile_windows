@@ -33,7 +33,7 @@ const
 
 /*
 TODO:
-	- Set up CMakeLists.txt and build to use pre-compiled DLLs/libs for TitaniumKit/Windows/JavaScriptCoreCPP
+	- Set up CMakeLists.txt and build to use pre-compiled DLLs/libs for TitaniumKit/Windows/HAL
 	  - Right now we build from source, and you need to follow the instructions for dependencies here: https://github.com/appcelerator/titanium_mobile_windows/blob/master/README.md
 	  - Then you need to copy the entire titanium_mobile_windows repo inside a Titanium SDK install and rename it "windows", and edit the package.json to add "windows" as a supported platform.
 	  - This will enable Windows support, but the APIs are a work in progress and we need to eliminate need to do so much setup for the user.
@@ -1535,7 +1535,7 @@ WindowsBuilder.prototype.runCmake = function runCmake(next) {
 			'-DTitaniumWindows_API_DISABLE_TESTS=ON',
 			'-DTitaniumWindows_UI_DISABLE_TESTS=ON',
 			'-DTitaniumKit_DISABLE_TESTS=ON', 
-			'-DJavaScriptCoreCPP_DISABLE_TESTS=ON',
+			'-DHAL_DISABLE_TESTS=ON',
 			this.buildDir
 		], 
 		{

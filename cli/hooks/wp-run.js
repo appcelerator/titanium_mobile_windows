@@ -107,6 +107,14 @@ exports.init = function (logger, config, cli) {
 						logger.debug(msg);
 					});
 
+					logRelay.on('disconnect', function () {
+						logger.info("Disconnected from app");
+					});
+
+					logRelay.on('connection', function () {
+						logger.info("Connected to app");
+					});
+
 					logRelay.on('started', function () {
 						finished();
 					});

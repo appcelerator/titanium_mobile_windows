@@ -14,6 +14,6 @@
 
 #include "Titanium/Titanium.hpp"
 #include "Titanium/detail/TiLogger.hpp"
-#include "JavaScriptCoreCPP/JavaScriptCoreCPP.hpp"
+#include "HAL/HAL.hpp"
 
 #endif // _TITANIUMWINDOWS_DETAIL_PLATFORMBASE_HPP_

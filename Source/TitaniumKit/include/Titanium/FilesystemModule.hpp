@@ -13,7 +13,7 @@
 
 namespace Titanium {
   
-  using namespace JavaScriptCoreCPP;
+  using namespace HAL;
   
   class TITANIUMKIT_EXPORT FilesystemModule : public Module, public JSExport <FilesystemModule> {
     

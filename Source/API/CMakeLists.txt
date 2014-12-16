@@ -1,5 +1,4 @@
 # Titanium.API for Windows
-# Author: Matthew D. Langston
 #
 # Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
 # Licensed under the terms of the Apache Public License.
@@ -43,6 +42,11 @@ if(NOT TARGET TitaniumKit)
 	add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
 endif()
 
+if(NOT TARGET TitaniumWindows_Utility)
+  get_filename_component(Utility_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../Utility ABSOLUTE)
+  add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
+endif()
+
 set(SOURCE_API
   include/TitaniumWindows/API.hpp
   src/API.cpp
@@ -65,10 +69,12 @@ target_compile_definitions(TitaniumWindows_API PRIVATE TitaniumWindows_API_EXPOR
 target_include_directories(TitaniumWindows_API PUBLIC
   ${PROJECT_SOURCE_DIR}/include
   $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
   )
 
 target_link_libraries(TitaniumWindows_API
   TitaniumKit
+  TitaniumWindows_Utility
   )
 
 set_target_properties(TitaniumWindows_API PROPERTIES VS_WINRT_COMPONENT TRUE)

@@ -1,6 +1,5 @@
 /**
  * TitaniumKit
- * Author: Matthew D. Langston
  *
  * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
@@ -11,6 +10,7 @@
 #include "Titanium/detail/TiUtil.hpp"
 #include <sstream>
 #include <functional>
+#include <boost/algorithm/string/predicate.hpp>
 
 namespace Titanium {
   
@@ -19,7 +19,7 @@ namespace Titanium {
   std::atomic<std::uint32_t> GlobalObject::timer_id_generator__;
   
   JSFunction GlobalObject::createRequireFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT{
-    return get_context().CreateFunction("'use strict'; eval(module_js); return exports;", { "exports", "module_js" });
+    return get_context().CreateFunction("'use strict'; var exports={},module={};module.exports=exports;eval(module_js); return module.exports;", { "_exports_", "module_js" });
   }
   
   GlobalObject::GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -38,11 +38,6 @@ namespace Titanium {
   JSObject GlobalObject::xrequire(const std::string& moduleId) TITANIUM_NOEXCEPT{
     TITANIUM_GLOBALOBJECT_LOCK_GUARD;
     
-    // Return the module from the cache if it has already been required.
-    if (HasProperty(moduleId)) {
-      return GetProperty(moduleId);
-    }
-    
     // The module is initially empty.
     JSObject module = get_context().CreateObject();
     
@@ -51,7 +46,15 @@ namespace Titanium {
     // TODO: Normalize moduleId (i.e. trim surrounding whitespace, append .js
     // if it's not already there, etc.).
     
-    std::string module_js = LoadResource(moduleId);
+    std::string module_path = moduleId;
+    if (!boost::starts_with(module_path, "/")) {
+      module_path = "/" + module_path;
+    }
+    if (!boost::ends_with(module_path, ".js")) {
+      module_path += ".js";
+    }
+
+    std::string module_js = LoadResource(module_path);
     if (module_js.empty()) {
       TITANIUM_LOG_WARN("GlobalObject::require: module '", moduleId, "' failed to load");
       return module;
@@ -69,16 +72,12 @@ namespace Titanium {
         else {
           module = result;
         }
-        
-        // postcondition
-        TITANIUM_ASSERT(result.IsObject());
-        
-        // TODO Set this as "ReadOnly, DontEnum, DontDelete".
-        const bool property_set = SetProperty(moduleId, result);
-        
-        TITANIUM_LOG_DEBUG("GlobalObject::require: module '", moduleId, "' property_set = ", property_set);
-        // postcondition
-        TITANIUM_ASSERT(property_set);
+
+        if (module.IsFunction()) {
+          TITANIUM_LOG_DEBUG("GlobalObject::require: module '", moduleId, "' is a function: ", to_string(result));
+        } else {
+          TITANIUM_LOG_DEBUG("GlobalObject::require: module '", moduleId, "' is not a function: ", to_string(result));
+        }
       }
       catch (const std::exception& exception) {
         TITANIUM_LOG_WARN("GlobalObject::require: module '", moduleId, "' threw exception ", exception.what());
@@ -229,13 +228,18 @@ namespace Titanium {
     TITANIUM_LOG_DEBUG("GlobalObject::JSExportInitialize");
     JSExport<GlobalObject>::SetClassVersion(1);
     JSExport<GlobalObject>::SetParent(JSExport<JSExportObject>::Class());
-    JSExport<GlobalObject>::AddFunctionProperty("require", std::mem_fn(&GlobalObject::requireArgumentValidator), true);
-    JSExport<GlobalObject>::AddFunctionProperty("setTimeout", std::mem_fn(&GlobalObject::setTimeoutArgumentValidator), true);
-    JSExport<GlobalObject>::AddFunctionProperty("clearTimeout", std::mem_fn(&GlobalObject::clearTimeoutArgumentValidator), true);
-    JSExport<GlobalObject>::AddFunctionProperty("setInterval", std::mem_fn(&GlobalObject::setIntervalArgumentValidator), true);
-    JSExport<GlobalObject>::AddFunctionProperty("clearInterval", std::mem_fn(&GlobalObject::clearIntervalArgumentValidator), true);
+    JSExport<GlobalObject>::AddValueProperty("global", std::mem_fn(&GlobalObject::globalArgumentValidator));
+    JSExport<GlobalObject>::AddFunctionProperty("require", std::mem_fn(&GlobalObject::requireArgumentValidator));
+    JSExport<GlobalObject>::AddFunctionProperty("setTimeout", std::mem_fn(&GlobalObject::setTimeoutArgumentValidator));
+    JSExport<GlobalObject>::AddFunctionProperty("clearTimeout", std::mem_fn(&GlobalObject::clearTimeoutArgumentValidator));
+    JSExport<GlobalObject>::AddFunctionProperty("setInterval", std::mem_fn(&GlobalObject::setIntervalArgumentValidator));
+    JSExport<GlobalObject>::AddFunctionProperty("clearInterval", std::mem_fn(&GlobalObject::clearIntervalArgumentValidator));
   }
   
+  JSValue GlobalObject::globalArgumentValidator() const TITANIUM_NOEXCEPT {
+    return get_context().JSEvaluateScript("this;");
+  }
+
   JSValue GlobalObject::requireArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object) {
     // TODO: Validate these precondition checks (which could be
     // automaticaly generated) with the team.

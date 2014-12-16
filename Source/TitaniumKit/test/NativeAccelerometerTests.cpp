@@ -14,7 +14,7 @@
 #define XCTAssertFalse    ASSERT_FALSE
 
 using namespace Titanium;
-using namespace JavaScriptCoreCPP;
+using namespace HAL;
 
 class AccelerometerTests : public testing::Test {
  protected:

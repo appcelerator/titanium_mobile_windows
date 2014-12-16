@@ -1,6 +1,5 @@
 /**
  * TitaniumKit
- * Author: Matthew D. Langston
  *
  * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
@@ -10,7 +9,7 @@
 #ifndef _TITANIUM_HPP_
 #define _TITANIUM_HPP_
 
-#include "JavaScriptCoreCPP/JavaScriptCoreCPP.hpp"
+#include "HAL/HAL.hpp"
 
 #include "Titanium/ApplicationBuilder.hpp"
 #include "Titanium/Application.hpp"

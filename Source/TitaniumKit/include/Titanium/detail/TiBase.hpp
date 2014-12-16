@@ -1,6 +1,5 @@
 /**
  * TitaniumKit
- * Author: Matthew D. Langston
  *
  * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
@@ -56,6 +55,6 @@
 #include "TitaniumKit_EXPORT.h"
 
 #include "Titanium/detail/TiLogger.hpp"
-#include "JavaScriptCoreCPP/JavaScriptCoreCPP.hpp"
+#include "HAL/HAL.hpp"
 
 #endif // _TITANIUM_DETAIL_TIBASE_HPP_

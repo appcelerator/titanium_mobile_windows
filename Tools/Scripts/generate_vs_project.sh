@@ -1,33 +1,28 @@
 #!/usr/bin/env bash
 
-# Author: Matt Langston
-# Date:   2014.09.02
+# Titanium for Windows
 #
+# Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+# Licensed under the terms of the Apache Public License.
+# Please see the LICENSE included with this distribution for details.
+
 # This bash script generates Visual Studio 2013 project files using
 # CMake. To use it simply run it from any directory where you want
-# your VS 2013 project files and pass in the name of one of the
-# example apps in the Examples directory. For example:
+# your VS 2013 project files.
 #
-# cd "c:/Users/matt/Documents/Visual Studio 2013/"
-# c:/Users/matt/Documents/GitHub/titanium_mobile_windows/Tools/Scripts/generate_vs_project.sh Russ
+# pushd " /cygdrive/c/Users/matt/Documents/build/"
+# /cygdrive/c/Users/matt/Documents/GitHub/titanium_mobile_windows/Source/Titanium//generate_vs_project.sh
 
-if ! test -d "${GTEST_ROOT}"; then
-    echo "GTEST_ROOT must point to your Google Test installation."
-    exit 1
-    #declare -rx GTEST_ROOT="c:/Users/matt/Downloads/gtest-1.7.0"
-fi
+declare -rx VERBOSE=1
 
-declare -r example_name="${1:?}"
-
-declare -r PROJECT_SOURCE_DIR="../../Examples/${example_name}"
-declare -r PROJECT_NAME="$(basename ${PROJECT_SOURCE_DIR})"
+declare -r EXAMPLE_NAME="${1:?}"
+declare -r PROJECT_SOURCE_DIR="../../Examples/${EXAMPLE_NAME}"
 
 #declare -r TARGET_PLATFORM_LIST="WindowsStore WindowsPhone"
 declare -r TARGET_PLATFORM_LIST="WindowsPhone"
 #declare -r TARGET_ARCHITECTURE_LIST="Win32 ARM"
 declare -r TARGET_ARCHITECTURE_LIST="Win32"
-
-declare -rx VERBOSE=1
+declare -r CMAKE_GENERATOR_NAME="Visual Studio 12 2013"
 
 # No user-servicable parts below this line.
 
@@ -46,7 +41,7 @@ function cmake_build_cmd {
             ;;
     esac
     
-    local cmake_generator_name="Visual Studio 12 2013"
+    local cmake_generator_name="${CMAKE_GENERATOR_NAME}"
     case "${target_architecture}" in
         "Win32")
             ;;
@@ -71,6 +66,12 @@ function cmake_build_cmd {
     cmd+=" -G \"${cmake_generator_name}\""
     cmd+=" -DCMAKE_SYSTEM_NAME=${target_platform}"
     cmd+=" -DCMAKE_SYSTEM_VERSION=8.1"
+    cmd+=" -DTitaniumWindows_DISABLE_TESTS=${OFF}"
+    cmd+=" -DTitaniumWindows_Global_DISABLE_TESTS=ON"
+    cmd+=" -DTitaniumWindows_API_DISABLE_TESTS=ON"
+    cmd+=" -DTitaniumWindows_UI_DISABLE_TESTS=ON"
+    cmd+=" -DTitaniumKit_DISABLE_TESTS=ON"
+    cmd+=" -DHAL_DISABLE_TESTS=ON"
     cmd+=" \"${project_source_dir}\""
     
     RESULT="${cmd}"
@@ -79,7 +80,15 @@ function cmake_build_cmd {
 function generate_project_files {
     local -r target_platform="${1:?}"
     local -r target_architecture="${2:?}"
-    local -r build_dir="${PROJECT_NAME}.${target_platform}.${target_architecture}"
+
+    getScriptAbsoluteDir
+    local -r script_absolute_dir="${RESULT}"
+    
+    normalize_path "${script_absolute_dir}/${PROJECT_SOURCE_DIR}"
+    local -r project_source_dir=$(cygpath -m "${RESULT}")
+    
+    local -r project_name=$(grep -E '^\s*project[(][^)]+[)]\s*$' "${project_source_dir}/CMakeLists.txt" | awk 'BEGIN {FS="[()]"} {printf "%s", $2}')
+    local -r build_dir="${project_name}.${target_platform}.${target_architecture}"
     
     local cmd=""
     local RESULT=""
@@ -144,8 +153,3 @@ for target_platform in ${TARGET_PLATFORM_LIST}; do
         generate_project_files "${target_platform}" "${target_architecture}"
     done
 done
-
-#make -j 4 package
-#make -j 4
-#make test
-

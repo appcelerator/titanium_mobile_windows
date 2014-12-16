@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Global for Windows
-# Author: Matthew D. Langston
 #
 # Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
 # Licensed under the terms of the Apache Public License.
@@ -37,7 +36,7 @@ cmd+=" -G \"${cmake_generator_name}\""
 cmd+=" -DCMAKE_SYSTEM_NAME=${target_platform}"
 cmd+=" -DCMAKE_SYSTEM_VERSION=${target_version}"
 cmd+=" -DTitaniumWindows_Global_DISABLE_TESTS=${TitaniumWindows_Global_DISABLE_TESTS}"
-cmd+=" -DJavaScriptCoreCPP_DISABLE_TESTS=ON"
+cmd+=" -DHAL_DISABLE_TESTS=ON"
 cmd+=" -DTitaniumKit_DISABLE_TESTS=ON"
 cmd+=" ../"
 

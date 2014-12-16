@@ -1,5 +1,4 @@
 # Titanium.UI for Windows
-# Author: Matthew D. Langston
 #
 # Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
 # Licensed under the terms of the Apache Public License.
@@ -73,6 +72,7 @@ target_include_directories(TitaniumWindows_UI PUBLIC
 
 target_link_libraries(TitaniumWindows_UI
   TitaniumKit
+  LayoutEngine
   )
 
 set_target_properties(TitaniumWindows_UI PROPERTIES VS_WINRT_COMPONENT TRUE)

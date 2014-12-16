@@ -1,6 +1,5 @@
 /**
  * Titanium.API for Windows
- * Author: Matthew D. Langston
  *
  * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
@@ -14,7 +13,7 @@
 
 namespace TitaniumWindows {
 
-  using namespace JavaScriptCoreCPP;
+  using namespace HAL;
 
   /*!
     @class
@@ -41,6 +40,13 @@ namespace TitaniumWindows {
   protected:
 
     virtual void log(const std::string& message) const TITANIUM_NOEXCEPT override final;
+
+  private:
+
+    Windows::Networking::Sockets::StreamSocket^ tcp_socket_ { nullptr };
+    Windows::Storage::Streams::DataWriter^ tcp_writer_ { nullptr };
+
+    void connect();
   };
 
 }  // namespace TitaniumWindows

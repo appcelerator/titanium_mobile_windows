@@ -1,5 +1,4 @@
 # The "NG" App.
-# Author: Matthew D. Langston
 #
 # Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
 # Licensed under the terms of the Apache Public License.
@@ -26,12 +25,12 @@ set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 # Use solution folders.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-get_filename_component(Titanium_SOURCE_DIR          ${WINDOWS_SOURCE_DIR}/Source/Titanium          ABSOLUTE)
-get_filename_component(Global_SOURCE_DIR            ${WINDOWS_SOURCE_DIR}/Source/Global            ABSOLUTE)
-get_filename_component(API_SOURCE_DIR               ${WINDOWS_SOURCE_DIR}/Source/API               ABSOLUTE)
-get_filename_component(UI_SOURCE_DIR                ${WINDOWS_SOURCE_DIR}/Source/UI                ABSOLUTE)
-get_filename_component(TitaniumKit_SOURCE_DIR       ${WINDOWS_SOURCE_DIR}/Source/TitaniumKit       ABSOLUTE)
-get_filename_component(JavaScriptCoreCPP_SOURCE_DIR ${WINDOWS_SOURCE_DIR}/Source/JavaScriptCoreCPP ABSOLUTE)
+get_filename_component(Titanium_SOURCE_DIR    ${WINDOWS_SOURCE_DIR}/Source/Titanium    ABSOLUTE)
+get_filename_component(Global_SOURCE_DIR      ${WINDOWS_SOURCE_DIR}/Source/Global      ABSOLUTE)
+get_filename_component(API_SOURCE_DIR         ${WINDOWS_SOURCE_DIR}/Source/API         ABSOLUTE)
+get_filename_component(UI_SOURCE_DIR          ${WINDOWS_SOURCE_DIR}/Source/UI          ABSOLUTE)
+get_filename_component(TitaniumKit_SOURCE_DIR ${WINDOWS_SOURCE_DIR}/Source/TitaniumKit ABSOLUTE)
+get_filename_component(HAL_SOURCE_DIR         ${WINDOWS_SOURCE_DIR}/Source/HAL         ABSOLUTE)
 
 if(NOT TARGET TitaniumWindows)
   add_subdirectory(${Titanium_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Titanium EXCLUDE_FROM_ALL)
@@ -53,8 +52,8 @@ if(NOT TARGET TitaniumKit)
   add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
 endif()
 
-if (NOT TARGET JavaScriptCoreCPP)
-  add_subdirectory(${JavaScriptCoreCPP_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/JavaScriptCoreCPP EXCLUDE_FROM_ALL)
+if (NOT TARGET HAL)
+  add_subdirectory(${HAL_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/HAL EXCLUDE_FROM_ALL)
 endif()
 
 # No user-servicable parts below this line.

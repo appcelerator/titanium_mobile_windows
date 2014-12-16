@@ -34,7 +34,7 @@ cmd+=" -G \"${cmake_generator_name}\""
 cmd+=" -DCMAKE_SYSTEM_NAME=${target_platform}"
 cmd+=" -DCMAKE_SYSTEM_VERSION=${target_version}"
 cmd+=" -DTitaniumWindows_Filesystem_DISABLE_TESTS=${TitaniumWindows_Filesystem_DISABLE_TESTS}"
-cmd+=" -DJavaScriptCoreCPP_DISABLE_TESTS=ON"
+cmd+=" -DHAL_DISABLE_TESTS=ON"
 cmd+=" -DTitaniumKit_DISABLE_TESTS=ON"
 cmd+=" ../"
 

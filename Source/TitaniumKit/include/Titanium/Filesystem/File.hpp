@@ -13,7 +13,7 @@
 
 namespace Titanium { namespace Filesystem {
   
-  using namespace JavaScriptCoreCPP;
+  using namespace HAL;
   
   /*!
    @class

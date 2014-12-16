@@ -11,7 +11,7 @@
 
 namespace TitaniumWindows {
 
-  using namespace JavaScriptCoreCPP;
+  using namespace HAL;
 
   namespace BlobModule {
     enum class TYPE {

@@ -1,6 +1,5 @@
 /**
  * TitaniumKit
- * Author: Matthew D. Langston
  *
  * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
@@ -22,7 +21,7 @@
 #define XCTAssertTrue     ASSERT_TRUE
 #define XCTAssertFalse    ASSERT_FALSE
 
-using namespace JavaScriptCoreCPP;
+using namespace HAL;
 
 TEST(ApplicationTests, build_and_run) {
   std::string app_js = R"js(

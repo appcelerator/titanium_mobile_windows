@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Titanium for Windows
-# Author: Matthew D. Langston
 #
 # Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
 # Licensed under the terms of the Apache Public License.
@@ -44,7 +43,7 @@ cmd+=" -DTitaniumWindows_Gesture_DISABLE_TESTS=ON"
 cmd+=" -DTitaniumWindows_Accelerometer_DISABLE_TESTS=ON"
 cmd+=" -DTitaniumWindows_UI_DISABLE_TESTS=ON"
 cmd+=" -DTitaniumWindows_Utility_DISABLE_TESTS=ON"
-cmd+=" -DJavaScriptCoreCPP_DISABLE_TESTS=ON"
+cmd+=" -DHAL_DISABLE_TESTS=ON"
 cmd+=" -DTitaniumKit_DISABLE_TESTS=ON"
 cmd+=" ../"
 

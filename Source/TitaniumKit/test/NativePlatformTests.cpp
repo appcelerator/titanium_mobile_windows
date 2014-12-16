@@ -14,7 +14,7 @@
 #define XCTAssertFalse    ASSERT_FALSE
 
 using namespace Titanium;
-using namespace JavaScriptCoreCPP;
+using namespace HAL;
 
 class PlatformTests : public testing::Test {
  protected:

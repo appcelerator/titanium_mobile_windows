@@ -1,6 +1,5 @@
 /**
  * TitaniumKit
- * Author: Matthew D. Langston
  *
  * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
@@ -22,7 +21,7 @@
 #include <iostream>
 
 int main () {
-  using namespace JavaScriptCoreCPP;
+  using namespace HAL;
 
   std::string app_js = R"js(
 'use strict';

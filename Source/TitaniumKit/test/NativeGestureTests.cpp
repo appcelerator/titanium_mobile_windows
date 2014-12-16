@@ -15,7 +15,7 @@
 #define XCTAssertNoThrow  ASSERT_NO_THROW
 
 using namespace Titanium;
-using namespace JavaScriptCoreCPP;
+using namespace HAL;
 
 class GestureTests : public testing::Test {
  protected:

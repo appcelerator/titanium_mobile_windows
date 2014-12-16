@@ -1,5 +1,4 @@
 # TitaniumKit
-# Author: Matthew D. Langston
 #
 # Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
 # Licensed under the terms of the Apache Public License.
@@ -25,12 +24,12 @@ config_compiler_and_linker()
 # Allow "make test" to work.
 enable_testing()
 
-if (NOT TARGET JavaScriptCoreCPP)
-  get_filename_component(JavaScriptCoreCPP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../JavaScriptCoreCPP ABSOLUTE)
-  add_subdirectory(${JavaScriptCoreCPP_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/JavaScriptCoreCPP EXCLUDE_FROM_ALL)
+if (NOT TARGET HAL)
+  get_filename_component(HAL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../HAL ABSOLUTE)
+  add_subdirectory(${HAL_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/HAL EXCLUDE_FROM_ALL)
 endif()
 
-# find_package(JavaScriptCoreCPP REQUIRED)
+# find_package(HAL REQUIRED)
 
 set(SOURCE_TitaniumKit
   include/Titanium/Titanium.hpp
@@ -161,16 +160,16 @@ target_compile_definitions(TitaniumKit PRIVATE TitaniumKit_EXPORTS)
 #target_compile_definitions(TitaniumKit PUBLIC TitaniumKit_STATIC_DEFINE)
 
 # target_compile_definitions(TitaniumKit PUBLIC
-#   $<TARGET_PROPERTY:JavaScriptCoreCPP,INTERFACE_COMPILE_DEFINITIONS>
+#   $<TARGET_PROPERTY:HAL,INTERFACE_COMPILE_DEFINITIONS>
 #   )
 
 target_include_directories(TitaniumKit PUBLIC
   ${PROJECT_SOURCE_DIR}/include
-  $<TARGET_PROPERTY:JavaScriptCoreCPP,INTERFACE_INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:HAL,INTERFACE_INCLUDE_DIRECTORIES>
   )
 
 target_link_libraries(TitaniumKit
-  JavaScriptCoreCPP
+  HAL
   )
 
 if (WIN32)

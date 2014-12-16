@@ -1,5 +1,4 @@
 # Titanium for Windows
-# Author: Matthew D. Langston
 #
 # Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
 # Licensed under the terms of the Apache Public License.
@@ -47,7 +46,8 @@ get_filename_component(Filesystem_SOURCE_DIR        ${PROJECT_SOURCE_DIR}/../Fil
 get_filename_component(UI_SOURCE_DIR                ${PROJECT_SOURCE_DIR}/../UI                ABSOLUTE)
 get_filename_component(Utility_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../Utility           ABSOLUTE)
 get_filename_component(TitaniumKit_SOURCE_DIR       ${PROJECT_SOURCE_DIR}/../TitaniumKit       ABSOLUTE)
-get_filename_component(JavaScriptCoreCPP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../JavaScriptCoreCPP ABSOLUTE)
+get_filename_component(HAL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../HAL ABSOLUTE)
+get_filename_component(LayoutEngine_SOURCE_DIR      ${PROJECT_SOURCE_DIR}/../LayoutEngine 	   ABSOLUTE)
 
 add_subdirectory(${Global_SOURCE_DIR}        ${CMAKE_CURRENT_BINARY_DIR}/Global        EXCLUDE_FROM_ALL)
 add_subdirectory(${API_SOURCE_DIR}           ${CMAKE_CURRENT_BINARY_DIR}/API           EXCLUDE_FROM_ALL)
@@ -61,8 +61,12 @@ if(NOT TARGET TitaniumKit)
   add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
 endif()
 
-if (NOT TARGET JavaScriptCoreCPP)
-  add_subdirectory(${JavaScriptCoreCPP_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/JavaScriptCoreCPP EXCLUDE_FROM_ALL)
+if (NOT TARGET HAL)
+  add_subdirectory(${HAL_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/HAL EXCLUDE_FROM_ALL)
+endif()
+
+if (NOT TARGET LayoutEngine)
+  add_subdirectory(${LayoutEngine_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/LayoutEngine EXCLUDE_FROM_ALL)
 endif()
 
 if(NOT TARGET TitaniumWindows_Utility)
@@ -100,6 +104,7 @@ target_link_libraries(TitaniumWindows
   TitaniumWindows_Filesystem
   TitaniumWindows_UI
   TitaniumWindows_Utility
+  LayoutEngine
   )
 
 target_include_directories(TitaniumWindows PUBLIC
