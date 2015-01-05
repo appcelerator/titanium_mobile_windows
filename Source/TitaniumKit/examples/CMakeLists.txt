@@ -36,6 +36,8 @@ set(SOURCE_examples
   NativeFilesystemExample.cpp
   NativeFileExample.hpp
   NativeFileExample.cpp
+  NativeXMLExample.hpp
+  NativeXMLExample.cpp
   )
 add_library(TitaniumKit_examples
   ${SOURCE_examples}

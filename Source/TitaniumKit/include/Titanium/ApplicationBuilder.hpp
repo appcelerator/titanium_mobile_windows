@@ -65,6 +65,9 @@ namespace Titanium {
     JSObject            FilesystemObject() const             TITANIUM_NOEXCEPT;
     ApplicationBuilder& FilesystemObject(const JSObject&)    TITANIUM_NOEXCEPT;
 
+    JSObject            XMLObject() const                   TITANIUM_NOEXCEPT;
+    ApplicationBuilder& XMLObject(const JSObject&)          TITANIUM_NOEXCEPT;
+
     virtual ~ApplicationBuilder() = default;
     ApplicationBuilder(const ApplicationBuilder&)            = default;
     ApplicationBuilder& operator=(const ApplicationBuilder&) = default;
@@ -97,6 +100,7 @@ namespace Titanium {
     JSObject  blob__;
     JSObject  file__;
     JSObject  filesystem__;
+    JSObject  xml__;
 #pragma warning(pop)
 };
   
