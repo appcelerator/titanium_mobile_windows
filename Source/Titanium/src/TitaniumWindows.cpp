@@ -16,6 +16,7 @@
 #include "TitaniumWindows/Gesture.hpp"
 #include "TitaniumWindows/Accelerometer.hpp"
 #include "TitaniumWindows/Filesystem.hpp"
+#include "TitaniumWindows/XML.hpp"
 #include "Blob.hpp"
 #include "File.hpp"
 
@@ -43,6 +44,7 @@ namespace TitaniumWindows {
     .BlobObject(js_context__.CreateObject<TitaniumWindows::Blob>())
     .FilesystemObject(js_context__.CreateObject<TitaniumWindows::FilesystemModule>())
     .FileObject(js_context__.CreateObject<TitaniumWindows::Filesystem::File>())
+    .XMLObject(js_context__.CreateObject<TitaniumWindows::XML>())
     .build()) {
   }
 
