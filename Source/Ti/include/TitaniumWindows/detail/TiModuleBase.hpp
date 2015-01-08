@@ -13,4 +13,4 @@
 #include "Titanium/detail/TiLogger.hpp"
 #include "HAL/HAL.hpp"
 
-#endif // _TITANIUMWINDOWS_DETAIL_TIMODULEBASE_HPP_
+#endif  // _TITANIUMWINDOWS_DETAIL_TIMODULEBASE_HPP_

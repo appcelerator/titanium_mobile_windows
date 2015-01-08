@@ -17,25 +17,22 @@ using namespace HAL;
  for a native platform.
  */
 class NativePlatformExample final : public Titanium::PlatformModule, public JSExport<NativePlatformExample> {
-  
-public:
-  
-  NativePlatformExample(const JSContext& js_context)                                    TITANIUM_NOEXCEPT;
+ public:
+  NativePlatformExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
   NativePlatformExample(const NativePlatformExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
-  
-  virtual ~NativePlatformExample()                          = default;
-  NativePlatformExample(const NativePlatformExample&)            = default;
+
+  virtual ~NativePlatformExample() = default;
+  NativePlatformExample(const NativePlatformExample&) = default;
   NativePlatformExample& operator=(const NativePlatformExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativePlatformExample(NativePlatformExample&&)                 = default;
-  NativePlatformExample& operator=(NativePlatformExample&&)      = default;
+  NativePlatformExample(NativePlatformExample&&) = default;
+  NativePlatformExample& operator=(NativePlatformExample&&) = default;
 #endif
-  
+
   static void JSExportInitialize();
-  
-protected:
-  
+
+ protected:
   virtual std::string osname() const TITANIUM_NOEXCEPT override final;
 };
 
-#endif // _TITANIUM_EXAMPLES_NATIVEPLATFORMEXAMPLE_HPP_
+#endif  // _TITANIUM_EXAMPLES_NATIVEPLATFORMEXAMPLE_HPP_

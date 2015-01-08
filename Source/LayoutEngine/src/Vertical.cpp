@@ -13,25 +13,26 @@
 #include <vector>
 #include <math.h>
 
-namespace Titanium { namespace LayoutEngine {
+namespace Titanium {
+namespace LayoutEngine {
 
 struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, double width, double height, bool isWidthSize, bool isHeightSize) {
-    struct ComputedSize computedSize;
+  struct ComputedSize computedSize;
   struct Element* child;
   int i = 0;
-  struct LayoutCoefficients  layoutCoefficients;
+  struct LayoutCoefficients layoutCoefficients;
   struct ThreeCoefficients widthLayoutCoefficients, heightLayoutCoefficients, sandboxWidthLayoutCoefficients,
-    sandboxHeightLayoutCoefficients, leftLayoutCoefficients, minWidthLayoutCoefficients, minHeightLayoutCoefficients;
+      sandboxHeightLayoutCoefficients, leftLayoutCoefficients, minWidthLayoutCoefficients, minHeightLayoutCoefficients;
   struct FourCoefficients topLayoutCoefficients;
   struct ComputedSize childSize;
-  double  measuredWidth, measuredHeight, measuredSandboxHeight, measuredSandboxWidth, measuredLeft;
+  double measuredWidth, measuredHeight, measuredSandboxHeight, measuredSandboxWidth, measuredLeft;
   std::string pixelUnits = "px";
   std::vector<struct Element*> deferredLeftCalculations;
   double runningHeight = 0;
   int len = children.size();
 
   // Calculate size and position for the children
-  for(i = 0; i < len; i++) {
+  for (i = 0; i < len; i++) {
     child = children[i];
 
     (*child).measuredRunningHeight = runningHeight;
@@ -48,11 +49,11 @@ struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, doub
     measuredHeight = heightLayoutCoefficients.x1 * height + heightLayoutCoefficients.x2 * (height - runningHeight) + heightLayoutCoefficients.x3;
 
     childSize = layoutNode(
-              child,
-              isNaN(measuredWidth) ? width : measuredWidth - (*child).borderLeftWidth - (*child).borderRightWidth,
-              isNaN(measuredHeight) ? height : measuredHeight - (*child).borderTopWidth - (*child).borderBottomWidth,
-              isNaN(measuredWidth),
-              isNaN(measuredHeight));
+        child,
+        isNaN(measuredWidth) ? width : measuredWidth - (*child).borderLeftWidth - (*child).borderRightWidth,
+        isNaN(measuredHeight) ? height : measuredHeight - (*child).borderTopWidth - (*child).borderBottomWidth,
+        isNaN(measuredWidth),
+        isNaN(measuredHeight));
 
     if (isNaN(measuredWidth)) {
       measuredWidth = childSize.width + (*child).borderLeftWidth + (*child).borderRightWidth;
@@ -70,7 +71,7 @@ struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, doub
     } else {
       measuredLeft = (*child).measuredLeft = leftLayoutCoefficients.x1 * width + leftLayoutCoefficients.x2 * measuredWidth + leftLayoutCoefficients.x3;
       measuredSandboxWidth = (*child).measuredSandboxWidth = sandboxWidthLayoutCoefficients.x1 * width + sandboxWidthLayoutCoefficients.x2 + measuredWidth + (isNaN(measuredLeft) ? 0 : measuredLeft);
-                        measuredSandboxWidth > computedSize.width && (computedSize.width = measuredSandboxWidth);
+      measuredSandboxWidth > computedSize.width && (computedSize.width = measuredSandboxWidth);
     }
     (*child).measuredTop = topLayoutCoefficients.x1 * height + topLayoutCoefficients.x2 + runningHeight;
 
@@ -81,15 +82,15 @@ struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, doub
 
   // Calculate the preliminary sandbox widths (missing left, since one of these widths may end up impacting all the lefts)
   len = deferredLeftCalculations.size();
-  for(i = 0; i < len; i++) {
+  for (i = 0; i < len; i++) {
     child = deferredLeftCalculations[i];
     sandboxWidthLayoutCoefficients = (*child).layoutCoefficients.sandboxWidth;
     measuredSandboxWidth = (*child).measuredSandboxWidth = sandboxWidthLayoutCoefficients.x1 * width + sandboxWidthLayoutCoefficients.x2 + (*child).measuredWidth;
-                      measuredSandboxWidth > computedSize.width && (computedSize.width = measuredSandboxWidth);
+    measuredSandboxWidth > computedSize.width && (computedSize.width = measuredSandboxWidth);
   }
 
   // Second pass, if necessary, to determine the left values
-  for(i = 0; i < len; i++) {
+  for (i = 0; i < len; i++) {
     child = deferredLeftCalculations[i];
 
     leftLayoutCoefficients = (*child).layoutCoefficients.left;
@@ -99,7 +100,7 @@ struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, doub
 
     measuredSandboxWidth > computedSize.width && (computedSize.width = measuredSandboxWidth);
     measuredLeft = (*child).measuredLeft = leftLayoutCoefficients.x1 * computedSize.width + leftLayoutCoefficients.x2 * measuredWidth + leftLayoutCoefficients.x3;
-                  (*child).measuredSandboxWidth += (isNaN(measuredLeft) ? 0 : measuredLeft);
+    (*child).measuredSandboxWidth += (isNaN(measuredLeft) ? 0 : measuredLeft);
   }
 
   return computedSize;
@@ -108,7 +109,7 @@ struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, doub
 static void setDefaultVerticalWidthType(struct LayoutProperties layoutProperties, enum ValueType* measuredWidthType) {
   if (*measuredWidthType == None) {
     if ((layoutProperties.left.valueType == Fixed || layoutProperties.left.valueType == Percent) &&
-      (layoutProperties.right.valueType == Fixed || layoutProperties.right.valueType == Percent)) {
+        (layoutProperties.right.valueType == Fixed || layoutProperties.right.valueType == Percent)) {
       return;
     }
 
@@ -248,7 +249,7 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
   x1 = x2 = x3 = 0;
   if (leftType == Percent) {
     x1 = leftValue;
-  } else if(leftType == Fixed) {
+  } else if (leftType == Fixed) {
     x3 = leftValue;
   } else if (centerXType == Percent) {
     x1 = centerXValue;
@@ -264,7 +265,7 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
     x2 = -1;
     x3 = -rightValue;
   } else {
-    switch((*element).defaultHorizontalAlignment) {
+    switch ((*element).defaultHorizontalAlignment) {
       case Center:
         x1 = 0.5;
         x2 = -0.5;
@@ -283,5 +284,5 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
   (*element).layoutCoefficients.top.x1 = topType == Percent ? topValue : 0;
   (*element).layoutCoefficients.top.x2 = topType == Fixed ? topValue : 0;
 }
-
-}}  // namespace Titanium { namespace LayoutEngine {
+}
+}  // namespace Titanium { namespace LayoutEngine {

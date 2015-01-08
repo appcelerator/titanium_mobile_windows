@@ -17,26 +17,24 @@ using namespace HAL;
  for a native Accelerometer.
  */
 class NativeAccelerometerExample final : public Titanium::Accelerometer, public JSExport<NativeAccelerometerExample> {
-  
-public:
-  
-  NativeAccelerometerExample(const JSContext& js_context)                                    TITANIUM_NOEXCEPT;
+ public:
+  NativeAccelerometerExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
   NativeAccelerometerExample(const NativeAccelerometerExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
-  
-  virtual ~NativeAccelerometerExample()                          = default;
-  NativeAccelerometerExample(const NativeAccelerometerExample&)            = default;
+
+  virtual ~NativeAccelerometerExample() = default;
+  NativeAccelerometerExample(const NativeAccelerometerExample&) = default;
   NativeAccelerometerExample& operator=(const NativeAccelerometerExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativeAccelerometerExample(NativeAccelerometerExample&&)                 = default;
-  NativeAccelerometerExample& operator=(NativeAccelerometerExample&&)      = default;
+  NativeAccelerometerExample(NativeAccelerometerExample&&) = default;
+  NativeAccelerometerExample& operator=(NativeAccelerometerExample&&) = default;
 #endif
-  
+
   static void JSExportInitialize();
-  
+
   virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
   virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
 
-protected:
+ protected:
 };
 
-#endif // _TITANIUM_EXAMPLES_NATIVEACCELEROMATEREXAMPLE_HPP_
+#endif  // _TITANIUM_EXAMPLES_NATIVEACCELEROMATEREXAMPLE_HPP_

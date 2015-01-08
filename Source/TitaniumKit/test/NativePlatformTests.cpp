@@ -9,10 +9,10 @@
 #include "NativePlatformDisplayCapsExample.hpp"
 #include "gtest/gtest.h"
 
-#define XCTAssertEqual    ASSERT_EQ
+#define XCTAssertEqual ASSERT_EQ
 #define XCTAssertNotEqual ASSERT_NE
-#define XCTAssertTrue     ASSERT_TRUE
-#define XCTAssertFalse    ASSERT_FALSE
+#define XCTAssertTrue ASSERT_TRUE
+#define XCTAssertFalse ASSERT_FALSE
 
 using namespace Titanium;
 using namespace HAL;
@@ -21,22 +21,22 @@ class PlatformTests : public testing::Test {
  protected:
   virtual void SetUp() {
   }
-  
+
   virtual void TearDown() {
   }
-  
+
   JSContextGroup js_context_group;
 };
 
 TEST_F(PlatformTests, logging) {
-  JSContext js_context   = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-  auto global_object     = js_context.get_global_object();
+  JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
+  auto global_object = js_context.get_global_object();
 
   XCTAssertFalse(global_object.HasProperty("Titanium"));
   auto Titanium = js_context.CreateObject();
   global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
   XCTAssertTrue(global_object.HasProperty("Titanium"));
-  
+
   // Make the alias "Ti" for the "Titanium" property.
   XCTAssertFalse(global_object.HasProperty("Ti"));
   global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
@@ -46,10 +46,10 @@ TEST_F(PlatformTests, logging) {
   auto Platform = js_context.CreateObject(JSExport<NativePlatformExample>::Class());
   Titanium.SetProperty("Platform", Platform, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
   XCTAssertTrue(Titanium.HasProperty("Platform"));
-  
+
   auto Platform_ptr = Platform.GetPrivate<NativePlatformExample>();
   XCTAssertNotEqual(nullptr, Platform_ptr);
-  
+
   XCTAssertTrue(Platform.HasProperty("BATTERY_STATE_CHARGING"));
   XCTAssertTrue(Platform.HasProperty("BATTERY_STATE_FULL"));
   XCTAssertTrue(Platform.HasProperty("BATTERY_STATE_UNKNOWN"));

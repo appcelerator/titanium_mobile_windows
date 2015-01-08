@@ -11,7 +11,6 @@
 
 #include "gtest/gtest.h"
 
-
 TEST(ParserProperties, layout_initialization) {
   struct Titanium::LayoutEngine::LayoutProperties layoutProperties;
   Titanium::LayoutEngine::layoutPropertiesInitialize(&layoutProperties);

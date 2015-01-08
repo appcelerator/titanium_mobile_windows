@@ -9,7 +9,8 @@
 
 #include "LayoutEngine/LayoutEngine.hpp"
 
-namespace Titanium { namespace LayoutEngine {
+namespace Titanium {
+namespace LayoutEngine {
 
 bool isNaN(double value) {
   if (value != value)
@@ -49,5 +50,5 @@ void measureNode(enum LayoutType type, struct LayoutProperties* properties, stru
       break;
   }
 }
-
-}}  // namespace Titanium { namespace LayoutEngine {
+}
+}  // namespace Titanium { namespace LayoutEngine {

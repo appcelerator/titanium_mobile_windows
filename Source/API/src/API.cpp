@@ -18,51 +18,49 @@
 
 namespace TitaniumWindows {
 
-  API::API(const JSContext& js_context) TITANIUM_NOEXCEPT
+API::API(const JSContext& js_context) TITANIUM_NOEXCEPT
     : Titanium::API(js_context) {
-    TITANIUM_LOG_DEBUG("API::ctor Initialize");
-    connect();
-  }
+  TITANIUM_LOG_DEBUG("API::ctor Initialize");
+  connect();
+}
 
-  API::API(const API& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+API::API(const API& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
     : Titanium::API(rhs, arguments) {
-    TITANIUM_LOG_DEBUG("API::ctor CallAsConstructor");
+  TITANIUM_LOG_DEBUG("API::ctor CallAsConstructor");
+}
+
+void API::log(const std::string& message) const TITANIUM_NOEXCEPT {
+  TITANIUM_LOG_DEBUG("API::log");
+
+  // send message to Titanium CLI log relay
+  if (tcp_socket_ != nullptr && tcp_writer_ != nullptr) {
+    tcp_writer_->WriteString(TitaniumWindows::Utility::ConvertString(message) + "\n");  // Logger assumes \n for newlines!
+    tcp_writer_->StoreAsync();
+  } else {
+    // TODO If the socket isn't connected yet, we should probably store the logs in a queue to get sent along
+    std::clog << message << std::endl;
   }
+}
 
-  void API::log(const std::string& message) const TITANIUM_NOEXCEPT{
-    TITANIUM_LOG_DEBUG("API::log");
+void API::JSExportInitialize() {
+  JSExport<API>::SetClassVersion(1);
+  JSExport<API>::SetParent(JSExport<Titanium::API>::Class());
+}
 
-    // send message to Titanium CLI log relay
-    if (tcp_socket_ != nullptr && tcp_writer_ != nullptr) {
-      tcp_writer_->WriteString(TitaniumWindows::Utility::ConvertString(message) + "\n"); // Logger assumes \n for newlines!
-      tcp_writer_->StoreAsync();
-    } else {
-      // TODO If the socket isn't connected yet, we should probably store the logs in a queue to get sent along
-      std::clog << message << std::endl;
-    }
-  }
+void API::connect() {
+  using namespace TitaniumWindows::Utility;
+  using namespace Windows::Storage;
+  using namespace Windows::Networking;
+  using namespace concurrency;
+  // Get a handle on titanium_settings.ini file
+  auto get_file_task = create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync("titanium_settings.ini"));
 
-  void API::JSExportInitialize() {
-    JSExport<API>::SetClassVersion(1);
-    JSExport<API>::SetParent(JSExport<Titanium::API>::Class());
-  }
-
-  void API::connect() {
-    using namespace TitaniumWindows::Utility;
-    using namespace Windows::Storage;
-    using namespace Windows::Networking;
-    using namespace concurrency;
-    // Get a handle on titanium_settings.ini file
-    auto get_file_task = create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync("titanium_settings.ini"));
-    
-    // Read titanium_settings.ini file into String
-    get_file_task.then([this](StorageFile^ storage_file)
-    {
+  // Read titanium_settings.ini file into String
+  get_file_task.then([this](StorageFile ^ storage_file) {
         return FileIO::ReadTextAsync(storage_file);
-    })
-    // Parse the ini, try to connect using settinsg found in INI
-    .then([this](task<Platform::String^> antecedent)
-    {
+  })
+      // Parse the ini, try to connect using settinsg found in INI
+      .then([this](task<Platform::String ^> antecedent) {
       Platform::String^ content;
       try {
         content = antecedent.get();
@@ -86,7 +84,7 @@ namespace TitaniumWindows {
 
       for (auto ip_address : hosts) {
         TITANIUM_LOG_DEBUG("API::connect: Trying to connect to log server: ", ip_address, ":", ConvertString(port));
-        
+
         try {
           // Connect to the tcp socket on log relay!
           tcp_socket_ = ref new Sockets::StreamSocket();
@@ -127,7 +125,7 @@ namespace TitaniumWindows {
           TITANIUM_LOG_DEBUG("API::connect: Trying to connect failed, trying next IP...");
         }
       }
-    });
-  }
+      });
+}
 
 }  // namespace TitaniumWindows

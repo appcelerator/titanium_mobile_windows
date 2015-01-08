@@ -20,38 +20,38 @@ using namespace HAL;
 }
 
 - (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+  [super setUp];
+  // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
+  // Put teardown code here. This method is called after the invocation of each test method in the class.
+  [super tearDown];
 }
 
 - (void)testModule {
-  JSContext js_context   = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-  auto global_object     = js_context.get_global_object();
-  
+  JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
+  auto global_object = js_context.get_global_object();
+
   XCTAssertFalse(global_object.HasProperty("Titanium"));
   auto Titanium = js_context.CreateObject();
   global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
   XCTAssertTrue(global_object.HasProperty("Titanium"));
-  
+
   // Make the alias "Ti" for the "Titanium" property.
   XCTAssertFalse(global_object.HasProperty("Ti"));
   global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
   XCTAssertTrue(global_object.HasProperty("Ti"));
-  
+
   XCTAssertFalse(Titanium.HasProperty("Module"));
   auto Module = js_context.CreateObject(JSExport<Titanium::Module>::Class());
   Titanium.SetProperty("Module", Module, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
   XCTAssertTrue(Titanium.HasProperty("Module"));
-  
+
   XCTAssertTrue(Module.HasProperty("addEventListener"));
   XCTAssertTrue(Module.HasProperty("applyProperties"));
   XCTAssertTrue(Module.HasProperty("fireEvent"));
-  
+
   auto nativeModuleExample = js_context.CreateObject(JSExport<NativeModuleExample>::Class());
   global_object.SetProperty("NativeModuleExample", nativeModuleExample, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
   XCTAssertTrue(global_object.HasProperty("NativeModuleExample"));
@@ -59,7 +59,7 @@ using namespace HAL;
   JSValue result = js_context.CreateNull();
   XCTAssertNoThrow(result = js_context.JSEvaluateScript("var module = new NativeModuleExample(); module;"));
   XCTAssertTrue(result.IsObject());
-  
+
   JSObject module = result;
   auto module_ptr = module.GetPrivate<NativeModuleExample>();
   XCTAssertNotEqual(nullptr, module_ptr);
@@ -67,15 +67,15 @@ using namespace HAL;
   // Set the name of the event that "enables" the native module. This could be
   // the 'update' event for the Titanium.Accelerometer that turns on the
   // device's battery-consuming accelerometer measurements.
-  module_ptr -> set_event_name("foo");
-  XCTAssertEqual("foo", module_ptr -> get_event_name());
-  
+  module_ptr->set_event_name("foo");
+  XCTAssertEqual("foo", module_ptr->get_event_name());
+
   // The native module should be disabled since there are no 'foo' event
   // listeners registered yet.
   XCTAssertNoThrow(result = js_context.JSEvaluateScript("module.enabled;"));
   XCTAssertTrue(result.IsBoolean());
   XCTAssertFalse(static_cast<bool>(result));
-  
+
   // Create a listener interested in 'foo' events.
   XCTAssertNoThrow(result = js_context.JSEvaluateScript("function fooEventListener(event){};"));
   XCTAssertTrue(result.IsUndefined());
@@ -88,7 +88,7 @@ using namespace HAL;
   XCTAssertNoThrow(result = js_context.JSEvaluateScript("module.enabled;"));
   XCTAssertTrue(result.IsBoolean());
   XCTAssertTrue(static_cast<bool>(result));
-  
+
   // Now remove the event listener.
   XCTAssertNoThrow(js_context.JSEvaluateScript("module.removeEventListener('foo', fooEventListener);"));
 

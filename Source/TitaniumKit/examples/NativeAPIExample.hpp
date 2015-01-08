@@ -15,30 +15,27 @@ using namespace HAL;
 
 /*!
  @class
- 
+
  @discussion This is an example of how to implement Titanium::API
  for a native platform.
  */
 class NativeAPIExample final : public Titanium::API, public JSExport<NativeAPIExample> {
-  
-public:
-  
-  NativeAPIExample(const JSContext& js_context)                                    TITANIUM_NOEXCEPT;
+ public:
+  NativeAPIExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
   NativeAPIExample(const NativeAPIExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
-  
-  virtual ~NativeAPIExample() TITANIUM_NOEXCEPT;//= default;
-  NativeAPIExample(const NativeAPIExample&)            = default;
+
+  virtual ~NativeAPIExample() TITANIUM_NOEXCEPT;  //= default;
+  NativeAPIExample(const NativeAPIExample&) = default;
   NativeAPIExample& operator=(const NativeAPIExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativeAPIExample(NativeAPIExample&&)                 = default;
-  NativeAPIExample& operator=(NativeAPIExample&&)      = default;
+  NativeAPIExample(NativeAPIExample&&) = default;
+  NativeAPIExample& operator=(NativeAPIExample&&) = default;
 #endif
-  
+
   static void JSExportInitialize();
-  
-protected:
-  
+
+ protected:
   virtual void log(const std::string& message) const TITANIUM_NOEXCEPT override final;
 };
 
-#endif // _TITANIUM_EXAMPLES_NATIVEAPIEXAMPLE_HPP_
+#endif  // _TITANIUM_EXAMPLES_NATIVEAPIEXAMPLE_HPP_

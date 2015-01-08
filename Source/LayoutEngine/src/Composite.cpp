@@ -15,25 +15,26 @@
 #include <math.h>
 #include <algorithm>
 
-namespace Titanium { namespace LayoutEngine {
+namespace Titanium {
+namespace LayoutEngine {
 
 struct ComputedSize doCompositeLayout(std::vector<struct Element*> children, double width, double height, bool isWidthSize, bool isHeightSize) {
-    struct ComputedSize computedSize;
+  struct ComputedSize computedSize;
   struct Element* child;
   int i = 0;
-  struct LayoutCoefficients  layoutCoefficients;
+  struct LayoutCoefficients layoutCoefficients;
   struct ThreeCoefficients widthLayoutCoefficients, heightLayoutCoefficients, sandboxWidthLayoutCoefficients,
       sandboxHeightLayoutCoefficients, leftLayoutCoefficients, minWidthLayoutCoefficients, minHeightLayoutCoefficients;
   struct FourCoefficients topLayoutCoefficients;
   struct ComputedSize childSize;
-  double  measuredWidth, measuredHeight, measuredSandboxHeight, measuredSandboxWidth, measuredLeft, measuredTop;
+  double measuredWidth, measuredHeight, measuredSandboxHeight, measuredSandboxWidth, measuredLeft, measuredTop;
   std::vector<struct Element*> deferredLeftCalculations;
   std::vector<struct Element*> deferredTopCalculations;
   int len = children.size();
 
   // Calculate size and position for the children
-  for(i = 0; i < len; i++) {
-      child = children[i];
+  for (i = 0; i < len; i++) {
+    child = children[i];
     layoutCoefficients = (*child).layoutCoefficients;
     widthLayoutCoefficients = layoutCoefficients.width;
     minWidthLayoutCoefficients = layoutCoefficients.minWidth;
@@ -55,10 +56,10 @@ struct ComputedSize doCompositeLayout(std::vector<struct Element*> children, dou
     }
 
     childSize = layoutNode(child,
-                isNaN(measuredWidth) ? width : measuredWidth - (*child).borderLeftWidth - (*child).borderRightWidth,
-        isNaN(measuredHeight) ? height : measuredHeight - (*child).borderTopWidth - (*child).borderBottomWidth,
-        isNaN(measuredWidth),
-        isNaN(measuredHeight));
+                           isNaN(measuredWidth) ? width : measuredWidth - (*child).borderLeftWidth - (*child).borderRightWidth,
+                           isNaN(measuredHeight) ? height : measuredHeight - (*child).borderTopWidth - (*child).borderBottomWidth,
+                           isNaN(measuredWidth),
+                           isNaN(measuredHeight));
 
     if (isNaN(measuredWidth)) {
       measuredWidth = childSize.width + (*child).borderLeftWidth + (*child).borderRightWidth;
@@ -96,11 +97,11 @@ struct ComputedSize doCompositeLayout(std::vector<struct Element*> children, dou
     (*child).measuredHeight = measuredHeight;
     (*child).measuredLeft = measuredLeft;
     (*child).measuredTop = measuredTop;
-    }
+  }
 
   // Second pass, if necessary, to determine the left/top values
   len = deferredLeftCalculations.size();
-  for(i = 0; i < len; i++) {
+  for (i = 0; i < len; i++) {
     child = deferredLeftCalculations[i];
     leftLayoutCoefficients = (*child).layoutCoefficients.left;
     sandboxWidthLayoutCoefficients = (*child).layoutCoefficients.sandboxWidth;
@@ -112,7 +113,7 @@ struct ComputedSize doCompositeLayout(std::vector<struct Element*> children, dou
     measuredSandboxWidth > computedSize.width && (computedSize.width = measuredSandboxWidth);
   }
   len = deferredTopCalculations.size();
-  for(i = 0; i < len; i++) {
+  for (i = 0; i < len; i++) {
     child = deferredTopCalculations[i];
     topLayoutCoefficients = (*child).layoutCoefficients.top;
     sandboxHeightLayoutCoefficients = (*child).layoutCoefficients.sandboxHeight;
@@ -130,7 +131,7 @@ struct ComputedSize doCompositeLayout(std::vector<struct Element*> children, dou
 static void setDefaultCompositeWidthType(struct LayoutProperties layoutProperties, enum ValueType* measuredWidthType) {
   if (*measuredWidthType == None) {
     if ((layoutProperties.left.valueType == Fixed || layoutProperties.left.valueType == Percent) &&
-      (layoutProperties.right.valueType == Fixed || layoutProperties.right.valueType == Percent)) {
+        (layoutProperties.right.valueType == Fixed || layoutProperties.right.valueType == Percent)) {
       return;
     }
 
@@ -141,7 +142,7 @@ static void setDefaultCompositeWidthType(struct LayoutProperties layoutPropertie
 static void setDefaultCompositeHeightType(struct LayoutProperties layoutProperties, enum ValueType* measuredHeightType) {
   if (*measuredHeightType == None) {
     if ((layoutProperties.top.valueType == Fixed || layoutProperties.top.valueType == Percent) &&
-      (layoutProperties.bottom.valueType == Fixed || layoutProperties.bottom.valueType == Percent)) {
+        (layoutProperties.bottom.valueType == Fixed || layoutProperties.bottom.valueType == Percent)) {
       return;
     }
 
@@ -170,7 +171,7 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
   double minWidthValue = layoutProperties.minWidth.value;
   enum ValueType minHeightType = layoutProperties.minHeight.valueType;
   double minHeightValue = layoutProperties.minHeight.value;
-  
+
   setDefaultCompositeWidthType(layoutProperties, &widthType);
   setDefaultCompositeHeightType(layoutProperties, &heightType);
 
@@ -180,76 +181,58 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
 
   if (widthType == Size) {
     x1 = x2 = NAN;
-  }
-  else if (widthType == Fill) {
+  } else if (widthType == Fill) {
     x1 = 1;
     if (leftType == Percent) {
       x1 -= leftValue;
-    }
-    else if (leftType == Fixed) {
+    } else if (leftType == Fixed) {
       x2 = -leftValue;
-    }
-    else if (rightType == Percent) {
+    } else if (rightType == Percent) {
       x1 -= rightValue;
-    }
-    else if (rightType == Fixed) {
+    } else if (rightType == Fixed) {
       x2 = -rightValue;
     }
-  }
-  else if (widthType == Percent) {
+  } else if (widthType == Percent) {
     x1 = widthValue;
-  }
-  else if (widthType == Fixed) {
+  } else if (widthType == Fixed) {
     x2 = widthValue;
-  }
-  else if (leftType == Percent) {
+  } else if (leftType == Percent) {
     if (centerXType == Percent) {
       x1 = 2 * (centerXValue - leftValue);
-    }
-    else if (centerXType == Fixed) {
+    } else if (centerXType == Fixed) {
       x1 = -2 * leftValue;
       x2 = 2 * centerXValue;
-    }
-    else if (rightType == Percent) {
+    } else if (rightType == Percent) {
       x1 = 1 - leftValue - rightValue;
-    }
-    else if (rightType == Fixed) {
+    } else if (rightType == Fixed) {
       x1 = 1 - leftValue;
       x2 = -rightValue;
     }
-  }
-  else if (leftType == Fixed) {
+  } else if (leftType == Fixed) {
     if (centerXType == Percent) {
       x1 = 2 * centerXValue;
       x2 = -2 * leftValue;
-    }
-    else if (centerXType == Fixed) {
+    } else if (centerXType == Fixed) {
       x2 = 2 * (centerXValue - leftValue);
-    }
-    else if (rightType == Percent) {
+    } else if (rightType == Percent) {
       x1 = 1 - rightValue;
       x2 = -leftValue;
-    }
-    else if (rightType == Fixed) {
+    } else if (rightType == Fixed) {
       x1 = 1;
       x2 = -rightValue - leftValue;
     }
-  }
-  else if (centerXType == Percent) {
+  } else if (centerXType == Percent) {
     if (rightType == Percent) {
       x1 = 2 * (rightValue - centerXValue);
-    }
-    else if (rightType == Fixed) {
+    } else if (rightType == Fixed) {
       x1 = -2 * centerXValue;
       x2 = 2 * rightValue;
     }
-  }
-  else if (centerXType == Fixed) {
+  } else if (centerXType == Fixed) {
     if (rightType == Percent) {
       x1 = 2 * rightValue;
       x2 = -2 * centerXValue;
-    }
-    else if (rightType == Fixed) {
+    } else if (rightType == Fixed) {
       x2 = 2 * (rightValue - centerXValue);
     }
   }
@@ -342,10 +325,10 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
   }
 
   (*element).layoutCoefficients.minWidth.x1 = x1;
-    (*element).layoutCoefficients.minWidth.x2 = x2;
-    (*element).layoutCoefficients.minWidth.x3 = x3;
+  (*element).layoutCoefficients.minWidth.x2 = x2;
+  (*element).layoutCoefficients.minWidth.x3 = x3;
 
-    x1 = x2 = x3 = 0;
+  x1 = x2 = x3 = 0;
   if (minHeightType == Size) {
     x1 = x2 = NAN;
   } else if (minHeightType == Fill) {
@@ -374,7 +357,7 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
   x1 = x2 = x3 = 0;
   if (leftType == Percent) {
     x1 = leftValue;
-  } else if(leftType == Fixed) {
+  } else if (leftType == Fixed) {
     x3 = leftValue;
   } else if (centerXType == Percent) {
     x1 = centerXValue;
@@ -390,7 +373,7 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
     x2 = -1;
     x3 = -rightValue;
   } else {
-    switch((*element).defaultHorizontalAlignment) {
+    switch ((*element).defaultHorizontalAlignment) {
       case Center:
         x1 = 0.5;
         x2 = -0.5;
@@ -398,18 +381,18 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
       case End:
         x1 = 1;
         x2 = -1;
-      break;
+        break;
     }
   }
 
   (*element).layoutCoefficients.left.x1 = x1;
-    (*element).layoutCoefficients.left.x2 = x2;
+  (*element).layoutCoefficients.left.x2 = x2;
   (*element).layoutCoefficients.left.x3 = x3;
 
   x1 = x2 = x3 = 0;
   if (topType == Percent) {
     x1 = topValue;
-  } else if(topType == Fixed) {
+  } else if (topType == Fixed) {
     x3 = topValue;
   } else if (centerYType == Percent) {
     x1 = centerYValue;
@@ -425,7 +408,7 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
     x2 = -1;
     x3 = -bottomValue;
   } else {
-    switch((*element).defaultVerticalAlignment) {
+    switch ((*element).defaultVerticalAlignment) {
       case Center:
         x1 = 0.5;
         x2 = -0.5;
@@ -447,5 +430,5 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
   (*element).layoutCoefficients.sandboxHeight.x1 = (bottomType == Percent ? bottomValue : 0);
   (*element).layoutCoefficients.sandboxHeight.x2 = (bottomType == Fixed ? bottomValue : 0);
 }
-
-}} // namespace Titanium { namespace LayoutEngine {
+}
+}  // namespace Titanium { namespace LayoutEngine {

@@ -8,11 +8,11 @@
 #include <iostream>
 
 NativeFilesystemExample::NativeFilesystemExample(const JSContext& js_context) TITANIUM_NOEXCEPT
-: Titanium::FilesystemModule(js_context) {
+    : Titanium::FilesystemModule(js_context) {
 }
 
 NativeFilesystemExample::NativeFilesystemExample(const NativeFilesystemExample& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-: Titanium::FilesystemModule(rhs, arguments) {
+    : Titanium::FilesystemModule(rhs, arguments) {
 }
 
 void NativeFilesystemExample::JSExportInitialize() {

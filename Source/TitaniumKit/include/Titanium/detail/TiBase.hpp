@@ -23,7 +23,7 @@
 
 #if defined(_MSC_VER) && _MSC_VER <= 1800
 // According to Microsoft's "Visual C++ Team Blog":
-// 
+//
 // VS 2013 supported rvalue references, except for automatically
 // generated move ctors/assigns. Similarly, VS 2013 supported
 // defaulted and deleted functions, except for defaulted move
@@ -42,7 +42,7 @@
 
 #endif  // #defined(_MSC_VER) && _MSC_VER <= 1800
 
-#ifdef  TITANIUM_NOEXCEPT_ENABLE
+#ifdef TITANIUM_NOEXCEPT_ENABLE
 #define TITANIUM_NOEXCEPT noexcept
 #else
 #define TITANIUM_NOEXCEPT
@@ -57,4 +57,4 @@
 #include "Titanium/detail/TiLogger.hpp"
 #include "HAL/HAL.hpp"
 
-#endif // _TITANIUM_DETAIL_TIBASE_HPP_
+#endif  // _TITANIUM_DETAIL_TIBASE_HPP_

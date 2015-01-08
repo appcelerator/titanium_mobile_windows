@@ -17,9 +17,7 @@ using namespace HAL;
  for a native File.
  */
 class NativeFilesystemExample final : public Titanium::FilesystemModule, public JSExport<NativeFilesystemExample> {
-  
-public:
-  
+ public:
   virtual JSValue getFile(const std::string&) TITANIUM_NOEXCEPT;
   virtual JSValue createTempDirectory() TITANIUM_NOEXCEPT;
   virtual JSValue createTempFile() TITANIUM_NOEXCEPT;
@@ -36,21 +34,20 @@ public:
   virtual std::string resourcesDirectory() const TITANIUM_NOEXCEPT;
   virtual std::string tempDirectory() const TITANIUM_NOEXCEPT;
 
-  NativeFilesystemExample(const JSContext& js_context)                                    TITANIUM_NOEXCEPT;
+  NativeFilesystemExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
   NativeFilesystemExample(const NativeFilesystemExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
-  
-  virtual ~NativeFilesystemExample()                          = default;
-  NativeFilesystemExample(const NativeFilesystemExample&)            = default;
+
+  virtual ~NativeFilesystemExample() = default;
+  NativeFilesystemExample(const NativeFilesystemExample&) = default;
   NativeFilesystemExample& operator=(const NativeFilesystemExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativeFilesystemExample(NativeFilesystemExample&&)                 = default;
-  NativeFilesystemExample& operator=(NativeFilesystemExample&&)      = default;
+  NativeFilesystemExample(NativeFilesystemExample&&) = default;
+  NativeFilesystemExample& operator=(NativeFilesystemExample&&) = default;
 #endif
-  
+
   static void JSExportInitialize();
-  
-protected:
-  
+
+ protected:
 };
 
-#endif // _TITANIUM_EXAMPLES_NATIVEFILESYSTEMEXAMPLE_HPP_
+#endif  // _TITANIUM_EXAMPLES_NATIVEFILESYSTEMEXAMPLE_HPP_

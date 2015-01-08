@@ -16,38 +16,39 @@
 #include <string.h>
 #include <algorithm>
 
-namespace Titanium { namespace LayoutEngine {
+namespace Titanium {
+namespace LayoutEngine {
 
 struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, double width, double height, bool isWidthSize, bool isHeightSize) {
-    struct ComputedSize computedSize;
+  struct ComputedSize computedSize;
   struct Element* child;
   unsigned int i = 0;
   unsigned int j = 0;
-  struct LayoutCoefficients  layoutCoefficients;
+  struct LayoutCoefficients layoutCoefficients;
   struct ThreeCoefficients widthLayoutCoefficients, heightLayoutCoefficients, sandboxWidthLayoutCoefficients,
-    sandboxHeightLayoutCoefficients, leftLayoutCoefficients, minWidthLayoutCoefficients, minHeightLayoutCoefficients;
+      sandboxHeightLayoutCoefficients, leftLayoutCoefficients, minWidthLayoutCoefficients, minHeightLayoutCoefficients;
   struct FourCoefficients topLayoutCoefficients;
   struct ComputedSize childSize;
-  double  measuredWidth, measuredHeight, measuredSandboxHeight, measuredSandboxWidth, measuredLeft, measuredTop;
+  double measuredWidth, measuredHeight, measuredSandboxHeight, measuredSandboxWidth, measuredLeft, measuredTop;
   std::string pixelUnits = "px";
   double runningHeight = 0;
   double runningWidth = 0;
   // ToDo Russ - remove hard coded c arrays
   std::vector<std::vector<Element*>> rows;
-  std::vector<double>rowHeights;
+  std::vector<double> rowHeights;
   double rowHeight;
   std::vector<struct Element*> deferredTopCalculations;
   double verticalAlignmentOffset = 0;
   unsigned int len = children.size();
   unsigned int rowLen = 0;
-  unsigned int rowsLen = (len > 0 ) ? 1: 0;
+  unsigned int rowsLen = (len > 0) ? 1 : 0;
 
   // Calculate horizontal size and position for the children
-  for(i = 0; i < len; i++) {
-      child = children[i];
-      (*child).measuredRunningWidth = runningWidth;
+  for (i = 0; i < len; i++) {
+    child = children[i];
+    (*child).measuredRunningWidth = runningWidth;
 
-      layoutCoefficients = (*child).layoutCoefficients;
+    layoutCoefficients = (*child).layoutCoefficients;
     widthLayoutCoefficients = layoutCoefficients.width;
     heightLayoutCoefficients = layoutCoefficients.height;
     sandboxWidthLayoutCoefficients = layoutCoefficients.sandboxWidth;
@@ -60,20 +61,19 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
     measuredHeight = heightLayoutCoefficients.x2 == 0 ? heightLayoutCoefficients.x1 * height + heightLayoutCoefficients.x3 : NAN;
 
     if (isNaN(measuredWidth) || isNaN(heightLayoutCoefficients.x1)) {
-
       childSize = layoutNode(
-        child,
-        isNaN(measuredWidth) ? width : measuredWidth - (*child).borderLeftWidth - (*child).borderRightWidth,
-        isNaN(measuredHeight) ? height : measuredHeight - (*child).borderTopWidth - (*child).borderBottomWidth,
-        isNaN(measuredWidth),
-        isNaN(measuredHeight));
+          child,
+          isNaN(measuredWidth) ? width : measuredWidth - (*child).borderLeftWidth - (*child).borderRightWidth,
+          isNaN(measuredHeight) ? height : measuredHeight - (*child).borderTopWidth - (*child).borderBottomWidth,
+          isNaN(measuredWidth),
+          isNaN(measuredHeight));
 
       isNaN(measuredWidth) && (measuredWidth = childSize.width + (*child).borderLeftWidth + (*child).borderRightWidth);
       isNaN(heightLayoutCoefficients.x1) && (measuredHeight = childSize.height + (*child).borderTopWidth + (*child).borderBottomWidth);
 
       (*child).childrenLaidOut = true;
       if (heightLayoutCoefficients.x2 != 0 && !isNaN(heightLayoutCoefficients.x2)) {
-	      std::clog << "Child of width SIZE and height FILL detected in a horizontal layout. Performance degradation may occur." << std::endl;
+        std::clog << "Child of width SIZE and height FILL detected in a horizontal layout. Performance degradation may occur." << std::endl;
         (*child).childrenLaidOut = false;
       }
     } else {
@@ -100,11 +100,9 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
     }
     if (rowLen >= rows[rowsLen - 1].size()) {
       rows[rowsLen - 1].push_back(child);
-    }
-    else {
+    } else {
       rows[rowsLen - 1][rowLen] = child;
     }
-
 
     rowLen++;
     runningWidth += measuredSandboxWidth;
@@ -113,7 +111,7 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 
   // Calculate vertical size and position for the children
   len = rows.size();
-  for(i = 0; i < len; i++) {
+  for (i = 0; i < len; i++) {
     auto row = rows[i];
     rowLen = row.size();
 
@@ -127,26 +125,27 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
       measuredHeight = (*child).measuredHeight;
       if (isNaN(measuredHeight)) {
         (*child).measuredHeight = measuredHeight = heightLayoutCoefficients.x1 *
-        height + heightLayoutCoefficients.x2 * (height - runningHeight) + heightLayoutCoefficients.x3;
+                                                       height +
+                                                   heightLayoutCoefficients.x2 * (height - runningHeight) + heightLayoutCoefficients.x3;
       }
 
       if (!(*child).childrenLaidOut) {
         measuredWidth = (*child).measuredWidth;
         (*child).childrenLaidOut = true;
         layoutNode(
-          child,
-          isNaN(measuredWidth) ? width : measuredWidth - (*child).borderLeftWidth - (*child).borderRightWidth,
-          isNaN(measuredHeight) ? height : measuredHeight - (*child).borderTopWidth - (*child).borderBottomWidth,
-          isNaN(measuredWidth),
-          isNaN(measuredHeight));
+            child,
+            isNaN(measuredWidth) ? width : measuredWidth - (*child).borderLeftWidth - (*child).borderRightWidth,
+            isNaN(measuredHeight) ? height : measuredHeight - (*child).borderTopWidth - (*child).borderBottomWidth,
+            isNaN(measuredWidth),
+            isNaN(measuredHeight));
       }
 
       if (topLayoutCoefficients.x2 != 0) {
-                deferredTopCalculations.push_back(child);
-        measuredTop = runningHeight; // Temporary for use in calculating row height
+        deferredTopCalculations.push_back(child);
+        measuredTop = runningHeight;  // Temporary for use in calculating row height
       } else {
         (*child).measuredTop = measuredTop = topLayoutCoefficients.x1 * height +
-          topLayoutCoefficients.x3 * measuredHeight + topLayoutCoefficients.x4 + runningHeight;
+                                             topLayoutCoefficients.x3 * measuredHeight + topLayoutCoefficients.x4 + runningHeight;
       }
 
       (*child).measuredSandboxHeight = measuredSandboxHeight = sandboxHeightLayoutCoefficients.x1 * height + sandboxHeightLayoutCoefficients.x2 + measuredHeight + measuredTop - runningHeight;
@@ -159,7 +158,7 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
   // Second pass, if necessary, to determine the top values
   runningHeight = 0;
   len = rowsLen;
-  for(i = 0; i < len; i++) {
+  for (i = 0; i < len; i++) {
     auto row = rows[i];
     rowLen = row.size();
     rowHeight = rowHeights[i];
@@ -193,7 +192,6 @@ static void setDefaultHorizontalHeightType(struct LayoutProperties layoutPropert
     *measuredHeightType = layoutProperties.defaultHeightType;
   }
 }
-
 
 void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, struct Element* element) {
   enum ValueType widthType = layoutProperties.width.valueType;
@@ -281,17 +279,17 @@ void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, st
   x1 = x2 = x3 = x4 = 0;
   if (topType == Percent) {
     x1 = topValue;
-  } else if(topType == Fixed) {
+  } else if (topType == Fixed) {
     x4 = topValue;
-  } else if(bottomType == Percent) {
+  } else if (bottomType == Percent) {
     x1 = 1 - bottomValue;
     x3 = -1;
-  } else if(bottomType == Fixed) {
+  } else if (bottomType == Fixed) {
     x1 = 1;
     x3 = -1;
     x4 = -bottomValue;
   } else {
-    switch((*element).defaultRowAlignment) {
+    switch ((*element).defaultRowAlignment) {
       case Center:
         x2 = 0.5;
         x3 = -0.5;
@@ -307,5 +305,5 @@ void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, st
   (*element).layoutCoefficients.top.x3 = x3;
   (*element).layoutCoefficients.top.x4 = x4;
 }
-
-}}  // namespace Titanium { namespace LayoutEngine {
+}
+}  // namespace Titanium { namespace LayoutEngine {

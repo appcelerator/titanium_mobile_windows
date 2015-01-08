@@ -11,7 +11,7 @@
 #include "Titanium/detail/TiBase.hpp"
 
 namespace TitaniumWindows {
-  namespace Utility {
+namespace Utility {
 
-  } // namespace Utility
-} // namespace TitaniumWindows
+}  // namespace Utility
+}  // namespace TitaniumWindows

@@ -30,10 +30,10 @@ TEST(HorizontalLayout, measure_horizontal_node) {
 }
 
 TEST(HorizontalLayout, horizontal_layout) {
-  struct  Titanium::LayoutEngine::LayoutProperties layoutProperties;
+  struct Titanium::LayoutEngine::LayoutProperties layoutProperties;
   Titanium::LayoutEngine::layoutPropertiesInitialize(&layoutProperties);
-  struct  Titanium::LayoutEngine::Element* e1 = new  Titanium::LayoutEngine::Element();
-  Titanium::LayoutEngine::elementInitialize(e1, Titanium::LayoutEngine::Horizontal); // Device - top level window
+  struct Titanium::LayoutEngine::Element* e1 = new Titanium::LayoutEngine::Element();
+  Titanium::LayoutEngine::elementInitialize(e1, Titanium::LayoutEngine::Horizontal);  // Device - top level window
   // e2
   layoutProperties.width.value = 50;
   layoutProperties.width.valueType = Titanium::LayoutEngine::Fixed;
@@ -44,7 +44,7 @@ TEST(HorizontalLayout, horizontal_layout) {
   Titanium::LayoutEngine::measureNodeForHorizontalLayout(layoutProperties, e2);
   // e3
   layoutProperties.width.value = 50;
-  layoutProperties.width.valueType = Titanium::LayoutEngine::Fixed; 
+  layoutProperties.width.valueType = Titanium::LayoutEngine::Fixed;
   layoutProperties.height.value = 40;
   layoutProperties.height.valueType = Titanium::LayoutEngine::Fixed;
   struct Titanium::LayoutEngine::Element* e3 = new Titanium::LayoutEngine::Element();

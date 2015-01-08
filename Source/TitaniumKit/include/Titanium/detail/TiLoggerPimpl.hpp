@@ -14,26 +14,25 @@
 #include <cstdint>
 
 namespace Titanium {
-  template<typename TiLoggerPolicy>
-  class TiLogger;
+template <typename TiLoggerPolicy>
+class TiLogger;
 }
 
-namespace Titanium { namespace detail {
-  
-  class TITANIUMKIT_EXPORT TiLoggerPimpl final {
-    
-  public:
-    
-    TiLoggerPimpl()                                = delete;
-    ~TiLoggerPimpl()                               = delete;
-    TiLoggerPimpl(const TiLoggerPimpl&)            = delete;
-    TiLoggerPimpl(TiLoggerPimpl&&)                 = delete;
-    TiLoggerPimpl& operator=(const TiLoggerPimpl&) = delete;
-    TiLoggerPimpl& operator=(TiLoggerPimpl&&)      = delete;
-    
-    static std::string GetLoglineHeader(uint32_t log_line_number);
-  };
-  
-}} // namespace Titanium { namespace detail
+namespace Titanium {
+namespace detail {
 
-#endif // _TITANIUM_DETAIL_TILOGGERPIMPL_HPP_
+class TITANIUMKIT_EXPORT TiLoggerPimpl final {
+ public:
+  TiLoggerPimpl() = delete;
+  ~TiLoggerPimpl() = delete;
+  TiLoggerPimpl(const TiLoggerPimpl&) = delete;
+  TiLoggerPimpl(TiLoggerPimpl&&) = delete;
+  TiLoggerPimpl& operator=(const TiLoggerPimpl&) = delete;
+  TiLoggerPimpl& operator=(TiLoggerPimpl&&) = delete;
+
+  static std::string GetLoglineHeader(uint32_t log_line_number);
+};
+}
+}  // namespace Titanium { namespace detail
+
+#endif  // _TITANIUM_DETAIL_TILOGGERPIMPL_HPP_

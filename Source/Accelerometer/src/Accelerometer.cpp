@@ -11,43 +11,41 @@
 
 namespace TitaniumWindows {
 
-  Accelerometer::Accelerometer(const JSContext& js_context) TITANIUM_NOEXCEPT
-    : Titanium::Accelerometer(js_context)
-  {
-    TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::ctor Initialize");
-  }
+Accelerometer::Accelerometer(const JSContext& js_context) TITANIUM_NOEXCEPT
+    : Titanium::Accelerometer(js_context) {
+  TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::ctor Initialize");
+}
 
-  Accelerometer::Accelerometer(const Accelerometer& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-    : Titanium::Accelerometer(rhs, arguments)
-  {
-    TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::ctor CallAsConstructor");
-  }
+Accelerometer::Accelerometer(const Accelerometer& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+    : Titanium::Accelerometer(rhs, arguments) {
+  TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::ctor CallAsConstructor");
+}
 
-  void Accelerometer::JSExportInitialize() {
-    JSExport<Accelerometer>::SetClassVersion(1);
-    JSExport<Accelerometer>::SetParent(JSExport<Titanium::Accelerometer>::Class());
-  }
+void Accelerometer::JSExportInitialize() {
+  JSExport<Accelerometer>::SetClassVersion(1);
+  JSExport<Accelerometer>::SetParent(JSExport<Titanium::Accelerometer>::Class());
+}
 
-  void Accelerometer::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
-	  TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::enableEvent: (event name '", event_name, "'");
-	  if (event_name == "update") {
-			  accelerometer_ = Windows::Devices::Sensors::Accelerometer::GetDefault();
+void Accelerometer::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
+  TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::enableEvent: (event name '", event_name, "'");
+  if (event_name == "update") {
+    accelerometer_ = Windows::Devices::Sensors::Accelerometer::GetDefault();
 
-			  if (accelerometer_ == nullptr) {
-				  std::clog << "[ERROR] Ti.Accelerometer: No accelerometer found" << std::endl;
-				  return;
-			  }
+    if (accelerometer_ == nullptr) {
+      std::clog << "[ERROR] Ti.Accelerometer: No accelerometer found" << std::endl;
+      return;
+    }
 
-			  // Select a report interval that is both suitable for the purposes of the app and supported by the sensor.
-			  const auto minReportInterval = accelerometer_->MinimumReportInterval;
-			  accelerometer_->ReportInterval = minReportInterval > 16 ? minReportInterval : 16;
+    // Select a report interval that is both suitable for the purposes of the app and supported by the sensor.
+    const auto minReportInterval = accelerometer_->MinimumReportInterval;
+    accelerometer_->ReportInterval = minReportInterval > 16 ? minReportInterval : 16;
 
-			  // Capture Window::Current here because getting it outside of UI thread seems always return nullptr
-			  const auto current = Windows::UI::Xaml::Window::Current;
-        const auto self = this;
+    // Capture Window::Current here because getting it outside of UI thread seems always return nullptr
+    const auto current = Windows::UI::Xaml::Window::Current;
+    const auto self = this;
 
-			  using namespace std::placeholders;
-        const auto updateCallback = [current, self](Windows::Devices::Sensors::Accelerometer^ sender, Windows::Devices::Sensors::AccelerometerReadingChangedEventArgs^ e) {
+    using namespace std::placeholders;
+    const auto updateCallback = [current, self](Windows::Devices::Sensors::Accelerometer ^ sender, Windows::Devices::Sensors::AccelerometerReadingChangedEventArgs ^ e) {
           const auto dispatchedCallback = [current, self]() {
             const auto ctx = self->get_context();
             auto obj = ctx.CreateObject();
@@ -74,17 +72,17 @@ namespace TitaniumWindows {
               Windows::UI::Core::CoreDispatcherPriority::Normal,
               ref new Windows::UI::Core::DispatchedHandler(dispatchedCallback));
           }
-        };
+    };
 
-			  update_event_ = accelerometer_->ReadingChanged += ref new Windows::Foundation::TypedEventHandler<Windows::Devices::Sensors::Accelerometer^, Windows::Devices::Sensors::AccelerometerReadingChangedEventArgs^>(updateCallback);
-	  }
+    update_event_ = accelerometer_->ReadingChanged += ref new Windows::Foundation::TypedEventHandler<Windows::Devices::Sensors::Accelerometer ^, Windows::Devices::Sensors::AccelerometerReadingChangedEventArgs ^>(updateCallback);
   }
+}
 
-  void Accelerometer::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
-	  TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::disableEvent: (event name '", event_name, "'");
-	  if (event_name == "update") {
-		  accelerometer_->ReadingChanged -= update_event_;
-	  }
+void Accelerometer::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
+  TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::disableEvent: (event name '", event_name, "'");
+  if (event_name == "update") {
+    accelerometer_->ReadingChanged -= update_event_;
   }
+}
 
 }  // namespace TitaniumWindows

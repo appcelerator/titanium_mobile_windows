@@ -11,19 +11,19 @@
 #include <sstream>
 
 namespace Titanium {
-  
-  Application::Application(const ApplicationBuilder& builder)
-  : js_context__(builder.js_context__) {
-  }
-  
-  JSValue Application::Run(const std::string& app_js) {
-    std::ostringstream os;
-    os << "require('" << app_js << "');\n";
-    return js_context__.JSEvaluateScript(os.str());
-  }
-  
-  JSContext Application::get_context() const {
-    return js_context__;
-  }
 
-} // namespace Titanium {
+Application::Application(const ApplicationBuilder& builder)
+    : js_context__(builder.js_context__) {
+}
+
+JSValue Application::Run(const std::string& app_js) {
+  std::ostringstream os;
+  os << "require('" << app_js << "');\n";
+  return js_context__.JSEvaluateScript(os.str());
+}
+
+JSContext Application::get_context() const {
+  return js_context__;
+}
+
+}  // namespace Titanium {

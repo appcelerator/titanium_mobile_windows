@@ -11,7 +11,6 @@
 
 #include "gtest/gtest.h"
 
-
 TEST(CompositeLayout, measure_composite_node_fill_properties) {
   struct Titanium::LayoutEngine::LayoutProperties layoutProperties;
   Titanium::LayoutEngine::layoutPropertiesInitialize(&layoutProperties);
@@ -46,9 +45,9 @@ TEST(CompositeLayout, measure_composite_node) {
   layoutPropertiesInitialize(&layoutProperties);
   struct Titanium::LayoutEngine::Element* element = new Titanium::LayoutEngine::Element();
   Titanium::LayoutEngine::elementInitialize(element, Titanium::LayoutEngine::Composite);
-  layoutProperties.width.valueType = Titanium::LayoutEngine::ValueType::Fixed; 
+  layoutProperties.width.valueType = Titanium::LayoutEngine::ValueType::Fixed;
   layoutProperties.width.value = 100;
-  layoutProperties.height.valueType = Titanium::LayoutEngine::ValueType::Fixed; 
+  layoutProperties.height.valueType = Titanium::LayoutEngine::ValueType::Fixed;
   layoutProperties.height.value = 100;
   Titanium::LayoutEngine::measureNodeForCompositeLayout(layoutProperties, element);
   // width height rule

@@ -18,24 +18,21 @@ using namespace HAL;
  for a native platform.
  */
 class NativePlatformDisplayCapsExample final : public Titanium::Platform::DisplayCaps, public JSExport<NativePlatformDisplayCapsExample> {
-  
-public:
-  
-  NativePlatformDisplayCapsExample(const JSContext& js_context)                                    TITANIUM_NOEXCEPT;
+ public:
+  NativePlatformDisplayCapsExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
   NativePlatformDisplayCapsExample(const NativePlatformDisplayCapsExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
-  
-  virtual ~NativePlatformDisplayCapsExample()                          = default;
-  NativePlatformDisplayCapsExample(const NativePlatformDisplayCapsExample&)            = default;
+
+  virtual ~NativePlatformDisplayCapsExample() = default;
+  NativePlatformDisplayCapsExample(const NativePlatformDisplayCapsExample&) = default;
   NativePlatformDisplayCapsExample& operator=(const NativePlatformDisplayCapsExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativePlatformDisplayCapsExample(NativePlatformDisplayCapsExample&&)                 = default;
-  NativePlatformDisplayCapsExample& operator=(NativePlatformDisplayCapsExample&&)      = default;
+  NativePlatformDisplayCapsExample(NativePlatformDisplayCapsExample&&) = default;
+  NativePlatformDisplayCapsExample& operator=(NativePlatformDisplayCapsExample&&) = default;
 #endif
-  
+
   static void JSExportInitialize();
-  
-protected:
-  
+
+ protected:
 };
 
-#endif // _TITANIUM_EXAMPLES_NATIVEPLATFORMDISPLAYCAPSEXAMPLE_HPP_
+#endif  // _TITANIUM_EXAMPLES_NATIVEPLATFORMDISPLAYCAPSEXAMPLE_HPP_

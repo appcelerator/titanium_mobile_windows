@@ -15,41 +15,37 @@ using namespace HAL;
 
 /*!
  @class
- 
+
  @discussion This is an example of how to implement a native module
  derived from Titanium::UI::Module for a native platform.
  */
 class NativeModuleExample final : public Titanium::Module, public JSExport<NativeModuleExample> {
-  
-public:
-  
+ public:
   JSValue get_enabled() const;
-  
-  std::string get_event_name() const                        TITANIUM_NOEXCEPT;
-  void        set_event_name(const std::string& event_name) TITANIUM_NOEXCEPT;
-  
-  NativeModuleExample(const JSContext& js_context)                                       TITANIUM_NOEXCEPT;
+
+  std::string get_event_name() const TITANIUM_NOEXCEPT;
+  void set_event_name(const std::string& event_name) TITANIUM_NOEXCEPT;
+
+  NativeModuleExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
   NativeModuleExample(const NativeModuleExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
-  
-  virtual ~NativeModuleExample()                             = default;
-  NativeModuleExample(const NativeModuleExample&)            = default;
+
+  virtual ~NativeModuleExample() = default;
+  NativeModuleExample(const NativeModuleExample&) = default;
   NativeModuleExample& operator=(const NativeModuleExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativeModuleExample(NativeModuleExample&&)                 = default;
-  NativeModuleExample& operator=(NativeModuleExample&&)      = default;
+  NativeModuleExample(NativeModuleExample&&) = default;
+  NativeModuleExample& operator=(NativeModuleExample&&) = default;
 #endif
-  
+
   static void JSExportInitialize();
-  
-protected:
-  
-  virtual void  enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
+
+ protected:
+  virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
   virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
-  
-private:
-  
+
+ private:
   std::string event_name__;
-  JSValue     enabled__;
+  JSValue enabled__;
 };
 
-#endif // _TITANIUM_EXAMPLES_NATIVEMODULEEXAMPLE_HPP_
+#endif  // _TITANIUM_EXAMPLES_NATIVEMODULEEXAMPLE_HPP_

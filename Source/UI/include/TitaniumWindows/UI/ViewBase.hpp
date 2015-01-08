@@ -13,85 +13,78 @@
 #include "Titanium/UI/Constants.hpp"
 #include "LayoutEngine/LayoutEngine.hpp"
 
-namespace TitaniumWindows { namespace UI {
+namespace TitaniumWindows {
+namespace UI {
 
-  class ViewBase { 
+class ViewBase {
+ public:
+  ViewBase();
 
-  public:
+  Titanium::LayoutEngine::Node* layout_node_;
 
-	ViewBase();
+  virtual void setComponent(Windows::UI::Xaml::FrameworkElement ^ component);
+  virtual Windows::UI::Xaml::FrameworkElement ^ getComponent() const {
+    return component_;
+  }
 
-    Titanium::LayoutEngine::Node* layout_node_;
-    
-    virtual void setComponent(Windows::UI::Xaml::FrameworkElement^ component);
-    virtual Windows::UI::Xaml::FrameworkElement^ getComponent() const {
-      return component_;
-    }
+  virtual void onLayoutEngineCallback(Titanium::LayoutEngine::Rect rect, const std::string& name);
 
-    virtual void onLayoutEngineCallback(Titanium::LayoutEngine::Rect rect, const std::string& name);
+  virtual Windows::UI::Xaml::FrameworkElement ^ get_UIElement() const TITANIUM_NOEXCEPT;
 
-    virtual Windows::UI::Xaml::FrameworkElement^ get_UIElement() const TITANIUM_NOEXCEPT;
+  static Windows::UI::Color ColorForName(const std::string& colorName);
+  static Windows::UI::Color ColorForHexCode(const std::string& hexCode);
 
-    static Windows::UI::Color ColorForName(const std::string& colorName);
-    static Windows::UI::Color ColorForHexCode(const std::string& hexCode);
+ protected:
+  void setLayoutProperty(const Titanium::LayoutEngine::ValueName&, const std::string&);
 
-  protected:
+  virtual bool isWindow() const {
+    return false;
+  }
 
-    void setLayoutProperty(const Titanium::LayoutEngine::ValueName&, const std::string&);    
-      
-    virtual bool isWindow() const {
-      return false;
-    }
+  virtual bool isLoaded() const {
+    return is_loaded_;
+  }
 
-    virtual bool isLoaded() const {
-      return is_loaded_;
-    }
+  virtual void onComponentLoaded(const Titanium::LayoutEngine::Rect&);
+  virtual void onComponentSizeChange(const Titanium::LayoutEngine::Rect&);
 
-    virtual void onComponentLoaded(const Titanium::LayoutEngine::Rect&);
-    virtual void onComponentSizeChange(const Titanium::LayoutEngine::Rect&);
+  virtual void setLayout(const std::string& type);
 
-    virtual void setLayout(const std::string& type);
+  virtual std::string defaultHeight() const {
+    return defaultHeight__;
+  }
 
+  virtual std::string defaultWidth() const {
+    return defaultWidth__;
+  }
 
-    virtual std::string defaultHeight() const {
-		return  defaultHeight__;
-    }
+  virtual void setDefaultHeight(const std::string& defaultHeight) {
+    defaultHeight__ = defaultHeight;
+  }
 
+  virtual void setDefaultWidth(const std::string defaultWidth) {
+    defaultWidth__ = defaultWidth;
+  }
 
-    virtual std::string defaultWidth() const {
-		return  defaultWidth__;
-    }
+ private:
+  std::string defaultWidth__;
+  std::string defaultHeight__;
 
-	
-	virtual void setDefaultHeight(const std::string& defaultHeight) {
-		defaultHeight__ =  defaultHeight;
-	}
-	
-	virtual void setDefaultWidth(const std::string defaultWidth) {
-		defaultWidth__ = defaultWidth;
-	}
+  Windows::Foundation::EventRegistrationToken size_change_event_;
+  Windows::Foundation::EventRegistrationToken loaded_event_;
 
-  private:
+  bool is_width_size_{false};
+  bool is_height_size_{false};
+  bool is_panel_{false};
+  bool is_control_{false};
+  bool is_loaded_{false};
 
-	std::string defaultWidth__;
-	std::string defaultHeight__;
+  Titanium::LayoutEngine::Rect oldRect;
 
-    Windows::Foundation::EventRegistrationToken size_change_event_;
-    Windows::Foundation::EventRegistrationToken loaded_event_;
+ public:
+  Windows::UI::Xaml::FrameworkElement ^ component_ { nullptr };
+};
+}
+}  // namespace TitaniumWindows { namespace UI {
 
-    bool is_width_size_ { false };
-    bool is_height_size_ { false };
-    bool is_panel_ { false };
-    bool is_control_ { false };
-    bool is_loaded_ { false };
-
-    Titanium::LayoutEngine::Rect oldRect;
-
-  public:
-
-    Windows::UI::Xaml::FrameworkElement^ component_ { nullptr };
-  };
-
-}}  // namespace TitaniumWindows { namespace UI {
-
-#endif	//  _TITANIUMWINDOWS_UI_VIEWBASE_HPP_
+#endif  //  _TITANIUMWINDOWS_UI_VIEWBASE_HPP_
