@@ -18,9 +18,10 @@
 #include <mutex>
 #include <memory>
 
-namespace Titanium {
-namespace detail {
-
+namespace Titanium
+{
+namespace detail
+{
 // The TiLogger infrastructure was inspired by this Dr. Dobbs article:
 //
 // A Lightweight Logger for C++
@@ -46,114 +47,121 @@ namespace detail {
    */
 
 enum class TITANIUMKIT_EXPORT TiLoggerSeverityType {
-  Ti_TRACE,
-  Ti_DEBUG,
-  Ti_INFO,
-  Ti_WARN,
-  Ti_ERROR
+	Ti_TRACE,
+	Ti_DEBUG,
+	Ti_INFO,
+	Ti_WARN,
+	Ti_ERROR
 };
 
 template <typename TiLoggerPolicy>
-class TiLogger final {
- public:
-  static std::shared_ptr<TiLogger<TiLoggerPolicy>> Instance();
+class TiLogger final
+{
+   public:
+	static std::shared_ptr<TiLogger<TiLoggerPolicy>> Instance();
 
-  TiLogger() = delete;
-  TiLogger(const TiLogger&) = delete;
-  TiLogger& operator=(const TiLogger&) = delete;
+	TiLogger() = delete;
+	TiLogger(const TiLogger&) = delete;
+	TiLogger& operator=(const TiLogger&) = delete;
 
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  TiLogger(TiLogger&&) = delete;
-  TiLogger& operator=(TiLogger&&) = delete;
+	TiLogger(TiLogger&&) = delete;
+	TiLogger& operator=(TiLogger&&) = delete;
 #endif
 
-  template <TiLoggerSeverityType severity, typename... Args>
-  void Print(Args... args);
+	template <TiLoggerSeverityType severity, typename... Args>
+	void Print(Args... args);
 
- private:
-  TiLogger(const std::string& name);
-  ~TiLogger() = default;
+   private:
+	TiLogger(const std::string& name);
+	~TiLogger() = default;
 
-  // Core printing functionality.
-  void PrintImpl();
+	// Core printing functionality.
+	void PrintImpl();
 
-  template <typename First, typename... Rest>
-  void PrintImpl(First first_parameter, Rest... rest);
+	template <typename First, typename... Rest>
+	void PrintImpl(First first_parameter, Rest... rest);
 
-  // This struct only exists so that a custom deleter can be passed to
-  // std::shared_ptr<TiLogger<T>> while keeping the TiLogger<T> destructor
-  // private.
-  struct deleter {
-    void operator()(TiLogger* ptr) {
-      delete ptr;
-    }
-  };
+	// This struct only exists so that a custom deleter can be passed to
+	// std::shared_ptr<TiLogger<T>> while keeping the TiLogger<T> destructor
+	// private.
+	struct deleter {
+		void operator()(TiLogger* ptr)
+		{
+			delete ptr;
+		}
+	};
 
-  TiLoggerPolicy ti_log_policy__;
-  uint32_t log_line_number__{0};
-  std::ostringstream log_stream__;
-  std::mutex ti_logger_mutex__;
+	TiLoggerPolicy ti_log_policy__;
+	uint32_t log_line_number__{0};
+	std::ostringstream log_stream__;
+	std::mutex ti_logger_mutex__;
 };
 
 template <typename TiLoggerPolicy>
 TiLogger<TiLoggerPolicy>::TiLogger(const std::string& name)
-    : ti_log_policy__(name) {
+    : ti_log_policy__(name)
+{
 }
 
 template <typename TiLoggerPolicy>
-std::shared_ptr<TiLogger<TiLoggerPolicy>> TiLogger<TiLoggerPolicy>::Instance() {
-  static std::shared_ptr<TiLogger<TiLoggerPolicy>> instance;
-  static std::once_flag of;
-  std::call_once(of, [] {
+std::shared_ptr<TiLogger<TiLoggerPolicy>> TiLogger<TiLoggerPolicy>::Instance()
+{
+	static std::shared_ptr<TiLogger<TiLoggerPolicy>> instance;
+	static std::once_flag of;
+	std::call_once(of, [] {
       instance = std::shared_ptr<TiLogger<TiLoggerPolicy>>(new TiLogger<TiLoggerPolicy>("TitaniumKit.log"), deleter{});
-  });
+	});
 
-  return instance;
+	return instance;
 }
 
 template <typename TiLoggerPolicy>
 template <TiLoggerSeverityType severity, typename... Args>
-void TiLogger<TiLoggerPolicy>::Print(Args... args) {
-  std::lock_guard<std::mutex> lock(ti_logger_mutex__);
+void TiLogger<TiLoggerPolicy>::Print(Args... args)
+{
+	std::lock_guard<std::mutex> lock(ti_logger_mutex__);
 
-  // The Debug and Error severity strings (i.e. "DEBUG" and "ERROR")
-  // are the longest of the three severity strings, and each is 5
-  // characters long. Since we want all of the severity types to have
-  // the same width on output, we set it to 5.
-  log_stream__ << std::setw(5) << std::left;
+	// The Debug and Error severity strings (i.e. "DEBUG" and "ERROR")
+	// are the longest of the three severity strings, and each is 5
+	// characters long. Since we want all of the severity types to have
+	// the same width on output, we set it to 5.
+	log_stream__ << std::setw(5) << std::left;
 
-  switch (severity) {
-    case TiLoggerSeverityType::Ti_TRACE:
-      log_stream__ << "TRACE: ";
-      break;
-    case TiLoggerSeverityType::Ti_DEBUG:
-      log_stream__ << "DEBUG: ";
-      break;
-    case TiLoggerSeverityType::Ti_INFO:
-      log_stream__ << "INFO: ";
-      break;
-    case TiLoggerSeverityType::Ti_WARN:
-      log_stream__ << "WARN: ";
-      break;
-    case TiLoggerSeverityType::Ti_ERROR:
-      log_stream__ << "ERROR: ";
-      break;
-  };
+	switch (severity) {
+		case TiLoggerSeverityType::Ti_TRACE:
+			log_stream__ << "TRACE: ";
+			break;
+		case TiLoggerSeverityType::Ti_DEBUG:
+			log_stream__ << "DEBUG: ";
+			break;
+		case TiLoggerSeverityType::Ti_INFO:
+			log_stream__ << "INFO: ";
+			break;
+		case TiLoggerSeverityType::Ti_WARN:
+			log_stream__ << "WARN: ";
+			break;
+		case TiLoggerSeverityType::Ti_ERROR:
+			log_stream__ << "ERROR: ";
+			break;
+	};
 
-  PrintImpl(args...);
+	PrintImpl(args...);
 }
 
 template <typename TiLoggerPolicy>
-void TiLogger<TiLoggerPolicy>::PrintImpl() {
-  ti_log_policy__.Write(TiLoggerPimpl::GetLoglineHeader(log_line_number__++) + log_stream__.str() + ".");
-  log_stream__.str("");
+void TiLogger<TiLoggerPolicy>::PrintImpl()
+{
+	ti_log_policy__.Write(TiLoggerPimpl::GetLoglineHeader(log_line_number__++) + log_stream__.str() + ".");
+	log_stream__.str("");
 }
 
 template <typename TiLoggerPolicy>
 template <typename First, typename... Rest>
-void TiLogger<TiLoggerPolicy>::PrintImpl(First first_parameter, Rest... rest) {
-  log_stream__ << first_parameter;
-  PrintImpl(rest...);
+void TiLogger<TiLoggerPolicy>::PrintImpl(First first_parameter, Rest... rest)
+{
+	log_stream__ << first_parameter;
+	PrintImpl(rest...);
 }
 
 #ifdef TITANIUM_LOGGING_ENABLE

@@ -12,9 +12,10 @@
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Constants.hpp"
 
-namespace Titanium {
-namespace UI {
-
+namespace Titanium
+{
+namespace UI
+{
 using namespace HAL;
 
 /*!
@@ -24,9 +25,10 @@ using namespace HAL;
 
    See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ListView
    */
-class TITANIUMKIT_EXPORT ListView : public View, public JSExport<ListView> {
- public:
-  /*!
+class TITANIUMKIT_EXPORT ListView : public View, public JSExport<ListView>
+{
+   public:
+	/*!
      @method
 
      @abstract defaultItemTemplate : String/Number
@@ -36,29 +38,29 @@ class TITANIUMKIT_EXPORT ListView : public View, public JSExport<ListView> {
      built-in templates or those defined in the templates
      property. Can be changed dynamically.
      */
-  virtual LIST_ITEM_TEMPLATE get_defaultItemTemplate() const TITANIUM_NOEXCEPT final;
-  virtual void set_defaultItemTemplate(const LIST_ITEM_TEMPLATE& defaultItemTemplate) TITANIUM_NOEXCEPT;
+	virtual LIST_ITEM_TEMPLATE get_defaultItemTemplate() const TITANIUM_NOEXCEPT final;
+	virtual void set_defaultItemTemplate(const LIST_ITEM_TEMPLATE& defaultItemTemplate) TITANIUM_NOEXCEPT;
 
-  ListView(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  ListView(const ListView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+	ListView(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	ListView(const ListView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~ListView() = default;
-  ListView(const ListView&) = default;
-  ListView& operator=(const ListView&) = default;
+	virtual ~ListView() = default;
+	ListView(const ListView&) = default;
+	ListView& operator=(const ListView&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  ListView(ListView&&) = default;
-  ListView& operator=(ListView&&) = default;
+	ListView(ListView&&) = default;
+	ListView& operator=(ListView&&) = default;
 #endif
 
-  // TODO: The following functions can automatically be generated
-  // from the YAML API docs.
-  static void JSExportInitialize();
+	// TODO: The following functions can automatically be generated
+	// from the YAML API docs.
+	static void JSExportInitialize();
 
-  virtual JSValue getDefaultItemTemplateArgumentValidator() const TITANIUM_NOEXCEPT final;
-  virtual bool setDefaultItemTemplateArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT final;
+	virtual JSValue getDefaultItemTemplateArgumentValidator() const TITANIUM_NOEXCEPT final;
+	virtual bool setDefaultItemTemplateArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT final;
 
- private:
-  LIST_ITEM_TEMPLATE defaultItemTemplate__;
+   private:
+	LIST_ITEM_TEMPLATE defaultItemTemplate__;
 };
 }
 }  // namespace Titanium { namespace UI {

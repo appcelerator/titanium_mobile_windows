@@ -18,59 +18,63 @@
 
 using namespace HAL;
 
-class GlobalObjectTests : public testing::Test {
- protected:
-  virtual void SetUp() {
-  }
+class GlobalObjectTests : public testing::Test
+{
+   protected:
+	virtual void SetUp()
+	{
+	}
 
-  virtual void TearDown() {
-  }
+	virtual void TearDown()
+	{
+	}
 
-  JSContextGroup js_context_group;
+	JSContextGroup js_context_group;
 };
 
-TEST_F(GlobalObjectTests, require) {
-  JSContext js_context = js_context_group.CreateContext(JSExport<NativeGlobalObjectExample>::Class());
-  auto global_object = js_context.get_global_object();
+TEST_F(GlobalObjectTests, require)
+{
+	JSContext js_context = js_context_group.CreateContext(JSExport<NativeGlobalObjectExample>::Class());
+	auto global_object = js_context.get_global_object();
 
-  auto foo = js_context.CreateObject();
+	auto foo = js_context.CreateObject();
 
-  XCTAssertFalse(foo.HasProperty("bar"));
-  auto bar = js_context.CreateObject();
-  foo.SetProperty("bar", bar, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(foo.HasProperty("bar"));
+	XCTAssertFalse(foo.HasProperty("bar"));
+	auto bar = js_context.CreateObject();
+	foo.SetProperty("bar", bar, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(foo.HasProperty("bar"));
 
-  XCTAssertFalse(bar.HasProperty("baz"));
-  auto baz = js_context.CreateObject();
-  bar.SetProperty("baz", baz, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(bar.HasProperty("baz"));
+	XCTAssertFalse(bar.HasProperty("baz"));
+	auto baz = js_context.CreateObject();
+	bar.SetProperty("baz", baz, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(bar.HasProperty("baz"));
 
-  XCTAssertFalse(baz.HasProperty("number"));
-  baz.SetProperty("number", js_context.CreateNumber(42), {JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(baz.HasProperty("number"));
+	XCTAssertFalse(baz.HasProperty("number"));
+	baz.SetProperty("number", js_context.CreateNumber(42), {JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(baz.HasProperty("number"));
 
-  XCTAssertFalse(global_object.HasProperty("foo"));
-  global_object.SetProperty("foo", foo, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(global_object.HasProperty("foo"));
+	XCTAssertFalse(global_object.HasProperty("foo"));
+	global_object.SetProperty("foo", foo, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(global_object.HasProperty("foo"));
 
-  auto number = js_context.JSEvaluateScript("foo.bar.baz.number;");
-  XCTAssertEqual(42, static_cast<uint32_t>(number));
-  //std::clog << "MDL: number = " << number << std::endl;
+	auto number = js_context.JSEvaluateScript("foo.bar.baz.number;");
+	XCTAssertEqual(42, static_cast<uint32_t>(number));
+	//std::clog << "MDL: number = " << number << std::endl;
 
-  number = js_context.JSEvaluateScript("foo.bar.baz.number = 24;");
-  XCTAssertEqual(24, static_cast<uint32_t>(number));
+	number = js_context.JSEvaluateScript("foo.bar.baz.number = 24;");
+	XCTAssertEqual(24, static_cast<uint32_t>(number));
 
-  for (const auto& property_name : static_cast<std::vector<JSString>>(global_object.GetPropertyNames())) {
-    std::clog << "MDL: property_name = " << property_name << std::endl;
-  }
+	for (const auto& property_name : static_cast<std::vector<JSString>>(global_object.GetPropertyNames())) {
+		std::clog << "MDL: property_name = " << property_name << std::endl;
+	}
 
-  std::string app1_js = R"js(
+	std::string app1_js = R"js(
   "use strict";
   var hello = require("hello");
   hello('world');
   )js";
 
-  std::string hello1_js = R"js(
+	std::string hello1_js = R"js(
   "use strict";
   exports = sayHello;
   function sayHello(name) {
@@ -78,21 +82,21 @@ TEST_F(GlobalObjectTests, require) {
   }
   )js";
 
-  auto global_object_ptr = global_object.GetPrivate<NativeGlobalObjectExample>();
-  XCTAssertNotEqual(nullptr, global_object_ptr);
+	auto global_object_ptr = global_object.GetPrivate<NativeGlobalObjectExample>();
+	XCTAssertNotEqual(nullptr, global_object_ptr);
 
-  JSValue result = js_context.CreateNull();
+	JSValue result = js_context.CreateNull();
 
-  global_object_ptr->set_example_resource(hello1_js);
-  XCTAssertNoThrow(result = js_context.JSEvaluateScript(app1_js));
+	global_object_ptr->set_example_resource(hello1_js);
+	XCTAssertNoThrow(result = js_context.JSEvaluateScript(app1_js));
 
-  std::string app2_js = R"js(
+	std::string app2_js = R"js(
   "use strict";
   var hello = require("hello");
   hello.sayHello('world');
   )js";
 
-  std::string hello2_js = R"js(
+	std::string hello2_js = R"js(
   "use strict";
   exports.sayHello = sayHello;
   function sayHello(name) {
@@ -100,12 +104,14 @@ TEST_F(GlobalObjectTests, require) {
   }
   )js";
 
-  global_object_ptr->set_example_resource(hello2_js);
-  XCTAssertNoThrow(result = js_context.JSEvaluateScript(app2_js));
+	global_object_ptr->set_example_resource(hello2_js);
+	XCTAssertNoThrow(result = js_context.JSEvaluateScript(app2_js));
 }
 
-TEST_F(GlobalObjectTests, timeout) {
+TEST_F(GlobalObjectTests, timeout)
+{
 }
 
-TEST_F(GlobalObjectTests, interval) {
+TEST_F(GlobalObjectTests, interval)
+{
 }

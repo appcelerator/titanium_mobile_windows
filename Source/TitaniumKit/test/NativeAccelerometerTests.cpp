@@ -16,39 +16,43 @@
 using namespace Titanium;
 using namespace HAL;
 
-class AccelerometerTests : public testing::Test {
- protected:
-  virtual void SetUp() {
-  }
+class AccelerometerTests : public testing::Test
+{
+   protected:
+	virtual void SetUp()
+	{
+	}
 
-  virtual void TearDown() {
-  }
+	virtual void TearDown()
+	{
+	}
 
-  JSContextGroup js_context_group;
+	JSContextGroup js_context_group;
 };
 
-TEST_F(AccelerometerTests, logging) {
-  JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-  auto global_object = js_context.get_global_object();
+TEST_F(AccelerometerTests, logging)
+{
+	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
+	auto global_object = js_context.get_global_object();
 
-  XCTAssertFalse(global_object.HasProperty("Titanium"));
-  auto Titanium = js_context.CreateObject();
-  global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(global_object.HasProperty("Titanium"));
+	XCTAssertFalse(global_object.HasProperty("Titanium"));
+	auto Titanium = js_context.CreateObject();
+	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(global_object.HasProperty("Titanium"));
 
-  // Make the alias "Ti" for the "Titanium" property.
-  XCTAssertFalse(global_object.HasProperty("Ti"));
-  global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(global_object.HasProperty("Ti"));
+	// Make the alias "Ti" for the "Titanium" property.
+	XCTAssertFalse(global_object.HasProperty("Ti"));
+	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(global_object.HasProperty("Ti"));
 
-  XCTAssertFalse(Titanium.HasProperty("Accelerometer"));
-  auto Accelerometer = js_context.CreateObject(JSExport<NativeAccelerometerExample>::Class());
-  Titanium.SetProperty("Accelerometer", Accelerometer, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(Titanium.HasProperty("Accelerometer"));
+	XCTAssertFalse(Titanium.HasProperty("Accelerometer"));
+	auto Accelerometer = js_context.CreateObject(JSExport<NativeAccelerometerExample>::Class());
+	Titanium.SetProperty("Accelerometer", Accelerometer, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(Titanium.HasProperty("Accelerometer"));
 
-  auto Accelerometer_ptr = Accelerometer.GetPrivate<NativeAccelerometerExample>();
-  XCTAssertNotEqual(nullptr, Accelerometer_ptr);
+	auto Accelerometer_ptr = Accelerometer.GetPrivate<NativeAccelerometerExample>();
+	XCTAssertNotEqual(nullptr, Accelerometer_ptr);
 
-  XCTAssertTrue(Accelerometer.HasProperty("addEventListener"));
-  ASSERT_NO_THROW(js_context.JSEvaluateScript("Ti.Accelerometer.addEventListener('update', function(){});"));
+	XCTAssertTrue(Accelerometer.HasProperty("addEventListener"));
+	ASSERT_NO_THROW(js_context.JSEvaluateScript("Ti.Accelerometer.addEventListener('update', function(){});"));
 }

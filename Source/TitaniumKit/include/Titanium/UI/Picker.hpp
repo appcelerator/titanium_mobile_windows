@@ -12,9 +12,10 @@
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Constants.hpp"
 
-namespace Titanium {
-namespace UI {
-
+namespace Titanium
+{
+namespace UI
+{
 using namespace HAL;
 
 /*!
@@ -24,9 +25,10 @@ using namespace HAL;
 
    See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Picker
    */
-class TITANIUMKIT_EXPORT Picker : public View, public JSExport<Picker> {
- public:
-  /*!
+class TITANIUMKIT_EXPORT Picker : public View, public JSExport<Picker>
+{
+   public:
+	/*!
      @method
 
      @abstract type : Number
@@ -36,29 +38,29 @@ class TITANIUMKIT_EXPORT Picker : public View, public JSExport<Picker> {
      else except Titanium.UI.PICKER_TYPE_PLAIN, you cannot modify the
      columns.
      */
-  virtual PICKER_TYPE get_type() const TITANIUM_NOEXCEPT final;
-  virtual void set_type(const PICKER_TYPE& type) TITANIUM_NOEXCEPT;
+	virtual PICKER_TYPE get_type() const TITANIUM_NOEXCEPT final;
+	virtual void set_type(const PICKER_TYPE& type) TITANIUM_NOEXCEPT;
 
-  Picker(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  Picker(const Picker&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+	Picker(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	Picker(const Picker&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~Picker() = default;
-  Picker(const Picker&) = default;
-  Picker& operator=(const Picker&) = default;
+	virtual ~Picker() = default;
+	Picker(const Picker&) = default;
+	Picker& operator=(const Picker&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  Picker(Picker&&) = default;
-  Picker& operator=(Picker&&) = default;
+	Picker(Picker&&) = default;
+	Picker& operator=(Picker&&) = default;
 #endif
 
-  // TODO: The following functions can automatically be generated
-  // from the YAML API docs.
-  static void JSExportInitialize();
+	// TODO: The following functions can automatically be generated
+	// from the YAML API docs.
+	static void JSExportInitialize();
 
-  virtual JSValue getTypeArgumentValidator() const TITANIUM_NOEXCEPT final;
-  virtual bool setTypeArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT final;
+	virtual JSValue getTypeArgumentValidator() const TITANIUM_NOEXCEPT final;
+	virtual bool setTypeArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT final;
 
- private:
-  PICKER_TYPE type__;
+   private:
+	PICKER_TYPE type__;
 };
 }
 }  // namespace Titanium { namespace UI {

@@ -10,8 +10,8 @@
 #include "TitaniumWindows/detail/GestureBase.hpp"
 #include "TitaniumWindows/ShakeGestureHelper.hpp"
 
-namespace TitaniumWindows {
-
+namespace TitaniumWindows
+{
 using namespace HAL;
 
 /*!
@@ -19,41 +19,42 @@ using namespace HAL;
 
     @discussion This is the Titanium.Gesture implementation for Windows.
     */
-class TITANIUMWINDOWS_GESTURE_EXPORT Gesture final : public Titanium::Gesture, public JSExport<Gesture> {
- public:
-  Gesture(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  Gesture(const Gesture&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+class TITANIUMWINDOWS_GESTURE_EXPORT Gesture final : public Titanium::Gesture, public JSExport<Gesture>
+{
+   public:
+	Gesture(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	Gesture(const Gesture&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~Gesture();
-  Gesture(const Gesture&) = default;
-  Gesture& operator=(const Gesture&) = default;
+	virtual ~Gesture();
+	Gesture(const Gesture&) = default;
+	Gesture& operator=(const Gesture&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  Gesture(Gesture&&) = default;
-  Gesture& operator=(Gesture&&) = default;
+	Gesture(Gesture&&) = default;
+	Gesture& operator=(Gesture&&) = default;
 #endif
 
-  static void JSExportInitialize();
+	static void JSExportInitialize();
 
-  virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
-  virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
+	virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
+	virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
 
-  virtual Titanium::UI::ORIENTATION get_orientation() const TITANIUM_NOEXCEPT override;
+	virtual Titanium::UI::ORIENTATION get_orientation() const TITANIUM_NOEXCEPT override;
 
- protected:
- private:
-  void setupOrieintationListener();
-  bool orientationEventSet_{false};
-  Titanium::UI::ORIENTATION updateOrientation();
+   protected:
+   private:
+	void setupOrieintationListener();
+	bool orientationEventSet_{false};
+	Titanium::UI::ORIENTATION updateOrientation();
 
-  Windows::Foundation::DateTime previous_acceleromter_time_;
-  Windows::Devices::Sensors::Accelerometer ^ accelerometer_;
+	Windows::Foundation::DateTime previous_acceleromter_time_;
+	Windows::Devices::Sensors::Accelerometer ^ accelerometer_;
 
-  Titanium::UI::ORIENTATION orientation_ = Titanium::UI::ORIENTATION::UNKNOWN;
+	Titanium::UI::ORIENTATION orientation_ = Titanium::UI::ORIENTATION::UNKNOWN;
 
-  Windows::Foundation::EventRegistrationToken shake_event_;
-  Windows::Foundation::EventRegistrationToken orientationchange_event_;
+	Windows::Foundation::EventRegistrationToken shake_event_;
+	Windows::Foundation::EventRegistrationToken orientationchange_event_;
 
-  TitaniumWindows::Gesture::ShakeGestureHelper shakeGestureHelper;
+	TitaniumWindows::Gesture::ShakeGestureHelper shakeGestureHelper;
 };
 
 }  // namespace TitaniumWindows

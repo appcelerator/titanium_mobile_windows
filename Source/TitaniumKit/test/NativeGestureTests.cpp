@@ -17,47 +17,51 @@
 using namespace Titanium;
 using namespace HAL;
 
-class GestureTests : public testing::Test {
- protected:
-  virtual void SetUp() {
-  }
+class GestureTests : public testing::Test
+{
+   protected:
+	virtual void SetUp()
+	{
+	}
 
-  virtual void TearDown() {
-  }
+	virtual void TearDown()
+	{
+	}
 
-  JSContextGroup js_context_group;
+	JSContextGroup js_context_group;
 };
 
-TEST_F(GestureTests, logging) {
-  JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-  auto global_object = js_context.get_global_object();
+TEST_F(GestureTests, logging)
+{
+	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
+	auto global_object = js_context.get_global_object();
 
-  XCTAssertFalse(global_object.HasProperty("Titanium"));
-  auto Titanium = js_context.CreateObject();
-  global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(global_object.HasProperty("Titanium"));
+	XCTAssertFalse(global_object.HasProperty("Titanium"));
+	auto Titanium = js_context.CreateObject();
+	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(global_object.HasProperty("Titanium"));
 
-  // Make the alias "Ti" for the "Titanium" property.
-  XCTAssertFalse(global_object.HasProperty("Ti"));
-  global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(global_object.HasProperty("Ti"));
+	// Make the alias "Ti" for the "Titanium" property.
+	XCTAssertFalse(global_object.HasProperty("Ti"));
+	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(global_object.HasProperty("Ti"));
 
-  XCTAssertFalse(Titanium.HasProperty("Gesture"));
-  auto Gesture = js_context.CreateObject(JSExport<NativeGestureExample>::Class());
-  Titanium.SetProperty("Gesture", Gesture, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-  XCTAssertTrue(Titanium.HasProperty("Gesture"));
+	XCTAssertFalse(Titanium.HasProperty("Gesture"));
+	auto Gesture = js_context.CreateObject(JSExport<NativeGestureExample>::Class());
+	Titanium.SetProperty("Gesture", Gesture, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+	XCTAssertTrue(Titanium.HasProperty("Gesture"));
 
-  auto Gesture_ptr = Gesture.GetPrivate<NativeGestureExample>();
-  XCTAssertNotEqual(nullptr, Gesture_ptr);
+	auto Gesture_ptr = Gesture.GetPrivate<NativeGestureExample>();
+	XCTAssertNotEqual(nullptr, Gesture_ptr);
 
-  XCTAssertTrue(Gesture.HasProperty("addEventListener"));
-  ASSERT_NO_THROW(js_context.JSEvaluateScript("Ti.Gesture.addEventListener('shake', function(){});"));
+	XCTAssertTrue(Gesture.HasProperty("addEventListener"));
+	ASSERT_NO_THROW(js_context.JSEvaluateScript("Ti.Gesture.addEventListener('shake', function(){});"));
 
-  XCTAssertTrue(Gesture.HasProperty("landscape"));
-  XCTAssertTrue(Gesture.HasProperty("portrait"));
-  XCTAssertTrue(Gesture.HasProperty("orientation"));
+	XCTAssertTrue(Gesture.HasProperty("landscape"));
+	XCTAssertTrue(Gesture.HasProperty("portrait"));
+	XCTAssertTrue(Gesture.HasProperty("orientation"));
 
-  JSValue result = js_context.CreateNull();
-  XCTAssertNoThrow(result = js_context.JSEvaluateScript("Ti.Gesture.landscape"));
-  XCTAssertTrue(result.IsBoolean());
+	JSValue result = js_context.CreateNull();
+	XCTAssertNoThrow(result = js_context.JSEvaluateScript("Ti.Gesture.landscape"));
+	XCTAssertTrue(result.IsBoolean());
 }

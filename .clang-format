@@ -44,10 +44,10 @@ PointerAlignment: Left
 SpacesBeforeTrailingComments: 2
 Cpp11BracedListStyle: true
 Standard:        Cpp11
-IndentWidth:     2
-TabWidth:        8
-UseTab:          Never
-BreakBeforeBraces: Attach
+IndentWidth:     4
+TabWidth:        4
+UseTab:          ForIndentation
+BreakBeforeBraces: Linux
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
 SpacesInAngles:  false

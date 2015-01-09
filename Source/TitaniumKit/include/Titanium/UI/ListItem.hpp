@@ -12,9 +12,10 @@
 #include "Titanium/Module.hpp"
 #include "Titanium/UI/Constants.hpp"
 
-namespace Titanium {
-namespace UI {
-
+namespace Titanium
+{
+namespace UI
+{
 using namespace HAL;
 
 /*!
@@ -24,38 +25,39 @@ using namespace HAL;
 
    See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ListItem
    */
-class TITANIUMKIT_EXPORT ListItem : public Module, public JSExport<ListItem> {
- public:
-  /*!
+class TITANIUMKIT_EXPORT ListItem : public Module, public JSExport<ListItem>
+{
+   public:
+	/*!
      @method
 
      @abstract accessoryType : Number
 
      @discussion Sets an accessory on the right side of an item.
      */
-  virtual LIST_ACCESSORY_TYPE get_accessoryType() const TITANIUM_NOEXCEPT final;
-  virtual void set_accessoryType(const LIST_ACCESSORY_TYPE& accessoryType) TITANIUM_NOEXCEPT;
+	virtual LIST_ACCESSORY_TYPE get_accessoryType() const TITANIUM_NOEXCEPT final;
+	virtual void set_accessoryType(const LIST_ACCESSORY_TYPE& accessoryType) TITANIUM_NOEXCEPT;
 
-  ListItem(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  ListItem(const ListItem&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+	ListItem(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	ListItem(const ListItem&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~ListItem() = default;
-  ListItem(const ListItem&) = default;
-  ListItem& operator=(const ListItem&) = default;
+	virtual ~ListItem() = default;
+	ListItem(const ListItem&) = default;
+	ListItem& operator=(const ListItem&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  ListItem(ListItem&&) = default;
-  ListItem& operator=(ListItem&&) = default;
+	ListItem(ListItem&&) = default;
+	ListItem& operator=(ListItem&&) = default;
 #endif
 
-  // TODO: The following functions can automatically be generated
-  // from the YAML API docs.
-  static void JSExportInitialize();
+	// TODO: The following functions can automatically be generated
+	// from the YAML API docs.
+	static void JSExportInitialize();
 
-  virtual JSValue getAccessoryTypeArgumentValidator() const TITANIUM_NOEXCEPT final;
-  virtual bool setAccessoryTypeArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT final;
+	virtual JSValue getAccessoryTypeArgumentValidator() const TITANIUM_NOEXCEPT final;
+	virtual bool setAccessoryTypeArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT final;
 
- private:
-  LIST_ACCESSORY_TYPE accessoryType__;
+   private:
+	LIST_ACCESSORY_TYPE accessoryType__;
 };
 }
 }  // namespace Titanium { namespace UI {

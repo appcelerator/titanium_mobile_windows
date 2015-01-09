@@ -20,22 +20,23 @@ using namespace HAL;
  @discussion This is an example of how to implement Titanium::UI::Button
  for a native platform.
  */
-class NativeButtonExample final : public Titanium::UI::Button, public JSExport<NativeButtonExample> {
- public:
-  NativeButtonExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  NativeButtonExample(const NativeButtonExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+class NativeButtonExample final : public Titanium::UI::Button, public JSExport<NativeButtonExample>
+{
+   public:
+	NativeButtonExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	NativeButtonExample(const NativeButtonExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~NativeButtonExample() TITANIUM_NOEXCEPT;  //= default;
-  NativeButtonExample(const NativeButtonExample&) = default;
-  NativeButtonExample& operator=(const NativeButtonExample&) = default;
+	virtual ~NativeButtonExample() TITANIUM_NOEXCEPT;  //= default;
+	NativeButtonExample(const NativeButtonExample&) = default;
+	NativeButtonExample& operator=(const NativeButtonExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativeButtonExample(NativeButtonExample&&) = default;
-  NativeButtonExample& operator=(NativeButtonExample&&) = default;
+	NativeButtonExample(NativeButtonExample&&) = default;
+	NativeButtonExample& operator=(NativeButtonExample&&) = default;
 #endif
 
-  static void JSExportInitialize();
+	static void JSExportInitialize();
 
-  virtual bool setTitleArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT override final;
+	virtual bool setTitleArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT override final;
 };
 
 #endif  // _TITANIUM_EXAMPLES_NATIVEBUTTONEXAMPLE_HPP_

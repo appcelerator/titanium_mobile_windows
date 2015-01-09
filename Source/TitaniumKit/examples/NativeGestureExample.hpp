@@ -16,27 +16,28 @@ using namespace HAL;
  @discussion This is an example of how to implement Titanium::Gesture
  for a native Gesture.
  */
-class NativeGestureExample final : public Titanium::Gesture, public JSExport<NativeGestureExample> {
- public:
-  NativeGestureExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  NativeGestureExample(const NativeGestureExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+class NativeGestureExample final : public Titanium::Gesture, public JSExport<NativeGestureExample>
+{
+   public:
+	NativeGestureExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	NativeGestureExample(const NativeGestureExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~NativeGestureExample() = default;
-  NativeGestureExample(const NativeGestureExample&) = default;
-  NativeGestureExample& operator=(const NativeGestureExample&) = default;
+	virtual ~NativeGestureExample() = default;
+	NativeGestureExample(const NativeGestureExample&) = default;
+	NativeGestureExample& operator=(const NativeGestureExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativeGestureExample(NativeGestureExample&&) = default;
-  NativeGestureExample& operator=(NativeGestureExample&&) = default;
+	NativeGestureExample(NativeGestureExample&&) = default;
+	NativeGestureExample& operator=(NativeGestureExample&&) = default;
 #endif
 
-  static void JSExportInitialize();
+	static void JSExportInitialize();
 
-  virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
-  virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
+	virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
+	virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
 
-  virtual Titanium::UI::ORIENTATION get_orientation() const TITANIUM_NOEXCEPT override;
+	virtual Titanium::UI::ORIENTATION get_orientation() const TITANIUM_NOEXCEPT override;
 
- protected:
+   protected:
 };
 
 #endif  // _TITANIUM_EXAMPLES_NATIVEGESTUREEXAMPLE_HPP_

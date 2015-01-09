@@ -19,22 +19,23 @@ using namespace HAL;
  @discussion This is an example of how to implement Titanium::UI::View
  for a native platform.
  */
-class NativeViewExample : public Titanium::UI::View, public JSExport<NativeViewExample> {
- public:
-  NativeViewExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  NativeViewExample(const NativeViewExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+class NativeViewExample : public Titanium::UI::View, public JSExport<NativeViewExample>
+{
+   public:
+	NativeViewExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	NativeViewExample(const NativeViewExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~NativeViewExample() TITANIUM_NOEXCEPT;  //= default;
-  NativeViewExample(const NativeViewExample&) = default;
-  NativeViewExample& operator=(const NativeViewExample&) = default;
+	virtual ~NativeViewExample() TITANIUM_NOEXCEPT;  //= default;
+	NativeViewExample(const NativeViewExample&) = default;
+	NativeViewExample& operator=(const NativeViewExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativeViewExample(NativeViewExample&&) = default;
-  NativeViewExample& operator=(NativeViewExample&&) = default;
+	NativeViewExample(NativeViewExample&&) = default;
+	NativeViewExample& operator=(NativeViewExample&&) = default;
 #endif
 
-  static void JSExportInitialize();
+	static void JSExportInitialize();
 
-  virtual bool setBackgroundColorArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT final;
+	virtual bool setBackgroundColorArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT final;
 };
 
 #endif  // _TITANIUM_EXAMPLES_NATIVEVIEW_HPP_

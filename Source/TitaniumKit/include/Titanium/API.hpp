@@ -11,8 +11,8 @@
 
 #include "Titanium/Module.hpp"
 
-namespace Titanium {
-
+namespace Titanium
+{
 using namespace HAL;
 
 /*!
@@ -22,9 +22,10 @@ using namespace HAL;
 
    See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.API
    */
-class TITANIUMKIT_EXPORT API : public Module, public JSExport<API> {
- public:
-  /*!
+class TITANIUMKIT_EXPORT API : public Module, public JSExport<API>
+{
+   public:
+	/*!
      @method
 
      @abstract info( message ) : void
@@ -36,9 +37,9 @@ class TITANIUMKIT_EXPORT API : public Module, public JSExport<API> {
 
      @result void
      */
-  virtual void info(const std::string& message) const TITANIUM_NOEXCEPT final;
+	virtual void info(const std::string& message) const TITANIUM_NOEXCEPT final;
 
-  /*!
+	/*!
      @method
 
      @abstract warn( message ) : void
@@ -50,9 +51,9 @@ class TITANIUMKIT_EXPORT API : public Module, public JSExport<API> {
 
      @result void
      */
-  virtual void warn(const std::string& message) const TITANIUM_NOEXCEPT final;
+	virtual void warn(const std::string& message) const TITANIUM_NOEXCEPT final;
 
-  /*!
+	/*!
      @method
 
      @abstract error( message ) : void
@@ -64,9 +65,9 @@ class TITANIUMKIT_EXPORT API : public Module, public JSExport<API> {
 
      @result void
      */
-  virtual void error(const std::string& message) const TITANIUM_NOEXCEPT final;
+	virtual void error(const std::string& message) const TITANIUM_NOEXCEPT final;
 
-  /*!
+	/*!
      @method
 
      @abstract debug( message ) : void
@@ -78,9 +79,9 @@ class TITANIUMKIT_EXPORT API : public Module, public JSExport<API> {
 
      @result void
      */
-  virtual void debug(const std::string& message) const TITANIUM_NOEXCEPT final;
+	virtual void debug(const std::string& message) const TITANIUM_NOEXCEPT final;
 
-  /*!
+	/*!
      @method
 
      @abstract trace( message ) : void
@@ -92,9 +93,9 @@ class TITANIUMKIT_EXPORT API : public Module, public JSExport<API> {
 
      @result void
      */
-  virtual void trace(const std::string& message) const TITANIUM_NOEXCEPT final;
+	virtual void trace(const std::string& message) const TITANIUM_NOEXCEPT final;
 
-  /*!
+	/*!
      @method
 
      @abstract log( level, message ) : void
@@ -110,44 +111,44 @@ class TITANIUMKIT_EXPORT API : public Module, public JSExport<API> {
 
      @result void
      */
-  virtual void log(const std::string& level, const std::string& message) const TITANIUM_NOEXCEPT final;
+	virtual void log(const std::string& level, const std::string& message) const TITANIUM_NOEXCEPT final;
 
-  API(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  API(const API&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+	API(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	API(const API&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~API() TITANIUM_NOEXCEPT;  //= default;
-  API(const API&) = default;
-  API& operator=(const API&) = default;
+	virtual ~API() TITANIUM_NOEXCEPT;  //= default;
+	API(const API&) = default;
+	API& operator=(const API&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  API(API&&) = default;
-  API& operator=(API&&) = default;
+	API(API&&) = default;
+	API& operator=(API&&) = default;
 #endif
 
-  // TODO: The following functions can automatically be generated from
-  // the YAML API docs.
-  static void JSExportInitialize();
-  JSValue infoArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
-  JSValue warnArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
-  JSValue errorArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
-  JSValue debugArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
-  JSValue traceArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
-  JSValue logArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	// TODO: The following functions can automatically be generated from
+	// the YAML API docs.
+	static void JSExportInitialize();
+	JSValue infoArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	JSValue warnArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	JSValue errorArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	JSValue debugArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	JSValue traceArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	JSValue logArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
 
- protected:
-  virtual void log(const std::string& message) const TITANIUM_NOEXCEPT;
+   protected:
+	virtual void log(const std::string& message) const TITANIUM_NOEXCEPT;
 
- private:
-  enum class LogSeverityLevel {
-    API_INFO,
-    API_WARN,
-    API_ERROR,
-    API_DEBUG,
-    API_TRACE
-  };
+   private:
+	enum class LogSeverityLevel {
+		API_INFO,
+		API_WARN,
+		API_ERROR,
+		API_DEBUG,
+		API_TRACE
+	};
 
-  void log(LogSeverityLevel log_severity_level, const std::string& message) const TITANIUM_NOEXCEPT;
+	void log(LogSeverityLevel log_severity_level, const std::string& message) const TITANIUM_NOEXCEPT;
 
-  static LogSeverityLevel ToLogLevel(const std::string& level);
+	static LogSeverityLevel ToLogLevel(const std::string& level);
 };
 
 }  // namespace Titanium

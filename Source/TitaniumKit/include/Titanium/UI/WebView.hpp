@@ -13,9 +13,10 @@
 #include "Titanium/UI/WebViewErrorEvent.hpp"
 #include "Titanium/UI/Constants.hpp"
 
-namespace Titanium {
-namespace UI {
-
+namespace Titanium
+{
+namespace UI
+{
 using namespace HAL;
 
 /*!
@@ -25,22 +26,23 @@ using namespace HAL;
 
    See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.WebView
    */
-class TITANIUMKIT_EXPORT WebView : public View, public JSExport<WebView> {
- public:
-  WebView(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  WebView(const WebView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+class TITANIUMKIT_EXPORT WebView : public View, public JSExport<WebView>
+{
+   public:
+	WebView(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	WebView(const WebView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~WebView() = default;
-  WebView(const WebView&) = default;
-  WebView& operator=(const WebView&) = default;
+	virtual ~WebView() = default;
+	WebView(const WebView&) = default;
+	WebView& operator=(const WebView&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  WebView(WebView&&) = default;
-  WebView& operator=(WebView&&) = default;
+	WebView(WebView&&) = default;
+	WebView& operator=(WebView&&) = default;
 #endif
 
-  // TODO: The following functions can automatically be generated
-  // from the YAML API docs.
-  static void JSExportInitialize();
+	// TODO: The following functions can automatically be generated
+	// from the YAML API docs.
+	static void JSExportInitialize();
 };
 }
 }  // namespace Titanium { namespace UI {

@@ -15,8 +15,8 @@
 #include <unordered_map>
 #include <atomic>
 
-namespace Titanium {
-
+namespace Titanium
+{
 using namespace HAL;
 
 /*!
@@ -29,9 +29,10 @@ using namespace HAL;
    Every Titanium platform provides a Platform Delegate that this
    class delegates to for platform-specific capabilities.
    */
-class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<GlobalObject> {
- public:
-  /*!
+class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<GlobalObject>
+{
+   public:
+	/*!
      @method
 
      @abstract require( moduleId ) : Object
@@ -84,9 +85,9 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
 
      @result Exported exports object of the required module (Object).
      */
-  virtual JSObject xrequire(const std::string& moduleId) TITANIUM_NOEXCEPT final;
+	virtual JSObject xrequire(const std::string& moduleId) TITANIUM_NOEXCEPT final;
 
-  /*!
+	/*!
      @method
 
      @abstract setTimeout( function, delay ) : Number
@@ -105,9 +106,9 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
 
      @result Unique timer identifier (Number).
      */
-  virtual unsigned setTimeout(JSObject&& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT final;
+	virtual unsigned setTimeout(JSObject&& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT final;
 
-  /*!
+	/*!
      @method
 
      @abstract clearTimeout( timerId ) : void
@@ -119,9 +120,9 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
 
      @result void
      */
-  virtual void clearTimeout(const unsigned& timerId) TITANIUM_NOEXCEPT final;
+	virtual void clearTimeout(const unsigned& timerId) TITANIUM_NOEXCEPT final;
 
-  /*!
+	/*!
      @method
 
      @abstract setInterval( function, delay ) : Number
@@ -141,9 +142,9 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
 
      @result Unique timer identifier (Number).
      */
-  virtual unsigned setInterval(JSObject&& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT final;
+	virtual unsigned setInterval(JSObject&& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT final;
 
-  /*!
+	/*!
      @method
 
      @abstract clearInterval( timerId ) : void
@@ -155,32 +156,32 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
 
      @result void
      */
-  virtual void clearInterval(const unsigned& timerId) TITANIUM_NOEXCEPT final;
+	virtual void clearInterval(const unsigned& timerId) TITANIUM_NOEXCEPT final;
 
-  GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  GlobalObject(const GlobalObject&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+	GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	GlobalObject(const GlobalObject&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~GlobalObject() TITANIUM_NOEXCEPT;  //= default;
-  GlobalObject(const GlobalObject&) = default;
-  GlobalObject& operator=(const GlobalObject&) = default;
+	virtual ~GlobalObject() TITANIUM_NOEXCEPT;  //= default;
+	GlobalObject(const GlobalObject&) = default;
+	GlobalObject& operator=(const GlobalObject&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  GlobalObject(GlobalObject&&) = default;
-  GlobalObject& operator=(GlobalObject&&) = default;
+	GlobalObject(GlobalObject&&) = default;
+	GlobalObject& operator=(GlobalObject&&) = default;
 #endif
 
-  // TODO: The following functions can automatically be generated
-  // from the YAML API docs.
-  static void JSExportInitialize();
-  JSValue globalArgumentValidator() const TITANIUM_NOEXCEPT;
-  JSValue requireArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
-  JSValue setTimeoutArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
-  JSValue clearTimeoutArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
-  JSValue setIntervalArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
-  JSValue clearIntervalArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	// TODO: The following functions can automatically be generated
+	// from the YAML API docs.
+	static void JSExportInitialize();
+	JSValue globalArgumentValidator() const TITANIUM_NOEXCEPT;
+	JSValue requireArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	JSValue setTimeoutArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	JSValue clearTimeoutArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	JSValue setIntervalArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
+	JSValue clearIntervalArgumentValidator(const std::vector<JSValue>& arguments, JSObject& this_object);
 
-  using Callback_t = std::function<void()>;
+	using Callback_t = std::function<void()>;
 
-  /*!
+	/*!
      @class
 
      @discussion This is an abstract base class used in the
@@ -188,9 +189,10 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
      clearInterval that native platforms must provide implementations
      for.
      */
-  class TITANIUMKIT_EXPORT Timer {
-   public:
-    /*!
+	class TITANIUMKIT_EXPORT Timer
+	{
+	   public:
+		/*!
        @method
 
        @abstract Create a Timer instance that repeatedly calls the
@@ -203,17 +205,17 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
        @param interval The interval to repeatedly call the given
        function after the Start method is called.
        */
-    Timer(Callback_t callback, const std::chrono::milliseconds& interval);
+		Timer(Callback_t callback, const std::chrono::milliseconds& interval);
 
-    virtual ~Timer() = default;
-    Timer(const Timer&) = default;
-    Timer& operator=(const Timer&) = default;
+		virtual ~Timer() = default;
+		Timer(const Timer&) = default;
+		Timer& operator=(const Timer&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-    Timer(Timer&&) = default;
-    Timer& operator=(Timer&&) = default;
+		Timer(Timer&&) = default;
+		Timer& operator=(Timer&&) = default;
 #endif
 
-    /*!
+		/*!
        @method
 
        @abstract Start calling the callback repeatedly at the given
@@ -221,9 +223,9 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
 
        @result void
        */
-    virtual void Start() TITANIUM_NOEXCEPT = 0;
+		virtual void Start() TITANIUM_NOEXCEPT = 0;
 
-    /*!
+		/*!
        @method
 
        @abstract Stop calling the callback repeatedly at the given
@@ -231,9 +233,9 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
 
        @result void
        */
-    virtual void Stop() TITANIUM_NOEXCEPT = 0;
+		virtual void Stop() TITANIUM_NOEXCEPT = 0;
 
-    /*!
+		/*!
        @method
 
        @abstract Return the interval that the Timer was constructed
@@ -241,21 +243,21 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
 
        @result The interval that the Timer was constructed with.
        */
-    virtual std::chrono::milliseconds get_interval() const TITANIUM_NOEXCEPT final;
+		virtual std::chrono::milliseconds get_interval() const TITANIUM_NOEXCEPT final;
 
-   private:
+	   private:
 // Silence 4251 on Windows since private member variables do not
 // need to be exported from a DLL.
 #pragma warning(push)
 #pragma warning(disable : 4251)
-    std::chrono::milliseconds interval__;
+		std::chrono::milliseconds interval__;
 #pragma warning(pop)
-  };
+	};
 
- protected:
-  virtual std::string LoadResource(const std::string& moduleId) const TITANIUM_NOEXCEPT;
+   protected:
+	virtual std::string LoadResource(const std::string& moduleId) const TITANIUM_NOEXCEPT;
 
-  /*!
+	/*!
      @method
 
      @abstract Create a Timer instance that repeatedly calls the given
@@ -274,32 +276,32 @@ class TITANIUMKIT_EXPORT GlobalObject : public JSExportObject, public JSExport<G
      the given callback at the given interval after its Start method
      is called.
      */
-  virtual std::shared_ptr<Timer> CreateTimer(Callback_t callback, const std::chrono::milliseconds& interval) const TITANIUM_NOEXCEPT;
+	virtual std::shared_ptr<Timer> CreateTimer(Callback_t callback, const std::chrono::milliseconds& interval) const TITANIUM_NOEXCEPT;
 
- private:
-  JSFunction createRequireFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT;
+   private:
+	JSFunction createRequireFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT;
 
-  void RegisterCallback(JSObject&& function, const unsigned& timerId) TITANIUM_NOEXCEPT;
-  void UnregisterCallback(const unsigned& timerId) TITANIUM_NOEXCEPT;
-  void InvokeCallback(const unsigned& timerId) TITANIUM_NOEXCEPT;
-  void StartTimer(Callback_t&& callback, const unsigned& timerId, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT;
-  void StopTimer(const unsigned& timerId) TITANIUM_NOEXCEPT;
+	void RegisterCallback(JSObject&& function, const unsigned& timerId) TITANIUM_NOEXCEPT;
+	void UnregisterCallback(const unsigned& timerId) TITANIUM_NOEXCEPT;
+	void InvokeCallback(const unsigned& timerId) TITANIUM_NOEXCEPT;
+	void StartTimer(Callback_t&& callback, const unsigned& timerId, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT;
+	void StopTimer(const unsigned& timerId) TITANIUM_NOEXCEPT;
 
-  JSFunction require_function__;
-  JSObject callback_map__;
+	JSFunction require_function__;
+	JSObject callback_map__;
 
 // Silence 4251 on Windows since private member variables do not
 // need to be exported from a DLL.
 #pragma warning(push)
 #pragma warning(disable : 4251)
-  std::unordered_map<unsigned, std::shared_ptr<Timer>> timer_map__;
+	std::unordered_map<unsigned, std::shared_ptr<Timer>> timer_map__;
 
-  static std::atomic<unsigned> timer_id_generator__;
+	static std::atomic<unsigned> timer_id_generator__;
 #pragma warning(pop)
 
 #undef TITANIUM_GLOBALOBJECT_LOCK_GUARD
 #ifdef TITANIUM_THREAD_SAFE
-  std::recursive_mutex mutex__;
+	std::recursive_mutex mutex__;
 #define TITANIUM_GLOBALOBJECT_LOCK_GUARD std::lock_guard<std::recursive_mutex> lock(mutex__)
 #else
 #define TITANIUM_GLOBALOBJECT_LOCK_GUARD

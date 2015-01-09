@@ -11,22 +11,24 @@
 
 #include "TitaniumKit_EXPORT.h"
 
-namespace Titanium {
-namespace detail {
-
-class TITANIUMKIT_EXPORT TiLoggerPolicyInterface {
- public:
-  TiLoggerPolicyInterface() = default;
-  virtual ~TiLoggerPolicyInterface() = default;
-  TiLoggerPolicyInterface(const TiLoggerPolicyInterface&) = default;
-  TiLoggerPolicyInterface& operator=(const TiLoggerPolicyInterface&) = default;
+namespace Titanium
+{
+namespace detail
+{
+class TITANIUMKIT_EXPORT TiLoggerPolicyInterface
+{
+   public:
+	TiLoggerPolicyInterface() = default;
+	virtual ~TiLoggerPolicyInterface() = default;
+	TiLoggerPolicyInterface(const TiLoggerPolicyInterface&) = default;
+	TiLoggerPolicyInterface& operator=(const TiLoggerPolicyInterface&) = default;
 
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  TiLoggerPolicyInterface(TiLoggerPolicyInterface&&) = default;
-  TiLoggerPolicyInterface& operator=(TiLoggerPolicyInterface&&) = default;
+	TiLoggerPolicyInterface(TiLoggerPolicyInterface&&) = default;
+	TiLoggerPolicyInterface& operator=(TiLoggerPolicyInterface&&) = default;
 #endif
 
-  virtual void Write(const std::string& log_message) = 0;
+	virtual void Write(const std::string& log_message) = 0;
 };
 }
 }  // namespace Titanium { namespace detail {

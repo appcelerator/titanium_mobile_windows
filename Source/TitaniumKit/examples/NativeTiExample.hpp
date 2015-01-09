@@ -16,25 +16,26 @@ using namespace HAL;
  @discussion This is an example of how to implement Titanium::Titanium
  for a native Titanium.
  */
-class NativeTiExample final : public Titanium::TiModule, public JSExport<NativeTiExample> {
- public:
-  NativeTiExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
-  NativeTiExample(const NativeTiExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+class NativeTiExample final : public Titanium::TiModule, public JSExport<NativeTiExample>
+{
+   public:
+	NativeTiExample(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	NativeTiExample(const NativeTiExample&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  virtual ~NativeTiExample() = default;
-  NativeTiExample(const NativeTiExample&) = default;
-  NativeTiExample& operator=(const NativeTiExample&) = default;
+	virtual ~NativeTiExample() = default;
+	NativeTiExample(const NativeTiExample&) = default;
+	NativeTiExample& operator=(const NativeTiExample&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-  NativeTiExample(NativeTiExample&&) = default;
-  NativeTiExample& operator=(NativeTiExample&&) = default;
+	NativeTiExample(NativeTiExample&&) = default;
+	NativeTiExample& operator=(NativeTiExample&&) = default;
 #endif
 
-  static void JSExportInitialize();
+	static void JSExportInitialize();
 
- protected:
-  virtual std::string version() const TITANIUM_NOEXCEPT override final;
-  virtual std::string buildDate() const TITANIUM_NOEXCEPT override final;
-  virtual std::string buildHash() const TITANIUM_NOEXCEPT override final;
+   protected:
+	virtual std::string version() const TITANIUM_NOEXCEPT override final;
+	virtual std::string buildDate() const TITANIUM_NOEXCEPT override final;
+	virtual std::string buildHash() const TITANIUM_NOEXCEPT override final;
 };
 
 #endif  // _TITANIUM_EXAMPLES_NATIVETIEXAMPLE_HPP_
