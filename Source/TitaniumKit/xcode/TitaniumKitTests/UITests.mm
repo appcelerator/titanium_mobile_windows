@@ -19,34 +19,34 @@ using namespace HAL;
 }
 
 - (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+  [super setUp];
+  // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
+  // Put teardown code here. This method is called after the invocation of each test method in the class.
+  [super tearDown];
 }
 
 - (void)testUI {
-  JSContext js_context   = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-  auto global_object     = js_context.get_global_object();
-  
+  JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
+  auto global_object = js_context.get_global_object();
+
   XCTAssertFalse(global_object.HasProperty("Titanium"));
   auto Titanium = js_context.CreateObject();
   global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
   XCTAssertTrue(global_object.HasProperty("Titanium"));
-  
+
   // Make the alias "Ti" for the "Titanium" property.
   XCTAssertFalse(global_object.HasProperty("Ti"));
   global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
   XCTAssertTrue(global_object.HasProperty("Ti"));
-  
+
   XCTAssertFalse(Titanium.HasProperty("UI"));
   auto UI = js_context.CreateObject(JSExport<Titanium::UIModule>::Class());
   Titanium.SetProperty("UI", UI, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
   XCTAssertTrue(Titanium.HasProperty("UI"));
-  
+
   // Inherited from Titanium::Module.
   XCTAssertTrue(UI.HasProperty("addEventListener"));
   XCTAssertTrue(UI.HasProperty("applyProperties"));

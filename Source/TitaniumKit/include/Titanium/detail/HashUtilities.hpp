@@ -12,9 +12,11 @@
 #include <cstddef>
 #include <functional>
 
-namespace Titanium { namespace detail {
-
-template<typename T>
+namespace Titanium
+{
+namespace detail
+{
+template <typename T>
 struct hash;
 
 // These utility hash functions taken from "The C++ Standard Library:
@@ -22,32 +24,32 @@ struct hash;
 // pages 364-365.
 
 template <typename T>
-inline
-void hash_combine(std::size_t& seed, const T& value) {
-  seed ^= std::hash<T>()(value) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+inline void hash_combine(std::size_t& seed, const T& value)
+{
+	seed ^= std::hash<T>()(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
 template <typename T>
-inline
-void hash_val(std::size_t& seed, const T& value) {
-  hash_combine(seed, value);
+inline void hash_val(std::size_t& seed, const T& value)
+{
+	hash_combine(seed, value);
 }
 
 template <typename T, typename... Types>
-inline
-void hash_val(std::size_t& seed, const T& value, const Types&... args) {
-  hash_combine(seed, value);
-  hash_val(seed, args...);
+inline void hash_val(std::size_t& seed, const T& value, const Types&... args)
+{
+	hash_combine(seed, value);
+	hash_val(seed, args...);
 }
 
 template <typename... Types>
-inline
-std::size_t hash_val(const Types&... args) {
-  std::size_t seed = 0;
-  hash_val(seed, args...);
-  return seed;
+inline std::size_t hash_val(const Types&... args)
+{
+	std::size_t seed = 0;
+	hash_val(seed, args...);
+	return seed;
 }
+}
+}  // namespace Titanium { namespace detail {
 
-}} // namespace Titanium { namespace detail {
-
-#endif // _TITANIUM_DETAIL_HASHUTILITIES_HPP_
+#endif  // _TITANIUM_DETAIL_HASHUTILITIES_HPP_

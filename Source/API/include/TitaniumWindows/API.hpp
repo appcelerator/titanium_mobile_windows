@@ -11,44 +11,41 @@
 
 #include "TitaniumWindows/detail/APIBase.hpp"
 
-namespace TitaniumWindows {
+namespace TitaniumWindows
+{
+using namespace HAL;
 
-  using namespace HAL;
-
-  /*!
+/*!
     @class
 
     @discussion This is the Titanium.API implementation for Windows.
     */
-  class TITANIUMWINDOWS_API_EXPORT API final : public Titanium::API, public JSExport < API > {
+class TITANIUMWINDOWS_API_EXPORT API final : public Titanium::API, public JSExport<API>
+{
+   public:
+	API(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	API(const API&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  public:
-
-    API(const JSContext& js_context)                       TITANIUM_NOEXCEPT;
-    API(const API&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
-
-    virtual ~API()             = default;
-    API(const API&)            = default;
-    API& operator=(const API&) = default;
+	virtual ~API() = default;
+	API(const API&) = default;
+	API& operator=(const API&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-    API(API&&)                 = default;
-    API& operator=(API&&)      = default;
+	API(API&&) = default;
+	API& operator=(API&&) = default;
 #endif
 
-    static void JSExportInitialize();
+	static void JSExportInitialize();
 
-  protected:
+   protected:
+	virtual void log(const std::string& message) const TITANIUM_NOEXCEPT override final;
 
-    virtual void log(const std::string& message) const TITANIUM_NOEXCEPT override final;
+   private:
+	Windows::Networking::Sockets::StreamSocket ^ tcp_socket_ { nullptr };
+	Windows::Storage::Streams::DataWriter ^ tcp_writer_ { nullptr };
 
-  private:
-
-    Windows::Networking::Sockets::StreamSocket^ tcp_socket_ { nullptr };
-    Windows::Storage::Streams::DataWriter^ tcp_writer_ { nullptr };
-
-    void connect();
-  };
+	void connect();
+};
 
 }  // namespace TitaniumWindows
 
-#endif // _TITANIUMWINDOWS_API_HPP_
+#endif  // _TITANIUMWINDOWS_API_HPP_

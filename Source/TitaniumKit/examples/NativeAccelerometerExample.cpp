@@ -8,20 +8,25 @@
 #include <iostream>
 
 NativeAccelerometerExample::NativeAccelerometerExample(const JSContext& js_context) TITANIUM_NOEXCEPT
-: Titanium::Accelerometer(js_context) {
+    : Titanium::Accelerometer(js_context)
+{
 }
 
 NativeAccelerometerExample::NativeAccelerometerExample(const NativeAccelerometerExample& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-: Titanium::Accelerometer(rhs, arguments) {
+    : Titanium::Accelerometer(rhs, arguments)
+{
 }
 
-void NativeAccelerometerExample::JSExportInitialize() {
-  JSExport<NativeAccelerometerExample>::SetClassVersion(1);
-  JSExport<NativeAccelerometerExample>::SetParent(JSExport<Titanium::Accelerometer>::Class());
+void NativeAccelerometerExample::JSExportInitialize()
+{
+	JSExport<NativeAccelerometerExample>::SetClassVersion(1);
+	JSExport<NativeAccelerometerExample>::SetParent(JSExport<Titanium::Accelerometer>::Class());
 }
 
-void NativeAccelerometerExample::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
+void NativeAccelerometerExample::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
+{
 }
 
-void NativeAccelerometerExample::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
+void NativeAccelerometerExample::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
+{
 }

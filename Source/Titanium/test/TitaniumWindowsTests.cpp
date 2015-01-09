@@ -9,8 +9,9 @@
 #include "TitaniumApplicationTests.hpp"
 #include "gtest/gtest.h"
 
-#define XCTAssertEqual    ASSERT_EQ
+#define XCTAssertEqual ASSERT_EQ
 #define XCTAssertNotEqual ASSERT_NE
 
-TEST(TitaniumApplicationTests, BasicCapabilities) {
+TEST(TitaniumApplicationTests, BasicCapabilities)
+{
 }

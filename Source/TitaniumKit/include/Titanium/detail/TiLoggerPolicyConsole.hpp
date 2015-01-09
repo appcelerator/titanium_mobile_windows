@@ -12,29 +12,33 @@
 #include "Titanium/detail/TiLoggerPolicyInterface.hpp"
 #include <iostream>
 
-namespace Titanium { namespace detail {
-  
-  class TITANIUMKIT_EXPORT TiLoggerPolicyConsole final : public TiLoggerPolicyInterface {
-  public:
-    
-    TiLoggerPolicyConsole(const std::string& name) {
-    }
-    
-    TiLoggerPolicyConsole()                                        = delete;
-    ~TiLoggerPolicyConsole()                                       = default;
-    TiLoggerPolicyConsole(const TiLoggerPolicyConsole&)            = default;
-    TiLoggerPolicyConsole& operator=(const TiLoggerPolicyConsole&) = default;
-    
+namespace Titanium
+{
+namespace detail
+{
+class TITANIUMKIT_EXPORT TiLoggerPolicyConsole final : public TiLoggerPolicyInterface
+{
+   public:
+	TiLoggerPolicyConsole(const std::string& name)
+	{
+	}
+
+	TiLoggerPolicyConsole() = delete;
+	~TiLoggerPolicyConsole() = default;
+	TiLoggerPolicyConsole(const TiLoggerPolicyConsole&) = default;
+	TiLoggerPolicyConsole& operator=(const TiLoggerPolicyConsole&) = default;
+
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-    TiLoggerPolicyConsole(TiLoggerPolicyConsole&&)                 = default;
-    TiLoggerPolicyConsole& operator=(TiLoggerPolicyConsole&&)      = default;
+	TiLoggerPolicyConsole(TiLoggerPolicyConsole&&) = default;
+	TiLoggerPolicyConsole& operator=(TiLoggerPolicyConsole&&) = default;
 #endif
-    
-    virtual void Write(const std::string& log_message) override final {
-      std::clog << log_message << std::endl;
-      }
-  };
-      
-}} // namespace Titanium { namespace detail {
-      
-#endif // _TITANIUM_DETAIL_TILOGGERPOLICYCONSOLE_HPP_
+
+	virtual void Write(const std::string& log_message) override final
+	{
+		std::clog << log_message << std::endl;
+	}
+};
+}
+}  // namespace Titanium { namespace detail {
+
+#endif  // _TITANIUM_DETAIL_TILOGGERPOLICYCONSOLE_HPP_

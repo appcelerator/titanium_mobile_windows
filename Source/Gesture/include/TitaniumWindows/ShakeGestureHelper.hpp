@@ -12,17 +12,20 @@
 
 #include <chrono>
 
-namespace TitaniumWindows {
-	class ShakeGestureHelper {
-	public:
-		ShakeGestureHelper();
-		virtual ~ShakeGestureHelper();
+namespace TitaniumWindows
+{
+class ShakeGestureHelper
+{
+   public:
+	ShakeGestureHelper();
+	virtual ~ShakeGestureHelper();
 
-		bool isShaken(Windows::Devices::Sensors::AccelerometerReading^ reading);
-	protected:
-	private:
-		std::chrono::system_clock::time_point shakeStart_;
-	};
-} // namespace Titanium {
+	bool isShaken(Windows::Devices::Sensors::AccelerometerReading ^ reading);
 
-#endif // _TITANIUMWINDOWS_SHAKEGESTUREHELPER_HPP_
+   protected:
+   private:
+	std::chrono::system_clock::time_point shakeStart_;
+};
+}  // namespace Titanium {
+
+#endif  // _TITANIUMWINDOWS_SHAKEGESTUREHELPER_HPP_

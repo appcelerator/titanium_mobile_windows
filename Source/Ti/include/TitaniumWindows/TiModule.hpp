@@ -9,42 +9,39 @@
 
 #include "TitaniumWindows/detail/TiModuleBase.hpp"
 
-namespace TitaniumWindows {
+namespace TitaniumWindows
+{
+using namespace HAL;
 
-  using namespace HAL;
-
-  /*!
+/*!
     @class
 
     @discussion This is the top-level Titanium module implementation for Windows.
     */
-  class TITANIUMWINDOWS_TI_EXPORT TiModule final : public Titanium::TiModule, public JSExport <TiModule> {
+class TITANIUMWINDOWS_TI_EXPORT TiModule final : public Titanium::TiModule, public JSExport<TiModule>
+{
+   public:
+	TiModule(const JSContext& js_context) TITANIUM_NOEXCEPT;
+	TiModule(const TiModule&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
-  public:
-
-    TiModule(const JSContext& js_context) TITANIUM_NOEXCEPT;
-    TiModule(const TiModule&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
-
-    virtual ~TiModule();
-    TiModule(const TiModule&)            = default;
-    TiModule& operator=(const TiModule&) = default;
+	virtual ~TiModule();
+	TiModule(const TiModule&) = default;
+	TiModule& operator=(const TiModule&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-    TiModule(TiModule&&)                 = default;
-    TiModule& operator=(TiModule&&)      = default;
+	TiModule(TiModule&&) = default;
+	TiModule& operator=(TiModule&&) = default;
 #endif
 
-    static void JSExportInitialize();
+	static void JSExportInitialize();
 
-  protected:
+   protected:
+	virtual std::string version() const TITANIUM_NOEXCEPT override final;
+	virtual std::string buildDate() const TITANIUM_NOEXCEPT override final;
+	virtual std::string buildHash() const TITANIUM_NOEXCEPT override final;
 
-    virtual std::string version() const TITANIUM_NOEXCEPT override final;
-    virtual std::string buildDate() const TITANIUM_NOEXCEPT override final;
-    virtual std::string buildHash() const TITANIUM_NOEXCEPT override final;
-
-  private:
-	
-  };
+   private:
+};
 
 }  // namespace TitaniumWindows
 
-#endif // _TITANIUMWINDOWS_TIMODULE_HPP_
+#endif  // _TITANIUMWINDOWS_TIMODULE_HPP_
