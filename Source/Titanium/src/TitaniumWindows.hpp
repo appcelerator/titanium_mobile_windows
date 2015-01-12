@@ -11,34 +11,34 @@
 
 #include "Titanium/Titanium.hpp"
 
-namespace TitaniumWindows {
-
-	public ref class Application sealed : public Windows::UI::Xaml::Application{
-
-	public:
-
+namespace TitaniumWindows
+{
+   public
+	ref class Application sealed : public Windows::UI::Xaml::Application
+	{
+	   public:
 		Application();
 		virtual ~Application();
 
-		virtual void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args) override;
+		virtual void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs ^ args) override;
 
-	private:
-
-		void OnSuspending(Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ e);
+	   private:
+		void OnSuspending(Object ^ sender, Windows::ApplicationModel::SuspendingEventArgs ^ e);
 
 #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
 		// This code is for Windows phone apps only.
-		void RootFrame_FirstNavigated(::Platform::Object^ sender, Windows::UI::Xaml::Navigation::NavigationEventArgs^ e);
+		void RootFrame_FirstNavigated(::Platform::Object ^ sender,
+		                              Windows::UI::Xaml::Navigation::NavigationEventArgs ^ e);
 
-		Windows::UI::Xaml::Media::Animation::TransitionCollection^ transitions__;
-		Windows::Foundation::EventRegistrationToken								first_navigated_token__;
+		Windows::UI::Xaml::Media::Animation::TransitionCollection ^ transitions__;
+		Windows::Foundation::EventRegistrationToken first_navigated_token__;
 #endif
 
-		HAL::JSContextGroup	 js_context_group__;
-		HAL::JSContext				js_context__;
+		HAL::JSContextGroup js_context_group__;
+		HAL::JSContext js_context__;
 		std::shared_ptr<Titanium::Application> application__;
 	};
 
-} // namespace TitaniumWindows {
+}  // namespace TitaniumWindows {
 
-#endif	// _APPLICATION_TITANIUMWINDOWS_HPP_
+#endif  // _APPLICATION_TITANIUMWINDOWS_HPP_

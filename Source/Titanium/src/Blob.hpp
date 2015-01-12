@@ -9,41 +9,37 @@
 
 #include "detail/BlobBase.hpp"
 
-namespace TitaniumWindows {
-
+namespace TitaniumWindows
+{
 	using namespace HAL;
 
-	namespace BlobModule {
-		enum class TYPE {
-			IMAGE = 0,
-			FILE = 1,
-			DATA = 2
-		};
+	namespace BlobModule
+	{
+		enum class TYPE { IMAGE = 0, FILE = 1, DATA = 2 };
 	}
 
 	/*!
-		@class
+	    @class
 
-		@discussion This is the Titanium.Blob implementation for Windows.
-		*/
-	class TITANIUMWINDOWS_EXPORT Blob final : public Titanium::Blob, public JSExport <Blob> {
-
-	public:
-
+	    @discussion This is the Titanium.Blob implementation for Windows.
+	    */
+	class TITANIUMWINDOWS_EXPORT Blob final : public Titanium::Blob, public JSExport<Blob>
+	{
+	   public:
 		std::vector<unsigned char> getData();
 		::Platform::Guid getImageEncoder();
 
-		void construct(Windows::Storage::StorageFile^ file);
+		void construct(Windows::Storage::StorageFile ^ file);
 
 		Blob(const JSContext& js_context) TITANIUM_NOEXCEPT;
 		Blob(const Blob&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~Blob();
-		Blob(const Blob&)						= default;
+		Blob(const Blob&) = default;
 		Blob& operator=(const Blob&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-		Blob(Blob&&)								 = default;
-		Blob& operator=(Blob&&)			= default;
+		Blob(Blob&&) = default;
+		Blob& operator=(Blob&&) = default;
 #endif
 
 		static void JSExportInitialize();
@@ -58,9 +54,8 @@ namespace TitaniumWindows {
 		virtual unsigned get_width() const TITANIUM_NOEXCEPT override;
 		virtual void append(std::shared_ptr<Titanium::Blob>&) TITANIUM_NOEXCEPT override;
 
-	protected:
-
-	private:
+	   protected:
+	   private:
 		std::string path_;
 		std::string mimetype_;
 		unsigned width_;
@@ -69,6 +64,6 @@ namespace TitaniumWindows {
 		std::vector<unsigned char> data_;
 	};
 
-}	// namespace TitaniumWindows
+}  // namespace TitaniumWindows
 
-#endif // _TITANIUMWINDOWS_BLOB_HPP_
+#endif  // _TITANIUMWINDOWS_BLOB_HPP_

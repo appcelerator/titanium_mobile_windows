@@ -8,16 +8,15 @@
 #include "TitaniumWindows/ShakeGestureHelper.hpp"
 #include <math.h>
 
-namespace TitaniumWindows {
+namespace TitaniumWindows
+{
+	ShakeGestureHelper::ShakeGestureHelper() {}
 
-	ShakeGestureHelper::ShakeGestureHelper() {
-	}
-
-	ShakeGestureHelper::~ShakeGestureHelper() {
-	}
+	ShakeGestureHelper::~ShakeGestureHelper() {}
 
 	// detect shake event
-	bool ShakeGestureHelper::isShaken(Windows::Devices::Sensors::AccelerometerReading^ reading) {
+	bool ShakeGestureHelper::isShaken(Windows::Devices::Sensors::AccelerometerReading ^ reading)
+	{
 		using namespace std::chrono;
 
 		const auto x = reading->AccelerationX;
@@ -25,7 +24,7 @@ namespace TitaniumWindows {
 		const auto z = reading->AccelerationZ;
 
 		// should be close to 1 when there's no force
-		if (sqrt(x*x + y*y + z*z) > 1.2) {
+		if (sqrt(x * x + y * y + z * z) > 1.2) {
 			const auto now = high_resolution_clock::now();
 			const auto duration = duration_cast<milliseconds>(now - shakeStart_);
 			// set shake resolution time
@@ -37,5 +36,4 @@ namespace TitaniumWindows {
 
 		return false;
 	}
-} // namespace TitaniumWindows
-
+}  // namespace TitaniumWindows
