@@ -16,20 +16,20 @@ NativeGestureExample::NativeGestureExample(const NativeGestureExample& rhs, cons
 }
 
 void NativeGestureExample::JSExportInitialize() {
-  JSExport<NativeGestureExample>::SetClassVersion(1);
-  JSExport<NativeGestureExample>::SetParent(JSExport<Titanium::Gesture>::Class());
+	JSExport<NativeGestureExample>::SetClassVersion(1);
+	JSExport<NativeGestureExample>::SetParent(JSExport<Titanium::Gesture>::Class());
 }
 
 void NativeGestureExample::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
-  
+	
 }
 
 void NativeGestureExample::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
-  
+	
 }
 
 Titanium::UI::ORIENTATION NativeGestureExample::get_orientation() const TITANIUM_NOEXCEPT {
-  TITANIUM_LOG_DEBUG("NativeGestureExample::get_orientation");
-  return Titanium::UI::ORIENTATION::UNKNOWN;
+	TITANIUM_LOG_DEBUG("NativeGestureExample::get_orientation");
+	return Titanium::UI::ORIENTATION::UNKNOWN;
 }
 

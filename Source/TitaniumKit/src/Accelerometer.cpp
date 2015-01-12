@@ -18,17 +18,17 @@ namespace Titanium {
 		: Module(rhs, arguments) {
 	}
 	void Accelerometer::JSExportInitialize() {
-    JSExport<Accelerometer>::SetClassVersion(1);
-    JSExport<Accelerometer>::SetParent(JSExport<Module>::Class());
+		JSExport<Accelerometer>::SetClassVersion(1);
+		JSExport<Accelerometer>::SetParent(JSExport<Module>::Class());
 	}
-  
-  void Accelerometer::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
-    TITANIUM_LOG_WARN("Ti::Accelerometer::enableEvent: Unimplemented (event name '", event_name, "'");
-  }
-  
-  void Accelerometer::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
-    TITANIUM_LOG_WARN("Ti::Accelerometer::disableEvent: Unimplemented (event name '", event_name, "'");
-  }
+	
+	void Accelerometer::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
+		TITANIUM_LOG_WARN("Ti::Accelerometer::enableEvent: Unimplemented (event name '", event_name, "'");
+	}
+	
+	void Accelerometer::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT {
+		TITANIUM_LOG_WARN("Ti::Accelerometer::disableEvent: Unimplemented (event name '", event_name, "'");
+	}
 
 
 } // namespace Titanium

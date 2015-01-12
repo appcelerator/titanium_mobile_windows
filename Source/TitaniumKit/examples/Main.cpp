@@ -21,29 +21,29 @@
 #include <iostream>
 
 int main () {
-  using namespace HAL;
+	using namespace HAL;
 
-  std::string app_js = R"js(
+	std::string app_js = R"js(
 'use strict';
 
 var button = Ti.UI.createButton({
-  top: 20,
-  bottom: 20,
-  width: 200,
-  height: Ti.UI.SIZE
+	top: 20,
+	bottom: 20,
+	width: 200,
+	height: Ti.UI.SIZE
 });
 
 button.title = 'Neeraj Says...';
 
 button.addEventListener('click', function(e) {
-  Ti.API.warn('Goals without a timeline are just a dream.');
+	Ti.API.warn('Goals without a timeline are just a dream.');
 });
 
 var view = Ti.UI.createView({
-  bottom: 50,
-  right: 50,
-  width: 300,
-  height: Ti.UI.SIZE
+	bottom: 50,
+	right: 50,
+	width: 300,
+	height: Ti.UI.SIZE
 });
 
 view.add(button);
@@ -55,21 +55,21 @@ window.open();
 
 Ti.API.info(Ti.Platform.osname);
 Ti.API.info('ng.js running...');
-  )js";
+	)js";
 
-  JSContextGroup js_context_group;
-  JSContext js_context = js_context_group.CreateContext(JSExport<NativeGlobalObjectExample>::Class());
-  Titanium::Application app = Titanium::ApplicationBuilder(js_context)
-      .APIObject(js_context.CreateObject<NativeAPIExample>())
-      .ViewObject(js_context.CreateObject<NativeViewExample>())
-      .WindowObject(js_context.CreateObject<NativeWindowExample>())
-      .ButtonObject(js_context.CreateObject<NativeButtonExample>())
-      .PlatformObject(js_context.CreateObject<NativePlatformExample>())
-      .AccelerometerObject(js_context.CreateObject<NativeAccelerometerExample>())
-      .GestureObject(js_context.CreateObject<NativeGestureExample>())
-      .FilesystemObject(js_context.CreateObject<NativeFilesystemExample>())
-      .FileObject(js_context.CreateObject<NativeFileExample>())
-      .build();
-  
-  JSValue reslut = app.Run("app.js");
+	JSContextGroup js_context_group;
+	JSContext js_context = js_context_group.CreateContext(JSExport<NativeGlobalObjectExample>::Class());
+	Titanium::Application app = Titanium::ApplicationBuilder(js_context)
+			.APIObject(js_context.CreateObject<NativeAPIExample>())
+			.ViewObject(js_context.CreateObject<NativeViewExample>())
+			.WindowObject(js_context.CreateObject<NativeWindowExample>())
+			.ButtonObject(js_context.CreateObject<NativeButtonExample>())
+			.PlatformObject(js_context.CreateObject<NativePlatformExample>())
+			.AccelerometerObject(js_context.CreateObject<NativeAccelerometerExample>())
+			.GestureObject(js_context.CreateObject<NativeGestureExample>())
+			.FilesystemObject(js_context.CreateObject<NativeFilesystemExample>())
+			.FileObject(js_context.CreateObject<NativeFileExample>())
+			.build();
+	
+	JSValue reslut = app.Run("app.js");
 }

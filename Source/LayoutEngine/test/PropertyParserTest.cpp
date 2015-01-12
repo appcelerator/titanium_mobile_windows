@@ -13,18 +13,18 @@
 
 
 TEST(ParserProperties, layout_initialization) {
-  struct Titanium::LayoutEngine::LayoutProperties layoutProperties;
-  Titanium::LayoutEngine::layoutPropertiesInitialize(&layoutProperties);
+	struct Titanium::LayoutEngine::LayoutProperties layoutProperties;
+	Titanium::LayoutEngine::layoutPropertiesInitialize(&layoutProperties);
 
-  EXPECT_EQ((int)Titanium::LayoutEngine::None, (int)layoutProperties.top.valueType);
+	EXPECT_EQ((int)Titanium::LayoutEngine::None, (int)layoutProperties.top.valueType);
 }
 
 TEST(ParserProperties, populate_layout) {
-  struct Titanium::LayoutEngine::LayoutProperties layoutProperties;
-  struct Titanium::LayoutEngine::InputProperty inputProperty;
-  inputProperty.name = Titanium::LayoutEngine::Top;
-  inputProperty.value = "99px";
-  // 96 is the ppi
-  Titanium::LayoutEngine::populateLayoutPoperties(inputProperty, &layoutProperties, 96);
-  EXPECT_EQ(layoutProperties.top.value, (float)99.0);
+	struct Titanium::LayoutEngine::LayoutProperties layoutProperties;
+	struct Titanium::LayoutEngine::InputProperty inputProperty;
+	inputProperty.name = Titanium::LayoutEngine::Top;
+	inputProperty.value = "99px";
+	// 96 is the ppi
+	Titanium::LayoutEngine::populateLayoutPoperties(inputProperty, &layoutProperties, 96);
+	EXPECT_EQ(layoutProperties.top.value, (float)99.0);
 }

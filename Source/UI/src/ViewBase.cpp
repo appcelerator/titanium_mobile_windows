@@ -234,7 +234,7 @@ namespace TitaniumWindows { namespace UI {
 		}
 	}
 
-	Windows::UI::Xaml::FrameworkElement ^ ViewBase::get_UIElement()  const TITANIUM_NOEXCEPT{
+	Windows::UI::Xaml::FrameworkElement ^ ViewBase::get_UIElement()	const TITANIUM_NOEXCEPT{
 		TITANIUM_LOG_DEBUG("View::get_UIElement:");
 		return dynamic_cast<Windows::UI::Xaml::FrameworkElement^>(component_);
 	}
@@ -469,6 +469,6 @@ namespace TitaniumWindows { namespace UI {
 		return color;
 	}
 
-}}  // namespace TitaniumWindows { namespace UI {
+}}	// namespace TitaniumWindows { namespace UI {
 
 
