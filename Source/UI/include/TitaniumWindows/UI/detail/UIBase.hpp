@@ -15,4 +15,4 @@
 #include "Titanium/detail/TiLogger.hpp"
 #include "HAL/HAL.hpp"
 
-#endif // _TITANIUMWINDOWS_UI_DETAIL_UIBASE_HPP_
+#endif  // _TITANIUMWINDOWS_UI_DETAIL_UIBASE_HPP_

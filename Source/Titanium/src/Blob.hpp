@@ -15,7 +15,9 @@ namespace TitaniumWindows
 
 	namespace BlobModule
 	{
-		enum class TYPE { IMAGE = 0, FILE = 1, DATA = 2 };
+		enum class TYPE { IMAGE = 0,
+			              FILE = 1,
+			              DATA = 2 };
 	}
 
 	/*!

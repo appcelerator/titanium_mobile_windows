@@ -131,6 +131,8 @@ namespace TitaniumWindows
 	}
 #endif
 
-	void Application::OnSuspending(Object ^ sender, Windows::ApplicationModel::SuspendingEventArgs ^ e) {}
+	void Application::OnSuspending(Object ^ sender, Windows::ApplicationModel::SuspendingEventArgs ^ e)
+	{
+	}
 
 }  // namespace TitaniumWindows {

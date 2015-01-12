@@ -8,7 +8,9 @@
 
 #include "Titanium/detail/TiBase.hpp"
 
-namespace Titanium { namespace detail {
-
-
-}} // namespace Titanium { namespace detail {
+namespace Titanium
+{
+	namespace detail
+	{
+	}
+}  // namespace Titanium { namespace detail {

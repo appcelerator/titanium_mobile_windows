@@ -24,4 +24,4 @@
 #include "Titanium/Blob.hpp"
 #include "Titanium/FilesystemModule.hpp"
 
-#endif // _TITANIUM_HPP_
+#endif  // _TITANIUM_HPP_

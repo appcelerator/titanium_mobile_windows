@@ -16,4 +16,4 @@
 #include "TitaniumWindows/UI/ImageView.hpp"
 #include "TitaniumWindows/UI/Label.hpp"
 
-#endif // _TITANIUMWINDOWS_UI_HPP_
+#endif  // _TITANIUMWINDOWS_UI_HPP_
