@@ -16,45 +16,45 @@ NativeBlobExample::NativeBlobExample(const NativeBlobExample& rhs, const std::ve
 }
 
 void NativeBlobExample::JSExportInitialize() {
-  JSExport<NativeBlobExample>::SetClassVersion(1);
-  JSExport<NativeBlobExample>::SetParent(JSExport<Titanium::Blob>::Class());
+	JSExport<NativeBlobExample>::SetClassVersion(1);
+	JSExport<NativeBlobExample>::SetParent(JSExport<Titanium::Blob>::Class());
 }
 
 unsigned NativeBlobExample::get_length() const TITANIUM_NOEXCEPT {
-  TITANIUM_LOG_DEBUG("NativeBlobExample::get_length");
-  return 0;
+	TITANIUM_LOG_DEBUG("NativeBlobExample::get_length");
+	return 0;
 }
 
 unsigned NativeBlobExample::get_height() const TITANIUM_NOEXCEPT {
-  TITANIUM_LOG_DEBUG("NativeBlobExample::get_height");
-  return 0;
+	TITANIUM_LOG_DEBUG("NativeBlobExample::get_height");
+	return 0;
 }
 
 std::string NativeBlobExample::get_mimeType() const TITANIUM_NOEXCEPT {
-  TITANIUM_LOG_DEBUG("NativeBlobExample::get_mimeType");
-  return "";
+	TITANIUM_LOG_DEBUG("NativeBlobExample::get_mimeType");
+	return "";
 }
 
 std::string NativeBlobExample::get_nativePath() const TITANIUM_NOEXCEPT {
-  TITANIUM_LOG_DEBUG("NativeBlobExample::get_nativePath");
-  return "";
+	TITANIUM_LOG_DEBUG("NativeBlobExample::get_nativePath");
+	return "";
 }
 
 unsigned NativeBlobExample::get_size() const TITANIUM_NOEXCEPT {
-  TITANIUM_LOG_DEBUG("NativeBlobExample::get_size");
-  return 0;
+	TITANIUM_LOG_DEBUG("NativeBlobExample::get_size");
+	return 0;
 }
 
 std::string NativeBlobExample::get_text() const TITANIUM_NOEXCEPT {
-  TITANIUM_LOG_DEBUG("NativeBlobExample::get_text");
-  return "";
+	TITANIUM_LOG_DEBUG("NativeBlobExample::get_text");
+	return "";
 }
 
 unsigned NativeBlobExample::get_width() const TITANIUM_NOEXCEPT {
-  TITANIUM_LOG_DEBUG("NativeBlobExample::get_width");
-  return 0;
+	TITANIUM_LOG_DEBUG("NativeBlobExample::get_width");
+	return 0;
 }
 
 void NativeBlobExample::append(std::shared_ptr<Blob>&) TITANIUM_NOEXCEPT {
-  TITANIUM_LOG_DEBUG("NativeBlobExample::append");
+	TITANIUM_LOG_DEBUG("NativeBlobExample::append");
 }

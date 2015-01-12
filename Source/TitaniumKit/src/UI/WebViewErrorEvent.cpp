@@ -10,43 +10,43 @@
 #include <type_traits>
 
 namespace Titanium { namespace UI {
-  
-  WebViewErrorEvent::WebViewErrorEvent(const JSContext& js_context) TITANIUM_NOEXCEPT
-  : JSExportObject(js_context)
-  , error__(URL_ERROR::UNKNOWN) {
-  }
-  
-  WebViewErrorEvent::WebViewErrorEvent(const WebViewErrorEvent& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-  : JSExportObject(rhs, arguments)
-  , error__(rhs.error__) {
-  }
-  
-  URL_ERROR WebViewErrorEvent::get_error() const  TITANIUM_NOEXCEPT {
-    return error__;
-  }
-  
-  void WebViewErrorEvent::set_error(const URL_ERROR& error) TITANIUM_NOEXCEPT {
-    TITANIUM_LOG_WARN("WebViewErrorEvent::set_error: Unimplemented");
-  }
-  
-  // TODO: The following functions can automatically be generated from
-  // the YAML API docs.
-  
-  void WebViewErrorEvent::JSExportInitialize() {
-    JSExport<WebViewErrorEvent>::SetClassVersion(1);
-    JSExport<WebViewErrorEvent>::SetParent(JSExport<JSExportObject>::Class());
-    JSExport<WebViewErrorEvent>::AddValueProperty("error", std::mem_fn(&WebViewErrorEvent::getErrorArgumentValidator), std::mem_fn(&WebViewErrorEvent::setErrorArgumentValidator));
-  }
-  
-  JSValue WebViewErrorEvent::getErrorArgumentValidator() const TITANIUM_NOEXCEPT {
-    return get_context().CreateNumber(static_cast<std::underlying_type<URL_ERROR>::type>(get_error()));
-  }
-  
-  bool WebViewErrorEvent::setErrorArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT {
-    TITANIUM_ASSERT(argument.IsNumber());
-    error__ = Constants::to_URL_ERROR(static_cast<std::underlying_type<URL_ERROR>::type>(argument));
-    set_error(error__);
-    return true;
-  }
+	
+	WebViewErrorEvent::WebViewErrorEvent(const JSContext& js_context) TITANIUM_NOEXCEPT
+	: JSExportObject(js_context)
+	, error__(URL_ERROR::UNKNOWN) {
+	}
+	
+	WebViewErrorEvent::WebViewErrorEvent(const WebViewErrorEvent& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	: JSExportObject(rhs, arguments)
+	, error__(rhs.error__) {
+	}
+	
+	URL_ERROR WebViewErrorEvent::get_error() const	TITANIUM_NOEXCEPT {
+		return error__;
+	}
+	
+	void WebViewErrorEvent::set_error(const URL_ERROR& error) TITANIUM_NOEXCEPT {
+		TITANIUM_LOG_WARN("WebViewErrorEvent::set_error: Unimplemented");
+	}
+	
+	// TODO: The following functions can automatically be generated from
+	// the YAML API docs.
+	
+	void WebViewErrorEvent::JSExportInitialize() {
+		JSExport<WebViewErrorEvent>::SetClassVersion(1);
+		JSExport<WebViewErrorEvent>::SetParent(JSExport<JSExportObject>::Class());
+		JSExport<WebViewErrorEvent>::AddValueProperty("error", std::mem_fn(&WebViewErrorEvent::getErrorArgumentValidator), std::mem_fn(&WebViewErrorEvent::setErrorArgumentValidator));
+	}
+	
+	JSValue WebViewErrorEvent::getErrorArgumentValidator() const TITANIUM_NOEXCEPT {
+		return get_context().CreateNumber(static_cast<std::underlying_type<URL_ERROR>::type>(get_error()));
+	}
+	
+	bool WebViewErrorEvent::setErrorArgumentValidator(const JSValue& argument) TITANIUM_NOEXCEPT {
+		TITANIUM_ASSERT(argument.IsNumber());
+		error__ = Constants::to_URL_ERROR(static_cast<std::underlying_type<URL_ERROR>::type>(argument));
+		set_error(error__);
+		return true;
+	}
 
 }} // namespace Titanium { namespace UI {

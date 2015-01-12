@@ -22,21 +22,21 @@ namespace Titanium {
 
 	public:
 
-		Accelerometer(const JSContext& js_context)                       TITANIUM_NOEXCEPT;
+		Accelerometer(const JSContext& js_context)											 TITANIUM_NOEXCEPT;
 		Accelerometer(const Accelerometer&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~Accelerometer() = default;
 		Accelerometer(const Accelerometer&) = default;
 		Accelerometer& operator=(const Accelerometer&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-		Accelerometer(Accelerometer&&)                 = default;
-		Accelerometer& operator=(Accelerometer&&)      = default;
+		Accelerometer(Accelerometer&&)								 = default;
+		Accelerometer& operator=(Accelerometer&&)			= default;
 #endif
 
 		static void JSExportInitialize();
 
-    virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
-    virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
+		virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
+		virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
 
 	};
 

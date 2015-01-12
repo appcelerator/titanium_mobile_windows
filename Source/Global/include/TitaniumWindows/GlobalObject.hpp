@@ -16,28 +16,28 @@ namespace TitaniumWindows {
 using namespace HAL;
 
 /*!
-  @class
-  
-  @discussion This is the Titanium GlobalObject implementation for
-  Windows.
+	@class
+	
+	@discussion This is the Titanium GlobalObject implementation for
+	Windows.
 */
 class TITANIUMWINDOWS_GLOBAL_EXPORT GlobalObject final : public Titanium::GlobalObject, public JSExport < GlobalObject > {
 	
 public:
 	
-	std::string get_example_resource() const                              TITANIUM_NOEXCEPT;
-	void        set_example_resource(const std::string& example_resource) TITANIUM_NOEXCEPT;
+	std::string get_example_resource() const															TITANIUM_NOEXCEPT;
+	void				set_example_resource(const std::string& example_resource) TITANIUM_NOEXCEPT;
 	
 	
-	GlobalObject(const JSContext& js_context)                                TITANIUM_NOEXCEPT;
+	GlobalObject(const JSContext& js_context)																TITANIUM_NOEXCEPT;
 	GlobalObject(const GlobalObject&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 	
 	virtual ~GlobalObject() = default;
 	GlobalObject(const GlobalObject&) = default;
 	GlobalObject& operator=(const GlobalObject&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-	GlobalObject(GlobalObject&&)                 = default;
-	GlobalObject& operator=(GlobalObject&&)      = default;
+	GlobalObject(GlobalObject&&)								 = default;
+	GlobalObject& operator=(GlobalObject&&)			= default;
 #endif
 	
 	static void JSExportInitialize();
@@ -52,6 +52,6 @@ private:
 	std::string example_resource__;
 };
 
-}  // namespace TitaniumWindows {
+}	// namespace TitaniumWindows {
 
 #endif // _TITANIUMWINDOWS_GLOBALOBJECT_HPP_
