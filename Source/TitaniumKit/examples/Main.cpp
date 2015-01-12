@@ -20,10 +20,11 @@
 
 #include <iostream>
 
-int main () {
-  using namespace HAL;
+int main()
+{
+	using namespace HAL;
 
-  std::string app_js = R"js(
+	std::string app_js = R"js(
 'use strict';
 
 var button = Ti.UI.createButton({
@@ -57,19 +58,19 @@ Ti.API.info(Ti.Platform.osname);
 Ti.API.info('ng.js running...');
   )js";
 
-  JSContextGroup js_context_group;
-  JSContext js_context = js_context_group.CreateContext(JSExport<NativeGlobalObjectExample>::Class());
-  Titanium::Application app = Titanium::ApplicationBuilder(js_context)
-      .APIObject(js_context.CreateObject<NativeAPIExample>())
-      .ViewObject(js_context.CreateObject<NativeViewExample>())
-      .WindowObject(js_context.CreateObject<NativeWindowExample>())
-      .ButtonObject(js_context.CreateObject<NativeButtonExample>())
-      .PlatformObject(js_context.CreateObject<NativePlatformExample>())
-      .AccelerometerObject(js_context.CreateObject<NativeAccelerometerExample>())
-      .GestureObject(js_context.CreateObject<NativeGestureExample>())
-      .FilesystemObject(js_context.CreateObject<NativeFilesystemExample>())
-      .FileObject(js_context.CreateObject<NativeFileExample>())
-      .build();
-  
-  JSValue reslut = app.Run("app.js");
+	JSContextGroup js_context_group;
+	JSContext js_context = js_context_group.CreateContext(JSExport<NativeGlobalObjectExample>::Class());
+	Titanium::Application app = Titanium::ApplicationBuilder(js_context)
+	                                .APIObject(js_context.CreateObject<NativeAPIExample>())
+	                                .ViewObject(js_context.CreateObject<NativeViewExample>())
+	                                .WindowObject(js_context.CreateObject<NativeWindowExample>())
+	                                .ButtonObject(js_context.CreateObject<NativeButtonExample>())
+	                                .PlatformObject(js_context.CreateObject<NativePlatformExample>())
+	                                .AccelerometerObject(js_context.CreateObject<NativeAccelerometerExample>())
+	                                .GestureObject(js_context.CreateObject<NativeGestureExample>())
+	                                .FilesystemObject(js_context.CreateObject<NativeFilesystemExample>())
+	                                .FileObject(js_context.CreateObject<NativeFileExample>())
+	                                .build();
+
+	JSValue reslut = app.Run("app.js");
 }
