@@ -21,8 +21,7 @@ namespace TitaniumWindows
 	class TITANIUMWINDOWS_PLATFORM_EXPORT Platform final : public Titanium::PlatformModule, public JSExport<Platform>
 	{
 	public:
-		Platform(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		Platform(const Platform&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		Platform(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~Platform() = default;
 		Platform(const Platform&) = default;

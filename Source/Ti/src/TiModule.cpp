@@ -11,17 +11,11 @@
 
 namespace TitaniumWindows
 {
-	TiModule::TiModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Titanium::TiModule(js_context)
+	TiModule::TiModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	    : Titanium::TiModule(js_context, arguments)
 	{
 		TITANIUM_LOG_DEBUG("TitaniumWindows::TiModule::ctor Initialize");
 		setUserAgent(get_context().CreateString("__TITANIUM_USER_AGENT__"));
-	}
-
-	TiModule::TiModule(const TiModule& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Titanium::TiModule(rhs, arguments)
-	{
-		TITANIUM_LOG_DEBUG("TitaniumWindows::TiModule::ctor CallAsConstructor");
 	}
 
 	TiModule::~TiModule()

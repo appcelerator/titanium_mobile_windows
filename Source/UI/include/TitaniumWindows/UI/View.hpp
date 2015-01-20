@@ -27,8 +27,7 @@ namespace TitaniumWindows
 		class TITANIUMWINDOWS_UI_EXPORT View final : public Titanium::UI::View, public JSExport<View>, public ViewBase
 		{
 		public:
-			View(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			View(const View&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			View(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~View() = default;
 			View(const View&) = default;

@@ -9,19 +9,11 @@
 
 namespace Titanium
 {
-	FilesystemModule::FilesystemModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context),
+	FilesystemModule::FilesystemModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	    : Module(js_context, arguments),
 	      mode_read__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::READ))),
 	      mode_write__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::WRITE))),
 	      mode_append__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::APPEND)))
-	{
-	}
-
-	FilesystemModule::FilesystemModule(const FilesystemModule& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Module(rhs, arguments),
-	      mode_read__(rhs.mode_read__),
-	      mode_write__(rhs.mode_write__),
-	      mode_append__(rhs.mode_append__)
 	{
 	}
 

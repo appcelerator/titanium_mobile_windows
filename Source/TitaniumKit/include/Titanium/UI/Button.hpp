@@ -38,8 +38,7 @@ namespace Titanium
 			virtual std::string get_title() const TITANIUM_NOEXCEPT final;
 			virtual void set_title(const std::string& title) TITANIUM_NOEXCEPT;
 
-			Button(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			Button(const Button&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			Button(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~Button() TITANIUM_NOEXCEPT;  //= default;
 			Button(const Button&) = default;

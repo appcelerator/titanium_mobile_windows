@@ -30,8 +30,7 @@ namespace Titanium
 			virtual std::string get_image() const TITANIUM_NOEXCEPT final;
 			virtual void set_image(const std::string& image) TITANIUM_NOEXCEPT;
 
-			ImageView(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			ImageView(const ImageView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			ImageView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~ImageView() = default;
 			ImageView(const ImageView&) = default;

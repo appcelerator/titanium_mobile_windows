@@ -21,8 +21,7 @@ namespace TitaniumWindows
 	class TITANIUMWINDOWS_FILESYSTEM_EXPORT FilesystemModule final : public Titanium::FilesystemModule, public JSExport<FilesystemModule>
 	{
 	public:
-		FilesystemModule(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		FilesystemModule(const FilesystemModule&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		FilesystemModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~FilesystemModule();
 		FilesystemModule(const FilesystemModule&) = default;

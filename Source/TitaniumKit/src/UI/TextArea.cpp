@@ -13,23 +13,13 @@ namespace Titanium
 {
 	namespace UI
 	{
-		TextArea::TextArea(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		TextArea::TextArea(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : View(js_context, arguments),
 		      autoLink__({AUTOLINK::NONE}),
 		      returnKeyType__(RETURNKEY::DEFAULT),
 		      textAlign__(TEXT_ALIGNMENT::LEFT),
 		      autoCapitalization__(TEXT_AUTOCAPITALIZATION::NONE),
 		      verticalAlign__(TEXT_VERTICAL_ALIGNMENT::CENTER)
-		{
-		}
-
-		TextArea::TextArea(const TextArea& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(rhs, arguments),
-		      autoLink__(rhs.autoLink__),
-		      returnKeyType__(rhs.returnKeyType__),
-		      textAlign__(rhs.textAlign__),
-		      autoCapitalization__(rhs.autoCapitalization__),
-		      verticalAlign__(rhs.verticalAlign__)
 		{
 		}
 

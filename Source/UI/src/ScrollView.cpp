@@ -30,18 +30,10 @@ namespace TitaniumWindows
 			scroll_viewer__->Content = content->getComponent();
 		}
 
-		ScrollView::ScrollView(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Titanium::UI::ScrollView(js_context),
+		ScrollView::ScrollView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : Titanium::UI::ScrollView(js_context, arguments),
 		      scroll_viewer__(ref new Windows::UI::Xaml::Controls::ScrollViewer()),
 		      contentView__(js_context.CreateObject(JSExport<TitaniumWindows::UI::View>::Class()).CallAsConstructor())
-		{
-			TITANIUM_LOG_DEBUG("ScrollView::ctor Initialize");
-		}
-
-		ScrollView::ScrollView(const ScrollView& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : Titanium::UI::ScrollView(rhs, arguments),
-		      scroll_viewer__(ref new Windows::UI::Xaml::Controls::ScrollViewer()),
-		      contentView__(get_context().CreateObject(JSExport<TitaniumWindows::UI::View>::Class()).CallAsConstructor())
 		{
 			TITANIUM_LOG_DEBUG("ScrollView::ctor CallAsConstructor");
 			setupViewer();

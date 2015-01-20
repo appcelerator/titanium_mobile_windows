@@ -91,8 +91,7 @@ namespace Titanium
 			virtual bool get_showVerticalScrollIndicator() const TITANIUM_NOEXCEPT;
 			virtual bool set_showVerticalScrollIndicator(bool enabled) TITANIUM_NOEXCEPT;
 
-			ScrollView(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			ScrollView(const ScrollView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			ScrollView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~ScrollView() = default;
 			ScrollView(const ScrollView&) = default;

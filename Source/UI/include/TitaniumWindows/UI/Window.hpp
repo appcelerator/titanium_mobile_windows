@@ -30,8 +30,7 @@ namespace TitaniumWindows
 			virtual void open(const JSObject& params, JSObject& this_object) const TITANIUM_NOEXCEPT override final;
 			virtual void add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT;
 
-			Window(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			Window(const Window&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			Window(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~Window();
 

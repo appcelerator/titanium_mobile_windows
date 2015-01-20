@@ -57,8 +57,7 @@ namespace TitaniumWindows
 			virtual unsigned spaceAvailable() TITANIUM_NOEXCEPT override;
 			virtual bool write(const JSValue& data, bool append) TITANIUM_NOEXCEPT override;
 
-			File(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			File(const File&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			File(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~File();
 			File(const File&) = default;

@@ -12,8 +12,8 @@ namespace Titanium
 {
 	namespace UI
 	{
-		View::View(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Module(js_context),
+		View::View(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : Module(js_context, arguments),
 		      children__(js_context.CreateArray()),
 		      backgroundColor__(js_context.CreateString()),
 		      top__(js_context.CreateString()),
@@ -26,22 +26,6 @@ namespace Titanium
 		      layout__(js_context.CreateString())
 		{
 			TITANIUM_LOG_DEBUG("View:: ctor 1 ", this);
-		}
-
-		View::View(const View& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : Module(rhs, arguments),
-		      children__(rhs.children__),
-		      backgroundColor__(rhs.backgroundColor__),
-		      top__(rhs.top__),
-		      left__(rhs.left__),
-		      bottom__(rhs.bottom__),
-		      right__(rhs.right__),
-		      center__(rhs.center__),
-		      width__(rhs.width__),
-		      height__(rhs.height__),
-		      layout__(rhs.layout__)
-		{
-			TITANIUM_LOG_DEBUG("View:: ctor 2 ", this);
 		}
 
 		View::~View() TITANIUM_NOEXCEPT

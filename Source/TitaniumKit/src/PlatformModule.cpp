@@ -11,23 +11,13 @@
 
 namespace Titanium
 {
-	PlatformModule::PlatformModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context),
+	PlatformModule::PlatformModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	    : Module(js_context, arguments),
 	      displayCaps__(get_context().CreateObject(JSExport<Titanium::Platform::DisplayCaps>::Class())),
 	      BATTERY_STATE_CHARGING__(get_context().CreateNumber(Platform::BatteryState::CHARGING)),
 	      BATTERY_STATE_FULL__(get_context().CreateNumber(Platform::BatteryState::FULL)),
 	      BATTERY_STATE_UNKNOWN__(get_context().CreateNumber(Platform::BatteryState::UNKNOWN)),
 	      BATTERY_STATE_UNPLUGGED__(get_context().CreateNumber(Platform::BatteryState::UNPLUGGED))
-	{
-	}
-
-	PlatformModule::PlatformModule(const PlatformModule& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Module(rhs, arguments),
-	      displayCaps__(rhs.displayCaps__),
-	      BATTERY_STATE_CHARGING__(rhs.BATTERY_STATE_CHARGING__),
-	      BATTERY_STATE_FULL__(rhs.BATTERY_STATE_FULL__),
-	      BATTERY_STATE_UNKNOWN__(rhs.BATTERY_STATE_UNKNOWN__),
-	      BATTERY_STATE_UNPLUGGED__(rhs.BATTERY_STATE_UNPLUGGED__)
 	{
 	}
 

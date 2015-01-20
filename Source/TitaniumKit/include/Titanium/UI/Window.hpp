@@ -52,8 +52,7 @@ namespace Titanium
 			virtual std::unordered_set<EXTEND_EDGE> get_extendEdges() const TITANIUM_NOEXCEPT final;
 			virtual void set_extendEdges(const std::unordered_set<EXTEND_EDGE>& extendEdges) TITANIUM_NOEXCEPT;
 
-			Window(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			Window(const Window&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			Window(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~Window() TITANIUM_NOEXCEPT;  //= default;
 			Window(const Window&) = default;

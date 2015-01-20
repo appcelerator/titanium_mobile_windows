@@ -21,8 +21,7 @@ namespace Titanium
 	class TITANIUMKIT_EXPORT Accelerometer : public Module, public JSExport<Accelerometer>
 	{
 	public:
-		Accelerometer(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		Accelerometer(const Accelerometer&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		Accelerometer(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~Accelerometer() = default;
 		Accelerometer(const Accelerometer&) = default;

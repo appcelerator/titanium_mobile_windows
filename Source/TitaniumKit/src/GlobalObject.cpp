@@ -23,21 +23,12 @@ namespace Titanium
 		return get_context().CreateFunction("var __OXP=exports;var module={'exports':exports}; eval(module_js); if(module.exports !== __OXP){return module.exports;} return exports;", {"__filename", "exports", "module_js"});
 	}
 
-	GlobalObject::GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : JSExportObject(js_context),
+	GlobalObject::GlobalObject(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	    : JSExportObject(js_context, arguments),
 	      require_function__(createRequireFunction(js_context)),
 	      callback_map__(js_context.CreateObject())
 	{
 		TITANIUM_LOG_DEBUG("GlobalObject:: ctor 1 ", this);
-	}
-
-	GlobalObject::GlobalObject(const GlobalObject& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : JSExportObject(rhs, arguments),
-	      require_function__(createRequireFunction(rhs.get_context())),
-	      callback_map__(rhs.callback_map__),
-	      timer_map__(rhs.timer_map__)
-	{
-		TITANIUM_LOG_DEBUG("GlobalObject:: ctor 2 ", this);
 	}
 
 	GlobalObject::~GlobalObject() TITANIUM_NOEXCEPT

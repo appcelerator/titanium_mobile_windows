@@ -38,8 +38,7 @@ namespace Titanium
 			virtual LIST_ACCESSORY_TYPE get_accessoryType() const TITANIUM_NOEXCEPT final;
 			virtual void set_accessoryType(const LIST_ACCESSORY_TYPE& accessoryType) TITANIUM_NOEXCEPT;
 
-			ListItem(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			ListItem(const ListItem&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			ListItem(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~ListItem() = default;
 			ListItem(const ListItem&) = default;

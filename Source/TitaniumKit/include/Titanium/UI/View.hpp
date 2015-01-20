@@ -221,8 +221,7 @@ namespace Titanium
 			virtual std::string get_layout() const TITANIUM_NOEXCEPT final;
 			virtual void set_layout(const std::string& height) TITANIUM_NOEXCEPT;
 
-			View(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			View(const View&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			View(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~View() TITANIUM_NOEXCEPT;  //= default;
 			View(const View&) = default;

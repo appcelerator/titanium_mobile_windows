@@ -27,8 +27,7 @@ namespace TitaniumWindows
 		std::string get_example_resource() const TITANIUM_NOEXCEPT;
 		void set_example_resource(const std::string& example_resource) TITANIUM_NOEXCEPT;
 
-		GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		GlobalObject(const GlobalObject&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		GlobalObject(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~GlobalObject() = default;
 		GlobalObject(const GlobalObject&) = default;

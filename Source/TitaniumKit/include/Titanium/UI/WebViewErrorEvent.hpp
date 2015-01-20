@@ -38,8 +38,7 @@ namespace Titanium
 			virtual URL_ERROR get_error() const TITANIUM_NOEXCEPT final;
 			virtual void set_error(const URL_ERROR& error) TITANIUM_NOEXCEPT;
 
-			WebViewErrorEvent(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			WebViewErrorEvent(const WebViewErrorEvent&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			WebViewErrorEvent(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~WebViewErrorEvent() = default;
 			WebViewErrorEvent(const WebViewErrorEvent&) = default;

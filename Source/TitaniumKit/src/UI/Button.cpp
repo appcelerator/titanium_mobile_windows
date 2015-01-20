@@ -12,18 +12,11 @@ namespace Titanium
 {
 	namespace UI
 	{
-		Button::Button(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		Button::Button(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : View(js_context, arguments),
 		      title__(js_context.CreateString())
 		{
 			TITANIUM_LOG_DEBUG("Button:: ctor 1 ", this);
-		}
-
-		Button::Button(const Button& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(rhs, arguments),
-		      title__(rhs.title__)
-		{
-			TITANIUM_LOG_DEBUG("Button:: ctor 2 ", this);
 		}
 
 		Button::~Button() TITANIUM_NOEXCEPT

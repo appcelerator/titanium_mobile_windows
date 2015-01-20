@@ -11,16 +11,10 @@
 
 namespace TitaniumWindows
 {
-	Accelerometer::Accelerometer(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Titanium::Accelerometer(js_context)
+	Accelerometer::Accelerometer(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	    : Titanium::Accelerometer(js_context, arguments)
 	{
 		TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::ctor Initialize");
-	}
-
-	Accelerometer::Accelerometer(const Accelerometer& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Titanium::Accelerometer(rhs, arguments)
-	{
-		TITANIUM_LOG_DEBUG("TitaniumWindows::Accelerometer::ctor CallAsConstructor");
 	}
 
 	void Accelerometer::JSExportInitialize()

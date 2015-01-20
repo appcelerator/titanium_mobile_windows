@@ -27,8 +27,7 @@ namespace TitaniumWindows
 		class TITANIUMWINDOWS_UI_EXPORT Label final : public Titanium::UI::Label, public JSExport<Label>, public ViewBase
 		{
 		public:
-			Label(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			Label(const Label&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			Label(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~Label() = default;
 			Label(const Label&) = default;

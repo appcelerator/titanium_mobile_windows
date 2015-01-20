@@ -13,15 +13,9 @@ namespace Titanium
 {
 	namespace UI
 	{
-		WebViewErrorEvent::WebViewErrorEvent(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : JSExportObject(js_context),
+		WebViewErrorEvent::WebViewErrorEvent(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : JSExportObject(js_context, arguments),
 		      error__(URL_ERROR::UNKNOWN)
-		{
-		}
-
-		WebViewErrorEvent::WebViewErrorEvent(const WebViewErrorEvent& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : JSExportObject(rhs, arguments),
-		      error__(rhs.error__)
 		{
 		}
 

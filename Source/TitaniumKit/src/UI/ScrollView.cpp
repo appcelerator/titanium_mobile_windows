@@ -12,13 +12,8 @@ namespace Titanium
 {
 	namespace UI
 	{
-		ScrollView::ScrollView(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context)
-		{
-		}
-
-		ScrollView::ScrollView(const ScrollView& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(rhs, arguments)
+		ScrollView::ScrollView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : View(js_context, arguments)
 		{
 		}
 

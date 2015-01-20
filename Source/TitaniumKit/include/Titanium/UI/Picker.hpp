@@ -41,8 +41,7 @@ namespace Titanium
 			virtual PICKER_TYPE get_type() const TITANIUM_NOEXCEPT final;
 			virtual void set_type(const PICKER_TYPE& type) TITANIUM_NOEXCEPT;
 
-			Picker(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			Picker(const Picker&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			Picker(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~Picker() = default;
 			Picker(const Picker&) = default;
