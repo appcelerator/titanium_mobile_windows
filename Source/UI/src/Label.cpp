@@ -14,15 +14,8 @@ namespace TitaniumWindows
 {
 	namespace UI
 	{
-		Label::Label(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Titanium::UI::Label(js_context),
-		      label__(ref new Windows::UI::Xaml::Controls::TextBlock())
-		{
-			TITANIUM_LOG_DEBUG("Label::ctor Initialize");
-		}
-
-		Label::Label(const Label& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : Titanium::UI::Label(rhs, arguments),
+		Label::Label(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : Titanium::UI::Label(js_context, arguments),
 		      label__(ref new Windows::UI::Xaml::Controls::TextBlock())
 		{
 			label__->TextWrapping = Windows::UI::Xaml::TextWrapping::Wrap;
@@ -30,7 +23,7 @@ namespace TitaniumWindows
 			label__->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
 			label__->FontSize = DEFAULT_FONT_SIZE;
 			setComponent(label__);
-			TITANIUM_LOG_DEBUG("Label::ctor CallAsConstructor");
+			TITANIUM_LOG_DEBUG("Label::ctor Initialize");
 		}
 
 		void Label::JSExportInitialize()

@@ -95,8 +95,7 @@ namespace Titanium
 			virtual TEXT_VERTICAL_ALIGNMENT get_verticalAlign() const TITANIUM_NOEXCEPT final;
 			virtual void set_verticalAlign(const TEXT_VERTICAL_ALIGNMENT& verticalAlign) TITANIUM_NOEXCEPT;
 
-			TextArea(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			TextArea(const TextArea&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			TextArea(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~TextArea() = default;
 			TextArea(const TextArea&) = default;

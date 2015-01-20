@@ -20,16 +20,10 @@ namespace TitaniumWindows
 {
 	namespace Filesystem
 	{
-		File::File(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Titanium::Filesystem::File(js_context)
+		File::File(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : Titanium::Filesystem::File(js_context, arguments)
 		{
 			TITANIUM_LOG_DEBUG("TitaniumWindows::Filesystem::File::ctor Initialize");
-		}
-
-		File::File(const File& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : Titanium::Filesystem::File(rhs, arguments)
-		{
-			TITANIUM_LOG_DEBUG("TitaniumWindows::Filesystem::File::ctor CallAsConstructor");
 
 			TITANIUM_ASSERT(!arguments.empty());
 			TITANIUM_ASSERT(arguments.at(0).IsString());

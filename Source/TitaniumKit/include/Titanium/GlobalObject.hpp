@@ -158,8 +158,7 @@ namespace Titanium
 		*/
 		virtual void clearInterval(const unsigned& timerId) TITANIUM_NOEXCEPT final;
 
-		GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		GlobalObject(const GlobalObject&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		GlobalObject(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~GlobalObject() TITANIUM_NOEXCEPT;  //= default;
 		GlobalObject(const GlobalObject&) = default;

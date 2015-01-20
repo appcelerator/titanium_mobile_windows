@@ -13,8 +13,8 @@ namespace Titanium
 {
 	namespace UI
 	{
-		TextField::TextField(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		TextField::TextField(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : View(js_context, arguments),
 		      borderStyle__(INPUT_BORDERSTYLE::NONE),
 		      clearButtonMode__(INPUT_BUTTONMODE::NEVER),
 		      leftButtonMode__(INPUT_BUTTONMODE::NEVER),
@@ -23,19 +23,6 @@ namespace Titanium
 		      textAlign__(TEXT_ALIGNMENT::LEFT),
 		      autoCapitalization__(TEXT_AUTOCAPITALIZATION::NONE),
 		      verticalAlign__(TEXT_VERTICAL_ALIGNMENT::CENTER)
-		{
-		}
-
-		TextField::TextField(const TextField& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(rhs, arguments),
-		      borderStyle__(rhs.borderStyle__),
-		      clearButtonMode__(rhs.clearButtonMode__),
-		      leftButtonMode__(rhs.leftButtonMode__),
-		      rightButtonMode__(rhs.rightButtonMode__),
-		      returnKeyType__(rhs.returnKeyType__),
-		      textAlign__(rhs.textAlign__),
-		      autoCapitalization__(rhs.autoCapitalization__),
-		      verticalAlign__(rhs.verticalAlign__)
 		{
 		}
 

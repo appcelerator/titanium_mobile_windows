@@ -13,15 +13,8 @@ namespace TitaniumWindows
 {
 	namespace UI
 	{
-		Window::Window(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Titanium::UI::Window(js_context),
-		      canvas__(ref new Windows::UI::Xaml::Controls::Canvas())
-		{
-			TITANIUM_LOG_DEBUG("Window::ctor Initialize");
-		}
-
-		Window::Window(const Window& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : Titanium::UI::Window(rhs, arguments),
+		Window::Window(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : Titanium::UI::Window(js_context, arguments),
 		      canvas__(ref new Windows::UI::Xaml::Controls::Canvas())
 		{
 			setDefaultHeight(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));

@@ -35,8 +35,7 @@ namespace TitaniumWindows
 
 		void construct(Windows::Storage::StorageFile^ file);
 
-		Blob(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		Blob(const Blob&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		Blob(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~Blob();
 		Blob(const Blob&) = default;

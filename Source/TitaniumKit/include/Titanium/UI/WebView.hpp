@@ -29,8 +29,7 @@ namespace Titanium
 		class TITANIUMKIT_EXPORT WebView : public View, public JSExport<WebView>
 		{
 		public:
-			WebView(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			WebView(const WebView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			WebView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~WebView() = default;
 			WebView(const WebView&) = default;

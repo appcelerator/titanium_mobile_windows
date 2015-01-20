@@ -77,8 +77,7 @@ namespace Titanium
 		*/
 		virtual void append(std::shared_ptr<Blob>&) TITANIUM_NOEXCEPT;
 
-		Blob(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		Blob(const Blob&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		Blob(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~Blob() = default;
 		Blob(const Blob&) = default;

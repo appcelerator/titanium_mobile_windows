@@ -10,15 +10,9 @@
 
 namespace Titanium
 {
-	TiModule::TiModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context),
+	TiModule::TiModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	    : Module(js_context, arguments),
 	      userAgent__(js_context.CreateString())
-	{
-	}
-
-	TiModule::TiModule(const TiModule& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Module(rhs, arguments),
-	      userAgent__(rhs.userAgent__)
 	{
 	}
 

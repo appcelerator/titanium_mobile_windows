@@ -12,16 +12,10 @@
 
 namespace Titanium
 {
-	API::API(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context)
+	API::API(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	    : Module(js_context, arguments)
 	{
 		TITANIUM_LOG_DEBUG("API:: ctor 1 ", this);
-	}
-
-	API::API(const API& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Module(rhs, arguments)
-	{
-		TITANIUM_LOG_DEBUG("API:: ctor 2 ", this);
 	}
 
 	API::~API() TITANIUM_NOEXCEPT

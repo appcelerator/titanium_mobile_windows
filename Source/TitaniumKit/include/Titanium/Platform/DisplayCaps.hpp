@@ -31,8 +31,7 @@ namespace Titanium
 			virtual double xdpi() const TITANIUM_NOEXCEPT;
 			virtual double ydpi() const TITANIUM_NOEXCEPT;
 
-			DisplayCaps(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			DisplayCaps(const DisplayCaps&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			DisplayCaps(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~DisplayCaps() = default;
 			DisplayCaps(const DisplayCaps&) = default;

@@ -13,15 +13,9 @@ namespace Titanium
 {
 	namespace UI
 	{
-		ListItem::ListItem(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Module(js_context),
+		ListItem::ListItem(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : Module(js_context, arguments),
 		      accessoryType__(LIST_ACCESSORY_TYPE::NONE)
-		{
-		}
-
-		ListItem::ListItem(const ListItem& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : Module(rhs, arguments),
-		      accessoryType__(rhs.accessoryType__)
 		{
 		}
 

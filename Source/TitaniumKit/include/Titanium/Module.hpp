@@ -99,8 +99,7 @@ namespace Titanium
 		*/
 		virtual void fireEvent(const std::string& name, const JSObject& event) const TITANIUM_NOEXCEPT final;
 
-		Module(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		Module(const Module&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		Module(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~Module() TITANIUM_NOEXCEPT;  //= default;
 		Module(const Module&) = default;

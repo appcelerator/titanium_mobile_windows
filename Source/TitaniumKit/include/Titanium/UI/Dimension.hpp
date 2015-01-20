@@ -39,8 +39,7 @@ namespace Titanium
 			virtual std::uint32_t get_y() const TITANIUM_NOEXCEPT final;
 			virtual void set_y(const std::uint32_t y) TITANIUM_NOEXCEPT final;
 
-			Dimension(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			Dimension(const Dimension&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			Dimension(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~Dimension() = default;
 			Dimension(const Dimension&) = default;

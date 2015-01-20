@@ -76,5 +76,5 @@ namespace Titanium
 		{
 			return static_cast<std::underlying_type<MODE>::type>(mode);
 		}
-	}
-}  // namespace Titanium { namespace Filesystem {
+	} // namespace Filesystem
+}  // namespace Titanium

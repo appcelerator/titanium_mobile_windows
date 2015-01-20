@@ -22,8 +22,7 @@ namespace TitaniumWindows
 	class TITANIUMWINDOWS_GESTURE_EXPORT Gesture final : public Titanium::Gesture, public JSExport<Gesture>
 	{
 	public:
-		Gesture(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		Gesture(const Gesture&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		Gesture(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~Gesture();
 		Gesture(const Gesture&) = default;

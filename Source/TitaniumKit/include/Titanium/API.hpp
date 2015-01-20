@@ -113,8 +113,7 @@ namespace Titanium
 		*/
 		virtual void log(const std::string& level, const std::string& message) const TITANIUM_NOEXCEPT final;
 
-		API(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		API(const API&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		API(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~API() TITANIUM_NOEXCEPT;  //= default;
 		API(const API&) = default;

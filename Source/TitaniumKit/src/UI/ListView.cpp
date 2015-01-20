@@ -13,15 +13,9 @@ namespace Titanium
 {
 	namespace UI
 	{
-		ListView::ListView(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		ListView::ListView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : View(js_context, arguments),
 		      defaultItemTemplate__(LIST_ITEM_TEMPLATE::DEFAULT)
-		{
-		}
-
-		ListView::ListView(const ListView& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(rhs, arguments),
-		      defaultItemTemplate__(rhs.defaultItemTemplate__)
 		{
 		}
 

@@ -29,8 +29,7 @@ namespace TitaniumWindows
 		class TITANIUMWINDOWS_UI_EXPORT ImageView final : public Titanium::UI::ImageView, public JSExport<ImageView>, public ViewBase
 		{
 		public:
-			ImageView(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			ImageView(const ImageView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			ImageView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~ImageView() = default;
 			ImageView(const ImageView&) = default;

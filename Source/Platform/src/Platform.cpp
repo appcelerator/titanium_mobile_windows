@@ -18,8 +18,8 @@
 
 namespace TitaniumWindows
 {
-	Platform::Platform(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Titanium::PlatformModule(js_context),
+	Platform::Platform(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	    : Titanium::PlatformModule(js_context, arguments),
 #if defined(__cplusplus_winrt)
 #if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
 	      osname__("windowsphone")
@@ -32,13 +32,6 @@ namespace TitaniumWindows
 	{
 		TITANIUM_LOG_DEBUG("Platform::ctor Initialize");
 		setDisplayCaps(get_context().CreateObject(JSExport<TitaniumWindows::DisplayCaps>::Class()));
-	}
-
-	Platform::Platform(const Platform& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Titanium::PlatformModule(rhs, arguments),
-	      osname__(rhs.osname__)
-	{
-		TITANIUM_LOG_DEBUG("Platform::ctor CallAsConstructor");
 	}
 
 	std::string Platform::osname() const TITANIUM_NOEXCEPT

@@ -12,21 +12,12 @@ namespace Titanium
 {
 	namespace UI
 	{
-		Dimension::Dimension(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : JSExportObject(js_context),
+		Dimension::Dimension(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : JSExportObject(js_context, arguments),
 		      height__(js_context.CreateNumber(0)),
 		      width__(js_context.CreateNumber(0)),
 		      x__(js_context.CreateNumber(0)),
 		      y__(js_context.CreateNumber(0))
-		{
-		}
-
-		Dimension::Dimension(const Dimension& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : JSExportObject(rhs, arguments),
-		      height__(rhs.height__),
-		      width__(rhs.width__),
-		      x__(rhs.x__),
-		      y__(rhs.y__)
 		{
 		}
 

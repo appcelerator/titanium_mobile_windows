@@ -23,8 +23,7 @@ namespace TitaniumWindows
 	class TITANIUMWINDOWS_API_EXPORT API final : public Titanium::API, public JSExport<API>
 	{
 	public:
-		API(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		API(const API&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		API(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~API() = default;
 		API(const API&) = default;

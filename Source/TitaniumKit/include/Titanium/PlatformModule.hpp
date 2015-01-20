@@ -55,8 +55,7 @@ namespace Titanium
 		virtual bool openURL(const std::string& url) TITANIUM_NOEXCEPT;
 		virtual bool is24HourTimeFormat() TITANIUM_NOEXCEPT;
 
-		PlatformModule(const JSContext& js_context) TITANIUM_NOEXCEPT;
-		PlatformModule(const PlatformModule&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+		PlatformModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 		virtual ~PlatformModule() = default;
 		PlatformModule(const PlatformModule&) = default;

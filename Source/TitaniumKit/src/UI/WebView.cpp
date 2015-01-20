@@ -13,13 +13,8 @@ namespace Titanium
 {
 	namespace UI
 	{
-		WebView::WebView(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context)
-		{
-		}
-
-		WebView::WebView(const WebView& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(rhs, arguments)
+		WebView::WebView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : View(js_context, arguments)
 		{
 		}
 

@@ -13,15 +13,9 @@ namespace Titanium
 {
 	namespace UI
 	{
-		Animation::Animation(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Module(js_context),
+		Animation::Animation(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		    : Module(js_context, arguments),
 		      curve__(ANIMATION_CURVE::LINEAR)
-		{
-		}
-
-		Animation::Animation(const Animation& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : Module(rhs, arguments),
-		      curve__(rhs.curve__)
 		{
 		}
 

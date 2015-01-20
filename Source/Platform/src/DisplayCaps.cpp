@@ -11,16 +11,10 @@
 
 namespace TitaniumWindows
 {
-	DisplayCaps::DisplayCaps(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Titanium::Platform::DisplayCaps(js_context)
+	DisplayCaps::DisplayCaps(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+	    : Titanium::Platform::DisplayCaps(js_context, arguments)
 	{
 		TITANIUM_LOG_DEBUG("DisplayCaps::ctor Initialize");
-	}
-
-	DisplayCaps::DisplayCaps(const DisplayCaps& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Titanium::Platform::DisplayCaps(rhs, arguments)
-	{
-		TITANIUM_LOG_DEBUG("DisplayCaps::ctor CallAsConstructor");
 	}
 
 	void DisplayCaps::JSExportInitialize()

@@ -92,8 +92,7 @@ namespace Titanium
 			virtual bool get_wordWrap() const TITANIUM_NOEXCEPT final;
 			virtual void set_wordWrap(const bool& wordWrap) TITANIUM_NOEXCEPT;
 
-			Label(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			Label(const Label&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			Label(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~Label() = default;
 			Label(const Label&) = default;

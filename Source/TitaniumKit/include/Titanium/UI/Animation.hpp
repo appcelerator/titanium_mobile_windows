@@ -39,8 +39,7 @@ namespace Titanium
 			virtual ANIMATION_CURVE get_curve() const TITANIUM_NOEXCEPT final;
 			virtual void set_curve(const ANIMATION_CURVE& curve) TITANIUM_NOEXCEPT;
 
-			Animation(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			Animation(const Animation&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			Animation(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~Animation() = default;
 			Animation(const Animation&) = default;

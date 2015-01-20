@@ -41,8 +41,7 @@ namespace Titanium
 			virtual LIST_ITEM_TEMPLATE get_defaultItemTemplate() const TITANIUM_NOEXCEPT final;
 			virtual void set_defaultItemTemplate(const LIST_ITEM_TEMPLATE& defaultItemTemplate) TITANIUM_NOEXCEPT;
 
-			ListView(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			ListView(const ListView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			ListView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~ListView() = default;
 			ListView(const ListView&) = default;

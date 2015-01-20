@@ -27,8 +27,7 @@ namespace TitaniumWindows
 		class TITANIUMWINDOWS_UI_EXPORT Button final : public Titanium::UI::Button, public JSExport<Button>, public ViewBase
 		{
 		public:
-			Button(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			Button(const Button&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			Button(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~Button() = default;
 			Button(const Button&) = default;

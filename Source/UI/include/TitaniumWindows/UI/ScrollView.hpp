@@ -27,8 +27,7 @@ namespace TitaniumWindows
 		class TITANIUMWINDOWS_UI_EXPORT ScrollView final : public Titanium::UI::ScrollView, public JSExport<ScrollView>, public ViewBase
 		{
 		public:
-			ScrollView(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			ScrollView(const ScrollView&, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
+			ScrollView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT;
 
 			virtual ~ScrollView() = default;
 			ScrollView(const ScrollView&) = default;
