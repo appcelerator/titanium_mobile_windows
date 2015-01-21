@@ -16,6 +16,7 @@
 #include "Titanium/Blob.hpp"
 #include "Titanium/FilesystemModule.hpp"
 #include "Titanium/Filesystem/File.hpp"
+#include "Titanium/XML.hpp"
 
 namespace Titanium
 {
@@ -35,7 +36,8 @@ namespace Titanium
 	      gesture__(js_context__.CreateObject<Titanium::Gesture>()),
 	      blob__(js_context__.CreateObject<Titanium::Blob>()),
 	      file__(js_context__.CreateObject<Titanium::Filesystem::File>()),
-	      filesystem__(js_context__.CreateObject<Titanium::FilesystemModule>())
+	      filesystem__(js_context__.CreateObject<Titanium::FilesystemModule>()),
+	      xml__(js_context__.CreateObject<Titanium::XML>())
 	{
 	}
 
@@ -62,6 +64,7 @@ namespace Titanium
 		titanium.SetProperty("Gesture", gesture__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("Blob", blob__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("Filesystem", filesystem__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+		titanium.SetProperty("XML", xml__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		JSString builtin_functions_script = R"js(
       console = {};
       console.log   = Ti.API.info;
@@ -228,4 +231,14 @@ namespace Titanium
 		return *this;
 	}
 
+	JSObject ApplicationBuilder::XMLObject() const TITANIUM_NOEXCEPT
+	{
+		return xml__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::XMLObject(const JSObject& xml) TITANIUM_NOEXCEPT
+	{
+		xml__ = xml;
+		return *this;
+	}
 }  // namespace Titanium {
