@@ -43,6 +43,9 @@ namespace Titanium
 		JSObject LabelObject() const TITANIUM_NOEXCEPT;
 		ApplicationBuilder& LabelObject(const JSObject&) TITANIUM_NOEXCEPT;
 
+		JSObject AlertDialogObject() const TITANIUM_NOEXCEPT;
+		ApplicationBuilder& AlertDialogObject(const JSObject&) TITANIUM_NOEXCEPT;
+
 		JSObject ScrollViewObject() const TITANIUM_NOEXCEPT;
 		ApplicationBuilder& ScrollViewObject(const JSObject&) TITANIUM_NOEXCEPT;
 
@@ -86,6 +89,7 @@ namespace Titanium
 		JSObject view__;
 		JSObject window__;
 		JSObject button__;
+		JSObject alertDialog__;
 		JSObject imageview__;
 		JSObject label__;
 		JSObject scrollview__;

@@ -16,6 +16,7 @@
 #include "Titanium/UI/ScrollView.hpp"
 #include "Titanium/UI/ImageView.hpp"
 #include "Titanium/UI/Label.hpp"
+#include "Titanium/UI/AlertDialog.hpp"
 
 namespace Titanium
 {
@@ -113,6 +114,7 @@ namespace Titanium
 		JSObject createTab(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
 		JSObject createTabGroup(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
 		JSObject createScrollView(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
+		JSObject createAlertDialog(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
 
 		virtual JSValue ANIMATION_CURVE_EASE_IN() const TITANIUM_NOEXCEPT final;
 		virtual JSValue ANIMATION_CURVE_EASE_IN_OUT() const TITANIUM_NOEXCEPT final;
@@ -239,6 +241,7 @@ namespace Titanium
 		JSValue js_createTab(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createTabGroup(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createScrollView(const std::vector<JSValue>& arguments, JSObject& this_object);
+		JSValue js_createAlertDialog(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createImageView(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createLabel(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_setBackgroundColor(const std::vector<JSValue>& arguments, JSObject& this_object);

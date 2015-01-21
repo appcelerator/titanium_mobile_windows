@@ -132,6 +132,8 @@ set(SOURCE_UI
   src/UI/Picker.cpp
   include/Titanium/UI/WebView.hpp
   src/UI/WebView.cpp
+  include/Titanium/UI/AlertDialog.hpp
+  src/UI/AlertDialog.cpp
   include/Titanium/UI/WebViewErrorEvent.hpp
   src/UI/WebViewErrorEvent.cpp
   include/Titanium/UI/ScrollView.hpp
