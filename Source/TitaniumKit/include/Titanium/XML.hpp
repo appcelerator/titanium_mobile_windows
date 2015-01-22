@@ -34,7 +34,7 @@ namespace Titanium
 
 		static void JSExportInitialize();
 
-		JSObject loadResource() TITANIUM_NOEXCEPT;
+		bool loadResource(const JSContext& js_context);
 		virtual JSValue js_parseString(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
 		virtual JSValue js_serializeToString(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
 

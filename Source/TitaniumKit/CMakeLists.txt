@@ -149,6 +149,7 @@ set(SOURCE_TiLogger_detail
 
 set(SOURCE_XML
   include/Titanium/XML.hpp
+  include/Titanium/XML/scripts.hpp
   src/XML.cpp
   )
 
