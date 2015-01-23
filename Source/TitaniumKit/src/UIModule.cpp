@@ -309,6 +309,48 @@ namespace Titanium
 		return button;
 	}
 
+	JSObject UIModule::createSlider(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_DEBUG("UI::createSlider");
+
+		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
+		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+		JSObject Titanium = Titanium_property;
+
+		JSValue UI_property = Titanium.GetProperty("UI");
+		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
+		JSObject UI = UI_property;
+
+		JSValue Slider_property = UI.GetProperty("Slider");
+		TITANIUM_ASSERT(Slider_property.IsObject());  // precondition
+		JSObject Slider = Slider_property;
+
+		auto slider = Slider.CallAsConstructor(parameters);
+		Titanium::applyProperties(slider, parameters);
+		return slider;
+	}
+
+	JSObject UIModule::createAlertDialog(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_DEBUG("UI::createAlertDialog");
+
+		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
+		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+		JSObject Titanium = Titanium_property;
+
+		JSValue UI_property = Titanium.GetProperty("UI");
+		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
+		JSObject UI = UI_property;
+
+		JSValue AlertDialog_property = UI.GetProperty("AlertDialog");
+		TITANIUM_ASSERT(AlertDialog_property.IsObject());  // precondition
+		JSObject AlertDialog = AlertDialog_property;
+
+		auto alertDialog = AlertDialog.CallAsConstructor(parameters);
+		Titanium::applyProperties(alertDialog, parameters);
+		return alertDialog;
+	}
+
 	JSObject UIModule::createTab(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_DEBUG("UI::createTab");
@@ -959,6 +1001,8 @@ namespace Titanium
 		JSExport<UIModule>::AddFunctionProperty("createScrollView", std::mem_fn(&UIModule::js_createScrollView));
 		JSExport<UIModule>::AddFunctionProperty("createImageView", std::mem_fn(&UIModule::js_createImageView));
 		JSExport<UIModule>::AddFunctionProperty("createLabel", std::mem_fn(&UIModule::js_createLabel));
+		JSExport<UIModule>::AddFunctionProperty("createSlider", std::mem_fn(&UIModule::js_createSlider));
+		JSExport<UIModule>::AddFunctionProperty("createAlertDialog", std::mem_fn(&UIModule::js_createAlertDialog));
 		JSExport<UIModule>::AddFunctionProperty("setBackgroundColor", std::mem_fn(&UIModule::js_setBackgroundColor));
 		JSExport<UIModule>::AddValueProperty("ANIMATION_CURVE_EASE_IN", std::mem_fn(&UIModule::ANIMATION_CURVE_EASE_IN));
 		JSExport<UIModule>::AddValueProperty("ANIMATION_CURVE_EASE_IN_OUT", std::mem_fn(&UIModule::ANIMATION_CURVE_EASE_IN_OUT));
@@ -1097,6 +1141,28 @@ namespace Titanium
 			parameters = _0;
 		}
 		return createButton(parameters, this_object);
+	}
+
+	JSValue UIModule::js_createSlider(const std::vector<JSValue>& arguments, JSObject& this_object)
+	{
+		JSObject parameters = get_context().CreateObject();
+		if (arguments.size() >= 1) {
+			const auto _0 = arguments.at(0);
+			TITANIUM_ASSERT(_0.IsObject());
+			parameters = _0;
+		}
+		return createSlider(parameters, this_object);
+	}
+
+	JSValue UIModule::js_createAlertDialog(const std::vector<JSValue>& arguments, JSObject& this_object)
+	{
+		JSObject parameters = get_context().CreateObject();
+		if (arguments.size() >= 1) {
+			const auto _0 = arguments.at(0);
+			TITANIUM_ASSERT(_0.IsObject());
+			parameters = _0;
+		}
+		return createAlertDialog(parameters, this_object);
 	}
 
 	JSValue UIModule::js_createImageView(const std::vector<JSValue>& arguments, JSObject& this_object)

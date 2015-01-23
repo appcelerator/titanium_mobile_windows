@@ -28,8 +28,10 @@ namespace Titanium
 	      view__(js_context__.CreateObject<Titanium::UI::View>()),
 	      window__(js_context__.CreateObject<Titanium::UI::Window>()),
 	      button__(js_context__.CreateObject<Titanium::UI::Button>()),
+		  alertDialog__(js_context__.CreateObject<Titanium::UI::AlertDialog>()),
 	      imageview__(js_context__.CreateObject<Titanium::UI::ImageView>()),
 	      label__(js_context__.CreateObject<Titanium::UI::Label>()),
+		  slider__(js_context__.CreateObject<Titanium::UI::Slider>()),
 	      scrollview__(js_context__.CreateObject<Titanium::UI::ScrollView>()),
 	      platform__(js_context__.CreateObject<Titanium::PlatformModule>()),
 	      accelerometer__(js_context__.CreateObject<Titanium::Accelerometer>()),
@@ -49,7 +51,9 @@ namespace Titanium
 		ui.SetProperty("Button", button__);
 		ui.SetProperty("ImageView", imageview__);
 		ui.SetProperty("Label", label__);
+		ui.SetProperty("Slider", slider__);
 		ui.SetProperty("ScrollView", scrollview__);
+		ui.SetProperty("AlertDialog", alertDialog__);
 
 		filesystem__.SetProperty("File", file__);
 
@@ -71,6 +75,14 @@ namespace Titanium
       console.info  = Ti.API.info;
       console.warn  = Ti.API.warn;
       console.error = Ti.API.error;
+
+	  // Create the global alert function
+      alert = function (_msg) {
+          Ti.UI.createAlertDialog({
+              title: 'Alert',
+              message: _msg
+          }).show();
+      };
     )js";
 
 		js_context__.JSEvaluateScript(builtin_functions_script);
@@ -130,6 +142,28 @@ namespace Titanium
 	ApplicationBuilder& ApplicationBuilder::ButtonObject(const JSObject& button) TITANIUM_NOEXCEPT
 	{
 		button__ = button;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::SliderObject() const TITANIUM_NOEXCEPT
+	{
+		return slider__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::SliderObject(const JSObject& slider) TITANIUM_NOEXCEPT
+	{
+		slider__ = slider;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::AlertDialogObject() const TITANIUM_NOEXCEPT
+	{
+		return alertDialog__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::AlertDialogObject(const JSObject& alertDialog) TITANIUM_NOEXCEPT
+	{
+		alertDialog__ = alertDialog;
 		return *this;
 	}
 
@@ -241,4 +275,4 @@ namespace Titanium
 		xml__ = xml;
 		return *this;
 	}
-}  // namespace Titanium {
+}  // namespace Titanium

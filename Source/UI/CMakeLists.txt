@@ -55,9 +55,14 @@ set(SOURCE_UI
   src/Window.cpp
   include/TitaniumWindows/UI/Button.hpp
   src/Button.cpp
+  include/TitaniumWindows/UI/AlertDialog.hpp
+  src/AlertDialog.cpp
   include/TitaniumWindows/UI/detail/UIBase.hpp
+  include/TitaniumWindows/UI.hpp
   include/TitaniumWindows/UI/ScrollView.hpp
   src/ScrollView.cpp
+  include/TitaniumWindows/UI/Slider.hpp
+  src/Slider.cpp
   )
 
 source_group(Titanium\\UI FILES ${SOURCE_UI})
@@ -146,7 +151,7 @@ export(EXPORT TitaniumWindows_UI_Targets
 
 configure_file(cmake/TitaniumWindows_UI_Config.cmake
   "${CMAKE_BINARY_DIR}/TitaniumWindows_UI_Config.cmake"
-  COPY_ONLY
+  COPYONLY
   )
 
 include(CMakePackageConfigHelpers)

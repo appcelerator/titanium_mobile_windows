@@ -132,10 +132,14 @@ set(SOURCE_UI
   src/UI/Picker.cpp
   include/Titanium/UI/WebView.hpp
   src/UI/WebView.cpp
+  include/Titanium/UI/AlertDialog.hpp
+  src/UI/AlertDialog.cpp
   include/Titanium/UI/WebViewErrorEvent.hpp
   src/UI/WebViewErrorEvent.cpp
   include/Titanium/UI/ScrollView.hpp
   src/UI/ScrollView.cpp
+  include/Titanium/UI/Slider.hpp
+  src/UI/Slider.cpp
   )
 
 set(SOURCE_TiLogger_detail
@@ -271,7 +275,7 @@ export(EXPORT TitaniumKitTargets
 
 configure_file(cmake/TitaniumKitConfig.cmake
   "${CMAKE_BINARY_DIR}/TitaniumKitConfig.cmake"
-  COPY_ONLY
+  COPYONLY
   )
 
 include(CMakePackageConfigHelpers)
