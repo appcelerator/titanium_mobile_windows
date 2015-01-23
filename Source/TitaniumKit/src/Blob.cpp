@@ -51,19 +51,19 @@ namespace Titanium
 		return 0;
 	}
 
-	JSObject Blob::get_file() const TITANIUM_NOEXCEPT
+	JSValue Blob::get_file() const TITANIUM_NOEXCEPT
 	{
 		JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue Filesystem_property = Titanium.GetProperty("Filesystem");
 		TITANIUM_ASSERT(Filesystem_property.IsObject());  // precondition
-		JSObject Filesystem = Filesystem_property;
+		JSObject Filesystem = static_cast<JSObject>(Filesystem_property);
 
 		JSValue File_property = Filesystem.GetProperty("File");
 		TITANIUM_ASSERT(File_property.IsObject());  // precondition
-		JSObject File = File_property;
+		JSObject File = static_cast<JSObject>(File_property);
 
 		return File.CallAsConstructor(get_nativePath());
 	}
@@ -168,7 +168,7 @@ namespace Titanium
 		if (!_0.IsObject()) {
 			return get_context().CreateUndefined();
 		}
-		const JSObject blob = _0;
+		const JSObject blob = static_cast<JSObject>(_0);
 		auto blob_ptr = blob.GetPrivate<Blob>();
 		TITANIUM_ASSERT(blob_ptr);
 		append(blob_ptr);

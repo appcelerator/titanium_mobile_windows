@@ -49,15 +49,15 @@ namespace Titanium
 
 		JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue FS_property = Titanium.GetProperty("Filesystem");
 		TITANIUM_ASSERT(FS_property.IsObject());  // precondition
-		JSObject FS = FS_property;
+		JSObject FS = static_cast<JSObject>(FS_property);
 
 		JSValue File_property = FS.GetProperty("File");
 		TITANIUM_ASSERT(File_property.IsObject());  // precondition
-		JSObject File = File_property;
+		JSObject File = static_cast<JSObject>(File_property);
 
 		return File.CallAsConstructor(path);
 	}
@@ -158,11 +158,11 @@ namespace Titanium
 	{
 		JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue FS_property = Titanium.GetProperty("Filesystem");
 		TITANIUM_ASSERT(FS_property.IsObject());  // precondition
-		JSObject FS = FS_property;
+		JSObject FS = static_cast<JSObject>(FS_property);
 
 		JSValue sep_property = FS.GetProperty("separator");
 		TITANIUM_ASSERT(sep_property.IsString());  // precondition

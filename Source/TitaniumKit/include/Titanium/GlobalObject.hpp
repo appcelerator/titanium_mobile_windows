@@ -85,7 +85,7 @@ namespace Titanium
 
 		  @result Exported exports object of the required module (Object).
 		*/
-		virtual JSObject xrequire(const std::string& moduleId) TITANIUM_NOEXCEPT final;
+		virtual JSValue xrequire(const std::string& moduleId) TITANIUM_NOEXCEPT final;
 
 		/*!
 		  @method

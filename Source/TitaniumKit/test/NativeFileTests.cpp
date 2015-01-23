@@ -93,7 +93,7 @@ TEST_F(FileTests, logging)
 	XCTAssertNoThrow(result = File.CallAsConstructor(js_context.CreateNull()));
 	XCTAssertTrue(result.IsObject());
 
-	JSObject file = result;
+	JSObject file = static_cast<JSObject>(result);
 
 	XCTAssertTrue(file.HasProperty("executable"));
 	XCTAssertTrue(file.HasProperty("hidden"));

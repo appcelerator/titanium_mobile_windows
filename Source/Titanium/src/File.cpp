@@ -541,7 +541,7 @@ namespace TitaniumWindows
 				const auto content = static_cast<std::string>(data);
 				buffer = getBufferFromString(content, append, file_);
 			} else if (data.IsObject()) {
-				JSObject obj = data;
+				JSObject obj = static_cast<JSObject>(data);
 				auto file = obj.GetPrivate<TitaniumWindows::Filesystem::File>();
 				if (file) {
 					auto content = file->getContent();

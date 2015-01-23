@@ -104,7 +104,7 @@ TEST_F(PlatformTests, logging)
 
 	auto DisplayCaps = Platform.GetProperty("displayCaps");
 	XCTAssertTrue(DisplayCaps.IsObject());
-	JSObject displayCaps = DisplayCaps;
+	JSObject displayCaps = static_cast<JSObject>(DisplayCaps);
 	auto displayCaps_ptr = displayCaps.GetPrivate<NativePlatformDisplayCapsExample>();
 	XCTAssertNotEqual(nullptr, displayCaps_ptr);
 

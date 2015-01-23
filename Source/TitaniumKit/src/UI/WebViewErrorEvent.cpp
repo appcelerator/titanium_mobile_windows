@@ -20,7 +20,7 @@ namespace Titanium
 		}
 
 		WebViewErrorEvent::WebViewErrorEvent(const WebViewErrorEvent& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : JSExportObject(rhs, arguments),
+		    : JSExportObject(rhs.get_context(), arguments),
 		      error__(rhs.error__)
 		{
 		}

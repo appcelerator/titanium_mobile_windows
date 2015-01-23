@@ -65,7 +65,7 @@ namespace Titanium
 			if (arguments.size() >= 1) {
 				const auto _0 = arguments.at(0);
 				TITANIUM_ASSERT(_0.IsObject());
-				params = _0;
+				params = static_cast<JSObject>(_0);
 			}
 			open(params, this_object);
 			return get_context().CreateUndefined();

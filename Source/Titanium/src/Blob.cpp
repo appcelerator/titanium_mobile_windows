@@ -68,7 +68,7 @@ namespace TitaniumWindows
 		return data_.size();
 	}
 
-	JSObject Blob::get_file() const TITANIUM_NOEXCEPT
+	JSValue Blob::get_file() const TITANIUM_NOEXCEPT
 	{
 		if (path_.size() > 0) {
 			auto File = get_context().CreateObject(JSExport<TitaniumWindows::Filesystem::File>::Class());
