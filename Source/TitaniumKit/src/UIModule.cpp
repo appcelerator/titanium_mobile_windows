@@ -315,15 +315,15 @@ namespace Titanium
 
 		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue UI_property = Titanium.GetProperty("UI");
 		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
-		JSObject UI = UI_property;
+		JSObject UI = static_cast<JSObject>(UI_property);
 
 		JSValue Slider_property = UI.GetProperty("Slider");
 		TITANIUM_ASSERT(Slider_property.IsObject());  // precondition
-		JSObject Slider = Slider_property;
+		JSObject Slider = static_cast<JSObject>(Slider_property);
 
 		auto slider = Slider.CallAsConstructor(parameters);
 		Titanium::applyProperties(slider, parameters);
@@ -1127,7 +1127,7 @@ namespace Titanium
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			parameters = _0;
+			parameters = static_cast<JSObject>(_0);
 		}
 		return createSlider(parameters, this_object);
 	}
