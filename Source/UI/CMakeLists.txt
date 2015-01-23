@@ -55,6 +55,8 @@ set(SOURCE_UI
   src/Window.cpp
   include/TitaniumWindows/UI/Button.hpp
   src/Button.cpp
+  include/TitaniumWindows/UI/AlertDialog.hpp
+  src/AlertDialog.cpp
   include/TitaniumWindows/UI/detail/UIBase.hpp
   include/TitaniumWindows/UI.hpp
   include/TitaniumWindows/UI/ScrollView.hpp

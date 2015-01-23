@@ -46,6 +46,7 @@ namespace TitaniumWindows
 		                                                            .ViewObject(js_context__.CreateObject<TitaniumWindows::UI::View>())
 		                                                            .WindowObject(js_context__.CreateObject<TitaniumWindows::UI::Window>())
 		                                                            .ButtonObject(js_context__.CreateObject<TitaniumWindows::UI::Button>())
+																	.AlertDialogObject(js_context__.CreateObject<TitaniumWindows::UI::AlertDialog>())
 		                                                            .ImageViewObject(js_context__.CreateObject<TitaniumWindows::UI::ImageView>())
 		                                                            .LabelObject(js_context__.CreateObject<TitaniumWindows::UI::Label>())
 		                                                            .ScrollViewObject(js_context__.CreateObject<TitaniumWindows::UI::ScrollView>())

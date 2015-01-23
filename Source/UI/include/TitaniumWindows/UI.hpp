@@ -16,5 +16,6 @@
 #include "TitaniumWindows/UI/ImageView.hpp"
 #include "TitaniumWindows/UI/Label.hpp"
 #include "TitaniumWindows/UI/Slider.hpp"
+#include "TitaniumWindows/UI/AlertDialog.hpp"
 
 #endif  // _TITANIUMWINDOWS_UI_HPP_
