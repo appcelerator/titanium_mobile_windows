@@ -72,7 +72,7 @@ TEST_F(WindowTests, basic_functionality)
 
 	auto result = js_context.JSEvaluateScript("Ti.UI.createWindow();");
 	XCTAssertTrue(result.IsObject());
-	JSObject window = result;
+	JSObject window = static_cast<JSObject>(result);
 	XCTAssertTrue(window.HasProperty("open"));
 
 	XCTAssertNoThrow(js_context.JSEvaluateScript("var window = Ti.UI.createWindow(); window.open();"));

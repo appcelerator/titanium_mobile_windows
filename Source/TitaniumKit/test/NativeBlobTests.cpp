@@ -58,7 +58,7 @@ TEST_F(BlobTests, logging)
 	XCTAssertNoThrow(result = Blob.CallAsConstructor(js_context.CreateNull()));
 	XCTAssertTrue(result.IsObject());
 
-	JSObject blob = result;
+	JSObject blob = static_cast<JSObject>(result);
 	XCTAssertTrue(blob.HasProperty("length"));
 	// XCTAssertTrue(blob.HasProperty("file")); // This depends on Ti.Filesystme.File
 	XCTAssertTrue(blob.HasProperty("height"));

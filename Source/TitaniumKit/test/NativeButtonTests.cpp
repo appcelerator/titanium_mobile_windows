@@ -73,6 +73,6 @@ TEST_F(ButtonTests, basic_functionality)
 	JSValue result = js_context.CreateNull();
 	XCTAssertNoThrow(result = js_context.JSEvaluateScript("Ti.UI.createButton();"));
 	XCTAssertTrue(result.IsObject());
-	JSObject button = result;
+	JSObject button = static_cast<JSObject>(result);
 	XCTAssertTrue(button.HasProperty("title"));
 }
