@@ -49,17 +49,17 @@ var button3 = Ti.UI.createButton({
 });
 
 button.addEventListener('click', function (e) {
-    Ti.API.warn('Goals without a timeline are just a dream.');
+    alert('Goals without a timeline are just a dream.');
     label.text = 'Goals without a timeline are just a dream.';
 });
 
 button2.addEventListener('click', function (e) {
-    Ti.API.info('Your estimation factor is 4X.');
+    alert('Your estimation factor is 4X.');
     label.text = 'Your estimation factor is 4X.';
 });
 
 button3.addEventListener('click', function (e) {
-    Ti.API.info("I am from Santa Clara.");
+    alert("I am from Santa Clara.");
     label.text = "I am from Santa Clara.";
 });
 
