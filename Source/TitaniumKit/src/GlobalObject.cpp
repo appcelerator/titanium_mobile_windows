@@ -32,7 +32,7 @@ namespace Titanium
 	}
 
 	GlobalObject::GlobalObject(const GlobalObject& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : JSExportObject(rhs, arguments),
+	    : JSExportObject(rhs.get_context(), arguments),
 	      require_function__(createRequireFunction(rhs.get_context())),
 	      callback_map__(rhs.callback_map__),
 	      timer_map__(rhs.timer_map__)
@@ -45,7 +45,7 @@ namespace Titanium
 		TITANIUM_LOG_DEBUG("GlobalObject:: dtor ", this);
 	}
 
-	JSObject GlobalObject::xrequire(const std::string& moduleId) TITANIUM_NOEXCEPT
+	JSValue GlobalObject::xrequire(const std::string& moduleId) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_GLOBALOBJECT_LOCK_GUARD;
 
@@ -75,12 +75,12 @@ namespace Titanium
 			try {
 				// Evaluate module_js to allow it to either populate the exports object
 				// with properties or to replace the exports object wholesale.
-				JSValue result = require_function__({get_context().CreateString(moduleId), module, get_context().CreateString(module_js)});
+				JSValue result = require_function__({get_context().CreateString(moduleId), module, get_context().CreateString(module_js)}, get_context().get_global_object());
 
 				if (!result.IsObject()) {
 					TITANIUM_LOG_WARN("GlobalObject::require: module '", moduleId, "' replaced 'exports' with a non-object: ", to_string(result));
 				} else {
-					module = result;
+					module = static_cast<JSObject>(result);
 				}
 
 				if (module.IsFunction()) {
@@ -162,9 +162,9 @@ namespace Titanium
 		TITANIUM_ASSERT(callback_map__.HasProperty(timerId_str));
 		JSValue callback_property = callback_map__.GetProperty(timerId_str);
 		TITANIUM_ASSERT(callback_property.IsObject());
-		JSObject callback = callback_property;
+		JSObject callback = static_cast<JSObject>(callback_property);
 		TITANIUM_ASSERT(callback.IsFunction());
-		callback();
+		callback(get_context().get_global_object());
 	}
 
 	void GlobalObject::StartTimer(Callback_t&& callback, const unsigned& timerId, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT
@@ -285,7 +285,7 @@ namespace Titanium
 		const auto _1 = arguments.at(1);
 		TITANIUM_ASSERT(_0.IsObject());
 		TITANIUM_ASSERT(_1.IsNumber());
-		JSObject function = _0;
+		JSObject function = static_cast<JSObject>(_0);
 		TITANIUM_ASSERT(function.IsFunction());
 		const auto delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(static_cast<std::uint32_t>(_1)));
 		JSNumber timerId = get_context().CreateNumber(setTimeout(std::move(function), delay));
@@ -313,7 +313,7 @@ namespace Titanium
 		const auto _1 = arguments.at(1);
 		TITANIUM_ASSERT(_0.IsObject());
 		TITANIUM_ASSERT(_1.IsNumber());
-		JSObject function = _0;
+		JSObject function = static_cast<JSObject>(_0);
 		;
 		TITANIUM_ASSERT(function.IsFunction());
 		const auto delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(static_cast<std::uint32_t>(_1)));

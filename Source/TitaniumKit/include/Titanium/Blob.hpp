@@ -33,7 +33,7 @@ namespace Titanium
 		  @discussion File object represented by this blob, or null if this blob is not
 		  associated with a file.
 		*/
-		virtual JSObject get_file() const TITANIUM_NOEXCEPT;
+		virtual JSValue get_file() const TITANIUM_NOEXCEPT;
 		/*!
 		  @method
 		  @abstract get_height

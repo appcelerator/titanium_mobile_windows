@@ -177,7 +177,7 @@ namespace Titanium
 				// preconditions
 				TITANIUM_ASSERT(child_property.IsObject());
 
-				JSObject child = child_property;
+				JSObject child = static_cast<JSObject>(child_property);
 
 				// precondition
 				auto native_child_ptr = child.GetPrivate<View>();
@@ -218,7 +218,7 @@ namespace Titanium
 			TITANIUM_ASSERT(arguments.size() >= 1);
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			JSObject view = _0;
+			JSObject view = static_cast<JSObject>(_0);
 			add(view, this_object);
 			return get_context().CreateUndefined();
 		}

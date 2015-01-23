@@ -252,15 +252,15 @@ namespace Titanium
 
 		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue UI_property = Titanium.GetProperty("UI");
 		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
-		JSObject UI = UI_property;
+		JSObject UI = static_cast<JSObject>(UI_property);
 
 		JSValue View_property = UI.GetProperty("View");
 		TITANIUM_ASSERT(View_property.IsObject());  // precondition
-		JSObject View = View_property;
+		JSObject View = static_cast<JSObject>(View_property);
 
 		auto view = View.CallAsConstructor(parameters);
 		Titanium::applyProperties(view, parameters);
@@ -273,15 +273,15 @@ namespace Titanium
 
 		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue UI_property = Titanium.GetProperty("UI");
 		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
-		JSObject UI = UI_property;
+		JSObject UI = static_cast<JSObject>(UI_property);
 
 		JSValue Window_property = UI.GetProperty("Window");
 		TITANIUM_ASSERT(Window_property.IsObject());  // precondition
-		JSObject Window = Window_property;
+		JSObject Window = static_cast<JSObject>(Window_property);
 
 		auto window = Window.CallAsConstructor(parameters);
 		Titanium::applyProperties(window, parameters);
@@ -294,15 +294,15 @@ namespace Titanium
 
 		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue UI_property = Titanium.GetProperty("UI");
 		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
-		JSObject UI = UI_property;
+		JSObject UI = static_cast<JSObject>(UI_property);
 
 		JSValue Button_property = UI.GetProperty("Button");
 		TITANIUM_ASSERT(Button_property.IsObject());  // precondition
-		JSObject Button = Button_property;
+		JSObject Button = static_cast<JSObject>(Button_property);
 
 		auto button = Button.CallAsConstructor(parameters);
 		Titanium::applyProperties(button, parameters);
@@ -399,7 +399,7 @@ namespace Titanium
   return ui;
     )JS";
 
-		return get_context().CreateFunction(script, {"_arguments"})({parameters}, this_object);
+		return static_cast<JSObject>(get_context().CreateFunction(script, { "_arguments" })({ parameters }, this_object));
 	}
 
 	JSObject UIModule::createTabGroup(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT
@@ -482,7 +482,7 @@ namespace Titanium
   ui.applyProperties(_arguments);
   return ui;
     )JS";
-		return get_context().CreateFunction(script, {"_arguments"})({parameters}, this_object);
+		return static_cast<JSObject>(get_context().CreateFunction(script, { "_arguments" })({ parameters }, this_object));
 	}
 
 	JSObject UIModule::createScrollView(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT
@@ -491,15 +491,15 @@ namespace Titanium
 
 		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue UI_property = Titanium.GetProperty("UI");
 		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
-		JSObject UI = UI_property;
+		JSObject UI = static_cast<JSObject>(UI_property);
 
 		JSValue ScrollView_property = UI.GetProperty("ScrollView");
 		TITANIUM_ASSERT(ScrollView_property.IsObject());  // precondition
-		JSObject ScrollView = ScrollView_property;
+		JSObject ScrollView = static_cast<JSObject>(ScrollView_property);
 
 		auto view = ScrollView.CallAsConstructor(parameters);
 		Titanium::applyProperties(view, parameters);
@@ -512,15 +512,15 @@ namespace Titanium
 
 		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue UI_property = Titanium.GetProperty("UI");
 		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
-		JSObject UI = UI_property;
+		JSObject UI = static_cast<JSObject>(UI_property);
 
 		JSValue Label_property = UI.GetProperty("Label");
 		TITANIUM_ASSERT(Label_property.IsObject());  // precondition
-		JSObject Label = Label_property;
+		JSObject Label = static_cast<JSObject>(Label_property);
 
 		auto label = Label.CallAsConstructor(parameters);
 		Titanium::applyProperties(label, parameters);
@@ -533,15 +533,15 @@ namespace Titanium
 
 		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = Titanium_property;
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
 		JSValue UI_property = Titanium.GetProperty("UI");
 		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
-		JSObject UI = UI_property;
+		JSObject UI = static_cast<JSObject>(UI_property);
 
 		JSValue ImageView_property = UI.GetProperty("ImageView");
 		TITANIUM_ASSERT(ImageView_property.IsObject());  // precondition
-		JSObject ImageView = ImageView_property;
+		JSObject ImageView = static_cast<JSObject>(ImageView_property);
 
 		auto image_view = ImageView.CallAsConstructor(parameters);
 		Titanium::applyProperties(image_view, parameters);
@@ -1094,7 +1094,7 @@ namespace Titanium
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			parameters = _0;
+			parameters = static_cast<JSObject>(_0);
 		}
 		return createView(parameters, this_object);
 	}
@@ -1105,7 +1105,7 @@ namespace Titanium
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			parameters = _0;
+			parameters = static_cast<JSObject>(_0);
 		}
 		return createWindow(parameters, this_object);
 	}
@@ -1116,7 +1116,7 @@ namespace Titanium
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			parameters = _0;
+			parameters = static_cast<JSObject>(_0);
 		}
 		return createButton(parameters, this_object);
 	}
@@ -1138,7 +1138,7 @@ namespace Titanium
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			parameters = _0;
+			parameters = static_cast<JSObject>(_0);
 		}
 		return createImageView(parameters, this_object);
 	}
@@ -1149,7 +1149,7 @@ namespace Titanium
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			parameters = _0;
+			parameters = static_cast<JSObject>(_0);
 		}
 		return createLabel(parameters, this_object);
 	}
@@ -1160,7 +1160,7 @@ namespace Titanium
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			parameters = _0;
+			parameters = static_cast<JSObject>(_0);
 		}
 		return createTab(parameters, this_object);
 	}
@@ -1171,7 +1171,7 @@ namespace Titanium
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			parameters = _0;
+			parameters = static_cast<JSObject>(_0);
 		}
 		return createTabGroup(parameters, this_object);
 	}
@@ -1182,7 +1182,7 @@ namespace Titanium
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			parameters = _0;
+			parameters = static_cast<JSObject>(_0);
 		}
 		return createScrollView(parameters, this_object);
 	}

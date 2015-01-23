@@ -19,14 +19,14 @@ namespace Titanium
 	}
 
 	Module::Module(const Module& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : JSExportObject(rhs, arguments),
+	    : JSExportObject(rhs.get_context(), arguments),
 	      event_listener_map__(get_context().CreateObject())
 	{
 		TITANIUM_LOG_DEBUG("Module:: ctor 2 ", this);
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			if (_0.IsObject()) {
-				JSObject properties = _0;
+				JSObject properties = static_cast<JSObject>(_0);
 				TITANIUM_LOG_DEBUG("Module:: ctor 2 has ", properties.GetPropertyNames().GetCount(), " properties for ", this);
 			}
 		}
@@ -52,7 +52,7 @@ namespace Titanium
 			JSValue event_listener_list_property = event_listener_map__.GetProperty(name);
 			// precondition
 			TITANIUM_ASSERT(event_listener_list_property.IsObject());
-			event_listener_list = event_listener_list_property;
+			event_listener_list = static_cast<JSObject>(event_listener_list_property);
 		}
 
 		JSObject callback_payload = get_context().CreateObject();
@@ -92,7 +92,7 @@ namespace Titanium
 
 		// precondition
 		TITANIUM_ASSERT(event_listener_list_property.IsObject());
-		JSObject event_listener_list = event_listener_list_property;
+		JSObject event_listener_list = static_cast<JSObject>(event_listener_list_property);
 
 		JSObject callback_payload = get_context().CreateObject();
 		callback_payload.SetProperty("callback", callback);
@@ -143,7 +143,7 @@ namespace Titanium
 		JSValue event_listener_list_property = event_listener_map__.GetProperty(name);
 		// Precondition
 		TITANIUM_ASSERT(event_listener_list_property.IsObject());
-		JSObject event_listener_list = event_listener_list_property;
+		JSObject event_listener_list = static_cast<JSObject>(event_listener_list_property);
 		const auto event_listener_count = event_listener_list.GetPropertyNames().GetCount();
 
 		if (event_listener_count == 0) {
@@ -156,13 +156,13 @@ namespace Titanium
 
 			// Precondition
 			TITANIUM_ASSERT(callback_payload_property.IsObject());
-			JSObject callback_payload = callback_payload_property;
+			JSObject callback_payload = static_cast<JSObject>(callback_payload_property);
 
 			JSValue callback_property = callback_payload.GetProperty("callback");
 
 			// Precondition
 			TITANIUM_ASSERT(callback_property.IsObject());
-			JSObject callback = callback_property;
+			JSObject callback = static_cast<JSObject>(callback_property);
 
 			// Precondition
 			TITANIUM_ASSERT(callback.IsFunction());
@@ -171,7 +171,7 @@ namespace Titanium
 
 			// Precondition
 			TITANIUM_ASSERT(this_object_property.IsObject());
-			JSObject this_object = this_object_property;
+			JSObject this_object = static_cast<JSObject>(this_object_property);
 
 			TITANIUM_LOG_DEBUG("Module::fireEvent: name = '", name, "' for listener at index ", i, " for ", this);
 			callback({static_cast<JSValue>(event)}, this_object);
@@ -198,7 +198,7 @@ namespace Titanium
 
 			// Precondition
 			TITANIUM_ASSERT(callback_payload_property.IsObject());
-			JSObject callback_payload = callback_payload_property;
+			JSObject callback_payload = static_cast<JSObject>(callback_payload_property);
 
 			JSValue callback_property = callback_payload.GetProperty("callback");
 			if (callback == callback_property) {
@@ -240,7 +240,7 @@ namespace Titanium
 		TITANIUM_ASSERT(_0.IsString());
 		TITANIUM_ASSERT(_1.IsObject());
 		std::string name = static_cast<std::string>(_0);
-		JSObject callback = _1;
+		JSObject callback = static_cast<JSObject>(_1);
 		TITANIUM_ASSERT(callback.IsFunction());
 		addEventListener(name, callback, this_object);
 		return get_context().CreateUndefined();
@@ -256,7 +256,7 @@ namespace Titanium
 		TITANIUM_ASSERT(_0.IsString());
 		TITANIUM_ASSERT(_1.IsObject());
 		std::string name = static_cast<std::string>(_0);
-		JSObject callback = _1;
+		JSObject callback = static_cast<JSObject>(_1);
 		TITANIUM_ASSERT(callback.IsFunction());
 		removeEventListener(name, callback, this_object);
 		return get_context().CreateUndefined();
@@ -269,7 +269,7 @@ namespace Titanium
 		TITANIUM_ASSERT(arguments.size() >= 1);
 		const auto _0 = arguments.at(0);
 		TITANIUM_ASSERT(_0.IsObject());
-		JSObject props = _0;
+		JSObject props = static_cast<JSObject>(_0);
 		applyProperties(props, this_object);
 		return get_context().CreateUndefined();
 	}
@@ -284,7 +284,7 @@ namespace Titanium
 		TITANIUM_ASSERT(_0.IsString());
 		TITANIUM_ASSERT(_1.IsObject());
 		std::string name = static_cast<std::string>(_0);
-		JSObject event = _1;
+		JSObject event = static_cast<JSObject>(_1);
 		//fireEvent(name, event, this_object);
 		fireEvent(name, event);
 		return get_context().CreateUndefined();

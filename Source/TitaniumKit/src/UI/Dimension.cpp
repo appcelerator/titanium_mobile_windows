@@ -22,7 +22,7 @@ namespace Titanium
 		}
 
 		Dimension::Dimension(const Dimension& rhs, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : JSExportObject(rhs, arguments),
+		    : JSExportObject(rhs.get_context(), arguments),
 		      height__(rhs.height__),
 		      width__(rhs.width__),
 		      x__(rhs.x__),

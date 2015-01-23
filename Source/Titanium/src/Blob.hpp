@@ -49,7 +49,7 @@ namespace TitaniumWindows
 		static void JSExportInitialize();
 
 		virtual unsigned get_length() const TITANIUM_NOEXCEPT override;
-		virtual JSObject get_file() const TITANIUM_NOEXCEPT override;
+		virtual JSValue get_file() const TITANIUM_NOEXCEPT override;
 		virtual unsigned get_height() const TITANIUM_NOEXCEPT override;
 		virtual std::string get_mimeType() const TITANIUM_NOEXCEPT override;
 		virtual std::string get_nativePath() const TITANIUM_NOEXCEPT override;
