@@ -18,6 +18,7 @@
 #include "Titanium/UI/Label.hpp"
 #include "Titanium/UI/Slider.hpp"
 #include "Titanium/UI/AlertDialog.hpp"
+#include "Titanium/UI/WebView.hpp"
 
 namespace Titanium
 {
@@ -111,6 +112,22 @@ namespace Titanium
 		  @result Titanium.UI.Window
 		*/
 		JSObject createLabel(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
+
+		/*!
+		  @method
+
+		  @abstract createWebView( [parameters] ) : Titanium.UI.WebView
+
+		  @discussion Creates and returns an instance of
+		  Titanium.UI.WebView
+
+		  @param parameters Properties to set on a new object, including
+		  any defined by Titanium.UI.WebView except those marked
+		  not-creation or read-only.  (Dictionary<Titanium.UI.WebView>)
+
+		  @result Titanium.UI.WebView
+		*/
+		JSObject createWebView(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
 
 		JSObject createTab(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
 		JSObject createTabGroup(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
@@ -247,6 +264,7 @@ namespace Titanium
 		JSValue js_createImageView(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createLabel(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createSlider(const std::vector<JSValue>& arguments, JSObject& this_object);
+		JSValue js_createWebView(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_setBackgroundColor(const std::vector<JSValue>& arguments, JSObject& this_object);
 
 	private:
