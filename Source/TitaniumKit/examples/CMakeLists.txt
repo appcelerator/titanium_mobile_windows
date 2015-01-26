@@ -38,6 +38,8 @@ set(SOURCE_examples
   NativeFilesystemExample.cpp
   NativeFileExample.hpp
   NativeFileExample.cpp
+  NativeWebViewExample.hpp
+  NativeWebViewExample.cpp
   )
 add_library(TitaniumKit_examples
   ${SOURCE_examples}
