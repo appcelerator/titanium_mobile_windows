@@ -5,8 +5,6 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('should');
-
 describe('titanium', function () {
     it('version', function (finish) {
         should(Ti.version).be.a.String;
