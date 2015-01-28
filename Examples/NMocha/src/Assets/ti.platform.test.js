@@ -5,8 +5,6 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('should');
-
 describe("platform", function () {
     it("Ti.Platform.createUUID", function (finish) {
         should(Ti.Platform.createUUID).be.a.Function;
