@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Slider
 		*/
-		class TITANIUMKIT_EXPORT Slider : public View, public JSExport<Slider>
+		class TITANIUMKIT_EXPORT Slider : public virtual View, public JSExport<Slider>
 		{
 		public:
 			/*!

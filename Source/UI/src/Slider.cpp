@@ -14,8 +14,9 @@ namespace TitaniumWindows
 	{
 		Slider::Slider(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			  : Titanium::UI::Slider(js_context, arguments),
-			  TitaniumWindows::UI::ViewBase(js_context, arguments),
-		      slider__(ref new Windows::UI::Xaml::Controls::Slider())
+			    Titanium::UI::View(js_context, arguments),
+			    ViewBase(js_context, arguments),
+		        slider__(ref new Windows::UI::Xaml::Controls::Slider())
 		{
 			setDefaultWidth(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
 			setComponent(slider__);

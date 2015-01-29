@@ -16,8 +16,9 @@ namespace TitaniumWindows
 	{
 		Label::Label(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			  : Titanium::UI::Label(js_context, arguments),
-			  TitaniumWindows::UI::ViewBase(js_context, arguments),
-		      label__(ref new Windows::UI::Xaml::Controls::TextBlock())
+			   Titanium::UI::View(js_context, arguments),
+			    ViewBase(js_context, arguments),
+		        label__(ref new Windows::UI::Xaml::Controls::TextBlock())
 		{
 			TITANIUM_LOG_DEBUG("Label::ctor");
 

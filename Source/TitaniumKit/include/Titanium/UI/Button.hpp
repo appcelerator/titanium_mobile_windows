@@ -24,7 +24,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Button
 		*/
-		class TITANIUMKIT_EXPORT Button : public View, public JSExport<Button>
+		class TITANIUMKIT_EXPORT Button : public virtual View, public JSExport<Button>
 		{
 		public:
 

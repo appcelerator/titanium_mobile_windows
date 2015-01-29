@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.TextArea
 		*/
-		class TITANIUMKIT_EXPORT TextArea : public View, public JSExport<TextArea>
+		class TITANIUMKIT_EXPORT TextArea : public virtual View, public JSExport<TextArea>
 		{
 		public:
 			/*!

@@ -15,8 +15,9 @@ namespace TitaniumWindows
 	{
 		ImageView::ImageView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			  : Titanium::UI::ImageView(js_context, arguments),
-			  TitaniumWindows::UI::ViewBase(js_context, arguments),
-		      image__(ref new Windows::UI::Xaml::Controls::Image())
+			    Titanium::UI::View(js_context, arguments),
+			    ViewBase(js_context, arguments),
+		        image__(ref new Windows::UI::Xaml::Controls::Image())
 		{
 			using namespace Windows::UI::Xaml;
 			using namespace Windows::UI::Xaml::Controls;

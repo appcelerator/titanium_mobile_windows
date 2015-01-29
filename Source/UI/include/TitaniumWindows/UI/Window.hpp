@@ -24,7 +24,7 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.Window implementation for
 		  Windows.
 		*/
-		class TITANIUMWINDOWS_UI_EXPORT Window final : public Titanium::UI::Window, public JSExport<Window>, public virtual ViewBase
+		class TITANIUMWINDOWS_UI_EXPORT Window final : public Titanium::UI::Window, public JSExport<Window>, public ViewBase
 		{
 		public:
 			virtual void open(const JSObject& params, JSObject& this_object) const TITANIUM_NOEXCEPT override final;

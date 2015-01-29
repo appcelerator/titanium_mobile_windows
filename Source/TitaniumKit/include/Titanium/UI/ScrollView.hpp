@@ -24,7 +24,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ScrollView
 		*/
-		class TITANIUMKIT_EXPORT ScrollView : public View, public JSExport<ScrollView>
+		class TITANIUMKIT_EXPORT ScrollView : public virtual View, public JSExport<ScrollView>
 		{
 		public:
 			virtual void add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT override;

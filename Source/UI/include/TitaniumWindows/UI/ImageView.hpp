@@ -26,7 +26,7 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.ImageView implementation for
 		  Windows.
 		*/
-		class TITANIUMWINDOWS_UI_EXPORT ImageView final : public Titanium::UI::ImageView, public JSExport<ImageView>, public virtual ViewBase
+		class TITANIUMWINDOWS_UI_EXPORT ImageView final : public Titanium::UI::ImageView, public JSExport<ImageView>, public ViewBase
 		{
 		public:
 			ImageView(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;

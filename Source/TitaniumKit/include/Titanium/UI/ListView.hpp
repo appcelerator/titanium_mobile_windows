@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ListView
 		*/
-		class TITANIUMKIT_EXPORT ListView : public View, public JSExport<ListView>
+		class TITANIUMKIT_EXPORT ListView : public virtual View, public JSExport<ListView>
 		{
 		public:
 			/*!

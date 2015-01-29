@@ -24,7 +24,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ImageView
 		*/
-		class TITANIUMKIT_EXPORT ImageView : public View, public JSExport<ImageView>
+		class TITANIUMKIT_EXPORT ImageView : public virtual View, public JSExport<ImageView>
 		{
 		public:
 			virtual std::string get_image() const TITANIUM_NOEXCEPT final;

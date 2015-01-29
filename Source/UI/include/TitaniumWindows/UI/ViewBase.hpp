@@ -19,7 +19,7 @@ namespace TitaniumWindows
 	{
 		using namespace HAL;
 
-		class TITANIUMWINDOWS_UI_EXPORT ViewBase : public Titanium::UI::View
+		class TITANIUMWINDOWS_UI_EXPORT ViewBase : public virtual Titanium::UI::View
 		{
 		public:
 			ViewBase(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;

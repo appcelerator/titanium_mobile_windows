@@ -24,7 +24,7 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.Button implementation for
 		  Windows.
 		*/
-		class TITANIUMWINDOWS_UI_EXPORT Button final : public Titanium::UI::Button, public JSExport<Button>, public virtual ViewBase
+		class TITANIUMWINDOWS_UI_EXPORT Button final : public Titanium::UI::Button, public JSExport<Button>, public ViewBase
 		{
 		public:
 			Button(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
