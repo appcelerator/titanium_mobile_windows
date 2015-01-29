@@ -24,7 +24,7 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.Slider implementation for
 		  Windows.
 		*/
-		class TITANIUMWINDOWS_UI_EXPORT Slider final : public Titanium::UI::Slider, public JSExport<Slider>, public ViewBase
+		class TITANIUMWINDOWS_UI_EXPORT Slider final : public Titanium::UI::Slider, public JSExport<Slider>, public virtual ViewBase
 		{
 		public:
 			Slider(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;

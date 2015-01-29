@@ -24,7 +24,7 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.Label implementation for
 		  Windows.
 		*/
-		class TITANIUMWINDOWS_UI_EXPORT Label final : public Titanium::UI::Label, public JSExport<Label>, public ViewBase
+		class TITANIUMWINDOWS_UI_EXPORT Label final : public Titanium::UI::Label, public JSExport<Label>, public virtual ViewBase
 		{
 		public:
 			Label(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;

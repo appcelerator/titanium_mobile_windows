@@ -24,7 +24,7 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.ScrollView implementation for
 		  Windows.
 		*/
-		class TITANIUMWINDOWS_UI_EXPORT ScrollView final : public Titanium::UI::ScrollView, public JSExport<ScrollView>, public ViewBase
+		class TITANIUMWINDOWS_UI_EXPORT ScrollView final : public Titanium::UI::ScrollView, public JSExport<ScrollView>, public virtual ViewBase
 		{
 		public:
 			ScrollView(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;

@@ -456,7 +456,7 @@ namespace TitaniumWindows
 			return color;
 		}
 
-		void View::add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT
+		void ViewBase::add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT
 		{
 			auto nativeView = dynamic_cast<Windows::UI::Xaml::Controls::Panel^>(getComponent());
 

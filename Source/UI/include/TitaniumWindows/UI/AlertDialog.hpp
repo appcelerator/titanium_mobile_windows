@@ -24,7 +24,7 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.AlertDialog implementation for
 		  Windows.
 		*/
-		class TITANIUMWINDOWS_UI_EXPORT AlertDialog final : public Titanium::UI::AlertDialog, public JSExport<AlertDialog>, public ViewBase
+		class TITANIUMWINDOWS_UI_EXPORT AlertDialog final : public Titanium::UI::AlertDialog, public JSExport<AlertDialog>, public virtual ViewBase
 		{
 		public:
 			AlertDialog(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;

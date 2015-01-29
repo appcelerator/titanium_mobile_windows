@@ -24,7 +24,7 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.View implementation for
 		  Windows.
 		*/
-		class TITANIUMWINDOWS_UI_EXPORT View final : public Titanium::UI::View, public JSExport<View>, public ViewBase
+		class TITANIUMWINDOWS_UI_EXPORT View final : public JSExport<View>, public ViewBase
 		{
 
 		public:
