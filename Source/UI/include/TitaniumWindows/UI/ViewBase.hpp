@@ -17,10 +17,10 @@ namespace TitaniumWindows
 {
 	namespace UI
 	{
-		class ViewBase
+		class ViewBase TITANIUMWINDOWS_UI_EXPORT ViewBase : public Titanium::UI::View
 		{
 		public:
-			ViewBase();
+			ViewBase(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 
 			Titanium::LayoutEngine::Node* layout_node_;
 
@@ -37,6 +37,20 @@ namespace TitaniumWindows
 			static Windows::UI::Color ColorForName(const std::string& colorName);
 			static Windows::UI::Color ColorForHexCode(const std::string& hexCode);
 
+			virtual void add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT;
+
+			virtual void hide(JSObject& this_object) TITANIUM_NOEXCEPT;
+			virtual void show(JSObject& this_object) TITANIUM_NOEXCEPT;
+
+			virtual void set_backgroundColor(const std::string& backgroundColor) TITANIUM_NOEXCEPT override final;
+			virtual void set_bottom(const std::string& bottom) TITANIUM_NOEXCEPT override final;
+			virtual void set_height(const std::string& height) TITANIUM_NOEXCEPT override final;
+			virtual void set_layout(const std::string& layout) TITANIUM_NOEXCEPT override;
+			virtual void set_left(const std::string& left) TITANIUM_NOEXCEPT override final;
+			virtual void set_right(const std::string& right) TITANIUM_NOEXCEPT override final;
+			virtual void set_top(const std::string& top) TITANIUM_NOEXCEPT override final;
+			virtual void set_width(const std::string& width) TITANIUM_NOEXCEPT override final;
+
 		protected:
 			void setLayoutProperty(const Titanium::LayoutEngine::ValueName&, const std::string&);
 
@@ -52,8 +66,6 @@ namespace TitaniumWindows
 
 			virtual void onComponentLoaded(const Titanium::LayoutEngine::Rect&);
 			virtual void onComponentSizeChange(const Titanium::LayoutEngine::Rect&);
-
-			virtual void setLayout(const std::string& type);
 
 			virtual std::string defaultHeight() const
 			{

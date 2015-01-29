@@ -14,6 +14,7 @@ namespace TitaniumWindows
 	{
 		Slider::Slider(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			  : Titanium::UI::Slider(js_context, arguments),
+			  TitaniumWindows::UI::ViewBase(js_context, arguments),
 		      slider__(ref new Windows::UI::Xaml::Controls::Slider())
 		{
 			setDefaultWidth(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
@@ -43,55 +44,6 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::Slider::set_value(value);
 			slider__->Value = value;
-		}
-
-		void Slider::set_backgroundColor(const std::string& backgroundColorName) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_backgroundColor(backgroundColorName);
-			const auto backgroundColor = ColorForName(backgroundColorName);
-			slider__->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(backgroundColor);
-		}
-
-		void Slider::set_bottom(const std::string& bottom) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_bottom(bottom);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Bottom, bottom);
-		}
-
-		void Slider::set_height(const std::string& height) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_height(height);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, height);
-		}
-
-		void Slider::set_left(const std::string& left) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_left(left);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, left);
-		}
-
-		void Slider::set_layout(const std::string& layout) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_layout(layout);
-			setLayout(layout);
-		}
-
-		void Slider::set_right(const std::string& right) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_right(right);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, right);
-		}
-
-		void Slider::set_top(const std::string& top) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_top(top);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, top);
-		}
-
-		void Slider::set_width(const std::string& width) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_width(width);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, width);
 		}
 
 		void Slider::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT

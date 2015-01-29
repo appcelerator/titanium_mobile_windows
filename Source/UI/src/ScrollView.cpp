@@ -32,10 +32,14 @@ namespace TitaniumWindows
 
 		ScrollView::ScrollView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			  : Titanium::UI::ScrollView(js_context, arguments),
+			  TitaniumWindows::UI::ViewBase(js_context, arguments),
 		      scroll_viewer__(ref new Windows::UI::Xaml::Controls::ScrollViewer()),
 		      contentView__(get_context().CreateObject(JSExport<TitaniumWindows::UI::View>::Class()).CallAsConstructor())
 		{
 			TITANIUM_LOG_DEBUG("ScrollView::ctor");
+
+			setDefaultHeight(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
+			setDefaultWidth(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
 
 			setupViewer();
 			setComponent(scroll_viewer__);
@@ -67,52 +71,9 @@ namespace TitaniumWindows
 			content->add(view, this_object);
 		}
 
-		void ScrollView::set_backgroundColor(const std::string& backgroundColorName) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_backgroundColor(backgroundColorName);
-			const auto backgroundColor = ColorForName(backgroundColorName);
-			scroll_viewer__->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(backgroundColor);
-		}
-
-		void ScrollView::set_bottom(const std::string& bottom) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_bottom(bottom);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Bottom, bottom);
-		}
-
-		void ScrollView::set_height(const std::string& height) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_height(height);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, height);
-		}
-
-		void ScrollView::set_left(const std::string& left) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_left(left);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, left);
-		}
-
 		void ScrollView::set_layout(const std::string& layout) TITANIUM_NOEXCEPT
 		{
 			contentView__.SetProperty("layout", get_context().CreateString(layout));
-		}
-
-		void ScrollView::set_right(const std::string& right) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_right(right);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, right);
-		}
-
-		void ScrollView::set_top(const std::string& top) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_top(top);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, top);
-		}
-
-		void ScrollView::set_width(const std::string& width) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_width(width);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, width);
 		}
 
 		void ScrollView::scrollTo(double x, double y)

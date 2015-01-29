@@ -15,10 +15,11 @@ namespace TitaniumWindows
 {
 	namespace UI
 	{
-		ViewBase::ViewBase()
+		ViewBase::ViewBase(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+  			: Titanium::UI::View(js_context, arguments)
 		{
-			defaultWidth__ = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
-			defaultHeight__ = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
+			setDefaultHeight(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE));
+			setDefaultWidth(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE));
 		}
 
 		static void onLayoutCallback(Titanium::LayoutEngine::Node* node)
@@ -208,24 +209,6 @@ namespace TitaniumWindows
 			}
 
 			Titanium::LayoutEngine::populateLayoutPoperties(prop, &layout_node_->properties, 1);
-
-			if (isLoaded()) {
-				auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node_);
-				if (root) {
-					Titanium::LayoutEngine::nodeLayout(root);
-				}
-			}
-		}
-
-		void ViewBase::setLayout(const std::string& type)
-		{
-			if (type == "horizontal") {
-				layout_node_->element.layoutType = Titanium::LayoutEngine::LayoutType::Horizontal;
-			} else if (type == "vertical") {
-				layout_node_->element.layoutType = Titanium::LayoutEngine::LayoutType::Vertical;
-			} else {
-				layout_node_->element.layoutType = Titanium::LayoutEngine::LayoutType::Composite;
-			}
 
 			if (isLoaded()) {
 				auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node_);
@@ -471,6 +454,115 @@ namespace TitaniumWindows
 			}
 
 			return color;
+		}
+
+		void View::add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT
+		{
+			auto nativeView = dynamic_cast<Windows::UI::Xaml::Controls::Panel^>(getComponent());
+
+			if (nativeView == nullptr) {
+				TITANIUM_LOG_DEBUG("View::add: nativeView = nullptr");
+				return;
+			}
+
+			auto view_ptr = view.GetPrivate<Titanium::UI::View>();
+			auto newView = std::dynamic_pointer_cast<TitaniumWindows::UI::ViewBase>(view_ptr);
+			auto nativeChildView = newView->getComponent();
+			if (nativeChildView != nullptr) {
+				Titanium::LayoutEngine::nodeAddChild(layout_node_, newView->layout_node_);
+				if (isLoaded()) {
+					auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node_);
+					if (root) {
+						Titanium::LayoutEngine::nodeLayout(root);
+					}
+				}
+
+				nativeView->Children->Append(nativeChildView);
+			} else {
+				TITANIUM_LOG_DEBUG("View::add: nativeChildView = nullptr");
+			}
+		}
+
+		void ViewBase::hide(JSObject& this_object) TITANIUM_NOEXCEPT
+		{
+			getComponent()->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+		}
+
+		void ViewBase::show(JSObject& this_object) TITANIUM_NOEXCEPT
+		{
+			getComponent()->Visibility = Windows::UI::Xaml::Visibility::Visible;
+		}
+
+		void ViewBase::set_backgroundColor(const std::string& backgroundColorName) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::View::set_backgroundColor(backgroundColorName);
+			const auto backgroundColor = ColorForName(backgroundColorName);
+			if (is_control_) {
+				auto control = safe_cast<Windows::UI::Xaml::Controls::Control^>(getComponent());
+				control->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(backgroundColor);
+				return;
+			}
+			if (is_panel_) {
+				auto panel = safe_cast<Windows::UI::Xaml::Controls::Panel^>(getComponent());
+				panel->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(backgroundColor);
+				return;
+			}
+		}
+
+		void ViewBase::set_bottom(const std::string& bottom) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::View::set_bottom(bottom);
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::Bottom, bottom);
+		}
+
+		void ViewBase::set_height(const std::string& height) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::View::set_height(height);
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, height);
+		}
+
+		void ViewBase::set_left(const std::string& left) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::View::set_left(left);
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, left);
+		}
+
+		void ViewBase::set_layout(const std::string& layout) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::View::set_layout(layout);
+
+			if (layout == "horizontal") {
+				layout_node_->element.layoutType = Titanium::LayoutEngine::LayoutType::Horizontal;
+			} else if (layout == "vertical") {
+				layout_node_->element.layoutType = Titanium::LayoutEngine::LayoutType::Vertical;
+			} else {
+				layout_node_->element.layoutType = Titanium::LayoutEngine::LayoutType::Composite;
+			}
+
+			if (isLoaded()) {
+				auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node_);
+				if (root) {
+					Titanium::LayoutEngine::nodeLayout(root);
+				}
+			}
+		}
+
+		void ViewBase::set_right(const std::string& right) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::View::set_right(right);
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, right);
+		}
+
+		void ViewBase::set_top(const std::string& top) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::View::set_top(top);
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, top);
+		}
+
+		void ViewBase::set_width(const std::string& width) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::View::set_width(width);
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, width);
 		}
 	} // namespace UI
 } // namespace TitaniumWindows
