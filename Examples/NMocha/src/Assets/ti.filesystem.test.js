@@ -5,8 +5,6 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('should');
-
 describe('filesystem', function () {
     // Check if applicationDirectory exists and make sure it does not throw exception
     it('applicationDirectory', function (finish) {

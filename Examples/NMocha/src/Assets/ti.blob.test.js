@@ -4,7 +4,6 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var should = require('should');
 
 describe("blob", function () {
     it.skip("Ti.Blob", function (finish) {
