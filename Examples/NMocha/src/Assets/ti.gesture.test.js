@@ -5,8 +5,6 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('should');
-
 describe('gesture', function () {
     it('Ti.Gesture', function (finish) {
         should(Ti.Gesture).not.be.undefined;
