@@ -151,6 +151,12 @@ set(SOURCE_TiLogger_detail
   src/detail/TiLoggerPimpl.cpp
   )
 
+set(SOURCE_XML
+  include/Titanium/XML.hpp
+  include/Titanium/XML/scripts.hpp
+  src/XML.cpp
+  )
+
 source_group(TitaniumKit                   FILES ${SOURCE_TitaniumKit})
 source_group(TitaniumKit\\detail           FILES ${SOURCE_TitaniumKit_detail})
 source_group(TitaniumKit\\Ti               FILES ${SOURCE_Ti})
@@ -161,6 +167,7 @@ source_group(TitaniumKit\\Gesture          FILES ${SOURCE_Gesture})
 source_group(TitaniumKit\\Blob             FILES ${SOURCE_Blob})
 source_group(TitaniumKit\\Filesystem       FILES ${SOURCE_Filesystem})
 source_group(TitaniumKit\\UI               FILES ${SOURCE_UI})
+source_group(TitaniumKit\\XML              FILES ${SOURCE_XML})
 source_group(TitaniumKit\\TiLogger\\detail FILES ${SOURCE_TiLogger_detail})
 
 #set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -177,6 +184,7 @@ add_library(TitaniumKit SHARED
   ${SOURCE_Blob}
   ${SOURCE_Filesystem}
   ${SOURCE_UI}
+  ${SOURCE_XML}
   ${SOURCE_TiLogger_detail}
   )
 
