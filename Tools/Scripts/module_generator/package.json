@@ -1,10 +1,20 @@
 {
   "name": "module_generator",
   "description": "Tool to generate modules/proxies from the documentation.",
-  "author": "Gary Mathews <gmathews@appcelerator.com>",
+  "author": {
+    "name": "Appcelerator, Inc.",
+    "email": "npmjs@appcelerator.com"
+  },
+  "maintainers": [
+    {"name": "Gary Mathews", "email": "gmathews@appcelerator.com"}
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/appcelerator/titanium_mobile_windows.git"
+  },
+  "main": "./generate",
   "dependencies": {
     "fs.extra": "1.2.x",
-    "path": "0.4.x",
     "async": "0.9.x",
     "ejs": "garymathews/ejs",
     "inquirer": "0.8.x"

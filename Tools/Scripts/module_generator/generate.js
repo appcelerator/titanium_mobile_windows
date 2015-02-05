@@ -6,11 +6,11 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var fs = require('fs.extra');
-var ejs = require('ejs');
-var inq = require('inquirer');
-var path = require('path');
-var async = require('async');
+var fs = require('fs.extra'),
+	ejs = require('ejs'),
+	inq = require('inquirer'),
+	path = require('path'),
+	async = require('async');
 
 const API_FILE = 'api.jsca';
 
@@ -31,23 +31,32 @@ String.prototype.repeat = function(x){
 }
 
 var jsca = JSON.parse(fs.readFileSync('api.jsca'));
-var modules = [];
 
-// List modules
-for (module in jsca) if(module.contains('Titanium')) modules.push(module);
-
-// Module selection
-inq.prompt(
-	[{
-		type: "list",
-		name: "module",
-		message: "Select a module to generate",
-		choices: modules
-	}],
-	function(result) {
-		generateModule(result.module);
+// slice off node and generate.js from args
+var myArgs = process.argv.slice(2);
+if (myArgs.length == 0) {
+	// Interactive module selection
+	var modules = [];
+	for (module in jsca) {
+		if (module.contains('Titanium')) {
+			modules.push(module);
+		}
 	}
-);
+	inq.prompt(
+		[{
+			type: "list",
+			name: "module",
+			message: "Select a module to generate",
+			choices: modules
+		}],
+		function(result) {
+			generateModule(result.module);
+		}
+	);
+} else {
+	// user passed in proxy name as argument
+	generateModule(myArgs[0]);
+}
 
 function generateModule(module) {
 
@@ -97,7 +106,7 @@ function includeModule(module_data) {
 	var path_ti_tiw = SOURCE_FOLDER + 'Titanium/src/TitaniumWindows.cpp';
 	var path_tik_app_hpp = SOURCE_FOLDER + 'TitaniumKit/include/Titanium/ApplicationBuilder.hpp';
 	var path_tik_app_cpp = SOURCE_FOLDER + 'TitaniumKit/src/ApplicationBuilder.cpp';
-	var path_tik_module = SOURCE_FOLDER + 'TitaniumKit/include/Titanium/'+module_data.module_parent+'.hpp';
+	var path_tik_module = SOURCE_FOLDER + 'TitaniumKit/include/Titanium/'+module_data.module_parent+'Module.hpp';
 	var path_module_cmake = SOURCE_FOLDER + module_data.module_parent + '/CMakeLists.txt';
 
 	// TitaniumKit CMakeLists.txt modifications
