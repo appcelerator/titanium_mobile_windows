@@ -63,10 +63,10 @@ mocha.setup({
 
 // dump the output, which will get interpreted above in the logging code
 mocha.run(function () {
-    Ti.API.info('!TEST_RESULTS_START!');
-    Ti.API.info(JSON.stringify({
+    Ti.API.info('!TEST_RESULTS_START!\n' +
+    (JSON.stringify({
         date: new Date,
         results: $results
-    }, null, '\t'));
-    Ti.API.info('!TEST_RESULTS_STOP!');
+    }, null, '\t')) +
+    '\n!TEST_RESULTS_STOP!');
 });
