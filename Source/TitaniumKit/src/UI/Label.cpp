@@ -13,7 +13,7 @@ namespace Titanium
 	namespace UI
 	{
 		Label::Label(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		    : UIBase(js_context),
 		      color__(js_context.CreateString()),
 		      text__(js_context.CreateString()),
 		      textAlign__(TEXT_ALIGNMENT::LEFT),
@@ -109,7 +109,7 @@ namespace Titanium
 		void Label::JSExportInitialize()
 		{
 			JSExport<Label>::SetClassVersion(1);
-			JSExport<Label>::SetParent(JSExport<View>::Class());
+			JSExport<Label>::SetParent(JSExport<UIBase>::Class());
 			JSExport<Label>::AddValueProperty("color", std::mem_fn(&Label::js_get_color), std::mem_fn(&Label::js_set_color));
 			JSExport<Label>::AddValueProperty("font", std::mem_fn(&Label::js_get_font), std::mem_fn(&Label::js_set_font));
 			JSExport<Label>::AddValueProperty("text", std::mem_fn(&Label::js_get_text), std::mem_fn(&Label::js_set_text));

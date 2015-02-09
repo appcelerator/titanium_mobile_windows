@@ -13,7 +13,7 @@ namespace Titanium
 	namespace UI
 	{
 		ImageView::ImageView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		    : UIBase(js_context),
 		      image__(js_context.CreateString())
 		{
 		}
@@ -34,7 +34,7 @@ namespace Titanium
 		void ImageView::JSExportInitialize()
 		{
 			JSExport<ImageView>::SetClassVersion(1);
-			JSExport<ImageView>::SetParent(JSExport<View>::Class());
+			JSExport<ImageView>::SetParent(JSExport<UIBase>::Class());
 			JSExport<ImageView>::AddValueProperty("image", std::mem_fn(&ImageView::js_get_image), std::mem_fn(&ImageView::js_set_image));
 		}
 

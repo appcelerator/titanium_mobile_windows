@@ -87,6 +87,8 @@ TEST_F(ViewTests, basic_functionality)
 	UI.SetProperty("Button", js_context.CreateObject(JSExport<Titanium::UI::Button>::Class()));
 	XCTAssertTrue(UI.HasProperty("Button"));
 
+	XCTAssertTrue(UI.HasProperty("Button"));
+
 	std::string app_js = R"js(
   'use strict';
   
@@ -121,4 +123,22 @@ TEST_F(ViewTests, basic_functionality)
   )js";
 
 	XCTAssertNoThrow(result = js_context.JSEvaluateScript(app_js));
+
 }
+
+TEST_F(ViewTests, virtual_base_class)
+{
+	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
+	//auto global_object = js_context.get_global_object();
+
+	std::string app_js = R"js(
+ 
+  var button = Ti.UI.createButton();
+  button.bottom = 50;
+
+  )js";
+
+	XCTAssertNoThrow(auto result = js_context.JSEvaluateScript(app_js));
+
+}
+

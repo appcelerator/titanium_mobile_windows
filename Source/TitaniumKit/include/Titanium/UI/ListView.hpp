@@ -9,7 +9,7 @@
 #ifndef _TITANIUM_UI_LISTVIEW_HPP_
 #define _TITANIUM_UI_LISTVIEW_HPP_
 
-#include "Titanium/UI/View.hpp"
+#include "Titanium/UI/UIBase.hpp"
 #include "Titanium/UI/Constants.hpp"
 
 namespace Titanium
@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ListView
 		*/
-		class TITANIUMKIT_EXPORT ListView : public View, public JSExport<ListView>
+		class TITANIUMKIT_EXPORT ListView : public UIBase, public JSExport<ListView>
 		{
 		public:
 			/*!

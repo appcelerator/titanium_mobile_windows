@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		ListView::ListView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		    : UIBase(js_context),
 		      defaultItemTemplate__(LIST_ITEM_TEMPLATE::DEFAULT)
 		{
 		}
@@ -35,7 +35,7 @@ namespace Titanium
 		void ListView::JSExportInitialize()
 		{
 			JSExport<ListView>::SetClassVersion(1);
-			JSExport<ListView>::SetParent(JSExport<View>::Class());
+			JSExport<ListView>::SetParent(JSExport<UIBase>::Class());
 			JSExport<ListView>::AddValueProperty("defaultItemTemplate", std::mem_fn(&ListView::js_get_defaultItemTemplate), std::mem_fn(&ListView::js_set_defaultItemTemplate));
 		}
 

@@ -9,7 +9,7 @@
 #ifndef _TITANIUM_UI_TEXTAREA_HPP_
 #define _TITANIUM_UI_TEXTAREA_HPP_
 
-#include "Titanium/UI/View.hpp"
+#include "Titanium/UI/UIBase.hpp"
 #include "Titanium/UI/Constants.hpp"
 
 namespace Titanium
@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.TextArea
 		*/
-		class TITANIUMKIT_EXPORT TextArea : public View, public JSExport<TextArea>
+		class TITANIUMKIT_EXPORT TextArea : public UIBase, public JSExport<TextArea>
 		{
 		public:
 			/*!

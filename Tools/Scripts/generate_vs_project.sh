@@ -21,7 +21,7 @@ declare -r PROJECT_SOURCE_DIR="../../Examples/${EXAMPLE_NAME}"
 #declare -r TARGET_PLATFORM_LIST="WindowsStore WindowsPhone"
 declare -r TARGET_PLATFORM_LIST="WindowsPhone"
 #declare -r TARGET_ARCHITECTURE_LIST="Win32 ARM"
-declare -r TARGET_ARCHITECTURE_LIST="Win32"
+declare -r TARGET_ARCHITECTURE_LIST="ARM"
 declare -r CMAKE_GENERATOR_NAME="Visual Studio 12 2013"
 
 # No user-servicable parts below this line.

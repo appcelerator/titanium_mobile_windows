@@ -9,7 +9,7 @@
 #ifndef _TITANIUM_UI_TEXTFIELD_HPP_
 #define _TITANIUM_UI_TEXTFIELD_HPP_
 
-#include "Titanium/UI/View.hpp"
+#include "Titanium/UI/UIBase.hpp"
 #include "Titanium/UI/Constants.hpp"
 
 namespace Titanium
@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.TextField
 		*/
-		class TITANIUMKIT_EXPORT TextField : public View, public JSExport<TextField>
+		class TITANIUMKIT_EXPORT TextField : public UIBase, public JSExport<TextField>
 		{
 		public:
 			/*!

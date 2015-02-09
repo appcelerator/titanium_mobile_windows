@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		TextField::TextField(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		    : UIBase(js_context),
 		      autoCapitalization__(TEXT_AUTOCAPITALIZATION::NONE),
 		      borderStyle__(INPUT_BORDERSTYLE::NONE),
 		      clearButtonMode__(INPUT_BUTTONMODE::NEVER),
@@ -233,7 +233,7 @@ namespace Titanium
 		void TextField::JSExportInitialize()
 		{
 			JSExport<TextField>::SetClassVersion(1);
-			JSExport<TextField>::SetParent(JSExport<View>::Class());
+			JSExport<TextField>::SetParent(JSExport<UIBase>::Class());
 			JSExport<TextField>::AddValueProperty("autocapitalization", std::mem_fn(&TextField::js_get_autoCapitalization), std::mem_fn(&TextField::js_set_autoCapitalization));
 			JSExport<TextField>::AddValueProperty("borderStyle", std::mem_fn(&TextField::js_get_borderStyle), std::mem_fn(&TextField::js_set_borderStyle));
 			JSExport<TextField>::AddValueProperty("clearButtonMode", std::mem_fn(&TextField::js_get_clearButtonMode), std::mem_fn(&TextField::js_set_clearButtonMode));
