@@ -14,10 +14,10 @@
 using namespace Windows::Storage;
 using namespace Windows::Foundation;
 
-namespace TitaniumWindows {
-
-	namespace App {
-
+namespace TitaniumWindows
+{
+	namespace App
+	{
 		using namespace HAL;
 
 		/*!

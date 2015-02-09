@@ -8,7 +8,8 @@
 
 #include "Titanium/App.hpp"
 
-namespace Titanium {
+namespace Titanium
+{
 
 	AppModule::AppModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 		: Module(js_context, arguments),

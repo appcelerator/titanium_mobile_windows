@@ -9,7 +9,8 @@
 #include "TitaniumWindows/App.hpp"
 #include "Titanium/detail/TiBase.hpp"
 
-namespace TitaniumWindows {
+namespace TitaniumWindows
+{
 
 	AppModule::AppModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 		: Titanium::AppModule(js_context, arguments)

@@ -10,8 +10,10 @@
 #include "Titanium/detail/TiBase.hpp"
 #include "TitaniumWindows/Utility.hpp"
 
-namespace TitaniumWindows {
-	namespace App {
+namespace TitaniumWindows
+{
+	namespace App
+	{
 
 		JSFunction Properties::createStringifyFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT
 		{

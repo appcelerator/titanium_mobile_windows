@@ -11,8 +11,8 @@
 
 #include "TitaniumWindows/detail/AppBase.hpp"
 
-namespace TitaniumWindows {
-
+namespace TitaniumWindows
+{
 	using namespace HAL;
 
 	/*!

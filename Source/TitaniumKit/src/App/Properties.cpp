@@ -8,8 +8,10 @@
 
 #include "Titanium/App/Properties.hpp"
 
-namespace Titanium {
-	namespace App {
+namespace Titanium
+{
+	namespace App
+	{
 
 		Properties::Properties(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			: Module(js_context, arguments)

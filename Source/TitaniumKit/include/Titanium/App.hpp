@@ -12,8 +12,8 @@
 #include "Titanium/Module.hpp"
 #include "Titanium/App/Properties.hpp"
 
-namespace Titanium {
-
+namespace Titanium
+{
 	using namespace HAL;
 
 	/*!

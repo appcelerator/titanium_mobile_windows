@@ -11,9 +11,10 @@
 
 #include "Titanium/Module.hpp"
 
-namespace Titanium {
-	namespace App {
-
+namespace Titanium
+{
+	namespace App
+	{
 		using namespace HAL;
 
 		/*!
