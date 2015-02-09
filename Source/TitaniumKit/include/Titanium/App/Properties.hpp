@@ -18,102 +18,102 @@ namespace Titanium
 		using namespace HAL;
 
 		/*!
-		@class
-		@discussion This is the Titanium Properties Module.
-		See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.App.Properties
+		  @class
+		  @discussion This is the Titanium Properties Module.
+		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.App.Properties
 		*/
 		class TITANIUMKIT_EXPORT Properties : public Module, public JSExport<Properties> {
 
 		public:
 
 			/*!
-			@method
-			@abstract getBool
-			@discussion Returns the value of a property as a boolean data type.
+			  @method
+			  @abstract getBool
+			  @discussion Returns the value of a property as a boolean data type.
 			*/
 			virtual bool getBool(const std::string& property, bool default) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract getDouble
-			@discussion Returns the value of a property as a double (double-precision, floating point) data type.
+			  @method
+			  @abstract getDouble
+			  @discussion Returns the value of a property as a double (double-precision, floating point) data type.
 			*/
 			virtual double getDouble(const std::string& property, double default) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract getInt
-			@discussion Returns the value of a property as an integer data type.
+			  @method
+			  @abstract getInt
+			  @discussion Returns the value of a property as an integer data type.
 			*/
 			virtual double getInt(const std::string& property, double default) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract getList
-			@discussion Returns the value of a property as an array data type.
+			  @method
+			  @abstract getList
+			  @discussion Returns the value of a property as an array data type.
 			*/
 			virtual JSValue getList(const std::string& property, JSValue default) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract getObject
-			@discussion Returns the value of a property as an object.
+			  @method
+			  @abstract getObject
+			  @discussion Returns the value of a property as an object.
 			*/
 			virtual JSValue getObject(const std::string& property, JSValue default) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract getString
-			@discussion Returns the value of a property as a string data type.
+			  @method
+			  @abstract getString
+			  @discussion Returns the value of a property as a string data type.
 			*/
 			virtual std::string getString(const std::string& property, const std::string& default) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract hasProperty
-			@discussion Indicates whether a property exists.
+			  @method
+			  @abstract hasProperty
+			  @discussion Indicates whether a property exists.
 			*/
 			virtual bool hasProperty(const std::string& property) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract listProperties
-			@discussion Returns an array of property names.
+			  @method
+			  @abstract listProperties
+			  @discussion Returns an array of property names.
 			*/
 			virtual JSValue listProperties() TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract removeProperty
-			@discussion Removes a property if it exists, or does nothing otherwise.
+			  @method
+			  @abstract removeProperty
+			  @discussion Removes a property if it exists, or does nothing otherwise.
 			*/
 			virtual void removeProperty(const std::string& property) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract setBool
-			@discussion Sets the value of a property as a boolean data type. The property will be created if it does not exist.
+			  @method
+			  @abstract setBool
+			  @discussion Sets the value of a property as a boolean data type. The property will be created if it does not exist.
 			*/
 			virtual JSValue setBool(const std::string& property, bool value) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract setDouble
-			@discussion Sets the value of a property as a double (double-precision, floating point) data type. The property will be created if it does not exist.
+			  @method
+			  @abstract setDouble
+			  @discussion Sets the value of a property as a double (double-precision, floating point) data type. The property will be created if it does not exist.
 			*/
 			virtual JSValue setDouble(const std::string& property, double value) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract setInt
-			@discussion Sets the value of a property as an integer data type. The property will be created if it does not exist.
+			  @method
+			  @abstract setInt
+			  @discussion Sets the value of a property as an integer data type. The property will be created if it does not exist.
 			*/
 			virtual JSValue setInt(const std::string& property, int value) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract setList
-			@discussion Sets the value of a property as an array data type. The property will be created if it does not exist.
+			  @method
+			  @abstract setList
+			  @discussion Sets the value of a property as an array data type. The property will be created if it does not exist.
 			*/
 			virtual JSValue setList(const std::string& property, JSValue value) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract setObject
-			@discussion Sets the value of a property as an object data type. The property will be created if it does not exist.
+			  @method
+			  @abstract setObject
+			  @discussion Sets the value of a property as an object data type. The property will be created if it does not exist.
 			*/
 			virtual JSValue setObject(const std::string& property, JSValue value) TITANIUM_NOEXCEPT;
 			/*!
-			@method
-			@abstract setString
-			@discussion Sets the value of a property as a string data type. The property will be created if it does not exist.
+			  @method
+			  @abstract setString
+			  @discussion Sets the value of a property as a string data type. The property will be created if it does not exist.
 			*/
 			virtual JSValue setString(const std::string& property, const std::string& value) TITANIUM_NOEXCEPT;
 

@@ -21,9 +21,9 @@ namespace TitaniumWindows
 		using namespace HAL;
 
 		/*!
-		@class
+		  @class
 
-		@discussion This is the Titanium.App.Properties implementation for Windows.
+		  @discussion This is the Titanium.App.Properties implementation for Windows.
 		*/
 		class TITANIUMWINDOWS_APP_EXPORT Properties final : public Titanium::App::Properties, public JSExport<Properties>{
 

@@ -17,114 +17,114 @@ namespace Titanium
 	using namespace HAL;
 
 	/*!
-	@class
-	@discussion This is the Titanium App Module.
-	See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.AppModule
+	  @class
+	  @discussion This is the Titanium App Module.
+	  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.AppModule
 	*/
 	class TITANIUMKIT_EXPORT AppModule : public Module, public JSExport<AppModule> {
 
 	public:
 
 		/*!
-		@property
-		@abstract EVENT_ACCESSIBILITY_ANNOUNCEMENT
-		@discussion Convenience constant for system event "accessibilityannouncement".
+		  @property
+		  @abstract EVENT_ACCESSIBILITY_ANNOUNCEMENT
+		  @discussion Convenience constant for system event "accessibilityannouncement".
 		*/
 		virtual JSValue EVENT_ACCESSIBILITY_ANNOUNCEMENT() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract EVENT_ACCESSIBILITY_CHANGED
-		@discussion Convenience constant for system event "accessibilitychanged".
+		  @property
+		  @abstract EVENT_ACCESSIBILITY_CHANGED
+		  @discussion Convenience constant for system event "accessibilitychanged".
 		*/
 		virtual JSValue EVENT_ACCESSIBILITY_CHANGED() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract accessibilityEnabled
-		@discussion Indicates whether Accessibility is enabled by the system.
+		  @property
+		  @abstract accessibilityEnabled
+		  @discussion Indicates whether Accessibility is enabled by the system.
 		*/
 		virtual bool accessibilityEnabled() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract analytics
-		@discussion Indicates whether Analytics is enabled, determined by `tiapp.xml`.
+		  @property
+		  @abstract analytics
+		  @discussion Indicates whether Analytics is enabled, determined by `tiapp.xml`.
 		*/
 		virtual bool analytics() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract copyright
-		@discussion Application copyright statement, determined by `tiapp.xml`.
+		  @property
+		  @abstract copyright
+		  @discussion Application copyright statement, determined by `tiapp.xml`.
 		*/
 		virtual std::string copyright() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract deployType
-		@discussion Build type that reflects how the application was packaged; either `test`, `development` or `production`.
+		  @property
+		  @abstract deployType
+		  @discussion Build type that reflects how the application was packaged; either `test`, `development` or `production`.
 		*/
 		virtual std::string deployType() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract description
-		@discussion Application description, determined by `tiapp.xml`.
+		  @property
+		  @abstract description
+		  @discussion Application description, determined by `tiapp.xml`.
 		*/
 		virtual std::string description() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract guid
-		@discussion Application globally-unique ID, determined by `tiapp.xml`.
+		  @property
+		  @abstract guid
+		  @discussion Application globally-unique ID, determined by `tiapp.xml`.
 		*/
 		virtual std::string guid() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract id
-		@discussion Application ID, from `tiapp.xml`.
+		  @property
+		  @abstract id
+		  @discussion Application ID, from `tiapp.xml`.
 		*/
 		virtual std::string id() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract name
-		@discussion Application name, determined by `tiapp.xml`.
+		  @property
+		  @abstract name
+		  @discussion Application name, determined by `tiapp.xml`.
 		*/
 		virtual std::string name() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract proximityDetection
-		@discussion Determines whether proximity detection is enabled.
+		  @property
+		  @abstract proximityDetection
+		  @discussion Determines whether proximity detection is enabled.
 		*/
 		virtual bool proximityDetection() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract proximityState
-		@discussion Indicates the state of the device's proximity sensor, according to the <Titanium.App.proximity> event.
+		  @property
+		  @abstract proximityState
+		  @discussion Indicates the state of the device's proximity sensor, according to the <Titanium.App.proximity> event.
 		*/
 		virtual bool proximityState() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract publisher
-		@discussion Application publisher, from `tiapp.xml`.
+		  @property
+		  @abstract publisher
+		  @discussion Application publisher, from `tiapp.xml`.
 		*/
 		virtual std::string publisher() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract sessionId
-		@discussion Unique session identifier for the current continuous run of the application.
+		  @property
+		  @abstract sessionId
+		  @discussion Unique session identifier for the current continuous run of the application.
 		*/
 		virtual std::string sessionId() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract url
-		@discussion Application URL, from `tiapp.xml`.
+		  @property
+		  @abstract url
+		  @discussion Application URL, from `tiapp.xml`.
 		*/
 		virtual std::string url() const TITANIUM_NOEXCEPT;
 		/*!
-		@property
-		@abstract version
-		@discussion Application version, from `tiapp.xml`.
+		  @property
+		  @abstract version
+		  @discussion Application version, from `tiapp.xml`.
 		*/
 		virtual std::string version() const TITANIUM_NOEXCEPT;
 		/*!
-		@method
-		@abstract fireSystemEvent
-		@discussion Fire a system-level event such as <Titanium.App.EVENT_ACCESSIBILITY_ANNOUNCEMENT>.
+		  @method
+		  @abstract fireSystemEvent
+		  @discussion Fire a system-level event such as <Titanium.App.EVENT_ACCESSIBILITY_ANNOUNCEMENT>.
 		*/
 		virtual JSValue fireSystemEvent(const std::string& eventName, JSValue param) TITANIUM_NOEXCEPT;
 

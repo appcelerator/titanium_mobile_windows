@@ -16,9 +16,9 @@ namespace TitaniumWindows
 	using namespace HAL;
 
 	/*!
-	@class
+	  @class
 
-	@discussion This is the Titanium.AppModule implementation for Windows.
+	  @discussion This is the Titanium.AppModule implementation for Windows.
 	*/
 	class TITANIUMWINDOWS_APP_EXPORT AppModule final : public Titanium::AppModule, public JSExport<AppModule>{
 
