@@ -10,6 +10,8 @@
 #include "Titanium/TiModule.hpp"
 #include "Titanium/API.hpp"
 #include "Titanium/UIModule.hpp"
+#include "Titanium/App/Properties.hpp"
+#include "Titanium/App.hpp"
 #include "Titanium/PlatformModule.hpp"
 #include "Titanium/Accelerometer.hpp"
 #include "Titanium/Gesture.hpp"
@@ -26,6 +28,8 @@ namespace Titanium
 	      ti__(js_context__.CreateObject<Titanium::TiModule>()),
 	      api__(js_context__.CreateObject<Titanium::API>()),
 	      view__(js_context__.CreateObject<Titanium::UI::View>()),
+	      properties__(js_context__.CreateObject<Titanium::App::Properties>()),
+	      app__(js_context__.CreateObject<Titanium::AppModule>()),
 	      window__(js_context__.CreateObject<Titanium::UI::Window>()),
 	      button__(js_context__.CreateObject<Titanium::UI::Button>()),
 		  alertDialog__(js_context__.CreateObject<Titanium::UI::AlertDialog>()),
@@ -71,7 +75,9 @@ namespace Titanium
 		titanium.SetProperty("Blob", blob__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("Filesystem", filesystem__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("Database", database__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-		JSString builtin_functions_script = R"js(
+		titanium.SetProperty("App", app__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+		app__.SetProperty("Properties", properties__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+JSString builtin_functions_script = R"js(
       console = {};
       console.log   = Ti.API.info;
       console.info  = Ti.API.info;
@@ -111,6 +117,28 @@ namespace Titanium
 	ApplicationBuilder& ApplicationBuilder::APIObject(const JSObject& api) TITANIUM_NOEXCEPT
 	{
 		api__ = api;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::AppObject() const TITANIUM_NOEXCEPT
+	{
+		return app__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::AppObject(const JSObject& App) TITANIUM_NOEXCEPT
+	{
+		app__ = App;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::PropertiesObject() const TITANIUM_NOEXCEPT
+	{
+		return properties__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::PropertiesObject(const JSObject& Properties) TITANIUM_NOEXCEPT
+	{
+		properties__ = Properties;
 		return *this;
 	}
 
