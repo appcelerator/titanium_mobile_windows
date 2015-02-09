@@ -79,7 +79,7 @@ namespace Titanium
 			@abstract removeProperty
 			@discussion Removes a property if it exists, or does nothing otherwise.
 			*/
-			virtual JSValue removeProperty(const std::string& property) TITANIUM_NOEXCEPT;
+			virtual void removeProperty(const std::string& property) TITANIUM_NOEXCEPT;
 			/*!
 			@method
 			@abstract setBool

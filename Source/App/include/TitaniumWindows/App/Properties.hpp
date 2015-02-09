@@ -53,7 +53,7 @@ namespace TitaniumWindows
 			virtual std::string getString(const std::string& property, const std::string& default) TITANIUM_NOEXCEPT;
 			virtual bool hasProperty(const std::string& property) TITANIUM_NOEXCEPT;
 			virtual JSValue listProperties() TITANIUM_NOEXCEPT;
-			virtual JSValue removeProperty(const std::string& property) TITANIUM_NOEXCEPT;
+			virtual void removeProperty(const std::string& property) TITANIUM_NOEXCEPT;
 			virtual JSValue setBool(const std::string& property, bool value) TITANIUM_NOEXCEPT;
 			virtual JSValue setDouble(const std::string& property, double value) TITANIUM_NOEXCEPT;
 			virtual JSValue setInt(const std::string& property, int value) TITANIUM_NOEXCEPT;

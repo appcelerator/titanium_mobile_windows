@@ -28,72 +28,72 @@ namespace TitaniumWindows
 		return accessibilityEnabled__;
 	}
 
-		bool AppModule::analytics() const TITANIUM_NOEXCEPT
+	bool AppModule::analytics() const TITANIUM_NOEXCEPT
 	{
 		return analytics__;
 	}
 
-		std::string AppModule::copyright() const TITANIUM_NOEXCEPT
+	std::string AppModule::copyright() const TITANIUM_NOEXCEPT
 	{
 		return copyright__;
 	}
 
-		std::string AppModule::deployType() const TITANIUM_NOEXCEPT
+	std::string AppModule::deployType() const TITANIUM_NOEXCEPT
 	{
 		return deployType__;
 	}
 
-		std::string AppModule::description() const TITANIUM_NOEXCEPT
+	std::string AppModule::description() const TITANIUM_NOEXCEPT
 	{
 		return description__;
 	}
 
-		std::string AppModule::guid() const TITANIUM_NOEXCEPT
+	std::string AppModule::guid() const TITANIUM_NOEXCEPT
 	{
 		return guid__;
 	}
 
-		std::string AppModule::id() const TITANIUM_NOEXCEPT
+	std::string AppModule::id() const TITANIUM_NOEXCEPT
 	{
 		return id__;
 	}
 
-		std::string AppModule::name() const TITANIUM_NOEXCEPT
+	std::string AppModule::name() const TITANIUM_NOEXCEPT
 	{
 		return name__;
 	}
 
-		bool AppModule::proximityDetection() const TITANIUM_NOEXCEPT
+	bool AppModule::proximityDetection() const TITANIUM_NOEXCEPT
 	{
 		return proximityDetection__;
 	}
 
-		bool AppModule::proximityState() const TITANIUM_NOEXCEPT
+	bool AppModule::proximityState() const TITANIUM_NOEXCEPT
 	{
 		return proximityState__;
 	}
 
-		std::string AppModule::publisher() const TITANIUM_NOEXCEPT
+	std::string AppModule::publisher() const TITANIUM_NOEXCEPT
 	{
 		return publisher__;
 	}
 
-		std::string AppModule::sessionId() const TITANIUM_NOEXCEPT
+	std::string AppModule::sessionId() const TITANIUM_NOEXCEPT
 	{
 		return sessionId__;
 	}
 
-		std::string AppModule::url() const TITANIUM_NOEXCEPT
+	std::string AppModule::url() const TITANIUM_NOEXCEPT
 	{
 		return url__;
 	}
 
-		std::string AppModule::version() const TITANIUM_NOEXCEPT
+	std::string AppModule::version() const TITANIUM_NOEXCEPT
 	{
 		return version__;
 	}
 
-		JSValue AppModule::fireSystemEvent(const std::string& eventName, JSValue param) TITANIUM_NOEXCEPT
+	JSValue AppModule::fireSystemEvent(const std::string& eventName, JSValue param) TITANIUM_NOEXCEPT
 	{
 		// TODO : Depends on WebView
 		TITANIUM_LOG_WARN("App.fireSystemEvent is not implemented yet");

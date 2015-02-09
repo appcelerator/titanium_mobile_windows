@@ -35,89 +35,89 @@ namespace Titanium
 		return get_context().CreateString("accessibilityannouncement");
 	}
 
-		JSValue AppModule::EVENT_ACCESSIBILITY_CHANGED() const TITANIUM_NOEXCEPT
+	JSValue AppModule::EVENT_ACCESSIBILITY_CHANGED() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString("accessibilitychanged");
 	}
 
-		bool AppModule::accessibilityEnabled() const TITANIUM_NOEXCEPT
+	bool AppModule::accessibilityEnabled() const TITANIUM_NOEXCEPT
 	{
 		return accessibilityEnabled__;
 	}
 
-		bool AppModule::analytics() const TITANIUM_NOEXCEPT
+	bool AppModule::analytics() const TITANIUM_NOEXCEPT
 	{
 		return analytics__;
 	}
 
-		std::string AppModule::copyright() const TITANIUM_NOEXCEPT
+	std::string AppModule::copyright() const TITANIUM_NOEXCEPT
 	{
 		return copyright__;
 	}
 
-		std::string AppModule::deployType() const TITANIUM_NOEXCEPT
+	std::string AppModule::deployType() const TITANIUM_NOEXCEPT
 	{
 		return deployType__;
 	}
 
-		std::string AppModule::description() const TITANIUM_NOEXCEPT
+	std::string AppModule::description() const TITANIUM_NOEXCEPT
 	{
 		return description__;
 	}
 
-		std::string AppModule::guid() const TITANIUM_NOEXCEPT
+	std::string AppModule::guid() const TITANIUM_NOEXCEPT
 	{
 		return guid__;
 	}
 
-		std::string AppModule::id() const TITANIUM_NOEXCEPT
+	std::string AppModule::id() const TITANIUM_NOEXCEPT
 	{
 		return id__;
 	}
 
-		std::string AppModule::name() const TITANIUM_NOEXCEPT
+	std::string AppModule::name() const TITANIUM_NOEXCEPT
 	{
 		return name__;
 	}
 
-		bool AppModule::proximityDetection() const TITANIUM_NOEXCEPT
+	bool AppModule::proximityDetection() const TITANIUM_NOEXCEPT
 	{
 		return proximityDetection__;
 	}
 
-		bool AppModule::proximityState() const TITANIUM_NOEXCEPT
+	bool AppModule::proximityState() const TITANIUM_NOEXCEPT
 	{
 		return proximityState__;
 	}
 
-		std::string AppModule::publisher() const TITANIUM_NOEXCEPT
+	std::string AppModule::publisher() const TITANIUM_NOEXCEPT
 	{
 		return publisher__;
 	}
 
-		std::string AppModule::sessionId() const TITANIUM_NOEXCEPT
+	std::string AppModule::sessionId() const TITANIUM_NOEXCEPT
 	{
 		return sessionId__;
 	}
 
-		std::string AppModule::url() const TITANIUM_NOEXCEPT
+	std::string AppModule::url() const TITANIUM_NOEXCEPT
 	{
 		return url__;
 	}
 
-		std::string AppModule::version() const TITANIUM_NOEXCEPT
+	std::string AppModule::version() const TITANIUM_NOEXCEPT
 	{
 		return version__;
 	}
 
-		JSValue AppModule::fireSystemEvent(const std::string& eventName, JSValue param) TITANIUM_NOEXCEPT
+	JSValue AppModule::fireSystemEvent(const std::string& eventName, JSValue param) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("AppModule::fireSystemEvent: Unimplemented");
 		return get_context().CreateUndefined();
 	}
 
 
-		void AppModule::JSExportInitialize() {
+	void AppModule::JSExportInitialize() {
 		JSExport<AppModule>::SetClassVersion(1);
 		JSExport<AppModule>::SetParent(JSExport<Module>::Class());
 
@@ -162,80 +162,79 @@ namespace Titanium
 		return get_context().CreateBoolean(accessibilityEnabled());
 	}
 
-		JSValue AppModule::js_analytics() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_analytics() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateBoolean(analytics());
 	}
 
-		JSValue AppModule::js_copyright() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_copyright() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(copyright());
 	}
 
-		JSValue AppModule::js_deployType() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_deployType() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(deployType());
 	}
 
-		JSValue AppModule::js_description() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_description() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(description());
 	}
 
-		JSValue AppModule::js_guid() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_guid() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(guid());
 	}
 
-		JSValue AppModule::js_id() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_id() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(id());
 	}
 
-		JSValue AppModule::js_name() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_name() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(name());
 	}
 
-		JSValue AppModule::js_proximityDetection() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_proximityDetection() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateBoolean(proximityDetection());
 	}
 
-		JSValue AppModule::js_proximityState() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_proximityState() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateBoolean(proximityState());
 	}
 
-		JSValue AppModule::js_publisher() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_publisher() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(publisher());
 	}
 
-		JSValue AppModule::js_sessionId() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_sessionId() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(sessionId());
 	}
 
-		JSValue AppModule::js_url() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_url() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(url());
 	}
 
-		JSValue AppModule::js_version() const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_version() const TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(version());
 	}
 
-		JSValue AppModule::js_fireSystemEvent(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_fireSystemEvent(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("App.fireSystemEvent is not implemented yet");
 
 		if (arguments.size() < 1) {
 			return get_context().CreateUndefined();
 
-		}
-		else if (arguments.size() >= 2) {
+		} else if (arguments.size() >= 2) {
 
 			const auto _0 = arguments.at(0);
 			const auto _1 = arguments.at(1);
@@ -246,8 +245,7 @@ namespace Titanium
 			const std::string eventName = static_cast<std::string>(_0);
 			const auto param = _1;
 
-		}
-		else if (arguments.size() >= 1) {
+		} else if (arguments.size() >= 1) {
 
 			const auto _0 = arguments.at(0);
 
@@ -260,52 +258,52 @@ namespace Titanium
 		return get_context().CreateUndefined();
 	}
 
-		JSValue AppModule::js_getAccessibilityEnabled(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getAccessibilityEnabled(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateBoolean(accessibilityEnabled());
 	}
 
-		JSValue AppModule::js_getAnalytics(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getAnalytics(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateBoolean(analytics());
 	}
 
-		JSValue AppModule::js_getCopyright(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getCopyright(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(copyright());
 	}
 
-		JSValue AppModule::js_getDeployType(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getDeployType(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(deployType());
 	}
 
-		JSValue AppModule::js_getDescription(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getDescription(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(description());
 	}
 
-		JSValue AppModule::js_getGuid(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getGuid(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(guid());
 	}
 
-		JSValue AppModule::js_getId(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getId(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(id());
 	}
 
-		JSValue AppModule::js_getName(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getName(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(name());
 	}
 
-		JSValue AppModule::js_getProximityDetection(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getProximityDetection(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateBoolean(proximityDetection());
 	}
 
-		JSValue AppModule::js_setProximityDetection(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_setProximityDetection(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		if (arguments.size() < 1) {
 			return get_context().CreateUndefined();
@@ -320,27 +318,27 @@ namespace Titanium
 		return get_context().CreateUndefined();
 	}
 
-		JSValue AppModule::js_getProximityState(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getProximityState(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateBoolean(proximityState());
 	}
 
-		JSValue AppModule::js_getPublisher(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getPublisher(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(publisher());
 	}
 
-		JSValue AppModule::js_getSessionId(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getSessionId(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(sessionId());
 	}
 
-		JSValue AppModule::js_getUrl(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getUrl(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(url());
 	}
 
-		JSValue AppModule::js_getVersion(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue AppModule::js_getVersion(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		return get_context().CreateString(version());
 	}

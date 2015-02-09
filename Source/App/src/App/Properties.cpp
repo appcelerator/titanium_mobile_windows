@@ -20,7 +20,7 @@ namespace TitaniumWindows
 			return get_context().CreateFunction("return JSON.stringify(value);", { "value" });
 		}
 
-			Properties::Properties(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
+		Properties::Properties(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			: Titanium::App::Properties(js_context, arguments),
 			stringify_function__(createStringifyFunction(js_context)),
 			local_settings_(ApplicationData::Current->LocalSettings)
@@ -40,44 +40,44 @@ namespace TitaniumWindows
 			return value;
 		}
 
-			double Properties::getDouble(const std::string& property, double default) TITANIUM_NOEXCEPT
+		double Properties::getDouble(const std::string& property, double default) TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			auto value = safe_cast<IPropertyValue^>(values->Lookup(Utility::ConvertString(property)))->GetDouble();
 			return value;
 		}
 
-			double Properties::getInt(const std::string& property, double default) TITANIUM_NOEXCEPT
+		double Properties::getInt(const std::string& property, double default) TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			auto value = safe_cast<IPropertyValue^>(values->Lookup(Utility::ConvertString(property)))->GetInt32();
 			return value;
 		}
 
-			JSValue Properties::getList(const std::string& property, JSValue default) TITANIUM_NOEXCEPT
+		JSValue Properties::getList(const std::string& property, JSValue default) TITANIUM_NOEXCEPT
 		{
 			return get_context().CreateValueFromJSON(getString(property, ""));
 		}
 
-			JSValue Properties::getObject(const std::string& property, JSValue default) TITANIUM_NOEXCEPT
+		JSValue Properties::getObject(const std::string& property, JSValue default) TITANIUM_NOEXCEPT
 		{
 			return get_context().CreateValueFromJSON(getString(property, ""));
 		}
 
-			std::string Properties::getString(const std::string& property, const std::string& default = "") TITANIUM_NOEXCEPT
+		std::string Properties::getString(const std::string& property, const std::string& default = "") TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			auto value = safe_cast<IPropertyValue^>(values->Lookup(Utility::ConvertString(property)))->GetString();
 			return Utility::ConvertString(value);
 		}
 
-			bool Properties::hasProperty(const std::string& property) TITANIUM_NOEXCEPT
+		bool Properties::hasProperty(const std::string& property) TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			return values->HasKey(Utility::ConvertString(property));
 		}
 
-			JSValue Properties::listProperties() TITANIUM_NOEXCEPT
+		JSValue Properties::listProperties() TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			std::vector<JSValue> properties;
@@ -87,67 +87,66 @@ namespace TitaniumWindows
 			return get_context().CreateArray(properties);
 		}
 
-			JSValue Properties::removeProperty(const std::string& property) TITANIUM_NOEXCEPT
+		void Properties::removeProperty(const std::string& property) TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			values->Remove(Utility::ConvertString(property));
-			return get_context().CreateUndefined();
 		}
 
-			JSValue Properties::setBool(const std::string& property, bool value) TITANIUM_NOEXCEPT
+		JSValue Properties::setBool(const std::string& property, bool value) TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			values->Insert(Utility::ConvertString(property), dynamic_cast<PropertyValue^>(PropertyValue::CreateBoolean(value)));
 
-			//fireEvent(Ti::Constants::EventChange, Ti::Value::Undefined());
+			//fireEvent
 
 			return get_context().CreateUndefined();
 		}
 
-			JSValue Properties::setDouble(const std::string& property, double value) TITANIUM_NOEXCEPT
+		JSValue Properties::setDouble(const std::string& property, double value) TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			values->Insert(Utility::ConvertString(property), dynamic_cast<PropertyValue^>(PropertyValue::CreateDouble(value)));
 
-			//fireEvent(Ti::Constants::EventChange, Ti::Value::Undefined());
+			//fireEvent
 
 			return get_context().CreateUndefined();
 		}
 
-			JSValue Properties::setInt(const std::string& property, int value) TITANIUM_NOEXCEPT
+		JSValue Properties::setInt(const std::string& property, int value) TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			values->Insert(Utility::ConvertString(property), dynamic_cast<PropertyValue^>(PropertyValue::CreateInt32(value)));
 
-			//fireEvent(Ti::Constants::EventChange, Ti::Value::Undefined());
+			//fireEvent
 
 			return get_context().CreateUndefined();
 		}
 
-			JSValue Properties::setList(const std::string& property, JSValue value) TITANIUM_NOEXCEPT
+		JSValue Properties::setList(const std::string& property, JSValue value) TITANIUM_NOEXCEPT
 		{
 			setString(property, static_cast<std::string>(stringify_function__({ value }, get_context().get_global_object())));
 
-			//fireEvent(Ti::Constants::EventChange, Ti::Value::Undefined());
+			//fireEvent
 
 			return get_context().CreateUndefined();
 		}
 
-			JSValue Properties::setObject(const std::string& property, JSValue value) TITANIUM_NOEXCEPT
+		JSValue Properties::setObject(const std::string& property, JSValue value) TITANIUM_NOEXCEPT
 		{
 			setString(property, static_cast<std::string>(stringify_function__({ value }, get_context().get_global_object())));
 
-			//fireEvent(Ti::Constants::EventChange, Ti::Value::Undefined());
+			//fireEvent
 
 			return get_context().CreateUndefined();
 		}
 
-			JSValue Properties::setString(const std::string& property, const std::string& value) TITANIUM_NOEXCEPT
+		JSValue Properties::setString(const std::string& property, const std::string& value) TITANIUM_NOEXCEPT
 		{
 			auto values = local_settings_->Values;
 			values->Insert(Utility::ConvertString(property), dynamic_cast<PropertyValue^>(PropertyValue::CreateString(Utility::ConvertString(value))));
 
-			//fireEvent(Ti::Constants::EventChange, Ti::Value::Undefined());
+			//fireEvent
 
 			return get_context().CreateUndefined();
 		}
