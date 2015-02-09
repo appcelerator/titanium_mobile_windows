@@ -128,6 +128,8 @@ set(SOURCE_UI
   src/UI/ImageView.cpp
   include/Titanium/UI/View.hpp
   src/UI/View.cpp
+  include/Titanium/UI/UIBase.hpp
+  src/UI/UIBase.cpp
   include/Titanium/UI/Window.hpp
   src/UI/Window.cpp
   include/Titanium/UI/Button.hpp

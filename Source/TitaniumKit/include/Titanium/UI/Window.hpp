@@ -9,7 +9,7 @@
 #ifndef _TITANIUM_UI_WINDOW_HPP_
 #define _TITANIUM_UI_WINDOW_HPP_
 
-#include "Titanium/UI/View.hpp"
+#include "Titanium/UI/UIBase.hpp"
 #include "Titanium/UI/Constants.hpp"
 
 namespace Titanium
@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Window
 		*/
-		class TITANIUMKIT_EXPORT Window : public View, public JSExport<Window>
+		class TITANIUMKIT_EXPORT Window : public UIBase, public JSExport<Window>
 		{
 		public:
 			/*!

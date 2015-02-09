@@ -9,7 +9,7 @@
 #ifndef _TITANIUM_UI_SCROLLVIEW_HPP_
 #define _TITANIUM_UI_SCROLLVIEW_HPP_
 
-#include "Titanium/UI/View.hpp"
+#include "Titanium/UI/UIBase.hpp"
 
 namespace Titanium
 {
@@ -24,7 +24,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ScrollView
 		*/
-		class TITANIUMKIT_EXPORT ScrollView : public View, public JSExport<ScrollView>
+		class TITANIUMKIT_EXPORT ScrollView : public UIBase, public JSExport<ScrollView>
 		{
 		public:
 			virtual void add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT override;

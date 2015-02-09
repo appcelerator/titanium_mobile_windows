@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		WebView::WebView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context)
+		    : UIBase(js_context)
 		{
 		}
 
@@ -24,7 +24,7 @@ namespace Titanium
 		void WebView::JSExportInitialize()
 		{
 			JSExport<WebView>::SetClassVersion(1);
-			JSExport<WebView>::SetParent(JSExport<View>::Class());
+			JSExport<WebView>::SetParent(JSExport<UIBase>::Class());
 		}
 	} // namespace UI
 }  // namespace Titanium

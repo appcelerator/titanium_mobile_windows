@@ -13,7 +13,7 @@ namespace Titanium
 	namespace UI
 	{
 		Window::Window(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		    : UIBase(js_context),
 		      extendEdges__({EXTEND_EDGE::NONE})
 		{
 			TITANIUM_LOG_DEBUG("Window:: ctor ", this);
@@ -45,7 +45,7 @@ namespace Titanium
 		void Window::JSExportInitialize()
 		{
 			JSExport<Window>::SetClassVersion(1);
-			JSExport<Window>::SetParent(JSExport<View>::Class());
+			JSExport<Window>::SetParent(JSExport<UIBase>::Class());
 			JSExport<Window>::AddFunctionProperty("open", std::mem_fn(&Window::js_open));
 			JSExport<Window>::AddValueProperty("extendEdges", std::mem_fn(&Window::js_get_extendEdges), std::mem_fn(&Window::js_set_extendEdges));
 		}

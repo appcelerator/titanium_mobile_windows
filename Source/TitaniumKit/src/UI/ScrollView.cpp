@@ -13,14 +13,14 @@ namespace Titanium
 	namespace UI
 	{
 		ScrollView::ScrollView(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context)
+		    : UIBase(js_context)
 		{
 		}
 
 		void ScrollView::JSExportInitialize()
 		{
 			JSExport<ScrollView>::SetClassVersion(1);
-			JSExport<ScrollView>::SetParent(JSExport<View>::Class());
+			JSExport<ScrollView>::SetParent(JSExport<UIBase>::Class());
 			JSExport<ScrollView>::AddFunctionProperty("scrollTo", std::mem_fn(&ScrollView::js_scrollTo));
 			JSExport<ScrollView>::AddFunctionProperty("scrollToBottom", std::mem_fn(&ScrollView::js_scrollToBottom));
 			JSExport<ScrollView>::AddValueProperty("contentWidth", std::mem_fn(&ScrollView::js_get_contentWidth), std::mem_fn(&ScrollView::js_set_contentWidth));
@@ -46,7 +46,7 @@ namespace Titanium
 		void ScrollView::add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("ScrollView::add: Unimplemented");
-			View::add(view, this_object);
+			UIBase::add(view, this_object);
 		}
 
 		void ScrollView::scrollTo(double x, double y) TITANIUM_NOEXCEPT

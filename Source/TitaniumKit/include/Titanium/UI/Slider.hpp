@@ -10,7 +10,7 @@
 #define _TITANIUM_UI_SLIDER_HPP_
 
 #include "Titanium/UI/Constants.hpp"
-#include "Titanium/UI/View.hpp"
+#include "Titanium/UI/UIBase.hpp"
 
 namespace Titanium
 {
@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Slider
 		*/
-		class TITANIUMKIT_EXPORT Slider : public View, public JSExport<Slider>
+		class TITANIUMKIT_EXPORT Slider : public UIBase, public JSExport<Slider>
 		{
 		public:
 			/*!

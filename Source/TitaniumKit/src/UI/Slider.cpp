@@ -13,7 +13,7 @@ namespace Titanium
 	namespace UI
 	{
 		Slider::Slider(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		    : UIBase(js_context),
 		      max__(js_context.CreateNumber(1)),
 		      min__(js_context.CreateNumber(0)),
 		      value__(js_context.CreateNumber(0))
@@ -56,7 +56,7 @@ namespace Titanium
 		void Slider::JSExportInitialize()
 		{
 			JSExport<Slider>::SetClassVersion(1);
-			JSExport<Slider>::SetParent(JSExport<View>::Class());
+			JSExport<Slider>::SetParent(JSExport<UIBase>::Class());
 			JSExport<Slider>::AddValueProperty("max", std::mem_fn(&Slider::js_get_max), std::mem_fn(&Slider::js_set_max));
 			JSExport<Slider>::AddValueProperty("min", std::mem_fn(&Slider::js_get_min), std::mem_fn(&Slider::js_set_min));
 			JSExport<Slider>::AddValueProperty("value", std::mem_fn(&Slider::js_get_value), std::mem_fn(&Slider::js_set_value));

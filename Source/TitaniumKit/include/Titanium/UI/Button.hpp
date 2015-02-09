@@ -9,7 +9,7 @@
 #ifndef _TITANIUM_UI_BUTTON_HPP_
 #define _TITANIUM_UI_BUTTON_HPP_
 
-#include "Titanium/UI/View.hpp"
+#include "Titanium/UI/UIBase.hpp"
 
 namespace Titanium
 {
@@ -24,7 +24,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Button
 		*/
-		class TITANIUMKIT_EXPORT Button : public View, public JSExport<Button>
+		class TITANIUMKIT_EXPORT Button : virtual public UIBase, public JSExport<Button>
 		{
 		public:
 

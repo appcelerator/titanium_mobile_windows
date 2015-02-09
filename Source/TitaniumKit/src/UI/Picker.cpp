@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		Picker::Picker(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		    : UIBase(js_context),
 		      type__(PICKER_TYPE::PLAIN)
 		{
 		}
@@ -35,7 +35,7 @@ namespace Titanium
 		void Picker::JSExportInitialize()
 		{
 			JSExport<Picker>::SetClassVersion(1);
-			JSExport<Picker>::SetParent(JSExport<View>::Class());
+			JSExport<Picker>::SetParent(JSExport<UIBase>::Class());
 			JSExport<Picker>::AddValueProperty("type", std::mem_fn(&Picker::js_get_type), std::mem_fn(&Picker::js_set_type));
 		}
 

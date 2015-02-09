@@ -9,7 +9,7 @@
 #ifndef _TITANIUM_UI_IMAGEVIEW_HPP_
 #define _TITANIUM_UI_IMAGEVIEW_HPP_
 
-#include "Titanium/UI/View.hpp"
+#include "Titanium/UI/UIBase.hpp"
 
 namespace Titanium
 {
@@ -24,7 +24,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.ImageView
 		*/
-		class TITANIUMKIT_EXPORT ImageView : public View, public JSExport<ImageView>
+		class TITANIUMKIT_EXPORT ImageView : public UIBase, public JSExport<ImageView>
 		{
 		public:
 			virtual std::string get_image() const TITANIUM_NOEXCEPT final;

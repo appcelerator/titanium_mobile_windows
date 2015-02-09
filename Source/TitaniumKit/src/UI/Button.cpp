@@ -13,7 +13,7 @@ namespace Titanium
 	namespace UI
 	{
 		Button::Button(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : View(js_context),
+		    : UIBase(js_context),
 		      title__(js_context.CreateString())
 		{
 			TITANIUM_LOG_DEBUG("Button:: ctor ", this);
@@ -40,7 +40,7 @@ namespace Titanium
 		void Button::JSExportInitialize()
 		{
 			JSExport<Button>::SetClassVersion(1);
-			JSExport<Button>::SetParent(JSExport<View>::Class());
+			JSExport<Button>::SetParent(JSExport<UIBase>::Class());
 			JSExport<Button>::AddValueProperty("title", std::mem_fn(&Button::js_get_title), std::mem_fn(&Button::js_set_title));
 		}
 
