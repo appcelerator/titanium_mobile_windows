@@ -81,7 +81,7 @@ namespace Titanium
 		}
 
 		// properties
-		void HTTPClient::setTimeout(const std::chrono::milliseconds timeout) TITANIUM_NOEXCEPT
+		void HTTPClient::setTimeout(const std::chrono::milliseconds& timeout) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("HTTPClient::setTimeout: Unimplemented");
 		}
@@ -281,12 +281,12 @@ namespace Titanium
 			TITANIUM_LOG_WARN("HTTPClient::send: Unimplemented");
 		}
 
-		void HTTPClient::send(const std::map<std::string, std::vector<unsigned char>>& postDataPairs, const bool useMultipartForm) TITANIUM_NOEXCEPT
+		void HTTPClient::send(const std::map<std::string, std::vector<unsigned char>>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("HTTPClient::send<data>: Unimplemented");
 		}
 
-		void HTTPClient::send(std::string postDataStr) TITANIUM_NOEXCEPT
+		void HTTPClient::send(const std::string& postDataStr) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("HTTPClient::send<data string>: Unimplemented");
 		}
@@ -366,7 +366,7 @@ namespace Titanium
 			return get_context().CreateString(getResponseHeader(name));
 		}
 
-		void HTTPClient::clearCookies(std::string url) TITANIUM_NOEXCEPT
+		void HTTPClient::clearCookies(const std::string& url) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("HTTPClient::clearCookies: Unimplemented");
 		}
