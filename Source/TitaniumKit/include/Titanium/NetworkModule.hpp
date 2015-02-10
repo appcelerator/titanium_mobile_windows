@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -15,17 +15,17 @@ namespace Titanium
 	using namespace HAL;
 
 	/*!
-    @class
-    @discussion This is the Ti.Network Module.
-    See http://docs.appcelerator.com/titanium/latest/#!/api/Ti.Network
+      @class
+      @discussion This is the Ti.Network Module.
+      See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.Network
     */
 	class TITANIUMKIT_EXPORT NetworkModule : public Module, public JSExport<NetworkModule>
 	{
 	public:
 		/*!
-		@method
-		@abstract createHTTPClient 
-		@discussion Returns a HTTP object allowing users to make http request and query the HTTP object.
+		  @method
+		  @abstract createHTTPClient 
+		  @discussion Returns a HTTP object allowing users to make http request and query the HTTP object.
 		*/
 		virtual JSObject createHTTPClient(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
 
@@ -43,6 +43,6 @@ namespace Titanium
 
 		JSObject js_createHTTPClient(const std::vector<JSValue>& arguments, JSObject& this_object);
 	};
-}
+} // namespace Titanium
 
 #endif  // _TITANIUM_NETWORK_HPP_

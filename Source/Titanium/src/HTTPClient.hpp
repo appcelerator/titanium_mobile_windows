@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -42,11 +42,11 @@ namespace TitaniumWindows
 
 			static void JSExportInitialize();
 
-			virtual void setTimeout(std::chrono::milliseconds timeout) TITANIUM_NOEXCEPT override final;
+			virtual void setTimeout(const std::chrono::milliseconds& timeout) TITANIUM_NOEXCEPT override final;
 			virtual void open(const std::string& method, const std::string& url) TITANIUM_NOEXCEPT override final;
 			virtual void send() TITANIUM_NOEXCEPT override final;
-			virtual void send(const std::map<std::string, std::vector<unsigned char>>& postDataPairs, const bool useMultipartForm) TITANIUM_NOEXCEPT override final;
-			virtual void send(std::string postDataStr) TITANIUM_NOEXCEPT override final;
+			virtual void send(const std::map<std::string, std::vector<unsigned char>>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT override final;
+			virtual void send(const std::string& postDataStr) TITANIUM_NOEXCEPT override final;
 			virtual std::string getResponseText() const TITANIUM_NOEXCEPT override final;
 			virtual std::vector<unsigned char> getResponseData() const TITANIUM_NOEXCEPT override final;
 			virtual void abort() TITANIUM_NOEXCEPT override final;
@@ -56,9 +56,11 @@ namespace TitaniumWindows
 			virtual std::string getResponseHeader(const std::string& name) TITANIUM_NOEXCEPT override final;
 			virtual std::uint32_t getStatus() const TITANIUM_NOEXCEPT override final;
 			virtual std::string getStatusText() const TITANIUM_NOEXCEPT override final;
-			virtual void clearCookies(std::string url) TITANIUM_NOEXCEPT override final;
+			virtual void clearCookies(const std::string& url) TITANIUM_NOEXCEPT override final;
 
 		private:
+#pragma warning(push)
+#pragma warning(disable : 4251)
 			// method_ - type of HTTP request (GET, POST, PUT)
 			NATIVE_HTTPCLIENT_METHOD method__;
 			// url__ - the full address of the HTTP request for example http://www.appcelerator.com
@@ -93,6 +95,7 @@ namespace TitaniumWindows
 			long contentLength__; // -1 if response is using chunked encoding
 			// requestHeaders__ - the collection of key value pairs to be sent to the server
 			std::map<const std::string, std::string> requestHeaders__;
+#pragma warning(pop)
 
 			void startDispatcherTimer();
 
@@ -106,7 +109,7 @@ namespace TitaniumWindows
 			void setRequestHeaders(Windows::Web::Http::HttpRequestMessage ^ request);
 			void addCookiesToRequest();
 		};
-	}
-}  
+	} // namespace Network
+} // namespace TitaniumWindows
 
 #endif  // _TITANIUMWINDOWS_FILE_HPP_
