@@ -1,7 +1,7 @@
 /**
  * TitaniumKit
  *
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -37,12 +37,7 @@ namespace Titanium
 			dbDir.createDirectory();
 		}
 		var dbFilePath = dbDirPath + Ti.Filesystem.separator + dbName;
-Ti.API.info("Creating DB from open");
 		var db = new self.TiDatabaseDB(dbName, dbFilePath);
-Ti.API.info("Created DB from open");
-		//Object.defineProperty(db, "file", { value: Ti.Filesystem.getFile(dbFilePath), writable : false });
-		//db.getFile = function() { return this.file; };
-		//db.remove = function() { this.close(); this.file.deleteFile(); };
 		return db;
 	};
 	)TI_DB_JS";
