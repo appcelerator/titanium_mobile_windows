@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Label
 		*/
-		class TITANIUMKIT_EXPORT Label : public View, public JSExport<Label>
+		class TITANIUMKIT_EXPORT Label : public virtual View, public JSExport<Label>
 		{
 		public:
 			/*!

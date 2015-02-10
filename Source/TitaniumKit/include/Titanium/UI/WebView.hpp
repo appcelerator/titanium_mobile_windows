@@ -26,7 +26,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.WebView
 		*/
-		class TITANIUMKIT_EXPORT WebView : public View, public JSExport<WebView>
+		class TITANIUMKIT_EXPORT WebView : public virtual View, public JSExport<WebView>
 		{
 		public:
 			WebView(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;

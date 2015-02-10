@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Picker
 		*/
-		class TITANIUMKIT_EXPORT Picker : public View, public JSExport<Picker>
+		class TITANIUMKIT_EXPORT Picker : public virtual View, public JSExport<Picker>
 		{
 		public:
 			/*!

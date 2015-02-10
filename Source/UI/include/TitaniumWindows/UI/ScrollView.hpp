@@ -24,12 +24,8 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.ScrollView implementation for
 		  Windows.
 		*/
-// Silence 4275 about ViewBase for now. We need to merge View and ViewBase and then remove this pragma! TIMOB-18422
-#pragma warning(push)
-#pragma warning(disable : 4275)
 		class TITANIUMWINDOWS_UI_EXPORT ScrollView final : public Titanium::UI::ScrollView, public JSExport<ScrollView>, public ViewBase
 		{
-#pragma warning(pop)
 		public:
 			ScrollView(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 
@@ -41,26 +37,9 @@ namespace TitaniumWindows
 			ScrollView& operator=(ScrollView&&) = default;
 #endif
 
-			virtual std::string defaultHeight() const override
-			{
-				return Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL);
-			}
-
-			virtual std::string defaultWidth() const override
-			{
-				return Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL);
-			}
-
 			virtual void add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT override;
 
-			virtual void set_backgroundColor(const std::string& backgroundColorName) TITANIUM_NOEXCEPT override;
-			virtual void set_bottom(const std::string& bottom) TITANIUM_NOEXCEPT override final;
-			virtual void set_height(const std::string& height) TITANIUM_NOEXCEPT override final;
 			virtual void set_layout(const std::string& layout) TITANIUM_NOEXCEPT override final;
-			virtual void set_left(const std::string& left) TITANIUM_NOEXCEPT override final;
-			virtual void set_right(const std::string& right) TITANIUM_NOEXCEPT override final;
-			virtual void set_top(const std::string& top) TITANIUM_NOEXCEPT override final;
-			virtual void set_width(const std::string& width) TITANIUM_NOEXCEPT override final;
 
 			virtual void scrollTo(double x, double y) TITANIUM_NOEXCEPT override;
 			virtual void scrollToBottom() TITANIUM_NOEXCEPT override;

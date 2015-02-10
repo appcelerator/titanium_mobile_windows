@@ -16,7 +16,9 @@ namespace TitaniumWindows
 	{
 		Label::Label(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			  : Titanium::UI::Label(js_context, arguments),
-		      label__(ref new Windows::UI::Xaml::Controls::TextBlock())
+			   Titanium::UI::View(js_context, arguments),
+			    ViewBase(js_context, arguments),
+		        label__(ref new Windows::UI::Xaml::Controls::TextBlock())
 		{
 			TITANIUM_LOG_DEBUG("Label::ctor");
 
@@ -143,48 +145,5 @@ namespace TitaniumWindows
 				return;
 			}
 		}
-
-		void Label::set_bottom(const std::string& bottom) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_bottom(bottom);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Bottom, bottom);
-		}
-
-		void Label::set_height(const std::string& height) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_height(height);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, height);
-		}
-
-		void Label::set_left(const std::string& left) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_left(left);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, left);
-		}
-
-		void Label::set_layout(const std::string& layout) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_layout(layout);
-			setLayout(layout);
-		}
-
-		void Label::set_right(const std::string& right) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_right(right);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, right);
-		}
-
-		void Label::set_top(const std::string& top) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_top(top);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, top);
-		}
-
-		void Label::set_width(const std::string& width) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_width(width);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, width);
-		}
-
 	} // namespace UI
 } // namespace TitaniumWindows

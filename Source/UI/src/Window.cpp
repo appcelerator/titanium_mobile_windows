@@ -15,6 +15,8 @@ namespace TitaniumWindows
 	{
 		Window::Window(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
   			: Titanium::UI::Window(js_context, arguments),
+			  Titanium::UI::View(js_context, arguments),
+  			  ViewBase(js_context, arguments),
 		      canvas__(ref new Windows::UI::Xaml::Controls::Canvas())
 		{
 			TITANIUM_LOG_DEBUG("Window::ctor");
@@ -27,43 +29,6 @@ namespace TitaniumWindows
 
 		Window::~Window()
 		{
-		}
-
-		void Window::hide(JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			getComponent()->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-		}
-
-		void Window::show(JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			getComponent()->Visibility = Windows::UI::Xaml::Visibility::Visible;
-		}
-
-		void Window::add(const JSObject& view, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			auto nativeView = dynamic_cast<Windows::UI::Xaml::Controls::Panel ^>(getComponent());
-
-			if (nativeView == nullptr) {
-				TITANIUM_LOG_DEBUG("Window::add: nativeView = nullptr");
-				return;
-			}
-
-			auto view_ptr = view.GetPrivate<Titanium::UI::View>();
-			auto newView = std::dynamic_pointer_cast<TitaniumWindows::UI::ViewBase>(view_ptr);
-			auto nativeChildView = newView->getComponent();
-			if (nativeChildView != nullptr) {
-				Titanium::LayoutEngine::nodeAddChild(layout_node_, newView->layout_node_);
-				if (isLoaded()) {
-					auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node_);
-					if (root) {
-						Titanium::LayoutEngine::nodeLayout(root);
-					}
-				}
-
-				canvas__->Children->Append(nativeChildView);
-			} else {
-				TITANIUM_LOG_DEBUG("Window::add: nativeChildView = nullptr");
-			}
 		}
 
 		void Window::open(const JSObject& params, JSObject& this_object) const TITANIUM_NOEXCEPT
@@ -80,55 +45,6 @@ namespace TitaniumWindows
 		{
 			JSExport<Window>::SetClassVersion(1);
 			JSExport<Window>::SetParent(JSExport<Titanium::UI::Window>::Class());
-		}
-
-		void Window::set_backgroundColor(const std::string& backgroundColorName) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_backgroundColor(backgroundColorName);
-			const auto backgroundColor = ColorForName(backgroundColorName);
-			canvas__->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(backgroundColor);
-		}
-
-		void Window::set_bottom(const std::string& bottom) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_bottom(bottom);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Bottom, bottom);
-		}
-
-		void Window::set_height(const std::string& height) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_height(height);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, height);
-		}
-
-		void Window::set_left(const std::string& left) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_left(left);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, left);
-		}
-
-		void Window::set_layout(const std::string& layout) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_layout(layout);
-			setLayout(layout);
-		}
-
-		void Window::set_right(const std::string& right) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_right(right);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, right);
-		}
-
-		void Window::set_top(const std::string& top) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_top(top);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, top);
-		}
-
-		void Window::set_width(const std::string& width) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::View::set_width(width);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, width);
 		}
 
 		///////////////// Layout //////////////

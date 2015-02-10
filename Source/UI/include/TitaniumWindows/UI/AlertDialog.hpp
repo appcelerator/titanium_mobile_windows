@@ -24,12 +24,8 @@ namespace TitaniumWindows
 		  @discussion This is the Titanium.UI.AlertDialog implementation for
 		  Windows.
 		*/
-// Silence 4275 about ViewBase for now. We need to merge View and ViewBase and then remove this pragma! TIMOB-18422
-#pragma warning(push)
-#pragma warning(disable : 4275)
-		class TITANIUMWINDOWS_UI_EXPORT AlertDialog final : public Titanium::UI::AlertDialog, public JSExport<AlertDialog>, public ViewBase
+		class TITANIUMWINDOWS_UI_EXPORT AlertDialog final : public Titanium::UI::AlertDialog, public JSExport<AlertDialog>
 		{
-#pragma warning(pop)
 		public:
 			AlertDialog(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 

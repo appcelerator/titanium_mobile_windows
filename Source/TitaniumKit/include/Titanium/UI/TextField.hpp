@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.TextField
 		*/
-		class TITANIUMKIT_EXPORT TextField : public View, public JSExport<TextField>
+		class TITANIUMKIT_EXPORT TextField : public virtual View, public JSExport<TextField>
 		{
 		public:
 			/*!

@@ -25,7 +25,7 @@ namespace Titanium
 
 		  See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Window
 		*/
-		class TITANIUMKIT_EXPORT Window : public View, public JSExport<Window>
+		class TITANIUMKIT_EXPORT Window : public virtual View, public JSExport<Window>
 		{
 		public:
 			/*!
