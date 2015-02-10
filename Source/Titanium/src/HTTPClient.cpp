@@ -40,7 +40,7 @@ namespace TitaniumWindows
 			JSExport<HTTPClient>::SetParent(JSExport<Titanium::Network::HTTPClient>::Class());
 		}
 
-		void HTTPClient::setTimeout(std::chrono::milliseconds timeout) TITANIUM_NOEXCEPT
+		void HTTPClient::setTimeout(const std::chrono::milliseconds& timeout) TITANIUM_NOEXCEPT
 		{
 			std::chrono::duration<std::chrono::nanoseconds::rep, std::ratio_multiply<std::ratio<100>, std::nano>> timer_interval_ticks = timeout;
 			timeoutSpan__.Duration = timer_interval_ticks.count();
@@ -112,7 +112,7 @@ namespace TitaniumWindows
 		  } });
 		}
 
-		void HTTPClient::send(const std::map<std::string, std::vector<unsigned char>>& postDataPairs, bool useMultipartForm) TITANIUM_NOEXCEPT
+		void HTTPClient::send(const std::map<std::string, std::vector<unsigned char>>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
 		{
 			Windows::Web::Http::IHttpContent ^ postData;
 			Windows::Foundation::IAsyncOperationWithProgress<Windows::Web::Http::HttpResponseMessage ^, Windows::Web::Http::HttpProgress> ^ operation;
@@ -186,7 +186,7 @@ namespace TitaniumWindows
 		  } }, task_continuation_context::use_current());
 		}
 
-		void HTTPClient::send(std::string postDataStr) TITANIUM_NOEXCEPT
+		void HTTPClient::send(const std::string& postDataStr) TITANIUM_NOEXCEPT
 		{
 			Windows::Web::Http::IHttpContent ^ postData;
 			Windows::Foundation::IAsyncOperationWithProgress<Windows::Web::Http::HttpResponseMessage ^, Windows::Web::Http::HttpProgress> ^ operation;
@@ -304,7 +304,7 @@ namespace TitaniumWindows
 			return requestStatusText__;
 		}
 
-		void HTTPClient::clearCookies(std::string url) TITANIUM_NOEXCEPT
+		void HTTPClient::clearCookies(const std::string& url) TITANIUM_NOEXCEPT
 		{
 			auto filter = ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter();
 
