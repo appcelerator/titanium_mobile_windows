@@ -13,7 +13,7 @@
 namespace TitaniumWindows
 {
 	template<typename _T> _T AppModule::getAppInfo(std::string property, _T default) const {
-		static const JSFunction readAppInfo = get_context().CreateFunction(
+		static JSFunction readAppInfo = get_context().CreateFunction(
 			"var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory+'\\\\_app_info_.json');"
 			"if (file.exists()) {"
 			"    var json = JSON.parse(file.read().text);"
