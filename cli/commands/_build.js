@@ -1405,6 +1405,7 @@ WindowsBuilder.prototype.copyResources = function copyResources(next) {
 				}
 			};
 		}), function () {
+
 			// write the properties file
 			var appPropsFile = path.join(this.buildTargetAssetsDir, '_app_props_.json'),
 				props = {};
@@ -1416,6 +1417,27 @@ WindowsBuilder.prototype.copyResources = function copyResources(next) {
 				JSON.stringify(props)
 			);
 			this.encryptJS && jsFilesToEncrypt.push('_app_props_.json');
+
+			// write the app info file
+			var appInfoFile = path.join(this.buildTargetAssetsDir, '_app_info_.json'),
+				appInfo = 
+				{
+					deployType: this.deployType,
+					name: this.tiapp.name,
+					id: this.tiapp.id,
+					analytics: this.tiapp.analytics,
+					publisher: this.tiapp.publisher,
+					url: this.tiapp.url,
+					version: this.tiapp.version,
+					description: this.tiapp.description,
+					copyright: this.tiapp.copyright,
+					guid: this.tiapp.guid
+				};
+			fs.writeFileSync(
+				appInfoFile,
+				JSON.stringify(appInfo)
+			);
+			this.encryptJS && jsFilesToEncrypt.push('_app_info_.json');
 
 			if (!jsFilesToEncrypt.length) {
 				// nothing to encrypt, continue

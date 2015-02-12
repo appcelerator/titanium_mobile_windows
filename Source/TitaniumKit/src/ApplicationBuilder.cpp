@@ -29,7 +29,6 @@ namespace Titanium
 	      api__(js_context__.CreateObject<Titanium::API>()),
 	      view__(js_context__.CreateObject<Titanium::UI::View>()),
 	      properties__(js_context__.CreateObject<Titanium::App::Properties>()),
-	      app__(js_context__.CreateObject<Titanium::AppModule>()),
 	      window__(js_context__.CreateObject<Titanium::UI::Window>()),
 	      button__(js_context__.CreateObject<Titanium::UI::Button>()),
 		  alertDialog__(js_context__.CreateObject<Titanium::UI::AlertDialog>()),
@@ -44,7 +43,8 @@ namespace Titanium
 	      blob__(js_context__.CreateObject<Titanium::Blob>()),
 	      file__(js_context__.CreateObject<Titanium::Filesystem::File>()),
 	      filesystem__(js_context__.CreateObject<Titanium::FilesystemModule>()),
-	      database__(js_context__.CreateObject<Titanium::DatabaseModule>())
+	      database__(js_context__.CreateObject<Titanium::DatabaseModule>()),
+		  app__(js_context__.CreateObject<Titanium::AppModule>())
 	{
 	}
 
@@ -77,21 +77,25 @@ namespace Titanium
 		titanium.SetProperty("Database", database__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("App", app__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		app__.SetProperty("Properties", properties__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-JSString builtin_functions_script = R"js(
-      console = {};
-      console.log   = Ti.API.info;
-      console.info  = Ti.API.info;
-      console.warn  = Ti.API.warn;
-      console.error = Ti.API.error;
 
-	  // Create the global alert function
-      alert = function (_msg) {
-          Ti.UI.createAlertDialog({
-              title: 'Alert',
-              message: _msg
-          }).show();
-      };
-    )js";
+		JSString builtin_functions_script = R"js(
+			  console = {};
+			  console.log   = Ti.API.info;
+			  console.info  = Ti.API.info;
+			  console.warn  = Ti.API.warn;
+			  console.error = Ti.API.error;
+
+			  // Create the global alert function
+			  alert = function (_msg) {
+				  Ti.UI.createAlertDialog({
+					  title: 'Alert',
+					  message: _msg
+				  }).show();
+			  };
+      
+			  // Load _app_info_.json
+			  Ti.App._loadAppInfo();
+			)js";
 
 		js_context__.JSEvaluateScript(builtin_functions_script);
 

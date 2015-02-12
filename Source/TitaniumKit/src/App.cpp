@@ -1,7 +1,7 @@
 /**
 * Titanium.App for Windows
 *
-* Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+* Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
 * Licensed under the terms of the Apache Public License.
 * Please see the LICENSE included with this distribution for details.
 */
@@ -27,6 +27,10 @@ namespace Titanium
 		sessionId__("__SESSION_ID__"),
 		url__("__URL__"),
 		version__("__VERSION__")
+	{
+	}
+
+	void AppModule::loadAppInfo() const TITANIUM_NOEXCEPT
 	{
 	}
 
@@ -116,10 +120,11 @@ namespace Titanium
 		return get_context().CreateUndefined();
 	}
 
-
 	void AppModule::JSExportInitialize() {
 		JSExport<AppModule>::SetClassVersion(1);
 		JSExport<AppModule>::SetParent(JSExport<Module>::Class());
+
+		JSExport<AppModule>::AddFunctionProperty("_loadAppInfo", std::mem_fn(&AppModule::js_loadAppInfo));
 
 		JSExport<AppModule>::AddValueProperty("EVENT_ACCESSIBILITY_ANNOUNCEMENT", std::mem_fn(&AppModule::EVENT_ACCESSIBILITY_ANNOUNCEMENT));
 		JSExport<AppModule>::AddValueProperty("EVENT_ACCESSIBILITY_CHANGED", std::mem_fn(&AppModule::EVENT_ACCESSIBILITY_CHANGED));
@@ -155,6 +160,12 @@ namespace Titanium
 		JSExport<AppModule>::AddFunctionProperty("getSessionId", std::mem_fn(&AppModule::js_getSessionId));
 		JSExport<AppModule>::AddFunctionProperty("getUrl", std::mem_fn(&AppModule::js_getUrl));
 		JSExport<AppModule>::AddFunctionProperty("getVersion", std::mem_fn(&AppModule::js_getVersion));
+	}
+
+	JSValue AppModule::js_loadAppInfo(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	{
+		loadAppInfo();
+		return get_context().CreateUndefined();
 	}
 
 	JSValue AppModule::js_accessibilityEnabled() const TITANIUM_NOEXCEPT

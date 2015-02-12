@@ -1,7 +1,7 @@
 /**
 * Titanium.App for Windows
 *
-* Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+* Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
 * Licensed under the terms of the Apache Public License.
 * Please see the LICENSE included with this distribution for details.
 */
@@ -37,23 +37,15 @@ namespace TitaniumWindows
 
 	private:
 
+		template<typename _T> _T getAppInfo(std::string property, _T default) const;
+		virtual void loadAppInfo() const TITANIUM_NOEXCEPT;
+
 		virtual bool accessibilityEnabled() const TITANIUM_NOEXCEPT;
-		virtual bool analytics() const TITANIUM_NOEXCEPT;
-		virtual std::string copyright() const TITANIUM_NOEXCEPT;
-		virtual std::string deployType() const TITANIUM_NOEXCEPT;
-		virtual std::string description() const TITANIUM_NOEXCEPT;
-		virtual std::string guid() const TITANIUM_NOEXCEPT;
-		virtual std::string id() const TITANIUM_NOEXCEPT;
-		virtual std::string name() const TITANIUM_NOEXCEPT;
 		virtual bool proximityDetection() const TITANIUM_NOEXCEPT;
 		virtual bool proximityState() const TITANIUM_NOEXCEPT;
-		virtual std::string publisher() const TITANIUM_NOEXCEPT;
 		virtual std::string sessionId() const TITANIUM_NOEXCEPT;
-		virtual std::string url() const TITANIUM_NOEXCEPT;
-		virtual std::string version() const TITANIUM_NOEXCEPT;
 
 		virtual JSValue fireSystemEvent(const std::string& eventName, JSValue param) TITANIUM_NOEXCEPT;
-
 	};
 }  // namespace TitaniumWindows
 #endif // _TITANIUMWINDOWS_APP_HPP_

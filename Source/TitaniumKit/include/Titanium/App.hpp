@@ -1,7 +1,7 @@
 /**
 * Titanium.App for Windows
 *
-* Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+* Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
 * Licensed under the terms of the Apache Public License.
 * Please see the LICENSE included with this distribution for details.
 */
@@ -128,6 +128,8 @@ namespace Titanium
 		*/
 		virtual JSValue fireSystemEvent(const std::string& eventName, JSValue param) TITANIUM_NOEXCEPT;
 
+		virtual void loadAppInfo() const TITANIUM_NOEXCEPT;
+
 		AppModule(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 
 		virtual ~AppModule() = default;
@@ -139,6 +141,8 @@ namespace Titanium
 #endif
 
 		static void JSExportInitialize();
+
+		virtual JSValue js_loadAppInfo(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT final;
 
 		virtual JSValue js_accessibilityEnabled() const TITANIUM_NOEXCEPT final;
 		virtual JSValue js_analytics() const TITANIUM_NOEXCEPT final;
@@ -154,6 +158,7 @@ namespace Titanium
 		virtual JSValue js_sessionId() const TITANIUM_NOEXCEPT final;
 		virtual JSValue js_url() const TITANIUM_NOEXCEPT final;
 		virtual JSValue js_version() const TITANIUM_NOEXCEPT final;
+
 		virtual JSValue js_fireSystemEvent(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
 		virtual JSValue js_getAccessibilityEnabled(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
 		virtual JSValue js_getAnalytics(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
@@ -175,19 +180,19 @@ namespace Titanium
 #pragma warning(push)
 #pragma warning(disable : 4251)
 		bool accessibilityEnabled__;
-		bool analytics__;
-		std::string copyright__;
-		std::string deployType__;
-		std::string description__;
-		std::string guid__;
-		std::string id__;
-		std::string name__;
+		mutable bool analytics__;
+		mutable std::string copyright__;
+		mutable std::string deployType__;
+		mutable std::string description__;
+		mutable std::string guid__;
+		mutable std::string id__;
+		mutable std::string name__;
 		bool proximityDetection__;
 		bool proximityState__;
-		std::string publisher__;
+		mutable std::string publisher__;
 		std::string sessionId__;
-		std::string url__;
-		std::string version__;
+		mutable std::string url__;
+		mutable std::string version__;
 #pragma warning(pop)
 	};
 }
