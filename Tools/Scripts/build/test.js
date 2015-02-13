@@ -24,7 +24,7 @@ function installSDK(next) {
 	prc.on('close', function (code) {
 		var setProcess;
 		if (code != 0) {
-			cnext("Failed to install master SDK");
+			next("Failed to install master SDK");
 		} else {
 			next();
 		}
