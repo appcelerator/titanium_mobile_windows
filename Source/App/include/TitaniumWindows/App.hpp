@@ -37,9 +37,6 @@ namespace TitaniumWindows
 
 	private:
 
-		template<typename _T> _T getAppInfo(std::string property, _T default) const;
-		virtual void loadAppInfo() const TITANIUM_NOEXCEPT;
-
 		virtual bool accessibilityEnabled() const TITANIUM_NOEXCEPT;
 		virtual bool proximityDetection() const TITANIUM_NOEXCEPT;
 		virtual bool proximityState() const TITANIUM_NOEXCEPT;

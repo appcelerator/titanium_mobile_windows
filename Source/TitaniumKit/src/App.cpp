@@ -11,6 +11,38 @@
 namespace Titanium
 {
 
+	template<typename _T> _T AppModule::getAppInfo(std::string property, _T default) {
+		
+		// Statically create json JSValue to load _app_info_.json once
+		static JSValue json = get_context().CreateUndefined();
+
+		// Statically create loadJson javascript function
+		static JSFunction loadJson = get_context().CreateFunction(
+			"var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory+Ti.Filesystem.separator+'_app_info_.json');"
+			"if (file.exists()) return JSON.parse(file.read().text);"
+		);
+
+		// Statically create readJson javascript function
+		static JSFunction readJson = get_context().CreateFunction(
+			"if (json != undefined && property in json) return json[property];"
+			"return null;",
+			{"json", "property"}
+		);
+
+		// Load _app_info_.json
+		if (json.IsUndefined()) json = loadJson(get_context().get_global_object());
+
+		// Read property
+		std::vector<JSValue> args = {json, get_context().CreateString(property)};
+		auto result = readJson(args, get_context().get_global_object());
+		
+		// Return property value if it exists
+		if (!result.IsNull()) return static_cast<_T>(result);
+
+		// Return default value
+		return default;
+	}
+
 	AppModule::AppModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 		: Module(js_context, arguments),
 		accessibilityEnabled__(false),
@@ -30,8 +62,18 @@ namespace Titanium
 	{
 	}
 
-	void AppModule::loadAppInfo() const TITANIUM_NOEXCEPT
+	void AppModule::loadAppInfo() TITANIUM_NOEXCEPT
 	{
+		analytics__ = getAppInfo<bool>("analytics", analytics__);
+		copyright__ = getAppInfo<std::string>("copyright", copyright__);
+		deployType__ = getAppInfo<std::string>("deployType", deployType__);
+		description__ = getAppInfo<std::string>("description", description__);
+		guid__ = getAppInfo<std::string>("guid", guid__);
+		id__ = getAppInfo<std::string>("id", id__);
+		name__ = getAppInfo<std::string>("name", name__);
+		publisher__ = getAppInfo<std::string>("publisher", publisher__);
+		url__ = getAppInfo<std::string>("url", url__);
+		version__ = getAppInfo<std::string>("version", version__);
 	}
 
 	JSValue AppModule::EVENT_ACCESSIBILITY_ANNOUNCEMENT() const TITANIUM_NOEXCEPT
@@ -162,7 +204,7 @@ namespace Titanium
 		JSExport<AppModule>::AddFunctionProperty("getVersion", std::mem_fn(&AppModule::js_getVersion));
 	}
 
-	JSValue AppModule::js_loadAppInfo(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue AppModule::js_loadAppInfo(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT
 	{
 		loadAppInfo();
 		return get_context().CreateUndefined();

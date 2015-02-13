@@ -128,7 +128,9 @@ namespace Titanium
 		*/
 		virtual JSValue fireSystemEvent(const std::string& eventName, JSValue param) TITANIUM_NOEXCEPT;
 
-		virtual void loadAppInfo() const TITANIUM_NOEXCEPT;
+		template<typename _T> _T getAppInfo(std::string property, _T default);
+		virtual void loadAppInfo() TITANIUM_NOEXCEPT;
+		virtual JSValue js_loadAppInfo(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
 
 		AppModule(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 
@@ -141,8 +143,6 @@ namespace Titanium
 #endif
 
 		static void JSExportInitialize();
-
-		virtual JSValue js_loadAppInfo(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT final;
 
 		virtual JSValue js_accessibilityEnabled() const TITANIUM_NOEXCEPT final;
 		virtual JSValue js_analytics() const TITANIUM_NOEXCEPT final;
@@ -180,19 +180,19 @@ namespace Titanium
 #pragma warning(push)
 #pragma warning(disable : 4251)
 		bool accessibilityEnabled__;
-		mutable bool analytics__;
-		mutable std::string copyright__;
-		mutable std::string deployType__;
-		mutable std::string description__;
-		mutable std::string guid__;
-		mutable std::string id__;
-		mutable std::string name__;
+		bool analytics__;
+		std::string copyright__;
+		std::string deployType__;
+		std::string description__;
+		std::string guid__;
+		std::string id__;
+		std::string name__;
 		bool proximityDetection__;
 		bool proximityState__;
-		mutable std::string publisher__;
+		std::string publisher__;
 		std::string sessionId__;
-		mutable std::string url__;
-		mutable std::string version__;
+		std::string url__;
+		std::string version__;
 #pragma warning(pop)
 	};
 }
