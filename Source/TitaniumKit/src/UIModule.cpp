@@ -480,6 +480,27 @@ namespace Titanium
 		return window;
 	}
 
+	JSObject UIModule::createWebView(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_DEBUG("UI::createWebView");
+
+		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
+		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
+
+		JSValue UI_property = Titanium.GetProperty("UI");
+		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
+		JSObject UI = static_cast<JSObject>(UI_property);
+
+		JSValue WebView_property = UI.GetProperty("WebView");
+		TITANIUM_ASSERT(WebView_property.IsObject());  // precondition
+		JSObject WebView = static_cast<JSObject>(WebView_property);
+
+		auto webview = WebView.CallAsConstructor(parameters);
+		Titanium::applyProperties(webview, parameters);
+		return webview;
+	}
+
 	JSValue UIModule::ANIMATION_CURVE_EASE_IN() const TITANIUM_NOEXCEPT
 	{
 		return animation_curve_ease_in__;
@@ -915,6 +936,7 @@ namespace Titanium
 		JSExport<UIModule>::AddFunctionProperty("createTextField", std::mem_fn(&UIModule::js_createTextField));
 		JSExport<UIModule>::AddFunctionProperty("createView", std::mem_fn(&UIModule::js_createView));
 		JSExport<UIModule>::AddFunctionProperty("createWindow", std::mem_fn(&UIModule::js_createWindow));
+		JSExport<UIModule>::AddFunctionProperty("createWebView", std::mem_fn(&UIModule::js_createWebView));
 		JSExport<UIModule>::AddFunctionProperty("setBackgroundColor", std::mem_fn(&UIModule::js_setBackgroundColor));
 		JSExport<UIModule>::AddValueProperty("ANIMATION_CURVE_EASE_IN", std::mem_fn(&UIModule::ANIMATION_CURVE_EASE_IN));
 		JSExport<UIModule>::AddValueProperty("ANIMATION_CURVE_EASE_IN_OUT", std::mem_fn(&UIModule::ANIMATION_CURVE_EASE_IN_OUT));
@@ -1141,6 +1163,17 @@ namespace Titanium
 			parameters = static_cast<JSObject>(_0);
 		}
 		return createWindow(parameters, this_object);
+	}
+
+	JSValue UIModule::js_createWebView(const std::vector<JSValue>& arguments, JSObject& this_object)
+	{
+		JSObject parameters = get_context().CreateObject();
+		if (arguments.size() >= 1) {
+			const auto _0 = arguments.at(0);
+			TITANIUM_ASSERT(_0.IsObject());
+			parameters = static_cast<JSObject>(_0);
+		}
+		return createWebView(parameters, this_object);
 	}
 
 	// TODO empty implementation so that it won't break default app template. Need to implement later on.

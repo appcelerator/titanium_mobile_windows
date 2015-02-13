@@ -1,5 +1,5 @@
 /**
-* Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+* Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
 * Licensed under the terms of the Apache Public License.
 * Please see the LICENSE included with this distribution for details.
 */
@@ -21,6 +21,7 @@ if (typeof String.prototype.contains === 'undefined') {
 var property_signature = 'AddValueProperty(\"';
 var method_signature = 'AddFunctionProperty(\"';
 var export_signature = 'JSExport<';
+var namespace_signature = 'namespace ';
 
 var properties_found = 0;
 var methods_found = 0;
@@ -31,6 +32,8 @@ walker.on("file",
 	function (root, stat, next) {
 		if (stat.name.contains('.cpp')) {
 		    processClass(root, stat.name, next);
+		} else {
+			next();
 		}
 	}
 );
@@ -38,16 +41,19 @@ walker.on("end",
 	function () {
 		console.log('\nFound '+methods_found+' methods');
 		console.log('Found '+properties_found+' propeties');
+		console.log('Total APIs : '+(methods_found+properties_found));
 		
 		var docPath = process.argv[1].replace(/\\/g, '/')
 		docPath = docPath.substring(0, docPath.lastIndexOf('/'))+'/Titanium';
-		console.log('\nTo append the documentation run the following command from titanium_mobile/apidoc :\n\nnode docgen.js -a \''+docPath+'\'');
+		console.log('\nTo append the documentation run the following command from titanium_mobile/apidoc :\n\nnode docgen.js -f parity -a '+docPath);
 	}
 );
 
 // Extract titanium properties and methods from the class file
 function processClass(root, file, next) {
 
+	var module_name = null;
+	var namespaces = [];
 	var module = null;
 	var properties = [];
 	var methods = [];
@@ -63,12 +69,22 @@ function processClass(root, file, next) {
 				if (module == null) {
 					module = line.substr(line.indexOf(export_signature)+export_signature.length).split('>')[0].replace('Module','');
 					if (module == 'Ti') module = 'Titanium';
+					if (module == 'Titanium') module = '';
 				}
 
 				var name = line.split('\"')[1];
 
+				if (module_name == null) module_name = namespaces.join('.')+(module != '' ? '.'+module : '');
+
 				if (isProperty) properties.push(name);
 				if (isMethod) methods.push(name);
+
+			} else if (line.contains(namespace_signature)) {
+				var namespace = line.substr(line.indexOf(namespace_signature)+namespace_signature.length).replace('Module','');
+				if (namespace.contains(' ')) namespace = namespace.split(' ')[0];
+				if (namespace.contains('{')) namespace = namespace.split('{')[0];
+				if (!namespace.contains('.') && !namespace.contains(':') && !namespace.contains(';'))
+					namespaces.push(namespace);
 			}
 		}
 	);
@@ -81,8 +97,9 @@ function processClass(root, file, next) {
 		function () {
 			properties_found += properties.length;
 			methods_found += methods.length;
-			if (module != null && module != '') {
-				generateYAML(root, module, properties, methods, next);
+			if (module != null) {
+				if (module == '') module = 'Titanium';
+				generateYAML(root, module_name, module, properties, methods, next);
 			} else {
 				next();
 			}
@@ -91,10 +108,10 @@ function processClass(root, file, next) {
 }
 
 // Generate a YAML file from the extracted information
-function generateYAML(root, module, properties, methods, next) {
+function generateYAML(root, module_name, module, properties, methods, next) {
 	var folder = root.split('/').pop();
 
-	var yaml = 'name: Titanium'+(folder != 'src' ? '.'+folder+'.'+module : (module != 'Titanium' ? '.'+module : ''))+'\n'+
+	var yaml = 'name: '+module_name+'\n'+
 	           'platforms: [windowsphone]\n\n';
 	if (properties.length > 0) yaml += 'properties:\n';
 	for(i in properties) {
@@ -114,7 +131,7 @@ function generateYAML(root, module, properties, methods, next) {
 	fs.mkdirp(target,
 		function (err) {
 			if (err) {
-				console.error(err);
+				console.log(err);
 			} else {
 				fs.writeFile(target+module+'.yml', yaml,
 					function(err) {

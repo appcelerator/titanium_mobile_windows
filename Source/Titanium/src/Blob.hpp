@@ -30,10 +30,11 @@ namespace TitaniumWindows
 	class TITANIUMWINDOWS_EXPORT Blob final : public Titanium::Blob, public JSExport<Blob>
 	{
 	public:
-		std::vector<unsigned char> getData();
+		virtual std::vector<unsigned char> getData() TITANIUM_NOEXCEPT override;
 		::Platform::Guid getImageEncoder();
 
 		void construct(Windows::Storage::StorageFile^ file);
+		virtual void construct(std::vector<unsigned char> data) TITANIUM_NOEXCEPT override;
 
 		Blob(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 

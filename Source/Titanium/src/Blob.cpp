@@ -41,6 +41,15 @@ namespace TitaniumWindows
 		this->type_ = BlobModule::TYPE::FILE;
 	}
 
+	void Blob::construct(std::vector<unsigned char> data)
+	{
+		TITANIUM_LOG_DEBUG("TitaniumWindows::Blob::construct<char[]>");
+		data_ = data;
+		mimetype_ = "application/octet- stream";
+
+		this->type_ = BlobModule::TYPE::DATA;
+	}
+
 	std::vector<unsigned char> Blob::getData()
 	{
 		return data_;

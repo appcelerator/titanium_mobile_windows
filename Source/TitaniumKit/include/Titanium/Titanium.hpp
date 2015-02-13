@@ -25,5 +25,7 @@
 #include "Titanium/Blob.hpp"
 #include "Titanium/FilesystemModule.hpp"
 #include "Titanium/DatabaseModule.hpp"
+#include "Titanium/NetworkModule.hpp"
+
 
 #endif  // _TITANIUM_HPP_

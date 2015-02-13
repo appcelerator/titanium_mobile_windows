@@ -42,6 +42,11 @@ if(NOT TARGET TitaniumKit)
 	add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
 endif()
 
+if(NOT TARGET TitaniumWindows_Utility)
+  get_filename_component(Utility_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../Utility ABSOLUTE)
+  add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
+endif()
+
 set(SOURCE_UI
   include/TitaniumWindows/UI/ViewBase.hpp
   src/ViewBase.cpp
@@ -65,6 +70,8 @@ set(SOURCE_UI
   src/Slider.cpp
   include/TitaniumWindows/UI/TextField.hpp
   src/TextField.cpp
+  include/TitaniumWindows/UI/WebView.hpp
+  src/WebView.cpp
   )
 
 source_group(Titanium\\UI FILES ${SOURCE_UI})
@@ -83,11 +90,13 @@ target_compile_definitions(TitaniumWindows_UI PRIVATE TitaniumWindows_UI_EXPORTS
 target_include_directories(TitaniumWindows_UI PUBLIC
   ${PROJECT_SOURCE_DIR}/include
   $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
   )
 
 target_link_libraries(TitaniumWindows_UI
   TitaniumKit
   LayoutEngine
+  TitaniumWindows_Utility
   )
 
 set_target_properties(TitaniumWindows_UI PROPERTIES VS_WINRT_COMPONENT TRUE)
@@ -125,6 +134,9 @@ set_target_properties(TitaniumWindows_UI PROPERTIES VS_WINRT_COMPONENT TRUE)
 # Therefore we disable /OPT:REF and /OPT:ICF for the Debug
 # configuration.
 set_property(TARGET TitaniumWindows_UI APPEND_STRING PROPERTY LINK_FLAGS_DEBUG "/OPT:NOREF /OPT:NOICF")
+
+# Fix error C4996: 'std::_Copy_impl': Function call with parameters that may be unsafe (needed by boost::split)
+set_property(TARGET TitaniumWindows_UI APPEND_STRING PROPERTY COMPILE_FLAGS " -D_SCL_SECURE_NO_WARNINGS")
 
 if (NOT TitaniumWindows_UI_DISABLE_TESTS)
   add_subdirectory(test)

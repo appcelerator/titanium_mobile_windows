@@ -14,6 +14,15 @@ namespace Titanium
 	{
 	}
 
+	void Blob::construct(std::vector<unsigned char> data) TITANIUM_NOEXCEPT
+	{
+	}
+
+	std::vector<unsigned char> Blob::getData() TITANIUM_NOEXCEPT
+	{
+		return std::vector<unsigned char>();
+	}
+
 	void Blob::JSExportInitialize()
 	{
 		JSExport<Blob>::SetClassVersion(1);

@@ -1,7 +1,7 @@
 /**
  * Titanium for Windows
  *
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -18,8 +18,10 @@
 #include "TitaniumWindows/Gesture.hpp"
 #include "TitaniumWindows/Accelerometer.hpp"
 #include "TitaniumWindows/Filesystem.hpp"
+#include "TitaniumWindows/Network.hpp"
 #include "Blob.hpp"
 #include "File.hpp"
+#include "HTTPClient.hpp"
 
 #include <Windows.h>
 #include <collection.h>
@@ -37,7 +39,7 @@ namespace TitaniumWindows
 	{
 	}
 
-	void Application::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args)
+	void Application::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs ^ args)
 	{
 		application__ = std::make_shared<Titanium::Application>(Titanium::ApplicationBuilder(js_context__)
 		                                                            .TiObject(js_context__.CreateObject<TitaniumWindows::TiModule>())
@@ -50,15 +52,18 @@ namespace TitaniumWindows
 		                                                            .AppObject(js_context__.CreateObject<TitaniumWindows::AppModule>())
 		                                                            .WindowObject(js_context__.CreateObject<TitaniumWindows::UI::Window>())
 		                                                            .ButtonObject(js_context__.CreateObject<TitaniumWindows::UI::Button>())
-																	.AlertDialogObject(js_context__.CreateObject<TitaniumWindows::UI::AlertDialog>())
+		                                                            .AlertDialogObject(js_context__.CreateObject<TitaniumWindows::UI::AlertDialog>())
 		                                                            .ImageViewObject(js_context__.CreateObject<TitaniumWindows::UI::ImageView>())
 		                                                            .LabelObject(js_context__.CreateObject<TitaniumWindows::UI::Label>())
 		                                                            .ScrollViewObject(js_context__.CreateObject<TitaniumWindows::UI::ScrollView>())
 		                                                            .SliderObject(js_context__.CreateObject<TitaniumWindows::UI::Slider>())
-																	.TextFieldObject(js_context__.CreateObject<TitaniumWindows::UI::TextField>())
-																	.BlobObject(js_context__.CreateObject<TitaniumWindows::Blob>())
+		                                                            .TextFieldObject(js_context__.CreateObject<TitaniumWindows::UI::TextField>())
+		                                                            .BlobObject(js_context__.CreateObject<TitaniumWindows::Blob>())
 		                                                            .FilesystemObject(js_context__.CreateObject<TitaniumWindows::FilesystemModule>())
 		                                                            .FileObject(js_context__.CreateObject<TitaniumWindows::Filesystem::File>())
+		                                                            .NetworkObject(js_context__.CreateObject<TitaniumWindows::NetworkModule>())
+		                                                            .HTTPClientObject(js_context__.CreateObject<TitaniumWindows::Network::HTTPClient>())
+		                                                            .WebViewObject(js_context__.CreateObject<TitaniumWindows::UI::WebView>())
 		                                                            .build());
 
 		Suspending += ref new Windows::UI::Xaml::SuspendingEventHandler(this, &Application::OnSuspending);
@@ -69,7 +74,7 @@ namespace TitaniumWindows
 		//  }
 		// #endif
 
-		auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+		auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame ^>(Windows::UI::Xaml::Window::Current->Content);
 		// Do not repeat initialization when the Window already has content,
 		// just ensure that the window is active.
 		if (rootFrame == nullptr) {
@@ -117,11 +122,11 @@ namespace TitaniumWindows
 #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
 	// This code is for Windows phone apps only. Restore the content
 	// transitions after the application has launched.
-	void Application::RootFrame_FirstNavigated(::Platform::Object^ sender, Windows::UI::Xaml::Navigation::NavigationEventArgs^ e)
+	void Application::RootFrame_FirstNavigated(::Platform::Object ^ sender, Windows::UI::Xaml::Navigation::NavigationEventArgs ^ e)
 	{
-		auto rootFrame = safe_cast<Windows::UI::Xaml::Controls::Frame^>(sender);
+		auto rootFrame = safe_cast<Windows::UI::Xaml::Controls::Frame ^>(sender);
 
-		Windows::UI::Xaml::Media::Animation::TransitionCollection^ newTransitions;
+		Windows::UI::Xaml::Media::Animation::TransitionCollection ^ newTransitions;
 		if (transitions__ == nullptr) {
 			newTransitions = ref new Windows::UI::Xaml::Media::Animation::TransitionCollection();
 			newTransitions->Append(ref new Windows::UI::Xaml::Media::Animation::NavigationThemeTransition());
@@ -134,8 +139,8 @@ namespace TitaniumWindows
 	}
 #endif
 
-	void Application::OnSuspending(Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ e)
+	void Application::OnSuspending(Object ^ sender, Windows::ApplicationModel::SuspendingEventArgs ^ e)
 	{
 	}
 
-}  // namespace TitaniumWindows {
+}  // namespace TitaniumWindows

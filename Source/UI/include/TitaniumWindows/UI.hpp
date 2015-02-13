@@ -18,5 +18,6 @@
 #include "TitaniumWindows/UI/TextField.hpp"
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/Window.hpp"
+#include "TitaniumWindows/UI/WebView.hpp"
 
 #endif  // _TITANIUMWINDOWS_UI_HPP_

@@ -24,8 +24,6 @@
 		C90950A31A296802002133E1 /* Picker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90950A11A296802002133E1 /* Picker.cpp */; };
 		C90950A61A297E03002133E1 /* WebView.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C90950A41A297E03002133E1 /* WebView.hpp */; };
 		C90950A71A297E03002133E1 /* WebView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90950A51A297E03002133E1 /* WebView.cpp */; };
-		C90950AA1A2A20C1002133E1 /* WebViewErrorEvent.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C90950A81A2A20C1002133E1 /* WebViewErrorEvent.hpp */; };
-		C90950AB1A2A20C1002133E1 /* WebViewErrorEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90950A91A2A20C1002133E1 /* WebViewErrorEvent.cpp */; };
 		C90B8F851A166496005F3210 /* ModuleTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = C90B8F841A166496005F3210 /* ModuleTests.mm */; };
 		C90B8F881A167E36005F3210 /* Module.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90B8F871A167E36005F3210 /* Module.cpp */; };
 		C90B8F8F1A16D346005F3210 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90B8F8D1A16D346005F3210 /* View.cpp */; };
@@ -90,6 +88,10 @@
 		F90831121A2EA3B500CB810B /* Blob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F90831111A2EA3B500CB810B /* Blob.cpp */; };
 		F90831151A2EA3FA00CB810B /* NativeBlobExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F90831131A2EA3FA00CB810B /* NativeBlobExample.cpp */; };
 		F90831161A2EA3FA00CB810B /* NativeBlobExample.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F90831141A2EA3FA00CB810B /* NativeBlobExample.hpp */; };
+		F913EFBC1A835FE4009080D1 /* AlertDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F913EFBA1A835FE4009080D1 /* AlertDialog.cpp */; };
+		F913EFBD1A835FE4009080D1 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F913EFBB1A835FE4009080D1 /* Slider.cpp */; };
+		F913EFC61A836026009080D1 /* AlertDialog.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F913EFC41A836026009080D1 /* AlertDialog.hpp */; };
+		F913EFC71A836026009080D1 /* Slider.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F913EFC51A836026009080D1 /* Slider.hpp */; };
 		F96BCABD1A25CE4C00745C3B /* PlatformModule.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F96BCABC1A25CE4C00745C3B /* PlatformModule.hpp */; };
 		F96BCAC01A25CE6100745C3B /* PlatformModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F96BCABF1A25CE6100745C3B /* PlatformModule.cpp */; };
 		F96BCAC31A25CEB000745C3B /* NativePlatformExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F96BCAC11A25CEB000745C3B /* NativePlatformExample.cpp */; };
@@ -104,12 +106,14 @@
 		F9B47E7F1A2EF1860052879A /* NativeFileExample.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F9B47E7D1A2EF1860052879A /* NativeFileExample.hpp */; };
 		F9B47E811A2EF93E0052879A /* Constants.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F9B47E801A2EF93E0052879A /* Constants.hpp */; };
 		F9B47E831A2EF94A0052879A /* Constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9B47E821A2EF94A0052879A /* Constants.cpp */; };
-		F9E96F891A415D62001E0EC4 /* DisplayCaps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9E96F881A415D62001E0EC4 /* DisplayCaps.cpp */; };
-		F9E96F8B1A415D6E001E0EC4 /* DisplayCaps.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F9E96F8A1A415D6E001E0EC4 /* DisplayCaps.hpp */; };
 		F9B549731A4027220051A096 /* TiModule.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F9B549721A4027220051A096 /* TiModule.hpp */; };
 		F9B549751A40272E0051A096 /* TiModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9B549741A40272E0051A096 /* TiModule.cpp */; };
 		F9B549781A402D520051A096 /* NativeTiExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9B549761A402D520051A096 /* NativeTiExample.cpp */; };
 		F9B549791A402D520051A096 /* NativeTiExample.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F9B549771A402D520051A096 /* NativeTiExample.hpp */; };
+		F9BE4A7C1A88999400301999 /* NativeWebViewExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9BE4A7A1A88999400301999 /* NativeWebViewExample.cpp */; };
+		F9BE4A7D1A88999400301999 /* NativeWebViewExample.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F9BE4A7B1A88999400301999 /* NativeWebViewExample.hpp */; };
+		F9E96F891A415D62001E0EC4 /* DisplayCaps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9E96F881A415D62001E0EC4 /* DisplayCaps.cpp */; };
+		F9E96F8B1A415D6E001E0EC4 /* DisplayCaps.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F9E96F8A1A415D6E001E0EC4 /* DisplayCaps.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,8 +144,6 @@
 		C90950A11A296802002133E1 /* Picker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Picker.cpp; path = src/UI/Picker.cpp; sourceTree = "<group>"; };
 		C90950A41A297E03002133E1 /* WebView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = WebView.hpp; path = include/Titanium/UI/WebView.hpp; sourceTree = "<group>"; };
 		C90950A51A297E03002133E1 /* WebView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebView.cpp; path = src/UI/WebView.cpp; sourceTree = "<group>"; };
-		C90950A81A2A20C1002133E1 /* WebViewErrorEvent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = WebViewErrorEvent.hpp; path = include/Titanium/UI/WebViewErrorEvent.hpp; sourceTree = "<group>"; };
-		C90950A91A2A20C1002133E1 /* WebViewErrorEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebViewErrorEvent.cpp; path = src/UI/WebViewErrorEvent.cpp; sourceTree = "<group>"; };
 		C90B8F841A166496005F3210 /* ModuleTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ModuleTests.mm; sourceTree = "<group>"; };
 		C90B8F871A167E36005F3210 /* Module.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Module.cpp; path = src/Module.cpp; sourceTree = "<group>"; };
 		C90B8F8D1A16D346005F3210 /* View.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = View.cpp; path = src/UI/View.cpp; sourceTree = "<group>"; };
@@ -212,6 +214,10 @@
 		F90831111A2EA3B500CB810B /* Blob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Blob.cpp; path = src/Blob.cpp; sourceTree = "<group>"; };
 		F90831131A2EA3FA00CB810B /* NativeBlobExample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeBlobExample.cpp; sourceTree = "<group>"; };
 		F90831141A2EA3FA00CB810B /* NativeBlobExample.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NativeBlobExample.hpp; sourceTree = "<group>"; };
+		F913EFBA1A835FE4009080D1 /* AlertDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AlertDialog.cpp; path = src/UI/AlertDialog.cpp; sourceTree = "<group>"; };
+		F913EFBB1A835FE4009080D1 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Slider.cpp; path = src/UI/Slider.cpp; sourceTree = "<group>"; };
+		F913EFC41A836026009080D1 /* AlertDialog.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AlertDialog.hpp; path = include/Titanium/UI/AlertDialog.hpp; sourceTree = "<group>"; };
+		F913EFC51A836026009080D1 /* Slider.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Slider.hpp; path = include/Titanium/UI/Slider.hpp; sourceTree = "<group>"; };
 		F96BCABC1A25CE4C00745C3B /* PlatformModule.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = PlatformModule.hpp; path = include/Titanium/PlatformModule.hpp; sourceTree = "<group>"; };
 		F96BCABF1A25CE6100745C3B /* PlatformModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlatformModule.cpp; path = src/PlatformModule.cpp; sourceTree = "<group>"; };
 		F96BCAC11A25CEB000745C3B /* NativePlatformExample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativePlatformExample.cpp; sourceTree = "<group>"; };
@@ -226,12 +232,14 @@
 		F9B47E7D1A2EF1860052879A /* NativeFileExample.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NativeFileExample.hpp; sourceTree = "<group>"; };
 		F9B47E801A2EF93E0052879A /* Constants.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Constants.hpp; path = include/Titanium/Filesystem/Constants.hpp; sourceTree = "<group>"; };
 		F9B47E821A2EF94A0052879A /* Constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Constants.cpp; path = src/Filesystem/Constants.cpp; sourceTree = "<group>"; };
-		F9E96F881A415D62001E0EC4 /* DisplayCaps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DisplayCaps.cpp; path = src/Platform/DisplayCaps.cpp; sourceTree = "<group>"; };
-		F9E96F8A1A415D6E001E0EC4 /* DisplayCaps.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DisplayCaps.hpp; path = include/Titanium/Platform/DisplayCaps.hpp; sourceTree = "<group>"; };
 		F9B549721A4027220051A096 /* TiModule.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TiModule.hpp; path = include/Titanium/TiModule.hpp; sourceTree = "<group>"; };
 		F9B549741A40272E0051A096 /* TiModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TiModule.cpp; path = src/TiModule.cpp; sourceTree = "<group>"; };
 		F9B549761A402D520051A096 /* NativeTiExample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeTiExample.cpp; sourceTree = "<group>"; };
 		F9B549771A402D520051A096 /* NativeTiExample.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NativeTiExample.hpp; sourceTree = "<group>"; };
+		F9BE4A7A1A88999400301999 /* NativeWebViewExample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeWebViewExample.cpp; sourceTree = "<group>"; };
+		F9BE4A7B1A88999400301999 /* NativeWebViewExample.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NativeWebViewExample.hpp; sourceTree = "<group>"; };
+		F9E96F881A415D62001E0EC4 /* DisplayCaps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DisplayCaps.cpp; path = src/Platform/DisplayCaps.cpp; sourceTree = "<group>"; };
+		F9E96F8A1A415D6E001E0EC4 /* DisplayCaps.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DisplayCaps.hpp; path = include/Titanium/Platform/DisplayCaps.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,8 +295,6 @@
 				C97E14851A4CB0E200C15EDC /* ScrollView.cpp */,
 				C90950A41A297E03002133E1 /* WebView.hpp */,
 				C90950A51A297E03002133E1 /* WebView.cpp */,
-				C90950A81A2A20C1002133E1 /* WebViewErrorEvent.hpp */,
-				C90950A91A2A20C1002133E1 /* WebViewErrorEvent.cpp */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -317,6 +323,8 @@
 				F90831131A2EA3FA00CB810B /* NativeBlobExample.cpp */,
 				F9B47E7D1A2EF1860052879A /* NativeFileExample.hpp */,
 				F9B47E7C1A2EF1860052879A /* NativeFileExample.cpp */,
+				F9BE4A7B1A88999400301999 /* NativeWebViewExample.hpp */,
+				F9BE4A7A1A88999400301999 /* NativeWebViewExample.cpp */,
 			);
 			name = Examples;
 			path = ../examples;
@@ -346,6 +354,10 @@
 		C974544B1A02A2B000CB4CA9 /* TitaniumKit */ = {
 			isa = PBXGroup;
 			children = (
+				F913EFC41A836026009080D1 /* AlertDialog.hpp */,
+				F913EFC51A836026009080D1 /* Slider.hpp */,
+				F913EFBA1A835FE4009080D1 /* AlertDialog.cpp */,
+				F913EFBB1A835FE4009080D1 /* Slider.cpp */,
 				C980919A1A2149A300AE5930 /* TitaniumKit_EXPORT.h */,
 				C9E6AFB71A13043300FED053 /* Titanium.hpp */,
 				C90B900B1A198370005F3210 /* ApplicationBuilder.hpp */,
@@ -475,13 +487,13 @@
 				F9B549791A402D520051A096 /* NativeTiExample.hpp in Headers */,
 				C974545C1A02A2E500CB4CA9 /* GlobalObject.hpp in Headers */,
 				C90950A61A297E03002133E1 /* WebView.hpp in Headers */,
-				C90950AA1A2A20C1002133E1 /* WebViewErrorEvent.hpp in Headers */,
 				F96BCABD1A25CE4C00745C3B /* PlatformModule.hpp in Headers */,
 				F9B549731A4027220051A096 /* TiModule.hpp in Headers */,
 				C90B8F901A16D346005F3210 /* View.hpp in Headers */,
 				C90B8F941A16D83F005F3210 /* Window.hpp in Headers */,
 				C90B8F9C1A16DDB0005F3210 /* UIModule.hpp in Headers */,
 				C950EF901A48D8FB000EE5AC /* Label.hpp in Headers */,
+				F913EFC61A836026009080D1 /* AlertDialog.hpp in Headers */,
 				C909509E1A2963F3002133E1 /* ListView.hpp in Headers */,
 				F908310F1A2EA3AC00CB810B /* Blob.hpp in Headers */,
 				C974545B1A02A2E500CB4CA9 /* Module.hpp in Headers */,
@@ -494,6 +506,7 @@
 				F9E96F8B1A415D6E001E0EC4 /* DisplayCaps.hpp in Headers */,
 				C9E6AFEC1A13F95300FED053 /* TiLogger.hpp in Headers */,
 				C9E6AFED1A13F95500FED053 /* TiLoggerPolicyInterface.hpp in Headers */,
+				F9BE4A7D1A88999400301999 /* NativeWebViewExample.hpp in Headers */,
 				F9B47E731A2EF1440052879A /* FilesystemModule.hpp in Headers */,
 				F9B47E7F1A2EF1860052879A /* NativeFileExample.hpp in Headers */,
 				F96BCAC41A25CEB000745C3B /* NativePlatformExample.hpp in Headers */,
@@ -502,6 +515,7 @@
 				C9BED2261A28F4CD00CFF800 /* Constants.hpp in Headers */,
 				C90950921A2951A7002133E1 /* Gesture.hpp in Headers */,
 				C909509A1A296170002133E1 /* ListItem.hpp in Headers */,
+				F913EFC71A836026009080D1 /* Slider.hpp in Headers */,
 				C9E6AFEF1A13F95D00FED053 /* TiLoggerPolicyFile.hpp in Headers */,
 				C9E6AFF01A13F96000FED053 /* TiLoggerPimpl.hpp in Headers */,
 				C9E6AFEA1A13F94900FED053 /* TiUtil.hpp in Headers */,
@@ -606,6 +620,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F913EFBC1A835FE4009080D1 /* AlertDialog.cpp in Sources */,
+				F9BE4A7C1A88999400301999 /* NativeWebViewExample.cpp in Sources */,
 				F9B549781A402D520051A096 /* NativeTiExample.cpp in Sources */,
 				C98091A21A238DC500AE5930 /* Dimension.cpp in Sources */,
 				F9B177981A2C46FB00ECE602 /* Accelerometer.cpp in Sources */,
@@ -615,7 +631,6 @@
 				F9B549751A40272E0051A096 /* TiModule.cpp in Sources */,
 				C9BED2201A27B14200CFF800 /* NativeModuleExample.cpp in Sources */,
 				C909509F1A2963F3002133E1 /* ListView.cpp in Sources */,
-				C90950AB1A2A20C1002133E1 /* WebViewErrorEvent.cpp in Sources */,
 				F9B47E831A2EF94A0052879A /* Constants.cpp in Sources */,
 				C90950931A2951A7002133E1 /* Gesture.cpp in Sources */,
 				F96BCAC31A25CEB000745C3B /* NativePlatformExample.cpp in Sources */,
@@ -638,6 +653,7 @@
 				C9E6AFE81A13F94200FED053 /* TiBase.cpp in Sources */,
 				C90950A31A296802002133E1 /* Picker.cpp in Sources */,
 				C90B8F881A167E36005F3210 /* Module.cpp in Sources */,
+				F913EFBD1A835FE4009080D1 /* Slider.cpp in Sources */,
 				C97E14871A4CB0E200C15EDC /* ScrollView.cpp in Sources */,
 				F9B47E7B1A2EF1730052879A /* File.cpp in Sources */,
 				C9E6AFE61A13F93800FED053 /* GlobalObject.cpp in Sources */,

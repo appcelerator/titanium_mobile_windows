@@ -117,6 +117,13 @@ set(SOURCE_Filesystem
   src/Filesystem/Constants.cpp
   )
 
+set(SOURCE_Network
+  include/Titanium/NetworkModule.hpp
+  src/NetworkModule.cpp
+  include/Titanium/Network/HTTPClient.hpp
+  src/Network/HTTPClient.cpp
+  )
+
 set(SOURCE_UI
   include/Titanium/UIModule.hpp
   src/UIModule.cpp
@@ -150,8 +157,6 @@ set(SOURCE_UI
   src/UI/WebView.cpp
   include/Titanium/UI/AlertDialog.hpp
   src/UI/AlertDialog.cpp
-  include/Titanium/UI/WebViewErrorEvent.hpp
-  src/UI/WebViewErrorEvent.cpp
   include/Titanium/UI/ScrollView.hpp
   src/UI/ScrollView.cpp
   include/Titanium/UI/Slider.hpp
@@ -187,8 +192,9 @@ source_group(TitaniumKit\\Accelerometer    FILES ${SOURCE_Accelerometer})
 source_group(TitaniumKit\\Gesture          FILES ${SOURCE_Gesture})
 source_group(TitaniumKit\\Blob             FILES ${SOURCE_Blob})
 source_group(TitaniumKit\\Filesystem       FILES ${SOURCE_Filesystem})
-source_group(TitaniumKit\\App       FILES ${SOURCE_App})
-source_group(TitaniumKit\\App\\Properties       FILES ${SOURCE_Properties})
+source_group(TitaniumKit\\App              FILES ${SOURCE_App})
+source_group(TitaniumKit\\App\\Properties  FILES ${SOURCE_Properties})
+source_group(TitaniumKit\\Network          FILES ${SOURCE_Network})
 source_group(TitaniumKit\\UI               FILES ${SOURCE_UI})
 source_group(TitaniumKit\\TiLogger\\detail FILES ${SOURCE_TiLogger_detail})
 
@@ -208,6 +214,7 @@ add_library(TitaniumKit SHARED
   ${SOURCE_Filesystem}
   ${SOURCE_App}
   ${SOURCE_Properties}
+  ${SOURCE_Network}
   ${SOURCE_UI}
   ${SOURCE_TiLogger_detail}
   )

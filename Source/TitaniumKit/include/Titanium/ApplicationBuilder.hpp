@@ -1,7 +1,7 @@
 /**
  * TitaniumKit
  *
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -82,6 +82,15 @@ namespace Titanium
 		JSObject DatabaseObject() const TITANIUM_NOEXCEPT;
 		ApplicationBuilder& DatabaseObject(const JSObject&) TITANIUM_NOEXCEPT;
 
+		JSObject WebViewObject() const TITANIUM_NOEXCEPT;
+		ApplicationBuilder& WebViewObject(const JSObject&) TITANIUM_NOEXCEPT;
+
+		JSObject HTTPClientObject() const TITANIUM_NOEXCEPT;
+		ApplicationBuilder& HTTPClientObject(const JSObject&) TITANIUM_NOEXCEPT;
+
+		JSObject NetworkObject() const TITANIUM_NOEXCEPT;
+		ApplicationBuilder& NetworkObject(const JSObject&) TITANIUM_NOEXCEPT;
+
 		virtual ~ApplicationBuilder() = default;
 		ApplicationBuilder(const ApplicationBuilder&) = default;
 		ApplicationBuilder& operator=(const ApplicationBuilder&) = default;
@@ -119,6 +128,10 @@ namespace Titanium
 		JSObject file__;
 		JSObject filesystem__;
 		JSObject database__;
+		JSObject webview__;
+		JSObject httpclient__;
+		JSObject network__;
+		
 #pragma warning(pop)
 	};
 

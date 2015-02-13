@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-require('ti-mocha');
-var should = require('should');
+require('./ti-mocha');
+var should = require('./should');
 
 describe('database', function () {
 

@@ -50,6 +50,11 @@ robocopy build\x86\Filesystem\Release dist\windows\lib\TitaniumWindows_Filesyste
 robocopy build\ARM\Filesystem\Release dist\windows\lib\TitaniumWindows_Filesystem\ARM TitaniumWindows_Filesystem.*
 robocopy build\x86\Filesystem dist\windows\lib\TitaniumWindows_Filesystem\include titaniumwindows_filesystem_export.h
 
+echo Titanium Windows Network
+robocopy build\x86\Network\Release dist\windows\lib\TitaniumWindows_Network\x86 TitaniumWindows_Network.*
+robocopy build\ARM\Network\Release dist\windows\lib\TitaniumWindows_Network\ARM TitaniumWindows_Network.*
+robocopy build\x86\Network dist\windows\lib\TitaniumWindows_Network\include titaniumwindows_network_export.h
+
 echo Titanium Windows Gesture
 robocopy build\x86\Gesture\Release dist\windows\lib\TitaniumWindows_Gesture\x86 TitaniumWindows_Gesture.*
 robocopy build\ARM\Gesture\Release dist\windows\lib\TitaniumWindows_Gesture\ARM TitaniumWindows_Gesture.*

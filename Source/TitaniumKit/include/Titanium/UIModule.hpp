@@ -19,6 +19,7 @@
 #include "Titanium/UI/TextField.hpp"
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Window.hpp"
+#include "Titanium/UI/WebView.hpp"
 
 namespace Titanium
 {
@@ -209,6 +210,22 @@ namespace Titanium
 		*/
 		JSObject createWindow(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
 
+		/*!
+		  @method
+
+		  @abstract createWebView( [parameters] ) : Titanium.UI.WebView
+
+		  @discussion Creates and returns an instance of
+		  Titanium.UI.WebView.
+
+		  @param parameters Properties to set on a new object, including
+		  any defined by Titanium.UI.WebView except those marked
+		  not-creation or read-only.  (Dictionary<Titanium.UI.WebView>)
+
+		  @result Titanium.UI.WebView
+		*/
+		JSObject createWebView(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
+
 		virtual JSValue ANIMATION_CURVE_EASE_IN() const TITANIUM_NOEXCEPT final;
 		virtual JSValue ANIMATION_CURVE_EASE_IN_OUT() const TITANIUM_NOEXCEPT final;
 		virtual JSValue ANIMATION_CURVE_EASE_OUT() const TITANIUM_NOEXCEPT final;
@@ -338,6 +355,7 @@ namespace Titanium
 		JSValue js_createTextField(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createView(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createWindow(const std::vector<JSValue>& arguments, JSObject& this_object);
+		JSValue js_createWebView(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_setBackgroundColor(const std::vector<JSValue>& arguments, JSObject& this_object);
 
 	private:

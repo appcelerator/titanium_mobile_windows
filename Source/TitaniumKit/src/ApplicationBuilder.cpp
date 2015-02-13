@@ -1,7 +1,7 @@
 /**
  * TitaniumKit
  *
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -19,6 +19,8 @@
 #include "Titanium/FilesystemModule.hpp"
 #include "Titanium/Filesystem/File.hpp"
 #include "Titanium/DatabaseModule.hpp"
+#include "Titanium/NetworkModule.hpp"
+#include "Titanium/Network/HTTPClient.hpp"
 
 namespace Titanium
 {
@@ -31,12 +33,13 @@ namespace Titanium
 	      properties__(js_context__.CreateObject<Titanium::App::Properties>()),
 	      window__(js_context__.CreateObject<Titanium::UI::Window>()),
 	      button__(js_context__.CreateObject<Titanium::UI::Button>()),
-		  alertDialog__(js_context__.CreateObject<Titanium::UI::AlertDialog>()),
+	      alertDialog__(js_context__.CreateObject<Titanium::UI::AlertDialog>()),
 	      imageview__(js_context__.CreateObject<Titanium::UI::ImageView>()),
 	      label__(js_context__.CreateObject<Titanium::UI::Label>()),
-		  slider__(js_context__.CreateObject<Titanium::UI::Slider>()),
+	      slider__(js_context__.CreateObject<Titanium::UI::Slider>()),
 	      scrollview__(js_context__.CreateObject<Titanium::UI::ScrollView>()),
 	      textField__(js_context__.CreateObject<Titanium::UI::TextField>()),
+	      webview__(js_context__.CreateObject<Titanium::UI::WebView>()),
 	      platform__(js_context__.CreateObject<Titanium::PlatformModule>()),
 	      accelerometer__(js_context__.CreateObject<Titanium::Accelerometer>()),
 	      gesture__(js_context__.CreateObject<Titanium::Gesture>()),
@@ -44,7 +47,9 @@ namespace Titanium
 	      file__(js_context__.CreateObject<Titanium::Filesystem::File>()),
 	      filesystem__(js_context__.CreateObject<Titanium::FilesystemModule>()),
 	      database__(js_context__.CreateObject<Titanium::DatabaseModule>()),
-		  app__(js_context__.CreateObject<Titanium::AppModule>())
+		  app__(js_context__.CreateObject<Titanium::AppModule>()),
+	      httpclient__(js_context__.CreateObject<Titanium::Network::HTTPClient>()),
+	      network__(js_context__.CreateObject<Titanium::NetworkModule>())
 	{
 	}
 
@@ -60,8 +65,10 @@ namespace Titanium
 		ui.SetProperty("TextField", textField__);
 		ui.SetProperty("View", view__);
 		ui.SetProperty("Window", window__);
+		ui.SetProperty("WebView", webview__);
 
 		filesystem__.SetProperty("File", file__);
+		network__.SetProperty("HTTPClient", httpclient__);
 
 		JSObject titanium = ti__;
 		global_object__.SetProperty("Titanium", titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
@@ -77,6 +84,7 @@ namespace Titanium
 		titanium.SetProperty("Database", database__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("App", app__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		app__.SetProperty("Properties", properties__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+		titanium.SetProperty("Network", network__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 
 		JSString builtin_functions_script = R"js(
 			  console = {};
@@ -317,6 +325,37 @@ namespace Titanium
 	ApplicationBuilder& ApplicationBuilder::DatabaseObject(const JSObject& database) TITANIUM_NOEXCEPT
 	{
 		database__ = database;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::WebViewObject() const TITANIUM_NOEXCEPT
+	{
+		return webview__;
+	}
+	ApplicationBuilder& ApplicationBuilder::WebViewObject(const JSObject& webview) TITANIUM_NOEXCEPT
+	{
+		webview__ = webview;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::HTTPClientObject() const TITANIUM_NOEXCEPT
+	{
+		return httpclient__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::HTTPClientObject(const JSObject& httpclient) TITANIUM_NOEXCEPT
+	{
+		httpclient__ = httpclient;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::NetworkObject() const TITANIUM_NOEXCEPT
+	{
+		return network__;
+	}
+	ApplicationBuilder& ApplicationBuilder::NetworkObject(const JSObject& network) TITANIUM_NOEXCEPT
+	{
+		network__ = network;
 		return *this;
 	}
 
