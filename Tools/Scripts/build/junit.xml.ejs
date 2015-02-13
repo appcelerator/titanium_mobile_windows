@@ -1,0 +1,53 @@
+<testsuites name="Mocha Tests">
+<%
+	suites.forEach(function(currentSuite)
+	{
+-%>
+	<testsuite name="<%= currentSuite.suite %>"
+		tests="<%= currentSuite.tests.length %>"
+		failures="<%= currentSuite.failures %>"
+	    skipped="<%= (currentSuite.tests.length - currentSuite.failures - currentSuite.passes) %>"
+	    timestamp="<%= currentSuite.start %>"
+	    time="<%= currentSuite.duration / 1000 %>">
+
+	<%
+	if (currentSuite.tests.length === 0 && currentSuite.failures > 0)
+	{
+	-%>
+		<testcase classname="<%= currentSuite.suite %>"
+	    	name="<%= CurrentSuite.suite %> before">
+	    	<failure message="Failed during before hook" />
+		</testcase>
+	<%
+	} else
+	{
+		currentSuite.tests.forEach(function(test)
+		{
+	-%>
+		<testcase
+		 classname="<%= test.title %>"
+	     name="<%= test.title %>"
+	     time="<%= (test.duration / 1000) %>"
+	<% if (test.state == "failed") { -%>
+		>
+			<failure message="<%= test.error.message ? test.error.message : '' %>">
+<%  // Do a unified diff here! See https://github.com/futurice/mocha-jenkins-reporter/blob/master/lib/jenkins.js -%>
+				<![CDATA[<%= test.error.stack %>]]>		
+	        </failure>
+	    </testcase>
+	<% } else if (test.state === 'skipped') { -%>
+	    >
+			<skipped/>
+		</testcase>
+	<% } else { -%>
+		/>
+	<%
+	        }
+	    });
+	}
+	-%>
+	</testsuite>
+<%
+});
+-%>
+</testsuites>

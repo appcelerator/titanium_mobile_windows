@@ -10,34 +10,33 @@ var win = Ti.UI.createWindow({
 });
 win.open();
 
-require('ti-mocha');
-var should = require('should');
+require('./ti-mocha');
 var $results = [];
 
 // ============================================================================
 // Add the tests here using "require"
-require('ti.test');
-require('ti.require.test');
-require('ti.ui.constants.test');
-require('email');
-require('imageview');
-require('ti.ui.label.test');
-require('ti.ui.layout');
-require('ti.ui.progressbar.test');
-require('ti.ui.activityindicator.test');
-require('ti.ui.textfield.test');
-require('webview');
-require('ti.ui.window.test');
-require('ti.internal');
-require('ti.platform.test');
-require('ti.filesystem.test');
-require('database');
-require('ti.app');
-require('ti.xml.test');
-require('blob');
-require('gesture');
-require('accelerometer');
-require('ti.geolocation');
+require('./ti.test');
+require('./ti.require.test');
+require('./ti.ui.constants.test');
+require('./email');
+require('./imageview');
+require('./ti.ui.label.test');
+require('./ti.ui.layout');
+require('./ti.ui.progressbar.test');
+require('./ti.ui.activityindicator.test');
+require('./ti.ui.textfield.test');
+require('./webview');
+require('./ti.ui.window.test');
+require('./ti.internal');
+require('./ti.platform.test');
+require('./ti.filesystem.test');
+require('./database');
+require('./ti.app');
+require('./ti.xml.test');
+require('./blob');
+require('./gesture');
+require('./accelerometer');
+require('./ti.geolocation');
 // ============================================================================
 
 // add a special mocha reporter that will time each test run using
@@ -77,10 +76,10 @@ mocha.setup({
 
 // dump the output, which will get interpreted above in the logging code
 mocha.run(function () {
-    Ti.API.info('!TEST_RESULTS_START!');
-    Ti.API.info(JSON.stringify({
+    Ti.API.info('!TEST_RESULTS_START!\n' +
+    JSON.stringify({
         date: new Date,
         results: $results
-    }, null, '\t'));
-    Ti.API.info('!TEST_RESULTS_STOP!');
+    }, null, '\t')
+    + '\n!TEST_RESULTS_STOP!');
 });

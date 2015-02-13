@@ -4,8 +4,6 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-
-require('./ti-mocha');
 var should = require('./should');
 
 describe('database', function () {

@@ -98,7 +98,6 @@ configure_file(
 
 set(SOURCE_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
-  ${SQLite_LIBRARIES_DLL}
   src/Assets/app.js
   src/Assets/Logo.png
   src/Assets/SmallLogo.png

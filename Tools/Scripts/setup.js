@@ -209,23 +209,6 @@ async.series([
 		}
     },
     function (next) {
-    	var sqliteDir = path.join(home, "SQLite-Windows-1415143965334");
-      	if (typeof process.env.SQLite_HOME !== 'undefined') {
-      		console.log((symbols.ok + ' SQLite_HOME set').green);
-    		next();
-    	} else if (fs.existsSync(sqliteDir)) {
-    		setENV('SQLite_HOME', sqliteDir, next);
-    	} else {
-		    downloadURL("http://timobile.appcelerator.com.s3.amazonaws.com/SQLite-Windows-1415143965334.zip", function (filename) {
-				// mkdir "SQLite-Windows-1415143965334" and unzip to _that_!
-				fs.existsSync(sqliteDir) || wrench.mkdirSyncRecursive(sqliteDir);
-				extract(filename, sqliteDir, true, function () {
-					setENV('SQLite_HOME', sqliteDir, next);
-				});
-			});
-		}
-    },
-    function (next) {
     	var jscHome = path.join(home, "JavaScriptCore-Windows-1411436814");
     	if (typeof process.env.JavaScriptCore_HOME !== 'undefined') {
     		console.log((symbols.ok + ' JavaScriptCore_HOME set').green);

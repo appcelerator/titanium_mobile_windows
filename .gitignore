@@ -212,3 +212,10 @@ FakesAssemblies/
 # CLI
 !templates/build
 !cli/vendor/cmake/bin
+
+# Scripts
+!Tools/Scripts/build
+Tools/Scripts/build/mocha
+
+# Distribution builds
+dist/

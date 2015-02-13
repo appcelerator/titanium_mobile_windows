@@ -103,7 +103,6 @@ set(SOURCE_Assets
   src/Assets/SmallLogo.png
   src/Assets/SplashScreen.png
   src/Assets/StoreLogo.png
-  ${SQLite_LIBRARIES_DLL}
   )
 
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
