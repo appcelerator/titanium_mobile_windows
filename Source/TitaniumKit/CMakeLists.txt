@@ -172,6 +172,16 @@ set(SOURCE_TiLogger_detail
   src/detail/TiLoggerPimpl.cpp
   )
 
+set(SOURCE_App
+  include/Titanium/App.hpp
+  src/App.cpp
+)
+
+set(SOURCE_Properties
+  include/Titanium/App/Properties.hpp
+  src/App/Properties.cpp
+)
+
 source_group(TitaniumKit                   FILES ${SOURCE_TitaniumKit})
 source_group(TitaniumKit\\detail           FILES ${SOURCE_TitaniumKit_detail})
 source_group(TitaniumKit\\Ti               FILES ${SOURCE_Ti})
@@ -182,7 +192,9 @@ source_group(TitaniumKit\\Accelerometer    FILES ${SOURCE_Accelerometer})
 source_group(TitaniumKit\\Gesture          FILES ${SOURCE_Gesture})
 source_group(TitaniumKit\\Blob             FILES ${SOURCE_Blob})
 source_group(TitaniumKit\\Filesystem       FILES ${SOURCE_Filesystem})
-source_group(TitaniumKit\\Network       FILES ${SOURCE_Network})
+source_group(TitaniumKit\\App              FILES ${SOURCE_App})
+source_group(TitaniumKit\\App\\Properties  FILES ${SOURCE_Properties})
+source_group(TitaniumKit\\Network          FILES ${SOURCE_Network})
 source_group(TitaniumKit\\UI               FILES ${SOURCE_UI})
 source_group(TitaniumKit\\TiLogger\\detail FILES ${SOURCE_TiLogger_detail})
 
@@ -200,6 +212,8 @@ add_library(TitaniumKit SHARED
   ${SOURCE_Gesture}
   ${SOURCE_Blob}
   ${SOURCE_Filesystem}
+  ${SOURCE_App}
+  ${SOURCE_Properties}
   ${SOURCE_Network}
   ${SOURCE_UI}
   ${SOURCE_TiLogger_detail}
