@@ -19,5 +19,7 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/Window.hpp"
 #include "TitaniumWindows/UI/WebView.hpp"
+#include "TitaniumWindows/UI/ListView.hpp"
+
 
 #endif  // _TITANIUMWINDOWS_UI_HPP_

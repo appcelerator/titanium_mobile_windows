@@ -10,6 +10,9 @@
 #include "Titanium/TiModule.hpp"
 #include "Titanium/API.hpp"
 #include "Titanium/UIModule.hpp"
+#include "Titanium/UI/ListSection.hpp"
+#include "Titanium/UI/ListItem.hpp"
+#include "Titanium/UI/ListView.hpp"
 #include "Titanium/PlatformModule.hpp"
 #include "Titanium/Accelerometer.hpp"
 #include "Titanium/Gesture.hpp"
@@ -28,6 +31,9 @@ namespace Titanium
 	      ti__(js_context__.CreateObject<Titanium::TiModule>()),
 	      api__(js_context__.CreateObject<Titanium::API>()),
 	      view__(js_context__.CreateObject<Titanium::UI::View>()),
+	      listsection__(js_context__.CreateObject<Titanium::UI::ListSection>()),
+	      listitem__(js_context__.CreateObject<Titanium::UI::ListItem>()),
+	      listview__(js_context__.CreateObject<Titanium::UI::ListView>()),
 	      window__(js_context__.CreateObject<Titanium::UI::Window>()),
 	      button__(js_context__.CreateObject<Titanium::UI::Button>()),
 	      alertDialog__(js_context__.CreateObject<Titanium::UI::AlertDialog>()),
@@ -61,6 +67,9 @@ namespace Titanium
 		ui.SetProperty("TextField", textField__);
 		ui.SetProperty("View", view__);
 		ui.SetProperty("Window", window__);
+		ui.SetProperty("ListView", listview__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+		ui.SetProperty("ListItem", listitem__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+		ui.SetProperty("ListSection", listsection__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		ui.SetProperty("WebView", webview__);
 
 		filesystem__.SetProperty("File", file__);
@@ -120,6 +129,39 @@ namespace Titanium
 	ApplicationBuilder& ApplicationBuilder::APIObject(const JSObject& api) TITANIUM_NOEXCEPT
 	{
 		api__ = api;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::ListViewObject() const TITANIUM_NOEXCEPT
+	{
+		return listview__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::ListViewObject(const JSObject& ListView) TITANIUM_NOEXCEPT
+	{
+		listview__ = ListView;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::ListItemObject() const TITANIUM_NOEXCEPT
+	{
+		return listitem__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::ListItemObject(const JSObject& ListItem) TITANIUM_NOEXCEPT
+	{
+		listitem__ = ListItem;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::ListSectionObject() const TITANIUM_NOEXCEPT
+	{
+		return listsection__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::ListSectionObject(const JSObject& ListSection) TITANIUM_NOEXCEPT
+	{
+		listsection__ = ListSection;
 		return *this;
 	}
 

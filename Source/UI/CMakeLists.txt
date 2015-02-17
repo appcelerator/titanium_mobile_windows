@@ -47,6 +47,11 @@ if(NOT TARGET TitaniumWindows_Utility)
   add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
 endif()
 
+if(NOT TARGET LayoutEngine)
+  get_filename_component(LayoutEngine_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../LayoutEngine ABSOLUTE)
+  add_subdirectory(${LayoutEngine_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/LayoutEngine EXCLUDE_FROM_ALL)
+endif()
+
 set(SOURCE_UI
   include/TitaniumWindows/UI/ViewBase.hpp
   src/ViewBase.cpp
@@ -70,6 +75,12 @@ set(SOURCE_UI
   src/Slider.cpp
   include/TitaniumWindows/UI/TextField.hpp
   src/TextField.cpp
+  include/TitaniumWindows/UI/ListView.hpp
+  src/ListView.cpp
+  include/TitaniumWindows/UI/ListSection.hpp
+  src/ListSection.cpp
+  include/TitaniumWindows/UI/ListItem.hpp
+  src/ListItem.cpp
   include/TitaniumWindows/UI/WebView.hpp
   src/WebView.cpp
   )
@@ -91,6 +102,7 @@ target_include_directories(TitaniumWindows_UI PUBLIC
   ${PROJECT_SOURCE_DIR}/include
   $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:LayoutEngine,INTERFACE_INCLUDE_DIRECTORIES>
   )
 
 target_link_libraries(TitaniumWindows_UI
