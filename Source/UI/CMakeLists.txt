@@ -70,6 +70,12 @@ set(SOURCE_UI
   src/Slider.cpp
   include/TitaniumWindows/UI/TextField.hpp
   src/TextField.cpp
+  include/TitaniumWindows/UI/ListView.hpp
+  src/ListView.cpp
+  include/TitaniumWindows/UI/ListSection.hpp
+  src/ListSection.cpp
+  include/TitaniumWindows/UI/ListItem.hpp
+  src/ListItem.cpp
   include/TitaniumWindows/UI/WebView.hpp
   src/WebView.cpp
   )
@@ -91,6 +97,7 @@ target_include_directories(TitaniumWindows_UI PUBLIC
   ${PROJECT_SOURCE_DIR}/include
   $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:LayoutEngine,INTERFACE_INCLUDE_DIRECTORIES>
   )
 
 target_link_libraries(TitaniumWindows_UI

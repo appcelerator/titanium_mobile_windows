@@ -19,6 +19,9 @@
 #include "Titanium/UI/TextField.hpp"
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Window.hpp"
+#include "Titanium/UI/ListView.hpp"
+#include "Titanium/UI/ListSection.hpp"
+#include "Titanium/UI/ListItem.hpp"
 #include "Titanium/UI/WebView.hpp"
 
 namespace Titanium
@@ -197,6 +200,51 @@ namespace Titanium
 		/*!
 		  @method
 
+		  @abstract createListView( [parameters] ) : Titanium.UI.ListView
+
+		  @discussion Creates and returns an instance of Titanium.UI.ListView.
+
+		  @param parameters Properties to set on a new object, including
+		  any defined by Titanium.UI.ListView except those marked not-creation
+		  or read-only.  (Dictionary<Titanium.UI.ListView>)
+
+		  @result Titanium.UI.ListView
+		*/
+		JSObject createListView(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
+
+		/*!
+		  @method
+
+		  @abstract createListSection( [parameters] ) : Titanium.UI.ListSection
+
+		  @discussion Creates and returns an instance of Titanium.UI.ListSection.
+
+		  @param parameters Properties to set on a new object, including
+		  any defined by Titanium.UI.ListSection except those marked not-creation
+		  or read-only.  (Dictionary<Titanium.UI.ListSection>)
+
+		  @result Titanium.UI.ListSection
+		*/
+		JSObject createListSection(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
+
+		/*!
+		  @method
+
+		  @abstract createListItem( [parameters] ) : Titanium.UI.ListItem
+
+		  @discussion Creates and returns an instance of Titanium.UI.ListItem
+
+		  @param parameters Properties to set on a new object, including
+		  any defined by Titanium.UI.ListItem except those marked not-creation
+		  or read-only.  (Dictionary<Titanium.UI.ListItem>)
+
+		  @result Titanium.UI.ListItem
+		*/
+		JSObject createListItem(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT;
+
+		/*!
+		  @method
+
 		  @abstract createWindow( [parameters] ) : Titanium.UI.Window
 
 		  @discussion Creates and returns an instance of
@@ -355,6 +403,9 @@ namespace Titanium
 		JSValue js_createTextField(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createView(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createWindow(const std::vector<JSValue>& arguments, JSObject& this_object);
+		JSValue js_createListView(const std::vector<JSValue>& arguments, JSObject& this_object);
+		JSValue js_createListSection(const std::vector<JSValue>& arguments, JSObject& this_object);
+		JSValue js_createListItem(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_createWebView(const std::vector<JSValue>& arguments, JSObject& this_object);
 		JSValue js_setBackgroundColor(const std::vector<JSValue>& arguments, JSObject& this_object);
 
