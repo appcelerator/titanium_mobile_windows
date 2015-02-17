@@ -19,6 +19,7 @@ require('./ti.builtin.test');
 require('./ti.require.test');
 require('./ti.platform.test');
 require('./ti.test');
+require('./ti.app.test');
 require('./ti.accelerometer.test');
 require('./ti.gesture.test');
 require('./ti.blob.test');
@@ -37,6 +38,7 @@ function $Reporter(runner) {
     });
 
     runner.on('test', function (test) {
+        Ti.API.info('Started: ' + test.title);
         started = new Date().getTime();
     });
 
