@@ -12,9 +12,8 @@
 #include "TitaniumWindows/TiModule.hpp"
 #include "TitaniumWindows/API.hpp"
 #include "TitaniumWindows/UI.hpp"
-#include "TitaniumWindows/UI/ListSection.hpp"
-#include "TitaniumWindows/UI/ListItem.hpp"
-#include "TitaniumWindows/UI/ListView.hpp"
+#include "TitaniumWindows/App/Properties.hpp"
+#include "TitaniumWindows/App.hpp"
 #include "TitaniumWindows/Platform.hpp"
 #include "TitaniumWindows/Gesture.hpp"
 #include "TitaniumWindows/Accelerometer.hpp"
@@ -52,6 +51,8 @@ namespace TitaniumWindows
 		                                                            .ListSectionObject(js_context__.CreateObject<TitaniumWindows::UI::ListSection>())
 		                                                            .ListItemObject(js_context__.CreateObject<TitaniumWindows::UI::ListItem>())
 		                                                            .ListViewObject(js_context__.CreateObject<TitaniumWindows::UI::ListView>())
+		                                                            .PropertiesObject(js_context__.CreateObject<TitaniumWindows::App::Properties>())
+		                                                            .AppObject(js_context__.CreateObject<TitaniumWindows::AppModule>())
 		                                                            .WindowObject(js_context__.CreateObject<TitaniumWindows::UI::Window>())
 		                                                            .ButtonObject(js_context__.CreateObject<TitaniumWindows::UI::Button>())
 		                                                            .AlertDialogObject(js_context__.CreateObject<TitaniumWindows::UI::AlertDialog>())
