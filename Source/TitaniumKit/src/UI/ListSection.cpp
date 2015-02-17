@@ -450,7 +450,7 @@ namespace Titanium
 				TITANIUM_ASSERT(_1.IsObject());
 
 				ListViewAnimationProperties animation;
-				const auto index    = static_cast<double>(_0);
+				const auto index    = static_cast<uint32_t>(_0);
 				const auto dataItem = js_to_ListDataItem(static_cast<JSObject>(_1));
 
 				if (arguments.size() >= 3) {

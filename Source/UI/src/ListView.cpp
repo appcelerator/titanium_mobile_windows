@@ -45,10 +45,10 @@ namespace TitaniumWindows
 		{
 			collectionViewItems__->Clear();
 			
-			for (int i = 0; i < get_sectionCount(); i++) {
+			for (uint32_t i = 0; i < get_sectionCount(); i++) {
 				auto v = createSectionViewAt(i);
 				auto group = ref new ::Platform::Collections::Vector<Windows::UI::Xaml::UIElement^>();
-				for (int j = 0; j < v.size(); j++) {
+				for (uint32_t j = 0; j < v.size(); j++) {
 					group->Append(v.at(j).GetPrivate<TitaniumWindows::UI::ViewBase>()->getComponent()); // TIMOB-18422 FIXME
 				}
 				collectionViewItems__->Append(group);
