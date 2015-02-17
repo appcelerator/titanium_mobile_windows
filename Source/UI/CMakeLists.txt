@@ -47,11 +47,6 @@ if(NOT TARGET TitaniumWindows_Utility)
   add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
 endif()
 
-if(NOT TARGET LayoutEngine)
-  get_filename_component(LayoutEngine_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../LayoutEngine ABSOLUTE)
-  add_subdirectory(${LayoutEngine_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/LayoutEngine EXCLUDE_FROM_ALL)
-endif()
-
 set(SOURCE_UI
   include/TitaniumWindows/UI/ViewBase.hpp
   src/ViewBase.cpp
