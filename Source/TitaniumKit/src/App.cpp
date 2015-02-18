@@ -11,7 +11,7 @@
 namespace Titanium
 {
 
-	template<typename _T> _T AppModule::getAppInfo(std::string property, _T default) {
+	template<typename _T> _T AppModule::getAppInfo(std::string property, _T defaultValue) {
 		
 		// Statically create json JSValue to load _app_info_.json once
 		static JSValue json = get_context().CreateUndefined();
@@ -40,7 +40,7 @@ namespace Titanium
 		if (!result.IsNull()) return static_cast<_T>(result);
 
 		// Return default value
-		return default;
+		return defaultValue;
 	}
 
 	AppModule::AppModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT

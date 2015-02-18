@@ -31,37 +31,37 @@ namespace Titanium
 			  @abstract getBool
 			  @discussion Returns the value of a property as a boolean data type.
 			*/
-			virtual bool getBool(const std::string& property, bool default) TITANIUM_NOEXCEPT;
+			virtual bool getBool(const std::string& property, bool defaultValue) TITANIUM_NOEXCEPT;
 			/*!
 			  @method
 			  @abstract getDouble
 			  @discussion Returns the value of a property as a double (double-precision, floating point) data type.
 			*/
-			virtual double getDouble(const std::string& property, double default) TITANIUM_NOEXCEPT;
+			virtual double getDouble(const std::string& property, double defaultValue) TITANIUM_NOEXCEPT;
 			/*!
 			  @method
 			  @abstract getInt
 			  @discussion Returns the value of a property as an integer data type.
 			*/
-			virtual double getInt(const std::string& property, double default) TITANIUM_NOEXCEPT;
+			virtual double getInt(const std::string& property, double defaultValue) TITANIUM_NOEXCEPT;
 			/*!
 			  @method
 			  @abstract getList
 			  @discussion Returns the value of a property as an array data type.
 			*/
-			virtual JSValue getList(const std::string& property, JSValue default) TITANIUM_NOEXCEPT;
+			virtual JSValue getList(const std::string& property, JSValue defaultValue) TITANIUM_NOEXCEPT;
 			/*!
 			  @method
 			  @abstract getObject
 			  @discussion Returns the value of a property as an object.
 			*/
-			virtual JSValue getObject(const std::string& property, JSValue default) TITANIUM_NOEXCEPT;
+			virtual JSValue getObject(const std::string& property, JSValue defaultValue) TITANIUM_NOEXCEPT;
 			/*!
 			  @method
 			  @abstract getString
 			  @discussion Returns the value of a property as a string data type.
 			*/
-			virtual std::string getString(const std::string& property, const std::string& default) TITANIUM_NOEXCEPT;
+			virtual std::string getString(const std::string& property, const std::string& defaultValue) TITANIUM_NOEXCEPT;
 			/*!
 			  @method
 			  @abstract hasProperty
