@@ -18,37 +18,37 @@ namespace Titanium
 		{
 		}
 
-		bool Properties::getBool(const std::string& property, bool default) TITANIUM_NOEXCEPT
+		bool Properties::getBool(const std::string& property, bool defaultValue) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Properties::getBool: Unimplemented");
 			return false;
 		}
 
-		double Properties::getDouble(const std::string& property, double default) TITANIUM_NOEXCEPT
+		double Properties::getDouble(const std::string& property, double defaultValue) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Properties::getDouble: Unimplemented");
 			return 0;
 		}
 
-		double Properties::getInt(const std::string& property, double default) TITANIUM_NOEXCEPT
+		double Properties::getInt(const std::string& property, double defaultValue) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Properties::getInt: Unimplemented");
 			return 0;
 		}
 
-		JSValue Properties::getList(const std::string& property, JSValue default) TITANIUM_NOEXCEPT
+		JSValue Properties::getList(const std::string& property, JSValue defaultValue) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Properties::getList: Unimplemented");
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Properties::getObject(const std::string& property, JSValue default) TITANIUM_NOEXCEPT
+		JSValue Properties::getObject(const std::string& property, JSValue defaultValue) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Properties::getObject: Unimplemented");
 			return get_context().CreateUndefined();
 		}
 
-		std::string Properties::getString(const std::string& property, const std::string& default) TITANIUM_NOEXCEPT
+		std::string Properties::getString(const std::string& property, const std::string& defaultValue) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Properties::getString: Unimplemented");
 			return "";
@@ -143,9 +143,9 @@ namespace Titanium
 				TITANIUM_ASSERT(_1.IsBoolean());
 
 				const std::string property = static_cast<std::string>(_0);
-				const bool default = static_cast<bool>(_1);
+				const bool defaultValue = static_cast<bool>(_1);
 
-				return get_context().CreateBoolean(getBool(property, default));
+				return get_context().CreateBoolean(getBool(property, defaultValue));
 
 			} else if (arguments.size() >= 1) {
 
@@ -175,9 +175,9 @@ namespace Titanium
 				TITANIUM_ASSERT(_1.IsNumber());
 
 				const std::string property = static_cast<std::string>(_0);
-				const double default = static_cast<double>(_1);
+				const double defaultValue = static_cast<double>(_1);
 
-				return get_context().CreateNumber(getDouble(property, default));
+				return get_context().CreateNumber(getDouble(property, defaultValue));
 
 			} else if (arguments.size() >= 1) {
 
@@ -207,9 +207,9 @@ namespace Titanium
 				TITANIUM_ASSERT(_1.IsNumber());
 
 				const std::string property = static_cast<std::string>(_0);
-				const double default = static_cast<double>(_1);
+				const double defaultValue = static_cast<double>(_1);
 
-				return get_context().CreateNumber(getInt(property, default));
+				return get_context().CreateNumber(getInt(property, defaultValue));
 
 			} else if (arguments.size() >= 1) {
 
@@ -239,9 +239,9 @@ namespace Titanium
 				TITANIUM_ASSERT(_1.IsObject());
 
 				const std::string property = static_cast<std::string>(_0);
-				const auto default = _1;
+				const auto defaultValue = _1;
 
-				getList(property, default);
+				getList(property, defaultValue);
 
 			} else if (arguments.size() >= 1) {
 
@@ -271,9 +271,9 @@ namespace Titanium
 				TITANIUM_ASSERT(_1.IsObject());
 
 				const std::string property = static_cast<std::string>(_0);
-				const auto default = _1;
+				const auto defaultValue = _1;
 
-				return getObject(property, default);
+				return getObject(property, defaultValue);
 
 			} else if (arguments.size() >= 1) {
 
@@ -313,9 +313,9 @@ namespace Titanium
 				TITANIUM_ASSERT(_1.IsString());
 
 				const std::string property = static_cast<std::string>(_0);
-				const std::string default = static_cast<std::string>(_1);
+				const std::string defaultValue = static_cast<std::string>(_1);
 
-				return get_context().CreateString(getString(property, default));
+				return get_context().CreateString(getString(property, defaultValue));
 			}
 
 			return get_context().CreateUndefined();

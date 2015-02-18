@@ -159,7 +159,7 @@ namespace Titanium
 		*/
 		virtual JSValue fireSystemEvent(const std::string& eventName, JSValue param) TITANIUM_NOEXCEPT;
 
-		template<typename _T> _T getAppInfo(std::string property, _T default);
+		template<typename _T> _T getAppInfo(std::string property, _T defaultValue);
 		virtual void loadAppInfo() TITANIUM_NOEXCEPT;
 		virtual JSValue js_loadAppInfo(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
 
