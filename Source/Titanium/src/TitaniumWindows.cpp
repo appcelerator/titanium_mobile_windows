@@ -19,6 +19,7 @@
 #include "TitaniumWindows/Accelerometer.hpp"
 #include "TitaniumWindows/Filesystem.hpp"
 #include "TitaniumWindows/Network.hpp"
+#include "TitaniumWindows/Map.hpp"
 #include "Blob.hpp"
 #include "File.hpp"
 #include "HTTPClient.hpp"
@@ -64,6 +65,7 @@ namespace TitaniumWindows
 		                                                            .NetworkObject(js_context__.CreateObject<TitaniumWindows::NetworkModule>())
 		                                                            .HTTPClientObject(js_context__.CreateObject<TitaniumWindows::Network::HTTPClient>())
 		                                                            .WebViewObject(js_context__.CreateObject<TitaniumWindows::UI::WebView>())
+		                                                            .MapObject(js_context__.CreateObject<TitaniumWindows::MapModule>())
 		                                                            .build());
 
 		Suspending += ref new Windows::UI::Xaml::SuspendingEventHandler(this, &Application::OnSuspending);

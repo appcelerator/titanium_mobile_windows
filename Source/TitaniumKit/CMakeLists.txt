@@ -194,6 +194,11 @@ set(SOURCE_Analytics
   src/Analytics.cpp
 )
 
+set(SOURCE_Map
+  include/Titanium/Map.hpp
+  src/Map.cpp
+)
+
 source_group(TitaniumKit                   FILES ${SOURCE_TitaniumKit})
 source_group(TitaniumKit\\detail           FILES ${SOURCE_TitaniumKit_detail})
 source_group(TitaniumKit\\Ti               FILES ${SOURCE_Ti})
@@ -208,6 +213,7 @@ source_group(TitaniumKit\\App              FILES ${SOURCE_App})
 source_group(TitaniumKit\\App\\Properties  FILES ${SOURCE_Properties})
 source_group(TitaniumKit\\Network          FILES ${SOURCE_Network})
 source_group(TitaniumKit\\Analytics        FILES ${SOURCE_Analytics})
+source_group(TitaniumKit\\Map              FILES ${SOURCE_Map})
 source_group(TitaniumKit\\UI               FILES ${SOURCE_UI})
 source_group(TitaniumKit\\TiLogger\\detail FILES ${SOURCE_TiLogger_detail})
 
@@ -230,6 +236,7 @@ add_library(TitaniumKit SHARED
   ${SOURCE_Network}
   ${SOURCE_Analytics}
   ${SOURCE_UI}
+  ${SOURCE_Map}
   ${SOURCE_TiLogger_detail}
   )
 
