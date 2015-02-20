@@ -52,6 +52,29 @@ namespace Titanium
 			/*!
 			  @method
 
+			  @abstract animate( animation, callback ) : void
+
+			  @discussion Animates this view.
+
+			  The Animation object or dictionary passed to this method defines the end state for the animation, the duration of the animation, and other properties.
+
+			  Note that if you use animate to move a view, the view's actual position is changed, but its layout properties, such as top, left, center and so on are not changed--these reflect the original values set by the user, not the actual position of the view.
+
+			  The rect property can be used to determine the actual size and position of the view. Note that on Mobile Web and Tizen, the rect property is not updated after animation. This is a known issue TIMOB-8930.
+
+			  @param animation : Titanium.UI.Animation/Dictionary<Titanium.UI.Animation>
+			  Either a dictionary of animation properties or an Animation object.
+
+			  @param callback : Callback<Object>
+			  Function to be invoked upon completion of the animation.
+
+			  @result void
+			*/
+			virtual void animate(const JSObject& animation, JSObject& callback) TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
 			  @abstract hide() : void
 
 			  @discussion Hides the view and it's chldren in the view's hierarchy.
@@ -90,6 +113,96 @@ namespace Titanium
 			*/
 			virtual std::string get_backgroundColor() const TITANIUM_NOEXCEPT final;
 			virtual void set_backgroundColor(const std::string& backgroundColor) TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
+			  @abstract borderColor : String
+
+			  @discussion Border color of the view, as a color name or hex triplet.
+
+			  For information about color values, see the "Colors" section of Titanium.UI.
+
+			  Default: Same as the normal background color of this view (Android, Mobile Web, Tizen), black (iOS).
+			*/
+			virtual std::string get_borderColor() const TITANIUM_NOEXCEPT final;
+			virtual void set_borderColor(const std::string& borderColor) TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
+			  @abstract borderRadius : Number
+
+			  @discussion Radius for the rounded corners of the view's border.
+
+			  Each corner is rounded using an arc of a circle.
+
+			  Default: 0
+			*/
+			virtual uint32_t get_borderRadius() const TITANIUM_NOEXCEPT final;
+			virtual void set_borderRadius(const uint32_t& borderRadius) TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
+			  @abstract borderWidth : Number
+
+			  @discussion Border width of the view.
+
+			  Default: 0
+			*/
+			virtual uint32_t get_borderWidth() const TITANIUM_NOEXCEPT final;
+			virtual void set_borderWidth(const uint32_t& borderWidth) TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
+			  @abstract opacity : Number
+
+			  @discussion Opacity of this view, from 0.0 (transparent) to 1.0 (opaque).
+
+			  Default: 1.0 (opaque)
+			*/
+			virtual double get_opacity() const TITANIUM_NOEXCEPT final;
+			virtual void set_opacity(const double& opacity) TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
+			  @abstract tintColor : String
+
+			  @discussion The view's tintColor. This property is applicable on iOS 7 and greater.
+
+			  This property is a direct correspondant of the tintColor property of UIView on iOS. If no value is specified, the tintColor of the View is inherited from its superview.
+			*/
+			virtual std::string get_tintColor() const TITANIUM_NOEXCEPT final;
+			virtual void set_tintColor(const std::string& tintColor) TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
+			  @abstract touchEnabled : Boolean
+
+			  @discussion Determines whether view should receive touch events.
+
+			  If false, will forward the events to peers.
+
+			  Default: true
+			*/
+			virtual bool get_touchEnabled() const TITANIUM_NOEXCEPT final;
+			virtual void set_touchEnabled(const bool& touchEnabled) TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
+			  @abstract visible : Boolean
+
+			  @discussion Determines whether the view is visible.
+
+			  Default: true
+			*/
+			virtual bool get_visible() const TITANIUM_NOEXCEPT final;
+			virtual void set_visible(const bool& visible) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
@@ -236,12 +349,34 @@ namespace Titanium
 			static void JSExportInitialize();
 
 			virtual JSValue js_add(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			virtual JSValue js_animate(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
 			virtual JSValue js_hide(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
 			virtual JSValue js_show(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
 
 			virtual JSValue js_get_backgroundColor() const TITANIUM_NOEXCEPT final;
 			virtual bool js_set_backgroundColor(const JSValue& argument) TITANIUM_NOEXCEPT final;
+
+			virtual JSValue js_get_borderColor() const TITANIUM_NOEXCEPT final;
+			virtual bool js_set_borderColor(const JSValue& argument) TITANIUM_NOEXCEPT final;
+
+			virtual JSValue js_get_borderRadius() const TITANIUM_NOEXCEPT final;
+			virtual bool js_set_borderRadius(const JSValue& argument) TITANIUM_NOEXCEPT final;
+
+			virtual JSValue js_get_borderWidth() const TITANIUM_NOEXCEPT final;
+			virtual bool js_set_borderWidth(const JSValue& argument) TITANIUM_NOEXCEPT final;
+
+			virtual JSValue js_get_opacity() const TITANIUM_NOEXCEPT final;
+			virtual bool js_set_opacity(const JSValue& argument) TITANIUM_NOEXCEPT final;
 			
+			virtual JSValue js_get_tintColor() const TITANIUM_NOEXCEPT final;
+			virtual bool js_set_tintColor(const JSValue& argument) TITANIUM_NOEXCEPT final;
+
+			virtual JSValue js_get_touchEnabled() const TITANIUM_NOEXCEPT final;
+			virtual bool js_set_touchEnabled(const JSValue& argument) TITANIUM_NOEXCEPT final;
+
+			virtual JSValue js_get_visible() const TITANIUM_NOEXCEPT final;
+			virtual bool js_set_visible(const JSValue& argument) TITANIUM_NOEXCEPT final;
+
 			virtual JSValue js_get_top() const TITANIUM_NOEXCEPT final;
 			virtual bool js_set_top(const JSValue& argument) TITANIUM_NOEXCEPT final;
 
@@ -273,6 +408,10 @@ namespace Titanium
 #pragma warning(disable : 4251)
 			JSArray children__;
 			std::string backgroundColor__;
+			std::string borderColor__;
+			uint32_t borderRadius__;
+			uint32_t borderWidth__;
+			double opacity__;
 			std::string top__;
 			std::string left__;
 			std::string bottom__;
@@ -281,6 +420,9 @@ namespace Titanium
 			std::string width__;
 			std::string height__;
 			std::string layout__;
+			std::string tintColor__;
+			bool touchEnabled__;
+			bool visible__;
 #pragma warning(pop)
 		};
 	} // namespace UI

@@ -507,4 +507,4 @@ namespace Titanium
 		return get_context().CreateUndefined();
 	}
 
-}  // namespace Titanium {
+}  // namespace Titanium

@@ -74,6 +74,12 @@ namespace TitaniumWindows
 			canvas__->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(backgroundColor);
 		}
 
+		void View::set_opacity(const double& opacity) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::View::set_opacity(opacity);
+			getComponent()->Opacity = opacity;
+		}
+
 		void View::set_bottom(const std::string& bottom) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::View::set_bottom(bottom);
