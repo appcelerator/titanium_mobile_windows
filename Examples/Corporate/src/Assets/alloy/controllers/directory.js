@@ -48,21 +48,18 @@ function Controller() {
                 sections.push(section);
             });
             $.listView.sections = sections;
-            $.wrapper.addEventListener("swipe", function(e) {
-                "left" === e.direction && ($.listView.sectionIndexTitles = indexes);
-                "right" === e.direction && ($.listView.sectionIndexTitles = null);
-            });
         }
         _args.title && ($.wrapper.title = _args.title);
-        _args.restrictBookmarks && ($.searchBar.showBookmark = false);
+        _args.restrictBookmarks && false;
     }
     function onItemClick(e) {
-        Ti.Analytics.featureEvent(Ti.Platform.osname + "." + title + ".contact.clicked");
+        Ti.Analytics.featureEvent("windows." + title + ".contact.clicked");
         var item = $.listView.sections[e.sectionIndex].items[e.itemIndex];
-        Alloy.Globals.App.Navigator.open("profile", item.properties.user);
+        Alloy.Globals.Navigator.open("profile", item.properties.user);
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "directory";
+    this.args = arguments[0] || {};
     if (arguments[0]) {
         {
             __processArg(arguments[0], "__parentSymbol");
@@ -77,33 +74,23 @@ function Controller() {
     var $ = this;
     var exports = {};
     var __defers = {};
-    $.__views.wrapper = Ti.UI.createView({
+    $.__views.wrapper = Ti.UI.createWindow({
+        backgroundColor: "#fff",
+        titleAttributes: {
+            color: "#C41230"
+        },
         layout: "vertical",
         id: "wrapper",
         title: "Directory"
     });
     $.__views.wrapper && $.addTopLevelView($.__views.wrapper);
-    $.__views.searchBar = Ti.UI.createSearchBar({
-        backgroundColor: "#fff",
-        borderWidth: 0,
-        tintColor: "#C41230",
-        hintText: "Search",
-        barColor: "#fff",
-        showBookmark: true,
-        id: "searchBar"
-    });
-    $.__views.wrapper.add($.__views.searchBar);
-    onBookmarkClick ? $.__views.searchBar.addEventListener("bookmark", onBookmarkClick) : __defers["$.__views.searchBar!bookmark!onBookmarkClick"] = true;
-    onSearchFocus ? $.__views.searchBar.addEventListener("focus", onSearchFocus) : __defers["$.__views.searchBar!focus!onSearchFocus"] = true;
-    onSearchCancel ? $.__views.searchBar.addEventListener("cancel", onSearchCancel) : __defers["$.__views.searchBar!cancel!onSearchCancel"] = true;
-    onSearchChange ? $.__views.searchBar.addEventListener("change", onSearchChange) : __defers["$.__views.searchBar!change!onSearchChange"] = true;
-    var __alloyId0 = {};
-    var __alloyId2 = [];
-    var __alloyId4 = {
+    var __alloyId1 = {};
+    var __alloyId3 = [];
+    var __alloyId5 = {
         type: "Ti.UI.View",
         childTemplates: function() {
-            var __alloyId5 = [];
-            var __alloyId6 = {
+            var __alloyId6 = [];
+            var __alloyId7 = {
                 type: "Ti.UI.ImageView",
                 bindId: "userPhoto",
                 properties: {
@@ -118,12 +105,12 @@ function Controller() {
                     bindId: "userPhoto"
                 }
             };
-            __alloyId5.push(__alloyId6);
-            var __alloyId8 = {
+            __alloyId6.push(__alloyId7);
+            var __alloyId9 = {
                 type: "Ti.UI.View",
                 childTemplates: function() {
-                    var __alloyId9 = [];
-                    var __alloyId10 = {
+                    var __alloyId10 = [];
+                    var __alloyId11 = {
                         type: "Ti.UI.Label",
                         bindId: "userName",
                         properties: {
@@ -135,8 +122,8 @@ function Controller() {
                             bindId: "userName"
                         }
                     };
-                    __alloyId9.push(__alloyId10);
-                    var __alloyId11 = {
+                    __alloyId10.push(__alloyId11);
+                    var __alloyId12 = {
                         type: "Ti.UI.Label",
                         bindId: "userEmail",
                         properties: {
@@ -149,8 +136,8 @@ function Controller() {
                             bindId: "userEmail"
                         }
                     };
-                    __alloyId9.push(__alloyId11);
-                    var __alloyId12 = {
+                    __alloyId10.push(__alloyId12);
+                    var __alloyId13 = {
                         type: "Ti.UI.Label",
                         bindId: "userCompany",
                         properties: {
@@ -163,18 +150,18 @@ function Controller() {
                             bindId: "userCompany"
                         }
                     };
-                    __alloyId9.push(__alloyId12);
-                    return __alloyId9;
+                    __alloyId10.push(__alloyId13);
+                    return __alloyId10;
                 }(),
                 properties: {
                     layout: "vertical",
                     height: Ti.UI.SIZE,
                     width: Ti.UI.SIZE,
-                    left: 10
+                    left: 0
                 }
             };
-            __alloyId5.push(__alloyId8);
-            var __alloyId14 = {
+            __alloyId6.push(__alloyId9);
+            var __alloyId15 = {
                 type: "Ti.UI.View",
                 properties: {
                     bottom: 0,
@@ -183,29 +170,29 @@ function Controller() {
                     height: 1
                 }
             };
-            __alloyId5.push(__alloyId14);
-            return __alloyId5;
+            __alloyId6.push(__alloyId15);
+            return __alloyId6;
         }(),
         properties: {
             left: 10
         }
     };
-    __alloyId2.push(__alloyId4);
-    var __alloyId1 = {
+    __alloyId3.push(__alloyId5);
+    var __alloyId2 = {
         properties: {
             height: 100,
             width: Ti.UI.FILL,
             name: "userTemplate"
         },
-        childTemplates: __alloyId2
+        childTemplates: __alloyId3
     };
-    __alloyId0["userTemplate"] = __alloyId1;
-    var __alloyId16 = [];
-    var __alloyId18 = {
+    __alloyId1["userTemplate"] = __alloyId2;
+    var __alloyId17 = [];
+    var __alloyId19 = {
         type: "Ti.UI.View",
         childTemplates: function() {
-            var __alloyId19 = [];
-            var __alloyId20 = {
+            var __alloyId20 = [];
+            var __alloyId21 = {
                 type: "Ti.UI.ImageView",
                 bindId: "userPhoto",
                 properties: {
@@ -220,12 +207,12 @@ function Controller() {
                     bindId: "userPhoto"
                 }
             };
-            __alloyId19.push(__alloyId20);
-            var __alloyId22 = {
+            __alloyId20.push(__alloyId21);
+            var __alloyId23 = {
                 type: "Ti.UI.View",
                 childTemplates: function() {
-                    var __alloyId23 = [];
-                    var __alloyId24 = {
+                    var __alloyId24 = [];
+                    var __alloyId25 = {
                         type: "Ti.UI.Label",
                         bindId: "userName",
                         properties: {
@@ -237,8 +224,8 @@ function Controller() {
                             bindId: "userName"
                         }
                     };
-                    __alloyId23.push(__alloyId24);
-                    var __alloyId25 = {
+                    __alloyId24.push(__alloyId25);
+                    var __alloyId26 = {
                         type: "Ti.UI.Label",
                         bindId: "userEmail",
                         properties: {
@@ -251,8 +238,8 @@ function Controller() {
                             bindId: "userEmail"
                         }
                     };
-                    __alloyId23.push(__alloyId25);
-                    var __alloyId26 = {
+                    __alloyId24.push(__alloyId26);
+                    var __alloyId27 = {
                         type: "Ti.UI.Label",
                         bindId: "userCompany",
                         properties: {
@@ -265,18 +252,18 @@ function Controller() {
                             bindId: "userCompany"
                         }
                     };
-                    __alloyId23.push(__alloyId26);
-                    return __alloyId23;
+                    __alloyId24.push(__alloyId27);
+                    return __alloyId24;
                 }(),
                 properties: {
                     layout: "vertical",
                     height: Ti.UI.SIZE,
                     width: Ti.UI.SIZE,
-                    left: 10
+                    left: 0
                 }
             };
-            __alloyId19.push(__alloyId22);
-            var __alloyId28 = {
+            __alloyId20.push(__alloyId23);
+            var __alloyId29 = {
                 type: "Ti.UI.Label",
                 properties: {
                     font: {
@@ -289,8 +276,8 @@ function Controller() {
                     top: -2
                 }
             };
-            __alloyId19.push(__alloyId28);
-            var __alloyId30 = {
+            __alloyId20.push(__alloyId29);
+            var __alloyId31 = {
                 type: "Ti.UI.View",
                 properties: {
                     bottom: 0,
@@ -299,26 +286,26 @@ function Controller() {
                     height: 1
                 }
             };
-            __alloyId19.push(__alloyId30);
-            return __alloyId19;
+            __alloyId20.push(__alloyId31);
+            return __alloyId20;
         }(),
         properties: {
             left: 10
         }
     };
-    __alloyId16.push(__alloyId18);
-    var __alloyId15 = {
+    __alloyId17.push(__alloyId19);
+    var __alloyId16 = {
         properties: {
             height: 100,
             width: Ti.UI.FILL,
             name: "favoriteTemplate"
         },
-        childTemplates: __alloyId16
+        childTemplates: __alloyId17
     };
-    __alloyId0["favoriteTemplate"] = __alloyId15;
+    __alloyId1["favoriteTemplate"] = __alloyId16;
     $.__views.listView = Ti.UI.createListView({
         tintColor: "#666",
-        templates: __alloyId0,
+        templates: __alloyId1,
         id: "listView",
         defaultItemTemplate: "userTemplate"
     });
@@ -326,9 +313,9 @@ function Controller() {
     onItemClick ? $.__views.listView.addEventListener("itemclick", onItemClick) : __defers["$.__views.listView!itemclick!onItemClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
-    var _args = arguments[0] || {}, App = Alloy.Globals.App, users = null, indexes = [];
+    var _args = arguments[0] || {}, users = (Alloy.Globals.App, null), indexes = [];
     var title = _args.title ? _args.title.toLowerCase() : "directory";
-    Ti.Analytics.featureEvent(Ti.Platform.osname + "." + title + ".viewed");
+    Ti.Analytics.featureEvent("windows." + title + ".viewed");
     var preprocessForListView = function(rawData) {
         var bookmarks = Ti.App.Properties.getList("bookmarks", []);
         _args.restrictBookmarks && (rawData = _.filter(rawData, function(item) {
@@ -361,38 +348,12 @@ function Controller() {
             };
         });
     };
-    var onSearchChange, onSearchFocus, onSearchCancel, onBookmarkClick;
-    onSearchChange = function() {
-        $.listView.searchText = $.searchBar.value;
-    };
-    onSearchFocus = function() {
-        $.searchBar.showBookmark = false;
-        $.searchBar.showCancel = true;
-    };
-    onSearchCancel = function() {
-        if (!_args.restrictBookmarks) {
-            $.searchBar.showBookmark = true;
-            $.searchBar.showCancel = false;
-        }
-        $.searchBar.blur();
-    };
-    onBookmarkClick = function() {
-        Ti.Analytics.featureEvent(Ti.Platform.osname + "." + title + ".bookmarks.clicked");
-        $.searchBar.blur();
-        App.Navigator.open("directory", {
-            restrictBookmarks: true,
-            title: "Bookmarks"
-        });
-    };
-    init();
+    $.wrapper.addEventListener("open", function() {
+    });
     Ti.App.addEventListener("refresh-data", function() {
-        $.listView.sections[0].items = null;
         init();
     });
-    __defers["$.__views.searchBar!bookmark!onBookmarkClick"] && $.__views.searchBar.addEventListener("bookmark", onBookmarkClick);
-    __defers["$.__views.searchBar!focus!onSearchFocus"] && $.__views.searchBar.addEventListener("focus", onSearchFocus);
-    __defers["$.__views.searchBar!cancel!onSearchCancel"] && $.__views.searchBar.addEventListener("cancel", onSearchCancel);
-    __defers["$.__views.searchBar!change!onSearchChange"] && $.__views.searchBar.addEventListener("change", onSearchChange);
+    init();
     __defers["$.__views.listView!itemclick!onItemClick"] && $.__views.listView.addEventListener("itemclick", onItemClick);
     _.extend($, exports);
 }

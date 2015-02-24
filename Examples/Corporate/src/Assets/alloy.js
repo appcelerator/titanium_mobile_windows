@@ -39,13 +39,14 @@ function deepExtend() {
                 src = target[name];
                 copy = options[name];
                 if (target === copy) continue;
-                if (deep && copy && (_.isObject(copy) && !_.has(copy, "apiName") || (copy_is_array = _.isArray(copy))) && !copy.colors) {
+                if (deep && copy && _.isObject(copy) && ((copy_is_array = _.isArray(copy)) || !_.has(copy, "apiName"))) {
                     if (copy_is_array) {
                         copy_is_array = false;
                         clone = src && _.isArray(src) ? src : [];
                     } else clone = _.isDate(copy) ? new Date(copy.valueOf()) : src && _.isObject(src) ? src : {};
                     target[name] = deepExtend(deep, clone, copy);
-                } else "undefined" != typeof copy ? target[name] = copy : copy.colors && (target[name] = copy);
+                }
+                target[name] = copy;
             }
         }
     }
@@ -54,7 +55,7 @@ function deepExtend() {
 
 var _ = require("alloy/underscore")._, Backbone = require("alloy/backbone"), CONST = require("alloy/constants");
 
-exports.version = "1.5.1";
+exports.version = "1.7.0";
 
 exports._ = _;
 
@@ -95,14 +96,9 @@ var RESET = {
     transform: null,
     backgroundGradient: {},
     borderColor: "transparent",
-    borderRadius: 0,
-    borderWidth: 0
+    borderRadius: null,
+    borderWidth: null
 };
-
-RESET = _.extend(RESET, {
-    backgroundLeftCap: 0,
-    backgroundTopCap: 0
-});
 
 exports.M = function(name, modelDesc, migrations) {
     var config = (modelDesc || {}).config || {};
@@ -113,7 +109,7 @@ exports.M = function(name, modelDesc, migrations) {
     if (adapter.type) {
         mod = require("alloy/sync/" + adapter.type);
         extendObj.sync = function(method, model, opts) {
-            mod.sync(method, model, opts);
+            return mod.sync(method, model, opts);
         };
     } else extendObj.sync = function(method, model) {
         Ti.API.warn("Execution of " + method + "#sync() function on a model that does not support persistence");
@@ -138,7 +134,7 @@ exports.C = function(name, modelDesc, model) {
     if (config.adapter && config.adapter.type) {
         mod = require("alloy/sync/" + config.adapter.type);
         extendObj.sync = function(method, model, opts) {
-            mod.sync(method, model, opts);
+            return mod.sync(method, model, opts);
         };
     } else extendObj.sync = function(method, model) {
         Ti.API.warn("Execution of " + method + "#sync() function on a collection that does not support persistence");
@@ -273,7 +269,7 @@ exports.createCollection = function(name, args) {
 };
 
 exports.isTablet = function() {
-    return "ipad" === Ti.Platform.osname;
+    return Math.max(Ti.Platform.displayCaps.platformHeight, Ti.Platform.displayCaps.platformWidth) >= 1024;
 }();
 
 exports.isHandheld = !exports.isTablet;
