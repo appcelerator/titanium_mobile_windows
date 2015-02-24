@@ -14,13 +14,13 @@ function Controller() {
         });
     }
     function emailContact() {
-        Ti.Analytics.featureEvent(Ti.Platform.osname + ".profile.emailButton.clicked");
+        Ti.Analytics.featureEvent("windows.profile.emailButton.clicked");
         var emailDialog = Ti.UI.createEmailDialog();
         emailDialog.toRecipients = [ _args.email ];
         emailDialog.open();
     }
     function callContact() {
-        Ti.Analytics.featureEvent(Ti.Platform.osname + ".profile.callContactButton.clicked");
+        Ti.Analytics.featureEvent("windows.profile.callContactButton.clicked");
         var dialog = Ti.UI.createAlertDialog({
             cancel: 0,
             buttonNames: [ "Cancel", "Ok" ],
@@ -33,11 +33,11 @@ function Controller() {
     }
     function toggleBookmark() {
         if (isBookmark(_args.id)) {
-            Ti.Analytics.featureEvent(Ti.Platform.osname + ".profile.removeBookmark.clicked");
+            Ti.Analytics.featureEvent("windows.profile.removeBookmark.clicked");
             bookmarks = _.difference(bookmarks, [ _args.id ]);
             $.addBookmarkBtn.setTitle("+ Add To Bookmarks");
         } else {
-            Ti.Analytics.featureEvent(Ti.Platform.osname + ".profile.addBookmark.clicked");
+            Ti.Analytics.featureEvent("windows.profile.addBookmark.clicked");
             bookmarks.push(_args.id);
             $.addBookmarkBtn.setTitle("- Remove From Bookmarks");
         }
@@ -46,6 +46,7 @@ function Controller() {
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "profile";
+    this.args = arguments[0] || {};
     if (arguments[0]) {
         {
             __processArg(arguments[0], "__parentSymbol");
@@ -60,92 +61,32 @@ function Controller() {
     var $ = this;
     var exports = {};
     var __defers = {};
-    $.__views.profile = Ti.UI.createView({
-        height: Ti.UI.FILL,
-        width: Ti.UI.FILL,
+    $.__views.profile = Ti.UI.createWindow({
         backgroundColor: "#fff",
+        titleAttributes: {
+            color: "#C41230"
+        },
+        layout: "vertical",
+        theme: "Appcelerator",
+        opacity: "0.0",
         title: "Profile",
         id: "profile"
     });
     $.__views.profile && $.addTopLevelView($.__views.profile);
-    $.__views.__alloyId34 = Ti.UI.createView({
+    $.__views.contactInfo = Ti.UI.createScrollView({
         layout: "vertical",
-        top: 10,
-        left: 10,
-        right: 10,
-        bottom: 10,
-        id: "__alloyId34"
+        top: 0,
+        id: "contactInfo"
     });
-    $.__views.profile.add($.__views.__alloyId34);
-    $.__views.__alloyId35 = Ti.UI.createView({
-        layout: "vertical",
-        bottom: 10,
-        width: "100%",
-        height: Ti.UI.SIZE,
-        id: "__alloyId35"
-    });
-    $.__views.__alloyId34.add($.__views.__alloyId35);
-    $.__views.__alloyId36 = Ti.UI.createView({
-        width: "100%",
-        height: Ti.UI.SIZE,
-        id: "__alloyId36"
-    });
-    $.__views.__alloyId35.add($.__views.__alloyId36);
-    $.__views.emailBtn = Alloy.createWidget("net.hoyohoyo.iconiclabel", "widget", {
-        left: 10,
-        height: 60,
-        width: 60,
-        color: "#C41230",
-        borderRadius: 30,
-        borderWidth: 1,
-        borderColor: "#C41230",
-        textAlign: "center",
-        font: {
-            fontSize: 24
-        },
-        backgroundColor: "#22C41230",
-        id: "emailBtn",
-        icon: "icon-envelope",
-        __parentSymbol: $.__views.__alloyId36
-    });
-    $.__views.emailBtn.setParent($.__views.__alloyId36);
-    $.__views.profilePicture = Ti.UI.createImageView({
-        preventDefaultImage: true,
-        top: 10,
-        touchEnabled: false,
-        height: 125,
-        width: 125,
-        borderRadius: 63,
-        borderWidth: 1,
-        borderColor: "#22C41230",
-        id: "profilePicture"
-    });
-    $.__views.__alloyId36.add($.__views.profilePicture);
-    $.__views.callBtn = Alloy.createWidget("net.hoyohoyo.iconiclabel", "widget", {
-        right: 10,
-        height: 60,
-        width: 60,
-        color: "#C41230",
-        borderRadius: 30,
-        borderWidth: 1,
-        borderColor: "#C41230",
-        textAlign: "center",
-        font: {
-            fontSize: 24
-        },
-        backgroundColor: "#22C41230",
-        id: "callBtn",
-        icon: "icon-phone",
-        __parentSymbol: $.__views.__alloyId36
-    });
-    $.__views.callBtn.setParent($.__views.__alloyId36);
-    $.__views.__alloyId37 = Ti.UI.createView({
+    $.__views.profile.add($.__views.contactInfo);
+    $.__views.__alloyId33 = Ti.UI.createView({
         layout: "vertical",
         height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
-        id: "__alloyId37"
+        top: 0,
+        id: "__alloyId33"
     });
-    $.__views.__alloyId35.add($.__views.__alloyId37);
+    $.__views.contactInfo.add($.__views.__alloyId33);
     $.__views.name = Ti.UI.createLabel({
         autoLink: Ti.UI.AUTOLINK_ALL,
         top: 10,
@@ -157,7 +98,7 @@ function Controller() {
         text: "Kelly Smith",
         id: "name"
     });
-    $.__views.__alloyId37.add($.__views.name);
+    $.__views.__alloyId33.add($.__views.name);
     $.__views.job = Ti.UI.createLabel({
         autoLink: Ti.UI.AUTOLINK_ALL,
         font: {
@@ -168,7 +109,7 @@ function Controller() {
         text: "Account Rep",
         id: "job"
     });
-    $.__views.__alloyId37.add($.__views.job);
+    $.__views.__alloyId33.add($.__views.job);
     $.__views.company = Ti.UI.createLabel({
         autoLink: Ti.UI.AUTOLINK_ALL,
         font: {
@@ -179,317 +120,280 @@ function Controller() {
         text: "Appcelerator, Inc",
         id: "company"
     });
-    $.__views.__alloyId37.add($.__views.company);
+    $.__views.__alloyId33.add($.__views.company);
     $.__views.addBookmarkBtn = Ti.UI.createButton({
+        top: 10,
         width: "100%",
         height: Ti.UI.SIZE,
         font: {
             fontSize: 18
         },
-        title: "+ Add to Bookmarks",
-        id: "addBookmarkBtn"
+        title: "+ Add To Bookmarks",
+        id: "addBookmarkBtn",
+        textid: "bookmarkBtn"
     });
-    $.__views.__alloyId34.add($.__views.addBookmarkBtn);
+    $.__views.__alloyId33.add($.__views.addBookmarkBtn);
     toggleBookmark ? $.__views.addBookmarkBtn.addEventListener("click", toggleBookmark) : __defers["$.__views.addBookmarkBtn!click!toggleBookmark"] = true;
-    var __alloyId39 = [];
-    $.__views.__alloyId40 = Ti.UI.createView({
-        layout: "vertical",
+    $.__views.__alloyId34 = Ti.UI.createView({
+        layout: "horizontal",
         top: 10,
         height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
-        id: "__alloyId40"
+        id: "__alloyId34"
     });
-    __alloyId39.push($.__views.__alloyId40);
-    $.__views.__alloyId41 = Ti.UI.createView({
-        layout: "horizontal",
-        width: "100%",
-        height: Ti.UI.SIZE,
-        id: "__alloyId41"
-    });
-    $.__views.__alloyId40.add($.__views.__alloyId41);
-    $.__views.__alloyId42 = Alloy.createWidget("net.hoyohoyo.iconiclabel", "widget", {
-        left: 10,
-        color: "#C41230",
-        font: {
-            fontFamily: "FontAwesome",
-            fontSize: 20
-        },
-        icon: "icon-qrcode",
-        id: "__alloyId42",
-        __parentSymbol: $.__views.__alloyId41
-    });
-    $.__views.__alloyId42.setParent($.__views.__alloyId41);
-    $.__views.__alloyId43 = Ti.UI.createLabel({
+    $.__views.contactInfo.add($.__views.__alloyId34);
+    $.__views.callBtn = Ti.UI.createLabel({
         autoLink: Ti.UI.AUTOLINK_ALL,
-        left: 10,
-        right: 10,
         font: {
+            fontFamily: "icomoon",
             fontSize: 24
         },
+        text: "",
+        height: 60,
+        width: 60,
         color: "#C41230",
-        text: "Contact Info",
-        id: "__alloyId43"
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: "#C41230",
+        backgroundColor: "#33C41230",
+        textAlign: "center",
+        left: "10%",
+        id: "callBtn"
     });
-    $.__views.__alloyId41.add($.__views.__alloyId43);
-    $.__views.__alloyId44 = Ti.UI.createView({
+    $.__views.__alloyId34.add($.__views.callBtn);
+    callContact ? $.__views.callBtn.addEventListener("click", callContact) : __defers["$.__views.callBtn!click!callContact"] = true;
+    $.__views.emailBtn = Ti.UI.createLabel({
+        autoLink: Ti.UI.AUTOLINK_ALL,
+        font: {
+            fontFamily: "icomoon",
+            fontSize: 24
+        },
+        text: "",
+        height: 60,
+        width: 60,
+        color: "#C41230",
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: "#C41230",
+        backgroundColor: "#33C41230",
+        textAlign: "center",
+        left: "10%",
+        id: "emailBtn"
+    });
+    $.__views.__alloyId34.add($.__views.emailBtn);
+    emailContact ? $.__views.emailBtn.addEventListener("click", emailContact) : __defers["$.__views.emailBtn!click!emailContact"] = true;
+    $.__views.msgBtn = Ti.UI.createLabel({
+        autoLink: Ti.UI.AUTOLINK_ALL,
+        font: {
+            fontFamily: "icomoon",
+            fontSize: 24
+        },
+        text: "",
+        height: 60,
+        width: 60,
+        color: "#C41230",
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: "#C41230",
+        backgroundColor: "#33C41230",
+        textAlign: "center",
+        left: "10%",
+        id: "msgBtn"
+    });
+    $.__views.__alloyId34.add($.__views.msgBtn);
+    $.__views.__alloyId35 = Ti.UI.createView({
+        top: 25,
+        height: 1,
+        width: "90%",
+        backgroundColor: "#acacac",
+        id: "__alloyId35"
+    });
+    $.__views.contactInfo.add($.__views.__alloyId35);
+    $.__views.__alloyId36 = Ti.UI.createView({
+        layout: "vertical",
+        top: 10,
+        left: 10,
+        right: 10,
+        bottom: 10,
+        height: Ti.UI.SIZE,
+        width: Ti.UI.SIZE,
+        id: "__alloyId36"
+    });
+    $.__views.contactInfo.add($.__views.__alloyId36);
+    $.__views.__alloyId37 = Ti.UI.createView({
         layout: "horizontal",
         top: 10,
         left: 10,
         height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
-        id: "__alloyId44"
+        id: "__alloyId37"
     });
-    $.__views.__alloyId40.add($.__views.__alloyId44);
-    $.__views.__alloyId45 = Alloy.createWidget("net.hoyohoyo.iconiclabel", "widget", {
-        color: "#C41230",
+    $.__views.__alloyId36.add($.__views.__alloyId37);
+    $.__views.__alloyId38 = Ti.UI.createLabel({
+        autoLink: Ti.UI.AUTOLINK_ALL,
+        top: 0,
+        left: 0,
         font: {
-            fontFamily: "FontAwesome",
-            fontSize: 20
+            fontSize: 18,
+            fontFamily: "icomoon"
         },
-        icon: "icon-phone",
-        id: "__alloyId45",
-        __parentSymbol: $.__views.__alloyId44
+        color: "#C41230",
+        text: "",
+        id: "__alloyId38"
     });
-    $.__views.__alloyId45.setParent($.__views.__alloyId44);
+    $.__views.__alloyId37.add($.__views.__alloyId38);
     $.__views.phone = Ti.UI.createLabel({
         autoLink: Ti.UI.AUTOLINK_ALL,
         left: 10,
-        right: 10,
         font: {
-            fontSize: 14
+            fontSize: 12
         },
         color: "#666",
         text: "512-555-1212",
         id: "phone"
     });
-    $.__views.__alloyId44.add($.__views.phone);
-    $.__views.__alloyId46 = Ti.UI.createView({
+    $.__views.__alloyId37.add($.__views.phone);
+    $.__views.__alloyId39 = Ti.UI.createView({
         layout: "horizontal",
         top: 10,
         left: 10,
         height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
-        id: "__alloyId46"
+        id: "__alloyId39"
     });
-    $.__views.__alloyId40.add($.__views.__alloyId46);
-    $.__views.__alloyId47 = Alloy.createWidget("net.hoyohoyo.iconiclabel", "widget", {
-        color: "#C41230",
+    $.__views.__alloyId36.add($.__views.__alloyId39);
+    $.__views.__alloyId40 = Ti.UI.createLabel({
+        autoLink: Ti.UI.AUTOLINK_ALL,
+        top: 0,
+        left: 0,
         font: {
-            fontFamily: "FontAwesome",
-            fontSize: 20
+            fontSize: 18,
+            fontFamily: "icomoon"
         },
-        icon: "icon-envelope-alt",
-        id: "__alloyId47",
-        __parentSymbol: $.__views.__alloyId46
+        color: "#C41230",
+        text: "",
+        id: "__alloyId40"
     });
-    $.__views.__alloyId47.setParent($.__views.__alloyId46);
+    $.__views.__alloyId39.add($.__views.__alloyId40);
     $.__views.email = Ti.UI.createLabel({
         autoLink: Ti.UI.AUTOLINK_ALL,
         left: 10,
-        right: 10,
         font: {
-            fontSize: 14
+            fontSize: 12
         },
         color: "#666",
         text: "kelly.smith@appcelerator.com",
         id: "email"
     });
-    $.__views.__alloyId46.add($.__views.email);
-    $.__views.__alloyId48 = Ti.UI.createView({
+    $.__views.__alloyId39.add($.__views.email);
+    $.__views.__alloyId41 = Ti.UI.createView({
         layout: "horizontal",
         top: 10,
         left: 10,
         height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
-        id: "__alloyId48"
+        id: "__alloyId41"
     });
-    $.__views.__alloyId40.add($.__views.__alloyId48);
-    $.__views.__alloyId49 = Alloy.createWidget("net.hoyohoyo.iconiclabel", "widget", {
-        color: "#C41230",
+    $.__views.__alloyId36.add($.__views.__alloyId41);
+    $.__views.__alloyId42 = Ti.UI.createLabel({
+        autoLink: Ti.UI.AUTOLINK_ALL,
+        top: 0,
+        left: 0,
         font: {
-            fontFamily: "FontAwesome",
-            fontSize: 20
+            fontSize: 18,
+            fontFamily: "icomoon"
         },
-        icon: "icon-comment",
-        id: "__alloyId49",
-        __parentSymbol: $.__views.__alloyId48
+        color: "#C41230",
+        text: "",
+        id: "__alloyId42"
     });
-    $.__views.__alloyId49.setParent($.__views.__alloyId48);
+    $.__views.__alloyId41.add($.__views.__alloyId42);
     $.__views.im = Ti.UI.createLabel({
         autoLink: Ti.UI.AUTOLINK_ALL,
         left: 10,
         right: 10,
         font: {
-            fontSize: 14
+            fontSize: 12
         },
         color: "#666",
         text: "kelly.smith",
         id: "im"
     });
-    $.__views.__alloyId48.add($.__views.im);
-    $.__views.__alloyId50 = Ti.UI.createView({
-        layout: "vertical",
+    $.__views.__alloyId41.add($.__views.im);
+    $.__views.__alloyId43 = Ti.UI.createView({
+        layout: "horizontal",
         top: 10,
+        left: 10,
         height: Ti.UI.SIZE,
         width: Ti.UI.SIZE,
-        id: "__alloyId50"
+        id: "__alloyId43"
     });
-    __alloyId39.push($.__views.__alloyId50);
-    $.__views.__alloyId51 = Ti.UI.createView({
-        layout: "horizontal",
-        width: "100%",
-        height: Ti.UI.SIZE,
-        id: "__alloyId51"
-    });
-    $.__views.__alloyId50.add($.__views.__alloyId51);
-    $.__views.__alloyId52 = Alloy.createWidget("net.hoyohoyo.iconiclabel", "widget", {
-        left: 10,
-        color: "#C41230",
+    $.__views.__alloyId36.add($.__views.__alloyId43);
+    $.__views.__alloyId44 = Ti.UI.createLabel({
+        autoLink: Ti.UI.AUTOLINK_ALL,
+        top: 0,
+        left: 0,
         font: {
-            fontFamily: "FontAwesome",
-            fontSize: 20
+            fontSize: 18,
+            fontFamily: "icomoon"
         },
-        icon: "icon-info-sign",
-        id: "__alloyId52",
-        __parentSymbol: $.__views.__alloyId51
+        color: "#C41230",
+        text: "",
+        id: "__alloyId44"
     });
-    $.__views.__alloyId52.setParent($.__views.__alloyId51);
-    $.__views.__alloyId53 = Ti.UI.createLabel({
+    $.__views.__alloyId43.add($.__views.__alloyId44);
+    $.__views.start_date = Ti.UI.createLabel({
         autoLink: Ti.UI.AUTOLINK_ALL,
         left: 10,
         right: 10,
-        font: {
-            fontSize: 24
-        },
-        color: "#C41230",
-        text: "About",
-        id: "__alloyId53"
-    });
-    $.__views.__alloyId51.add($.__views.__alloyId53);
-    $.__views.__alloyId54 = Ti.UI.createScrollView({
-        height: Ti.UI.SIZE,
-        width: Ti.UI.SIZE,
-        id: "__alloyId54"
-    });
-    $.__views.__alloyId50.add($.__views.__alloyId54);
-    $.__views.about = Ti.UI.createLabel({
-        autoLink: Ti.UI.AUTOLINK_ALL,
-        font: {
-            fontSize: 14
-        },
-        color: "#666",
-        width: Ti.UI.SIZE,
-        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        id: "about"
-    });
-    $.__views.__alloyId54.add($.__views.about);
-    $.__views.__alloyId55 = Ti.UI.createView({
-        layout: "vertical",
-        top: 10,
-        height: Ti.UI.SIZE,
-        width: Ti.UI.SIZE,
-        id: "__alloyId55"
-    });
-    __alloyId39.push($.__views.__alloyId55);
-    $.__views.__alloyId56 = Ti.UI.createView({
-        layout: "horizontal",
-        width: "100%",
-        height: Ti.UI.SIZE,
-        id: "__alloyId56"
-    });
-    $.__views.__alloyId55.add($.__views.__alloyId56);
-    $.__views.__alloyId57 = Alloy.createWidget("net.hoyohoyo.iconiclabel", "widget", {
-        left: 10,
-        color: "#C41230",
-        font: {
-            fontFamily: "FontAwesome",
-            fontSize: 20
-        },
-        icon: "icon-map-marker",
-        id: "__alloyId57",
-        __parentSymbol: $.__views.__alloyId56
-    });
-    $.__views.__alloyId57.setParent($.__views.__alloyId56);
-    $.__views.__alloyId58 = Ti.UI.createLabel({
-        autoLink: Ti.UI.AUTOLINK_ALL,
-        left: 10,
-        font: {
-            fontSize: 24
-        },
-        color: "#C41230",
-        text: "Location",
-        id: "__alloyId58"
-    });
-    $.__views.__alloyId56.add($.__views.__alloyId58);
-    $.__views.fromHQ = Ti.UI.createLabel({
-        autoLink: Ti.UI.AUTOLINK_ALL,
-        right: 10,
-        bottom: 0,
         font: {
             fontSize: 12
         },
         color: "#666",
-        width: Ti.UI.FILL,
-        height: Ti.UI.SIZE,
-        textAlign: "right",
-        id: "fromHQ"
+        text: "July 27, 2001",
+        id: "start_date"
     });
-    $.__views.__alloyId56.add($.__views.fromHQ);
-    var __alloyId59 = [];
-    $.__views.mapview = require("ti.map").createView({
-        top: 10,
-        left: 10,
-        right: 10,
-        bottom: 10,
-        border: 10,
-        borderColor: "#666",
-        touchEnabled: false,
-        enableZoomControls: false,
-        compassEnabled: false,
-        annotations: __alloyId59,
-        id: "mapview"
-    });
-    $.__views.__alloyId55.add($.__views.mapview);
-    $.__views.__alloyId38 = Ti.UI.createScrollableView({
-        height: "45%",
-        pagingControlColor: "#C41230",
-        showPagingControl: true,
-        top: 10,
-        views: __alloyId39,
-        pagingControlHeight: "20",
-        id: "__alloyId38"
-    });
-    $.__views.__alloyId34.add($.__views.__alloyId38);
+    $.__views.__alloyId43.add($.__views.start_date);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    var _args = arguments[0] || {}, Map = (Alloy.Globals.App, require("ti.map")), $U = require("utilities"), bookmarks = null;
-    $.profilePicture.image = _args.photo;
+    var _args = arguments[0] || {}, Map = require("ti.map"), bookmarks = (require("utilities"), 
+    null);
     $.name.text = _args.firstName + " " + _args.lastName;
     $.company.text = _args.company;
     $.phone.text = _args.phone;
     $.email.text = _args.email;
     $.im.text = _args.im || _args.firstName + "." + _args.lastName;
-    $.about.text = _args.about;
-    var distanceFromAppcelerator = Math.floor($U.getDistanceFromLatLonInMiles(_args.latitude, _args.longitude, 37.389505, -122.050252));
-    $.fromHQ.text = distanceFromAppcelerator + " miles from HQ";
-    $.emailBtn.icon.addEventListener("click", emailContact);
-    $.callBtn.icon.addEventListener("click", callContact);
+    var lat = _args.latitude;
     $.mapview.setRegion({
-        latitude: _args.latitude || 30.631256,
+        latitude: lat || 30.631256,
         longitude: _args.longitude || -97.675422,
         latitudeDelta: 2,
-        longitudeDelta: 2
+        longitudeDelta: 2,
+        zoom: 5,
+        tilt: 45
     });
     var mapAnnotation = Map.createAnnotation({
         latitude: _args.latitude || 30.631256,
         longitude: _args.longitude || -97.675422,
-        pincolor: Map.ANNOTATION_RED
+        customView: Alloy.createController("annotation", {
+            image: _args.photo
+        }).getView(),
+        animate: true
     });
     $.mapview.addAnnotation(mapAnnotation);
     bookmarks = Ti.App.Properties.getList("bookmarks", []);
     isBookmark(_args.id) && $.addBookmarkBtn.setTitle("- Remove From Bookmarks");
-    Ti.Analytics.featureEvent(Ti.Platform.osname + ".profile.viewed");
+    Ti.Analytics.featureEvent("windows.profile.viewed");
+    $.profile.addEventListener("postlayout", function() {
+        $.profile.animate({
+            opacity: 1,
+            duration: 250,
+            curve: Ti.UI.ANIMATION_CURVE_EASE_IN_OUT
+        });
+    });
     __defers["$.__views.addBookmarkBtn!click!toggleBookmark"] && $.__views.addBookmarkBtn.addEventListener("click", toggleBookmark);
+    __defers["$.__views.callBtn!click!callContact"] && $.__views.callBtn.addEventListener("click", callContact);
+    __defers["$.__views.emailBtn!click!emailContact"] && $.__views.emailBtn.addEventListener("click", emailContact);
     _.extend($, exports);
 }
 

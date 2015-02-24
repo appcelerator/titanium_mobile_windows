@@ -1,4 +1,4 @@
-# The "NG" App.
+# The "Corporate Directory" App.
 #
 # Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
 # Licensed under the terms of the Apache Public License.
@@ -24,12 +24,20 @@ set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 # Use solution folders.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-get_filename_component(Titanium_SOURCE_DIR    ${PROJECT_SOURCE_DIR}/../../Source/Titanium    ABSOLUTE)
-get_filename_component(Global_SOURCE_DIR      ${PROJECT_SOURCE_DIR}/../../Source/Global      ABSOLUTE)
-get_filename_component(API_SOURCE_DIR         ${PROJECT_SOURCE_DIR}/../../Source/API         ABSOLUTE)
-get_filename_component(UI_SOURCE_DIR          ${PROJECT_SOURCE_DIR}/../../Source/UI          ABSOLUTE)
-get_filename_component(TitaniumKit_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../../Source/TitaniumKit ABSOLUTE)
-get_filename_component(HAL_SOURCE_DIR         ${PROJECT_SOURCE_DIR}/../../Source/HAL         ABSOLUTE)
+get_filename_component(Titanium_SOURCE_DIR      ${PROJECT_SOURCE_DIR}/../../Source/Titanium      ABSOLUTE)
+get_filename_component(Global_SOURCE_DIR        ${PROJECT_SOURCE_DIR}/../../Source/Global        ABSOLUTE)
+get_filename_component(Ti_SOURCE_DIR            ${PROJECT_SOURCE_DIR}/../../Source/Ti            ABSOLUTE)
+get_filename_component(API_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/API           ABSOLUTE)
+get_filename_component(Gesture_SOURCE_DIR       ${PROJECT_SOURCE_DIR}/../../Source/Gesture       ABSOLUTE)
+get_filename_component(Accelerometer_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../../Source/Accelerometer ABSOLUTE)
+get_filename_component(App_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/App           ABSOLUTE)
+get_filename_component(Map_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/Map           ABSOLUTE)
+get_filename_component(Network_SOURCE_DIR       ${PROJECT_SOURCE_DIR}/../../Source/Network       ABSOLUTE)
+get_filename_component(Filesystem_SOURCE_DIR    ${PROJECT_SOURCE_DIR}/../../Source/Filesystem    ABSOLUTE)
+get_filename_component(Utility_SOURCE_DIR       ${PROJECT_SOURCE_DIR}/../../Source/Utility       ABSOLUTE)
+get_filename_component(UI_SOURCE_DIR            ${PROJECT_SOURCE_DIR}/../../Source/UI            ABSOLUTE)
+get_filename_component(TitaniumKit_SOURCE_DIR   ${PROJECT_SOURCE_DIR}/../../Source/TitaniumKit   ABSOLUTE)
+get_filename_component(HAL_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/HAL           ABSOLUTE)
 
 if(NOT TARGET TitaniumWindows)
   add_subdirectory(${Titanium_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Titanium EXCLUDE_FROM_ALL)
@@ -39,8 +47,40 @@ if(NOT TARGET TitaniumWindows_Global)
   add_subdirectory(${Global_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Global EXCLUDE_FROM_ALL)
 endif()
 
+if(NOT TARGET TitaniumWindows_Ti)
+  add_subdirectory(${Ti_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Ti EXCLUDE_FROM_ALL)
+endif()
+
 if(NOT TARGET TitaniumWindows_API)
   add_subdirectory(${API_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/API EXCLUDE_FROM_ALL)
+endif()
+
+if(NOT TARGET TitaniumWindows_Gesture)
+  add_subdirectory(${Gesture_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Gesture EXCLUDE_FROM_ALL)
+endif()
+
+if(NOT TARGET TitaniumWindows_Accelerometer)
+  add_subdirectory(${Accelerometer_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Accelerometer EXCLUDE_FROM_ALL)
+endif()
+
+if(NOT TARGET TitaniumWindows_App)
+  add_subdirectory(${App_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/App EXCLUDE_FROM_ALL)
+endif()
+
+if(NOT TARGET TitaniumWindows_Map)
+  add_subdirectory(${Map_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Map EXCLUDE_FROM_ALL)
+endif()
+
+if(NOT TARGET TitaniumWindows_Network)
+  add_subdirectory(${Network_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Network EXCLUDE_FROM_ALL)
+endif()
+
+if(NOT TARGET TitaniumWindows_Filesystem)
+  add_subdirectory(${Filesystem_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Filesystem EXCLUDE_FROM_ALL)
+endif()
+
+if(NOT TARGET TitaniumWindows_Utility)
+  add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
 endif()
 
 if(NOT TARGET TitaniumWindows_UI)
@@ -73,7 +113,6 @@ configure_file(
 
 set(SOURCE_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
-  ${SQLite_LIBRARIES_DLL}
   "src/Assets/alloy.js"
   "src/Assets/app.js"
   "src/Assets/appicon-72.png"
@@ -119,37 +158,45 @@ set_property(SOURCE ${SOURCE_alloy} PROPERTY VS_DEPLOYMENT_LOCATION "alloy")
 set_property(SOURCE ${SOURCE_alloy} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
 set(SOURCE_alloy_controllers
+      "src/Assets/alloy/controllers/annotation.js"
       "src/Assets/alloy/controllers/BaseController.js"
       "src/Assets/alloy/controllers/directory.js"
       "src/Assets/alloy/controllers/index.js"
+      "src/Assets/alloy/controllers/loader.js"
       "src/Assets/alloy/controllers/profile.js"
   )
 source_group("alloy/controllers" FILES 
+      "src/Assets/alloy/controllers/annotation.js"
       "src/Assets/alloy/controllers/BaseController.js"
       "src/Assets/alloy/controllers/directory.js"
       "src/Assets/alloy/controllers/index.js"
+      "src/Assets/alloy/controllers/loader.js"
       "src/Assets/alloy/controllers/profile.js"
   )
 set_property(SOURCE ${SOURCE_alloy_controllers} PROPERTY VS_DEPLOYMENT_LOCATION "alloy\\controllers")
 set_property(SOURCE ${SOURCE_alloy_controllers} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
-set(SOURCE_alloy_models
-      "src/Assets/alloy/models/Users.js"
-  )
-source_group("alloy/models" FILES 
-      "src/Assets/alloy/models/Users.js"
-  )
-set_property(SOURCE ${SOURCE_alloy_models} PROPERTY VS_DEPLOYMENT_LOCATION "alloy\\models")
-set_property(SOURCE ${SOURCE_alloy_models} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+#set(SOURCE_alloy_models
+#      "src/Assets/alloy/models/Users.js"
+#  )
+#source_group("alloy/models" FILES 
+#      "src/Assets/alloy/models/Users.js"
+#  )
+#set_property(SOURCE ${SOURCE_alloy_models} PROPERTY VS_DEPLOYMENT_LOCATION "alloy\\models")
+#set_property(SOURCE ${SOURCE_alloy_models} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
 set(SOURCE_alloy_styles
+      "src/Assets/alloy/styles/annotation.js"
       "src/Assets/alloy/styles/directory.js"
       "src/Assets/alloy/styles/index.js"
+      "src/Assets/alloy/styles/loader.js"
       "src/Assets/alloy/styles/profile.js"
   )
 source_group("alloy/styles" FILES 
+      "src/Assets/alloy/styles/annotation.js"
       "src/Assets/alloy/styles/directory.js"
       "src/Assets/alloy/styles/index.js"
+      "src/Assets/alloy/styles/loader.js"
       "src/Assets/alloy/styles/profile.js"
   )
 set_property(SOURCE ${SOURCE_alloy_styles} PROPERTY VS_DEPLOYMENT_LOCATION "alloy\\styles")
@@ -168,64 +215,154 @@ source_group("alloy/sync" FILES
 set_property(SOURCE ${SOURCE_alloy_sync} PROPERTY VS_DEPLOYMENT_LOCATION "alloy\\sync")
 set_property(SOURCE ${SOURCE_alloy_sync} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
-set(SOURCE_alloy_widgets_net.hoyohoyo.iconiclabel_controllers
-      "src/Assets/alloy/widgets/net.hoyohoyo.iconiclabel/controllers/widget.js"
-  )
-source_group("alloy/widgets/net.hoyohoyo.iconiclabel/controllers" FILES 
-      "src/Assets/alloy/widgets/net.hoyohoyo.iconiclabel/controllers/widget.js"
-  )
-set_property(SOURCE ${SOURCE_alloy_widgets_net.hoyohoyo.iconiclabel_controllers} PROPERTY VS_DEPLOYMENT_LOCATION "alloy\\widgets\\net.hoyohoyo.iconiclabel\\controllers")
-set_property(SOURCE ${SOURCE_alloy_widgets_net.hoyohoyo.iconiclabel_controllers} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-set(SOURCE_alloy_widgets_net.hoyohoyo.iconiclabel_styles
-      "src/Assets/alloy/widgets/net.hoyohoyo.iconiclabel/styles/widget.js"
-  )
-source_group("alloy/widgets/net.hoyohoyo.iconiclabel/styles" FILES 
-      "src/Assets/alloy/widgets/net.hoyohoyo.iconiclabel/styles/widget.js"
-  )
-set_property(SOURCE ${SOURCE_alloy_widgets_net.hoyohoyo.iconiclabel_styles} PROPERTY VS_DEPLOYMENT_LOCATION "alloy\\widgets\\net.hoyohoyo.iconiclabel\\styles")
-set_property(SOURCE ${SOURCE_alloy_widgets_net.hoyohoyo.iconiclabel_styles} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
 set(SOURCE_fonts
-      "src/Assets/fonts/fontawesome-webfont.ttf"
       "src/Assets/fonts/icomoon.ttf"
-      "src/Assets/fonts/LigatureSymbols-2.11.ttf"
+      "src/Assets/fonts/icomoon.woff"
   )
 source_group("fonts" FILES 
-      "src/Assets/fonts/fontawesome-webfont.ttf"
       "src/Assets/fonts/icomoon.ttf"
-      "src/Assets/fonts/LigatureSymbols-2.11.ttf"
+      "src/Assets/fonts/icomoon.woff"
   )
 set_property(SOURCE ${SOURCE_fonts} PROPERTY VS_DEPLOYMENT_LOCATION "fonts")
 set_property(SOURCE ${SOURCE_fonts} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
-set(SOURCE_images
-      "src/Assets/images/profile-bkg.jpg"
+set(SOURCE_images_RocketFlight
+      "src/Assets/images/RocketFlight/RocketFlight01.png"
+      "src/Assets/images/RocketFlight/RocketFlight02.png"
+      "src/Assets/images/RocketFlight/RocketFlight03.png"
+      "src/Assets/images/RocketFlight/RocketFlight04.png"
+      "src/Assets/images/RocketFlight/RocketFlight05.png"
+      "src/Assets/images/RocketFlight/RocketFlight06.png"
+      "src/Assets/images/RocketFlight/RocketFlight07.png"
+      "src/Assets/images/RocketFlight/RocketFlight08.png"
+      "src/Assets/images/RocketFlight/RocketFlight09.png"
+      "src/Assets/images/RocketFlight/RocketFlight10.png"
+      "src/Assets/images/RocketFlight/RocketFlight11.png"
+      "src/Assets/images/RocketFlight/RocketFlight12.png"
+      "src/Assets/images/RocketFlight/RocketFlight13.png"
+      "src/Assets/images/RocketFlight/RocketFlight14.png"
+      "src/Assets/images/RocketFlight/RocketFlight15.png"
+      "src/Assets/images/RocketFlight/RocketFlight16.png"
+      "src/Assets/images/RocketFlight/RocketFlight17.png"
+      "src/Assets/images/RocketFlight/RocketFlight18.png"
+      "src/Assets/images/RocketFlight/RocketFlight19.png"
+      "src/Assets/images/RocketFlight/RocketFlight20.png"
+      "src/Assets/images/RocketFlight/RocketFlight21.png"
+      "src/Assets/images/RocketFlight/RocketFlight22.png"
+      "src/Assets/images/RocketFlight/RocketFlight23.png"
+      "src/Assets/images/RocketFlight/RocketFlight24.png"
+      "src/Assets/images/RocketFlight/RocketFlight25.png"
   )
-source_group("images" FILES 
-      "src/Assets/images/profile-bkg.jpg"
+source_group("images/RocketFlight" FILES 
+      "src/Assets/images/RocketFlight/RocketFlight01.png"
+      "src/Assets/images/RocketFlight/RocketFlight02.png"
+      "src/Assets/images/RocketFlight/RocketFlight03.png"
+      "src/Assets/images/RocketFlight/RocketFlight04.png"
+      "src/Assets/images/RocketFlight/RocketFlight05.png"
+      "src/Assets/images/RocketFlight/RocketFlight06.png"
+      "src/Assets/images/RocketFlight/RocketFlight07.png"
+      "src/Assets/images/RocketFlight/RocketFlight08.png"
+      "src/Assets/images/RocketFlight/RocketFlight09.png"
+      "src/Assets/images/RocketFlight/RocketFlight10.png"
+      "src/Assets/images/RocketFlight/RocketFlight11.png"
+      "src/Assets/images/RocketFlight/RocketFlight12.png"
+      "src/Assets/images/RocketFlight/RocketFlight13.png"
+      "src/Assets/images/RocketFlight/RocketFlight14.png"
+      "src/Assets/images/RocketFlight/RocketFlight15.png"
+      "src/Assets/images/RocketFlight/RocketFlight16.png"
+      "src/Assets/images/RocketFlight/RocketFlight17.png"
+      "src/Assets/images/RocketFlight/RocketFlight18.png"
+      "src/Assets/images/RocketFlight/RocketFlight19.png"
+      "src/Assets/images/RocketFlight/RocketFlight20.png"
+      "src/Assets/images/RocketFlight/RocketFlight21.png"
+      "src/Assets/images/RocketFlight/RocketFlight22.png"
+      "src/Assets/images/RocketFlight/RocketFlight23.png"
+      "src/Assets/images/RocketFlight/RocketFlight24.png"
+      "src/Assets/images/RocketFlight/RocketFlight25.png"
   )
-set_property(SOURCE ${SOURCE_images} PROPERTY VS_DEPLOYMENT_LOCATION "images")
-set_property(SOURCE ${SOURCE_images} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_images_RocketFlight} PROPERTY VS_DEPLOYMENT_LOCATION "images\\RocketFlight")
+set_property(SOURCE ${SOURCE_images_RocketFlight} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
-set(SOURCE_net.hoyohoyo.iconiclabel
-      "src/Assets/net.hoyohoyo.iconiclabel/FontAwesome-deprecate.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/FontAwesome.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/IconicFont.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/LigatureSymbols-deprecate.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/LigatureSymbols.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/ti.ss-pika.js"
+set(SOURCE_images_RocketSmoke
+      "src/Assets/images/RocketSmoke/RocketSmoke01.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke02.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke03.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke04.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke05.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke06.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke07.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke08.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke09.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke10.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke11.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke12.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke13.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke14.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke15.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke16.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke17.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke18.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke19.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke20.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke21.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke22.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke23.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke24.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke25.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke26.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke27.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke28.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke29.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke30.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke31.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke32.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke33.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke34.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke35.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke36.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke37.png"
   )
-source_group("net.hoyohoyo.iconiclabel" FILES 
-      "src/Assets/net.hoyohoyo.iconiclabel/FontAwesome-deprecate.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/FontAwesome.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/IconicFont.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/LigatureSymbols-deprecate.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/LigatureSymbols.js"
-      "src/Assets/net.hoyohoyo.iconiclabel/ti.ss-pika.js"
+source_group("images/RocketSmoke" FILES 
+      "src/Assets/images/RocketSmoke/RocketSmoke01.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke02.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke03.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke04.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke05.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke06.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke07.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke08.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke09.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke10.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke11.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke12.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke13.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke14.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke15.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke16.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke17.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke18.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke19.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke20.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke21.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke22.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke23.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke24.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke25.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke26.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke27.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke28.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke29.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke30.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke31.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke32.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke33.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke34.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke35.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke36.png"
+      "src/Assets/images/RocketSmoke/RocketSmoke37.png"
   )
-set_property(SOURCE ${SOURCE_net.hoyohoyo.iconiclabel} PROPERTY VS_DEPLOYMENT_LOCATION "net.hoyohoyo.iconiclabel")
-set_property(SOURCE ${SOURCE_net.hoyohoyo.iconiclabel} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_images_RocketSmoke} PROPERTY VS_DEPLOYMENT_LOCATION "images\\RocketSmoke")
+set_property(SOURCE ${SOURCE_images_RocketSmoke} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
 set(SOURCE_userData
       "src/Assets/userData/data.json"
@@ -242,16 +379,13 @@ add_executable(${EXE_NAME} WIN32
   src/main.cpp
   src/OutputDebugStringBuf.hpp
   ${SOURCE_Assets}
-      ${SOURCE_alloy}
+    ${SOURCE_alloy}
     ${SOURCE_alloy_controllers}
-    ${SOURCE_alloy_models}
     ${SOURCE_alloy_styles}
     ${SOURCE_alloy_sync}
-    ${SOURCE_alloy_widgets_net.hoyohoyo.iconiclabel_controllers}
-    ${SOURCE_alloy_widgets_net.hoyohoyo.iconiclabel_styles}
     ${SOURCE_fonts}
-    ${SOURCE_images}
-    ${SOURCE_net.hoyohoyo.iconiclabel}
+    ${SOURCE_images_RocketFlight}
+    ${SOURCE_images_RocketSmoke}
     ${SOURCE_userData}
 )
 
