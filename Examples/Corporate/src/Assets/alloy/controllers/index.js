@@ -10,6 +10,7 @@ function __processArg(obj, key) {
 function Controller() {
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
+    this.args = arguments[0] || {};
     if (arguments[0]) {
         {
             __processArg(arguments[0], "__parentSymbol");
@@ -23,45 +24,32 @@ function Controller() {
     }
     var $ = this;
     var exports = {};
-    $.__views.__alloyId31 = Ti.UI.createWindow({
-        backgroundColor: "#fff",
-        titleAttributes: {
-            color: "#C41230"
-        },
-        title: "Directory",
-        id: "__alloyId31"
-    });
-    $.__views.logo = Ti.UI.createLabel({
-        text: "",
-        color: "#C41230",
-        font: {
-            fontFamily: "icomoon",
-            fontSize: 36
-        },
-        id: "logo"
-    });
-    $.__views.__alloyId31.leftNavButton = $.__views.logo;
-    $.__views.__alloyId33 = Alloy.createController("directory", {
-        id: "__alloyId33",
-        __parentSymbol: $.__views.__alloyId31
-    });
-    $.__views.__alloyId33.setParent($.__views.__alloyId31);
-    $.__views.nav = Ti.UI.iOS.createNavigationWindow({
-        backgroundColor: "#fff",
-        orientationModes: [ Ti.UI.PORTRAIT, Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT, Ti.UI.UPSIDE_PORTRAIT ],
-        navBarHidden: true,
-        exitOnClose: true,
-        navTintColor: "#ae331f",
-        window: $.__views.__alloyId31,
-        id: "nav"
-    });
-    $.__views.nav && $.addTopLevelView($.__views.nav);
     exports.destroy = function() {};
     _.extend($, $.__views);
-    Alloy.Globals.App.init({
-        navGroup: $.nav
-    });
-    $.nav.open();
+    Alloy.Globals.Navigator = {
+        navGroup: $.nav,
+        open: function(controller, payload) {
+            var win = Alloy.createController(controller, payload || {}).getView();
+            payload.displayHomeAsUp && win.addEventListener("open", function(evt) {
+                var activity = win.activity;
+                activity.actionBar.displayHomeAsUp = payload.displayHomeAsUp;
+                activity.actionBar.onHomeIconItemSelected = function() {
+                    evt.source.close();
+                };
+            });
+            win.open();
+        }
+    };
+    var loadingView = Alloy.createController("loader");
+    loadingView.getView().open();
+    loadingView.start();
+    setTimeout(function() {
+        loadingView.finish(function() {
+            $.index.getView().open();
+            loadingView.getView().close();
+            loadingView = null;
+        });
+    }, 1500);
     _.extend($, exports);
 }
 

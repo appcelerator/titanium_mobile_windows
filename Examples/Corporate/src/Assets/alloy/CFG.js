@@ -1,1 +1,1 @@
-module.exports={"dependencies":{"net.hoyohoyo.iconiclabel":"1.3"}};
+module.exports={"dependencies":{}};

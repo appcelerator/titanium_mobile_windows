@@ -227,9 +227,13 @@ namespace Titanium
 			return Map_property;
 		}
 
-		const auto module_path = requestResolveModule(parent, moduleId);
+		auto module_path = requestResolveModule(parent, moduleId);
 		if (module_path.empty()) {
-			detail::ThrowRuntimeError("require", "Could not load module " + moduleId);
+			// Fall back to assuming equivalent of "/" + moduleId?
+			module_path = requestResolveModule(parent, "/" + moduleId);
+			if (module_path.empty()) {
+				detail::ThrowRuntimeError("require", "Could not load module " + moduleId);
+			}
 		}
 
 		// check if we have already loaded the module
@@ -507,4 +511,4 @@ namespace Titanium
 		return get_context().CreateUndefined();
 	}
 
-}  // namespace Titanium {
+}  // namespace Titanium
