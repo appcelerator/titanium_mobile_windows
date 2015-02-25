@@ -21,12 +21,12 @@ namespace Titanium
 		{
 		}
 
-		void ImageView::hide(JSObject& this_object) TITANIUM_NOEXCEPT
+		void ImageView::start(JSObject& this_object) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_DEBUG("ImageView::start unimplemented");
 		}
 
-		void ImageView::show(JSObject& this_object) TITANIUM_NOEXCEPT
+		void ImageView::stop(JSObject& this_object) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_DEBUG("ImageView::stop unimplemented");
 		}
@@ -83,7 +83,7 @@ namespace Titanium
 			JSExport<ImageView>::AddValueProperty("preventDefaultImage", std::mem_fn(&ImageView::js_get_preventDefaultImage), std::mem_fn(&ImageView::js_set_preventDefaultImage));
 		}
 
-		JSValue ImageView::js_hide(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		JSValue ImageView::js_start(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_ASSERT(arguments.empty());
 			start(this_object);
@@ -126,7 +126,11 @@ namespace Titanium
 
 		JSValue ImageView::js_get_images() const TITANIUM_NOEXCEPT
 		{
-			return get_context().CreateString(images__);
+			std::vector<JSValue> images;
+			for (auto image : images__) {
+				images.push_back(get_context().CreateString(image));
+			}
+			return get_context().CreateArray(images);
 		}
 
 		bool ImageView::js_set_images(const JSValue& argument) TITANIUM_NOEXCEPT
@@ -136,9 +140,9 @@ namespace Titanium
 			TITANIUM_ASSERT(object.IsArray());
 			
 			std::vector<std::string> images;
-			const auto item_count = event_listener_list.GetPropertyNames().GetCount();
+			const auto item_count = object.GetPropertyNames().GetCount();
 			for (size_t i = 0; i < item_count; ++i) {
-				JSValue item = item_count.GetProperty(i);
+				JSValue item = object.GetProperty(i);
 				TITANIUM_ASSERT(item.IsString());
 				images.push_back(static_cast<std::string>(item));
 			}

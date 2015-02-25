@@ -105,14 +105,13 @@ namespace Titanium
 			navBarHidden__ = navBarHidden;
 		}
 
-		bool Window::get_navTintColor() const TITANIUM_NOEXCEPT
+		std::string Window::get_navTintColor() const TITANIUM_NOEXCEPT
 		{
 			return navTintColor__;
 		}
 
-		void Window::set_navTintColor(const bool& navTintColor) TITANIUM_NOEXCEPT
+		void Window::set_navTintColor(const std::string &navTintColor) TITANIUM_NOEXCEPT
 		{
-			TITANIUM_LOG_WARN("Window::set_navTintColor: Unimplemented");
 			navTintColor__ = navTintColor;
 		}
 
@@ -159,6 +158,15 @@ namespace Titanium
 			translucent__ = translucent;
 		}
 
+		std::string Window::get_barColor() const TITANIUM_NOEXCEPT 
+		{
+			return barColor__;
+		}
+		void Window::set_barColor(const std::string& barColor) TITANIUM_NOEXCEPT 
+		{
+			barColor__ = barColor;
+		}
+
 		void Window::JSExportInitialize()
 		{
 			JSExport<Window>::SetClassVersion(1);
@@ -192,7 +200,7 @@ namespace Titanium
 
 		JSValue Window::js_get_barColor() const TITANIUM_NOEXCEPT
 		{
-			return get_context().CreateString(barColor__);
+			return get_context().CreateString(get_barColor());
 		}
 
 		bool Window::js_set_barColor(const JSValue& argument) TITANIUM_NOEXCEPT

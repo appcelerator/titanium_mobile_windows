@@ -58,17 +58,13 @@ namespace Titanium
 			return true;
 		}
 
-		JSValue Properties::js_setTitle(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		JSValue Button::js_setTitle(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 		{
-			if (arguments.empty()) {
-				return get_context().CreateUndefined();
-
-			} else {
-				const auto _0 = arguments.at(0);
-				js_set_title(_0);
+			if (arguments.size() > 0) {
+				js_set_title(arguments.at(0));
 			}
-
-			return get_context().CreateUndefined();
+			return this_object.get_context().CreateUndefined();
 		}
+
 	} // namespace UI
 }  // namespace Titanium

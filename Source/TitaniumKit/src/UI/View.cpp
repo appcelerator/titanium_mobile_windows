@@ -306,7 +306,7 @@ namespace Titanium
 			TITANIUM_ASSERT(_0.IsObject());
 			JSObject animation = static_cast<JSObject>(_0);
 
-			JSObject callback;
+			JSObject callback = this_object.get_context().CreateObject();
 			if (arguments.size() > 1) {
 				const auto _1 = arguments.at(1);
 				TITANIUM_ASSERT(_1.IsObject());
