@@ -34,13 +34,13 @@ namespace Titanium
 			title__ = title;
 		}
 
-		// TODO: The following functions can automatically be generated from
-		// the YAML API docs.
-
 		void Button::JSExportInitialize()
 		{
 			JSExport<Button>::SetClassVersion(1);
 			JSExport<Button>::SetParent(JSExport<View>::Class());
+			
+			JSExport<Button>::AddFunctionProperty("setTitle", std::mem_fn(&Button::js_setTitle));
+
 			JSExport<Button>::AddValueProperty("title", std::mem_fn(&Button::js_get_title), std::mem_fn(&Button::js_set_title));
 		}
 
@@ -56,6 +56,19 @@ namespace Titanium
 			TITANIUM_LOG_DEBUG("Button::js_set_title: title = ", title);
 			set_title(title);
 			return true;
+		}
+
+		JSValue Properties::js_setTitle(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		{
+			if (arguments.empty()) {
+				return get_context().CreateUndefined();
+
+			} else {
+				const auto _0 = arguments.at(0);
+				js_set_title(_0);
+			}
+
+			return get_context().CreateUndefined();
 		}
 	} // namespace UI
 }  // namespace Titanium

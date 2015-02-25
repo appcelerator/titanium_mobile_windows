@@ -48,12 +48,11 @@ namespace Titanium
 			Button& operator=(Button&&) = default;
 #endif
 
-			// TODO: The following functions can automatically be generated
-			// from the YAML API docs.
 			static void JSExportInitialize();
 
 			virtual JSValue js_get_title() const TITANIUM_NOEXCEPT final;
 			virtual bool js_set_title(const JSValue& argument) TITANIUM_NOEXCEPT final;
+			virtual JSValue js_setTitle(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
 
 		private:
 #pragma warning(push)

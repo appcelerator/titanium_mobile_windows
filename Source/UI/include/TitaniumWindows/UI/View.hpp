@@ -50,6 +50,7 @@ namespace TitaniumWindows
 			virtual void show(JSObject& this_object) TITANIUM_NOEXCEPT;
 
 			virtual void set_backgroundColor(const std::string& backgroundColor) TITANIUM_NOEXCEPT override final;
+			virtual void set_opacity(const double& opacity) TITANIUM_NOEXCEPT override final;
 			virtual void set_bottom(const std::string& bottom) TITANIUM_NOEXCEPT override final;
 			virtual void set_height(const std::string& height) TITANIUM_NOEXCEPT override final;
 			virtual void set_layout(const std::string& layout) TITANIUM_NOEXCEPT override final;
