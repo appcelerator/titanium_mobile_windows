@@ -37,6 +37,8 @@ namespace TitaniumWindows
 			setDefaultHeight(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
 			setDefaultWidth(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
 
+			listViewItems__ = ref new ::Platform::Collections::Vector<ListViewItem^>();
+
 			setComponent(listview__);
 		}
 
@@ -55,11 +57,14 @@ namespace TitaniumWindows
 					[this, ctx](::Platform::Object^ sender, Windows::UI::Xaml::Controls::SelectionChangedEventArgs^ e) {
 					auto listview = safe_cast<Windows::UI::Xaml::Controls::ListView^>(sender);
 
-					auto selectedItem = listview->SelectedItem;
+					TITANIUM_ASSERT(listViewItems__->Size > listview->SelectedIndex);
+					auto listViewItem = listViewItems__->GetAt(listview->SelectedIndex);
 
 					JSObject  eventArgs = ctx.CreateObject();
-					eventArgs.SetProperty("itemIndex", ctx.CreateNumber(listview->SelectedIndex));
-					// TODO more properties
+					eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(listViewItem->SectionIndex));
+					eventArgs.SetProperty("itemIndex", ctx.CreateNumber(listViewItem->ItemIndex));
+
+				  // TODO more properties
 					this->fireEvent("itemclick", eventArgs);
 				});
 			}
@@ -76,17 +81,26 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ListView::set_sections(sections);
 
+			listViewItems__->Clear();
 			collectionViewItems__->Clear();
-			
-			for (uint32_t i = 0; i < get_sectionCount(); i++) {
-				auto views = createSectionViewAt<TitaniumWindows::UI::View>(i);
+
+			for (uint32_t sectionIndex = 0; sectionIndex < get_sectionCount(); sectionIndex++) {
+				auto views = createSectionViewAt<TitaniumWindows::UI::View>(sectionIndex);
 				auto group = ref new ::Platform::Collections::Vector<Windows::UI::Xaml::UIElement^>();
-				for (auto view : views) {
+				for (uint32_t itemIndex = 0; itemIndex < views.size(); itemIndex++) {
+					auto view = views.at(itemIndex);
 					auto nativeChildView = view->getComponent();
 					TITANIUM_ASSERT(nativeChildView);
 
 					// Add as list item
 					group->Append(nativeChildView);
+
+					// Add as ListViewItem so that we can map item index
+					auto item = ref new ListViewItem();
+					item->View = nativeChildView;
+					item->ItemIndex = itemIndex;
+					item->SectionIndex = sectionIndex;
+					listViewItems__->Append(item);
 
 					// Add as child view to make layout engine work
 					Titanium::LayoutEngine::nodeAddChild(layout_node_, view->layout_node_);

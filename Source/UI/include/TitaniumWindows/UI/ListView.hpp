@@ -21,6 +21,47 @@ namespace TitaniumWindows
 		using ListSection_shared_ptr_t = std::shared_ptr <Titanium::UI::ListSection>;
 
 		/*!
+		@class ListViewItem
+
+		@discussion This class represents item in ListView which is used for mapping ListView item with index and view
+		*/
+		ref class ListViewItem {
+		public:
+			property Windows::UI::Xaml::UIElement^ View
+			{
+				Windows::UI::Xaml::UIElement^ get() {
+					return view__;
+				}
+				void set(Windows::UI::Xaml::UIElement^ value) {
+					view__ = value;
+				}
+			}
+			property uint32_t SectionIndex
+			{
+				uint32_t get() {
+					return sectionIndex__;
+				}
+				void set(uint32_t value) {
+					sectionIndex__ = value;
+				}
+			}
+			property uint32_t ItemIndex
+			{
+				uint32_t get() {
+					return itemIndex__;
+				}
+				void set(uint32_t value) {
+					itemIndex__ = value;
+				}
+			}
+
+		private:
+			Windows::UI::Xaml::UIElement^ view__;
+			uint32_t sectionIndex__;
+			uint32_t itemIndex__;
+		};
+
+		/*!
 		  @class
 
 		  @discussion This is the Titanium.UI.ListView implementation for Windows.
@@ -52,6 +93,9 @@ namespace TitaniumWindows
 			Windows::UI::Xaml::Controls::ListView^ listview__;
 			Windows::UI::Xaml::Data::CollectionViewSource^ collectionViewSource__;
 			Windows::Foundation::Collections::IObservableVector<Platform::Object^>^ collectionViewItems__;
+
+			// Section and item index mapping
+			Windows::Foundation::Collections::IVector<ListViewItem^>^ listViewItems__;
 
 			Windows::Foundation::EventRegistrationToken click_event__;
 
