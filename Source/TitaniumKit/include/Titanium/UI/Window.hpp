@@ -179,8 +179,8 @@ namespace Titanium
 
 			  To determine the current orientation of the window, see Window.orientation. To determine the current orientation of the device, see Gesture.orientation. To be notified when the device's current orientation changes, add a listener for the Titanium.Gesture.orientationchange event.
 			*/
-			virtual std::unordered_set<ORIENTATION> get_orientationModes() const TITANIUM_NOEXCEPT final;
-			virtual void set_orientationModes(const std::unordered_set<ORIENTATION>& orientationModes) TITANIUM_NOEXCEPT;
+			virtual std::vector<ORIENTATION> get_orientationModes() const TITANIUM_NOEXCEPT final;
+			virtual void set_orientationModes(const std::vector<ORIENTATION>& orientationModes) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
@@ -271,7 +271,7 @@ namespace Titanium
 			bool modal__;
 			bool navBarHidden__;
 			std::string navTintColor__;
-			std::unordered_set<ORIENTATION> orientationModes__;
+			std::vector<ORIENTATION> orientationModes__;
 			std::string theme__;
 			JSObject titleAttributes__;
 			bool translucent__;

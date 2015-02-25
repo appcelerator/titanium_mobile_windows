@@ -115,12 +115,12 @@ namespace Titanium
 			navTintColor__ = navTintColor;
 		}
 
-		std::unordered_set<ORIENTATION> Window::get_orientationModes() const TITANIUM_NOEXCEPT
+		std::vector<ORIENTATION> Window::get_orientationModes() const TITANIUM_NOEXCEPT
 		{
 			return orientationModes__;
 		}
 
-		void Window::set_orientationModes(const std::unordered_set<ORIENTATION>& orientationModes) TITANIUM_NOEXCEPT
+		void Window::set_orientationModes(const std::vector<ORIENTATION>& orientationModes) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Window::set_orientationModes: Unimplemented");
 		}
@@ -297,14 +297,26 @@ namespace Titanium
 
 		JSValue Window::js_get_orientationModes() const TITANIUM_NOEXCEPT
 		{
-			return get_context().CreateNumber(Constants::to_underlying_type(orientationModes__));
+			std::vector<JSValue> modes;
+			for (auto mode : orientationModes__) {
+				modes.push_back(get_context().CreateNumber(Constants::to_underlying_type(mode)));
+			}
+			return get_context().CreateArray(modes);
 		}
 
 		bool Window::js_set_orientationModes(const JSValue& argument) TITANIUM_NOEXCEPT
 		{
-			TITANIUM_ASSERT(argument.IsNumber());
-			orientationModes__ = Constants::to_ORIENTATION(static_cast<std::underlying_type<ORIENTATION>::type>(argument));
-			set_orientationModes(orientationModes__);
+			TITANIUM_ASSERT(argument.IsObject());
+			auto js_arg = static_cast<JSObject>(argument);
+			TITANIUM_ASSERT(js_arg.IsArray());
+			auto modes = static_cast<JSArray>(js_arg);
+			auto js_modes= static_cast<std::vector<JSValue>>(modes);
+			std::vector<ORIENTATION> orientationModes;
+			for (auto mode : js_modes) {
+				orientationModes.push_back(Constants::to_ORIENTATION(static_cast<std::underlying_type<ORIENTATION>::type>(mode)));
+			}
+			set_orientationModes(orientationModes);
+
 			return true;
 		}
 
