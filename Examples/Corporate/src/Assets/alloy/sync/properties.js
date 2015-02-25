@@ -10,7 +10,7 @@ function Sync(method, model, opts) {
     var prefix = model.config.adapter.collection_name ? model.config.adapter.collection_name : "default";
     var regex = new RegExp("^(" + prefix + ")\\-(.+)$");
     var resp = null;
-    if ("read" === method) if (opts.parse) {
+    if ("read" === method) if (model instanceof Backbone.Collection) {
         var list = [];
         _.each(TAP.listProperties(), function(prop) {
             var match = prop.match(regex);

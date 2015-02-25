@@ -36,6 +36,7 @@ exports.PLUGIN_NAME = 'ti.alloy';
 exports.EXPR_PREFIX = '#';
 exports.PLUGIN_FILE = 'plugin.py';
 exports.HOOK_FILE = 'alloy.js';
+exports.HOOK_FILE_CLEAN = 'deepclean.js';
 exports.MINIMUM_TI_SDK = '3.0.0';
 exports.ITEM_TEMPLATE_VAR = '__itemTemplate';
 exports.PARENT_SYMBOL_VAR = '__parentSymbol';
@@ -43,11 +44,14 @@ exports.WIDGET_OBJECT = 'Widget';
 exports.SKIP_EVENT_HANDLING = ['Ti.UI.ListItem','Alloy.Abstract.ItemTemplate'];
 exports.ADAPTERS = ['localStorage', 'properties', 'sql'];
 exports.CONTROLLER_NODES = ['Alloy.Require', 'Alloy.Widget'];
+exports.DEFAULT_BACKBONE_VERSION = '0.9.2';
+exports.SUPPORTED_BACKBONE_VERSIONS = ['0.9.2', '1.1.2'];
 
 // property names
 exports.CLASS_PROPERTY = 'classes';
 exports.APINAME_PROPERTY = 'apiName';
 exports.AUTOSTYLE_PROPERTY = 'autoStyle';
+exports.DOCROOT_MODULE_PROPERTY = "module";
 
 // Constants related to model-view binding
 exports.BIND_PROPERTIES = ['dataCollection','dataFilter','dataTransform','dataFunction'];
@@ -107,12 +111,14 @@ exports.DIR = {
 	THEME: 'themes',
 	BUILD: 'build/alloy',
 	I18N: 'i18n',
-	PLATFORM: 'platform'
+	PLATFORM: 'platform',
+	BUILD_I18N: 'build/i18n',
+	BUILD_PLATFORM: 'build/platform'
 };
 // folders/files to exclude when copying and processing files
 // RegEx format: must escape special chars - so use \.svn not .svn
 exports.EXCLUDED_FILES = [
-	'\\.svn'
+	'\\.svn','\\.git'
 ];
 
 // constants identifying JS reserved words
@@ -201,6 +207,7 @@ exports.IMPLICIT_NAMESPACES = {
 	LeftNavButtons: 'Ti.UI.Window',
 	RightNavButtons: 'Ti.UI.Window',
 	TitleControl: 'Ti.UI.Window',
+	WindowToolbar: 'Ti.UI.Window',
 
 	// Ti.UI.iPad.Popover
 	ContentView: 'Ti.UI.iPad.Popover',
@@ -217,6 +224,7 @@ exports.IMPLICIT_NAMESPACES = {
 	RightButton: '_ProxyProperty',
 	LeftButton: '_ProxyProperty',
 	KeyboardToolbar: '_ProxyProperty',
+	ActionView: '_ProxyProperty'
 
 };
 
@@ -227,3 +235,7 @@ exports.SPECIAL_PROPERTY_NAMES = [
 	'onCreateOptionsMenu',
 	'onPrepareOptionsMenu'
 ];
+
+exports.COMMANDS = {
+	GENERATE: 'generate'
+};

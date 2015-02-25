@@ -270,6 +270,10 @@ namespace Titanium
 
 		bool View::js_set_top(const JSValue& argument) TITANIUM_NOEXCEPT
 		{
+			// FIXME What does setting top to null mean? Because corporate directory does it...
+			if (argument.IsNull()) {
+				return false;
+			}
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			bool result = false;
 			std::string value = static_cast<std::string>(argument);

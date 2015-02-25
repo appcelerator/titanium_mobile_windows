@@ -118,9 +118,9 @@ function Sync(method, model, opts) {
             if (!model.id) {
                 model.id = model.idAttribute === ALLOY_ID_DEFAULT ? guid() : null;
                 attrObj[model.idAttribute] = model.id;
-                model.set(attrObj, {
+                "0.9.2" === backbone.VERSION ? model.set(attrObj, {
                     silent: true
-                });
+                }) : model.set(attrObj);
             }
             var names = [], values = [], q = [];
             for (var k in columns) {
@@ -130,21 +130,14 @@ function Sync(method, model, opts) {
             }
             sql = "REPLACE INTO " + table + " (" + names.join(",") + ") VALUES (" + q.join(",") + ");";
             db = Ti.Database.open(dbName);
-            db.execute("BEGIN;");
             db.execute(sql, values);
             if (null === model.id) {
-                var sqlId = "SELECT last_insert_rowid();";
-                var rs = db.execute(sqlId);
-                if (rs && rs.isValidRow()) {
-                    model.id = rs.field(0);
-                    attrObj[model.idAttribute] = model.id;
-                    model.set(attrObj, {
-                        silent: true
-                    });
-                } else Ti.API.warn("Unable to get ID from database for model: " + model.toJSON());
-                rs && rs.close();
+                model.id = db.lastInsertRowId;
+                attrObj[model.idAttribute] = model.id;
+                "0.9.2" === backbone.VERSION ? model.set(attrObj, {
+                    silent: true
+                }) : model.set(attrObj);
             }
-            db.execute("COMMIT;");
             db.close();
             return model.toJSON();
         }();
@@ -157,23 +150,22 @@ function Sync(method, model, opts) {
         db = Ti.Database.open(dbName);
         var rs;
         rs = _.isString(sql) ? db.execute(sql) : db.execute(sql.statement, sql.params);
-        var len = 0;
         var values = [];
+        var fieldNames = [];
+        var fieldCount = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
+        var getField = rs.field;
+        var i = 0;
+        for (;fieldCount > i; i++) fieldNames.push(rs.fieldName(i));
         while (rs.isValidRow()) {
             var o = {};
-            var fc = 0;
-            fc = _.isFunction(rs.fieldCount) ? rs.fieldCount() : rs.fieldCount;
-            _.times(fc, function(c) {
-                var fn = rs.fieldName(c);
-                o[fn] = rs.fieldByName(fn);
-            });
+            for (i = 0; fieldCount > i; i++) o[fieldNames[i]] = getField(i);
             values.push(o);
-            len++;
             rs.next();
         }
         rs.close();
         db.close();
-        model.length = len;
+        var len = values.length;
+        "0.9.2" === backbone.VERSION && (model.length = len);
         resp = 1 === len ? values[0] : values;
         break;
 
@@ -182,7 +174,6 @@ function Sync(method, model, opts) {
         db = Ti.Database.open(dbName);
         db.execute(sql, model.id);
         db.close();
-        model.id = null;
         resp = model.toJSON();
     }
     if (resp) {
@@ -261,7 +252,7 @@ function installDatabase(config) {
     var dbName = config.adapter.db_name;
     Ti.API.debug('Installing sql database "' + dbFile + '" with name "' + dbName + '"');
     var db = Ti.Database.install(dbFile, dbName);
-    if (false === config.adapter.remoteBackup && true) {
+    if (false === config.adapter.remoteBackup && false) {
         Ti.API.debug('iCloud "do not backup" flag set for database "' + dbFile + '"');
         db.file.setRemoteBackup(false);
     }
@@ -309,7 +300,7 @@ function installDatabase(config) {
     db.close();
 }
 
-var _ = require("alloy/underscore")._;
+var _ = require("alloy/underscore")._, backbone = require("alloy/backbone");
 
 var ALLOY_DB_DEFAULT = "_alloy_";
 
@@ -322,7 +313,7 @@ var cache = {
 
 module.exports.beforeModelCreate = function(config, name) {
     if (cache.config[name]) return cache.config[name];
-    if ("mobileweb" === Ti.Platform.osname || "undefined" == typeof Ti.Database) throw "No support for Titanium.Database in MobileWeb environment.";
+    if (false || "undefined" == typeof Ti.Database) throw "No support for Titanium.Database in MobileWeb environment.";
     config.adapter.db_file && installDatabase(config);
     if (!config.adapter.idAttribute) {
         Ti.API.info('No config.adapter.idAttribute specified for table "' + config.adapter.collection_name + '"');
