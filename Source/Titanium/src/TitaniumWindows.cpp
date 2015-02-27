@@ -68,6 +68,7 @@ namespace TitaniumWindows
 		                                                            .HTTPClientObject(js_context__.CreateObject<TitaniumWindows::Network::HTTPClient>())
 		                                                            .WebViewObject(js_context__.CreateObject<TitaniumWindows::UI::WebView>())
 		                                                            .MapObject(js_context__.CreateObject<TitaniumWindows::MapModule>())
+		                                                            .MapViewObject(js_context__.CreateObject<TitaniumWindows::Map::View>())
 		                                                            .build());
 
 		Suspending += ref new Windows::UI::Xaml::SuspendingEventHandler(this, &Application::OnSuspending);

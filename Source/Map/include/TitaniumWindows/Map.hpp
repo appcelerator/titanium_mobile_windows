@@ -10,6 +10,7 @@
 #define _TITANIUMWINDOWS_MAP_HPP_
 
 #include "TitaniumWindows/detail/MapBase.hpp"
+#include "TitaniumWindows/Map/View.hpp"
 
 namespace TitaniumWindows
 {
