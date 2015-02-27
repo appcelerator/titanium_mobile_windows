@@ -18,8 +18,8 @@
 
 namespace TitaniumWindows
 {
-	API::API(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Titanium::API(js_context, arguments)
+	API::API(const JSContext& js_context) TITANIUM_NOEXCEPT
+	    : Titanium::API(js_context)
 	{
 		TITANIUM_LOG_DEBUG("API::ctor Initialize");
 		connect();

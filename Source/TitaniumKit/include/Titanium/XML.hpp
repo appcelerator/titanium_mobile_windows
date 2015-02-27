@@ -21,7 +21,8 @@ namespace Titanium
 	class TITANIUMKIT_EXPORT XML : public Module, public JSExport<XML>
 	{
 	public:
-		XML(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+		XML(const JSContext&) TITANIUM_NOEXCEPT;
+		virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 		virtual ~XML() = default;
 		XML(const XML&) = default;

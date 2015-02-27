@@ -29,7 +29,7 @@ namespace TitaniumWindows
 		{
 
 		public:
-			EmailDialog(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+			EmailDialog(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~EmailDialog()                  = default;
 			EmailDialog(const EmailDialog&)            = default;

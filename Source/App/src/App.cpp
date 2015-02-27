@@ -12,8 +12,8 @@
 
 namespace TitaniumWindows
 {
-	AppModule::AppModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		: Titanium::AppModule(js_context, arguments)
+	AppModule::AppModule(const JSContext& js_context) TITANIUM_NOEXCEPT
+		: Titanium::AppModule(js_context)
 	{
 		TITANIUM_LOG_DEBUG("App::ctor Initialize");
 	}

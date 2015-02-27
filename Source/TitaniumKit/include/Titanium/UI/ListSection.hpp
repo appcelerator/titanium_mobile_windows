@@ -140,7 +140,8 @@ namespace Titanium
 			*/
 			virtual void updateItemAt(uint32_t index, const ListDataItem& dataItem, const ListViewAnimationProperties& animation) TITANIUM_NOEXCEPT;
 
-			ListSection(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+			ListSection(const JSContext&) TITANIUM_NOEXCEPT;
+			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 			virtual ~ListSection() = default;
 			ListSection(const ListSection&) = default;

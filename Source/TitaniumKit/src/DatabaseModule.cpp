@@ -42,8 +42,8 @@ namespace Titanium
 	};
 	)TI_DB_JS";
 
-	DatabaseModule::DatabaseModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Module(js_context, arguments),
+	DatabaseModule::DatabaseModule(const JSContext& js_context) TITANIUM_NOEXCEPT
+	    : Module(js_context),
 	      ti_db__(js_context.CreateObject()),
 	      field_type_double__(js_context.CreateNumber(Titanium::Database::Constants::to_underlying_type(Titanium::Database::FIELD_TYPE::DOUBLE))),
 	      field_type_float__(js_context.CreateNumber(Titanium::Database::Constants::to_underlying_type(Titanium::Database::FIELD_TYPE::FLOAT))),
@@ -51,6 +51,10 @@ namespace Titanium
 	      field_type_string__(js_context.CreateNumber(Titanium::Database::Constants::to_underlying_type(Titanium::Database::FIELD_TYPE::STRING)))
 	{
 		TITANIUM_LOG_DEBUG("DatabaseModule:: ctor ", this);
+	}
+
+	void DatabaseModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("DatabaseModule:: postCallAsConstructor ", this);
 	}
 
 	DatabaseModule::~DatabaseModule() TITANIUM_NOEXCEPT

@@ -25,7 +25,7 @@ namespace TitaniumWindows
 	{
 	public:
 
-		GlobalObject(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+		GlobalObject(const JSContext&) TITANIUM_NOEXCEPT;
 
 		virtual ~GlobalObject() = default;
 		GlobalObject(const GlobalObject&) = default;

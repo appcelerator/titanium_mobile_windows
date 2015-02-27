@@ -10,8 +10,8 @@
 
 namespace Titanium
 {
-    MapModule::MapModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-        : Module(js_context, arguments),
+    MapModule::MapModule(const JSContext& js_context) TITANIUM_NOEXCEPT
+        : Module(js_context),
 		hybrid_type__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::HYBRID))),
 		satellite_type__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::SATELLITE))),
 		normal_type__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::NORMAL))),
@@ -37,6 +37,11 @@ namespace Titanium
 		service_version_update_required__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::VERSION_UPDATE_REQUIRED))),
 		success__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::SUCCESS)))
     {
+		TITANIUM_LOG_DEBUG("MapModule:: ctor ", this);
+	}
+
+	void MapModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("MapModule:: postCallAsConstructor ", this);
 	}
 
 	JSValue MapModule::HYBRID_TYPE() const TITANIUM_NOEXCEPT

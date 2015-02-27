@@ -14,8 +14,8 @@ namespace TitaniumWindows
 	namespace UI
 	{
 
-		EmailDialog::EmailDialog(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: Titanium::UI::EmailDialog(js_context, arguments),
+		EmailDialog::EmailDialog(const JSContext& js_context) TITANIUM_NOEXCEPT
+			: Titanium::UI::EmailDialog(js_context),
 			attachments__()
 		{
 			TITANIUM_LOG_DEBUG("EmailDialog::ctor Initialize");

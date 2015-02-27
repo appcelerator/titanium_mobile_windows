@@ -10,10 +10,15 @@
 
 namespace Titanium
 {
-	TiModule::TiModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Module(js_context, arguments),
+	TiModule::TiModule(const JSContext& js_context) TITANIUM_NOEXCEPT
+	    : Module(js_context),
 	      userAgent__(js_context.CreateString())
 	{
+		TITANIUM_LOG_DEBUG("TiModule:: ctor ", this);
+	}
+
+	void TiModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("TiModule:: postCallAsConstructor ", this);
 	}
 
 	void TiModule::JSExportInitialize()

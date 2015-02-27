@@ -23,7 +23,7 @@ namespace TitaniumWindows
 	class TITANIUMWINDOWS_APP_EXPORT AppModule final : public Titanium::AppModule, public JSExport<AppModule>{
 
 	public:
-		AppModule(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+		AppModule(const JSContext&) TITANIUM_NOEXCEPT;
 
 		virtual ~AppModule() = default;
 		AppModule(const AppModule&) = default;

@@ -13,9 +13,14 @@ namespace Titanium
 	namespace App
 	{
 
-		Properties::Properties(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: Module(js_context, arguments)
+		Properties::Properties(const JSContext& js_context) TITANIUM_NOEXCEPT
+			: Module(js_context)
 		{
+			TITANIUM_LOG_DEBUG("Properties:: ctor ", this);
+		}
+
+		void Properties::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+			HAL_LOG_DEBUG("Properties:: postCallAsConstructor ", this);
 		}
 
 		bool Properties::getBool(const std::string& property, bool defaultValue) TITANIUM_NOEXCEPT

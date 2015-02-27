@@ -27,7 +27,8 @@ namespace Titanium
 
 		virtual void setUserAgent(const JSValue&) TITANIUM_NOEXCEPT final;
 
-		TiModule(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+		TiModule(const JSContext&) TITANIUM_NOEXCEPT;
+		virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 		virtual ~TiModule() = default;
 		TiModule(const TiModule&) = default;

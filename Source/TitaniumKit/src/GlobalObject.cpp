@@ -34,12 +34,16 @@ namespace Titanium
 		  {"__filename", "module_js"});
 	}
 
-	GlobalObject::GlobalObject(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : JSExportObject(js_context, arguments),
+	GlobalObject::GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT
+	    : JSExportObject(js_context),
 	      require_function__(createRequireFunction(js_context)),
 	      callback_map__(js_context.CreateObject())
 	{
 		TITANIUM_LOG_DEBUG("GlobalObject:: ctor ", this);
+	}
+
+	void GlobalObject::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("GlobalObject:: postCallAsConstructor ", this);
 	}
 
 	GlobalObject::~GlobalObject() TITANIUM_NOEXCEPT

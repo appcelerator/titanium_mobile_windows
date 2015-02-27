@@ -197,7 +197,8 @@ namespace Titanium
 			virtual uint32_t get_zIndex() const TITANIUM_NOEXCEPT final;
 			virtual void set_zIndex(const uint32_t& width) TITANIUM_NOEXCEPT;
 
-			Animation(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+			Animation(const JSContext&) TITANIUM_NOEXCEPT;
+			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 			virtual ~Animation() = default;
 			Animation(const Animation&) = default;

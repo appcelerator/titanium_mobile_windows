@@ -89,7 +89,9 @@ namespace Titanium
 		*/
 		virtual Titanium::Map::GOOGLE_PLAY_SERVICE_STATE isGooglePlayServicesAvailable() TITANIUM_NOEXCEPT;
 
-		MapModule(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+		MapModule(const JSContext&) TITANIUM_NOEXCEPT;
+		virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
+
 		virtual ~MapModule() = default;
 		MapModule(const MapModule&) = default;
 		MapModule& operator=(const MapModule&) = default;

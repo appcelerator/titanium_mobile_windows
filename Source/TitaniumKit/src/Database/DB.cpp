@@ -13,9 +13,15 @@ namespace Titanium
 {
 	namespace Database
 	{
-		DB::DB(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : Module(js_context, arguments)
+		DB::DB(const JSContext& js_context) TITANIUM_NOEXCEPT
+		    : Module(js_context)
 		{
+			TITANIUM_LOG_DEBUG("DB:: ctor ", this);
+		}
+
+		void DB::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+			HAL_LOG_DEBUG("DB:: postCallAsConstructor ", this);
+
 			// When called to represent class
 			if (arguments.empty()) {
 				return;

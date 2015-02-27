@@ -132,7 +132,8 @@ namespace Titanium
 			*/
 			virtual bool next() TITANIUM_NOEXCEPT;
 
-			ResultSet(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+			ResultSet(const JSContext&) TITANIUM_NOEXCEPT;
+			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 			virtual ~ResultSet() = default;
 			ResultSet(const ResultSet&) = default;

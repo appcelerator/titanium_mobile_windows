@@ -11,11 +11,16 @@
 
 namespace Titanium
 {
-	Module::Module(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : JSExportObject(js_context, arguments),
+	Module::Module(const JSContext& js_context) TITANIUM_NOEXCEPT
+	    : JSExportObject(js_context),
 	      event_listener_map__(js_context.CreateObject())
 	{
 		TITANIUM_LOG_DEBUG("Module:: ctor ", this);
+	}
+
+	void Module::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("Module:: postCallAsConstructor ", this);
+  
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
 			if (_0.IsObject()) {

@@ -11,9 +11,14 @@ namespace Titanium
 {
 	namespace Database
 	{
-		ResultSet::ResultSet(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		    : Module(js_context, arguments)
+		ResultSet::ResultSet(const JSContext& js_context) TITANIUM_NOEXCEPT
+		    : Module(js_context)
 		{
+			TITANIUM_LOG_DEBUG("ResultSet:: ctor ", this);
+		}
+
+		void ResultSet::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+			HAL_LOG_DEBUG("ResultSet:: postCallAsConstructor ", this);
 		}
 
 		uint32_t ResultSet::get_fieldCount() const TITANIUM_NOEXCEPT
