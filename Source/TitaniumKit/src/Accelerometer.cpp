@@ -10,10 +10,16 @@
 
 namespace Titanium
 {
-	Accelerometer::Accelerometer(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Module(js_context, arguments)
+	Accelerometer::Accelerometer(const JSContext& js_context) TITANIUM_NOEXCEPT
+	    : Module(js_context)
 	{
+		TITANIUM_LOG_DEBUG("Accelerometer:: ctor ", this);
 	}
+
+	void Accelerometer::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("Accelerometer:: postCallAsConstructor ", this);
+	}
+
 	void Accelerometer::JSExportInitialize()
 	{
 		JSExport<Accelerometer>::SetClassVersion(1);

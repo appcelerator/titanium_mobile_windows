@@ -43,8 +43,8 @@ namespace Titanium
 		return defaultValue;
 	}
 
-	AppModule::AppModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		: Module(js_context, arguments),
+	AppModule::AppModule(const JSContext& js_context) TITANIUM_NOEXCEPT
+		: Module(js_context),
 		accessibilityEnabled__(false),
 		analytics__(false),
 		copyright__("__COPYRIGHT__"),
@@ -64,6 +64,11 @@ namespace Titanium
 		url__("__URL__"),
 		version__("__VERSION__")
 	{
+		TITANIUM_LOG_DEBUG("AppModule:: ctor ", this);
+	}
+
+	void AppModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("AppModule:: postCallAsConstructor ", this);
 	}
 
 	void AppModule::loadAppInfo() TITANIUM_NOEXCEPT

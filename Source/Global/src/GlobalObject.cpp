@@ -164,8 +164,8 @@ namespace TitaniumWindows
 		TITANIUM_LOG_DEBUG("Timer::CreateTimer");
 		return std::make_shared<TitaniumWindows::Timer>(callback, interval);
 	}
-	GlobalObject::GlobalObject(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Titanium::GlobalObject(js_context, arguments)
+	GlobalObject::GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT
+	    : Titanium::GlobalObject(js_context)
 	{
 		TITANIUM_LOG_DEBUG("GlobalObject::ctor");
 	}

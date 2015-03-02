@@ -117,7 +117,8 @@ namespace Titanium
 			*/
 			virtual JSValue setString(const std::string& property, const std::string& value) TITANIUM_NOEXCEPT;
 
-			Properties(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+			Properties(const JSContext&) TITANIUM_NOEXCEPT;
+			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 			virtual ~Properties() = default;
 			Properties(const Properties&) = default;

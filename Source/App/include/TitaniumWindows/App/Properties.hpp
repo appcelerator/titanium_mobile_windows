@@ -28,7 +28,7 @@ namespace TitaniumWindows
 		class TITANIUMWINDOWS_APP_EXPORT Properties final : public Titanium::App::Properties, public JSExport<Properties>{
 
 		public:
-			Properties(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+			Properties(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~Properties() = default;
 			Properties(const Properties&) = default;

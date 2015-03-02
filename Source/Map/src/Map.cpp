@@ -11,8 +11,8 @@
 
 namespace TitaniumWindows
 {
-	MapModule::MapModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		: Titanium::MapModule(js_context, arguments)
+	MapModule::MapModule(const JSContext& js_context) TITANIUM_NOEXCEPT
+		: Titanium::MapModule(js_context)
 	{
 		TITANIUM_LOG_DEBUG("Map::ctor Initialize");
 	}

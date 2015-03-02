@@ -14,8 +14,8 @@ namespace Titanium
 	{
 
 
-		Animation::Animation(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: Module(js_context, arguments),
+		Animation::Animation(const JSContext& js_context) TITANIUM_NOEXCEPT
+			: Module(js_context),
 			autoreverse__(false),
 			backgroundColor__(""),
 			bottom__(0),
@@ -38,6 +38,11 @@ namespace Titanium
 			width__(0),
 			zIndex__(1)
 		{
+			TITANIUM_LOG_DEBUG("Animation:: ctor ", this);
+		}
+
+		void Animation::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+			HAL_LOG_DEBUG("Animation:: postCallAsConstructor ", this);
 		}
 
 		bool Animation::get_autoreverse() const TITANIUM_NOEXCEPT

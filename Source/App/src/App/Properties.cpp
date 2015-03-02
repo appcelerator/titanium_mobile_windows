@@ -20,8 +20,8 @@ namespace TitaniumWindows
 			return get_context().CreateFunction("return JSON.stringify(value);", { "value" });
 		}
 
-		Properties::Properties(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: Titanium::App::Properties(js_context, arguments),
+		Properties::Properties(const JSContext& js_context) TITANIUM_NOEXCEPT
+			: Titanium::App::Properties(js_context),
 			stringify_function__(createStringifyFunction(js_context)),
 			local_settings_(ApplicationData::Current->LocalSettings)
 		{

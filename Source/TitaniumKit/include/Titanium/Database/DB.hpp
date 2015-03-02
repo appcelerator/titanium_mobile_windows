@@ -65,7 +65,8 @@ namespace Titanium
 			*/
 			virtual JSValue execute(const std::string& sql, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 
-			DB(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+			DB(const JSContext&) TITANIUM_NOEXCEPT;
+			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 			virtual ~DB() = default;
 			DB(const DB&) = default;

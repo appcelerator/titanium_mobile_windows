@@ -21,7 +21,7 @@ namespace TitaniumWindows
 	class TITANIUMWINDOWS_TI_EXPORT TiModule final : public Titanium::TiModule, public JSExport<TiModule>
 	{
 	public:
-		TiModule(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+		TiModule(const JSContext&) TITANIUM_NOEXCEPT;
 
 		virtual ~TiModule();
 		TiModule(const TiModule&) = default;

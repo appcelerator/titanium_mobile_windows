@@ -12,10 +12,14 @@
 
 namespace Titanium
 {
-	API::API(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Module(js_context, arguments)
+	API::API(const JSContext& js_context) TITANIUM_NOEXCEPT
+	    : Module(js_context)
 	{
 		TITANIUM_LOG_DEBUG("API:: ctor ", this);
+	}
+
+	void API::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("API:: postCallAsConstructor ", this);
 	}
 
 	API::~API() TITANIUM_NOEXCEPT

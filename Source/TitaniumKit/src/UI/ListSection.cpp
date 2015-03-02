@@ -58,11 +58,16 @@ namespace Titanium
 			return items;
 		}
 
-		ListSection::ListSection(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: Module(js_context, arguments),
+		ListSection::ListSection(const JSContext& js_context) TITANIUM_NOEXCEPT
+			: Module(js_context),
 			footerTitle__(""),
 			headerTitle__("")
 		{
+			TITANIUM_LOG_DEBUG("ListSection:: ctor ", this);
+		}
+
+		void ListSection::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+			HAL_LOG_DEBUG("ListSection:: postCallAsConstructor ", this);
 		}
 
 		std::string ListSection::get_footerTitle() const TITANIUM_NOEXCEPT

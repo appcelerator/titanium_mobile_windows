@@ -30,13 +30,18 @@ this.exports.serializeToString = function(_xml) {
 )TI_XML_JS";
 
 
-	XML::XML(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	    : Module(js_context, arguments),
+	XML::XML(const JSContext& js_context) TITANIUM_NOEXCEPT
+	    : Module(js_context),
 	      func_parseString__(js_context.CreateObject()),
 	      func_serializeToString__(js_context.CreateObject()),
 		  ti_xml__(js_context.CreateObject())
 	{
 		// There's no "new Ti.XML()" 
+		TITANIUM_LOG_DEBUG("XML:: ctor ", this);
+	}
+
+	void XML::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("XML:: postCallAsConstructor ", this);
 	}
 
 	void XML::JSExportInitialize()

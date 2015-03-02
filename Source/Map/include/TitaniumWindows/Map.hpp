@@ -24,7 +24,7 @@ namespace TitaniumWindows
 	{
 
 	public:
-		MapModule(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+		MapModule(const JSContext&) TITANIUM_NOEXCEPT;
 		virtual ~MapModule()                  = default;
 		MapModule(const MapModule&)            = default;
 		MapModule& operator=(const MapModule&) = default;

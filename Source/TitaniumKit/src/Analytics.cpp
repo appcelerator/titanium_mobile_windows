@@ -13,11 +13,16 @@
 namespace Titanium
 {
 
-    Analytics::Analytics(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-	  : Module(js_context, arguments),
+    Analytics::Analytics(const JSContext& js_context) TITANIUM_NOEXCEPT
+	  : Module(js_context),
 		ti_analytics__(js_context.CreateObject())
     {
+		TITANIUM_LOG_DEBUG("Analytics:: ctor ", this);
     }
+
+	void Analytics::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+		HAL_LOG_DEBUG("Analytics:: postCallAsConstructor ", this);
+	}
 
 	bool Analytics::loadJS()
 	{
