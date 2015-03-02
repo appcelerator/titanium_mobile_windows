@@ -6,8 +6,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef _TITANIUMWINDOWS_DETAIL_MAPBASE_HPP_
-#define _TITANIUMWINDOWS_DETAIL_MAPBASE_HPP_
+#ifndef _TITANIUMWINDOWS_MAP_DETAIL_MAPBASE_HPP_
+#define _TITANIUMWINDOWS_MAP_DETAIL_MAPBASE_HPP_
 
 #include "TitaniumWindows_Map_EXPORT.h"
 
@@ -15,4 +15,4 @@
 #include "Titanium/detail/TiLogger.hpp"
 #include "HAL/HAL.hpp"
 
-#endif // _TITANIUMWINDOWS_DETAIL_MAPBASE_HPP_
+#endif // _TITANIUMWINDOWS_MAP_DETAIL_MAPBASE_HPP_

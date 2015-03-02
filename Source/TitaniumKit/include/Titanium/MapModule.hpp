@@ -10,6 +10,7 @@
 #define _TITANIUM_MAP_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/Map/View.hpp"
 #include "Titanium/Map/Constants.hpp"
 
 namespace Titanium

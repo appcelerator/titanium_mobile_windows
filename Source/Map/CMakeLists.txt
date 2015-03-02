@@ -47,10 +47,16 @@ if(NOT TARGET TitaniumWindows_Utility)
   add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
 endif()
 
+if(NOT TARGET TitaniumWindows_UI)
+  get_filename_component(UI_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../UI ABSOLUTE)
+  add_subdirectory(${UI_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/UI EXCLUDE_FROM_ALL)
+endif()
+
 set(SOURCE_Map
+  include/TitaniumWindows/Map/View.hpp
+  src/View.cpp
   include/TitaniumWindows/Map.hpp
-  src/Map.cpp
-  include/TitaniumWindows/detail/MapBase.hpp
+  include/TitaniumWindows/Map/detail/MapBase.hpp
   )
 
 source_group(Titanium\\Map FILES ${SOURCE_Map})
@@ -70,11 +76,13 @@ target_include_directories(TitaniumWindows_Map PUBLIC
   ${PROJECT_SOURCE_DIR}/include
   $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:TitaniumWindows_UI,INTERFACE_INCLUDE_DIRECTORIES>
   )
 
 target_link_libraries(TitaniumWindows_Map
   TitaniumKit
   TitaniumWindows_Utility
+  TitaniumWindows_UI
   )
 
 set_target_properties(TitaniumWindows_Map PROPERTIES VS_WINRT_COMPONENT TRUE)

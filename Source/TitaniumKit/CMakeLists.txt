@@ -224,6 +224,8 @@ set(SOURCE_Map
   src/MapModule.cpp
   include/Titanium/Map/Constants.hpp
   src/Map/Constants.cpp
+  include/Titanium/Map/View.hpp
+  src/Map/View.cpp
 )
 
 source_group(TitaniumKit                   FILES ${SOURCE_TitaniumKit})

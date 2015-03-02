@@ -174,9 +174,9 @@ namespace Titanium
 		TITANIUM_ASSERT(View_property.IsObject());  // precondition
 		JSObject MapView = static_cast<JSObject>(View_property);
 
-		Titanium::Module::applyProperties(MapView, parameters);
-		
-		return MapView.CallAsConstructor(parameters);
+		auto mapView = MapView.CallAsConstructor(parameters);
+		Titanium::Module::applyProperties(parameters, mapView);
+		return mapView;
 	}
 
 	JSValue MapModule::createAnnotation(JSObject parameters) TITANIUM_NOEXCEPT
@@ -209,7 +209,7 @@ namespace Titanium
 		JSExport<MapModule>::AddValueProperty("HYBRID_TYPE", std::mem_fn(&MapModule::HYBRID_TYPE));
 		JSExport<MapModule>::AddValueProperty("SATELLITE_TYPE", std::mem_fn(&MapModule::SATELLITE_TYPE));
 		JSExport<MapModule>::AddValueProperty("NORMAL_TYPE", std::mem_fn(&MapModule::NORMAL_TYPE));
-		JSExport<MapModule>::AddValueProperty("TERRAIN_TYPE", std::mem_fn(&MapModule::NORMAL_TYPE));
+		JSExport<MapModule>::AddValueProperty("TERRAIN_TYPE", std::mem_fn(&MapModule::TERRAIN_TYPE));
 		JSExport<MapModule>::AddValueProperty("ANNOTATION_DRAG_STATE_END", std::mem_fn(&MapModule::ANNOTATION_DRAG_STATE_END));
 		JSExport<MapModule>::AddValueProperty("ANNOTATION_DRAG_STATE_START", std::mem_fn(&MapModule::ANNOTATION_DRAG_STATE_START));
 		JSExport<MapModule>::AddValueProperty("ANNOTATION_AZURE", std::mem_fn(&MapModule::ANNOTATION_AZURE));

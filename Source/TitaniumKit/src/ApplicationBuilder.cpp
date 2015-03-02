@@ -10,8 +10,6 @@
 #include "Titanium/TiModule.hpp"
 #include "Titanium/API.hpp"
 #include "Titanium/UIModule.hpp"
-#include "Titanium/UI/Animation.hpp"
-#include "Titanium/App/Properties.hpp"
 #include "Titanium/App.hpp"
 #include "Titanium/Analytics.hpp"
 #include "Titanium/PlatformModule.hpp"
@@ -19,10 +17,8 @@
 #include "Titanium/Gesture.hpp"
 #include "Titanium/Blob.hpp"
 #include "Titanium/FilesystemModule.hpp"
-#include "Titanium/Filesystem/File.hpp"
 #include "Titanium/DatabaseModule.hpp"
 #include "Titanium/NetworkModule.hpp"
-#include "Titanium/Network/HTTPClient.hpp"
 #include "Titanium/XML.hpp"
 #include "Titanium/MapModule.hpp"
 
@@ -57,10 +53,11 @@ namespace Titanium
 	      file__(js_context__.CreateObject<Titanium::Filesystem::File>()),
 	      filesystem__(js_context__.CreateObject<Titanium::FilesystemModule>()),
 	      database__(js_context__.CreateObject<Titanium::DatabaseModule>()),
-		  app__(js_context__.CreateObject<Titanium::AppModule>()),
+	      app__(js_context__.CreateObject<Titanium::AppModule>()),
 	      httpclient__(js_context__.CreateObject<Titanium::Network::HTTPClient>()),
 	      network__(js_context__.CreateObject<Titanium::NetworkModule>()),
-	      map__(js_context__.CreateObject<Titanium::MapModule>())
+	      map__(js_context__.CreateObject<Titanium::MapModule>()),
+	      mapview__(js_context__.CreateObject<Titanium::Map::View>())
 	{
 	}
 
@@ -103,6 +100,7 @@ namespace Titanium
 		titanium.SetProperty("Analytics", analytics__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("XML", xml__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("Map", map__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+		map__.SetProperty("View", mapview__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 
 		JSString builtin_functions_script = R"js(
 			  console = {};
@@ -232,9 +230,9 @@ namespace Titanium
 		return view__;
 	}
 
-	ApplicationBuilder& ApplicationBuilder::ViewObject(const JSObject& view) TITANIUM_NOEXCEPT
+	ApplicationBuilder& ApplicationBuilder::ViewObject(const JSObject& View) TITANIUM_NOEXCEPT
 	{
-		view__ = view;
+		view__ = View;
 		return *this;
 	}
 
@@ -385,6 +383,7 @@ namespace Titanium
 	{
 		return filesystem__;
 	}
+	
 	ApplicationBuilder& ApplicationBuilder::FilesystemObject(const JSObject& filesystem) TITANIUM_NOEXCEPT
 	{
 		filesystem__ = filesystem;
@@ -395,6 +394,7 @@ namespace Titanium
 	{
 		return database__;
 	}
+
 	ApplicationBuilder& ApplicationBuilder::DatabaseObject(const JSObject& database) TITANIUM_NOEXCEPT
 	{
 		database__ = database;
@@ -405,6 +405,7 @@ namespace Titanium
 	{
 		return webview__;
 	}
+
 	ApplicationBuilder& ApplicationBuilder::WebViewObject(const JSObject& webview) TITANIUM_NOEXCEPT
 	{
 		webview__ = webview;
@@ -426,6 +427,7 @@ namespace Titanium
 	{
 		return network__;
 	}
+
 	ApplicationBuilder& ApplicationBuilder::NetworkObject(const JSObject& network) TITANIUM_NOEXCEPT
 	{
 		network__ = network;
@@ -451,6 +453,17 @@ namespace Titanium
 	ApplicationBuilder& ApplicationBuilder::MapObject(const JSObject& Map) TITANIUM_NOEXCEPT
 	{
 		map__ = Map;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::MapViewObject() const TITANIUM_NOEXCEPT
+	{
+		return mapview__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::MapViewObject(const JSObject& mapview) TITANIUM_NOEXCEPT
+	{
+		mapview__ = mapview;
 		return *this;
 	}
 
