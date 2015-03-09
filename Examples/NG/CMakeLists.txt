@@ -113,6 +113,7 @@ configure_file(
 
 set(SOURCE_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
+  src/Assets/titanium_settings.ini
   src/Assets/app.js
   src/Assets/Logo.png
   src/Assets/SmallLogo.png
