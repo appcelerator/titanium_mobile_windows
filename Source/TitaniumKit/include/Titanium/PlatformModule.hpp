@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -124,6 +124,7 @@ namespace Titanium
 		virtual JSValue js_get_BATTERY_STATE_UNPLUGGED() const TITANIUM_NOEXCEPT final;
 
 		virtual void setDisplayCaps(const JSValue&) TITANIUM_NOEXCEPT final;
+		JSObject GetPlatformObject(const JSContext& js_context) const TITANIUM_NOEXCEPT;
 
 	private:
 		JSValue displayCaps__;

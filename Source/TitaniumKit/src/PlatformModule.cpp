@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -225,90 +225,131 @@ namespace Titanium
 	JSValue PlatformModule::js_setBatteryMonitoring(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_ASSERT(arguments.size() == 1);
-		js_set_batteryMonitoring(arguments.at(0));
-		return get_context().CreateUndefined();
+
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+
+		platform_ptr->js_set_batteryMonitoring(arguments.at(0));
+
+		return this_object.get_context().CreateUndefined();
 	}
-	JSValue PlatformModule::js_getBatteryState(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getBatteryState(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_batteryState();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_batteryState();
 	}
-	JSValue PlatformModule::js_getId(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getId(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_id();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_id();
 	}
-	JSValue PlatformModule::js_getLocale(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getLocale(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_locale();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_locale();
 	}
-	JSValue PlatformModule::js_getMacaddress(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getMacaddress(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_macaddress();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_macaddress();
 	}
-	JSValue PlatformModule::js_getManufacturer(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getManufacturer(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_manufacturer();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_manufacturer();
 	}
-	JSValue PlatformModule::js_getModel(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getModel(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_model();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_model();
 	}
-	JSValue PlatformModule::js_getName(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getName(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_name();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_name();
 	}
-	JSValue PlatformModule::js_getNetmask(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getNetmask(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_netmask();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_netmask();
 	}
-	JSValue PlatformModule::js_getOsname(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getOsname(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_osname();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_osname();
 	}
-	JSValue PlatformModule::js_getOstype(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getOstype(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_ostype();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_ostype();
 	}
-	JSValue PlatformModule::js_getProcessorCount(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getProcessorCount(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_processorCount();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_processorCount();
 	}
-	JSValue PlatformModule::js_getRuntime(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getRuntime(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_runtime();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_runtime();
 	}
-	JSValue PlatformModule::js_getUsername(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getUsername(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_username();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_username();
 	}
-	JSValue PlatformModule::js_getVersion(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue PlatformModule::js_getVersion(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_version();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_version();
 	}
 
 	JSValue PlatformModule::js_createUUID(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
-		return get_context().CreateString(createUUID());
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return js_context.CreateString(platform_ptr->createUUID());
 	}
 
 	JSValue PlatformModule::js_canOpenURL(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
+		const auto js_context = this_object.get_context();
 		if (arguments.size() < 1) {
-			return get_context().CreateBoolean(false);
+			return js_context.CreateBoolean(false);
 		}
 		const auto _0 = static_cast<std::string>(arguments.at(0));
-		return get_context().CreateBoolean(canOpenURL(_0));
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return js_context.CreateBoolean(platform_ptr->canOpenURL(_0));
 	}
 	JSValue PlatformModule::js_openURL(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
+		const auto js_context = this_object.get_context();
 		if (arguments.size() < 1) {
 			return get_context().CreateBoolean(false);
 		}
 		const auto _0 = static_cast<std::string>(arguments.at(0));
-		return get_context().CreateBoolean(openURL(_0));
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return js_context.CreateBoolean(platform_ptr->openURL(_0));
 	}
 	JSValue PlatformModule::js_is24HourTimeFormat(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
-		return get_context().CreateBoolean(is24HourTimeFormat());
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return js_context.CreateBoolean(platform_ptr->is24HourTimeFormat());
 	}
 
 	void PlatformModule::setDisplayCaps(const JSValue& displayCaps) TITANIUM_NOEXCEPT
@@ -323,7 +364,9 @@ namespace Titanium
 
 	JSValue PlatformModule::js_getDisplayCaps(const std::vector<JSValue>& arguments, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_get_displayCaps();
+		const auto js_context = this_object.get_context();
+		const auto platform_ptr = GetPlatformObject(js_context).GetPrivate<PlatformModule>();
+		return platform_ptr->js_get_displayCaps();
 	}
 
 	JSValue PlatformModule::js_get_BATTERY_STATE_CHARGING() const TITANIUM_NOEXCEPT
@@ -344,6 +387,17 @@ namespace Titanium
 	JSValue PlatformModule::js_get_BATTERY_STATE_UNPLUGGED() const TITANIUM_NOEXCEPT
 	{
 		return BATTERY_STATE_UNPLUGGED__;
+	}
+
+	JSObject PlatformModule::GetPlatformObject(const JSContext& js_context) const TITANIUM_NOEXCEPT
+	{
+		JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
+		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
+
+		JSValue Object_property = Titanium.GetProperty("Platform");
+		TITANIUM_ASSERT(Object_property.IsObject());  // precondition
+		return static_cast<JSObject>(Object_property);
 	}
 
 	void PlatformModule::JSExportInitialize()

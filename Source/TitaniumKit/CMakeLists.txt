@@ -123,6 +123,8 @@ set(SOURCE_Filesystem
   src/Filesystem/File.cpp
   include/Titanium/Filesystem/Constants.hpp
   src/Filesystem/Constants.cpp
+  include/Titanium/Filesystem/FileStream.hpp
+  src/Filesystem/FileStream.cpp
   )
 
 set(SOURCE_Network

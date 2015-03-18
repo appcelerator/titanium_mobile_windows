@@ -34,9 +34,9 @@ bool NativeFilesystemExample::isExternalStoragePresent() TITANIUM_NOEXCEPT
 {
 	return false;
 }
-JSValue NativeFilesystemExample::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT
+std::shared_ptr<Titanium::Filesystem::FileStream> NativeFilesystemExample::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT
 {
-	return get_context().CreateNull();
+	return nullptr;
 }
 std::string NativeFilesystemExample::separator() const TITANIUM_NOEXCEPT
 {

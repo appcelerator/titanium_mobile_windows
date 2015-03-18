@@ -1,7 +1,7 @@
 /**
  * TitaniumKit
  *
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -82,20 +82,19 @@ namespace Titanium
 		return field_type_string__;
 	}
 
-	bool DatabaseModule::loadJS()
+	bool DatabaseModule::loadJS(const JSContext& js_context)
 	{
 		if (ti_db__.HasProperty("install") && ti_db__.HasProperty("open")) {
 			return true;
 		}
 
-		JSContext context = get_context();
-		auto export_object = context.CreateObject();
-		export_object.SetProperty("global", context.get_global_object());
-		export_object.SetProperty("TiDatabase", context.CreateObject(JSExport<Titanium::DatabaseModule>::Class()));
-		export_object.SetProperty("TiDatabaseDB", context.CreateObject(JSExport<Titanium::Database::DB>::Class()));
-		export_object.SetProperty("TiDatabaseResultSet", context.CreateObject(JSExport<Titanium::Database::ResultSet>::Class()));
+		auto export_object = js_context.CreateObject();
+		export_object.SetProperty("global", js_context.get_global_object());
+		export_object.SetProperty("TiDatabase", js_context.CreateObject(JSExport<Titanium::DatabaseModule>::Class()));
+		export_object.SetProperty("TiDatabaseDB", js_context.CreateObject(JSExport<Titanium::Database::DB>::Class()));
+		export_object.SetProperty("TiDatabaseResultSet", js_context.CreateObject(JSExport<Titanium::Database::ResultSet>::Class()));
 
-		context.JSEvaluateScript(ti_db_js, export_object);
+		js_context.JSEvaluateScript(ti_db_js, export_object);
 		if (export_object.HasProperty("exports")) {
 			ti_db__ = static_cast<JSObject>(export_object.GetProperty("exports"));
 		} else {
@@ -116,6 +115,17 @@ namespace Titanium
 		JSExport<DatabaseModule>::AddValueProperty("FIELD_TYPE_STRING", std::mem_fn(&DatabaseModule::FIELD_TYPE_STRING));
 	}
 
+	JSObject DatabaseModule::GetDatabaseObject(const JSContext& js_context) const TITANIUM_NOEXCEPT
+	{
+		JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
+		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
+
+		JSValue Object_property = Titanium.GetProperty("Database");
+		TITANIUM_ASSERT(Object_property.IsObject());  // precondition
+		return static_cast<JSObject>(Object_property);
+	}
+
 	JSValue DatabaseModule::js_install(const std::vector<JSValue>& arguments, JSObject& this_object)
 	{
 		TITANIUM_ASSERT(arguments.size() == 2);
@@ -126,14 +136,17 @@ namespace Titanium
 		TITANIUM_ASSERT(_0.IsString());
 		TITANIUM_ASSERT(_1.IsString());
 
+		const auto js_context = this_object.get_context();
+		const auto database = GetDatabaseObject(js_context).GetPrivate<DatabaseModule>();
+
 		// lazy loading
-		const auto loaded = loadJS();
+		const auto loaded = database->loadJS(js_context);
 		if (loaded) {
-			auto func = ti_db__.GetProperty("install");
+			auto func = database->getTiObject().GetProperty("install");
 			return static_cast<JSObject>(func)(arguments, this_object);
 		} else {
 			TITANIUM_LOG_ERROR("Failed to execute Database.install");
-			return get_context().CreateNull();
+			return js_context.CreateNull();
 		}
 	}
 
@@ -144,14 +157,17 @@ namespace Titanium
 		const auto _0 = arguments.at(0);
 		TITANIUM_ASSERT(_0.IsString());
 
+		const auto js_context = this_object.get_context();
+		const auto database = GetDatabaseObject(js_context).GetPrivate<DatabaseModule>();
+
 		// lazy loading
-		const auto loaded = loadJS();
+		const auto loaded = database->loadJS(js_context);
 		if (loaded) {
-			auto func = ti_db__.GetProperty("open");
+			auto func = database->getTiObject().GetProperty("open");
 			return static_cast<JSObject>(func)(arguments, this_object);
 		} else {
 			TITANIUM_LOG_ERROR("Failed to execute Database.open");
-			return get_context().CreateNull();
+			return js_context.CreateNull();
 		}
 	}
 }  // namespace Titanium

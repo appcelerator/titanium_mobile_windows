@@ -55,6 +55,17 @@ namespace Titanium
 		JSExport<Analytics>::AddFunctionProperty("getLastEvent", std::mem_fn(&Analytics::js_getLastEvent));
 	}
 
+	JSObject Analytics::GetAnalyticsObject(const JSContext& js_context) const TITANIUM_NOEXCEPT
+	{
+		JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
+		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
+
+		JSValue Object_property = Titanium.GetProperty("Analytics");
+		TITANIUM_ASSERT(Object_property.IsObject());  // precondition
+		return static_cast<JSObject>(Object_property);
+	}
+
 	JSValue Analytics::js_lastEvent() const TITANIUM_NOEXCEPT
 	{
 //		// lazy loading
@@ -79,14 +90,17 @@ namespace Titanium
 			TITANIUM_ASSERT(_1.IsObject());
 		}
 
+		const auto js_context = this_object.get_context();
+		const auto analytics = GetAnalyticsObject(js_context).GetPrivate<Analytics>();
+
 		// lazy loading
-		const auto loaded = loadJS();
+		const auto loaded = analytics->loadJS();
 		if (loaded) {
-			auto func = ti_analytics__.GetProperty("featureEvent");
+			auto func = analytics->getTiObject().GetProperty("featureEvent");
 			return static_cast<JSObject>(func)(arguments, this_object);
 		} else {
 			TITANIUM_LOG_ERROR("Failed to execute Database.featureEvent");
-			return get_context().CreateNull();
+			return this_object.get_context().CreateNull();
 		}
 	}
 
@@ -114,10 +128,13 @@ namespace Titanium
 			}
 		}
 
+		const auto js_context = this_object.get_context();
+		const auto analytics = GetAnalyticsObject(js_context).GetPrivate<Analytics>();
+
 		// lazy loading
-		const auto loaded = loadJS();
+		const auto loaded = analytics->loadJS();
 		if (loaded) {
-			auto func = ti_analytics__.GetProperty("navEvent");
+			auto func = analytics->getTiObject().GetProperty("navEvent");
 			return static_cast<JSObject>(func)(arguments, this_object);
 		} else {
 			TITANIUM_LOG_ERROR("Failed to execute Database.navEvent");

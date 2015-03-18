@@ -46,6 +46,12 @@ namespace Titanium
 
 		bool loadJS();
 
+		JSObject GetAnalyticsObject(const JSContext& js_context) const TITANIUM_NOEXCEPT;
+
+		JSObject getTiObject() {
+			return ti_analytics__;
+		}
+
 	private:
 		JSObject ti_analytics__;
 	};

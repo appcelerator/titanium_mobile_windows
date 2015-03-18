@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -35,11 +35,11 @@ namespace Titanium
 		return "/";
 	}
 
-	JSValue FilesystemModule::getFile(const std::string& path) TITANIUM_NOEXCEPT
+	File_shared_ptr_t FilesystemModule::getFile(const JSContext& js_context, const std::string& path) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_DEBUG("Filesystem::getFile: ", path);
 
-		JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
+		JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
 		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
@@ -51,35 +51,43 @@ namespace Titanium
 		TITANIUM_ASSERT(File_property.IsObject());  // precondition
 		JSObject File = static_cast<JSObject>(File_property);
 
-		return File.CallAsConstructor(path);
+		return File.CallAsConstructor(path).GetPrivate<Titanium::Filesystem::File>();
 	}
 
-	JSValue FilesystemModule::createTempDirectory() TITANIUM_NOEXCEPT
+	File_shared_ptr_t FilesystemModule::createTempDirectory(const JSContext& js_context) TITANIUM_NOEXCEPT
 	{
 		const auto script =
 		"       var file = Ti.Filesystem.getFile(Ti.Filesystem.tempDirectory, new Date().getTime());"
 		"       file.createDirectory();"
 		"       file;";
-		return get_context().JSEvaluateScript(script);
+		auto file = js_context.JSEvaluateScript(script);
+		if (file.IsObject()) {
+			return static_cast<JSObject>(file).GetPrivate<Titanium::Filesystem::File>();
+		}
+		return nullptr;
 	}
-	JSValue FilesystemModule::createTempFile() TITANIUM_NOEXCEPT
+	File_shared_ptr_t FilesystemModule::createTempFile(const JSContext& js_context) TITANIUM_NOEXCEPT
 	{
 		const auto script =
 		"       var dir  = Ti.Filesystem.createTempDirectory();"
 		"       var file = Ti.Filesystem.getFile(dir.nativePath, 'tifile' + Math.random().toString(36).substring(2) + '.tmp');"
 		"       file.createFile();"
 		"       file;";
-		return get_context().JSEvaluateScript(script);
+		auto file = js_context.JSEvaluateScript(script);
+		if (file.IsObject()) {
+			return static_cast<JSObject>(file).GetPrivate<Titanium::Filesystem::File>();
+		}
+		return nullptr;
 	}
 	bool FilesystemModule::isExternalStoragePresent() TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("File::isExternalStoragePresent: Unimplemented");
 		return false;
 	}
-	JSValue FilesystemModule::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT
+	FileStream_shared_ptr_t FilesystemModule::openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("File::openStream: Unimplemented");
-		return get_context().CreateNull();
+		return nullptr;
 	}
 	std::string FilesystemModule::applicationCacheDirectory() const TITANIUM_NOEXCEPT
 	{
@@ -153,9 +161,22 @@ namespace Titanium
 		JSExport<FilesystemModule>::AddFunctionProperty("getTempDirectory", std::mem_fn(&FilesystemModule::js_getTempDirectory));
 	}
 
+	JSObject FilesystemModule::GetFilesystemObject(const JSContext& js_context) const TITANIUM_NOEXCEPT
+	{
+		JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
+		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
+
+		JSValue Object_property = Titanium.GetProperty("Filesystem");
+		TITANIUM_ASSERT(Object_property.IsObject());  // precondition
+		return static_cast<JSObject>(Object_property);
+	}
+
 	JSValue FilesystemModule::js_getFile(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
-		JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
+		const auto js_context = this_object.get_context();
+
+		JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
 		JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
@@ -167,6 +188,8 @@ namespace Titanium
 		TITANIUM_ASSERT(sep_property.IsString());  // precondition
 		std::string separator = static_cast<std::string>(sep_property);
 
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+
 		// join paths with separator
 		std::ostringstream oss;
 		const auto size = arguments.size();
@@ -177,25 +200,43 @@ namespace Titanium
 				oss << separator;
 			}
 		}
-		return getFile(oss.str());
+		const auto object_ptr = filesystem_ptr->getFile(js_context, oss.str());
+		if (object_ptr != nullptr) {
+			return object_ptr->get_object();
+		}
+		return this_object.get_context().CreateUndefined();
 	}
 
-	JSValue FilesystemModule::js_createTempDirectory(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_createTempDirectory(const std::vector<JSValue>&, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
-		return createTempDirectory();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		const auto object_ptr = filesystem_ptr->createTempDirectory(this_object.get_context());
+		if (object_ptr != nullptr) {
+			return object_ptr->get_object();
+		}
+		return this_object.get_context().CreateUndefined();
 	}
-	JSValue FilesystemModule::js_createTempFile(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_createTempFile(const std::vector<JSValue>&, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
-		return createTempFile();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		const auto object_ptr = filesystem_ptr->createTempFile(this_object.get_context());
+		if (object_ptr != nullptr) {
+			return object_ptr->get_object();
+		}
+		return this_object.get_context().CreateUndefined();
 	}
-	JSValue FilesystemModule::js_isExternalStoragePresent(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_isExternalStoragePresent(const std::vector<JSValue>&, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
-		return get_context().CreateBoolean(isExternalStoragePresent());
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateBoolean(filesystem_ptr->isExternalStoragePresent());
 	}
-	JSValue FilesystemModule::js_openStream(const std::vector<JSValue>& arguments, JSObject&) TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_openStream(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		if (arguments.size() < 2) {
-			return get_context().CreateUndefined();
+			return this_object.get_context().CreateUndefined();
 		}
 		const auto _0 = arguments.at(0);
 		const auto _1 = arguments.at(1);
@@ -203,46 +244,71 @@ namespace Titanium
 		TITANIUM_ASSERT(_0.IsNumber());
 		TITANIUM_ASSERT(_1.IsString());
 
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+
 		const auto modes = Titanium::Filesystem::Constants::to_MODE(static_cast<std::underlying_type<Titanium::Filesystem::MODE>::type>(_0));
 		const std::string path = static_cast<std::string>(_1);
-		return openStream(modes, path);
+		const auto object_ptr = filesystem_ptr->openStream(modes, path);
+		if (object_ptr != nullptr) {
+			return object_ptr->get_object();
+		}
+		return this_object.get_context().CreateUndefined();
 	}
 
-	JSValue FilesystemModule::js_getSeparator(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_getSeparator(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_separator();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateString(filesystem_ptr->separator());
 	}
-	JSValue FilesystemModule::js_getApplicationCacheDirectory(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_getApplicationCacheDirectory(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_applicationCacheDirectory();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateString(filesystem_ptr->applicationCacheDirectory());
 	}
-	JSValue FilesystemModule::js_getApplicationDataDirectory(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_getApplicationDataDirectory(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_applicationDataDirectory();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateString(filesystem_ptr->applicationDataDirectory());
 	}
-	JSValue FilesystemModule::js_getApplicationDirectory(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_getApplicationDirectory(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_applicationDirectory();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateString(filesystem_ptr->applicationDirectory());
 	}
-	JSValue FilesystemModule::js_getApplicationSupportDirectory(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_getApplicationSupportDirectory(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_applicationSupportDirectory();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateString(filesystem_ptr->applicationSupportDirectory());
 	}
-	JSValue FilesystemModule::js_getExternalStorageDirectory(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_getExternalStorageDirectory(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_externalStorageDirectory();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateString(filesystem_ptr->externalStorageDirectory());
 	}
-	JSValue FilesystemModule::js_getLineEnding(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_getLineEnding(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_lineEnding();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateString(filesystem_ptr->lineEnding());
 	}
-	JSValue FilesystemModule::js_getResourcesDirectory(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_getResourcesDirectory(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_resourcesDirectory();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateString(filesystem_ptr->resourcesDirectory());
 	}
-	JSValue FilesystemModule::js_getTempDirectory(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT
+	JSValue FilesystemModule::js_getTempDirectory(const std::vector<JSValue>&, JSObject& this_object) const TITANIUM_NOEXCEPT
 	{
-		return js_tempDirectory();
+		const auto js_context = this_object.get_context();
+		const auto filesystem_ptr = GetFilesystemObject(js_context).GetPrivate<FilesystemModule>();
+		return this_object.get_context().CreateString(filesystem_ptr->tempDirectory());
 	}
 
 	JSValue FilesystemModule::js_separator() const TITANIUM_NOEXCEPT

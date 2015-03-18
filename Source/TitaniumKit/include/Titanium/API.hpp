@@ -1,7 +1,7 @@
 /**
  * TitaniumKit
  *
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -146,6 +146,7 @@ namespace Titanium
 			API_TRACE
 		};
 
+		JSObject GetAPIObject(const JSContext& js_context) const TITANIUM_NOEXCEPT;
 		void log(LogSeverityLevel log_severity_level, const std::string& message) const TITANIUM_NOEXCEPT;
 
 		static LogSeverityLevel ToLogLevel(const std::string& level);

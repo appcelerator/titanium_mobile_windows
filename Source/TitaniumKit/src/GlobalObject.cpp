@@ -1,7 +1,7 @@
 /**
  * TitaniumKit
  *
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -23,7 +23,7 @@ namespace Titanium
 
 	JSFunction GlobalObject::createRequireFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT
 	{
-		return get_context().CreateFunction(R"JS(
+		return js_context.CreateFunction(R"JS(
       var exports={},__OXP=exports,module={'exports':exports};
       eval(module_js);
       if(module.exports !== __OXP){
@@ -145,7 +145,7 @@ namespace Titanium
 		const auto packageJSONFile = path + "/package.json";
 		if (requiredModuleExists(packageJSONFile)) {
 				const auto content = readRequiredModule(packageJSONFile);
-				const auto result = get_context().CreateValueFromJSON(content);
+				const auto result = parent.get_context().CreateValueFromJSON(content);
 				if (result.IsObject()) {
 					const auto json = static_cast<JSObject>(result);
 					auto mainValue = json.GetProperty("main");
@@ -220,8 +220,10 @@ namespace Titanium
 	{
 		TITANIUM_GLOBALOBJECT_LOCK_GUARD;
 
+		const auto js_context = parent.get_context();
+
 		if (moduleId == "ti.map") {
-			JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
+			JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
 			TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
 			JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
@@ -252,12 +254,12 @@ namespace Titanium
 		}
 
 		try {
-			JSValue result = get_context().CreateUndefined();
+			JSValue result = js_context.CreateUndefined();
 			if (boost::ends_with(module_path, ".json")){
-				result = get_context().CreateValueFromJSON(module_js);
-			} else if (get_context().JSCheckScriptSyntax(module_js, moduleId)) {
-				const std::vector<JSValue> args = { get_context().CreateString(moduleId), get_context().CreateString(module_js) };
-				result = require_function__(args, get_context().get_global_object());
+				result = js_context.CreateValueFromJSON(module_js);
+			} else if (js_context.JSCheckScriptSyntax(module_js, moduleId)) {
+				const std::vector<JSValue> args = { js_context.CreateString(moduleId), js_context.CreateString(module_js) };
+				result = require_function__(args, js_context.get_global_object());
 			} else {
 				detail::ThrowRuntimeError("require", "Could not load module "+moduleId);
 			}
@@ -272,7 +274,7 @@ namespace Titanium
 		} catch (...) {
 			detail::ThrowRuntimeError("require", "Unknown error while require("+moduleId+")");
 		}
-		return get_context().CreateUndefined();
+		return js_context.CreateUndefined();
 	}
 
 	unsigned GlobalObject::setTimeout(JSObject&& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT
@@ -449,6 +451,16 @@ namespace Titanium
 
 	JSValue GlobalObject::js_require(const std::vector<JSValue>& arguments, JSObject& this_object)
 	{
+		// When caller has been changed ("this" is nullptr), fallback to global object
+		if (this == nullptr) {
+			const auto global_object = this_object.get_context().get_global_object();
+			const auto global_ptr = global_object.GetPrivate<GlobalObject>();
+			if (global_ptr != nullptr) {
+				return global_ptr->js_require(arguments, this_object);
+			} else {
+				return this_object.get_context().CreateUndefined();
+			}
+		}
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
 		TITANIUM_ASSERT(arguments.size() >= 1);
@@ -460,6 +472,16 @@ namespace Titanium
 
 	JSValue GlobalObject::js_setTimeout(const std::vector<JSValue>& arguments, JSObject& this_object)
 	{
+		// When caller has been changed ("this" is nullptr), fallback to global object
+		if (this == nullptr) {
+			const auto global_object = this_object.get_context().get_global_object();
+			const auto global_ptr = global_object.GetPrivate<GlobalObject>();
+			if (global_ptr != nullptr) {
+				return global_ptr->js_setTimeout(arguments, this_object);
+			} else {
+				return this_object.get_context().CreateUndefined();
+			}
+		}
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
 		TITANIUM_ASSERT(arguments.size() >= 2);
@@ -470,12 +492,22 @@ namespace Titanium
 		JSObject function = static_cast<JSObject>(_0);
 		TITANIUM_ASSERT(function.IsFunction());
 		const auto delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(static_cast<std::uint32_t>(_1)));
-		JSNumber timerId = get_context().CreateNumber(setTimeout(std::move(function), delay));
+		JSNumber timerId = this_object.get_context().CreateNumber(setTimeout(std::move(function), delay));
 		return timerId;
 	}
 
 	JSValue GlobalObject::js_clearTimeout(const std::vector<JSValue>& arguments, JSObject& this_object)
 	{
+		// When caller has been changed ("this" is nullptr), fallback to global object
+		if (this == nullptr) {
+			const auto global_object = this_object.get_context().get_global_object();
+			const auto global_ptr = global_object.GetPrivate<GlobalObject>();
+			if (global_ptr != nullptr) {
+				return global_ptr->js_clearTimeout(arguments, this_object);
+			} else {
+				return this_object.get_context().CreateUndefined();
+			}
+		}
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
 		TITANIUM_ASSERT(arguments.size() >= 1);
@@ -483,11 +515,21 @@ namespace Titanium
 		TITANIUM_ASSERT(_0.IsNumber());
 		const auto timerId = static_cast<unsigned>(_0);
 		clearTimeout(timerId);
-		return get_context().CreateUndefined();
+		return this_object.get_context().CreateUndefined();
 	}
 
 	JSValue GlobalObject::js_setInterval(const std::vector<JSValue>& arguments, JSObject& this_object)
 	{
+		// When caller has been changed ("this" is nullptr), fallback to global object
+		if (this == nullptr) {
+			const auto global_object = this_object.get_context().get_global_object();
+			const auto global_ptr = global_object.GetPrivate<GlobalObject>();
+			if (global_ptr != nullptr) {
+				return global_ptr->js_setInterval(arguments, this_object);
+			} else {
+				return this_object.get_context().CreateUndefined();
+			}
+		}
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
 		TITANIUM_ASSERT(arguments.size() >= 2);
@@ -499,12 +541,22 @@ namespace Titanium
 		
 		TITANIUM_ASSERT(function.IsFunction());
 		const auto delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(static_cast<std::uint32_t>(_1)));
-		JSNumber timerId = get_context().CreateNumber(setInterval(std::move(function), delay));
+		JSNumber timerId = this_object.get_context().CreateNumber(setInterval(std::move(function), delay));
 		return timerId;
 	}
 
 	JSValue GlobalObject::js_clearInterval(const std::vector<JSValue>& arguments, JSObject& this_object)
 	{
+		// When caller has been changed ("this" is nullptr), fallback to global object
+		if (this == nullptr) {
+			const auto global_object = this_object.get_context().get_global_object();
+			const auto global_ptr = global_object.GetPrivate<GlobalObject>();
+			if (global_ptr != nullptr) {
+				return global_ptr->js_setInterval(arguments, this_object);
+			} else {
+				return this_object.get_context().CreateUndefined();
+			}
+		}
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
 		TITANIUM_ASSERT(arguments.size() >= 1);
@@ -512,7 +564,7 @@ namespace Titanium
 		TITANIUM_ASSERT(_0.IsNumber());
 		const auto timerId = static_cast<unsigned>(_0);
 		clearInterval(timerId);
-		return get_context().CreateUndefined();
+		return this_object.get_context().CreateUndefined();
 	}
 
 }  // namespace Titanium

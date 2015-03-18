@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -10,10 +10,13 @@
 #include "Titanium/Module.hpp"
 #include "Titanium/Filesystem/Constants.hpp"
 #include "Titanium/Filesystem/File.hpp"
+#include "Titanium/Filesystem/FileStream.hpp"
 
 namespace Titanium
 {
 	using namespace HAL;
+	using File_shared_ptr_t = std::shared_ptr<Titanium::Filesystem::File>;
+	using FileStream_shared_ptr_t = std::shared_ptr<Titanium::Filesystem::FileStream>;
 
 	/*!
 	  @class
@@ -28,19 +31,19 @@ namespace Titanium
 		  @abstract getFile
 		  @discussion Returns a File object representing the file identified by the path arguments.
 		*/
-		virtual JSValue getFile(const std::string&) TITANIUM_NOEXCEPT;
+		virtual File_shared_ptr_t getFile(const JSContext&, const std::string&) TITANIUM_NOEXCEPT final;
 		/*!
 		  @method
 		  @abstract createTempDirectory
 		  @discussion Creates a temporary directory and returns a File object representing the new directory.
 		*/
-		virtual JSValue createTempDirectory() TITANIUM_NOEXCEPT;
+		virtual File_shared_ptr_t createTempDirectory(const JSContext&) TITANIUM_NOEXCEPT final;
 		/*!
 		  @method
 		  @abstract createTempFile
 		  @discussion Creates a temporary file and returns a File object representing the new file.
 		*/
-		virtual JSValue createTempFile() TITANIUM_NOEXCEPT;
+		virtual File_shared_ptr_t createTempFile(const JSContext&) TITANIUM_NOEXCEPT final;
 		/*!
 		  @method
 		  @abstract isExternalStoragePresent
@@ -52,7 +55,7 @@ namespace Titanium
 		  @abstract openStream
 		  @discussion Opens file using the Ti.IOStream interface.
 		*/
-		virtual JSValue openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT;
+		virtual FileStream_shared_ptr_t openStream(std::unordered_set<Titanium::Filesystem::MODE> modes, const std::string& path) TITANIUM_NOEXCEPT;
 		/*!
 		  @method
 		  @abstract get_MODE_READ
@@ -163,6 +166,8 @@ namespace Titanium
 		virtual JSValue js_lineEnding() const TITANIUM_NOEXCEPT final;
 		virtual JSValue js_resourcesDirectory() const TITANIUM_NOEXCEPT final;
 		virtual JSValue js_tempDirectory() const TITANIUM_NOEXCEPT final;
+
+		JSObject GetFilesystemObject(const JSContext& js_context) const TITANIUM_NOEXCEPT;
 
 	private:
 		JSValue mode_read__;

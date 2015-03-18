@@ -1,7 +1,7 @@
 /**
  * TitaniumKit
  *
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -133,13 +133,25 @@ namespace Titanium
 		JSExport<API>::AddFunctionProperty("log", std::mem_fn(&API::js_log));
 	}
 
+	JSObject API::GetAPIObject(const JSContext& js_context) const TITANIUM_NOEXCEPT
+	{
+		JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
+		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+		JSObject Titanium = static_cast<JSObject>(Titanium_property);
+
+		JSValue Object_property = Titanium.GetProperty("API");
+		TITANIUM_ASSERT(Object_property.IsObject());  // precondition
+		return static_cast<JSObject>(Object_property);
+	}
+
 	JSValue API::js_info(const std::vector<JSValue>& arguments, JSObject& this_object)
 	{
 		TITANIUM_ASSERT(arguments.size() >= 1);
 		const auto _0 = arguments.at(0);
 		std::string message = static_cast<std::string>(_0);
-		this_object.GetPrivate<API>()->info(message);
-		return this_object.get_context().CreateUndefined();
+		const auto js_context = this_object.get_context();
+		GetAPIObject(js_context).GetPrivate<API>()->info(message);
+		return js_context.CreateUndefined();
 	}
 
 	JSValue API::js_warn(const std::vector<JSValue>& arguments, JSObject& this_object)
@@ -147,8 +159,9 @@ namespace Titanium
 		TITANIUM_ASSERT(arguments.size() >= 1);
 		const auto _0 = arguments.at(0);
 		std::string message = static_cast<std::string>(_0);
-		this_object.GetPrivate<API>()->warn(message);
-		return this_object.get_context().CreateUndefined();
+		const auto js_context = this_object.get_context();
+		GetAPIObject(js_context).GetPrivate<API>()->warn(message);
+		return js_context.CreateUndefined();
 	}
 
 	JSValue API::js_error(const std::vector<JSValue>& arguments, JSObject& this_object)
@@ -156,8 +169,9 @@ namespace Titanium
 		TITANIUM_ASSERT(arguments.size() >= 1);
 		const auto _0 = arguments.at(0);
 		std::string message = static_cast<std::string>(_0);
-		this_object.GetPrivate<API>()->error(message);
-		return this_object.get_context().CreateUndefined();
+		const auto js_context = this_object.get_context();
+		GetAPIObject(js_context).GetPrivate<API>()->error(message);
+		return js_context.CreateUndefined();
 	}
 
 	JSValue API::js_debug(const std::vector<JSValue>& arguments, JSObject& this_object)
@@ -165,8 +179,9 @@ namespace Titanium
 		TITANIUM_ASSERT(arguments.size() >= 1);
 		const auto _0 = arguments.at(0);
 		std::string message = static_cast<std::string>(_0);
-		this_object.GetPrivate<API>()->debug(message);
-		return this_object.get_context().CreateUndefined();
+		const auto js_context = this_object.get_context();
+		GetAPIObject(js_context).GetPrivate<API>()->debug(message);
+		return js_context.CreateUndefined();
 	}
 
 	JSValue API::js_trace(const std::vector<JSValue>& arguments, JSObject& this_object)
@@ -174,8 +189,9 @@ namespace Titanium
 		TITANIUM_ASSERT(arguments.size() >= 1);
 		const auto _0 = arguments.at(0);
 		std::string message = static_cast<std::string>(_0);
-		this_object.GetPrivate<API>()->trace(message);
-		return this_object.get_context().CreateUndefined();
+		const auto js_context = this_object.get_context();
+		GetAPIObject(js_context).GetPrivate<API>()->trace(message);
+		return js_context.CreateUndefined();
 	}
 
 	JSValue API::js_log(const std::vector<JSValue>& arguments, JSObject& this_object)
@@ -185,8 +201,9 @@ namespace Titanium
 		std::string level = static_cast<std::string>(_0);
 		const auto _1 = arguments.at(1);
 		std::string message = static_cast<std::string>(_1);
-		this_object.GetPrivate<API>()->log(level, message);
-		return this_object.get_context().CreateUndefined();
+		const auto js_context = this_object.get_context();
+		GetAPIObject(js_context).GetPrivate<API>()->log(message);
+		return js_context.CreateUndefined();
 	}
 
 }  // namespace Titanium

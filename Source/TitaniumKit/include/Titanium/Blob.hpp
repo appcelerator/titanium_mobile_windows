@@ -38,7 +38,7 @@ namespace Titanium
 		  @abstract get_length
 		  @discussion Length of this blob in bytes.
 		*/
-		virtual size_t get_length() const TITANIUM_NOEXCEPT;
+		virtual uint32_t get_length() const TITANIUM_NOEXCEPT;
 		/*!
 		  @method
 		  @abstract get_file
@@ -69,7 +69,7 @@ namespace Titanium
 		  @abstract get_size
 		  @discussion Size of the blob in pixels (for image blobs) or bytes (for all other blobs).
 		*/
-		virtual size_t get_size() const TITANIUM_NOEXCEPT;
+		virtual uint32_t get_size() const TITANIUM_NOEXCEPT;
 		/*!
 		  @method
 		  @abstract get_text

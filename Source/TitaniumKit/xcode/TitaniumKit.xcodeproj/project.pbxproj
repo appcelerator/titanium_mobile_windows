@@ -48,7 +48,6 @@
 		C90B90091A19804D005F3210 /* Application.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C90B90071A19804D005F3210 /* Application.hpp */; };
 		C90B900C1A198370005F3210 /* ApplicationBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90B900A1A198370005F3210 /* ApplicationBuilder.cpp */; };
 		C90B900D1A198370005F3210 /* ApplicationBuilder.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C90B900B1A198370005F3210 /* ApplicationBuilder.hpp */; };
-		C90B900F1A198976005F3210 /* ApplicationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = C90B900E1A198976005F3210 /* ApplicationTests.mm */; };
 		C90B90121A1ADC7D005F3210 /* NativeViewExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C90B90101A1ADC7D005F3210 /* NativeViewExample.cpp */; };
 		C90B90131A1ADC7D005F3210 /* NativeViewExample.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C90B90111A1ADC7D005F3210 /* NativeViewExample.hpp */; };
 		C950EF8F1A48D8FB000EE5AC /* ImageView.hpp in Headers */ = {isa = PBXBuildFile; fileRef = C950EF8D1A48D8FB000EE5AC /* ImageView.hpp */; };
@@ -110,6 +109,7 @@
 		F965FF2C1AA588230092ABBA /* Annotation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F965FF291AA588230092ABBA /* Annotation.cpp */; };
 		F965FF2D1AA588230092ABBA /* Constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F965FF2A1AA588230092ABBA /* Constants.cpp */; };
 		F965FF2E1AA588230092ABBA /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F965FF2B1AA588230092ABBA /* View.cpp */; };
+		F968A1C61AB93F6C00A0D546 /* FileStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F968A1C51AB93F6C00A0D546 /* FileStream.cpp */; };
 		F96A53D41AA5B60D00AD4011 /* MapLocationTypev2.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F96A53D31AA5B60D00AD4011 /* MapLocationTypev2.hpp */; };
 		F96A53D61AA5B64300AD4011 /* MapLocationTypev2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F96A53D51AA5B64300AD4011 /* MapLocationTypev2.cpp */; };
 		F96A53D81AA5CFAB00AD4011 /* EmailDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F96A53D71AA5CFAB00AD4011 /* EmailDialog.cpp */; };
@@ -221,7 +221,6 @@
 		C90B90071A19804D005F3210 /* Application.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Application.hpp; path = include/Titanium/Application.hpp; sourceTree = "<group>"; };
 		C90B900A1A198370005F3210 /* ApplicationBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplicationBuilder.cpp; path = src/ApplicationBuilder.cpp; sourceTree = "<group>"; };
 		C90B900B1A198370005F3210 /* ApplicationBuilder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ApplicationBuilder.hpp; path = include/Titanium/ApplicationBuilder.hpp; sourceTree = "<group>"; };
-		C90B900E1A198976005F3210 /* ApplicationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ApplicationTests.mm; sourceTree = "<group>"; };
 		C90B90101A1ADC7D005F3210 /* NativeViewExample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeViewExample.cpp; sourceTree = "<group>"; };
 		C90B90111A1ADC7D005F3210 /* NativeViewExample.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NativeViewExample.hpp; sourceTree = "<group>"; };
 		C950EF8D1A48D8FB000EE5AC /* ImageView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ImageView.hpp; path = include/Titanium/UI/ImageView.hpp; sourceTree = "<group>"; };
@@ -285,6 +284,7 @@
 		F965FF291AA588230092ABBA /* Annotation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Annotation.cpp; path = src/Map/Annotation.cpp; sourceTree = "<group>"; };
 		F965FF2A1AA588230092ABBA /* Constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Constants.cpp; path = src/Map/Constants.cpp; sourceTree = "<group>"; };
 		F965FF2B1AA588230092ABBA /* View.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = View.cpp; path = src/Map/View.cpp; sourceTree = "<group>"; };
+		F968A1C51AB93F6C00A0D546 /* FileStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileStream.cpp; path = src/Filesystem/FileStream.cpp; sourceTree = "<group>"; };
 		F96A53D31AA5B60D00AD4011 /* MapLocationTypev2.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MapLocationTypev2.hpp; path = include/Titanium/Map/MapLocationTypev2.hpp; sourceTree = "<group>"; };
 		F96A53D51AA5B64300AD4011 /* MapLocationTypev2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MapLocationTypev2.cpp; path = src/Map/MapLocationTypev2.cpp; sourceTree = "<group>"; };
 		F96A53D71AA5CFAB00AD4011 /* EmailDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EmailDialog.cpp; path = src/UI/EmailDialog.cpp; sourceTree = "<group>"; };
@@ -363,6 +363,23 @@
 		C90B8F8B1A16D32C005F3210 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				C90B8F9A1A16DDB0005F3210 /* UIModule.hpp */,
+				C90B8F991A16DDB0005F3210 /* UIModule.cpp */,
+				F913EFC41A836026009080D1 /* AlertDialog.hpp */,
+				F913EFC51A836026009080D1 /* Slider.hpp */,
+				F913EFBA1A835FE4009080D1 /* AlertDialog.cpp */,
+				F913EFBB1A835FE4009080D1 /* Slider.cpp */,
+				F9DD758D1AAEA3E2002D3AAA /* ViewLayoutPolicy.cpp */,
+				F9DD758B1AAEA2BE002D3AAA /* ViewLayoutPolicy.hpp */,
+				F96A53D71AA5CFAB00AD4011 /* EmailDialog.cpp */,
+				F93CDC441A96D25E00C42D8C /* Dimension.cpp */,
+				F93CDC451A96D25E00C42D8C /* Font.cpp */,
+				F93CDC461A96D25E00C42D8C /* Gradient.cpp */,
+				F93CDC471A96D25E00C42D8C /* Point.cpp */,
+				F93CDC3C1A96D24C00C42D8C /* Dimension.hpp */,
+				F93CDC3D1A96D24C00C42D8C /* Font.hpp */,
+				F93CDC3E1A96D24C00C42D8C /* Gradient.hpp */,
+				F93CDC3F1A96D24C00C42D8C /* Point.hpp */,
 				C9BED2251A28F4CD00CFF800 /* Constants.hpp */,
 				C909508E1A29478A002133E1 /* Constants.cpp */,
 				C90B8F8E1A16D346005F3210 /* View.hpp */,
@@ -454,40 +471,16 @@
 		C974544B1A02A2B000CB4CA9 /* TitaniumKit */ = {
 			isa = PBXGroup;
 			children = (
-				F9DD758D1AAEA3E2002D3AAA /* ViewLayoutPolicy.cpp */,
-				F9DD758B1AAEA2BE002D3AAA /* ViewLayoutPolicy.hpp */,
+				F968A1CA1AB9A98500A0D546 /* Database */,
+				F968A1C91AB9A97900A0D546 /* Network */,
+				F968A1C71AB9A91F00A0D546 /* App */,
 				F965FF2F1AA5899D0092ABBA /* Map */,
+				F9E96F871A415CAD001E0EC4 /* Platform */,
+				F9B47E771A2EF15A0052879A /* Filesystem */,
+				C9E6AFBB1A13D34900FED053 /* detail */,
+				C90B8F8B1A16D32C005F3210 /* UI */,
 				F96A53DF1AA5D00F00AD4011 /* Analytics.cpp */,
 				F96A53E11AA5D03E00AD4011 /* XML.cpp */,
-				F96A53DD1AA5CFEA00AD4011 /* Constants.cpp */,
-				F96A53DB1AA5CFC200AD4011 /* Properties.cpp */,
-				F96A53D91AA5CFB700AD4011 /* App.cpp */,
-				F96A53D71AA5CFAB00AD4011 /* EmailDialog.cpp */,
-				F93CDC441A96D25E00C42D8C /* Dimension.cpp */,
-				F93CDC451A96D25E00C42D8C /* Font.cpp */,
-				F93CDC461A96D25E00C42D8C /* Gradient.cpp */,
-				F93CDC471A96D25E00C42D8C /* Point.cpp */,
-				F93CDC3C1A96D24C00C42D8C /* Dimension.hpp */,
-				F93CDC3D1A96D24C00C42D8C /* Font.hpp */,
-				F93CDC3E1A96D24C00C42D8C /* Gradient.hpp */,
-				F93CDC3F1A96D24C00C42D8C /* Point.hpp */,
-				F9B1AF821A8E2F4400DEF4D6 /* sqlite3.c */,
-				F9B1AF801A8E2F2B00DEF4D6 /* HTTPClient.cpp */,
-				F9B1AF7E1A8E2F1D00DEF4D6 /* DatabaseModule.cpp */,
-				F9B1AF781A8E2EEC00DEF4D6 /* Constants.cpp */,
-				F9B1AF791A8E2EEC00DEF4D6 /* DB.cpp */,
-				F9B1AF7A1A8E2EEC00DEF4D6 /* ResultSet.cpp */,
-				F9B1AF721A8E2EDD00DEF4D6 /* Constants.hpp */,
-				F9B1AF731A8E2EDD00DEF4D6 /* DB.hpp */,
-				F9B1AF741A8E2EDD00DEF4D6 /* ResultSet.hpp */,
-				F9B1AF701A8E2ECF00DEF4D6 /* HTTPClient.hpp */,
-				F9B1AF6E1A8E2EBE00DEF4D6 /* DatabaseModule.hpp */,
-				F9B1AF6C1A8E2EA300DEF4D6 /* NetworkModule.cpp */,
-				F9B1AF6A1A8E2E9400DEF4D6 /* Network.hpp */,
-				F913EFC41A836026009080D1 /* AlertDialog.hpp */,
-				F913EFC51A836026009080D1 /* Slider.hpp */,
-				F913EFBA1A835FE4009080D1 /* AlertDialog.cpp */,
-				F913EFBB1A835FE4009080D1 /* Slider.cpp */,
 				C980919A1A2149A300AE5930 /* TitaniumKit_EXPORT.h */,
 				C9E6AFB71A13043300FED053 /* Titanium.hpp */,
 				C90B900B1A198370005F3210 /* ApplicationBuilder.hpp */,
@@ -502,22 +495,12 @@
 				C90B8F871A167E36005F3210 /* Module.cpp */,
 				C90B8FD21A17CB1C005F3210 /* API.hpp */,
 				C90B8FD11A17CB1C005F3210 /* API.cpp */,
-				F96BCABF1A25CE6100745C3B /* PlatformModule.cpp */,
-				F96BCABC1A25CE4C00745C3B /* PlatformModule.hpp */,
-				C90B8F9A1A16DDB0005F3210 /* UIModule.hpp */,
-				C90B8F991A16DDB0005F3210 /* UIModule.cpp */,
 				C90950901A2951A7002133E1 /* Gesture.hpp */,
 				C90950911A2951A7002133E1 /* Gesture.cpp */,
 				F9B177971A2C46FB00ECE602 /* Accelerometer.cpp */,
 				F9B177941A2C46F100ECE602 /* Accelerometer.hpp */,
 				F90831111A2EA3B500CB810B /* Blob.cpp */,
 				F908310E1A2EA3AC00CB810B /* Blob.hpp */,
-				F9B47E751A2EF1500052879A /* FilesystemModule.cpp */,
-				F9B47E721A2EF1440052879A /* FilesystemModule.hpp */,
-				F9E96F871A415CAD001E0EC4 /* Platform */,
-				F9B47E771A2EF15A0052879A /* Filesystem */,
-				C9E6AFBB1A13D34900FED053 /* detail */,
-				C90B8F8B1A16D32C005F3210 /* UI */,
 			);
 			name = TitaniumKit;
 			path = ..;
@@ -526,7 +509,6 @@
 		C97454651A02A40A00CB4CA9 /* TitaniumKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				C90B900E1A198976005F3210 /* ApplicationTests.mm */,
 				C9E6AFF51A158AD000FED053 /* GlobalObjectTests.mm */,
 				C90B8F841A166496005F3210 /* ModuleTests.mm */,
 				C90B8FD61A17CC39005F3210 /* APITests.mm */,
@@ -607,9 +589,49 @@
 			name = Map;
 			sourceTree = "<group>";
 		};
+		F968A1C71AB9A91F00A0D546 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F96A53D91AA5CFB700AD4011 /* App.cpp */,
+				F96A53DB1AA5CFC200AD4011 /* Properties.cpp */,
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
+		F968A1C91AB9A97900A0D546 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				F9B1AF701A8E2ECF00DEF4D6 /* HTTPClient.hpp */,
+				F9B1AF6C1A8E2EA300DEF4D6 /* NetworkModule.cpp */,
+				F9B1AF6A1A8E2E9400DEF4D6 /* Network.hpp */,
+				F96A53DD1AA5CFEA00AD4011 /* Constants.cpp */,
+				F9B1AF801A8E2F2B00DEF4D6 /* HTTPClient.cpp */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
+		F968A1CA1AB9A98500A0D546 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				F9B1AF6E1A8E2EBE00DEF4D6 /* DatabaseModule.hpp */,
+				F9B1AF731A8E2EDD00DEF4D6 /* DB.hpp */,
+				F9B1AF741A8E2EDD00DEF4D6 /* ResultSet.hpp */,
+				F9B1AF821A8E2F4400DEF4D6 /* sqlite3.c */,
+				F9B1AF7E1A8E2F1D00DEF4D6 /* DatabaseModule.cpp */,
+				F9B1AF721A8E2EDD00DEF4D6 /* Constants.hpp */,
+				F9B1AF781A8E2EEC00DEF4D6 /* Constants.cpp */,
+				F9B1AF791A8E2EEC00DEF4D6 /* DB.cpp */,
+				F9B1AF7A1A8E2EEC00DEF4D6 /* ResultSet.cpp */,
+			);
+			name = Database;
+			sourceTree = "<group>";
+		};
 		F9B47E771A2EF15A0052879A /* Filesystem */ = {
 			isa = PBXGroup;
 			children = (
+				F9B47E751A2EF1500052879A /* FilesystemModule.cpp */,
+				F9B47E721A2EF1440052879A /* FilesystemModule.hpp */,
+				F968A1C51AB93F6C00A0D546 /* FileStream.cpp */,
 				F9B47E821A2EF94A0052879A /* Constants.cpp */,
 				F9B47E801A2EF93E0052879A /* Constants.hpp */,
 				F9B47E7A1A2EF1730052879A /* File.cpp */,
@@ -621,6 +643,8 @@
 		F9E96F871A415CAD001E0EC4 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				F96BCABF1A25CE6100745C3B /* PlatformModule.cpp */,
+				F96BCABC1A25CE4C00745C3B /* PlatformModule.hpp */,
 				F9E96F881A415D62001E0EC4 /* DisplayCaps.cpp */,
 				F9E96F8A1A415D6E001E0EC4 /* DisplayCaps.hpp */,
 			);
@@ -813,6 +837,7 @@
 				C9BED2201A27B14200CFF800 /* NativeModuleExample.cpp in Sources */,
 				C909509F1A2963F3002133E1 /* ListView.cpp in Sources */,
 				F9901B0B1AA5A366003FFD52 /* MapRegionTypev2.cpp in Sources */,
+				F968A1C61AB93F6C00A0D546 /* FileStream.cpp in Sources */,
 				F9B1AF831A8E2F4400DEF4D6 /* sqlite3.c in Sources */,
 				F9B47E831A2EF94A0052879A /* Constants.cpp in Sources */,
 				C90950931A2951A7002133E1 /* Gesture.cpp in Sources */,
@@ -873,7 +898,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C90B900F1A198976005F3210 /* ApplicationTests.mm in Sources */,
 				C90B8FE61A193F58005F3210 /* ButtonTests.mm in Sources */,
 				C9E6AFBA1A13044100FED053 /* TiLoggerTests.mm in Sources */,
 				C90B8FDA1A17DCF5005F3210 /* UITests.mm in Sources */,

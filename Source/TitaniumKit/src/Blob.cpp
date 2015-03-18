@@ -59,9 +59,9 @@ namespace Titanium
 		// TODO image* methods!
 	}
 
-	size_t Blob::get_length() const TITANIUM_NOEXCEPT
+	uint32_t Blob::get_length() const TITANIUM_NOEXCEPT
 	{
-		return data_.size();
+		return static_cast<uint32_t>(data_.size());
 	}
 
 	File_shared_ptr_t Blob::get_file() const TITANIUM_NOEXCEPT
@@ -99,7 +99,7 @@ namespace Titanium
 		return path_;
 	}
 
-	size_t Blob::get_size() const TITANIUM_NOEXCEPT
+	uint32_t Blob::get_size() const TITANIUM_NOEXCEPT
 	{
 		if (type_ == Titanium::BlobModule::TYPE::IMAGE) {
 			return get_width() * get_height();
