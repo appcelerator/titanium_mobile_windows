@@ -222,7 +222,7 @@ namespace Titanium
 
 			  Use unicode characters, such as those included in (but not limited to) the Unicode List of Useful Symbols section of wikipedia, to insert special characters and symbols.
 			*/
-			virtual std::string get_value() const TITANIUM_NOEXCEPT final;
+			virtual std::string get_value() const TITANIUM_NOEXCEPT;
 			virtual void set_value(const std::string& value) TITANIUM_NOEXCEPT;
 
 			/*!

@@ -56,6 +56,7 @@ namespace TitaniumWindows
 //			virtual void set_rightButtonMode(const Titanium::UI::INPUT_BUTTONMODE& rightButtonMode) TITANIUM_NOEXCEPT override final;
 //			virtual void set_suppressReturn(const bool& suppressReturn) TITANIUM_NOEXCEPT override final;
 			virtual void set_textAlign(const Titanium::UI::TEXT_ALIGNMENT& textAlign) TITANIUM_NOEXCEPT override final;
+			virtual std::string get_value() const TITANIUM_NOEXCEPT override final;
 			virtual void set_value(const std::string& value) TITANIUM_NOEXCEPT override final;
 			virtual void set_verticalAlign(const Titanium::UI::TEXT_VERTICAL_ALIGNMENT& verticalAlign) TITANIUM_NOEXCEPT override final;
 

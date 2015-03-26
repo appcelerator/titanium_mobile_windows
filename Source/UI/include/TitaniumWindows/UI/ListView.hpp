@@ -92,6 +92,7 @@ namespace TitaniumWindows
 
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
+			virtual void set_searchText(const std::string& searchText) TITANIUM_NOEXCEPT;
 			virtual void set_sections(const std::vector<ListSection_shared_ptr_t>& sections) TITANIUM_NOEXCEPT override;
 
 			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
@@ -100,9 +101,10 @@ namespace TitaniumWindows
 		private:
 			Windows::UI::Xaml::Controls::ListView^ listview__;
 			Windows::UI::Xaml::Data::CollectionViewSource^ collectionViewSource__;
+			// This is the "view" of the underlying list view items that is shown in the UI. It may be filtered from set_searchText
 			Windows::Foundation::Collections::IObservableVector<Platform::Object^>^ collectionViewItems__;
 
-			// Section and item index mapping
+			// Section and item index mapping. This is the _full_ listing of the underlying data
 			Windows::Foundation::Collections::IVector<ListViewItem^>^ listViewItems__;
 
 			Windows::Foundation::EventRegistrationToken click_event__;

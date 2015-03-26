@@ -115,6 +115,11 @@ namespace TitaniumWindows
 			// TODO Windows supports JUSTIFY!
 		}
 
+		std::string TextField::get_value() const TITANIUM_NOEXCEPT
+		{
+			return TitaniumWindows::Utility::ConvertUTF8String(text_box__->Text);
+		}
+
 		void TextField::set_value(const std::string& value) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::TextField::set_value(value);
@@ -158,7 +163,7 @@ namespace TitaniumWindows
 
 			if (event_name == "blur") {
 				blur_event_ = text_box__->LostFocus += ref new RoutedEventHandler([this, ctx](Platform::Object^ sender, RoutedEventArgs^ e) {
-					JSObject  eventArgs = ctx.CreateObject();
+					JSObject eventArgs = ctx.CreateObject();
 					eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
 
 					this->fireEvent("blur", eventArgs);
@@ -166,7 +171,7 @@ namespace TitaniumWindows
 				return;
 			} else if (event_name == "change") {
 				change_event_ = text_box__->TextChanged += ref new Controls::TextChangedEventHandler([this, ctx](Platform::Object^ sender, Controls::TextChangedEventArgs^ e) {
-					JSObject  eventArgs = ctx.CreateObject();
+					JSObject eventArgs = ctx.CreateObject();
 					eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
 
 					this->fireEvent("change", eventArgs);
@@ -174,7 +179,7 @@ namespace TitaniumWindows
 				return;
 			} else if (event_name == "focus") {
 				focus_event_ = text_box__->GotFocus += ref new RoutedEventHandler([this, ctx](Platform::Object^ sender, RoutedEventArgs^ e) {
-					JSObject  eventArgs = ctx.CreateObject();
+					JSObject eventArgs = ctx.CreateObject();
 					eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
 
 					this->fireEvent("focus", eventArgs);
@@ -183,7 +188,7 @@ namespace TitaniumWindows
 			} else if (event_name == "return") {
 				return_event_ = text_box__->KeyDown += ref new KeyEventHandler([this, ctx](Platform::Object^ sender, KeyRoutedEventArgs^ e) {
 					if (e->Key == Windows::System::VirtualKey::Enter) {
-						JSObject  eventArgs = ctx.CreateObject();
+						JSObject eventArgs = ctx.CreateObject();
 						eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
 
 						this->fireEvent("return", eventArgs);
