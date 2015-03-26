@@ -94,10 +94,13 @@ namespace TitaniumWindows
 			}
 			Titanium::UI::ListView::set_searchText(searchText); // set field
 
+
+			auto search = searchText;
+			const bool filtering = (search != "");
 			const bool case_insensitive = get_caseInsensitiveSearch();
 			if (case_insensitive) {
 				// Make searchText lowercase! Note that this likely _isn't_ UTF-8 friendly
-				std::transform(searchText.begin(), searchText.end(), searchText.begin(), ::tolower);
+				std::transform(search.begin(), search.end(), search.begin(), ::tolower);
 			}
 
 			// Let's build up a filtered listing
@@ -109,25 +112,25 @@ namespace TitaniumWindows
 			for (uint32_t sectionIndex = 0; sectionIndex < get_sectionCount(); sectionIndex++) {
 				auto items = sections__[sectionIndex]->get_items();
 				// if we're not filtering, we show the section's header, and we place results into groups/sections - not one single group of results
-				if (searchText == "") {
+				if (!filtering) {
 					group = ref new ::Platform::Collections::Vector<Windows::UI::Xaml::UIElement^>();
 					group->Append(listViewItems__->GetAt(listViewItemsIndex)->View);
 				}
 
 				listViewItemsIndex++; // there's headers in the listViewItems__ collection, so we need to bump up the index to skip them
 				for (uint32_t itemIndex = 0; itemIndex < items.size(); itemIndex++) {
-					if (searchText != "") {
+					if (filtering) {
 						auto item = items[itemIndex];
 						auto properties = item.properties;
 						if (properties.find("searchableText") != properties.end()) {
 							const auto text = properties.at("searchableText");
 							TITANIUM_ASSERT(text.IsString());
-							const auto string = static_cast<std::string>(text);
+							auto string = static_cast<std::string>(text);
 							if (case_insensitive) {
 								// make string lowercase! Note that this likely _isn't_ UTF-8 friendly
 								std::transform(string.begin(), string.end(), string.begin(), ::tolower);
 							}
-							if (string.find(searchText) != std::string::npos) {
+							if (string.find(search) != std::string::npos) {
 								// match, add item to filtered collection!
 								group->Append(listViewItems__->GetAt(listViewItemsIndex)->View);
 							}
@@ -137,13 +140,13 @@ namespace TitaniumWindows
 					}
 					listViewItemsIndex++; // record that we're moving on to the next item
 				}
-				// No search text means no filter, append each original section/group
-				if (searchText == "") {
+				// When no filter, append each original section/group
+				if (!filtering) {
 					filtered->Append(group);
 				}
 			}
-			// We're actualyy filtering, so append the one and only group holding results
-			if (searchText != "") {
+			// We're actually filtering, so append the one and only group holding results
+			if (filtering) {
 				filtered->Append(group);
 			}
 			// Now let's tell the ListView to use the filtered listing
