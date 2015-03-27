@@ -12,6 +12,7 @@
 #include "TitaniumWindows/TiModule.hpp"
 #include "TitaniumWindows/API.hpp"
 #include "TitaniumWindows/UI.hpp"
+#include "TitaniumWindows/GeolocationModule.hpp"
 #include "TitaniumWindows/Utils.hpp"
 #include "TitaniumWindows/App.hpp"
 #include "TitaniumWindows/Platform.hpp"
@@ -49,6 +50,7 @@ namespace TitaniumWindows
 		                                                            .GestureObject(js_context__.CreateObject(JSExport<TitaniumWindows::Gesture>::Class()))
 		                                                            .AccelerometerObject(js_context__.CreateObject(JSExport<TitaniumWindows::Accelerometer>::Class()))
 		                                                            .ViewObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::View>::Class()))
+		                                                            .GeolocationObject(js_context__.CreateObject(JSExport<TitaniumWindows::GeolocationModule>::Class()))
 		                                                            .SwitchObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::Switch>::Class()))
 		                                                            .UtilsObject(js_context__.CreateObject(JSExport<TitaniumWindows::Utils>::Class()))
 		                                                            .PropertiesObject(js_context__.CreateObject(JSExport<TitaniumWindows::App::Properties>::Class()))

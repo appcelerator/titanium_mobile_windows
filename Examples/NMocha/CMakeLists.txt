@@ -27,6 +27,7 @@ get_filename_component(Global_SOURCE_DIR        ${PROJECT_SOURCE_DIR}/../../Sour
 get_filename_component(Ti_SOURCE_DIR            ${PROJECT_SOURCE_DIR}/../../Source/Ti            ABSOLUTE)
 get_filename_component(API_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/API           ABSOLUTE)
 get_filename_component(Gesture_SOURCE_DIR       ${PROJECT_SOURCE_DIR}/../../Source/Gesture       ABSOLUTE)
+get_filename_component(Geolocation_SOURCE_DIR   ${PROJECT_SOURCE_DIR}/../../Source/Geolocation   ABSOLUTE)
 get_filename_component(Accelerometer_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../../Source/Accelerometer ABSOLUTE)
 get_filename_component(App_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/App           ABSOLUTE)
 get_filename_component(Map_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/Map           ABSOLUTE)
@@ -56,6 +57,10 @@ endif()
 
 if(NOT TARGET TitaniumWindows_Gesture)
   add_subdirectory(${Gesture_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Gesture EXCLUDE_FROM_ALL)
+endif()
+
+if(NOT TARGET TitaniumWindows_Geolocation)
+  add_subdirectory(${Geolocation_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Geolocation EXCLUDE_FROM_ALL)
 endif()
 
 if(NOT TARGET TitaniumWindows_Accelerometer)

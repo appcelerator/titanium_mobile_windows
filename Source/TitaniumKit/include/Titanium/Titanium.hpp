@@ -18,6 +18,7 @@
 #include "Titanium/TiModule.hpp"
 #include "Titanium/API.hpp"
 #include "Titanium/UIModule.hpp"
+#include "Titanium/GeolocationModule.hpp"
 #include "Titanium/Utils.hpp"
 #include "Titanium/App.hpp"
 #include "Titanium/Analytics.hpp"
