@@ -297,7 +297,16 @@ namespace Titanium
 		
 		void ViewLayoutEventDelegate::fireEvent(const std::string& name, const JSObject& event_args)
 		{
-			view__->fireEvent(name, event_args);
+			try {
+				view__->fireEvent(name, event_args);
+			} catch (const HAL::detail::js_runtime_error& e) {
+				std::ostringstream os;
+				os << "Titanium_RedScreenOfDeath({"
+					<< "  message:'Runtime Error during " << name << " event: "
+					<< e.js_message() << "'"
+				  << "});";
+				get_context().JSEvaluateScript(os.str());
+			}
 		}
 	} // namespace UI
 }  // namespace Titanium
