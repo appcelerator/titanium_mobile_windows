@@ -8,7 +8,6 @@
 
 #include "Titanium/UI/ViewLayoutDelegate.hpp"
 #include "Titanium/UI/View.hpp"
-#include "HAL/detail/JSUtil.hpp"
 
 namespace Titanium
 {
