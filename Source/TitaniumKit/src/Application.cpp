@@ -40,14 +40,18 @@ function Titanium_RedScreenOfDeath(e) {
             button;
 
         function makeLabel(text, height, color, fontSize) {
-            win.add(Ti.UI.createLabel({
+            var label = Ti.UI.createView({
+                height: height,
+                width: Ti.UI.FILL
+            });
+            label.add(Ti.UI.createLabel({
                 color: color,
                 font: { fontSize: fontSize, fontWeight: "bold" },
-                height: height,
                 width: Ti.UI.FILL,
-                textAlign: 'center', //UI.TEXT_ALIGNMENT_CENTER,
+                textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
                 text: text
             }));
+            win.add(label);
         }
 
         win.add(view = Ti.UI.createView({ height: "12%" }));
@@ -59,7 +63,7 @@ function Titanium_RedScreenOfDeath(e) {
             win.close();
         });
 
-        makeLabel("Error messages will only be displayed during development. When your app is packaged for final distribution, no error screen will appear. Test your code!", "28%", "#000", "20");
+        makeLabel("Error messages will only be displayed during development. When your app is packaged for final distribution, no error screen will appear. Test your code!", "16%", "#000", "20");
 
         win.open();
     } catch (er) {
