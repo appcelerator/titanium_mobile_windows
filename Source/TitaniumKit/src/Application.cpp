@@ -26,12 +26,12 @@ namespace Titanium
  */
 function Titanium_RedScreenOfDeath(e) {
     try {
-        Ti.API.error(e);
+        Ti.API.error("Application Error: "+JSON.stringify(e, null, 2));
 
-        var f = e.filename || "",
+        var f = e.fileName || "",
             match = f.match(/:\/\/.+(\/.*)/),
-            filename = match ? match[1] : e.filename,
-            line = e.lineno,
+            filename = match ? match[1] : e.fileName,
+            line = e.lineNumber,
             win = Ti.UI.createWindow({
                 backgroundColor: "#f00",
                 layout: "vertical"
@@ -40,26 +40,30 @@ function Titanium_RedScreenOfDeath(e) {
             button;
 
         function makeLabel(text, height, color, fontSize) {
-            win.add(Ti.UI.createLabel({
+            var label = Ti.UI.createView({
+                height: height,
+                width: Ti.UI.FILL
+            });
+            label.add(Ti.UI.createLabel({
                 color: color,
                 font: { fontSize: fontSize, fontWeight: "bold" },
-                height: height,
                 width: Ti.UI.FILL,
-                textAlign: 'center', //UI.TEXT_ALIGNMENT_CENTER,
+                textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
                 text: text
             }));
+            win.add(label);
         }
 
         win.add(view = Ti.UI.createView({ height: "12%" }));
         makeLabel("Application Error", "15%", "#0f0", "34");
-        makeLabel((e.message || e.toString()).trim() + (filename && filename !== "undefined" ? " at " + filename : "") + (line ? " (line " + line + ")" : ""), "45%", "#fff", "26");
+        makeLabel((e.message || e.toString()).trim() + (line ? " (line " + line + ")" : ""), "45%", "#fff", "26");
         win.add(view = Ti.UI.createView({ height: "12%" }));
         view.add(button = Ti.UI.createButton({ title: "Dismiss" }));
         button.addEventListener("click", function () {
             win.close();
         });
 
-        makeLabel("Error messages will only be displayed during development. When your app is packaged for final distribution, no error screen will appear. Test your code!", "28%", "#000", "20");
+        makeLabel("Error messages will only be displayed during development. When your app is packaged for final distribution, no error screen will appear. Test your code!", "16%", "#000", "20");
 
         win.open();
     } catch (er) {
@@ -71,21 +75,19 @@ function Titanium_RedScreenOfDeath(e) {
 		js_context__.JSEvaluateScript(show_error_js);
 
 		try {
-
 			std::ostringstream os;
 			os << "try {\n";
 			os << "  require('" << app_js << "');\n";
 			os << "} catch (E) {\n";
 			os << "  Titanium_RedScreenOfDeath(E);\n";
 			os << "}";
-
 			return js_context__.JSEvaluateScript(os.str());
-
-		} catch (std::exception& stdex) {
+		} catch (const std::exception& stdex) {
 			const std::string what = stdex.what();
 			TITANIUM_LOG_ERROR(what);
 			return js_context__.JSEvaluateScript("Titanium_RedScreenOfDeath('" + what + "');");
 		}
+		return js_context__.CreateUndefined();
 	}
 
 	JSContext Application::get_context() const
