@@ -17,8 +17,8 @@ add_library(TitaniumWindows_Geolocation SHARED IMPORTED)
 
 set_target_properties(TitaniumWindows_Geolocation PROPERTIES
   COMPATIBLE_INTERFACE_STRING "TitaniumWindows_Geolocation_MAJOR_VERSION"
-  INTERFACE_INCLUDE_DIRECTORIES "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Geolocation/include;$<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>"
-  INTERFACE_LINK_LIBRARIES "TitaniumKit"
+  INTERFACE_INCLUDE_DIRECTORIES "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Geolocation/include;$<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>;$<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>"
+  INTERFACE_LINK_LIBRARIES "TitaniumKit;TitaniumWindows_Utility"
   INTERFACE_TitaniumWindows_Geolocation_MAJOR_VERSION "0"
 )
 
