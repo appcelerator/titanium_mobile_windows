@@ -125,12 +125,13 @@ namespace Titanium
 	{
 		JSExport<API>::SetClassVersion(1);
 		JSExport<API>::SetParent(JSExport<Module>::Class());
-		JSExport<API>::AddFunctionProperty("info", std::mem_fn(&API::js_info));
-		JSExport<API>::AddFunctionProperty("warn", std::mem_fn(&API::js_warn));
-		JSExport<API>::AddFunctionProperty("error", std::mem_fn(&API::js_error));
-		JSExport<API>::AddFunctionProperty("debug", std::mem_fn(&API::js_debug));
-		JSExport<API>::AddFunctionProperty("trace", std::mem_fn(&API::js_trace));
-		JSExport<API>::AddFunctionProperty("log", std::mem_fn(&API::js_log));
+		
+		TITANIUM_MODULE_ADD_FUNCTION(API, info);
+		TITANIUM_MODULE_ADD_FUNCTION(API, warn);
+		TITANIUM_MODULE_ADD_FUNCTION(API, error);
+		TITANIUM_MODULE_ADD_FUNCTION(API, debug);
+		TITANIUM_MODULE_ADD_FUNCTION(API, trace);
+		TITANIUM_MODULE_ADD_FUNCTION(API, log);
 	}
 
 	JSObject API::GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -144,63 +145,56 @@ namespace Titanium
 		return static_cast<JSObject>(Object_property);
 	}
 
-	JSValue API::js_info(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(API, info)
 	{
-		TITANIUM_ASSERT(arguments.size() >= 1);
-		const auto _0 = arguments.at(0);
-		std::string message = static_cast<std::string>(_0);
+		ENSURE_STRING_AT_INDEX(message, 0);
+		
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->info(message);
 		return js_context.CreateUndefined();
 	}
 
-	JSValue API::js_warn(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(API, warn)
 	{
-		TITANIUM_ASSERT(arguments.size() >= 1);
-		const auto _0 = arguments.at(0);
-		std::string message = static_cast<std::string>(_0);
+		ENSURE_STRING_AT_INDEX(message, 0);
+		
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->warn(message);
 		return js_context.CreateUndefined();
 	}
 
-	JSValue API::js_error(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(API, error)
 	{
-		TITANIUM_ASSERT(arguments.size() >= 1);
-		const auto _0 = arguments.at(0);
-		std::string message = static_cast<std::string>(_0);
+		ENSURE_STRING_AT_INDEX(message, 0);
+		
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->error(message);
 		return js_context.CreateUndefined();
 	}
 
-	JSValue API::js_debug(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(API, debug)
 	{
-		TITANIUM_ASSERT(arguments.size() >= 1);
-		const auto _0 = arguments.at(0);
-		std::string message = static_cast<std::string>(_0);
+		ENSURE_STRING_AT_INDEX(message, 0);
+		
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->debug(message);
 		return js_context.CreateUndefined();
 	}
 
-	JSValue API::js_trace(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(API, trace)
 	{
-		TITANIUM_ASSERT(arguments.size() >= 1);
-		const auto _0 = arguments.at(0);
-		std::string message = static_cast<std::string>(_0);
+		ENSURE_STRING_AT_INDEX(message, 0);
+		
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->trace(message);
 		return js_context.CreateUndefined();
 	}
 
-	JSValue API::js_log(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(API, log)
 	{
-		TITANIUM_ASSERT(arguments.size() >= 2);
-		const auto _0 = arguments.at(0);
-		std::string level = static_cast<std::string>(_0);
-		const auto _1 = arguments.at(1);
-		std::string message = static_cast<std::string>(_1);
+		ENSURE_STRING_AT_INDEX(level, 0);
+		ENSURE_STRING_AT_INDEX(message, 1);
+		
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->log(message);
 		return js_context.CreateUndefined();

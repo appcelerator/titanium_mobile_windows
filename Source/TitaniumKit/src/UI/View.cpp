@@ -43,150 +43,140 @@ namespace Titanium
 			JSExport<View>::SetClassVersion(1);
 			JSExport<View>::SetParent(JSExport<Module>::Class());
 			// methods
-			JSExport<View>::AddFunctionProperty("add", std::mem_fn(&View::js_add));
-			JSExport<View>::AddFunctionProperty("animate", std::mem_fn(&View::js_animate));
-			JSExport<View>::AddFunctionProperty("hide", std::mem_fn(&View::js_hide));
-			JSExport<View>::AddFunctionProperty("show", std::mem_fn(&View::js_show));
+
+			TITANIUM_MODULE_ADD_FUNCTION(View, add);
+			TITANIUM_MODULE_ADD_FUNCTION(View, animate);
+			TITANIUM_MODULE_ADD_FUNCTION(View, hide);
+			TITANIUM_MODULE_ADD_FUNCTION(View, show);
+
 			// properties
-			
-			JSExport<View>::AddValueProperty("backgroundColor", std::mem_fn(&View::js_get_backgroundColor), std::mem_fn(&View::js_set_backgroundColor));
-			JSExport<View>::AddValueProperty("borderColor", std::mem_fn(&View::js_get_borderColor), std::mem_fn(&View::js_set_borderColor));
-			JSExport<View>::AddValueProperty("borderRadius", std::mem_fn(&View::js_get_borderRadius), std::mem_fn(&View::js_set_borderRadius));
-			JSExport<View>::AddValueProperty("borderWidth", std::mem_fn(&View::js_get_borderWidth), std::mem_fn(&View::js_set_borderWidth));
-			JSExport<View>::AddValueProperty("bottom", std::mem_fn(&View::js_get_bottom), std::mem_fn(&View::js_set_bottom));
-			JSExport<View>::AddValueProperty("center", std::mem_fn(&View::js_get_center), std::mem_fn(&View::js_set_center));
-			JSExport<View>::AddValueProperty("children", std::mem_fn(&View::js_get_children));
-			JSExport<View>::AddValueProperty("height", std::mem_fn(&View::js_get_height), std::mem_fn(&View::js_set_height));
-			JSExport<View>::AddValueProperty("layout", std::mem_fn(&View::js_get_layout), std::mem_fn(&View::js_set_layout));
-			JSExport<View>::AddValueProperty("left", std::mem_fn(&View::js_get_left), std::mem_fn(&View::js_set_left));
-			JSExport<View>::AddValueProperty("opacity", std::mem_fn(&View::js_get_opacity), std::mem_fn(&View::js_set_opacity));
-			JSExport<View>::AddValueProperty("rect", std::mem_fn(&View::js_get_rect));
-			JSExport<View>::AddValueProperty("right", std::mem_fn(&View::js_get_right), std::mem_fn(&View::js_set_right));
-			JSExport<View>::AddValueProperty("size", std::mem_fn(&View::js_get_size));
-			JSExport<View>::AddValueProperty("tintColor", std::mem_fn(&View::js_get_tintColor), std::mem_fn(&View::js_set_tintColor));
-			JSExport<View>::AddValueProperty("top", std::mem_fn(&View::js_get_top), std::mem_fn(&View::js_set_top));
-			JSExport<View>::AddValueProperty("touchEnabled", std::mem_fn(&View::js_get_touchEnabled), std::mem_fn(&View::js_set_touchEnabled));
-			JSExport<View>::AddValueProperty("visible", std::mem_fn(&View::js_get_visible), std::mem_fn(&View::js_set_visible));
-			JSExport<View>::AddValueProperty("width", std::mem_fn(&View::js_get_width), std::mem_fn(&View::js_set_width));
+			TITANIUM_MODULE_ADD_PROPERTY(View, backgroundColor);
+			TITANIUM_MODULE_ADD_PROPERTY(View, borderColor);
+			TITANIUM_MODULE_ADD_PROPERTY(View, borderRadius);
+			TITANIUM_MODULE_ADD_PROPERTY(View, borderWidth);
+			TITANIUM_MODULE_ADD_PROPERTY(View, bottom);
+			TITANIUM_MODULE_ADD_PROPERTY(View, center);
+			TITANIUM_MODULE_ADD_PROPERTY_READONLY(View, children);
+			TITANIUM_MODULE_ADD_PROPERTY(View, height);
+			TITANIUM_MODULE_ADD_PROPERTY(View, layout);
+			TITANIUM_MODULE_ADD_PROPERTY(View, left);
+			TITANIUM_MODULE_ADD_PROPERTY(View, opacity);
+			TITANIUM_MODULE_ADD_PROPERTY_READONLY(View, rect);
+			TITANIUM_MODULE_ADD_PROPERTY(View, right);
+			TITANIUM_MODULE_ADD_PROPERTY_READONLY(View, size);
+			TITANIUM_MODULE_ADD_PROPERTY(View, tintColor);
+			TITANIUM_MODULE_ADD_PROPERTY(View, top);
+			TITANIUM_MODULE_ADD_PROPERTY(View, touchEnabled);
+			TITANIUM_MODULE_ADD_PROPERTY(View, visible);
+			TITANIUM_MODULE_ADD_PROPERTY(View, width);
 		}
 
-		JSValue View::js_add(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_FUNCTION(View, add)
 		{
-			TITANIUM_ASSERT(arguments.size() >= 1);
-			const auto _0 = arguments.at(0);
-			TITANIUM_ASSERT(_0.IsObject());
-			JSObject view = static_cast<JSObject>(_0);
+			ENSURE_OBJECT_AT_INDEX(view, 0);
 			layoutDelegate__->add(view.GetPrivate<View>());
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_animate(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_FUNCTION(View, animate)
 		{
-			TITANIUM_ASSERT(arguments.size() >= 1);
-			const auto _0 = arguments.at(0);
-			TITANIUM_ASSERT(_0.IsObject());
-			JSObject animation = static_cast<JSObject>(_0);
+			ENSURE_OBJECT_AT_INDEX(animation, 0);
 			// TODO Convert the animation object into a Ti.UI.Animation if it isn't one already?
 
-			JSObject callback = this_object.get_context().CreateObject();
-			if (arguments.size() > 1) {
-				const auto _1 = arguments.at(1);
-				TITANIUM_ASSERT(_1.IsObject());
-				callback = static_cast<JSObject>(_1);
-				TITANIUM_ASSERT(callback.IsFunction());
-			}
+			ENSURE_OPTIONAL_OBJECT_AT_INDEX(callback, 1);
+			TITANIUM_ASSERT(callback.IsFunction());
 
 			animate(animation, callback);
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_hide(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_FUNCTION(View, hide)
 		{
 			TITANIUM_ASSERT(arguments.size() == 0);
 			layoutDelegate__->hide();
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_show(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_FUNCTION(View, show)
 		{
 			TITANIUM_ASSERT(arguments.size() == 0);
 			layoutDelegate__->show();
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_backgroundColor() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, backgroundColor)
 		{
 			return get_context().CreateString(layoutDelegate__->get_backgroundColor());
 		}
 
-		bool View::js_set_backgroundColor(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, backgroundColor)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundColor(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_borderColor() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, borderColor)
 		{
 			return get_context().CreateString(layoutDelegate__->get_borderColor());
 		}
 
-		bool View::js_set_borderColor(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, borderColor)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_borderColor(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_borderRadius() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, borderRadius)
 		{
 			return get_context().CreateNumber(layoutDelegate__->get_borderRadius());
 		}
 
-		bool View::js_set_borderRadius(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, borderRadius)
 		{
 			TITANIUM_ASSERT(argument.IsNumber());
 			layoutDelegate__->set_borderRadius(static_cast<uint32_t>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_borderWidth() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, borderWidth)
 		{
 			return get_context().CreateNumber(layoutDelegate__->get_borderWidth());
 		}
 
-		bool View::js_set_borderWidth(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, borderWidth)
 		{
 			TITANIUM_ASSERT(argument.IsNumber());
 			layoutDelegate__->set_borderWidth(static_cast<uint32_t>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_bottom() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, bottom)
 		{
 			return get_context().CreateString(layoutDelegate__->get_bottom());
 		}
 
-		bool View::js_set_bottom(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, bottom)
 		{
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_bottom(static_cast<std::string>(argument));
 			return true;
 		}
 
-		bool View::js_set_center(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, center)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			layoutDelegate__->set_center(js_to_Point(static_cast<JSObject>(argument)));
 			return true;
 		}
 		
-		JSValue View::js_get_center() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, center)
 		{
 			return Point_to_js(get_context(), layoutDelegate__->get_center());
 		}
 
-		JSValue View::js_get_children() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, children)
 		{
 			std::vector<JSValue> js_children;
 			const auto children = layoutDelegate__->get_children();
@@ -196,48 +186,48 @@ namespace Titanium
 			return get_context().CreateArray(js_children);
 		}
 
-		JSValue View::js_get_height() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, height)
 		{
 			return get_context().CreateString(layoutDelegate__->get_height());
 		}
 
-		bool View::js_set_height(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, height)
 		{
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_height(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_layout() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, layout)
 		{
 			return get_context().CreateString(layoutDelegate__->get_layout());
 		}
 
-		bool View::js_set_layout(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, layout)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_layout(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_left() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, left)
 		{
 			return get_context().CreateString(layoutDelegate__->get_left());
 		}
 
-		bool View::js_set_left(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, left)
 		{
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_left(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_opacity() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, opacity)
 		{
 			return get_context().CreateNumber(layoutDelegate__->get_opacity());
 		}
 
-		bool View::js_set_opacity(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, opacity)
 		{
 			if (argument.IsNumber()) {
 				layoutDelegate__->set_opacity(static_cast<double>(argument));
@@ -245,46 +235,46 @@ namespace Titanium
 			return true;
 		}
 
-		JSValue View::js_get_rect() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, rect)
 		{
 			return Titanium::UI::Dimension_to_js(get_context(), layoutDelegate__->get_rect());
 		}
 
-		JSValue View::js_get_right() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, right)
 		{
 			return get_context().CreateString(layoutDelegate__->get_right());
 		}
 
-		bool View::js_set_right(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, right)
 		{
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_right(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_size() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, size)
 		{
 			return Titanium::UI::Dimension_to_js(get_context(), layoutDelegate__->get_size());
 		}
 
-		JSValue View::js_get_tintColor() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, tintColor)
 		{
 			return get_context().CreateString(layoutDelegate__->get_tintColor());
 		}
 
-		bool View::js_set_tintColor(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, tintColor)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_tintColor(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_top() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, top)
 		{
 			return get_context().CreateString(layoutDelegate__->get_top());
 		}
 
-		bool View::js_set_top(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, top)
 		{
 			// FIXME What does setting top to null mean? Because corporate directory does it...
 			if (argument.IsNull()) {
@@ -295,36 +285,36 @@ namespace Titanium
 			return true;
 		}
 
-		JSValue View::js_get_touchEnabled() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, touchEnabled)
 		{
 			return get_context().CreateBoolean(layoutDelegate__->get_touchEnabled());
 		}
 
-		bool View::js_set_touchEnabled(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, touchEnabled)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			layoutDelegate__->set_touchEnabled(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_visible() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, visible)
 		{
 			return get_context().CreateBoolean(layoutDelegate__->get_visible());
 		}
 
-		bool View::js_set_visible(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, visible)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			layoutDelegate__->set_visible(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_width() const TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_GETTER(View, width)
 		{
 			return get_context().CreateString(layoutDelegate__->get_width());
 		}
 
-		bool View::js_set_width(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_MODULE_PROPERTY_SETTER(View, width)
 		{
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_width(static_cast<std::string>(argument));

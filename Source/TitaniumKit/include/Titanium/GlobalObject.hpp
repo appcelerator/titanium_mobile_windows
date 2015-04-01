@@ -172,13 +172,14 @@ namespace Titanium
 		// TODO: The following functions can automatically be generated
 		// from the YAML API docs.
 		static void JSExportInitialize();
-		JSValue js_global() const TITANIUM_NOEXCEPT;
-		JSValue js_require(const std::vector<JSValue>& arguments, JSObject& this_object);
-		JSValue js_setTimeout(const std::vector<JSValue>& arguments, JSObject& this_object);
-		JSValue js_clearTimeout(const std::vector<JSValue>& arguments, JSObject& this_object);
-		JSValue js_setInterval(const std::vector<JSValue>& arguments, JSObject& this_object);
-		JSValue js_clearInterval(const std::vector<JSValue>& arguments, JSObject& this_object);
-
+		
+		TITANIUM_MODULE_PROPERTY_READONLY_DEF(global);
+		TITANIUM_MODULE_FUNCTION_DEF(require);
+		TITANIUM_MODULE_FUNCTION_DEF(setTimeout);
+		TITANIUM_MODULE_FUNCTION_DEF(clearTimeout);
+		TITANIUM_MODULE_FUNCTION_DEF(setInterval);
+		TITANIUM_MODULE_FUNCTION_DEF(clearInterval);
+		
 		using Callback_t = std::function<void()>;
 
 		/*!

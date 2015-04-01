@@ -68,64 +68,30 @@ namespace Titanium
 
 			static void JSExportInitialize();
 
-			virtual JSValue js_add(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_animate(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_hide(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_show(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_backgroundColor() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_backgroundColor(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_borderColor() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_borderColor(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_borderRadius() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_borderRadius(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_borderWidth() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_borderWidth(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_bottom() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_bottom(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_center() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_center(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_children() const TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_height() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_height(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_layout() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_layout(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_left() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_left(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_opacity() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_opacity(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_rect() const TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_right() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_right(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_size() const TITANIUM_NOEXCEPT final;
+			TITANIUM_MODULE_FUNCTION_DEF(add);
+			TITANIUM_MODULE_FUNCTION_DEF(animate);
+			TITANIUM_MODULE_FUNCTION_DEF(hide);
+			TITANIUM_MODULE_FUNCTION_DEF(show);
 			
-			virtual JSValue js_get_tintColor() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_tintColor(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_touchEnabled() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_touchEnabled(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_visible() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_visible(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_top() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_top(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_width() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_width(const JSValue& argument) TITANIUM_NOEXCEPT final;
+			TITANIUM_MODULE_PROPERTY_DEF(backgroundColor);
+			TITANIUM_MODULE_PROPERTY_DEF(borderColor);
+			TITANIUM_MODULE_PROPERTY_DEF(borderRadius);
+			TITANIUM_MODULE_PROPERTY_DEF(borderWidth);
+			TITANIUM_MODULE_PROPERTY_DEF(bottom);
+			TITANIUM_MODULE_PROPERTY_DEF(center);
+			TITANIUM_MODULE_PROPERTY_READONLY_DEF(children);
+			TITANIUM_MODULE_PROPERTY_DEF(height);
+			TITANIUM_MODULE_PROPERTY_DEF(layout);
+			TITANIUM_MODULE_PROPERTY_DEF(left);
+			TITANIUM_MODULE_PROPERTY_DEF(opacity);
+			TITANIUM_MODULE_PROPERTY_READONLY_DEF(rect);
+			TITANIUM_MODULE_PROPERTY_DEF(right);
+			TITANIUM_MODULE_PROPERTY_READONLY_DEF(size);
+			TITANIUM_MODULE_PROPERTY_DEF(tintColor);
+			TITANIUM_MODULE_PROPERTY_DEF(touchEnabled);
+			TITANIUM_MODULE_PROPERTY_DEF(visible);
+			TITANIUM_MODULE_PROPERTY_DEF(top);
+			TITANIUM_MODULE_PROPERTY_DEF(width);
 
 			virtual void postInitialize(JSObject& this_object) override;
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
