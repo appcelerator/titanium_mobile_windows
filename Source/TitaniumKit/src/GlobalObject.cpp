@@ -436,27 +436,25 @@ namespace Titanium
 		TITANIUM_LOG_DEBUG("GlobalObject::JSExportInitialize");
 		JSExport<GlobalObject>::SetClassVersion(1);
 		JSExport<GlobalObject>::SetParent(JSExport<JSExportObject>::Class());
-		JSExport<GlobalObject>::AddValueProperty("global", std::mem_fn(&GlobalObject::js_global));
-		JSExport<GlobalObject>::AddFunctionProperty("require", std::mem_fn(&GlobalObject::js_require));
-		JSExport<GlobalObject>::AddFunctionProperty("setTimeout", std::mem_fn(&GlobalObject::js_setTimeout));
-		JSExport<GlobalObject>::AddFunctionProperty("clearTimeout", std::mem_fn(&GlobalObject::js_clearTimeout));
-		JSExport<GlobalObject>::AddFunctionProperty("setInterval", std::mem_fn(&GlobalObject::js_setInterval));
-		JSExport<GlobalObject>::AddFunctionProperty("clearInterval", std::mem_fn(&GlobalObject::js_clearInterval));
+		
+		TITANIUM_MODULE_ADD_PROPERTY_READONLY(GlobalObject, global);
+		TITANIUM_MODULE_ADD_FUNCTION(GlobalObject, require);
+		TITANIUM_MODULE_ADD_FUNCTION(GlobalObject, setTimeout);
+		TITANIUM_MODULE_ADD_FUNCTION(GlobalObject, clearTimeout);
+		TITANIUM_MODULE_ADD_FUNCTION(GlobalObject, setInterval);
+		TITANIUM_MODULE_ADD_FUNCTION(GlobalObject, clearInterval);
 	}
 
-	JSValue GlobalObject::js_global() const TITANIUM_NOEXCEPT
+	TITANIUM_MODULE_PROPERTY_GETTER(GlobalObject, global)
 	{
 		return get_context().JSEvaluateScript("this;");
 	}
 
-	JSValue GlobalObject::js_require(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(GlobalObject, require)
 	{
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
-		TITANIUM_ASSERT(arguments.size() >= 1);
-		const auto _0 = arguments.at(0);
-		TITANIUM_ASSERT(_0.IsString());
-		std::string moduleId = static_cast<std::string>(_0);
+		ENSURE_STRING_AT_INDEX(moduleId, 0);
 
 		const auto global_object = this_object.get_context().get_global_object();
 		const auto global_ptr = global_object.GetPrivate<GlobalObject>();
@@ -465,34 +463,27 @@ namespace Titanium
 		return global_ptr->requireModule(this_object, moduleId);
 	}
 
-	JSValue GlobalObject::js_setTimeout(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(GlobalObject, setTimeout)
 	{
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
-		TITANIUM_ASSERT(arguments.size() >= 2);
-		const auto _0 = arguments.at(0);
-		const auto _1 = arguments.at(1);
-		TITANIUM_ASSERT(_0.IsObject());
-		TITANIUM_ASSERT(_1.IsNumber());
-		JSObject function = static_cast<JSObject>(_0);
-		TITANIUM_ASSERT(function.IsFunction());
-		const auto delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(static_cast<std::uint32_t>(_1)));
+		ENSURE_OBJECT_AT_INDEX(function, 0);
+		ENSURE_UINT_AT_INDEX(delay, 1);
+		
+		const auto chrono_delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(delay));
 
 		const auto global_object = this_object.get_context().get_global_object();
 		const auto global_ptr = global_object.GetPrivate<GlobalObject>();
 		TITANIUM_ASSERT(global_ptr);
 
-		return this_object.get_context().CreateNumber(global_ptr->setTimeout(std::move(function), delay));
+		return this_object.get_context().CreateNumber(global_ptr->setTimeout(std::move(function), chrono_delay));
 	}
 
-	JSValue GlobalObject::js_clearTimeout(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(GlobalObject, clearTimeout)
 	{
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
-		TITANIUM_ASSERT(arguments.size() >= 1);
-		const auto _0 = arguments.at(0);
-		TITANIUM_ASSERT(_0.IsNumber());
-		const auto timerId = static_cast<unsigned>(_0);
+		ENSURE_UINT_AT_INDEX(timerId, 0);
 
 		const auto global_object = this_object.get_context().get_global_object();
 		const auto global_ptr = global_object.GetPrivate<GlobalObject>();
@@ -503,35 +494,29 @@ namespace Titanium
 		return this_object.get_context().CreateUndefined();
 	}
 
-	JSValue GlobalObject::js_setInterval(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(GlobalObject, setInterval)
 	{
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
-		TITANIUM_ASSERT(arguments.size() >= 2);
-		const auto _0 = arguments.at(0);
-		const auto _1 = arguments.at(1);
-		TITANIUM_ASSERT(_0.IsObject());
-		TITANIUM_ASSERT(_1.IsNumber());
-		JSObject function = static_cast<JSObject>(_0);
 		
+		ENSURE_OBJECT_AT_INDEX(function, 0);
+		ENSURE_UINT_AT_INDEX(delay, 1);
+
 		TITANIUM_ASSERT(function.IsFunction());
-		const auto delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(static_cast<std::uint32_t>(_1)));
+		const auto chrono_delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(delay));
 
 		const auto global_object = this_object.get_context().get_global_object();
 		const auto global_ptr = global_object.GetPrivate<GlobalObject>();
 		TITANIUM_ASSERT(global_ptr);
 
-		return this_object.get_context().CreateNumber(global_ptr->setInterval(std::move(function), delay));
+		return this_object.get_context().CreateNumber(global_ptr->setInterval(std::move(function), chrono_delay));
 	}
 
-	JSValue GlobalObject::js_clearInterval(const std::vector<JSValue>& arguments, JSObject& this_object)
+	TITANIUM_MODULE_FUNCTION(GlobalObject, clearInterval)
 	{
 		// TODO: Validate these precondition checks (which could be
 		// automaticaly generated) with the team.
-		TITANIUM_ASSERT(arguments.size() >= 1);
-		const auto _0 = arguments.at(0);
-		TITANIUM_ASSERT(_0.IsNumber());
-		const auto timerId = static_cast<unsigned>(_0);
+		ENSURE_UINT_AT_INDEX(timerId, 0);
 
 		const auto global_object = this_object.get_context().get_global_object();
 		const auto global_ptr = global_object.GetPrivate<GlobalObject>();

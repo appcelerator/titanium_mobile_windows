@@ -49,57 +49,58 @@ namespace Titanium
 		  @abstract js_get_orientation
 		  @discussion Orientation of the current window.
 		*/
-		virtual JSValue js_get_orientation() const TITANIUM_NOEXCEPT final;
+		TITANIUM_MODULE_PROPERTY_READONLY_DEF(orientation)
 
 		/*!
 		  @method
 		  @abstract js_get_landscape
 		  @discussion Indicates whether current window is considered landscape by the device.
 		*/
-		virtual JSValue js_get_landscape() const TITANIUM_NOEXCEPT final;
+		TITANIUM_MODULE_PROPERTY_READONLY_DEF(landscape)
+		
 		/*!
 		  @method
 		  @abstract js_get_portrait
 		  @discussion Indicates whether current window is considered portrait by the device.
 		*/
-		virtual JSValue js_get_portrait() const TITANIUM_NOEXCEPT final;
+		TITANIUM_MODULE_PROPERTY_READONLY_DEF(portrait)
 
 		/*!
 		  @method
 		  @abstract js_getLandscape
 		  @discussion Gets the value of the landscape property.
 		*/
-		virtual JSValue js_getLandscape(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+		TITANIUM_MODULE_FUNCTION_DEF(getLandscape)
 
 		/*!
 		  @method
 		  @abstract js_getPortrait
 		  @discussion Gets the value of the portrait property.
 		*/
-		virtual JSValue js_getPortrait(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+		TITANIUM_MODULE_FUNCTION_DEF(getPortrait)
 
 		/*!
 		  @method
 		  @abstract js_getOrientation
 		  @discussion Gets the value of the orientation property.
 		*/
-		virtual JSValue js_getOrientation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+		TITANIUM_MODULE_FUNCTION_DEF(getOrientation)
 
 		/*!
 		  @method
 		  @abstract js_isFaceDown
 		  @discussion Returns whether current window is considered face down by the device.
 		*/
-		virtual JSValue js_isFaceDown(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+		TITANIUM_MODULE_FUNCTION_DEF(isFaceDown)
 
 		/*!
 		  @method
 		  @abstract js_isFaceUp
 		  @discussion Returns whether current window is considered face up by the device.
 		*/
-		virtual JSValue js_isFaceUp(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-		virtual JSValue js_isLandscape(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-		virtual JSValue js_isPortrait(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+		TITANIUM_MODULE_FUNCTION_DEF(isFaceUp)
+		TITANIUM_MODULE_FUNCTION_DEF(isLandscape)
+		TITANIUM_MODULE_FUNCTION_DEF(isPortrait)
 
 		virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
 		virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
