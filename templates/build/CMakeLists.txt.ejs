@@ -44,6 +44,7 @@ find_package(TitaniumWindows_API REQUIRED)
 find_package(TitaniumWindows_Accelerometer REQUIRED)
 find_package(TitaniumWindows_App REQUIRED)
 find_package(TitaniumWindows_Filesystem REQUIRED)
+find_package(TitaniumWindows_Geolocation REQUIRED)
 find_package(TitaniumWindows_Gesture REQUIRED)
 find_package(TitaniumWindows_Global REQUIRED)
 find_package(TitaniumWindows_Map REQUIRED)
@@ -119,6 +120,7 @@ target_link_libraries(${EXE_NAME} ${TitaniumWindows_API_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_Accelerometer_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_App_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_Filesystem_LIBRARIES})
+target_link_libraries(${EXE_NAME} ${TitaniumWindows_Geolocation_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_Gesture_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_Global_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_Map_LIBRARIES})
@@ -138,6 +140,7 @@ target_include_directories(${EXE_NAME} PUBLIC
   ${TitaniumWindows_Accelerometer_INCLUDE_DIRS}
   ${TitaniumWindows_App_INCLUDE_DIRS}
   ${TitaniumWindows_Filesystem_INCLUDE_DIRS}
+  ${TitaniumWindows_Geolocation_INCLUDE_DIRS}
   ${TitaniumWindows_Gesture_INCLUDE_DIRS}
   ${TitaniumWindows_Global_INCLUDE_DIRS}
   ${TitaniumWindows_Map_INCLUDE_DIRS}
@@ -146,7 +149,8 @@ target_include_directories(${EXE_NAME} PUBLIC
   ${TitaniumWindows_Ti_INCLUDE_DIRS}
   ${TitaniumWindows_UI_INCLUDE_DIRS}
   ${TitaniumWindows_Utility_INCLUDE_DIRS}
+  ${TitaniumWindows_Utils_INCLUDE_DIRS}
   ${LayoutEngine_INCLUDE_DIRS}
   )
 
-set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_REFERENCES "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows/${TitaniumWindows_Platform_ARCH}/TitaniumWindows.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_API/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_API.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Accelerometer/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Accelerometer.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_App/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_App.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Filesystem/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Filesystem.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Gesture/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Gesture.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Global/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Global.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Map/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Map.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Network/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Network.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Platform/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Platform.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Ti/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Ti.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_UI/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_UI.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Utility/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Utility.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Utils/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Utils.winmd")
+set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_REFERENCES "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows/${TitaniumWindows_Platform_ARCH}/TitaniumWindows.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_API/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_API.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Accelerometer/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Accelerometer.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_App/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_App.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Filesystem/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Filesystem.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Geolocation/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Geolocation.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Gesture/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Gesture.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Global/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Global.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Map/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Map.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Network/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Network.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Platform/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Platform.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Ti/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Ti.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_UI/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_UI.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Utility/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Utility.winmd;${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Utils/${TitaniumWindows_Platform_ARCH}/TitaniumWindows_Utils.winmd")
