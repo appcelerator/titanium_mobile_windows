@@ -197,49 +197,46 @@ namespace Titanium
 		{
 			JSExport<DB>::SetClassVersion(1);
 			JSExport<DB>::SetParent(JSExport<Module>::Class());
-			JSExport<DB>::AddValueProperty("file", std::mem_fn(&DB::js_get_file));
-			JSExport<DB>::AddValueProperty("lastInsertRowId", std::mem_fn(&DB::js_get_lastInsertRowId));
-			JSExport<DB>::AddValueProperty("name", std::mem_fn(&DB::js_get_name));
-			JSExport<DB>::AddValueProperty("rowsAffected", std::mem_fn(&DB::js_get_rowsAffected));
+			TITANIUM_ADD_PROPERTY_READONLY(DB, file);
+			TITANIUM_ADD_PROPERTY_READONLY(DB, lastInsertRowId);
+			TITANIUM_ADD_PROPERTY_READONLY(DB, name);
+			TITANIUM_ADD_PROPERTY_READONLY(DB, rowsAffected);
 
-			JSExport<DB>::AddFunctionProperty("close", std::mem_fn(&DB::js_close));
-			JSExport<DB>::AddFunctionProperty("execute", std::mem_fn(&DB::js_execute));
-			JSExport<DB>::AddFunctionProperty("remove", std::mem_fn(&DB::js_remove));
+			TITANIUM_ADD_FUNCTION(DB, close);
+			TITANIUM_ADD_FUNCTION(DB, execute);
+			TITANIUM_ADD_FUNCTION(DB, remove);
 		}
 	
-		JSValue DB::js_get_file() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(DB, file)
 		{
 			return get_file();
 		}
 
-		JSValue DB::js_get_lastInsertRowId() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(DB, lastInsertRowId)
 		{
 			return get_context().CreateNumber(static_cast<double>(get_lastInsertRowId()));
 		}
 
-		JSValue DB::js_get_name() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(DB, name)
 		{
 			return get_context().CreateString(get_name());
 		}
 
-		JSValue DB::js_get_rowsAffected() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(DB, rowsAffected)
 		{
 			return get_context().CreateNumber(get_rowsAffected());
 		}
 
-		JSValue DB::js_close(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(DB, close)
 		{
-			TITANIUM_ASSERT(arguments.size() == 0);
 			close();
+			
 			return get_context().CreateUndefined();
 		}
 
-		JSValue DB::js_execute(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(DB, execute)
 		{
-			TITANIUM_ASSERT(arguments.size() >= 1);
-			const auto _0 = arguments.at(0);
-			TITANIUM_ASSERT(_0.IsString());
-			const auto sql = static_cast<std::string>(_0);
+			ENSURE_STRING_AT_INDEX(sql, 0);
 
 			if (arguments.size() > 1) {
 				// TODO Drop the first arg (the sql statement) and grab all the varargs
@@ -250,9 +247,8 @@ namespace Titanium
 			}
 		}
 
-		JSValue DB::js_remove(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(DB, remove)
 		{
-			TITANIUM_ASSERT(arguments.size() == 0);
 			close();
 
 			// Now we grab the file object and call deleteFile on it

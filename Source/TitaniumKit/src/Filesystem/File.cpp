@@ -22,48 +22,48 @@ namespace Titanium
 		{
 			JSExport<File>::SetClassVersion(1);
 			JSExport<File>::SetParent(JSExport<Module>::Class());
-			JSExport<File>::AddValueProperty("executable", std::mem_fn(&File::js_get_executable));
-			JSExport<File>::AddValueProperty("hidden", std::mem_fn(&File::js_get_hidden));
-			JSExport<File>::AddValueProperty("name", std::mem_fn(&File::js_get_name));
-			JSExport<File>::AddValueProperty("nativePath", std::mem_fn(&File::js_get_nativePath));
-			JSExport<File>::AddValueProperty("parent", std::mem_fn(&File::js_get_parent));
-			JSExport<File>::AddValueProperty("readonly", std::mem_fn(&File::js_get_readonly));
-			JSExport<File>::AddValueProperty("remoteBackup", std::mem_fn(&File::js_get_remoteBackup));
-			JSExport<File>::AddValueProperty("size", std::mem_fn(&File::js_get_size));
-			JSExport<File>::AddValueProperty("symbolicLink", std::mem_fn(&File::js_get_symbolicLink));
-			JSExport<File>::AddValueProperty("writable", std::mem_fn(&File::js_get_writable));
+			TITANIUM_ADD_PROPERTY_READONLY(File, executable);
+			TITANIUM_ADD_PROPERTY_READONLY(File, hidden);
+			TITANIUM_ADD_PROPERTY_READONLY(File, name);
+			TITANIUM_ADD_PROPERTY_READONLY(File, nativePath);
+			TITANIUM_ADD_PROPERTY_READONLY(File, parent);
+			TITANIUM_ADD_PROPERTY_READONLY(File, readonly);
+			TITANIUM_ADD_PROPERTY_READONLY(File, remoteBackup);
+			TITANIUM_ADD_PROPERTY_READONLY(File, size);
+			TITANIUM_ADD_PROPERTY_READONLY(File, symbolicLink);
+			TITANIUM_ADD_PROPERTY_READONLY(File, writable);
 
-			JSExport<File>::AddFunctionProperty("getExecutable", std::mem_fn(&File::js_getExecutable));
-			JSExport<File>::AddFunctionProperty("getHidden", std::mem_fn(&File::js_getHidden));
-			JSExport<File>::AddFunctionProperty("getName", std::mem_fn(&File::js_getName));
-			JSExport<File>::AddFunctionProperty("getNativePath", std::mem_fn(&File::js_getNativePath));
-			JSExport<File>::AddFunctionProperty("getParent", std::mem_fn(&File::js_getParent));
-			JSExport<File>::AddFunctionProperty("getReadonly", std::mem_fn(&File::js_getReadonly));
-			JSExport<File>::AddFunctionProperty("getRemoteBackup", std::mem_fn(&File::js_getRemoteBackup));
-			JSExport<File>::AddFunctionProperty("getSize", std::mem_fn(&File::js_getSize));
-			JSExport<File>::AddFunctionProperty("getSymbolicLink", std::mem_fn(&File::js_getSymbolicLink));
-			JSExport<File>::AddFunctionProperty("getWritable", std::mem_fn(&File::js_getWritable));
+			TITANIUM_ADD_FUNCTION(File, getExecutable);
+			TITANIUM_ADD_FUNCTION(File, getHidden);
+			TITANIUM_ADD_FUNCTION(File, getName);
+			TITANIUM_ADD_FUNCTION(File, getNativePath);
+			TITANIUM_ADD_FUNCTION(File, getParent);
+			TITANIUM_ADD_FUNCTION(File, getReadonly);
+			TITANIUM_ADD_FUNCTION(File, getRemoteBackup);
+			TITANIUM_ADD_FUNCTION(File, getSize);
+			TITANIUM_ADD_FUNCTION(File, getSymbolicLink);
+			TITANIUM_ADD_FUNCTION(File, getWritable);
 
-			JSExport<File>::AddFunctionProperty("append", std::mem_fn(&File::js_append));
-			JSExport<File>::AddFunctionProperty("copy", std::mem_fn(&File::js_copy));
-			JSExport<File>::AddFunctionProperty("createDirectory", std::mem_fn(&File::js_createDirectory));
-			JSExport<File>::AddFunctionProperty("createFile", std::mem_fn(&File::js_createFile));
-			JSExport<File>::AddFunctionProperty("createTimestamp", std::mem_fn(&File::js_createTimestamp));
-			JSExport<File>::AddFunctionProperty("deleteDirectory", std::mem_fn(&File::js_deleteDirectory));
-			JSExport<File>::AddFunctionProperty("deleteFile", std::mem_fn(&File::js_deleteFile));
-			JSExport<File>::AddFunctionProperty("exists", std::mem_fn(&File::js_exists));
-			JSExport<File>::AddFunctionProperty("extension", std::mem_fn(&File::js_extension));
-			JSExport<File>::AddFunctionProperty("getDirectoryListing", std::mem_fn(&File::js_getDirectoryListing));
-			JSExport<File>::AddFunctionProperty("isDirectory", std::mem_fn(&File::js_isDirectory));
-			JSExport<File>::AddFunctionProperty("isFile", std::mem_fn(&File::js_isFile));
-			JSExport<File>::AddFunctionProperty("modificationTimestamp", std::mem_fn(&File::js_modificationTimestamp));
-			JSExport<File>::AddFunctionProperty("move", std::mem_fn(&File::js_move));
-			JSExport<File>::AddFunctionProperty("open", std::mem_fn(&File::js_open));
-			JSExport<File>::AddFunctionProperty("read", std::mem_fn(&File::js_read));
-			JSExport<File>::AddFunctionProperty("rename", std::mem_fn(&File::js_rename));
-			JSExport<File>::AddFunctionProperty("resolve", std::mem_fn(&File::js_resolve));
-			JSExport<File>::AddFunctionProperty("spaceAvailable", std::mem_fn(&File::js_spaceAvailable));
-			JSExport<File>::AddFunctionProperty("write", std::mem_fn(&File::js_write));
+			TITANIUM_ADD_FUNCTION(File, append);
+			TITANIUM_ADD_FUNCTION(File, copy);
+			TITANIUM_ADD_FUNCTION(File, createDirectory);
+			TITANIUM_ADD_FUNCTION(File, createFile);
+			TITANIUM_ADD_FUNCTION(File, createTimestamp);
+			TITANIUM_ADD_FUNCTION(File, deleteDirectory);
+			TITANIUM_ADD_FUNCTION(File, deleteFile);
+			TITANIUM_ADD_FUNCTION(File, exists);
+			TITANIUM_ADD_FUNCTION(File, extension);
+			TITANIUM_ADD_FUNCTION(File, getDirectoryListing);
+			TITANIUM_ADD_FUNCTION(File, isDirectory);
+			TITANIUM_ADD_FUNCTION(File, isFile);
+			TITANIUM_ADD_FUNCTION(File, modificationTimestamp);
+			TITANIUM_ADD_FUNCTION(File, move);
+			TITANIUM_ADD_FUNCTION(File, open);
+			TITANIUM_ADD_FUNCTION(File, read);
+			TITANIUM_ADD_FUNCTION(File, rename);
+			TITANIUM_ADD_FUNCTION(File, resolve);
+			TITANIUM_ADD_FUNCTION(File, spaceAvailable);
+			TITANIUM_ADD_FUNCTION(File, write);
 		}
 
 		bool File::get_executable() const TITANIUM_NOEXCEPT
@@ -278,27 +278,27 @@ namespace Titanium
 			return content;
 		}
 
-		JSValue File::js_get_executable() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, executable)
 		{
 			return get_context().CreateBoolean(get_executable());
 		}
 
-		JSValue File::js_get_hidden() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, hidden)
 		{
 			return get_context().CreateBoolean(get_hidden());
 		}
 
-		JSValue File::js_get_name() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, name)
 		{
 			return get_context().CreateString(get_name());
 		}
 
-		JSValue File::js_get_nativePath() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, nativePath)
 		{
 			return get_context().CreateString(get_nativePath());
 		}
 
-		JSValue File::js_get_parent() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, parent)
 		{
 			auto parent = get_parent();
 			if (parent != nullptr) {
@@ -307,82 +307,43 @@ namespace Titanium
 			return get_context().CreateNull();
 		}
 
-		JSValue File::js_get_readonly() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, readonly)
 		{
 			return get_context().CreateBoolean(get_readonly());
 		}
 
-		JSValue File::js_get_remoteBackup() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, remoteBackup)
 		{
 			return get_context().CreateBoolean(get_remoteBackup());
 		}
 
-		JSValue File::js_get_symbolicLink() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, symbolicLink)
 		{
 			return get_context().CreateBoolean(get_symbolicLink());
 		}
 
-		JSValue File::js_get_writable() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, writable)
 		{
 			return get_context().CreateBoolean(get_writable());
 		}
 
-		JSValue File::js_get_size() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(File, size)
 		{
 			return get_context().CreateNumber(static_cast<double>(get_size()));
 		}
 
-		JSValue File::js_getSize(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_size();
-		}
+		TITANIUM_FUNCTION_AS_GETTER(File, getSize, size);
+		TITANIUM_FUNCTION_AS_GETTER(File, getExecutable, executable);
+		TITANIUM_FUNCTION_AS_GETTER(File, getHidden, hidden);
+		TITANIUM_FUNCTION_AS_GETTER(File, getName, name);
+		TITANIUM_FUNCTION_AS_GETTER(File, getNativePath, nativePath);
+		TITANIUM_FUNCTION_AS_GETTER(File, getParent, parent);
+		TITANIUM_FUNCTION_AS_GETTER(File, getReadonly, readonly);
+		TITANIUM_FUNCTION_AS_GETTER(File, getRemoteBackup, remoteBackup);
+		TITANIUM_FUNCTION_AS_GETTER(File, getSymbolicLink, symbolicLink);
+		TITANIUM_FUNCTION_AS_GETTER(File, getWritable, writable);
 
-		JSValue File::js_getExecutable(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_executable();
-		}
-
-		JSValue File::js_getHidden(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_hidden();
-		}
-
-		JSValue File::js_getName(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_name();
-		}
-
-		JSValue File::js_getNativePath(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_nativePath();
-		}
-
-		JSValue File::js_getParent(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_parent();
-		}
-
-		JSValue File::js_getReadonly(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_readonly();
-		}
-
-		JSValue File::js_getRemoteBackup(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_remoteBackup();
-		}
-
-		JSValue File::js_getSymbolicLink(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_symbolicLink();
-		}
-
-		JSValue File::js_getWritable(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			return js_get_writable();
-		}
-
-		JSValue File::js_append(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, append)
 		{
 			const auto js_context = this_object.get_context();
 
@@ -406,7 +367,7 @@ namespace Titanium
 			return js_context.CreateNull();
 		}
 
-		JSValue File::js_copy(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, copy)
 		{
 			if (arguments.size() == 0) {
 				return get_context().CreateUndefined();
@@ -417,22 +378,22 @@ namespace Titanium
 			return get_context().CreateBoolean(copy(destinationPath));
 		}
 
-		JSValue File::js_createDirectory(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, createDirectory)
 		{
 			return get_context().CreateBoolean(createDirectory());
 		}
 
-		JSValue File::js_createFile(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, createFile)
 		{
 			return get_context().CreateBoolean(createFile());
 		}
 
-		JSValue File::js_createTimestamp(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, createTimestamp)
 		{
 			return get_context().CreateNumber(static_cast<double>(createTimestamp().count()));
 		}
 
-		JSValue File::js_deleteDirectory(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, deleteDirectory)
 		{
 			bool recursive = false;
 			if (arguments.size() > 0) {
@@ -444,22 +405,22 @@ namespace Titanium
 			return get_context().CreateBoolean(deleteDirectory(recursive));
 		}
 
-		JSValue File::js_deleteFile(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, deleteFile)
 		{
 			return get_context().CreateBoolean(deleteFile());
 		}
 
-		JSValue File::js_exists(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, exists)
 		{
 			return get_context().CreateBoolean(exists());
 		}
 
-		JSValue File::js_extension(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, extension)
 		{
 			return get_context().CreateString(extension());
 		}
 
-		JSValue File::js_getDirectoryListing(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, getDirectoryListing)
 		{
 			auto listing = getDirectoryListing();
 			auto context = get_context();
@@ -470,22 +431,22 @@ namespace Titanium
 			return context.CreateArray(result);
 		}
 
-		JSValue File::js_isDirectory(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, isDirectory)
 		{
 			return get_context().CreateBoolean(isDirectory());
 		}
 
-		JSValue File::js_isFile(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, isFile)
 		{
 			return get_context().CreateBoolean(isFile());
 		}
 
-		JSValue File::js_modificationTimestamp(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, modificationTimestamp)
 		{
 			return get_context().CreateNumber(static_cast<double>(modificationTimestamp().count()));
 		}
 
-		JSValue File::js_move(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, move)
 		{
 			if (arguments.size() == 0) {
 				return get_context().CreateUndefined();
@@ -496,7 +457,7 @@ namespace Titanium
 			return get_context().CreateBoolean(move(newpath));
 		}
 
-		JSValue File::js_open(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, open)
 		{
 			auto js_context = this_object.get_context();
 			if (arguments.size() == 0) {
@@ -513,7 +474,7 @@ namespace Titanium
 			}
 		}
 
-		JSValue File::js_read(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, read)
 		{
 			const auto result = read();
 			if (result != nullptr) {
@@ -523,7 +484,7 @@ namespace Titanium
 			}
 		}
 
-		JSValue File::js_rename(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, rename)
 		{
 			if (arguments.size() == 0) {
 				return get_context().CreateUndefined();
@@ -534,17 +495,17 @@ namespace Titanium
 			return get_context().CreateBoolean(rename(newname));
 		}
 
-		JSValue File::js_resolve(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, resolve)
 		{
 			return get_context().CreateString(resolve());
 		}
 
-		JSValue File::js_spaceAvailable(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, spaceAvailable)
 		{
 			return get_context().CreateNumber(static_cast<double>(spaceAvailable()));
 		}
 
-		JSValue File::js_write(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(File, write)
 		{
 			const auto js_context = this_object.get_context();
 

@@ -197,92 +197,59 @@ namespace Titanium
 			static void JSExportInitialize();
 
 			// properties
-			virtual JSValue js_get_canShowCallout() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_canShowCallout(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_centerOffset() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_centerOffset(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_customView() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_customView(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_draggable() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_draggable(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_image() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_image(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_latitude() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_latitude(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_leftButton() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_leftButton(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			
-			virtual JSValue js_get_leftView() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_leftView(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_longitude() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_longitude(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_pincolor() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_pincolor(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_rightButton() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_rightButton(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_rightView() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_rightView(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_showInfoWindow() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_showInfoWindow(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_subtitle() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_subtitle(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_subtitleid() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_subtitleid(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_title() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_title(const JSValue& argument) TITANIUM_NOEXCEPT final;
-
-			virtual JSValue js_get_titleid() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_titleid(const JSValue& argument) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(canShowCallout);
+			TITANIUM_PROPERTY_DEF(centerOffset);
+			TITANIUM_PROPERTY_DEF(customView);
+			TITANIUM_PROPERTY_DEF(draggable);
+			TITANIUM_PROPERTY_DEF(image);
+			TITANIUM_PROPERTY_DEF(latitude);
+			TITANIUM_PROPERTY_DEF(leftButton);
+			TITANIUM_PROPERTY_DEF(leftView);
+			TITANIUM_PROPERTY_DEF(longitude);
+			TITANIUM_PROPERTY_DEF(pincolor);
+			TITANIUM_PROPERTY_DEF(rightButton);
+			TITANIUM_PROPERTY_DEF(rightView);
+			TITANIUM_PROPERTY_DEF(showInfoWindow);
+			TITANIUM_PROPERTY_DEF(subtitle);
+			TITANIUM_PROPERTY_DEF(subtitleid);
+			TITANIUM_PROPERTY_DEF(title);
+			TITANIUM_PROPERTY_DEF(titleid);
 
 			// methods
-			virtual JSValue js_getCanShowCallout(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setCanShowCallout(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getCenterOffset(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setCenterOffset(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getCustomView(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setCustomView(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getDraggable(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setDraggable(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getImage(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setImage(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getLatitude(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setLatitude(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getLeftButton(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setLeftButton(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getLeftView(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setLeftView(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getLongitude(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setLongitude(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getPincolor(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setPincolor(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getRightButton(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setRightButton(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getRightView(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setRightView(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getShowInfoWindow(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setShowInfoWindow(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getSubtitle(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setSubtitle(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getSubtitleid(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setSubtitleid(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getTitle(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setTitle(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getTitleid(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setTitleid(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
+			TITANIUM_FUNCTION_DEF(getCanShowCallout);
+			TITANIUM_FUNCTION_DEF(setCanShowCallout);
+			TITANIUM_FUNCTION_DEF(getCenterOffset);
+			TITANIUM_FUNCTION_DEF(setCenterOffset);
+			TITANIUM_FUNCTION_DEF(getCustomView);
+			TITANIUM_FUNCTION_DEF(setCustomView);
+			TITANIUM_FUNCTION_DEF(getDraggable);
+			TITANIUM_FUNCTION_DEF(setDraggable);
+			TITANIUM_FUNCTION_DEF(getImage);
+			TITANIUM_FUNCTION_DEF(setImage);
+			TITANIUM_FUNCTION_DEF(getLatitude);
+			TITANIUM_FUNCTION_DEF(setLatitude);
+			TITANIUM_FUNCTION_DEF(getLeftButton);
+			TITANIUM_FUNCTION_DEF(setLeftButton);
+			TITANIUM_FUNCTION_DEF(getLeftView);
+			TITANIUM_FUNCTION_DEF(setLeftView);
+			TITANIUM_FUNCTION_DEF(getLongitude);
+			TITANIUM_FUNCTION_DEF(setLongitude);
+			TITANIUM_FUNCTION_DEF(getPincolor);
+			TITANIUM_FUNCTION_DEF(setPincolor);
+			TITANIUM_FUNCTION_DEF(getRightButton);
+			TITANIUM_FUNCTION_DEF(setRightButton);
+			TITANIUM_FUNCTION_DEF(getRightView);
+			TITANIUM_FUNCTION_DEF(setRightView);
+			TITANIUM_FUNCTION_DEF(getShowInfoWindow);
+			TITANIUM_FUNCTION_DEF(setShowInfoWindow);
+			TITANIUM_FUNCTION_DEF(getSubtitle);
+			TITANIUM_FUNCTION_DEF(setSubtitle);
+			TITANIUM_FUNCTION_DEF(getSubtitleid);
+			TITANIUM_FUNCTION_DEF(setSubtitleid);
+			TITANIUM_FUNCTION_DEF(getTitle);
+			TITANIUM_FUNCTION_DEF(setTitle);
+			TITANIUM_FUNCTION_DEF(getTitleid);
+			TITANIUM_FUNCTION_DEF(setTitleid);
 
 			protected:
 #pragma warning(push)

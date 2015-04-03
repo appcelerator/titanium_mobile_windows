@@ -131,21 +131,21 @@ namespace Titanium
 			JSExport<Properties>::SetClassVersion(1);
 			JSExport<Properties>::SetParent(JSExport<Module>::Class());
 
-			JSExport<Properties>::AddFunctionProperty("getBool", std::mem_fn(&Properties::js_getBool));
-			JSExport<Properties>::AddFunctionProperty("getDouble", std::mem_fn(&Properties::js_getDouble));
-			JSExport<Properties>::AddFunctionProperty("getInt", std::mem_fn(&Properties::js_getInt));
-			JSExport<Properties>::AddFunctionProperty("getList", std::mem_fn(&Properties::js_getList));
-			JSExport<Properties>::AddFunctionProperty("getObject", std::mem_fn(&Properties::js_getObject));
-			JSExport<Properties>::AddFunctionProperty("getString", std::mem_fn(&Properties::js_getString));
-			JSExport<Properties>::AddFunctionProperty("hasProperty", std::mem_fn(&Properties::js_hasProperty));
-			JSExport<Properties>::AddFunctionProperty("listProperties", std::mem_fn(&Properties::js_listProperties));
-			JSExport<Properties>::AddFunctionProperty("removeProperty", std::mem_fn(&Properties::js_removeProperty));
-			JSExport<Properties>::AddFunctionProperty("setBool", std::mem_fn(&Properties::js_setBool));
-			JSExport<Properties>::AddFunctionProperty("setDouble", std::mem_fn(&Properties::js_setDouble));
-			JSExport<Properties>::AddFunctionProperty("setInt", std::mem_fn(&Properties::js_setInt));
-			JSExport<Properties>::AddFunctionProperty("setList", std::mem_fn(&Properties::js_setList));
-			JSExport<Properties>::AddFunctionProperty("setObject", std::mem_fn(&Properties::js_setObject));
-			JSExport<Properties>::AddFunctionProperty("setString", std::mem_fn(&Properties::js_setString));
+			TITANIUM_ADD_FUNCTION(Properties, getBool);
+			TITANIUM_ADD_FUNCTION(Properties, getDouble);
+			TITANIUM_ADD_FUNCTION(Properties, getInt);
+			TITANIUM_ADD_FUNCTION(Properties, getList);
+			TITANIUM_ADD_FUNCTION(Properties, getObject);
+			TITANIUM_ADD_FUNCTION(Properties, getString);
+			TITANIUM_ADD_FUNCTION(Properties, hasProperty);
+			TITANIUM_ADD_FUNCTION(Properties, listProperties);
+			TITANIUM_ADD_FUNCTION(Properties, removeProperty);
+			TITANIUM_ADD_FUNCTION(Properties, setBool);
+			TITANIUM_ADD_FUNCTION(Properties, setDouble);
+			TITANIUM_ADD_FUNCTION(Properties, setInt);
+			TITANIUM_ADD_FUNCTION(Properties, setList);
+			TITANIUM_ADD_FUNCTION(Properties, setObject);
+			TITANIUM_ADD_FUNCTION(Properties, setString);
 		}
 
 		JSObject Properties::GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -163,149 +163,84 @@ namespace Titanium
 			return static_cast<JSObject>(Object_property);
 		}
 
-		JSValue Properties::js_getBool(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Properties, getBool)
 		{
-			if (arguments.size() >= 1) {
-				const auto _0 = arguments.at(0);
-				TITANIUM_ASSERT(_0.IsString());
-				const std::string property = static_cast<std::string>(_0);
-				bool defaultValue = false;
-
-				if (arguments.size() >= 2) {
-					const auto _1 = arguments.at(1);
-					TITANIUM_ASSERT(_1.IsBoolean());
-					defaultValue = static_cast<bool>(_1);
-				}
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				return js_context.CreateBoolean(object_ptr->getBool(property, defaultValue));
-			}
-			return this_object.get_context().CreateUndefined();
-		}
-
-		JSValue Properties::js_getDouble(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			if (arguments.size() >= 1) {
-				const auto _0 = arguments.at(0);
-				TITANIUM_ASSERT(_0.IsString());
-				const std::string property = static_cast<std::string>(_0);
-				double defaultValue = 0;
-
-				if (arguments.size() >= 2) {
-					const auto _1 = arguments.at(1);
-					TITANIUM_ASSERT(_1.IsNumber());
-					defaultValue = static_cast<double>(_1);
-				}
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				return js_context.CreateNumber(object_ptr->getDouble(property, defaultValue));
-			}
-			return this_object.get_context().CreateUndefined();
-		}
-
-		JSValue Properties::js_getInt(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			if (arguments.size() >= 1) {
-				const auto _0 = arguments.at(0);
-				TITANIUM_ASSERT(_0.IsString());
-				const std::string property = static_cast<std::string>(_0);
-				double defaultValue = 0;
-				if (arguments.size() >= 2) {
-					const auto _1 = arguments.at(1);
-					TITANIUM_ASSERT(_1.IsNumber());
-					defaultValue = static_cast<double>(_1);
-				}
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				return js_context.CreateNumber(object_ptr->getInt(property, defaultValue));
-			}
-			return  this_object.get_context().CreateUndefined();
-		}
-
-		JSValue Properties::js_getList(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			if (arguments.size() >= 1) {
-				const auto _0 = arguments.at(0);
-				TITANIUM_ASSERT(_0.IsString());
-				const std::string property = static_cast<std::string>(_0);
-				std::vector<JSValue> defaultValue;
-				if (arguments.size() >= 2) {
-					const auto _1 = arguments.at(1);
-					TITANIUM_ASSERT(_1.IsObject());
-					auto object = static_cast<JSObject>(_1);
-					TITANIUM_ASSERT(object.IsArray());
-					defaultValue = static_cast<JSArray>(object);
-				}
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				const auto list = object_ptr->getList(property, defaultValue);
-				return js_context.CreateArray(list);
-			}
-
-			return this_object.get_context().CreateUndefined();
-		}
-
-		JSValue Properties::js_getObject(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			if (arguments.size() >= 1) {
-				const auto _0 = arguments.at(0);
-				TITANIUM_ASSERT(_0.IsString());
-				const std::string property = static_cast<std::string>(_0);
-				JSObject defaultValue = get_context().CreateObject();
-				if (arguments.size() >= 2) {
-					const auto _1 = arguments.at(1);
-					TITANIUM_ASSERT(_1.IsObject());
-					defaultValue = static_cast<JSObject>(_1);
-				}
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				return object_ptr->getObject(property, defaultValue);
-			}
-
-			return this_object.get_context().CreateUndefined();
-		}
-
-		JSValue Properties::js_getString(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			if (arguments.size() > 0) {
-				const auto _0 = arguments.at(0);
-				TITANIUM_ASSERT(_0.IsString());
-				const std::string property = static_cast<std::string>(_0);
-				std::string defaultValue = "";
-				if (arguments.size() > 1) {
-					const auto _1 = arguments.at(1);
-					TITANIUM_ASSERT(_1.IsString());
-					defaultValue = static_cast<std::string>(_1);
-				}
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				return js_context.CreateString(object_ptr->getString(property, defaultValue));
-			}
-
-			return this_object.get_context().CreateUndefined();
-		}
-
-		JSValue Properties::js_hasProperty(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
-		{
-			if (arguments.size() < 1) {
-				return get_context().CreateUndefined();
-			}
-			const auto _0 = arguments.at(0);
-			TITANIUM_ASSERT(_0.IsString());
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_OPTIONAL_BOOL_AT_INDEX(defaultValue, 1, false);
 
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-			return js_context.CreateBoolean(object_ptr->hasProperty(static_cast<std::string>(_0)));
+			return js_context.CreateBoolean(object_ptr->getBool(property, defaultValue));
 		}
 
-		JSValue Properties::js_listProperties(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Properties, getDouble)
+		{
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_OPTIONAL_DOUBLE_AT_INDEX(defaultValue, 1, 0);
+
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
+
+			return js_context.CreateNumber(object_ptr->getDouble(property, defaultValue));
+		}
+
+		TITANIUM_FUNCTION(Properties, getInt)
+		{
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_OPTIONAL_DOUBLE_AT_INDEX(defaultValue, 1, 0);
+
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
+
+			return js_context.CreateNumber(object_ptr->getInt(property, defaultValue));
+		}
+
+		TITANIUM_FUNCTION(Properties, getList)
+		{
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_OPTIONAL_ARRAY_AT_INDEX(defaultValue, 1);
+
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
+
+			const auto list = object_ptr->getList(property, static_cast<std::vector<JSValue>>(defaultValue));
+			return js_context.CreateArray(list);
+		}
+
+		TITANIUM_FUNCTION(Properties, getObject)
+		{
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_OPTIONAL_OBJECT_AT_INDEX(defaultValue, 1);
+
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
+
+			return object_ptr->getObject(property, defaultValue);
+		}
+
+		TITANIUM_FUNCTION(Properties, getString)
+		{
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_OPTIONAL_STRING_AT_INDEX(defaultValue, 1, "");
+
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
+
+			return js_context.CreateString(object_ptr->getString(property, defaultValue));
+		}
+
+		TITANIUM_FUNCTION(Properties, hasProperty)
+		{
+			ENSURE_STRING_AT_INDEX(property, 0);
+
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
+
+			return js_context.CreateBoolean(object_ptr->hasProperty(property));
+		}
+
+		TITANIUM_FUNCTION(Properties, listProperties)
 		{
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
@@ -318,147 +253,87 @@ namespace Titanium
 			return js_context.CreateArray(converted);
 		}
 
-		JSValue Properties::js_removeProperty(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Properties, removeProperty)
 		{
-			if (arguments.size() < 1) {
-				return this_object.get_context().CreateUndefined();
-			}
+			ENSURE_STRING_AT_INDEX(property, 0);
 
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 			
-			const auto _0 = arguments.at(0);
-			TITANIUM_ASSERT(_0.IsString());
-			object_ptr->removeProperty(static_cast<std::string>(_0));
-
+			object_ptr->removeProperty(property);
 			return js_context.CreateUndefined();
 		}
 
-		JSValue Properties::js_setBool(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Properties, setBool)
 		{
-			if (arguments.size() >= 2) {
-				const auto _0 = arguments.at(0);
-				const auto _1 = arguments.at(1);
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_BOOL_AT_INDEX(value, 1);
 
-				TITANIUM_ASSERT(_0.IsString());
-				TITANIUM_ASSERT(_1.IsBoolean());
-
-				const std::string property = static_cast<std::string>(_0);
-				const bool value = static_cast<bool>(_1);
-
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 			
-				object_ptr->setBool(property, value);
-			}
-
-			return this_object.get_context().CreateUndefined();
+			object_ptr->setBool(property, value);
+			return js_context.CreateUndefined();
 		}
 
-		JSValue Properties::js_setDouble(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Properties, setDouble)
 		{
-			if (arguments.size() >= 2) {
-				const auto _0 = arguments.at(0);
-				const auto _1 = arguments.at(1);
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_DOUBLE_AT_INDEX(value, 1);
 
-				TITANIUM_ASSERT(_0.IsString());
-				TITANIUM_ASSERT(_1.IsNumber());
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-				const std::string property = static_cast<std::string>(_0);
-				const double value = static_cast<double>(_1);
-
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				object_ptr->setDouble(property, value);
-			}
-
-			return this_object.get_context().CreateUndefined();
+			object_ptr->setDouble(property, value);
+			return js_context.CreateUndefined();
 		}
 
-		JSValue Properties::js_setInt(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Properties, setInt)
 		{
-			if (arguments.size() >= 2) {
-				const auto _0 = arguments.at(0);
-				TITANIUM_ASSERT(_0.IsString());
-				const std::string property = static_cast<std::string>(_0);
-				
-				const auto _1 = arguments.at(1);
-				TITANIUM_ASSERT(_1.IsNumber());
-				const int value = static_cast<int32_t>(_1);
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_INT_AT_INDEX(value, 1);
 
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-				object_ptr->setInt(property, value);
-			}
-
-			return this_object.get_context().CreateUndefined();
+			object_ptr->setInt(property, value);
+			return js_context.CreateUndefined();
 		}
 
-		JSValue Properties::js_setList(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Properties, setList)
 		{
-			if (arguments.size() >= 2) {
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_ARRAY_AT_INDEX(array, 1);
 
-				const auto _0 = arguments.at(0);
-				const std::string property = static_cast<std::string>(_0);
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-				TITANIUM_ASSERT(_0.IsString());
-				const auto _1 = arguments.at(1);
-				TITANIUM_ASSERT(_1.IsObject());
-				auto object = static_cast<JSObject>(_1);
-				TITANIUM_ASSERT(object.IsArray());
-				auto array = static_cast<JSArray>(object);
-
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				object_ptr->setList(property, array);
-			}
-
-			return this_object.get_context().CreateUndefined();
+			object_ptr->setList(property, array);
+			return js_context.CreateUndefined();
 		}
 
-		JSValue Properties::js_setObject(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Properties, setObject)
 		{
-			 if (arguments.size() >= 2) {
-				const auto _0 = arguments.at(0);
-				const auto _1 = arguments.at(1);
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_OBJECT_AT_INDEX(value, 1);
 
-				TITANIUM_ASSERT(_0.IsString());
-				TITANIUM_ASSERT(_1.IsObject());
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-				const std::string property = static_cast<std::string>(_0);
-				const auto value = static_cast<JSObject>(_1);
-
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				object_ptr->setObject(property, value);
-			}
-
-			return this_object.get_context().CreateUndefined();
+			object_ptr->setObject(property, value);
+			return js_context.CreateUndefined();
 		}
 
-		JSValue Properties::js_setString(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Properties, setString)
 		{
-			if (arguments.size() >= 2) {
-				const auto _0 = arguments.at(0);
-				const auto _1 = arguments.at(1);
+			ENSURE_STRING_AT_INDEX(property, 0);
+			ENSURE_STRING_AT_INDEX(value, 1);
 
-				TITANIUM_ASSERT(_0.IsString());
-				TITANIUM_ASSERT(_1.IsString());
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-				const std::string property = static_cast<std::string>(_0);
-				const std::string value = static_cast<std::string>(_1);
-
-				const auto js_context = this_object.get_context();
-				const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-
-				object_ptr->setString(property, value);
-			}
-
-			return this_object.get_context().CreateUndefined();
+			object_ptr->setString(property, value);
+			return js_context.CreateUndefined();
 		}
 	}
 }

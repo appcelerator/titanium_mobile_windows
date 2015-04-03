@@ -131,21 +131,21 @@ namespace Titanium
 			static void JSExportInitialize();
 			static JSObject GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
 
-			virtual JSValue js_getBool(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getDouble(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getInt(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getList(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getObject(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getString(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_hasProperty(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_listProperties(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_removeProperty(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setBool(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setDouble(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setInt(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setList(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setObject(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setString(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
+			TITANIUM_FUNCTION_DEF(getBool);
+			TITANIUM_FUNCTION_DEF(getDouble);
+			TITANIUM_FUNCTION_DEF(getInt);
+			TITANIUM_FUNCTION_DEF(getList);
+			TITANIUM_FUNCTION_DEF(getObject);
+			TITANIUM_FUNCTION_DEF(getString);
+			TITANIUM_FUNCTION_DEF(hasProperty);
+			TITANIUM_FUNCTION_DEF(listProperties);
+			TITANIUM_FUNCTION_DEF(removeProperty);
+			TITANIUM_FUNCTION_DEF(setBool);
+			TITANIUM_FUNCTION_DEF(setDouble);
+			TITANIUM_FUNCTION_DEF(setInt);
+			TITANIUM_FUNCTION_DEF(setList);
+			TITANIUM_FUNCTION_DEF(setObject);
+			TITANIUM_FUNCTION_DEF(setString);
 
 		private:
 			JSFunction stringify_function__;

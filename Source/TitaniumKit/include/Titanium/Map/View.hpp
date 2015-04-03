@@ -116,84 +116,69 @@ namespace Titanium
 
 			static void JSExportInitialize();
 			
-			virtual JSValue js_addAnnotation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_addAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_addRoute(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_animateCamera(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_deselectAnnotation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_removeAllAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_removeAnnotation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_removeAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_removeRoute(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_selectAnnotation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setLocation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_showAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_snapshot(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_zoom(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_FUNCTION_DEF(addAnnotation);
+			TITANIUM_FUNCTION_DEF(addAnnotations);
+			TITANIUM_FUNCTION_DEF(addRoute);
+			TITANIUM_FUNCTION_DEF(animateCamera);
+			TITANIUM_FUNCTION_DEF(deselectAnnotation);
+			TITANIUM_FUNCTION_DEF(removeAllAnnotations);
+			TITANIUM_FUNCTION_DEF(removeAnnotation);
+			TITANIUM_FUNCTION_DEF(removeAnnotations);
+			TITANIUM_FUNCTION_DEF(removeRoute);
+			TITANIUM_FUNCTION_DEF(selectAnnotation);
+			TITANIUM_FUNCTION_DEF(setLocation);
+			TITANIUM_FUNCTION_DEF(showAnnotations);
+			TITANIUM_FUNCTION_DEF(snapshot);
+			TITANIUM_FUNCTION_DEF(zoom);
 
-			virtual JSValue js_get_animate() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_animate(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setAnimate(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(animate);
+			TITANIUM_FUNCTION_DEF(setAnimate);
 
-			virtual JSValue js_get_annotations() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_annotations(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(annotations);
+			TITANIUM_FUNCTION_DEF(setAnnotations);
 
-			virtual JSValue js_get_camera() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_camera(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setCamera(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(camera);
+			TITANIUM_FUNCTION_DEF(setCamera);
 
-			virtual JSValue js_get_compassEnabled() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_compassEnabled(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setCompassEnabled(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(compassEnabled);
+			TITANIUM_FUNCTION_DEF(setCompassEnabled);
 
-			virtual JSValue js_get_enableZoomControls() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_enableZoomControls(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setEnableZoomControls(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(enableZoomControls);
+			TITANIUM_FUNCTION_DEF(setEnableZoomControls);
 
-			virtual JSValue js_get_mapType() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_mapType(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setMapType(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(mapType);
+			TITANIUM_FUNCTION_DEF(setMapType);
 
-			virtual JSValue js_get_maxZoomLevel() const TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_READONLY_DEF(maxZoomLevel);
 
-			virtual JSValue js_get_minZoomLevel() const TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_READONLY_DEF(minZoomLevel);
 
-			virtual JSValue js_get_pitchEnabled() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_pitchEnabled(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setPitchEnabled(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(pitchEnabled);
+			TITANIUM_FUNCTION_DEF(setPitchEnabled);
 
-			virtual JSValue js_get_region() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_region(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setRegion(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(region);
+			TITANIUM_FUNCTION_DEF(setRegion);
 
-			virtual JSValue js_get_rotateEnabled() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_rotateEnabled(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setRotateEnabled(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(rotateEnabled);
+			TITANIUM_FUNCTION_DEF(setRotateEnabled);
 
-			virtual JSValue js_get_showsBuildings() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_showsBuildings(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setShowsBuildings(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(showsBuildings);
+			TITANIUM_FUNCTION_DEF(setShowsBuildings);
 
-			virtual JSValue js_get_showsPointsOfInterest() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_showsPointsOfInterest(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setShowsPointsOfInterest(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(showsPointsOfInterest);
+			TITANIUM_FUNCTION_DEF(setShowsPointsOfInterest);
 
-			virtual JSValue js_get_traffic() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_traffic(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setTraffic(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(traffic);
+			TITANIUM_FUNCTION_DEF(setTraffic);
 
-			virtual JSValue js_get_userLocation() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_userLocation(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setUserLocation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(userLocation);
+			TITANIUM_FUNCTION_DEF(setUserLocation);
 
-			virtual JSValue js_get_userLocationButton() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_userLocationButton(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setUserLocationButton(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(userLocationButton);
+			TITANIUM_FUNCTION_DEF(setUserLocationButton);
 
-			virtual JSValue js_get_zOrderOnTop() const TITANIUM_NOEXCEPT final;
-			virtual bool js_set_zOrderOnTop(const JSValue& argument) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_setZOrderOnTop(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_DEF(zOrderOnTop);
+			TITANIUM_FUNCTION_DEF(setZOrderOnTop);
 
 		protected:
 #pragma warning(push)

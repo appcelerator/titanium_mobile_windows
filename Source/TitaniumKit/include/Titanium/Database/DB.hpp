@@ -78,19 +78,19 @@ namespace Titanium
 
 			static void JSExportInitialize();
 
-			virtual JSValue js_get_file() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_lastInsertRowId() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_name() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_rowsAffected() const TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_READONLY_DEF(file);
+			TITANIUM_PROPERTY_READONLY_DEF(lastInsertRowId);
+			TITANIUM_PROPERTY_READONLY_DEF(name);
+			TITANIUM_PROPERTY_READONLY_DEF(rowsAffected);
 
-			virtual JSValue js_close(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_execute(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
+			TITANIUM_FUNCTION_DEF(close);
+			TITANIUM_FUNCTION_DEF(execute);
 			/*!
 			  @method
 			  @abstract remove( ) : void
 			  @discussion Removes the database files for this instance from disk. WARNING: this is a destructive operation and cannot be reversed. All data in the database will be lost; use with caution.
 			*/
-			virtual JSValue js_remove(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
+			TITANIUM_FUNCTION_DEF(remove);
 		
 		private:
 #pragma warning(push)

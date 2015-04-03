@@ -181,68 +181,62 @@ namespace Titanium
 			static void JSExportInitialize();
 
 			/////// constant properties
-			JSValue js_getLOADING() const TITANIUM_NOEXCEPT;
-			JSValue js_getOPENED() const TITANIUM_NOEXCEPT;
-			JSValue js_getDONE() const TITANIUM_NOEXCEPT;
-			JSValue js_getUNSENT() const TITANIUM_NOEXCEPT;
-			JSValue js_getHEADERS_RECEIVED() const TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_READONLY_DEF(LOADING);
+			TITANIUM_PROPERTY_READONLY_DEF(OPENED);
+			TITANIUM_PROPERTY_READONLY_DEF(DONE);
+			TITANIUM_PROPERTY_READONLY_DEF(UNSENT);
+			TITANIUM_PROPERTY_READONLY_DEF(HEADERS_RECEIVED);
 
 			/////// properties
-			JSValue js_get_allResponseHeaders() const TITANIUM_NOEXCEPT;
-			JSValue js_getAllResponseHeaders(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_READONLY_DEF(allResponseHeaders);
+			TITANIUM_FUNCTION_DEF(getAllResponseHeaders);
 
-			JSValue js_get_ondatastream() const TITANIUM_NOEXCEPT;
-			bool js_set_ondatastream(const JSValue& argument) TITANIUM_NOEXCEPT;
-			JSValue js_getOndatastream(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
-			JSValue js_setOndatastream(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_DEF(ondatastream);
+			TITANIUM_FUNCTION_DEF(getOndatastream);
+			TITANIUM_FUNCTION_DEF(setOndatastream);
 
-			JSValue js_get_onerror() const TITANIUM_NOEXCEPT;
-			bool js_set_onerror(const JSValue& argument) TITANIUM_NOEXCEPT;
-			JSValue js_getOnerror(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
-			JSValue js_setOnerror(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_DEF(onerror);
+			TITANIUM_FUNCTION_DEF(getOnerror);
+			TITANIUM_FUNCTION_DEF(setOnerror);
 
-			JSValue js_get_onload() const TITANIUM_NOEXCEPT;
-			bool js_set_onload(const JSValue& argument) TITANIUM_NOEXCEPT;
-			JSValue js_getOnload(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
-			JSValue js_setOnload(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_DEF(onload);
+			TITANIUM_FUNCTION_DEF(getOnload);
+			TITANIUM_FUNCTION_DEF(setOnload);
 
-			JSValue js_get_onreadystatechange() const TITANIUM_NOEXCEPT;
-			bool js_set_onreadystatechange(const JSValue& argument) TITANIUM_NOEXCEPT;
-			JSValue js_getOnreadystatechange(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
-			JSValue js_setOnreadystatechange(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_DEF(onreadystatechange);
+			TITANIUM_FUNCTION_DEF(getOnreadystatechange);
+			TITANIUM_FUNCTION_DEF(setOnreadystatechange);
 
-			JSValue js_get_onsendstream() const TITANIUM_NOEXCEPT;
-			bool js_set_onsendstream(const JSValue& argument) TITANIUM_NOEXCEPT;
-			JSValue js_getOnsendstream(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
-			JSValue js_setOnsendstream(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_DEF(onsendstream);
+			TITANIUM_FUNCTION_DEF(getOnsendstream);
+			TITANIUM_FUNCTION_DEF(setOnsendstream);
 
-			JSValue js_get_readyState() const TITANIUM_NOEXCEPT;
-			JSValue js_getReadyState(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_READONLY_DEF(readyState);
+			TITANIUM_FUNCTION_DEF(getReadyState);
 
-			JSValue js_get_responseData() const TITANIUM_NOEXCEPT;
-			JSValue js_getResponseData(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_READONLY_DEF(responseData);
+			TITANIUM_FUNCTION_DEF(getResponseData);
 
-			JSValue js_get_responseText() const TITANIUM_NOEXCEPT;
-			JSValue js_getResponseText(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_READONLY_DEF(responseText);
+			TITANIUM_FUNCTION_DEF(getResponseText);
 			
-			JSValue js_get_status() const TITANIUM_NOEXCEPT;
-			JSValue js_getStatus(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_READONLY_DEF(status);
+			TITANIUM_FUNCTION_DEF(getStatus);
 
-			JSValue js_get_statusText() const TITANIUM_NOEXCEPT;
-			JSValue js_getStatusText(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_READONLY_DEF(statusText);
+			TITANIUM_FUNCTION_DEF(getStatusText);
 
-			bool js_set_timeout(const JSValue& argument) TITANIUM_NOEXCEPT;
-			JSValue js_get_timeout() const TITANIUM_NOEXCEPT;
-			JSValue js_getTimeout(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT;
-			JSValue js_setTimeout(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT;
+			TITANIUM_PROPERTY_DEF(timeout);
+			TITANIUM_FUNCTION_DEF(getTimeout);
+			TITANIUM_FUNCTION_DEF(setTimeout);
 
 			/////// methods
-			JSValue js_abort(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT;
-			JSValue js_clearCookies(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT;
-			JSValue js_getResponseHeader(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT;
-			JSValue js_open(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT;
-			JSValue js_send(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT;
-			JSValue js_setRequestHeader(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT;
+			TITANIUM_FUNCTION_DEF(abort);
+			TITANIUM_FUNCTION_DEF(clearCookies);
+			TITANIUM_FUNCTION_DEF(getResponseHeader);
+			TITANIUM_FUNCTION_DEF(open);
+			TITANIUM_FUNCTION_DEF(send);
+			TITANIUM_FUNCTION_DEF(setRequestHeader);
 
 			/////// slots
 			void ondatastream(const double progress) TITANIUM_NOEXCEPT;
