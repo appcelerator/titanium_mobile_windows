@@ -46,6 +46,11 @@ robocopy build\x86\Gesture\Release dist\windows\lib\TitaniumWindows_Gesture\x86 
 robocopy build\ARM\Gesture\Release dist\windows\lib\TitaniumWindows_Gesture\ARM TitaniumWindows_Gesture.*
 robocopy build\x86\Gesture dist\windows\lib\TitaniumWindows_Gesture\include titaniumwindows_gesture_export.h
 
+echo Titanium Windows Geolocation
+robocopy build\x86\Geolocation\Release dist\windows\lib\TitaniumWindows_Geolocation\x86 TitaniumWindows_Geolocation.*
+robocopy build\ARM\Geolocation\Release dist\windows\lib\TitaniumWindows_Geolocation\ARM TitaniumWindows_Geolocation.*
+robocopy build\x86\Geolocation dist\windows\lib\TitaniumWindows_Geolocation\include titaniumwindows_geolocation_export.h
+
 echo Titanium Windows Global
 robocopy build\x86\Global\Release dist\windows\lib\TitaniumWindows_Global\x86 TitaniumWindows_Global.*
 robocopy build\ARM\Global\Release dist\windows\lib\TitaniumWindows_Global\ARM TitaniumWindows_Global.*
