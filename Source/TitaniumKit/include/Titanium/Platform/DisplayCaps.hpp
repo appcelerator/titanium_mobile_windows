@@ -43,20 +43,20 @@ namespace Titanium
 
 			static void JSExportInitialize();
 
-			virtual JSValue js_get_density() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getDensity(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_dpi() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getDpi(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_logicalDensityFactor() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getLogicalDensityFactor(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_platformHeight() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getPlatformHeight(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_platformWidth() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getPlatformWidth(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_xdpi() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getXdpi(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_ydpi() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getYdpi(const std::vector<JSValue>&, JSObject&) const TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_READONLY_DEF(density);
+			TITANIUM_FUNCTION_DEF(getDensity);
+			TITANIUM_PROPERTY_READONLY_DEF(dpi);
+			TITANIUM_FUNCTION_DEF(getDpi);
+			TITANIUM_PROPERTY_READONLY_DEF(logicalDensityFactor);
+			TITANIUM_FUNCTION_DEF(getLogicalDensityFactor);
+			TITANIUM_PROPERTY_READONLY_DEF(platformHeight);
+			TITANIUM_FUNCTION_DEF(getPlatformHeight);
+			TITANIUM_PROPERTY_READONLY_DEF(platformWidth);
+			TITANIUM_FUNCTION_DEF(getPlatformWidth);
+			TITANIUM_PROPERTY_READONLY_DEF(xdpi);
+			TITANIUM_FUNCTION_DEF(getXdpi);
+			TITANIUM_PROPERTY_READONLY_DEF(ydpi);
+			TITANIUM_FUNCTION_DEF(getYdpi);
 		};
 	} // namespace Platform
 }  // namespace Titanium

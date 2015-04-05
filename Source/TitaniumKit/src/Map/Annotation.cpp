@@ -203,268 +203,268 @@ namespace Titanium
 			JSExport<Annotation>::SetClassVersion(1);
 			JSExport<Annotation>::SetParent(JSExport<Module>::Class());
 			// Properties
-			JSExport<Annotation>::AddValueProperty("canShowCallout", std::mem_fn(&Annotation::js_get_canShowCallout), std::mem_fn(&Annotation::js_set_canShowCallout));
-			JSExport<Annotation>::AddValueProperty("centerOffset", std::mem_fn(&Annotation::js_get_centerOffset), std::mem_fn(&Annotation::js_set_centerOffset));
-			JSExport<Annotation>::AddValueProperty("customView", std::mem_fn(&Annotation::js_get_customView), std::mem_fn(&Annotation::js_set_customView));
-			JSExport<Annotation>::AddValueProperty("draggable", std::mem_fn(&Annotation::js_get_draggable), std::mem_fn(&Annotation::js_set_draggable));
-			JSExport<Annotation>::AddValueProperty("image", std::mem_fn(&Annotation::js_get_image), std::mem_fn(&Annotation::js_set_image));
-			JSExport<Annotation>::AddValueProperty("latitude", std::mem_fn(&Annotation::js_get_latitude), std::mem_fn(&Annotation::js_set_latitude));
-			JSExport<Annotation>::AddValueProperty("leftButton", std::mem_fn(&Annotation::js_get_leftButton), std::mem_fn(&Annotation::js_set_leftButton));
-			JSExport<Annotation>::AddValueProperty("leftView", std::mem_fn(&Annotation::js_get_leftView), std::mem_fn(&Annotation::js_set_leftView));
-			JSExport<Annotation>::AddValueProperty("longitude", std::mem_fn(&Annotation::js_get_longitude), std::mem_fn(&Annotation::js_set_longitude));
-			JSExport<Annotation>::AddValueProperty("pincolor", std::mem_fn(&Annotation::js_get_pincolor), std::mem_fn(&Annotation::js_set_pincolor));
-			JSExport<Annotation>::AddValueProperty("rightButton", std::mem_fn(&Annotation::js_get_rightButton), std::mem_fn(&Annotation::js_set_rightButton));
-			JSExport<Annotation>::AddValueProperty("rightView", std::mem_fn(&Annotation::js_get_rightView), std::mem_fn(&Annotation::js_set_rightView));
-			JSExport<Annotation>::AddValueProperty("showInfoWindow", std::mem_fn(&Annotation::js_get_showInfoWindow), std::mem_fn(&Annotation::js_set_showInfoWindow));
-			JSExport<Annotation>::AddValueProperty("subtitle", std::mem_fn(&Annotation::js_get_subtitle), std::mem_fn(&Annotation::js_set_subtitle));
-			JSExport<Annotation>::AddValueProperty("subtitleid", std::mem_fn(&Annotation::js_get_subtitleid), std::mem_fn(&Annotation::js_set_subtitleid));
-			JSExport<Annotation>::AddValueProperty("title", std::mem_fn(&Annotation::js_get_title), std::mem_fn(&Annotation::js_set_title));
-			JSExport<Annotation>::AddValueProperty("titleid", std::mem_fn(&Annotation::js_get_titleid), std::mem_fn(&Annotation::js_set_titleid));
+			TITANIUM_ADD_PROPERTY(Annotation, canShowCallout);
+			TITANIUM_ADD_PROPERTY(Annotation, centerOffset);
+			TITANIUM_ADD_PROPERTY(Annotation, customView);
+			TITANIUM_ADD_PROPERTY(Annotation, draggable);
+			TITANIUM_ADD_PROPERTY(Annotation, image);
+			TITANIUM_ADD_PROPERTY(Annotation, latitude);
+			TITANIUM_ADD_PROPERTY(Annotation, leftButton);
+			TITANIUM_ADD_PROPERTY(Annotation, leftView);
+			TITANIUM_ADD_PROPERTY(Annotation, longitude);
+			TITANIUM_ADD_PROPERTY(Annotation, pincolor);
+			TITANIUM_ADD_PROPERTY(Annotation, rightButton);
+			TITANIUM_ADD_PROPERTY(Annotation, rightView);
+			TITANIUM_ADD_PROPERTY(Annotation, showInfoWindow);
+			TITANIUM_ADD_PROPERTY(Annotation, subtitle);
+			TITANIUM_ADD_PROPERTY(Annotation, subtitleid);
+			TITANIUM_ADD_PROPERTY(Annotation, title);
+			TITANIUM_ADD_PROPERTY(Annotation, titleid);
 			// Methods
-			JSExport<Annotation>::AddFunctionProperty("getCanShowCallout", std::mem_fn(&Annotation::js_getCanShowCallout));
-			JSExport<Annotation>::AddFunctionProperty("setCanShowCallout", std::mem_fn(&Annotation::js_setCanShowCallout));
-			JSExport<Annotation>::AddFunctionProperty("getCenterOffset", std::mem_fn(&Annotation::js_getCenterOffset));
-			JSExport<Annotation>::AddFunctionProperty("setCenterOffset", std::mem_fn(&Annotation::js_setCenterOffset));
-			JSExport<Annotation>::AddFunctionProperty("getCustomView", std::mem_fn(&Annotation::js_getCustomView));
-			JSExport<Annotation>::AddFunctionProperty("setCustomView", std::mem_fn(&Annotation::js_setCustomView));
-			JSExport<Annotation>::AddFunctionProperty("getDraggable", std::mem_fn(&Annotation::js_getDraggable));
-			JSExport<Annotation>::AddFunctionProperty("setDraggable", std::mem_fn(&Annotation::js_setDraggable));
-			JSExport<Annotation>::AddFunctionProperty("getImage", std::mem_fn(&Annotation::js_getImage));
-			JSExport<Annotation>::AddFunctionProperty("setImage", std::mem_fn(&Annotation::js_setImage));
-			JSExport<Annotation>::AddFunctionProperty("getLatitude", std::mem_fn(&Annotation::js_getLatitude));
-			JSExport<Annotation>::AddFunctionProperty("setLatitude", std::mem_fn(&Annotation::js_setLatitude));
-			JSExport<Annotation>::AddFunctionProperty("getLeftButton", std::mem_fn(&Annotation::js_getLeftButton));
-			JSExport<Annotation>::AddFunctionProperty("setLeftButton", std::mem_fn(&Annotation::js_setLeftButton));
-			JSExport<Annotation>::AddFunctionProperty("getLeftView", std::mem_fn(&Annotation::js_getLeftView));
-			JSExport<Annotation>::AddFunctionProperty("setLeftView", std::mem_fn(&Annotation::js_setLeftView));
-			JSExport<Annotation>::AddFunctionProperty("getLongitude", std::mem_fn(&Annotation::js_getLongitude));
-			JSExport<Annotation>::AddFunctionProperty("setLongitude", std::mem_fn(&Annotation::js_setLongitude));
-			JSExport<Annotation>::AddFunctionProperty("getPincolor", std::mem_fn(&Annotation::js_getPincolor));
-			JSExport<Annotation>::AddFunctionProperty("setPincolor", std::mem_fn(&Annotation::js_setPincolor));
-			JSExport<Annotation>::AddFunctionProperty("getRightButton", std::mem_fn(&Annotation::js_getRightButton));
-			JSExport<Annotation>::AddFunctionProperty("setRightButton", std::mem_fn(&Annotation::js_setRightButton));
-			JSExport<Annotation>::AddFunctionProperty("getRightView", std::mem_fn(&Annotation::js_getRightView));
-			JSExport<Annotation>::AddFunctionProperty("setRightView", std::mem_fn(&Annotation::js_setRightView));
-			JSExport<Annotation>::AddFunctionProperty("getSubtitle", std::mem_fn(&Annotation::js_getSubtitle));
-			JSExport<Annotation>::AddFunctionProperty("setSubtitle", std::mem_fn(&Annotation::js_setSubtitle));
-			JSExport<Annotation>::AddFunctionProperty("getSubtitleid", std::mem_fn(&Annotation::js_getSubtitleid));
-			JSExport<Annotation>::AddFunctionProperty("setSubtitleid", std::mem_fn(&Annotation::js_setSubtitleid));
-			JSExport<Annotation>::AddFunctionProperty("getTitle", std::mem_fn(&Annotation::js_getTitle));
-			JSExport<Annotation>::AddFunctionProperty("setTitle", std::mem_fn(&Annotation::js_setTitle));
-			JSExport<Annotation>::AddFunctionProperty("getTitleid", std::mem_fn(&Annotation::js_getTitleid));
-			JSExport<Annotation>::AddFunctionProperty("setTitleid", std::mem_fn(&Annotation::js_setTitleid));
+			TITANIUM_ADD_FUNCTION(Annotation, getCanShowCallout);
+			TITANIUM_ADD_FUNCTION(Annotation, setCanShowCallout);
+			TITANIUM_ADD_FUNCTION(Annotation, getCenterOffset);
+			TITANIUM_ADD_FUNCTION(Annotation, setCenterOffset);
+			TITANIUM_ADD_FUNCTION(Annotation, getCustomView);
+			TITANIUM_ADD_FUNCTION(Annotation, setCustomView);
+			TITANIUM_ADD_FUNCTION(Annotation, getDraggable);
+			TITANIUM_ADD_FUNCTION(Annotation, setDraggable);
+			TITANIUM_ADD_FUNCTION(Annotation, getImage);
+			TITANIUM_ADD_FUNCTION(Annotation, setImage);
+			TITANIUM_ADD_FUNCTION(Annotation, getLatitude);
+			TITANIUM_ADD_FUNCTION(Annotation, setLatitude);
+			TITANIUM_ADD_FUNCTION(Annotation, getLeftButton);
+			TITANIUM_ADD_FUNCTION(Annotation, setLeftButton);
+			TITANIUM_ADD_FUNCTION(Annotation, getLeftView);
+			TITANIUM_ADD_FUNCTION(Annotation, setLeftView);
+			TITANIUM_ADD_FUNCTION(Annotation, getLongitude);
+			TITANIUM_ADD_FUNCTION(Annotation, setLongitude);
+			TITANIUM_ADD_FUNCTION(Annotation, getPincolor);
+			TITANIUM_ADD_FUNCTION(Annotation, setPincolor);
+			TITANIUM_ADD_FUNCTION(Annotation, getRightButton);
+			TITANIUM_ADD_FUNCTION(Annotation, setRightButton);
+			TITANIUM_ADD_FUNCTION(Annotation, getRightView);
+			TITANIUM_ADD_FUNCTION(Annotation, setRightView);
+			TITANIUM_ADD_FUNCTION(Annotation, getSubtitle);
+			TITANIUM_ADD_FUNCTION(Annotation, setSubtitle);
+			TITANIUM_ADD_FUNCTION(Annotation, getSubtitleid);
+			TITANIUM_ADD_FUNCTION(Annotation, setSubtitleid);
+			TITANIUM_ADD_FUNCTION(Annotation, getTitle);
+			TITANIUM_ADD_FUNCTION(Annotation, setTitle);
+			TITANIUM_ADD_FUNCTION(Annotation, getTitleid);
+			TITANIUM_ADD_FUNCTION(Annotation, setTitleid);
 		}
 
-		JSValue Annotation::js_get_canShowCallout() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, canShowCallout)
 		{
 			return get_context().CreateBoolean(get_canShowCallout());
 		}
 
-		bool Annotation::js_set_canShowCallout(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, canShowCallout)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_canShowCallout(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_centerOffset() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, centerOffset)
 		{
 			return Titanium::UI::Point_to_js(get_context(), get_centerOffset());
 		}
 
-		bool Annotation::js_set_centerOffset(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, centerOffset)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			set_centerOffset(Titanium::UI::js_to_Point(static_cast<JSObject>(argument)));
 			return true;
 		}
 
-		JSValue Annotation::js_get_customView() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, customView)
 		{
 			return get_customView()->get_object();
 		}
 
-		bool Annotation::js_set_customView(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, customView)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			set_customView(static_cast<JSObject>(argument).GetPrivate<Titanium::UI::View>());
 			return true;
 		}
 
-		JSValue Annotation::js_get_draggable() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, draggable)
 		{
 			return get_context().CreateBoolean(get_draggable());
 		}
 
-		bool Annotation::js_set_draggable(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, draggable)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_draggable(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_image() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, image)
 		{
 			return get_context().CreateString(get_image());
 		}
 
-		bool Annotation::js_set_image(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, image)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			set_image(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_latitude() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, latitude)
 		{
 			return get_context().CreateNumber(get_latitude());
 		}
 
-		bool Annotation::js_set_latitude(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, latitude)
 		{
 			TITANIUM_ASSERT(argument.IsNumber());
 			set_latitude(static_cast<double>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_leftButton() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, leftButton)
 		{
 			return get_context().CreateString(get_leftButton());
 		}
 
-		bool Annotation::js_set_leftButton(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, leftButton)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			set_leftButton(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_leftView() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, leftView)
 		{
 			return get_leftView()->get_object();
 		}
 
-		bool Annotation::js_set_leftView(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, leftView)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			set_leftView(static_cast<JSObject>(argument).GetPrivate<Titanium::UI::View>());
 			return true;
 		}
 
-		JSValue Annotation::js_get_longitude() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, longitude)
 		{
 			return get_context().CreateNumber(get_longitude());
 		}
 
-		bool Annotation::js_set_longitude(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, longitude)
 		{
 			TITANIUM_ASSERT(argument.IsNumber());
 			set_longitude(static_cast<double>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_pincolor() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, pincolor)
 		{
 			return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(get_pincolor()));
 		}
 
-		bool Annotation::js_set_pincolor(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, pincolor)
 		{
 			TITANIUM_ASSERT(argument.IsNumber());
 			set_pincolor(Constants::to_ANNOTATION_COLOR(static_cast<std::underlying_type<ANNOTATION_COLOR>::type>(argument)));
 			return true;
 		}
 
-		JSValue Annotation::js_get_rightButton() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, rightButton)
 		{
 			return get_context().CreateString(get_rightButton());
 		}
 
-		bool Annotation::js_set_rightButton(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, rightButton)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			set_rightButton(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_rightView() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, rightView)
 		{
 			return get_rightView()->get_object();
 		}
 
-		bool Annotation::js_set_rightView(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, rightView)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			set_rightView(static_cast<JSObject>(argument).GetPrivate<Titanium::UI::View>());
 			return true;
 		}
 
-		JSValue Annotation::js_get_showInfoWindow() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, showInfoWindow)
 		{
 			return get_context().CreateBoolean(get_showInfoWindow());
 		}
 
-		bool Annotation::js_set_showInfoWindow(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, showInfoWindow)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_showInfoWindow(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_subtitle() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, subtitle)
 		{
 			return get_context().CreateString(get_subtitle());
 		}
 
-		bool Annotation::js_set_subtitle(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, subtitle)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			set_subtitle(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_subtitleid() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, subtitleid)
 		{
 			return get_context().CreateString(get_subtitleid());
 		}
 
-		bool Annotation::js_set_subtitleid(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, subtitleid)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			set_subtitleid(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_title() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, title)
 		{
 			return get_context().CreateString(get_title());
 		}
 
-		bool Annotation::js_set_title(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, title)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			set_title(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_get_titleid() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(Annotation, titleid)
 		{
 			return get_context().CreateString(get_titleid());
 		}
 
-		bool Annotation::js_set_titleid(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(Annotation, titleid)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			set_titleid(static_cast<std::string>(argument));
 			return true;
 		}
 
-		JSValue Annotation::js_getCanShowCallout(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getCanShowCallout)
 		{
 			return js_get_canShowCallout();
 		}
 
-		JSValue Annotation::js_setCanShowCallout(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setCanShowCallout)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -473,12 +473,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getCenterOffset(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getCenterOffset)
 		{
 			return js_get_centerOffset();
 		}
 
-		JSValue Annotation::js_setCenterOffset(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setCenterOffset)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -487,12 +487,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getCustomView(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getCustomView)
 		{
 			return js_get_customView();
 		}
 
-		JSValue Annotation::js_setCustomView(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setCustomView)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -501,12 +501,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getDraggable(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getDraggable)
 		{
 			return js_get_draggable();
 		}
 
-		JSValue Annotation::js_setDraggable(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setDraggable)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -515,12 +515,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getImage(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getImage)
 		{
 			return js_get_image();
 		}
 
-		JSValue Annotation::js_setImage(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setImage)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -529,12 +529,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getLatitude(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getLatitude)
 		{
 			return js_get_latitude();
 		}
 
-		JSValue Annotation::js_setLatitude(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setLatitude)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -543,12 +543,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getLeftButton(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getLeftButton)
 		{
 			return js_get_leftButton();
 		}
 
-		JSValue Annotation::js_setLeftButton(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setLeftButton)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -557,12 +557,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getLeftView(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getLeftView)
 		{
 			return js_get_leftView();
 		}
 
-		JSValue Annotation::js_setLeftView(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setLeftView)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -571,12 +571,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getLongitude(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getLongitude)
 		{
 			return js_get_longitude();
 		}
 
-		JSValue Annotation::js_setLongitude(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setLongitude)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -585,12 +585,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getPincolor(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getPincolor)
 		{
 			return js_get_pincolor();
 		}
 
-		JSValue Annotation::js_setPincolor(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setPincolor)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -599,12 +599,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getRightButton(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getRightButton)
 		{
 			return js_get_rightButton();
 		}
 
-		JSValue Annotation::js_setRightButton(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setRightButton)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -613,12 +613,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getRightView(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getRightView)
 		{
 			return js_get_rightView();
 		}
 
-		JSValue Annotation::js_setRightView(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setRightView)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -627,12 +627,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getShowInfoWindow(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getShowInfoWindow)
 		{
 			return js_get_showInfoWindow();
 		}
 
-		JSValue Annotation::js_setShowInfoWindow(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setShowInfoWindow)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -641,12 +641,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getSubtitle(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getSubtitle)
 		{
 			return js_get_subtitle();
 		}
 
-		JSValue Annotation::js_setSubtitle(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setSubtitle)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -655,12 +655,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getSubtitleid(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getSubtitleid)
 		{
 			return js_get_subtitleid();
 		}
 
-		JSValue Annotation::js_setSubtitleid(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setSubtitleid)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -669,12 +669,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getTitle(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getTitle)
 		{
 			return js_get_title();
 		}
 
-		JSValue Annotation::js_setTitle(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setTitle)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -683,12 +683,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue Annotation::js_getTitleid(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, getTitleid)
 		{
 			return js_get_titleid();
 		}
 
-		JSValue Annotation::js_setTitleid(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(Annotation, setTitleid)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			

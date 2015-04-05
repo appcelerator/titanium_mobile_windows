@@ -275,59 +275,59 @@ namespace Titanium
 			JSExport<View>::SetParent(JSExport<Titanium::UI::View>::Class());
 			
 			// methods
-			JSExport<View>::AddFunctionProperty("addAnnotation", std::mem_fn(&View::js_addAnnotation));
-			JSExport<View>::AddFunctionProperty("addAnnotations", std::mem_fn(&View::js_addAnnotations));
-			JSExport<View>::AddFunctionProperty("addRoute", std::mem_fn(&View::js_addRoute));
-			JSExport<View>::AddFunctionProperty("animateCamera", std::mem_fn(&View::js_animateCamera));
-			JSExport<View>::AddFunctionProperty("deselectAnnotation", std::mem_fn(&View::js_deselectAnnotation));
-			JSExport<View>::AddFunctionProperty("removeAllAnnotations", std::mem_fn(&View::js_removeAllAnnotations));
-			JSExport<View>::AddFunctionProperty("removeAnnotation", std::mem_fn(&View::js_removeAnnotation));
-			JSExport<View>::AddFunctionProperty("removeAnnotations", std::mem_fn(&View::js_removeAnnotations));
-			JSExport<View>::AddFunctionProperty("removeRoute", std::mem_fn(&View::js_removeRoute));
-			JSExport<View>::AddFunctionProperty("selectAnnotation", std::mem_fn(&View::js_selectAnnotation));
-			JSExport<View>::AddFunctionProperty("setLocation", std::mem_fn(&View::js_setLocation));
-			JSExport<View>::AddFunctionProperty("showAnnotations", std::mem_fn(&View::js_showAnnotations));
-			JSExport<View>::AddFunctionProperty("snapshot", std::mem_fn(&View::js_snapshot));
-			JSExport<View>::AddFunctionProperty("zoom", std::mem_fn(&View::js_zoom));
+			TITANIUM_ADD_FUNCTION(View, addAnnotation);
+			TITANIUM_ADD_FUNCTION(View, addAnnotations);
+			TITANIUM_ADD_FUNCTION(View, addRoute);
+			TITANIUM_ADD_FUNCTION(View, animateCamera);
+			TITANIUM_ADD_FUNCTION(View, deselectAnnotation);
+			TITANIUM_ADD_FUNCTION(View, removeAllAnnotations);
+			TITANIUM_ADD_FUNCTION(View, removeAnnotation);
+			TITANIUM_ADD_FUNCTION(View, removeAnnotations);
+			TITANIUM_ADD_FUNCTION(View, removeRoute);
+			TITANIUM_ADD_FUNCTION(View, selectAnnotation);
+			TITANIUM_ADD_FUNCTION(View, setLocation);
+			TITANIUM_ADD_FUNCTION(View, showAnnotations);
+			TITANIUM_ADD_FUNCTION(View, snapshot);
+			TITANIUM_ADD_FUNCTION(View, zoom);
 
 			// properties
-			JSExport<View>::AddValueProperty("animate", std::mem_fn(&View::js_get_animate), std::mem_fn(&View::js_set_animate));
-			JSExport<View>::AddValueProperty("camera", std::mem_fn(&View::js_get_camera), std::mem_fn(&View::js_set_camera));
-			JSExport<View>::AddValueProperty("annotations", std::mem_fn(&View::js_get_annotations), std::mem_fn(&View::js_set_annotations));
-			JSExport<View>::AddValueProperty("compassEnabled", std::mem_fn(&View::js_get_compassEnabled), std::mem_fn(&View::js_set_compassEnabled));
-			JSExport<View>::AddValueProperty("enableZoomControls", std::mem_fn(&View::js_get_enableZoomControls), std::mem_fn(&View::js_set_enableZoomControls));
-			JSExport<View>::AddValueProperty("mapType", std::mem_fn(&View::js_get_mapType), std::mem_fn(&View::js_set_mapType));
-			JSExport<View>::AddValueProperty("maxZoomLevel", std::mem_fn(&View::js_get_maxZoomLevel));
-			JSExport<View>::AddValueProperty("minZoomLevel", std::mem_fn(&View::js_get_minZoomLevel));
-			JSExport<View>::AddValueProperty("pitchEnabled", std::mem_fn(&View::js_get_pitchEnabled), std::mem_fn(&View::js_set_pitchEnabled));
-			JSExport<View>::AddValueProperty("region", std::mem_fn(&View::js_get_region), std::mem_fn(&View::js_set_region));
-			JSExport<View>::AddValueProperty("rotateEnabled", std::mem_fn(&View::js_get_rotateEnabled), std::mem_fn(&View::js_set_rotateEnabled));
-			JSExport<View>::AddValueProperty("showsBuildings", std::mem_fn(&View::js_get_showsBuildings), std::mem_fn(&View::js_set_showsBuildings));
-			JSExport<View>::AddValueProperty("showsPointsOfInterest", std::mem_fn(&View::js_get_showsPointsOfInterest), std::mem_fn(&View::js_set_showsPointsOfInterest));
-			JSExport<View>::AddValueProperty("traffic", std::mem_fn(&View::js_get_traffic), std::mem_fn(&View::js_set_traffic));
-			JSExport<View>::AddValueProperty("userLocation", std::mem_fn(&View::js_get_userLocation), std::mem_fn(&View::js_set_userLocation));
-			JSExport<View>::AddValueProperty("userLocationButton", std::mem_fn(&View::js_get_userLocationButton), std::mem_fn(&View::js_set_userLocationButton));
-			JSExport<View>::AddValueProperty("zOrderOnTop", std::mem_fn(&View::js_get_zOrderOnTop), std::mem_fn(&View::js_set_zOrderOnTop));
+			TITANIUM_ADD_PROPERTY(View, animate);
+			TITANIUM_ADD_PROPERTY(View, camera);
+			TITANIUM_ADD_PROPERTY(View, annotations);
+			TITANIUM_ADD_PROPERTY(View, compassEnabled);
+			TITANIUM_ADD_PROPERTY(View, enableZoomControls);
+			TITANIUM_ADD_PROPERTY(View, mapType);
+			TITANIUM_ADD_PROPERTY_READONLY(View, maxZoomLevel);
+			TITANIUM_ADD_PROPERTY_READONLY(View, minZoomLevel);
+			TITANIUM_ADD_PROPERTY(View, pitchEnabled);
+			TITANIUM_ADD_PROPERTY(View, region);
+			TITANIUM_ADD_PROPERTY(View, rotateEnabled);
+			TITANIUM_ADD_PROPERTY(View, showsBuildings);
+			TITANIUM_ADD_PROPERTY(View, showsPointsOfInterest);
+			TITANIUM_ADD_PROPERTY(View, traffic);
+			TITANIUM_ADD_PROPERTY(View, userLocation);
+			TITANIUM_ADD_PROPERTY(View, userLocationButton);
+			TITANIUM_ADD_PROPERTY(View, zOrderOnTop);
 
 			// prperty setter functions
-			JSExport<View>::AddFunctionProperty("setCamera", std::mem_fn(&View::js_setCamera));
-			JSExport<View>::AddFunctionProperty("setAnnotations", std::mem_fn(&View::js_setAnnotations));
-			JSExport<View>::AddFunctionProperty("setAnimate", std::mem_fn(&View::js_setAnimate));
-			JSExport<View>::AddFunctionProperty("setCompassEnabled", std::mem_fn(&View::js_setCompassEnabled));
-			JSExport<View>::AddFunctionProperty("setEnableZoomControls", std::mem_fn(&View::js_setEnableZoomControls));
-			JSExport<View>::AddFunctionProperty("setMapType", std::mem_fn(&View::js_setMapType));
-			JSExport<View>::AddFunctionProperty("setPitchEnabled", std::mem_fn(&View::js_setPitchEnabled));
-			JSExport<View>::AddFunctionProperty("setRegion", std::mem_fn(&View::js_setRegion));
-			JSExport<View>::AddFunctionProperty("setRotateEnabled", std::mem_fn(&View::js_setRotateEnabled));
-			JSExport<View>::AddFunctionProperty("setShowsBuildings", std::mem_fn(&View::js_setShowsBuildings));
-			JSExport<View>::AddFunctionProperty("setShowsPointsOfInterest", std::mem_fn(&View::js_setShowsPointsOfInterest));
-			JSExport<View>::AddFunctionProperty("setTraffic", std::mem_fn(&View::js_setTraffic));
-			JSExport<View>::AddFunctionProperty("setUserLocation", std::mem_fn(&View::js_setUserLocation));
-			JSExport<View>::AddFunctionProperty("setUserLocationButton", std::mem_fn(&View::js_setUserLocationButton));
-			JSExport<View>::AddFunctionProperty("setZOrderOnTop", std::mem_fn(&View::js_setZOrderOnTop));
+			TITANIUM_ADD_FUNCTION(View, setCamera);
+			TITANIUM_ADD_FUNCTION(View, setAnnotations);
+			TITANIUM_ADD_FUNCTION(View, setAnimate);
+			TITANIUM_ADD_FUNCTION(View, setCompassEnabled);
+			TITANIUM_ADD_FUNCTION(View, setEnableZoomControls);
+			TITANIUM_ADD_FUNCTION(View, setMapType);
+			TITANIUM_ADD_FUNCTION(View, setPitchEnabled);
+			TITANIUM_ADD_FUNCTION(View, setRegion);
+			TITANIUM_ADD_FUNCTION(View, setRotateEnabled);
+			TITANIUM_ADD_FUNCTION(View, setShowsBuildings);
+			TITANIUM_ADD_FUNCTION(View, setShowsPointsOfInterest);
+			TITANIUM_ADD_FUNCTION(View, setTraffic);
+			TITANIUM_ADD_FUNCTION(View, setUserLocation);
+			TITANIUM_ADD_FUNCTION(View, setUserLocationButton);
+			TITANIUM_ADD_FUNCTION(View, setZOrderOnTop);
 		}
 
-		JSValue View::js_addAnnotation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, addAnnotation)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 
@@ -338,7 +338,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_addAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, addAnnotations)
 		{
 			TITANIUM_ASSERT(arguments.size() > 0);
 
@@ -351,7 +351,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_addRoute(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, addRoute)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 
@@ -362,7 +362,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_animateCamera(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, animateCamera)
 		{
 			if (arguments.size() > 1) {
 				auto _0 = arguments.at(0);
@@ -375,7 +375,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_deselectAnnotation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, deselectAnnotation)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 
@@ -386,13 +386,13 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_removeAllAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, removeAllAnnotations)
 		{
 			removeAllAnnotations();
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_removeAnnotation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, removeAnnotation)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 
@@ -403,7 +403,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_removeAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, removeAnnotations)
 		{
 			TITANIUM_ASSERT(arguments.size() > 0);
 
@@ -417,7 +417,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_removeRoute(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, removeRoute)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -428,7 +428,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_selectAnnotation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, selectAnnotation)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -439,7 +439,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_setLocation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setLocation)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -450,7 +450,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_showAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, showAnnotations)
 		{
 			TITANIUM_ASSERT(arguments.size() > 0);
 			auto _0 = arguments.at(0);
@@ -462,13 +462,13 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_snapshot(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, snapshot)
 		{
 			snapshot();
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_zoom(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, zoom)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
 			
@@ -479,19 +479,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_animate() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, animate)
 		{
 			return get_context().CreateBoolean(get_animate());
 		}
 
-		bool View::js_set_animate(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, animate)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_animate(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_get_annotations() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, annotations)
 		{
 			std::vector<JSValue> js_annotations;
 			const auto annotations = get_annotations();
@@ -501,7 +501,7 @@ namespace Titanium
 			return get_context().CreateArray(js_annotations);
 		}
 
-		bool View::js_set_annotations(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, annotations)
 		{
 			if (!argument.IsObject()) {
 				return false;
@@ -514,19 +514,19 @@ namespace Titanium
 			return true;
 		}
 
-		JSValue View::js_get_camera() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, camera)
 		{
 			return get_camera()->get_object();
 		}
 
-		bool View::js_set_camera(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, camera)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			set_camera(static_cast<JSObject>(argument).GetPrivate<Camera>());
 			return true;
 		}
 
-		JSValue View::js_setAnnotations(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setAnnotations)
 		{
 			if (arguments.size() >= 1) {
 				js_set_annotations(arguments.at(0));
@@ -534,7 +534,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_setCamera(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setCamera)
 		{
 			if (arguments.size() >= 1) {
 				js_set_camera(arguments.at(0));
@@ -542,7 +542,7 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_setAnimate(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setAnimate)
 		{
 			if (arguments.size() >= 1) {
 				js_set_animate(arguments.at(0));
@@ -550,19 +550,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_enableZoomControls() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, enableZoomControls)
 		{
 			return get_context().CreateBoolean(get_enableZoomControls());
 		}
 
-		bool View::js_set_enableZoomControls(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, enableZoomControls)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_enableZoomControls(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setEnableZoomControls(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setEnableZoomControls)
 		{
 			if (arguments.size() >= 1) {
 				js_set_enableZoomControls(arguments.at(0));
@@ -570,19 +570,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_compassEnabled() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, compassEnabled)
 		{
 			return get_context().CreateBoolean(get_compassEnabled());
 		}
 
-		bool View::js_set_compassEnabled(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, compassEnabled)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_compassEnabled(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setCompassEnabled(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setCompassEnabled)
 		{
 			if (arguments.size() >= 1) {
 				js_set_compassEnabled(arguments.at(0));
@@ -590,19 +590,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_mapType() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, mapType)
 		{
 			return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(get_mapType()));
 		}
 
-		bool View::js_set_mapType(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, mapType)
 		{
 			TITANIUM_ASSERT(argument.IsNumber());
 			set_mapType(Titanium::Map::Constants::to_MAP_TYPE(static_cast<std::underlying_type<Titanium::Map::MAP_TYPE>::type>(argument)));
 			return true;
 		}
 
-		JSValue View::js_setMapType(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setMapType)
 		{
 			if (arguments.size() >= 1) {
 				js_set_mapType(arguments.at(0));
@@ -610,29 +610,29 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_maxZoomLevel() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, maxZoomLevel)
 		{
 			return get_context().CreateNumber(get_maxZoomLevel());
 		}
 
-		JSValue View::js_get_minZoomLevel() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, minZoomLevel)
 		{
 			return get_context().CreateNumber(get_minZoomLevel());
 		}
 
-		JSValue View::js_get_pitchEnabled() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, pitchEnabled)
 		{
 			return get_context().CreateBoolean(get_pitchEnabled());
 		}
 
-		bool View::js_set_pitchEnabled(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, pitchEnabled)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_pitchEnabled(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setPitchEnabled(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setPitchEnabled)
 		{
 			if (arguments.size() >= 1) {
 				js_set_pitchEnabled(arguments.at(0));
@@ -640,12 +640,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_region() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, region)
 		{
 			return MapRegionTypev2_to_js(get_context(), get_region());
 		}
 
-		bool View::js_set_region(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, region)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			const auto region = static_cast<JSObject>(argument);
@@ -653,7 +653,7 @@ namespace Titanium
 			return true;
 		}
 
-		JSValue View::js_setRegion(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setRegion)
 		{
 			if (arguments.size() >= 1) {
 				js_set_region(arguments.at(0));
@@ -661,19 +661,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_rotateEnabled() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, rotateEnabled)
 		{
 			return get_context().CreateBoolean(get_rotateEnabled());
 		}
 
-		bool View::js_set_rotateEnabled(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, rotateEnabled)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_rotateEnabled(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setRotateEnabled(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setRotateEnabled)
 		{
 			if (arguments.size() >= 1) {
 				js_set_rotateEnabled(arguments.at(0));
@@ -681,19 +681,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_showsBuildings() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, showsBuildings)
 		{
 			return get_context().CreateBoolean(get_showsBuildings());
 		}
 
-		bool View::js_set_showsBuildings(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, showsBuildings)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_showsBuildings(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setShowsBuildings(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setShowsBuildings)
 		{
 			if (arguments.size() >= 1) {
 				js_set_showsBuildings(arguments.at(0));
@@ -701,19 +701,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_showsPointsOfInterest() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, showsPointsOfInterest)
 		{
 			return get_context().CreateBoolean(get_showsPointsOfInterest());
 		}
 
-		bool View::js_set_showsPointsOfInterest(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, showsPointsOfInterest)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_showsPointsOfInterest(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setShowsPointsOfInterest(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setShowsPointsOfInterest)
 		{
 			if (arguments.size() >= 1) {
 				js_set_showsPointsOfInterest(arguments.at(0));
@@ -721,19 +721,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_traffic() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, traffic)
 		{
 			return get_context().CreateBoolean(get_traffic());
 		}
 
-		bool View::js_set_traffic(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, traffic)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_traffic(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setTraffic(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setTraffic)
 		{
 			if (arguments.size() >= 1) {
 				js_set_traffic(arguments.at(0));
@@ -741,19 +741,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_userLocation() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, userLocation)
 		{
 			return get_context().CreateNumber(get_userLocation());
 		}
 
-		bool View::js_set_userLocation(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, userLocation)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_userLocation(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setUserLocation(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setUserLocation)
 		{
 			if (arguments.size() >= 1) {
 				js_set_userLocation(arguments.at(0));
@@ -761,19 +761,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_userLocationButton() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, userLocationButton)
 		{
 			return get_context().CreateBoolean(get_userLocationButton());
 		}
 
-		bool View::js_set_userLocationButton(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, userLocationButton)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_userLocationButton(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setUserLocationButton(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setUserLocationButton)
 		{
 			if (arguments.size() >= 1) {
 				js_set_userLocationButton(arguments.at(0));
@@ -781,19 +781,19 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		JSValue View::js_get_zOrderOnTop() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(View, zOrderOnTop)
 		{
 			return get_context().CreateBoolean(get_zOrderOnTop());
 		}
 
-		bool View::js_set_zOrderOnTop(const JSValue& argument) TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_SETTER(View, zOrderOnTop)
 		{
 			TITANIUM_ASSERT(argument.IsBoolean());
 			set_zOrderOnTop(static_cast<bool>(argument));
 			return true;
 		}
 
-		JSValue View::js_setZOrderOnTop(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(View, setZOrderOnTop)
 		{
 			if (arguments.size() >= 1) {
 				js_set_zOrderOnTop(arguments.at(0));

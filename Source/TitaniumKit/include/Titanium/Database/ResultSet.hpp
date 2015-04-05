@@ -145,17 +145,17 @@ namespace Titanium
 
 			static void JSExportInitialize();
 
-			virtual JSValue js_get_fieldCount() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_rowCount() const TITANIUM_NOEXCEPT final;
-			virtual JSValue js_get_validRow() const TITANIUM_NOEXCEPT final;
+			TITANIUM_PROPERTY_READONLY_DEF(fieldCount);
+			TITANIUM_PROPERTY_READONLY_DEF(rowCount);
+			TITANIUM_PROPERTY_READONLY_DEF(validRow);
 
-			virtual JSValue js_close(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_field(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_fieldByName(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_fieldName(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_getFieldName(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_isValidRow(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
-			virtual JSValue js_next(const std::vector<JSValue>&, JSObject&) TITANIUM_NOEXCEPT final;
+			TITANIUM_FUNCTION_DEF(close);;
+			TITANIUM_FUNCTION_DEF(field);;
+			TITANIUM_FUNCTION_DEF(fieldByName);;
+			TITANIUM_FUNCTION_DEF(fieldName);;
+			TITANIUM_FUNCTION_DEF(getFieldName);;
+			TITANIUM_FUNCTION_DEF(isValidRow);;
+			TITANIUM_FUNCTION_DEF(next);;
 
 			// FIXME Make these fields private
 			uint32_t affected_rows__;

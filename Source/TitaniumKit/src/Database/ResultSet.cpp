@@ -146,47 +146,45 @@ namespace Titanium
 		{
 			JSExport<ResultSet>::SetClassVersion(1);
 			JSExport<ResultSet>::SetParent(JSExport<Module>::Class());
-			JSExport<ResultSet>::AddValueProperty("fieldCount", std::mem_fn(&ResultSet::js_get_fieldCount));
-			JSExport<ResultSet>::AddValueProperty("rowCount", std::mem_fn(&ResultSet::js_get_rowCount));
-			JSExport<ResultSet>::AddValueProperty("validRow", std::mem_fn(&ResultSet::js_get_validRow));
+			TITANIUM_ADD_PROPERTY_READONLY(ResultSet, fieldCount);
+			TITANIUM_ADD_PROPERTY_READONLY(ResultSet, rowCount);
+			TITANIUM_ADD_PROPERTY_READONLY(ResultSet, validRow);
 
-			JSExport<ResultSet>::AddFunctionProperty("close", std::mem_fn(&ResultSet::js_close));
-			JSExport<ResultSet>::AddFunctionProperty("field", std::mem_fn(&ResultSet::js_field));
-			JSExport<ResultSet>::AddFunctionProperty("fieldByName", std::mem_fn(&ResultSet::js_fieldByName));
-			JSExport<ResultSet>::AddFunctionProperty("fieldName", std::mem_fn(&ResultSet::js_fieldName));
-			JSExport<ResultSet>::AddFunctionProperty("getFieldName", std::mem_fn(&ResultSet::js_getFieldName));
-			JSExport<ResultSet>::AddFunctionProperty("isValidRow", std::mem_fn(&ResultSet::js_isValidRow));
-			JSExport<ResultSet>::AddFunctionProperty("next", std::mem_fn(&ResultSet::js_next));
+			TITANIUM_ADD_FUNCTION(ResultSet, close);
+			TITANIUM_ADD_FUNCTION(ResultSet, field);
+			TITANIUM_ADD_FUNCTION(ResultSet, fieldByName);
+			TITANIUM_ADD_FUNCTION(ResultSet, fieldName);
+			TITANIUM_ADD_FUNCTION(ResultSet, getFieldName);
+			TITANIUM_ADD_FUNCTION(ResultSet, isValidRow);
+			TITANIUM_ADD_FUNCTION(ResultSet, next);
 		}
 	
-		JSValue ResultSet::js_get_fieldCount() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(ResultSet, fieldCount)
 		{
 			return get_context().CreateNumber(get_fieldCount());
 		}
 
-		JSValue ResultSet::js_get_rowCount() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(ResultSet, rowCount)
 		{
 			return get_context().CreateNumber(get_rowCount());
 		}
 
-		JSValue ResultSet::js_get_validRow() const TITANIUM_NOEXCEPT
+		TITANIUM_PROPERTY_GETTER(ResultSet, validRow)
 		{
 			return get_context().CreateBoolean(get_validRow());
 		}
 
-		JSValue ResultSet::js_close(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(ResultSet, close)
 		{
 			TITANIUM_ASSERT(arguments.size() == 0);
 			close();
 			return get_context().CreateUndefined();
 		}
 
-		JSValue ResultSet::js_field(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(ResultSet, field)
 		{
-			TITANIUM_ASSERT(arguments.size() >= 1);
-			const auto _0 = arguments.at(0);
-			TITANIUM_ASSERT(_0.IsNumber());
-			const auto index = static_cast<uint32_t>(_0);
+			ENSURE_UINT_AT_INDEX(index, 0);
+
 			if (arguments.size() > 1) {
 				const auto _1 = arguments.at(1);
 				TITANIUM_ASSERT(_1.IsNumber());
@@ -196,12 +194,10 @@ namespace Titanium
 			return field(index);
 		}
 
-		JSValue ResultSet::js_fieldByName(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(ResultSet, fieldByName)
 		{
-			TITANIUM_ASSERT(arguments.size() >= 1);
-			const auto _0 = arguments.at(0);
-			TITANIUM_ASSERT(_0.IsString());
-			const auto name = static_cast<std::string>(_0);
+			ENSURE_STRING_AT_INDEX(name, 0);
+
 			if (arguments.size() > 1) {
 				const auto _1 = arguments.at(1);
 				TITANIUM_ASSERT(_1.IsNumber());
@@ -211,12 +207,10 @@ namespace Titanium
 			return fieldByName(name);
 		}
 
-		JSValue ResultSet::js_fieldName(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(ResultSet, fieldName)
 		{
-			TITANIUM_ASSERT(arguments.size() == 1);
-			const auto _0 = arguments.at(0);
-			TITANIUM_ASSERT(_0.IsNumber());
-			const auto index = static_cast<uint32_t>(_0);
+			ENSURE_UINT_AT_INDEX(index, 0);
+
 			std::string result = fieldName(index);
 			if (result == nullptr) {
 				return get_context().CreateNull();
@@ -224,12 +218,9 @@ namespace Titanium
 			return get_context().CreateString(result);
 		}
 
-		JSValue ResultSet::js_getFieldName(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(ResultSet, getFieldName)
 		{
-			TITANIUM_ASSERT(arguments.size() == 1);
-			const auto _0 = arguments.at(0);
-			TITANIUM_ASSERT(_0.IsNumber());
-			const auto index = static_cast<uint32_t>(_0);
+			ENSURE_UINT_AT_INDEX(index, 0);
 
 			std::string result = getFieldName(index);
 			if (result == nullptr) {
@@ -238,13 +229,13 @@ namespace Titanium
 			return get_context().CreateString(result);
 		}
 
-		JSValue ResultSet::js_isValidRow(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(ResultSet, isValidRow)
 		{
 			TITANIUM_ASSERT(arguments.size() == 0);
 			return get_context().CreateBoolean(isValidRow());
 		}
 
-		JSValue ResultSet::js_next(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+		TITANIUM_FUNCTION(ResultSet, next)
 		{
 			TITANIUM_ASSERT(arguments.size() == 0);
 			return get_context().CreateBoolean(next());
