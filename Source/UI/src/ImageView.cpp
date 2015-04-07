@@ -39,6 +39,8 @@ namespace TitaniumWindows
 					this->image__->ActualHeight
 				);
 				layout->onComponentSizeChange(rect);
+
+				this->fireEvent("load", this->get_context().CreateObject());
 			});
 
 			Titanium::UI::ImageView::setLayoutDelegate<WindowsViewLayoutDelegate>();
