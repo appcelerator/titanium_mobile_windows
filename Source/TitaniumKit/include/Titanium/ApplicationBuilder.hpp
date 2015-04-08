@@ -55,6 +55,9 @@ namespace Titanium
 		JSObject SwitchObject() const TITANIUM_NOEXCEPT;
 		ApplicationBuilder& SwitchObject(const JSObject&) TITANIUM_NOEXCEPT;
 
+		JSObject GeolocationObject() const TITANIUM_NOEXCEPT;
+		ApplicationBuilder& GeolocationObject(const JSObject&) TITANIUM_NOEXCEPT;
+
 		JSObject ViewObject() const TITANIUM_NOEXCEPT;
 		ApplicationBuilder& ViewObject(const JSObject&) TITANIUM_NOEXCEPT;
 
@@ -159,6 +162,7 @@ namespace Titanium
 		JSObject ti__;
 		JSObject api__;
 		JSObject view__;
+		JSObject geolocation__;
 		JSObject switch__;
 		JSObject utils__;
 		JSObject animation__;

@@ -10,6 +10,7 @@
 #include "Titanium/TiModule.hpp"
 #include "Titanium/API.hpp"
 #include "Titanium/UIModule.hpp"
+#include "Titanium/GeolocationModule.hpp"
 #include "Titanium/UI/Switch.hpp"
 #include "Titanium/Utils.hpp"
 #include "Titanium/App.hpp"
@@ -32,7 +33,8 @@ namespace Titanium
 		  ti__(js_context__.CreateObject(JSExport<Titanium::TiModule>::Class())),
 		  api__(js_context__.CreateObject(JSExport<Titanium::API>::Class())),
 		  view__(js_context__.CreateObject(JSExport<Titanium::UI::View>::Class())),
-	      switch__(js_context__.CreateObject(JSExport<Titanium::UI::Switch>::Class())),
+		  geolocation__(js_context__.CreateObject(JSExport<Titanium::GeolocationModule>::Class())),
+		  switch__(js_context__.CreateObject(JSExport<Titanium::UI::Switch>::Class())),
 		  utils__(js_context__.CreateObject(JSExport<Titanium::Utils>::Class())),
 		  animation__(js_context__.CreateObject(JSExport<Titanium::UI::Animation>::Class())),
 		  listsection__(js_context__.CreateObject(JSExport<Titanium::UI::ListSection>::Class())),
@@ -109,6 +111,7 @@ namespace Titanium
 		titanium.SetProperty("Filesystem", filesystem__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("Database", database__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		titanium.SetProperty("Utils", utils__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+		titanium.SetProperty("Geolocation", geolocation__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		// App
 		titanium.SetProperty("App", app__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		app__.SetProperty("Properties", properties__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
@@ -266,6 +269,17 @@ namespace Titanium
 	ApplicationBuilder& ApplicationBuilder::SwitchObject(const JSObject& Switch) TITANIUM_NOEXCEPT
 	{
 		switch__ = Switch;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::GeolocationObject() const TITANIUM_NOEXCEPT
+	{
+		return geolocation__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::GeolocationObject(const JSObject& Geolocation) TITANIUM_NOEXCEPT
+	{
+		geolocation__ = Geolocation;
 		return *this;
 	}
 

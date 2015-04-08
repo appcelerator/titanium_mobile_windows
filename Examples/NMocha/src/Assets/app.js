@@ -22,7 +22,7 @@ require('./ti.blob.test');
 require('./ti.builtin.test');
 require('./ti.database.test');
 require('./ti.filesystem.test');
-//require('./ti.geolocation.test'); // TODO Implement Geolocation module
+require('./ti.geolocation.test');
 require('./ti.gesture.test');
 //require('./ti.internal.test');
 require('./ti.map.test');
