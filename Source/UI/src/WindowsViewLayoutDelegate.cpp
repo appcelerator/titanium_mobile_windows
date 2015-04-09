@@ -16,8 +16,24 @@ namespace TitaniumWindows
 {
 	namespace UI
 	{
+
+		void OnLayoutCallback::onLayout(const Titanium::LayoutEngine::Rect& rect, const std::string& name) 
+		{
+			view__->onLayoutEngineCallback(rect, name);
+		}
+
+		void OnLayoutCallback::onLayout(struct Titanium::LayoutEngine::Node* node) 
+		{
+			auto view_ptr = node->onLayoutCallback.lock();
+			if (view_ptr) {
+				auto rect = Titanium::LayoutEngine::RectMake(node->element.measuredLeft, node->element.measuredTop, node->element.measuredWidth, node->element.measuredHeight);
+				view_ptr->onLayout(rect, node->name);
+			}
+		}
+
 		WindowsViewLayoutDelegate::WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 			: ViewLayoutDelegate()
+			, onLayoutCallback__(std::make_shared<OnLayoutCallback>(this))
 		{
 			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::ctor");
 		}
@@ -350,13 +366,6 @@ namespace TitaniumWindows
 			 }
 		}
 
-		static void onLayoutCallback(Titanium::LayoutEngine::Node* node)
-		{
-			auto view = static_cast<WindowsViewLayoutDelegate*>(node->data);
-			auto rect = Titanium::LayoutEngine::RectMake(node->element.measuredLeft, node->element.measuredTop, node->element.measuredWidth, node->element.measuredHeight);
-			view->onLayoutEngineCallback(rect, node->name);
-		}
-
 		void WindowsViewLayoutDelegate::setComponent(Windows::UI::Xaml::FrameworkElement^ component)
 		{
 			using namespace Windows::UI::Xaml;
@@ -393,8 +402,7 @@ namespace TitaniumWindows
 			});
 
 			layout_node__ = new Titanium::LayoutEngine::Node;
-			layout_node__->data = this;
-			layout_node__->onLayout = onLayoutCallback;
+			layout_node__->onLayoutCallback = onLayoutCallback__;
 
 			if (get_defaultWidth() == Titanium::UI::LAYOUT::SIZE) {
 				is_width_size__ = true;

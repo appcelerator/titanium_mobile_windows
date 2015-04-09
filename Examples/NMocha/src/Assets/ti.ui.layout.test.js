@@ -712,7 +712,7 @@ describe("Titanium.UI.Layout", function () {
         win.open();
     });
     
-    it.skip("sizeFillConflict", function (finish) {
+    it("sizeFillConflict", function (finish) {
         var win = createWindow({});
         var grandParent = Ti.UI.createView({
             height: 300,
