@@ -148,6 +148,14 @@ namespace Titanium
 		*/
 		virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT;
 
+		/*
+		 * Stop firing all events, especially used when module is closed/disabled.
+		 */
+		virtual void stopFiringEvents() TITANIUM_NOEXCEPT final
+		{
+			stopFiringEvents__ = true;
+		}
+
 		template<typename T>
 		std::shared_ptr<T> get_shared_ptr_for_module()
 		{
@@ -164,6 +172,7 @@ namespace Titanium
 #pragma warning(push)
 #pragma warning(disable : 4251)
 		std::unordered_map<std::string, std::vector<JSObject>> event_listener_map__;
+		bool stopFiringEvents__;
 #pragma warning(pop)
 	};
 }  // namespace Titanium

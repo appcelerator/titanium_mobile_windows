@@ -47,7 +47,8 @@ function Titanium_RedScreenOfDeath(e) {
             label.add(Ti.UI.createLabel({
                 color: color,
                 font: { fontSize: fontSize, fontWeight: "bold" },
-                width: Ti.UI.FILL,
+                width:  Ti.UI.FILL,
+                height: Ti.UI.FILL,
                 textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
                 text: text
             }));

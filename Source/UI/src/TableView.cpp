@@ -114,10 +114,7 @@ namespace TitaniumWindows
 				auto layoutDelegate = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 				Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), view->getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>()->getLayoutNode());
 				if (layoutDelegate->isLoaded()) {
-					auto root = Titanium::LayoutEngine::nodeRequestLayout(layoutDelegate->getLayoutNode());
-					if (root) {
-						Titanium::LayoutEngine::nodeLayout(root);
-					}
+					layoutDelegate->requestLayout();
 				}
 				collectionViewItems__->Append(group);
 				return;
@@ -145,10 +142,7 @@ namespace TitaniumWindows
 					auto layoutDelegate = getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>();
 					Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), view->getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>()->getLayoutNode());
 					if (layoutDelegate->isLoaded()) {
-						auto root = Titanium::LayoutEngine::nodeRequestLayout(layoutDelegate->getLayoutNode());
-						if (root) {
-							Titanium::LayoutEngine::nodeLayout(root);
-						}
+						layoutDelegate->requestLayout();
 					}
 				} else {
 					Windows::UI::Xaml::Controls::ListViewHeaderItem^ header = ref new Windows::UI::Xaml::Controls::ListViewHeaderItem();
@@ -181,10 +175,7 @@ namespace TitaniumWindows
 					auto layoutDelegate = getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>();
 					Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), view->getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>()->getLayoutNode());
 					if (layoutDelegate->isLoaded()) {
-						auto root = Titanium::LayoutEngine::nodeRequestLayout(layoutDelegate->getLayoutNode());
-						if (root) {
-							Titanium::LayoutEngine::nodeLayout(root);
-						}
+						layoutDelegate->requestLayout();
 					}
 				}
 				collectionViewItems__->Append(group);
@@ -227,6 +218,8 @@ namespace TitaniumWindows
 
 		void TableView::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::TableView::enableEvent(event_name);
+
 			const JSContext ctx = this->get_context();
 
 			if (event_name == "click") {
@@ -252,6 +245,8 @@ namespace TitaniumWindows
 
 		void TableView::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::TableView::disableEvent(event_name);
+
 			if (event_name == "click") {
 				tableview__->ItemClick -= click_event__;
 			}

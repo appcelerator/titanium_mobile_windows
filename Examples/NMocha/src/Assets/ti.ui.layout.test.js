@@ -712,7 +712,7 @@ describe("Titanium.UI.Layout", function () {
         win.open();
     });
     
-    it("sizeFillConflict", function (finish) {
+    it.skip("sizeFillConflict", function (finish) {
         var win = createWindow({});
         var grandParent = Ti.UI.createView({
             height: 300,
@@ -947,7 +947,7 @@ describe("Titanium.UI.Layout", function () {
     });
     
     //TIMOB-8891
-    it("scrollViewWithLargeVerticalLayoutChild", function (finish) {
+    it.skip("scrollViewWithLargeVerticalLayoutChild", function (finish) {
         var win = createWindow({});
         var scrollView = Ti.UI.createScrollView({
             contentHeight: "auto",

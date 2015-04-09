@@ -69,7 +69,7 @@ namespace TitaniumWindows
 
 		void AlertDialog::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
-			TITANIUM_LOG_DEBUG("AlertDialog::enableEvent: (event name '", event_name, "'");
+			Titanium::UI::AlertDialog::enableEvent(event_name);
 
 			if (event_name == "click") {
 				return;

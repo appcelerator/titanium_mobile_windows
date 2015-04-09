@@ -68,6 +68,8 @@ namespace TitaniumWindows
 
 		void EmailDialog::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::EmailDialog::enableEvent(event_name);
+
 			if (event_name == "complete") {
 				++complete_event_count__;
 				return;

@@ -46,8 +46,6 @@ namespace TitaniumWindows
 			label__ = ref new Windows::UI::Xaml::Controls::TextBlock();
 			Titanium::UI::Label::setLayoutDelegate<WindowsViewLayoutDelegate>();
 
-			//layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::FILL);
-
 			label__->TextWrapping = Windows::UI::Xaml::TextWrapping::Wrap;
 			label__->TextTrimming = Windows::UI::Xaml::TextTrimming::Clip;
 			label__->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
@@ -164,6 +162,8 @@ namespace TitaniumWindows
 
 		void Label::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::Label::enableEvent(event_name);
+
 			const JSContext ctx = this->get_context();
 
 			using namespace Windows::UI::Xaml::Input;

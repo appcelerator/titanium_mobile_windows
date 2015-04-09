@@ -33,11 +33,10 @@ namespace TitaniumWindows
 			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(canvas__);
 		}
 
-		void Window::close(const std::shared_ptr<Titanium::UI::CloseWindowParams>& params) const TITANIUM_NOEXCEPT
+		void Window::close(const std::shared_ptr<Titanium::UI::CloseWindowParams>& params) TITANIUM_NOEXCEPT
 		{
 			// FIXME How do we handle this? It should navigate to the next window/page in a stack...
 			layoutDelegate__->hide();
-
 
 			// Fire close event on this window
 			auto ctx = get_context();
@@ -45,6 +44,9 @@ namespace TitaniumWindows
 			//close_event.SetProperty("source", get_object());
 			close_event.SetProperty("type", ctx.CreateString("close"));
 			this->fireEvent("close", close_event);
+
+			// disable all events further because it doesn't make sense.
+			this->stopFiringEvents();
 
 			// See https://github.com/appcelerator/titanium_mobile_windows.bak/blob/master/Source/TitaniumPedro/Modules/UI/TiPageManager.cpp
 			auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
@@ -59,7 +61,7 @@ namespace TitaniumWindows
 			}
 		}
 
-		void Window::open(const std::shared_ptr<Titanium::UI::OpenWindowParams>& params) const TITANIUM_NOEXCEPT
+		void Window::open(const std::shared_ptr<Titanium::UI::OpenWindowParams>& params) TITANIUM_NOEXCEPT
 		{
 			// Fire open event on this window
 			auto ctx = get_context();
@@ -112,19 +114,8 @@ namespace TitaniumWindows
 
 			layout_node__->element.measuredHeight = rect.height;
 			layout_node__->element.measuredWidth = rect.width;
-			auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
-			if (root) {
-				Titanium::LayoutEngine::nodeLayout(root);
-			}
 
-		 	auto event_delegate = event_delegate__.lock();
-		 	if (event_delegate != nullptr) {
-				JSContext js_context = event_delegate->get_context();
-				JSObject  eventArgs = js_context.CreateObject();
-				eventArgs.SetProperty("source", event_delegate->get_object());
-				eventArgs.SetProperty("type", js_context.CreateString("postlayout"));
-				event_delegate->fireEvent("postlayout", eventArgs);
-			}
+			requestLayout(true);
 		}
 
 		void WindowLayoutDelegate::onLayoutEngineCallback(Titanium::LayoutEngine::Rect rect, const std::string& name)

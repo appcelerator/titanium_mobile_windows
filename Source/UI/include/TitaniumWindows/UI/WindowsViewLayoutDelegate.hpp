@@ -359,6 +359,8 @@ namespace TitaniumWindows
 				return is_loaded__;
 			}
 
+			virtual void requestLayout(bool fire_event = false);
+
 			// compute its fixed size when either width or height (not both) is Ti.UI.SIZE
 			virtual Titanium::LayoutEngine::Rect computeRelativeSize(const double& x, const double& y,  const double& baseWidth, const double& baseHeight);
  
@@ -377,8 +379,8 @@ namespace TitaniumWindows
 			Windows::Foundation::EventRegistrationToken loaded_event__;
 			Windows::Foundation::EventRegistrationToken focus_event__;
 
-			bool is_default_width_size__{false};
-			bool is_default_height_size__{false};
+			bool is_width_size__{false};
+			bool is_height_size__{false};
 			bool is_panel__{false};
 			bool is_control__{false};
 			bool is_loaded__{false};

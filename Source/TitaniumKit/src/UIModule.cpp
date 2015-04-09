@@ -276,6 +276,11 @@ namespace Titanium
   };
   TabGroup.prototype.addTab = function (_tab) {
       var self = this;
+
+      _tab.__ti_private__.title.addEventListener('postlayout', function() {
+          self.__ti_private__.bar.height =  _tab.__ti_private__.title.size.height;
+      });
+
       this.__ti_private__.tabs.push(_tab);
       this.__ti_private__.bar.add(_tab.__ti_private__.title);
       this.__ti_private__.content.add(_tab.window);

@@ -20,7 +20,7 @@ NativeWindowExample::~NativeWindowExample() TITANIUM_NOEXCEPT
 	TITANIUM_LOG_DEBUG("NativeWindowExample:: dtor ", this);
 }
 
-void NativeWindowExample::open(const std::shared_ptr<Titanium::UI::OpenWindowParams>& params) const TITANIUM_NOEXCEPT
+void NativeWindowExample::open(const std::shared_ptr<Titanium::UI::OpenWindowParams>& params) TITANIUM_NOEXCEPT
 {
 	TITANIUM_LOG_DEBUG("NativeWindowExample::open");
 	for (auto native_view_ptr : layoutDelegate__->get_children()) {

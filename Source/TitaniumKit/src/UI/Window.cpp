@@ -36,12 +36,12 @@ namespace Titanium
 			TITANIUM_LOG_DEBUG("Window:: dtor ", this);
 		}
 
-		void Window::close(const std::shared_ptr<CloseWindowParams>& params) const TITANIUM_NOEXCEPT
+		void Window::close(const std::shared_ptr<CloseWindowParams>& params) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Window::close: Unimplemented");
 		}
 
-		void Window::open(const std::shared_ptr<OpenWindowParams>& params) const TITANIUM_NOEXCEPT
+		void Window::open(const std::shared_ptr<OpenWindowParams>& params) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Window::open: Unimplemented");
 		}

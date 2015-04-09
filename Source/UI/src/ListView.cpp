@@ -57,6 +57,8 @@ namespace TitaniumWindows
 
 		void ListView::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::ListView::enableEvent(event_name);
+
 			const JSContext ctx = this->get_context();
 
 			if (event_name == "itemclick") {
@@ -94,6 +96,8 @@ namespace TitaniumWindows
 
 		void ListView::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::ListView::disableEvent(event_name);
+
 			if (event_name == "itemclick") {
 				listview__->ItemClick -= click_event__;
 			}
@@ -196,10 +200,7 @@ namespace TitaniumWindows
 					auto layoutDelegate = getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>();
 					Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), view->getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>()->getLayoutNode());
 					if (layoutDelegate->isLoaded()) {
-						auto root = Titanium::LayoutEngine::nodeRequestLayout(layoutDelegate->getLayoutNode());
-						if (root) {
-							Titanium::LayoutEngine::nodeLayout(root);
-						}
+						layoutDelegate->requestLayout();
 					}
 				} else {
 					Windows::UI::Xaml::Controls::ListViewHeaderItem^ header = ref new Windows::UI::Xaml::Controls::ListViewHeaderItem();
@@ -234,10 +235,7 @@ namespace TitaniumWindows
 					auto layoutDelegate = getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>();
 					Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), view->getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>()->getLayoutNode());
 					if (layoutDelegate->isLoaded()) {
-						auto root = Titanium::LayoutEngine::nodeRequestLayout(layoutDelegate->getLayoutNode());
-						if (root) {
-							Titanium::LayoutEngine::nodeLayout(root);
-						}
+						layoutDelegate->requestLayout();
 					}
 				}
 

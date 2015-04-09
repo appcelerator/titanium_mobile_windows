@@ -118,10 +118,7 @@ namespace TitaniumWindows
 			while (!API::done__) {
 				message = concurrency::receive(API::buffer__); // wait for next message to log
 				if (writer == nullptr) { // no TCP connection
-					// Use clog because OutputDebugString will choke and print nothing if the string is too long!
-					std::clog << message << std::endl;
-					// Use Windows-specific logger because TITANIUM_LOG_DEBUG doesn't support UTF-8
-					//OutputDebugString(TitaniumWindows::Utility::ConvertUTF8String(message + "\n")->Data());
+					std::wclog << TitaniumWindows::Utility::ConvertUTF8String(message)->Data() << std::endl;
 				} else { // forward over tcp socket
 					writer->WriteString(TitaniumWindows::Utility::ConvertUTF8String(message) + "\n");  // Logger assumes \n for newlines!
 					writer->StoreAsync();

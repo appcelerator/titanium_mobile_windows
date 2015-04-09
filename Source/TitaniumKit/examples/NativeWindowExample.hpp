@@ -22,7 +22,7 @@ using namespace HAL;
 class NativeWindowExample final : public Titanium::UI::Window, public JSExport<NativeWindowExample>
 {
 public:
-	virtual void open(const std::shared_ptr<Titanium::UI::OpenWindowParams>& params) const TITANIUM_NOEXCEPT override final;
+	virtual void open(const std::shared_ptr<Titanium::UI::OpenWindowParams>& params) TITANIUM_NOEXCEPT override final;
 
 	NativeWindowExample(const JSContext&) TITANIUM_NOEXCEPT;
 

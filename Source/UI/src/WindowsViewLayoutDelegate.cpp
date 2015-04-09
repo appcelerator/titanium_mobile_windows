@@ -43,10 +43,7 @@ namespace TitaniumWindows
 			if (nativeChildView != nullptr) {
 				Titanium::LayoutEngine::nodeAddChild(layout_node__, newView->getLayoutNode());
 				if (isLoaded()) {
-					auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
-					if (root) {
-						Titanium::LayoutEngine::nodeLayout(root);
-					}
+					requestLayout();
 				}
 
 				nativeView->Children->Append(nativeChildView);
@@ -283,6 +280,7 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ViewLayoutDelegate::set_width(width);
 			setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, width);
+			is_width_size__ = layout_node__->properties.width.valueType == Titanium::LayoutEngine::ValueType::Size;
 		}
 
 		void WindowsViewLayoutDelegate::set_minWidth(const std::string& width) TITANIUM_NOEXCEPT
@@ -295,6 +293,7 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ViewLayoutDelegate::set_height(height);
 			setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, height);
+			is_height_size__ = layout_node__->properties.height.valueType == Titanium::LayoutEngine::ValueType::Size;
 		}
 
 		void WindowsViewLayoutDelegate::set_minHeight(const std::string& height) TITANIUM_NOEXCEPT
@@ -316,10 +315,7 @@ namespace TitaniumWindows
 			}
 
 			if (isLoaded()) {
-				auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
-				if (root) {
-					Titanium::LayoutEngine::nodeLayout(root);
-				}
+				requestLayout();
 			}
 		}
 
@@ -401,14 +397,14 @@ namespace TitaniumWindows
 			layout_node__->onLayout = onLayoutCallback;
 
 			if (get_defaultWidth() == Titanium::UI::LAYOUT::SIZE) {
-				is_default_width_size__ = true;
+				is_width_size__ = true;
 				layout_node__->properties.defaultWidthType = Titanium::LayoutEngine::ValueType::Size;
 			} else if (get_defaultWidth() == Titanium::UI::LAYOUT::FILL) {
 				layout_node__->properties.defaultWidthType = Titanium::LayoutEngine::ValueType::Fill;
 			}
 
 			if (get_defaultHeight() == Titanium::UI::LAYOUT::SIZE) {
-				is_default_height_size__ = true;
+				is_height_size__ = true;
 				layout_node__->properties.defaultHeightType = Titanium::LayoutEngine::ValueType::Size;
 			} else if (get_defaultHeight() == Titanium::UI::LAYOUT::FILL) {
 				layout_node__->properties.defaultHeightType = Titanium::LayoutEngine::ValueType::Fill;
@@ -419,9 +415,9 @@ namespace TitaniumWindows
 		{
 			using namespace Windows::UI::Xaml::Controls;
 			using namespace Windows::UI::Xaml;
-			if (is_default_height_size__ && rect.height == 0)
+			if (is_height_size__ && rect.height == 0)
 				return;
-			if (is_default_width_size__ && rect.width == 0)
+			if (is_width_size__ && rect.width == 0)
 				return;
 			if (rect.width < 0 || rect.height < 0)
 				return;
@@ -436,10 +432,10 @@ namespace TitaniumWindows
 
 			auto setWidth = false;
 			auto setHeight = false;
-			auto setWidthOnWidget = !is_default_width_size__;
-			auto setHeightOnWidget = !is_default_height_size__;
+			auto setWidthOnWidget = !is_width_size__;
+			auto setHeightOnWidget = !is_height_size__;
 
-			if (!is_panel__ && is_default_width_size__ && parentLayout != nullptr) {
+			if (!is_panel__ && is_width_size__ && parentLayout != nullptr) {
 				if (rect.width > parentLayout->element.measuredWidth && parentLayout->element.measuredWidth > 0) {
 					rect.width = parentLayout->element.measuredWidth;
 					setWidthOnWidget = true;
@@ -448,13 +444,21 @@ namespace TitaniumWindows
 				}
 			}
 
-			if (!is_panel__ && is_default_height_size__ && parentLayout != nullptr) {
+			if (!is_panel__ && is_height_size__ && parentLayout != nullptr) {
 				if (rect.height > parentLayout->element.measuredHeight && parentLayout->element.measuredHeight > 0) {
 					rect.height = parentLayout->element.measuredHeight;
 					setHeightOnWidget = true;
 				} else if (layout_node__->properties.height.valueType == Titanium::LayoutEngine::Fixed) {
 					setHeightOnWidget = true;
 				}
+			}
+
+			// Use actual size when LayoutEngine does nothing against the component size
+			if (rect.height <= 0) {
+				rect.height = component->ActualHeight;
+			}
+			if (rect.width <= 0) {
+				rect.width = component->ActualWidth;
 			}
 
 			oldRect__ = Titanium::LayoutEngine::RectMake(rect.x, rect.y, rect.width, rect.height);
@@ -486,15 +490,29 @@ namespace TitaniumWindows
 			}
 		}
 
+		void WindowsViewLayoutDelegate::requestLayout(bool fire_event)
+		{
+			auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
+			if (root) {
+				Titanium::LayoutEngine::nodeLayout(root);
+				if (fire_event && postlayout_listening__) {
+				 	auto event_delegate = event_delegate__.lock();
+				 	if (event_delegate != nullptr) {
+						// Fire postlayout event
+						JSContext js_context = event_delegate->get_context();
+						JSObject  eventArgs = js_context.CreateObject();
+						eventArgs.SetProperty("source", event_delegate->get_object());
+						eventArgs.SetProperty("type", js_context.CreateString("postlayout"));
+						event_delegate->fireEvent("postlayout", eventArgs);
+					}
+				}
+			}
+		}
+
 		void WindowsViewLayoutDelegate::onComponentLoaded(const Titanium::LayoutEngine::Rect& rect)
 		{
 			is_loaded__ = true;
-
-			auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
-
-			if (root) {
-				Titanium::LayoutEngine::nodeLayout(root);
-			}
+			requestLayout(true);
 		}
 
 		Titanium::LayoutEngine::Rect WindowsViewLayoutDelegate::computeRelativeSize(const double& x, const double& y, const double& baseWidth, const double& baseHeight) {
@@ -522,35 +540,20 @@ namespace TitaniumWindows
 		{
 			bool needsLayout = false;
 
-			if (is_default_width_size__ && !is_panel__) {
+			if (is_width_size__ && !is_panel__) {
 				layout_node__->properties.width.value = rect.width;
 				layout_node__->properties.width.valueType = Titanium::LayoutEngine::Fixed;
 				needsLayout = isLoaded();
 			}
 
-			if (is_default_height_size__ && !is_panel__) {
+			if (is_height_size__ && !is_panel__) {
 				layout_node__->properties.height.value = rect.height;
 				layout_node__->properties.height.valueType = Titanium::LayoutEngine::Fixed;
 				needsLayout = isLoaded();
 			}
 
 			if (needsLayout) {
-				auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
-				if (root) {
-					Titanium::LayoutEngine::nodeLayout(root);
-				}
-			}
-
-			if (postlayout_listening__) {
-			 	auto event_delegate = event_delegate__.lock();
-			 	if (event_delegate != nullptr) {
-					// Fire postlayout event
-					JSContext js_context = event_delegate->get_context();
-					JSObject  eventArgs = js_context.CreateObject();
-					eventArgs.SetProperty("source", event_delegate->get_object());
-					eventArgs.SetProperty("type", js_context.CreateString("postlayout"));
-					event_delegate->fireEvent("postlayout", eventArgs);
-				}
+				requestLayout(true);
 			}
 		}
 
@@ -570,10 +573,7 @@ namespace TitaniumWindows
 			Titanium::LayoutEngine::populateLayoutPoperties(prop, &layout_node__->properties, 1);
 
 			if (isLoaded()) {
-				auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
-				if (root) {
-					Titanium::LayoutEngine::nodeLayout(root);
-				}
+				requestLayout();
 			}
 		}
 

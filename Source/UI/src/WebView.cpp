@@ -141,6 +141,8 @@ namespace TitaniumWindows
 
 		void WebView::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::WebView::enableEvent(event_name);
+
 			if (event_name == "load") {
 				load_event_enabled__ = true;
 			} else if (event_name == "beforeload") {
@@ -152,6 +154,8 @@ namespace TitaniumWindows
 
 		void WebView::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::WebView::disableEvent(event_name);
+			
 			if (event_name == "load") {
 				load_event_enabled__ = false;
 			} else if (event_name == "beforeload") {

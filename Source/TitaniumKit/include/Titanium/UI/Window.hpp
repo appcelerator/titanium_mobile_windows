@@ -42,7 +42,7 @@ namespace Titanium
 
 			  @result void
 			*/
-			virtual void close(const std::shared_ptr<CloseWindowParams>& params) const TITANIUM_NOEXCEPT;
+			virtual void close(const std::shared_ptr<CloseWindowParams>& params) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
@@ -56,7 +56,7 @@ namespace Titanium
 
 			  @result void
 			*/
-			virtual void open(const std::shared_ptr<OpenWindowParams>& params) const TITANIUM_NOEXCEPT;
+			virtual void open(const std::shared_ptr<OpenWindowParams>& params) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method

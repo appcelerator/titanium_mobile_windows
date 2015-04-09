@@ -48,6 +48,8 @@ namespace TitaniumWindows
 
 		void Switch::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::Switch::enableEvent(event_name);
+
 			const JSContext ctx = this->get_context();
 
 			using namespace Windows::UI::Xaml::Input;

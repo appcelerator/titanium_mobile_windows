@@ -64,10 +64,7 @@ namespace TitaniumWindows
 			if (nativeChildView != nullptr) {
 				Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), content->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getLayoutNode());
 				if (layoutDelegate->isLoaded()) {
-					auto root = Titanium::LayoutEngine::nodeRequestLayout(layoutDelegate->getLayoutNode());
-					if (root) {
-						Titanium::LayoutEngine::nodeLayout(root);
-					}
+					layoutDelegate->requestLayout();
 				}
 			} else {
 				TITANIUM_LOG_DEBUG("ScrollView::setupViewer: nativeChildView = nullptr");

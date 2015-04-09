@@ -13,6 +13,7 @@ namespace Titanium
 {
 	Module::Module(const JSContext& js_context) TITANIUM_NOEXCEPT
 	    : JSExportObject(js_context)
+	    , stopFiringEvents__(false)
 	{
 	}
 
@@ -123,6 +124,10 @@ namespace Titanium
 
 	void Module::fireEvent(const std::string& name, const JSObject& event) const TITANIUM_NOEXCEPT
 	{
+		if (stopFiringEvents__) {
+			TITANIUM_LOG_WARN("Module::fireEvent: Stopped firing '", name, "'");
+			return;
+		}
 		if (event_listener_map__.find(name) == event_listener_map__.end()) {
 			TITANIUM_LOG_WARN("Module::fireEvent: No event named '", name, "' has been added");
 			return;
