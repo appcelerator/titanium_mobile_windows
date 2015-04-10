@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cctype>
 #include <collection.h>
+#include <cmath>
 
 namespace TitaniumWindows
 {
@@ -237,10 +238,10 @@ namespace TitaniumWindows
 		Titanium::UI::Dimension WindowsViewLayoutDelegate::get_rect() const TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::Dimension d;
-			d.x = static_cast<uint32_t>(oldRect__.x);
-			d.y = static_cast<uint32_t>(oldRect__.y);
-			d.width = static_cast<uint32_t>(oldRect__.width);
-			d.height = static_cast<uint32_t>(oldRect__.height);
+			d.x = static_cast<uint32_t>(std::round(oldRect__.x));
+			d.y = static_cast<uint32_t>(std::round(oldRect__.y));
+			d.width = static_cast<uint32_t>(std::round(oldRect__.width));
+			d.height = static_cast<uint32_t>(std::round(oldRect__.height));
 			return d;
 		}
 
@@ -249,8 +250,8 @@ namespace TitaniumWindows
 			Titanium::UI::Dimension d;
 			d.x = 0;
 			d.y = 0;
-			d.width = static_cast<uint32_t>(oldRect__.width);
-			d.height = static_cast<uint32_t>(oldRect__.height);
+			d.width = static_cast<uint32_t>(std::round(oldRect__.width));
+			d.height = static_cast<uint32_t>(std::round(oldRect__.height));
 			return d;
 		}
 		void WindowsViewLayoutDelegate::set_tintColor(const std::string& tintColor) TITANIUM_NOEXCEPT

@@ -1,12 +1,13 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 var should = require('./should');
 
-describe("Titanium.UI.ImageView", function() {
+describe("Titanium.UI.ImageView", function () {
+	this.timeout(5000);
 	it("image", function (finish) {
         var label = Ti.UI.createImageView({
             image: "https://www.google.com/images/srpr/logo11w.png"

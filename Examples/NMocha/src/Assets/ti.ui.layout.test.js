@@ -912,7 +912,7 @@ describe("Titanium.UI.Layout", function () {
     });
     */
     //TIMOB-8362
-    it.skip("scrollViewWithSIZE", function (finish) {
+    it("scrollViewWithSIZE", function (finish) {
         var win = createWindow({
             backgroundColor: "#7B6700",
             layout: "vertical"
