@@ -521,7 +521,6 @@ namespace TitaniumWindows
 		void WindowsViewLayoutDelegate::onComponentLoaded(const Titanium::LayoutEngine::Rect& rect)
 		{
 			is_loaded__ = true;
-			requestLayout(true);
 		}
 
 		Titanium::LayoutEngine::Rect WindowsViewLayoutDelegate::computeRelativeSize(const double& x, const double& y, const double& baseWidth, const double& baseHeight) {
