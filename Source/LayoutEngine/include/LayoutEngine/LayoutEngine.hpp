@@ -13,6 +13,7 @@
 #include <math.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 #define FLAG_INVALID 0x01     // Node layout properties have been updated since last layout pass.
 #define FLAG_REQ_LAYOUT 0x02  // Layout has been request for this node and its children.
@@ -27,6 +28,18 @@ namespace Titanium
 			double height = 0;
 			double x = 0;
 			double y = 0;
+		};
+
+#pragma warning(push)
+#pragma warning(disable : 4275)
+		class OnLayoutCallback 
+		{
+#pragma warning(pop)
+
+		public:
+			virtual ~OnLayoutCallback() {};
+			virtual void onLayout(const Rect& rect, const std::string& name) = 0;
+			virtual void onLayout(struct Node*) = 0;
 		};
 
 		enum LayoutType
@@ -177,8 +190,7 @@ namespace Titanium
 			struct LayoutProperties properties;
 			//int flags = FLAG_INVALID;
 			std::string name;
-			void (*onLayout)(struct Node*);
-			void* data;
+			std::weak_ptr<OnLayoutCallback> onLayoutCallback;
 		};
 
 		//void nodeInitialize(struct Node* node);

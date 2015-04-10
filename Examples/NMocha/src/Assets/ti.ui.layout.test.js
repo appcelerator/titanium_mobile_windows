@@ -712,7 +712,7 @@ describe("Titanium.UI.Layout", function () {
         win.open();
     });
     
-    it.skip("sizeFillConflict", function (finish) {
+    it("sizeFillConflict", function (finish) {
         var win = createWindow({});
         var grandParent = Ti.UI.createView({
             height: 300,
@@ -1043,5 +1043,27 @@ describe("Titanium.UI.Layout", function () {
         });
         win.open();
     });
-    
+
+    // TIMOB-18684
+    it("layoutWithSIZE_and_fixed", function (finish) {
+        var win = createWindow({});
+        var view = Ti.UI.createView({
+            backgroundColor: "green",
+            width: 100,
+            height: Ti.UI.SIZE
+        });
+        var innerView = Ti.UI.createView({
+            backgroundColor: "blue",
+            width: 100,
+            height: 50
+        });
+        view.add(innerView);
+        win.addEventListener("postlayout", function (e) {
+            should(view.size.height).eql(innerView.size.height);
+            should(view.size.width).eql(innerView.size.width);
+            closeAndFinish(win, finish);
+        });
+        win.add(view);
+        win.open();
+    });
 });

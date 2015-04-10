@@ -21,6 +21,22 @@ namespace TitaniumWindows
 	{
 		using namespace HAL;
 
+		class WindowsViewLayoutDelegate;
+
+#pragma warning(push)
+#pragma warning(disable : 4275)
+		class TITANIUMWINDOWS_UI_EXPORT OnLayoutCallback : public Titanium::LayoutEngine::OnLayoutCallback
+		{
+#pragma warning(pop)
+		public:
+			OnLayoutCallback(WindowsViewLayoutDelegate* view) : view__(view) {};
+			virtual ~OnLayoutCallback() {};
+			virtual void onLayout(const Titanium::LayoutEngine::Rect& rect, const std::string& name) override;
+			virtual void onLayout(struct Titanium::LayoutEngine::Node*) override;
+		protected:
+			WindowsViewLayoutDelegate* view__;
+		};
+
 		class TITANIUMWINDOWS_UI_EXPORT WindowsViewLayoutDelegate : public Titanium::UI::ViewLayoutDelegate
 		{
 		public:
@@ -386,6 +402,8 @@ namespace TitaniumWindows
 			bool is_loaded__{false};
 
 			Titanium::LayoutEngine::Rect oldRect__;
+
+			std::shared_ptr<Titanium::LayoutEngine::OnLayoutCallback> onLayoutCallback__;
 #pragma warning(pop)
 
 		};

@@ -69,8 +69,9 @@ namespace Titanium
 
 		static void invokeLayoutCallback(struct Node* node)
 		{
-			if (node->onLayout) {
-				node->onLayout(node);
+			auto callback = node->onLayoutCallback.lock();
+			if (callback) {
+				callback->onLayout(node);
 			}
 
 			struct Node* child = node->firstChild;

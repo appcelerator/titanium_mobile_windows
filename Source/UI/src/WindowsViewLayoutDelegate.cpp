@@ -11,13 +11,30 @@
 #include <algorithm>
 #include <cctype>
 #include <collection.h>
+#include <cmath>
 
 namespace TitaniumWindows
 {
 	namespace UI
 	{
+
+		void OnLayoutCallback::onLayout(const Titanium::LayoutEngine::Rect& rect, const std::string& name) 
+		{
+			view__->onLayoutEngineCallback(rect, name);
+		}
+
+		void OnLayoutCallback::onLayout(struct Titanium::LayoutEngine::Node* node) 
+		{
+			auto view_ptr = node->onLayoutCallback.lock();
+			if (view_ptr) {
+				auto rect = Titanium::LayoutEngine::RectMake(node->element.measuredLeft, node->element.measuredTop, node->element.measuredWidth, node->element.measuredHeight);
+				view_ptr->onLayout(rect, node->name);
+			}
+		}
+
 		WindowsViewLayoutDelegate::WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 			: ViewLayoutDelegate()
+			, onLayoutCallback__(std::make_shared<OnLayoutCallback>(this))
 		{
 			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::ctor");
 		}
@@ -221,10 +238,10 @@ namespace TitaniumWindows
 		Titanium::UI::Dimension WindowsViewLayoutDelegate::get_rect() const TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::Dimension d;
-			d.x = static_cast<uint32_t>(oldRect__.x);
-			d.y = static_cast<uint32_t>(oldRect__.y);
-			d.width = static_cast<uint32_t>(oldRect__.width);
-			d.height = static_cast<uint32_t>(oldRect__.height);
+			d.x = static_cast<uint32_t>(std::round(oldRect__.x));
+			d.y = static_cast<uint32_t>(std::round(oldRect__.y));
+			d.width = static_cast<uint32_t>(std::round(oldRect__.width));
+			d.height = static_cast<uint32_t>(std::round(oldRect__.height));
 			return d;
 		}
 
@@ -233,8 +250,8 @@ namespace TitaniumWindows
 			Titanium::UI::Dimension d;
 			d.x = 0;
 			d.y = 0;
-			d.width = static_cast<uint32_t>(oldRect__.width);
-			d.height = static_cast<uint32_t>(oldRect__.height);
+			d.width = static_cast<uint32_t>(std::round(oldRect__.width));
+			d.height = static_cast<uint32_t>(std::round(oldRect__.height));
 			return d;
 		}
 		void WindowsViewLayoutDelegate::set_tintColor(const std::string& tintColor) TITANIUM_NOEXCEPT
@@ -350,13 +367,6 @@ namespace TitaniumWindows
 			 }
 		}
 
-		static void onLayoutCallback(Titanium::LayoutEngine::Node* node)
-		{
-			auto view = static_cast<WindowsViewLayoutDelegate*>(node->data);
-			auto rect = Titanium::LayoutEngine::RectMake(node->element.measuredLeft, node->element.measuredTop, node->element.measuredWidth, node->element.measuredHeight);
-			view->onLayoutEngineCallback(rect, node->name);
-		}
-
 		void WindowsViewLayoutDelegate::setComponent(Windows::UI::Xaml::FrameworkElement^ component)
 		{
 			using namespace Windows::UI::Xaml;
@@ -393,8 +403,7 @@ namespace TitaniumWindows
 			});
 
 			layout_node__ = new Titanium::LayoutEngine::Node;
-			layout_node__->data = this;
-			layout_node__->onLayout = onLayoutCallback;
+			layout_node__->onLayoutCallback = onLayoutCallback__;
 
 			if (get_defaultWidth() == Titanium::UI::LAYOUT::SIZE) {
 				is_width_size__ = true;
@@ -512,7 +521,6 @@ namespace TitaniumWindows
 		void WindowsViewLayoutDelegate::onComponentLoaded(const Titanium::LayoutEngine::Rect& rect)
 		{
 			is_loaded__ = true;
-			requestLayout(true);
 		}
 
 		Titanium::LayoutEngine::Rect WindowsViewLayoutDelegate::computeRelativeSize(const double& x, const double& y, const double& baseWidth, const double& baseHeight) {
