@@ -31,28 +31,28 @@ namespace Titanium
 			  @abstract fieldCount : Number READONLY
 			  @discussion The number of columns in this result set.
 			*/
-			virtual uint32_t get_fieldCount() const TITANIUM_NOEXCEPT;
+			uint32_t get_fieldCount() const TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
 			  @abstract rowCount : Number READONLY
 			  @discussion The number of rows in this result set.
 			*/
-			virtual uint32_t get_rowCount() const TITANIUM_NOEXCEPT;
+			uint32_t get_rowCount() const TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
 			  @abstract validRow : Boolean READONLY
 			  @discussion Indicates whether the current row is valid.
 			*/
-			virtual bool get_validRow() const TITANIUM_NOEXCEPT;
+			bool get_validRow() const TITANIUM_NOEXCEPT;
 	
 			/*!
 			  @method
 			  @abstract close( ) : void
 			  @discussion Closes this result set and release resources. Once closed, the result set must no longer be used.
 			*/
-			virtual void close() TITANIUM_NOEXCEPT;
+			void close() TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
@@ -74,8 +74,8 @@ namespace Titanium
 			  @param type : Number (optional)
 			  	Type to cast field value
 			*/
-			virtual JSValue field(const uint32_t& index) TITANIUM_NOEXCEPT;
-			virtual JSValue field(const uint32_t& index, const FIELD_TYPE& type) TITANIUM_NOEXCEPT;
+			JSValue field(const uint32_t& index) TITANIUM_NOEXCEPT;
+			JSValue field(const uint32_t& index, const FIELD_TYPE& type) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
@@ -97,8 +97,8 @@ namespace Titanium
 			  @param type : Number (optional)
 			  	Type to cast field value
 			*/
-			virtual JSValue fieldByName(const std::string& name) TITANIUM_NOEXCEPT;
-			virtual JSValue fieldByName(const std::string& name, const FIELD_TYPE& type) TITANIUM_NOEXCEPT;
+			JSValue fieldByName(const std::string& name) TITANIUM_NOEXCEPT;
+			JSValue fieldByName(const std::string& name, const FIELD_TYPE& type) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
@@ -107,7 +107,7 @@ namespace Titanium
 			  @param index : Number
 			  A zero-based column index for the field.
 			*/
-			virtual std::string fieldName(const uint32_t& index) TITANIUM_NOEXCEPT;
+			std::string fieldName(const uint32_t& index) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
@@ -116,21 +116,21 @@ namespace Titanium
 			  @param index : Number
 			  A zero-based column index for the field.
 			*/
-			virtual std::string getFieldName(const uint32_t& index) TITANIUM_NOEXCEPT final;
+			std::string getFieldName(const uint32_t& index) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
 			  @abstract isValidRow( ) : Boolean
 			  @discussion Returns whether the current row is valid.
 			*/
-			virtual bool isValidRow() TITANIUM_NOEXCEPT;
+			bool isValidRow() TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
 			  @abstract next( ) : Boolean
 			  @discussion Advances to the next row in the result set and returns true if one exists, or false otherwise.
 			*/
-			virtual bool next() TITANIUM_NOEXCEPT;
+			bool next() TITANIUM_NOEXCEPT;
 
 			ResultSet(const JSContext&) TITANIUM_NOEXCEPT;
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
@@ -172,7 +172,7 @@ namespace Titanium
 			  @abstract fieldIndex( name ) : int
 			  @discussion Finds the index of the field with the given name. Returns -1 if not found.
 			*/
-			virtual uint32_t fieldIndex(const std::string& fieldName) TITANIUM_NOEXCEPT final;
+			uint32_t fieldIndex(const std::string& fieldName) TITANIUM_NOEXCEPT;
 
 		};
 	} // namespace Database

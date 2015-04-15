@@ -28,42 +28,42 @@ namespace Titanium
 			  @abstract file : Titanium.Filesystem.File READONLY
 			  @discussion A File object representing the file where this database is stored. Must only be used for setting file properties.
 			*/
-			virtual JSValue get_file() const TITANIUM_NOEXCEPT;
+			JSValue get_file() const TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
 			  @abstract lastInsertRowId : Number
 			  @discussion The identifier of the last populated row.
 			*/
-			virtual int64_t get_lastInsertRowId() const TITANIUM_NOEXCEPT;
+			int64_t get_lastInsertRowId() const TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
 			  @abstract name : String
 			  @discussion The name of the database.
 			*/
-			virtual std::string get_name() const TITANIUM_NOEXCEPT;
+			std::string get_name() const TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
 			  @abstract rowsAffected : Number
 			  @discussion The number of rows affected by the last query.
 			*/
-			virtual uint32_t get_rowsAffected() const TITANIUM_NOEXCEPT;
+			uint32_t get_rowsAffected() const TITANIUM_NOEXCEPT;
 	
 			/*!
 			  @method
 			  @abstract close( ) : void
 			  @discussion Closes the database and releases resources from memory. Once closed, this instance is no longer valid and should not be used. On iOS, also closes all Titanium.Database.ResultSet instances that exist.
 			*/
-			virtual void close() TITANIUM_NOEXCEPT;
+			void close() TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
 			  @abstract execute( sql, [vararg] ) : Titanium.Database.ResultSet
 			  @discussion Executes an SQL statement against the database and returns a ResultSet.
 			*/
-			virtual JSValue execute(const std::string& sql, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
+			JSValue execute(const std::string& sql, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 
 			DB(const JSContext&) TITANIUM_NOEXCEPT;
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
