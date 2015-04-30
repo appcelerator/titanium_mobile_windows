@@ -52,6 +52,8 @@ set(SOURCE_App
   src/Properties.cpp
   include/TitaniumWindows/App.hpp
   include/TitaniumWindows/detail/AppBase.hpp
+  include/TitaniumWindows/AppModule.hpp
+  src/AppModule.cpp
   )
 
 source_group(Titanium\\App FILES ${SOURCE_App})

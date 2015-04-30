@@ -28,6 +28,14 @@
 #include <Windows.h>
 #include <collection.h>
 
+#define GET_TITANIUM_APP(VARNAME) \
+  JSValue Titanium_property = js_context__.get_global_object().GetProperty("Titanium"); \
+  TITANIUM_ASSERT(Titanium_property.IsObject()); \
+  JSObject Titanium = static_cast<JSObject>(Titanium_property); \
+  JSValue App_property = Titanium.GetProperty("App"); \
+  TITANIUM_ASSERT(App_property.IsObject()); \
+  std::shared_ptr<Titanium::AppModule> VARNAME = static_cast<JSObject>(App_property).GetPrivate<Titanium::AppModule>();
+
 namespace TitaniumWindows
 {
 	using namespace HAL;
@@ -47,6 +55,7 @@ namespace TitaniumWindows
 		                                                            .TiObject(js_context__.CreateObject(JSExport<TitaniumWindows::TiModule>::Class()))
 		                                                            .UIObject(js_context__.CreateObject(JSExport<TitaniumWindows::UIModule>::Class()))
 		                                                            .APIObject(js_context__.CreateObject(JSExport<TitaniumWindows::API>::Class()))
+		                                                            .AppObject(js_context__.CreateObject(JSExport<TitaniumWindows::AppModule>::Class()))
 		                                                            .PlatformObject(js_context__.CreateObject(JSExport<TitaniumWindows::Platform>::Class()))
 		                                                            .GestureObject(js_context__.CreateObject(JSExport<TitaniumWindows::Gesture>::Class()))
 		                                                            .AccelerometerObject(js_context__.CreateObject(JSExport<TitaniumWindows::Accelerometer>::Class()))
@@ -78,6 +87,7 @@ namespace TitaniumWindows
 		                                                            .build());
 
 		Suspending += ref new Windows::UI::Xaml::SuspendingEventHandler(this, &Application::OnSuspending);
+		Resuming += ref new Windows::Foundation::EventHandler<::Platform::Object ^>(this, &Application::OnResuming);
 
 		// #if _DEBUG
 		//  if (IsDebuggerPresent()) {
@@ -150,8 +160,20 @@ namespace TitaniumWindows
 	}
 #endif
 
+	void Application::OnResuming(Object ^sender, Object ^args) 
+	{
+		// Since we only have "resuming" event, we fires both resume and resumed event.
+		GET_TITANIUM_APP(App);
+		App->fireEvent("resume");
+		App->fireEvent("resumed");
+	}
+
 	void Application::OnSuspending(Object ^ sender, Windows::ApplicationModel::SuspendingEventArgs ^ e)
 	{
+		// Since we only have "suspending" event, we fires both pause and paused event.
+		GET_TITANIUM_APP(App);
+		App->fireEvent("pause");
+		App->fireEvent("paused");
 	}
 
 }  // namespace TitaniumWindows
