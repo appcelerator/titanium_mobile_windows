@@ -21,9 +21,10 @@ public
 		virtual ~Application();
 
 		virtual void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args) override;
+		void OnSuspending(Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ e);
+		void OnResuming(Object ^sender, Object ^args);
 
 	private:
-		void OnSuspending(Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ e);
 
 #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
 		// This code is for Windows phone apps only.

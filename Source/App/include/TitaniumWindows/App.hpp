@@ -9,6 +9,7 @@
 #ifndef _TITANIUMWINDOWS_APP_HPP_
 #define _TITANIUMWINDOWS_APP_HPP_
 
+#include "TitaniumWindows/AppModule.hpp"
 #include "TitaniumWindows/App/Properties.hpp"
 
 #endif  // _TITANIUMWINDOWS_APP_HPP_

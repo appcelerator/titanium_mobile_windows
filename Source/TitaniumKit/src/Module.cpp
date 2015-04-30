@@ -245,7 +245,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(Module, fireEvent)
 	{
 		ENSURE_STRING_AT_INDEX(name, 0);
-		ENSURE_OBJECT_AT_INDEX(param, 1);
+		ENSURE_OPTIONAL_OBJECT_AT_INDEX(param, 1);
 
 		fireEvent(name, param);
 		return get_context().CreateUndefined();
