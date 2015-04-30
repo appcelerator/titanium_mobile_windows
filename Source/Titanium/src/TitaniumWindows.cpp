@@ -28,14 +28,13 @@
 #include <Windows.h>
 #include <collection.h>
 
-#define FIRE_TITANIUM_APP_EVENT(NAME) \
-  { JSValue Titanium_property = js_context__.get_global_object().GetProperty("Titanium"); \
+#define GET_TITANIUM_APP(VARNAME) \
+  JSValue Titanium_property = js_context__.get_global_object().GetProperty("Titanium"); \
   TITANIUM_ASSERT(Titanium_property.IsObject()); \
   JSObject Titanium = static_cast<JSObject>(Titanium_property); \
   JSValue App_property = Titanium.GetProperty("App"); \
   TITANIUM_ASSERT(App_property.IsObject()); \
-  std::shared_ptr<Titanium::AppModule> App = static_cast<JSObject>(App_property).GetPrivate<Titanium::AppModule>();\
-	App->fireEvent(#NAME); }
+  std::shared_ptr<Titanium::AppModule> VARNAME = static_cast<JSObject>(App_property).GetPrivate<Titanium::AppModule>();
 
 namespace TitaniumWindows
 {
@@ -164,15 +163,17 @@ namespace TitaniumWindows
 	void Application::OnResuming(Object ^sender, Object ^args) 
 	{
 		// Since we only have "resuming" event, we fires both resume and resumed event.
-		FIRE_TITANIUM_APP_EVENT(resume);
-		FIRE_TITANIUM_APP_EVENT(resumed);
+		GET_TITANIUM_APP(App);
+		App->fireEvent("resume");
+		App->fireEvent("resumed");
 	}
 
 	void Application::OnSuspending(Object ^ sender, Windows::ApplicationModel::SuspendingEventArgs ^ e)
 	{
 		// Since we only have "suspending" event, we fires both pause and paused event.
-		FIRE_TITANIUM_APP_EVENT(pause);
-		FIRE_TITANIUM_APP_EVENT(paused);
+		GET_TITANIUM_APP(App);
+		App->fireEvent("pause");
+		App->fireEvent("paused");
 	}
 
 }  // namespace TitaniumWindows
