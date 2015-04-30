@@ -29,13 +29,13 @@
 #include <collection.h>
 
 #define FIRE_TITANIUM_APP_EVENT(NAME) \
-  JSValue Titanium_property = js_context__.get_global_object().GetProperty("Titanium"); \
+  { JSValue Titanium_property = js_context__.get_global_object().GetProperty("Titanium"); \
   TITANIUM_ASSERT(Titanium_property.IsObject()); \
   JSObject Titanium = static_cast<JSObject>(Titanium_property); \
   JSValue App_property = Titanium.GetProperty("App"); \
   TITANIUM_ASSERT(App_property.IsObject()); \
   std::shared_ptr<Titanium::AppModule> App = static_cast<JSObject>(App_property).GetPrivate<Titanium::AppModule>();\
-	App->fireEvent(#NAME);
+	App->fireEvent(#NAME); }
 
 namespace TitaniumWindows
 {
