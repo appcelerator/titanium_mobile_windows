@@ -273,7 +273,19 @@ namespace Titanium
 		// platform-dependent functions
 		virtual bool requiredModuleExists(const std::string& path) const TITANIUM_NOEXCEPT;
 		virtual std::string readRequiredModule(const JSObject& parent, const std::string& path) const;
-    
+
+		// "builtin" module such as ti.map
+		virtual bool requiredBuiltinModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT;
+		virtual JSValue requireBuiltinModule(const JSContext& js_context, const std::string& moduleId);
+
+		// CommonJS module
+		virtual bool requiredCommonJSModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT;
+		virtual JSValue requireCommonJSModule(const JSContext& js_context, const std::string& moduleId);
+
+		// native module
+		virtual bool requiredNativeModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT;
+		virtual JSValue requireNativeModule(const JSContext& js_context, const std::string& moduleId);
+
 		/*!
 		  @method
 

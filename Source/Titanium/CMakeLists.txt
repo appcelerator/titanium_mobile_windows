@@ -81,8 +81,6 @@ set(SOURCE_TitaniumWindows
   src/File.cpp
   include/TitaniumWindows/File.hpp
   include/TitaniumWindows/detail/TitaniumWindowsBase.hpp
-  include/TitaniumWindows/WindowsNativeModuleLoader.hpp
-  src/WindowsNativeModuleLoader.cpp
 )
 
 source_group(TitaniumWindows FILES ${SOURCE_TitaniumWindows})

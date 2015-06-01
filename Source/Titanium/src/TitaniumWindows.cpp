@@ -25,7 +25,6 @@
 #include "TitaniumWindows/File.hpp"
 #include "TitaniumWindows/HTTPClient.hpp"
 #include "TitaniumWindows/Media.hpp"
-#include "TitaniumWindows/WindowsNativeModuleLoader.hpp"
 
 #include <Windows.h>
 #include <collection.h>
@@ -92,9 +91,6 @@ namespace TitaniumWindows
 		                                                            .ScrollableViewObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::ScrollableView>::Class()))
 		                                                            .MediaObject(js_context__.CreateObject(JSExport<TitaniumWindows::MediaModule>::Class()))
 		                                                            .build());
-		auto global = js_context__.get_global_object().GetPrivate<TitaniumWindows::GlobalObject>();
-		auto module_loader = new TitaniumWindows::WindowsNativeModuleLoader();
-		global->registerNativeModuleLoader(module_loader);
 
 		Suspending += ref new Windows::UI::Xaml::SuspendingEventHandler(this, &Application::OnSuspending);
 		Resuming += ref new Windows::Foundation::EventHandler<::Platform::Object ^>(this, &Application::OnResuming);
