@@ -1319,6 +1319,8 @@ WindowsBuilder.prototype.copyResources = function copyResources(next) {
 		// TODO: copy any module specific resources here
 	}, this);
 
+	// TODO: rebuild Global module so that we can load native modules
+
 	var platformPaths = [];
 	// WARNING! This is pretty dangerous, but yes, we're intentionally copying
 	// every file from platform/windows and all modules into the build dir
