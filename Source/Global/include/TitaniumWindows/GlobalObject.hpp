@@ -10,7 +10,6 @@
 #define _TITANIUMWINDOWS_GLOBALOBJECT_HPP_
 
 #include "TitaniumWindows/detail/GlobalBase.hpp"
-#include "TitaniumWindows/NativeModuleLoader.hpp"
 
 namespace TitaniumWindows
 {
@@ -38,18 +37,28 @@ namespace TitaniumWindows
 
 		static void JSExportInitialize();
 
-		virtual void registerNativeModuleLoader(NativeModuleLoader* module_loader);
+		virtual void registerNativeModuleRequireHook(const std::vector<std::string>& supported_module_names, const std::unordered_map<std::string, JSValue>& preloaded_modules, std::function<JSValue(const std::string&)> requireCallback);
 
 	protected:
-		virtual std::string requestResolveModule(const JSObject& parent, const std::string& moduleId, const std::string& dirname = COMMONJS_SEPARATOR__) TITANIUM_NOEXCEPT override final;
+#pragma warning(push)
+#pragma warning(disable : 4251)
+		// store supported module names and its loaded status
+		std::unordered_map<std::string, bool> native_module_names__;
+
+		// cache for native module
+		std::unordered_map<std::string, JSValue> native_module_cache__;
+		std::function<JSValue(const std::string&)> native_module_requireHook__;
+#pragma warning(pop)
+
+		// native module
+		virtual bool requiredNativeModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT override;
+		virtual JSValue requireNativeModule(const JSContext& js_context, const std::string& moduleId) TITANIUM_NOEXCEPT override;
+
 		virtual std::string readRequiredModule(const JSObject& parent, const std::string& path) const override final;
 		virtual bool requiredModuleExists(const std::string& path) const TITANIUM_NOEXCEPT override final;
 		virtual std::shared_ptr<Titanium::GlobalObject::Timer> CreateTimer(Callback_t callback, const std::chrono::milliseconds& interval) const TITANIUM_NOEXCEPT override final;
-
-	private:
-		NativeModuleLoader* module_loader__ { nullptr };
 	};
 
-}  // namespace TitaniumWindows {
+}  // namespace TitaniumWindows
 
 #endif  // _TITANIUMWINDOWS_GLOBALOBJECT_HPP_

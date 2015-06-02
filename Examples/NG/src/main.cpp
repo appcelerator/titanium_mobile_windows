@@ -1,7 +1,7 @@
 /**
  * Titanium for Windows
  *
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -20,8 +20,10 @@ int main(Platform::Array<Platform::String^>^) {
   std::wclog.rdbuf(&wcharDebugOutput);
 #endif
 
-  Windows::UI::Xaml::Application::Start(ref new Windows::UI::Xaml::ApplicationInitializationCallback([](Windows::UI::Xaml::ApplicationInitializationCallbackParams^ params) {
-    ref new TitaniumWindows::Application();
+	Windows::UI::Xaml::Application::Start(ref new Windows::UI::Xaml::ApplicationInitializationCallback([](Windows::UI::Xaml::ApplicationInitializationCallbackParams^ params) {
+		auto app = ref new TitaniumWindows::Application();
+		auto hook = ref new TitaniumWindows_Native::RequireHook();
+		hook->Register(app);
   }));
 
   return 0;

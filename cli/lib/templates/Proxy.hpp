@@ -30,7 +30,8 @@ if (parent && parent.indexOf('[mscorlib]') != 0) {
 #ifndef _<%= name_upper %>_HPP_
 #define _<%= name_upper %>_HPP_
 
-#include "TitaniumWindows/detail/TitaniumWindowsBase.hpp"
+#include "TitaniumWindows_Native_EXPORT.h"
+#include "Titanium/detail/TiBase.hpp"
 #include "TitaniumWindows/Utility.hpp"
 <%
 if (parent_name == 'Module') { -%>
@@ -48,7 +49,7 @@ if (parent_name == 'Module') { -%>
 
 		using namespace HAL;
 
-		class TITANIUMWINDOWS_EXPORT <%= base_name %> : public ::Titanium::<%= parent_name.to_windows_name() %>, public JSExport<<%= base_name %>>
+		class TITANIUMWINDOWS_NATIVE_EXPORT <%= base_name %> : public ::Titanium::<%= parent_name.to_windows_name() %>, public JSExport<<%= base_name %>>
 		{
 
 		public:

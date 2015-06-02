@@ -16,6 +16,7 @@ const
 	async = require('async'),
 	ejs = require('ejs'),
 	Builder = require('titanium-sdk/lib/builder'),
+	nativeTypeGenerator = require('../lib/stub'),
 	cleanCSS = require('clean-css'),
 	DOMParser = require('xmldom').DOMParser,
 	fields = require('fields'),
@@ -643,6 +644,7 @@ WindowsBuilder.prototype.run = function run(logger, config, cli, finished) {
         'checkAppJs',
         'copyResources',
         'generateI18N',
+		'generateNativeWrappers',
         'generateCmakeList',
         'runCmake',
         'compileApp',
@@ -738,16 +740,16 @@ WindowsBuilder.prototype.initialize = function initialize(next) {
 	this.cmakeTarget  = this.cmakePlatformAbbrev +'.' + this.arch;
 
 	// directories
-	// FIXME If we're building to temp, we need to copy the build results back over to the origin build dir!
+	// FIXME If we're building to temp, we need to copy the build results back over to the original build dir!
 	this.outputDir             = argv['output-dir'] ? appc.fs.resolvePath(argv['output-dir']) : null;
-	this.buildTargetDir        = path.join(this.buildDir, 'src'); // where we stuff the cmake inputs,
-	this.cmakeTargetDir		   = path.join(this.buildDir, this.cmakeTarget); // where cmake generate the VS solution
-	this.buildTargetAssetsDir  = path.join(this.buildTargetDir, 'Assets');
-	this.buildTargetStringsDir = path.join(this.buildTargetDir, 'Strings');
+	this.buildSrcDir		   = path.join(this.buildDir, 'src'); // Where the src files go
+	this.cmakeTargetDir		   = path.join(this.buildDir, this.cmakeTarget); // where cmake generates the VS solution
+	this.buildTargetAssetsDir  = path.join(this.buildDir, 'Assets');
+	this.buildTargetStringsDir = path.join(this.buildDir, 'Strings');
 
 	// files
-	this.buildManifestFile = path.join(this.buildDir, 'build-manifest.json'); // QUESTION: do we want to put the build-manifest.json in buildDir or the buildTargetDir?
-	this.cmakeListFile = path.join(this.buildDir, 'CMakeLists.txt'); // lives above the buildTargetDir
+	this.buildManifestFile = path.join(this.buildDir, 'build-manifest.json');
+	this.cmakeListFile = path.join(this.buildDir, 'CMakeLists.txt'); // lives above the buildSrcDir
 
 	next();
 };
@@ -1258,7 +1260,7 @@ WindowsBuilder.prototype.copyResources = function copyResources(next) {
 			var src = path.join(this.platformPath, 'templates', 'build');
 			copyDir.call(this, {
 				src: src,
-				dest: this.buildTargetDir
+				dest: this.buildDir // throw into top-level build dir
 			}, cb);
 		},
 
@@ -1271,13 +1273,13 @@ WindowsBuilder.prototype.copyResources = function copyResources(next) {
 			}, cb);
 		},
 
-		// Copy TitaniumKit and HAL dlls over
+		// Copy TitaniumKit and HAL dlls over into src folder
 		function (cb) {
 			var plat = this.target == 'ws-local' ? 'store' : 'phone';
 			var src = path.join(this.platformPath, 'lib', 'TitaniumKit', plat, this.arch, 'TitaniumKit.dll');
 			copyFile.call(this,
 				src,
-				path.join(this.buildTargetDir, 'TitaniumKit.dll'),
+				path.join(this.buildDir, 'lib', 'TitaniumKit.dll'),
 			cb);
 		},
 
@@ -1286,7 +1288,7 @@ WindowsBuilder.prototype.copyResources = function copyResources(next) {
 			var src = path.join(this.platformPath, 'lib', 'HAL', plat, this.arch, 'HAL.dll');
 			copyFile.call(this,
 				src,
-				path.join(this.buildTargetDir, 'HAL.dll'),
+				path.join(this.buildDir, 'lib', 'HAL.dll'),
 			cb);
 		}
 	];
@@ -1505,6 +1507,27 @@ WindowsBuilder.prototype.generateI18N = function generateI18N(next) {
 };
 
 /**
+ * Generates the native type wrappers and adds them to the Visual Studio project.
+ *
+ * @param {Function} next - A function to call after the native types have been generated.
+ */
+WindowsBuilder.prototype.generateNativeWrappers = function generateNativeWrappers(next) {
+	// FIXME Walk the user's JS files to generate the listing of native types we need!
+	var seeds = [
+		"Windows.UI.Xaml.Window",
+		"Windows.UI.Colors",
+		"Windows.UI.Xaml.Media.SolidColorBrush",
+		"Windows.UI.Xaml.Controls.Canvas",
+		"Windows.UI.Xaml.Controls.TextBlock",
+		'Windows.UI.Xaml.Controls.Frame',
+		'Windows.UI.Xaml.Controls.Page'
+	];
+	this.logger.info(__('Generating Native Type Wrappers'));
+
+	nativeTypeGenerator.generate(path.join(this.buildDir, 'Native'), seeds, next);
+};
+
+/**
  * Generates a cmakelist to define what cmake is doing to generate the VS project.
  *
  * @param {Function} next - A function to call after generating the cmakelist.txt file.
@@ -1538,14 +1561,14 @@ WindowsBuilder.prototype.generateCmakeList = function generateCmakeList(next) {
 	// Recursively read all files under Assets and populate the cmake listing with it.
 	assetList = getFilesRecursive(this.buildTargetAssetsDir);
 	assetList = assetList.map(function(filename) {
-		return 'src/Assets/' + filename;  // cmake likes unix separators
+		return 'Assets/' + filename;  // cmake likes unix separators
 	});
 
 	// Generate source groups!
 	// go through the asset list, and basically generate a group for each folder
 	assetList.forEach(function (filepath) {
-		// lop off src/Assets/
-		var truncatedPath = filepath.substring(11);
+		// lop off Assets/
+		var truncatedPath = filepath.substring(7);
 		// drop the file basename?
 		var folderName = path.dirname(truncatedPath);
 		// now stick it in the mapping!

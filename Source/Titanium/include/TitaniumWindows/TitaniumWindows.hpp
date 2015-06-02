@@ -10,11 +10,12 @@
 #define _APPLICATION_TITANIUMWINDOWS_HPP_
 
 #include "Titanium/Titanium.hpp"
+#include "TitaniumWindows/TitaniumApplicationCallback.hpp"
+#include <unordered_map>
 
 namespace TitaniumWindows
 {
-public
-	ref class Application sealed : public Windows::UI::Xaml::Application
+	public ref class Application sealed : public Windows::UI::Xaml::Application
 	{
 	public:
 		Application();
@@ -23,6 +24,15 @@ public
 		virtual void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args) override;
 		void OnSuspending(Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ e);
 		void OnResuming(Object ^sender, Object ^args);
+
+		event TitaniumModulePreloadHandler^ TitaniumModulePreload;
+		event TitaniumModuleRequireHandler^ TitaniumModuleRequire;
+		event TitaniumModuleNamesHandler^   TitaniumModuleNames;
+
+		// Used just for saving reference to TitaniumWindows_Native::RequireHook to prevent from GC
+		void SaveRequireHook(Object^ requireHook) {
+			this->requireHook__ = requireHook;
+		}
 
 	private:
 
@@ -37,6 +47,8 @@ public
 		HAL::JSContextGroup js_context_group__;
 		HAL::JSContext js_context__;
 		std::shared_ptr<Titanium::Application> application__;
+
+		Object^ requireHook__;
 	};
 
 }  // namespace TitaniumWindows

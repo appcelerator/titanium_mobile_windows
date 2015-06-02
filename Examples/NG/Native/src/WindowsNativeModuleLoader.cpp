@@ -4,9 +4,9 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TitaniumWindows/WindowsNativeModuleLoader.hpp"
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/algorithm/string.hpp>
+#include "WindowsNativeModuleLoader.hpp"
+#include "Titanium/detail/TiBase.hpp"
+
 // INSERT_INCLUDES
 // END_INCLUDES
 
@@ -30,11 +30,14 @@ namespace TitaniumWindows
 		auto global = context.get_global_object();
 		// Split type/path by '.', then build up the namespaces!
 		JSObject current_object = global;
+
+		std::stringstream stream(name);
+		std::string segment;
 		std::vector<std::string> parts;
-#pragma warning(push)
-#pragma warning(disable:4996)
-		boost::split(parts, name, boost::is_any_of("."));
-#pragma warning(pop)
+		while(std::getline(stream, segment, '.'))
+		{
+		   parts.push_back(segment);
+		}
 		for (size_t i = 0, len = parts.size(); i < len - 1; i++) {
 			auto part = parts.at(i);
 
@@ -58,9 +61,8 @@ namespace TitaniumWindows
 		// END_ENUMS
 	}
 
-	bool WindowsNativeModuleLoader::registerNativeModule(const JSObject& parent, const std::string& path) const
+	JSValue WindowsNativeModuleLoader::registerNativeModule(const JSContext& context, const std::string& path) const
 	{
-		auto context = parent.get_context();
 		JSObject instantiated = context.CreateObject();
 		// TODO Use a std::map that we populate once and just check for a key with that name?
 		// INSERT_SWITCH
@@ -68,7 +70,8 @@ namespace TitaniumWindows
 
 		registerValue(context, path, instantiated);
 
-		return true;
+		return static_cast<JSValue>(instantiated);
 	}
+
 }  // namespace TitaniumWindows
 

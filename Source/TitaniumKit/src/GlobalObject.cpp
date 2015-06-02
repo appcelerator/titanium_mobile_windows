@@ -216,12 +216,26 @@ namespace Titanium
 		return modulePath;
 	}
 
-	JSValue GlobalObject::requireModule(const JSObject& parent, const std::string& moduleId)
+	bool GlobalObject::requiredNativeModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT
 	{
-		TITANIUM_GLOBALOBJECT_LOCK_GUARD;
+		return false;
+	}
 
-		const auto js_context = parent.get_context();
+	JSValue GlobalObject::requireNativeModule(const JSContext& js_context, const std::string& moduleId)
+	{
+		return js_context.CreateUndefined();
+	}
 
+	bool GlobalObject::requiredBuiltinModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT
+	{
+		if (moduleId == "ti.map") {
+			return true;
+		}
+		return false;
+	}
+
+	JSValue GlobalObject::requireBuiltinModule(const JSContext& js_context, const std::string& moduleId)
+	{
 		if (moduleId == "ti.map") {
 			JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
 			TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
@@ -229,8 +243,27 @@ namespace Titanium
 
 			JSValue Map_property = Titanium.GetProperty("Map");
 			TITANIUM_ASSERT(Map_property.IsObject());  // precondition
-			
+
 			return Map_property;
+		}
+
+		return js_context.CreateUndefined();
+	}
+
+	JSValue GlobalObject::requireModule(const JSObject& parent, const std::string& moduleId)
+	{
+		TITANIUM_GLOBALOBJECT_LOCK_GUARD;
+
+		const auto js_context = parent.get_context();
+
+		// check if we have special module such as ti.map
+		if (requiredBuiltinModuleExists(js_context, moduleId)) {
+			return requireBuiltinModule(js_context, moduleId);
+		}
+
+		// check if we have native module
+		if (requiredNativeModuleExists(js_context, moduleId)) {
+			return requireNativeModule(js_context, moduleId);
 		}
 
 		auto module_path = requestResolveModule(parent, moduleId);

@@ -7,7 +7,6 @@
  */
 
 #include "TitaniumWindows/TitaniumWindows.hpp"
-
 #include "TitaniumWindows/GlobalObject.hpp"
 #include "TitaniumWindows/UIModule.hpp"
 #include "TitaniumWindows/TiModule.hpp"
@@ -25,7 +24,6 @@
 #include "TitaniumWindows/File.hpp"
 #include "TitaniumWindows/HTTPClient.hpp"
 #include "TitaniumWindows/Media.hpp"
-#include "TitaniumWindows/WindowsNativeModuleLoader.hpp"
 
 #include <Windows.h>
 #include <collection.h>
@@ -92,12 +90,39 @@ namespace TitaniumWindows
 		                                                            .ScrollableViewObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::ScrollableView>::Class()))
 		                                                            .MediaObject(js_context__.CreateObject(JSExport<TitaniumWindows::MediaModule>::Class()))
 		                                                            .build());
+
+		const auto js_context_ref = reinterpret_cast<std::intptr_t>(static_cast<JSContextRef>(js_context__));
+		auto preloaded = TitaniumModulePreload(js_context_ref);
+		auto js_preloaded_modules = js_context__.CreateObject();
+		if (preloaded) {
+			js_preloaded_modules = JSObject(js_context__, reinterpret_cast<JSObjectRef>(TitaniumModulePreload(js_context_ref)));
+		}
+
+		// store all preloaded native modules
+		std::unordered_map<std::string, JSValue> preloaded_modules;
+		for (const auto& property_name : static_cast<std::vector<JSString>>(js_preloaded_modules.GetPropertyNames())) {
+			preloaded_modules.emplace(property_name, js_preloaded_modules.GetProperty(property_name));
+		}
+
+		// store all supported native module names
+		std::vector<std::string> native_module_names;
+		const auto rt_native_module_names = TitaniumModuleNames(js_context_ref);
+		if (rt_native_module_names) {
+			for (auto v : rt_native_module_names) {
+				native_module_names.push_back(TitaniumWindows::Utility::ConvertString(v));
+			}
+		}
+
+		// registerNativeModuleRequireHook will be called for "non-preloaded" modules
 		auto global = js_context__.get_global_object().GetPrivate<TitaniumWindows::GlobalObject>();
-		auto module_loader = new TitaniumWindows::WindowsNativeModuleLoader();
-		global->registerNativeModuleLoader(module_loader);
+		global->registerNativeModuleRequireHook(native_module_names, preloaded_modules, [js_context_ref, this](const std::string& moduleId) {
+			const auto js_value_ptr = TitaniumModuleRequire(js_context_ref, TitaniumWindows::Utility::ConvertString(moduleId));
+			auto result = JSValue(js_context__, reinterpret_cast<JSValueRef>(js_value_ptr));
+			return result;
+		});
 
 		Suspending += ref new Windows::UI::Xaml::SuspendingEventHandler(this, &Application::OnSuspending);
-		Resuming += ref new Windows::Foundation::EventHandler<::Platform::Object ^>(this, &Application::OnResuming);
+		Resuming += ref new Windows::Foundation::EventHandler<::Platform::Object^>(this, &Application::OnResuming);
 
 		// #if _DEBUG
 		//  if (IsDebuggerPresent()) {

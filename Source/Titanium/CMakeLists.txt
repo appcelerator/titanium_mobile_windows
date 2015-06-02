@@ -81,32 +81,10 @@ set(SOURCE_TitaniumWindows
   src/File.cpp
   include/TitaniumWindows/File.hpp
   include/TitaniumWindows/detail/TitaniumWindowsBase.hpp
-  include/TitaniumWindows/WindowsNativeModuleLoader.hpp
-  src/WindowsNativeModuleLoader.cpp
+  include/TitaniumWindows/TitaniumApplicationCallback.hpp
 )
 
-source_group(TitaniumWindows FILES ${SOURCE_TitaniumWindows})
-
-file(GLOB_RECURSE WINDOWS_WRAPPERS "src/Windows.*.cpp")
-file(GLOB_RECURSE WINDOWS_HEADERS "include/Windows.*.hpp")
-file(GLOB_RECURSE PLATFORM_WRAPPERS "src/Platform.*.cpp")
-file(GLOB_RECURSE PLATFORM_HEADERS "include/Platform.*.hpp")
-
-set(SOURCE_TitaniumWindows_Native
-${WINDOWS_WRAPPERS}
-${WINDOWS_HEADERS}
-${PLATFORM_WRAPPERS}
-${PLATFORM_HEADERS}
-  )
-
-source_group(TitaniumWindows\\\\Native FILES ${SOURCE_TitaniumWindows_Native})
-
-
-add_library(TitaniumWindows SHARED
-  ${SOURCE_TitaniumWindows}
-  ${SOURCE_TitaniumWindows_Native}
-  )
-
+add_library(TitaniumWindows SHARED ${SOURCE_TitaniumWindows})
 
 include(GenerateExportHeader)
 generate_export_header(TitaniumWindows)

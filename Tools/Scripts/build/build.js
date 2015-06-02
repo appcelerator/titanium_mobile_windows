@@ -210,13 +210,19 @@ async.series([
 	function (next) {
 		buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, 'Release', 'WindowsPhone', 'x86', next);
 	},
-	// TODO Maybe we can be more efficient by running the mocha tests here after we have enough of the libs to run the emulator.
-	// If they pass, keep building, otherwise exit early?
+	// TODO Do all these others async. Use async.parallel, and use non-sync versions of file ops!
 	function (next) {
-		buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, 'Release', 'WindowsPhone', 'ARM', next);
-	},
-	function (next) {
-		buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, 'Release', 'WindowsStore', 'x86', next);
+		console.log("Copying over include headers...");
+		wrench.copyDirSyncRecursive(path.join(rootDir, 'Source', 'HAL', 'include', 'HAL'), path.join(distLib, 'HAL', 'include', 'HAL'));
+		wrench.mkdirSyncRecursive(path.join(distLib, 'TitaniumKit', 'include', 'Titanium'));
+		wrench.copyDirSyncRecursive(path.join(rootDir, 'Source', 'Utility', 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows_Utility', 'include', 'TitaniumWindows'));
+		wrench.copyDirSyncRecursive(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'Titanium', 'detail'), path.join(distLib, 'TitaniumKit', 'include', 'Titanium', 'detail'));	
+		// Copy over the JSC headers to HAL!
+		wrench.copyDirSyncRecursive(path.join(process.env.JavaScriptCore_HOME, 'includes', 'JavaScriptCore'), path.join(distLib, 'HAL', 'include', 'JavaScriptCore'));
+		// Copy over TitaniumKit's Titanium/Module.hpp until we fix the wrappers to not use it!
+		fs.writeFileSync(path.join(distLib, 'TitaniumKit', 'include', 'Titanium', 'Module.hpp'), fs.readFileSync(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'Titanium', 'Module.hpp')));
+		
+		next();
 	},
 	function (next) {
 		console.log("Copying over package.json...");

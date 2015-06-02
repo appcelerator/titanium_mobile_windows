@@ -85,6 +85,11 @@ if (NOT TARGET HAL)
   add_subdirectory(${HAL_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/HAL EXCLUDE_FROM_ALL)
 endif()
 
+if(NOT TARGET TitaniumWindows_Native)
+  get_filename_component(Native_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Native ABSOLUTE)
+  add_subdirectory(${Native_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Native EXCLUDE_FROM_ALL)
+endif()
+
 # No user-servicable parts below this line.
 
 # Variable naming the built executable.
@@ -120,8 +125,9 @@ add_executable(${EXE_NAME} WIN32
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
-target_link_libraries(${EXE_NAME} TitaniumWindows)
+target_link_libraries(${EXE_NAME} TitaniumWindows TitaniumWindows_Native)
 
 target_include_directories(${EXE_NAME} PUBLIC
   $<TARGET_PROPERTY:TitaniumWindows,INTERFACE_INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:TitaniumWindows_Native,INTERFACE_INCLUDE_DIRECTORIES>
   )

@@ -51,6 +51,11 @@ find_package(TitaniumWindows_Utility REQUIRED)
 
 # No user-servicable parts below this line.
 
+if(NOT TARGET TitaniumWindows_Native)
+  get_filename_component(Native_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Native ABSOLUTE)
+  add_subdirectory(${Native_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Native EXCLUDE_FROM_ALL)
+endif()
+
 # Variable naming the built executable.
 set(EXE_NAME ${PROJECT_NAME})
 
@@ -62,17 +67,17 @@ set(PHONE_PRODUCT_ID "f0473be1-c557-4f98-a103-4ba9f453b5b0")
 
 # Generate the app manifest.
 configure_file(
-  src/Package.${PLATFORM}.appxmanifest.in
+  Package.${PLATFORM}.appxmanifest.in
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
   @ONLY)
 
 # Generate the list of assets!
 set(SOURCE_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
-  src/TitaniumKit.dll
-  src/HAL.dll
+  lib/TitaniumKit.dll
+  lib/HAL.dll
   # Include the "." assets here!
-<% for(var i=0; i<sourceGroups['.'].length; i++) { -%>
+<% for(var i = 0; i < sourceGroups['.'].length; i++) { -%>
   "<%= sourceGroups['.'][i] %>"
 <% } -%>
   )
@@ -81,12 +86,12 @@ set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 <% for(var key in sourceGroups) {%>
 <% if (key == '.') { continue; } -%>
 set(SOURCE_<%= key.replace(/\//g, '_') %>
-  <% for(var i=0; i<sourceGroups[key].length; i++) { -%>
+  <% for(var i = 0; i < sourceGroups[key].length; i++) { -%>
     "<%= sourceGroups[key][i] %>"
   <% } -%>
 )
 source_group("<%= key %>" FILES 
-  <% for(var i=0; i<sourceGroups[key].length; i++) { -%>
+  <% for(var i = 0; i < sourceGroups[key].length; i++) { -%>
     "<%= sourceGroups[key][i] %>"
   <% } -%>
 )
@@ -97,7 +102,7 @@ set_property(SOURCE ${SOURCE_<%= key.replace(/\//g, '_') %>} PROPERTY VS_DEPLOYM
 # Add all the files to the app
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
-  src/OutputDebugStringBuf.hpp
+  include/OutputDebugStringBuf.hpp
   ${SOURCE_Assets}
 <% for(var key in sourceGroups) { -%>
   <% if (key == '.') { continue; } -%>
@@ -120,8 +125,11 @@ target_link_libraries(${EXE_NAME} ${TitaniumWindows_LIBRARIES})
 target_link_libraries(${EXE_NAME} TitaniumKit)
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_UI_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_Utility_LIBRARIES})
+target_link_libraries(${EXE_NAME} TitaniumWindows_Native)
 
 target_include_directories(${EXE_NAME} PUBLIC
+  ${PROJECT_SOURCE_DIR}/include
+  $<TARGET_PROPERTY:TitaniumWindows_Native,INTERFACE_INCLUDE_DIRECTORIES>
   ${TitaniumWindows_Filesystem_INCLUDE_DIRS}
   ${TitaniumWindows_Global_INCLUDE_DIRS}
   $<TARGET_PROPERTY:HAL,INTERFACE_INCLUDE_DIRECTORIES>

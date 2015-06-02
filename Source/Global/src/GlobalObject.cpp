@@ -15,6 +15,41 @@
 
 namespace TitaniumWindows
 {
+	void GlobalObject::registerNativeModuleRequireHook(const std::vector<std::string>& native_module_names, const std::unordered_map<std::string, JSValue>& preloaded_modules, std::function<JSValue(const std::string&)> requireHook)
+	{
+		// store supported native module names
+		for (const auto v : native_module_names) {
+			native_module_names__.emplace(v, false);
+		}
+
+		// register preloaded modules
+		for (const auto v : preloaded_modules) {
+			native_module_cache__.emplace(v.first, v.second);
+			native_module_names__.emplace(v.first, true); // mark it as loaded
+		}
+
+		// register require callback
+		native_module_requireHook__ = requireHook;
+	}
+
+	bool GlobalObject::requiredNativeModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT
+	{
+		return native_module_names__.find(moduleId) != native_module_names__.end();
+	}
+
+	JSValue GlobalObject::requireNativeModule(const JSContext& js_context, const std::string& moduleId)
+	{
+		// if we already cached the module, just return the instance
+		if (native_module_cache__.find(moduleId) != native_module_cache__.end()) {
+			return native_module_cache__.at(moduleId);
+		}
+		// mark it as loaded
+		native_module_names__.emplace(moduleId, true);
+
+		// otherwise try to load dynamically
+		return native_module_requireHook__(moduleId);
+	}
+
 	static Platform::String^ resolve(const std::string& path) 
 	{
 		const auto newpath = TitaniumWindows::Utility::ConvertUTF8String(boost::algorithm::replace_all_copy(path, "/", "\\"));
@@ -26,26 +61,8 @@ namespace TitaniumWindows
 		return location + "\\" + newpath;
 	}
 
-	std::string GlobalObject::requestResolveModule(const JSObject& parent, const std::string& moduleId, const std::string& dirname)
-	{
-		auto result = Titanium::GlobalObject::requestResolveModule(parent, moduleId, dirname);
-		if (!result.empty()) {
-			return result;
-		}
-
-		// TODO Unable to find the module normally. Let's see if it's a native type, if so we can resolve it properly.
-		// Maybe we should use some special prefix/suffix for the native type so we can avoid clashes and denote it special so that below it's easier to know when we're explicitly loading up a native type?
-		if (moduleId.find("Windows.") == 0) {
-			return "native:" + moduleId;
-		}
-
-		return result;
-	}
-
 	bool GlobalObject::requiredModuleExists(const std::string& path) const TITANIUM_NOEXCEPT
 	{
-		// TODO If the name is a Windows type, return yes!
-		// How can we look up the types? i.e. Windows.Ui.Xaml.Controls.Page
 		auto module_path = resolve(path);
 		TITANIUM_LOG_DEBUG("GlobalObject::requiredModuleExists: ", TitaniumWindows::Utility::ConvertUTF8String(module_path));
 
@@ -65,22 +82,8 @@ namespace TitaniumWindows
 		return exists;
 	}
 
-	void GlobalObject::registerNativeModuleLoader(NativeModuleLoader* module_loader)
-	{
-		module_loader__ = module_loader;
-	}
-
 	std::string GlobalObject::readRequiredModule(const JSObject& parent, const std::string& path) const
 	{
-		if (path.find("native:") == 0) {
-			// Slice off "native:" and pass it along
-			auto class_name = path.substr(7);
-			auto created_object = module_loader__->registerNativeModule(parent, class_name);
-			
-			// TODO We know this got hooked on the global using the full name, so let's cheat and use that knowledge?
-			return "module.exports = " + class_name + ";";
-		}
-
 		auto module_path = resolve(path);
 		TITANIUM_LOG_DEBUG("GlobalObject::loadRequiredModule: module_path = ", TitaniumWindows::Utility::ConvertUTF8String(module_path));
 
@@ -209,4 +212,4 @@ namespace TitaniumWindows
 		TITANIUM_LOG_DEBUG("GlobalObject::ctor CallAsConstructor");
 	}
 
-}  // namespace TitaniumWindows {
+}  // namespace TitaniumWindows
