@@ -541,7 +541,7 @@ WindowsBuilder.prototype.validate = function validate(logger, config, cli) {
 			this.allowProfiling = true;
 			this.includeAllTiModules = true;
 			this.enableLogging = true;
-			this.buildConfiguration = 'Debug';
+			this.buildConfiguration = 'Release';
 	}
 
 	if (cli.argv['skip-js-minify']) {
@@ -1618,6 +1618,7 @@ WindowsBuilder.prototype.runCmake = function runCmake(next) {
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
 			'-DCMAKE_SYSTEM_VERSION=' + this.wpsdk,
+			'-DCMAKE_BUILD_TYPE=' + this.buildConfiguration,
 			this.buildDir
 		],
 		{
