@@ -506,7 +506,7 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ViewLayoutDelegate::set_height(height);
 			if (height == "auto") {
-				setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, Titanium::UI::Constants::to_string(get_autoLayoutForHeight()));
+				setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, Titanium::UI::Constants::to_string(get_autoLayoutForHeight()));
 			} else {
 				setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, height);
 			}
