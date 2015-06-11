@@ -35,6 +35,8 @@ namespace TitaniumWindows
 
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::FILL);
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
+			layoutDelegate__->set_autoLayoutForHeight(Titanium::UI::LAYOUT::FILL);
+			layoutDelegate__->set_autoLayoutForWidth(Titanium::UI::LAYOUT::FILL);
 
 			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(webview__);
 		}

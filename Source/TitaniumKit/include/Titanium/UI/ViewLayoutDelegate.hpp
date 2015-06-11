@@ -388,6 +388,14 @@ namespace Titanium
 			virtual void set_defaultHeight(const Titanium::UI::LAYOUT& defaultHeight) TITANIUM_NOEXCEPT;
 			virtual void set_defaultWidth(const Titanium::UI::LAYOUT& defaultWidth) TITANIUM_NOEXCEPT;
 
+			/*
+			 * getter/setter for layout policy when "auto" is set
+			 */
+			virtual Titanium::UI::LAYOUT get_autoLayoutForHeight() const TITANIUM_NOEXCEPT;
+			virtual Titanium::UI::LAYOUT get_autoLayoutForWidth() const TITANIUM_NOEXCEPT;
+			virtual void set_autoLayoutForHeight(const Titanium::UI::LAYOUT&) TITANIUM_NOEXCEPT;
+			virtual void set_autoLayoutForWidth(const Titanium::UI::LAYOUT&) TITANIUM_NOEXCEPT;
+
 			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT;
 			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT;
 
@@ -429,6 +437,9 @@ namespace Titanium
 
 			Titanium::UI::LAYOUT defaultWidth__;
 			Titanium::UI::LAYOUT defaultHeight__;
+
+			Titanium::UI::LAYOUT autoLayoutForWidth__;
+			Titanium::UI::LAYOUT autoLayoutForHeight__;
 
 			std::weak_ptr<ViewLayoutEventDelegate> event_delegate__;
 #pragma warning(pop)

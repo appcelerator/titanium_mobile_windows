@@ -488,7 +488,11 @@ namespace TitaniumWindows
 		void WindowsViewLayoutDelegate::set_width(const std::string& width) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_width(width);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, width);
+			if (width == "auto") {
+				setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, Titanium::UI::Constants::to_string(get_autoLayoutForWidth()));
+			} else {
+				setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, width);
+			}
 			is_width_size__ = layout_node__->properties.width.valueType == Titanium::LayoutEngine::ValueType::Size;
 		}
 
@@ -501,7 +505,11 @@ namespace TitaniumWindows
 		void WindowsViewLayoutDelegate::set_height(const std::string& height) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_height(height);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, height);
+			if (height == "auto") {
+				setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, Titanium::UI::Constants::to_string(get_autoLayoutForHeight()));
+			} else {
+				setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, height);
+			}
 			is_height_size__ = layout_node__->properties.height.valueType == Titanium::LayoutEngine::ValueType::Size;
 		}
 

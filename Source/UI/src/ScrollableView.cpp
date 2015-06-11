@@ -98,6 +98,8 @@ namespace TitaniumWindows
 
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::FILL);
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
+			layoutDelegate__->set_autoLayoutForHeight(Titanium::UI::LAYOUT::FILL);
+			layoutDelegate__->set_autoLayoutForWidth(Titanium::UI::LAYOUT::FILL);
 
 			auto layoutDelegate = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 			layoutDelegate->setComponent(scroll_viewer__);

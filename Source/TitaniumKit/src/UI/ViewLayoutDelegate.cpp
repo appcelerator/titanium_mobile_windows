@@ -20,7 +20,9 @@ namespace Titanium
 			touchEnabled__(true),
 			visible__(true),
 			defaultWidth__(Titanium::UI::LAYOUT::SIZE),
-			defaultHeight__(Titanium::UI::LAYOUT::SIZE)
+			defaultHeight__(Titanium::UI::LAYOUT::SIZE),
+			autoLayoutForHeight__(defaultHeight__),
+			autoLayoutForWidth__(defaultWidth__)
 		{
 
 		}
@@ -275,6 +277,26 @@ namespace Titanium
 		void ViewLayoutDelegate::set_defaultHeight(const Titanium::UI::LAYOUT& value) TITANIUM_NOEXCEPT
 		{
 			defaultHeight__ = value;
+		}
+
+		Titanium::UI::LAYOUT ViewLayoutDelegate::get_autoLayoutForWidth() const TITANIUM_NOEXCEPT
+		{
+			return autoLayoutForWidth__;
+		}
+
+		void ViewLayoutDelegate::set_autoLayoutForWidth(const Titanium::UI::LAYOUT& value) TITANIUM_NOEXCEPT
+		{
+			autoLayoutForWidth__ = value;
+		}
+
+		Titanium::UI::LAYOUT ViewLayoutDelegate::get_autoLayoutForHeight() const TITANIUM_NOEXCEPT
+		{
+			return autoLayoutForHeight__;
+		}
+
+		void ViewLayoutDelegate::set_autoLayoutForHeight(const Titanium::UI::LAYOUT& value) TITANIUM_NOEXCEPT
+		{
+			autoLayoutForHeight__ = value;
 		}
 
 		void ViewLayoutDelegate::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
