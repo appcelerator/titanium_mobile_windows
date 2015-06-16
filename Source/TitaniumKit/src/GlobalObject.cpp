@@ -228,25 +228,11 @@ namespace Titanium
 
 	bool GlobalObject::requiredBuiltinModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT
 	{
-		if (moduleId == "ti.map") {
-			return true;
-		}
 		return false;
 	}
 
 	JSValue GlobalObject::requireBuiltinModule(const JSContext& js_context, const std::string& moduleId)
 	{
-		if (moduleId == "ti.map") {
-			JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
-			TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-			JSObject Titanium = static_cast<JSObject>(Titanium_property);
-
-			JSValue Map_property = Titanium.GetProperty("Map");
-			TITANIUM_ASSERT(Map_property.IsObject());  // precondition
-
-			return Map_property;
-		}
-
 		return js_context.CreateUndefined();
 	}
 

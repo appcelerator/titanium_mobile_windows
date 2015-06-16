@@ -170,21 +170,6 @@ namespace Titanium
 		JSObject TableViewRowObject() const TITANIUM_NOEXCEPT;
 		ApplicationBuilder& TableViewRowObject(const JSObject&) TITANIUM_NOEXCEPT;
 
-		JSObject MapObject() const TITANIUM_NOEXCEPT;
-		ApplicationBuilder& MapObject(const JSObject&) TITANIUM_NOEXCEPT;
-
-		JSObject MapViewObject() const TITANIUM_NOEXCEPT;
-		ApplicationBuilder& MapViewObject(const JSObject&) TITANIUM_NOEXCEPT;
-			
-		JSObject MapAnnotationObject() const TITANIUM_NOEXCEPT;
-		ApplicationBuilder& MapAnnotationObject(const JSObject&) TITANIUM_NOEXCEPT;
-
-		JSObject MapCameraObject() const TITANIUM_NOEXCEPT;
-		ApplicationBuilder& MapCameraObject(const JSObject&) TITANIUM_NOEXCEPT;
-
-		JSObject MapRouteObject() const TITANIUM_NOEXCEPT;
-		ApplicationBuilder& MapRouteObject(const JSObject&) TITANIUM_NOEXCEPT;
-
 		JSObject ActivityIndicatorObject() const TITANIUM_NOEXCEPT;
 		ApplicationBuilder& ActivityIndicatorObject(const JSObject&) TITANIUM_NOEXCEPT;
 
@@ -266,11 +251,6 @@ namespace Titanium
 		JSObject tableview__;
 		JSObject tableviewsection__;
 		JSObject tableviewrow__;
-		JSObject map__;
-		JSObject mapAnnotation__;
-		JSObject mapCamera__;
-		JSObject mapRoute__;
-		JSObject mapView__;
 		JSObject activityIndicator__;
 		JSObject activityIndicatorStyle__;
 		JSObject optionDialog__;

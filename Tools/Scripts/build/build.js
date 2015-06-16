@@ -45,7 +45,6 @@ function runCMake(sourceDir, buildDir, buildType, platform, arch, callback) {
 			'-DTitaniumWindows_Sensors_DISABLE_TESTS=ON',
 			'-DTitaniumWindows_UI_DISABLE_TESTS=ON',
 			'-DTitaniumWindows_Utility_DISABLE_TESTS=ON',
-			'-DTitaniumWindows_Map_DISABLE_TESTS=ON',
 			'-DTitaniumWindows_Media_DISABLE_TESTS=ON',
 			'-DHAL_DISABLE_TESTS=ON',
 			'-DTitaniumKit_DISABLE_TESTS=ON',
@@ -79,7 +78,7 @@ function runCMake(sourceDir, buildDir, buildType, platform, arch, callback) {
  */
 function runMSBuild(slnFile, buildType, arch, callback) {
 	var prc,
-		args = ['/p:Configuration=' + buildType];
+		args = ['/p:Configuration=' + buildType, '/m'];
 		if ('ARM' == arch) {
 			args.unshift('/p:Platform=ARM');
 		}
@@ -118,13 +117,12 @@ function copyToDistribution(sourceDir, destDir, buildType, platform, arch, callb
 			'TitaniumWindows_Global': 'Global',
 			'HAL': 'Filesystem\\TitaniumKit\\HAL',
 			'LayoutEngine': 'LayoutEngine',
-			'TitaniumWindows_Map': 'Map',
 			'TitaniumWindows_Media': 'Media',
 			'TitaniumWindows_Network': 'Network',
 			'TitaniumWindows_Ti': 'Ti',
 			'TitaniumWindows': '',
 			'TitaniumKit': 'Filesystem\\TitaniumKit',
-			'TitaniumWindows_UI': 'Map\\UI',
+			'TitaniumWindows_UI': 'UI',
 			'TitaniumWindows_Utility': 'Filesystem\\Utility',
 		},
 		libDestDir,
@@ -222,14 +220,18 @@ async.series([
 	function (next) {
 		console.log("Copying over include headers...");
 		wrench.copyDirSyncRecursive(path.join(rootDir, 'Source', 'HAL', 'include', 'HAL'), path.join(distLib, 'HAL', 'include', 'HAL'));
-		wrench.mkdirSyncRecursive(path.join(distLib, 'TitaniumKit', 'include', 'Titanium'));
+		//wrench.mkdirSyncRecursive(path.join(distLib, 'TitaniumKit', 'include', 'Titanium'));
 		wrench.copyDirSyncRecursive(path.join(rootDir, 'Source', 'Utility', 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows_Utility', 'include', 'TitaniumWindows'));
-		wrench.copyDirSyncRecursive(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'Titanium', 'detail'), path.join(distLib, 'TitaniumKit', 'include', 'Titanium', 'detail'));	
+		wrench.copyDirSyncRecursive(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'Titanium'), path.join(distLib, 'TitaniumKit', 'include', 'Titanium'));	
+		wrench.copyDirSyncRecursive(path.join(rootDir, 'Source', 'UI', 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows_UI', 'include', 'TitaniumWindows'));
+		wrench.copyDirSyncRecursive(path.join(rootDir, 'Source', 'LayoutEngine', 'include', 'LayoutEngine'), path.join(distLib, 'LayoutEngine', 'include', 'LayoutEngine'));
 		// Copy over the JSC headers to HAL!
 		wrench.copyDirSyncRecursive(path.join(process.env.JavaScriptCore_HOME, 'includes', 'JavaScriptCore'), path.join(distLib, 'HAL', 'include', 'JavaScriptCore'));
 		// Copy over TitaniumKit's Titanium/Module.hpp until we fix the wrappers to not use it!
 		fs.writeFileSync(path.join(distLib, 'TitaniumKit', 'include', 'Titanium', 'Module.hpp'), fs.readFileSync(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'Titanium', 'Module.hpp')));
-		
+		// Copy over TitaniumKit's sqlite3.h and stdafx.h
+		fs.writeFileSync(path.join(distLib, 'TitaniumKit', 'include', 'sqlite3.h'), fs.readFileSync(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'sqlite3.h')));
+		fs.writeFileSync(path.join(distLib, 'TitaniumKit', 'include', 'stdafx.h'), fs.readFileSync(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'stdafx.h')));
 		next();
 	},
 	function (next) {

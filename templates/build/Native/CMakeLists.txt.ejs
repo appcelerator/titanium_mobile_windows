@@ -29,6 +29,12 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 get_filename_component(APPCELERATOR_CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake ABSOLUTE)
 list(INSERT CMAKE_MODULE_PATH 0 ${APPCELERATOR_CMAKE_MODULE_PATH})
 
+# Boost
+set(Boost_USE_STATIC_LIBS ON )
+set(Boost_USE_MULTITHREADED ON )
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.55.0 REQUIRED)
+
 # Define helper functions and macros.
 include(${APPCELERATOR_CMAKE_MODULE_PATH}/internal_utils.cmake)
 
@@ -60,7 +66,6 @@ target_link_libraries(TitaniumWindows_Native ${TitaniumWindows_Filesystem_LIBRAR
 target_link_libraries(TitaniumWindows_Native ${TitaniumWindows_Global_LIBRARIES})
 target_link_libraries(TitaniumWindows_Native HAL)
 target_link_libraries(TitaniumWindows_Native ${LayoutEngine_LIBRARIES})
-target_link_libraries(TitaniumWindows_Native ${TitaniumWindows_Map_LIBRARIES})
 target_link_libraries(TitaniumWindows_Native ${TitaniumWindows_Media_LIBRARIES})
 target_link_libraries(TitaniumWindows_Native ${TitaniumWindows_Network_LIBRARIES})
 target_link_libraries(TitaniumWindows_Native ${TitaniumWindows_Sensors_LIBRARIES})
@@ -80,7 +85,6 @@ target_include_directories(TitaniumWindows_Native PUBLIC
   ${TitaniumWindows_Global_INCLUDE_DIRS}
   $<TARGET_PROPERTY:HAL,INTERFACE_INCLUDE_DIRECTORIES>
   ${LayoutEngine_INCLUDE_DIRS}
-  ${TitaniumWindows_Map_INCLUDE_DIRS}
   ${TitaniumWindows_Media_INCLUDE_DIRS}
   ${TitaniumWindows_Network_INCLUDE_DIRS}
   ${TitaniumWindows_Sensors_INCLUDE_DIRS}
@@ -89,6 +93,7 @@ target_include_directories(TitaniumWindows_Native PUBLIC
   $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
   ${TitaniumWindows_UI_INCLUDE_DIRS}
   ${TitaniumWindows_Utility_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
   $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
 <% for(var i = 0; i < native_modules.length; i++) { -%>
   $<TARGET_PROPERTY:<%= native_modules[i].projectname %>,INTERFACE_INCLUDE_DIRECTORIES>

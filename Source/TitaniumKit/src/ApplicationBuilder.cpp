@@ -24,7 +24,6 @@
 #include "Titanium/NetworkModule.hpp"
 #include "Titanium/MediaModule.hpp"
 #include "Titanium/XML.hpp"
-#include "Titanium/MapModule.hpp"
 
 namespace Titanium
 {
@@ -77,11 +76,6 @@ namespace Titanium
 		  sound__(js_context__.CreateObject(JSExport<Titanium::Media::Sound>::Class())),
 		  videoplayer__(js_context__.CreateObject(JSExport<Titanium::Media::VideoPlayer>::Class())),
 		  xml__(js_context__.CreateObject(JSExport<Titanium::XML>::Class())),
-		  map__(js_context__.CreateObject(JSExport<Titanium::MapModule>::Class())),
-		  mapAnnotation__(js_context__.CreateObject(JSExport<Titanium::Map::Annotation>::Class())),
-		  mapCamera__(js_context__.CreateObject(JSExport<Titanium::Map::Camera>::Class())),
-		  mapRoute__(js_context__.CreateObject(JSExport<Titanium::Map::Route>::Class())),
-		  mapView__(js_context__.CreateObject(JSExport<Titanium::Map::View>::Class())),
 		  tableview__(js_context__.CreateObject(JSExport<Titanium::UI::TableView>::Class())),
 		  tableviewsection__(js_context__.CreateObject(JSExport<Titanium::UI::TableViewSection>::Class())),
 		  tableviewrow__(js_context__.CreateObject(JSExport<Titanium::UI::TableViewRow>::Class())),
@@ -161,12 +155,6 @@ namespace Titanium
 
 		titanium.SetProperty("Media", media__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 
-		// Map
-		titanium.SetProperty("Map", map__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-		map__.SetProperty("Annotation", mapAnnotation__, { JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete });
-		map__.SetProperty("Camera", mapCamera__, { JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete });
-		map__.SetProperty("Route", mapRoute__, { JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete });
-		map__.SetProperty("View", mapView__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 		// XML
 		titanium.SetProperty("XML", xml__, { JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete });
 
@@ -733,61 +721,6 @@ JSString builtin_functions_script = R"js(
 	ApplicationBuilder& ApplicationBuilder::TableViewRowObject(const JSObject& TableViewRow) TITANIUM_NOEXCEPT
 	{
 		tableviewrow__ = TableViewRow;
-		return *this;
-	}
-
-	JSObject ApplicationBuilder::MapObject() const TITANIUM_NOEXCEPT
-	{
-		return map__;
-	}
-
-	ApplicationBuilder& ApplicationBuilder::MapObject(const JSObject& Map) TITANIUM_NOEXCEPT
-	{
-		map__ = Map;
-		return *this;
-	}
-
-	JSObject ApplicationBuilder::MapAnnotationObject() const TITANIUM_NOEXCEPT
-	{
-		return mapAnnotation__;
-	}
-
-	ApplicationBuilder& ApplicationBuilder::MapAnnotationObject(const JSObject& mapAnnotation) TITANIUM_NOEXCEPT
-	{
-		mapAnnotation__ = mapAnnotation;
-		return *this;
-	}
-
-	JSObject ApplicationBuilder::MapCameraObject() const TITANIUM_NOEXCEPT
-	{
-		return mapCamera__;
-	}
-
-	ApplicationBuilder& ApplicationBuilder::MapCameraObject(const JSObject& mapCamera) TITANIUM_NOEXCEPT
-	{
-		mapCamera__ = mapCamera;
-		return *this;
-	}
-
-	JSObject ApplicationBuilder::MapRouteObject() const TITANIUM_NOEXCEPT
-	{
-		return mapRoute__;
-	}
-
-	ApplicationBuilder& ApplicationBuilder::MapRouteObject(const JSObject& mapRoute) TITANIUM_NOEXCEPT
-	{
-		mapRoute__ = mapRoute;
-		return *this;
-	}
-
-	JSObject ApplicationBuilder::MapViewObject() const TITANIUM_NOEXCEPT
-	{
-		return mapView__;
-	}
-
-	ApplicationBuilder& ApplicationBuilder::MapViewObject(const JSObject& mapView) TITANIUM_NOEXCEPT
-	{
-		mapView__ = mapView;
 		return *this;
 	}
 

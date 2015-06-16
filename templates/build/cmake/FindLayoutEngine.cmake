@@ -62,7 +62,7 @@ if(CMAKE_GENERATOR MATCHES "^Visual Studio .+ ARM$")
 endif()
 
 # Create imported target LayoutEngine
-add_library(LayoutEngine STATIC IMPORTED)
+add_library(LayoutEngine SHARED IMPORTED)
 
 set_target_properties(LayoutEngine PROPERTIES
   COMPATIBLE_INTERFACE_STRING "LayoutEngine_MAJOR_VERSION"

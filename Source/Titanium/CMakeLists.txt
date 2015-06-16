@@ -41,7 +41,6 @@ get_filename_component(Filesystem_SOURCE_DIR        ${PROJECT_SOURCE_DIR}/../Fil
 get_filename_component(Global_SOURCE_DIR            ${PROJECT_SOURCE_DIR}/../Global            ABSOLUTE)
 get_filename_component(HAL_SOURCE_DIR               ${PROJECT_SOURCE_DIR}/../HAL               ABSOLUTE)
 get_filename_component(LayoutEngine_SOURCE_DIR      ${PROJECT_SOURCE_DIR}/../LayoutEngine      ABSOLUTE)
-get_filename_component(Map_SOURCE_DIR               ${PROJECT_SOURCE_DIR}/../Map               ABSOLUTE)
 get_filename_component(Media_SOURCE_DIR             ${PROJECT_SOURCE_DIR}/../Media             ABSOLUTE)
 get_filename_component(Network_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../Network           ABSOLUTE)
 get_filename_component(Sensors_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../Sensors           ABSOLUTE)
@@ -58,7 +57,6 @@ endif()
 if (NOT TARGET LayoutEngine)
   add_subdirectory(${LayoutEngine_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/LayoutEngine EXCLUDE_FROM_ALL)
 endif()
-add_subdirectory(${Map_SOURCE_DIR}           ${CMAKE_CURRENT_BINARY_DIR}/Map           EXCLUDE_FROM_ALL)
 add_subdirectory(${Media_SOURCE_DIR}         ${CMAKE_CURRENT_BINARY_DIR}/Media         EXCLUDE_FROM_ALL)
 add_subdirectory(${Network_SOURCE_DIR}       ${CMAKE_CURRENT_BINARY_DIR}/Network       EXCLUDE_FROM_ALL)
 add_subdirectory(${Sensors_SOURCE_DIR}       ${CMAKE_CURRENT_BINARY_DIR}/Sensors       EXCLUDE_FROM_ALL)
@@ -95,7 +93,6 @@ target_link_libraries(TitaniumWindows
   TitaniumWindows_Global
   HAL
   LayoutEngine
-  TitaniumWindows_Map
   TitaniumWindows_Media
   TitaniumWindows_Network
   TitaniumWindows_Sensors
@@ -111,7 +108,6 @@ target_include_directories(TitaniumWindows PUBLIC
   $<TARGET_PROPERTY:TitaniumWindows_Global,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:HAL,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:LayoutEngine,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:TitaniumWindows_Map,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:TitaniumWindows_Media,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:TitaniumWindows_Network,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:TitaniumWindows_Sensors,INTERFACE_INCLUDE_DIRECTORIES> 

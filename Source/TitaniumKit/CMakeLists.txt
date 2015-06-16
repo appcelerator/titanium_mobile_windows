@@ -314,27 +314,6 @@ set(SOURCE_XML
   src/XML.cpp
 )
 
-set(SOURCE_Map
-  include/Titanium/MapModule.hpp
-  src/MapModule.cpp
-  include/Titanium/Map/Constants.hpp
-  src/Map/Constants.cpp
-  include/Titanium/Map/View.hpp
-  src/Map/View.cpp
-  include/Titanium/Map/Annotation.hpp
-  src/Map/Annotation.cpp
-  include/Titanium/Map/Camera.hpp
-  src/Map/Camera.cpp
-  include/Titanium/Map/Route.hpp
-  src/Map/Route.cpp
-  include/Titanium/Map/MapRegionTypev2.hpp
-  src/Map/MapRegionTypev2.cpp
-  include/Titanium/Map/MapLocationTypev2.hpp
-  src/Map/MapLocationTypev2.cpp
-  include/Titanium/Map/CameraAnimationParams.hpp
-  src/Map/CameraAnimationParams.cpp
-)
-
 set(SOURCE_Utils
   include/Titanium/Utils.hpp
   src/Utils.cpp
@@ -363,7 +342,6 @@ source_group(TitaniumKit\\Network          FILES ${SOURCE_Network})
 source_group(TitaniumKit\\Media            FILES ${SOURCE_Media})
 source_group(TitaniumKit\\Analytics        FILES ${SOURCE_Analytics})
 source_group(TitaniumKit\\XML              FILES ${SOURCE_XML})
-source_group(TitaniumKit\\Map              FILES ${SOURCE_Map})
 source_group(TitaniumKit\\Utils            FILES ${SOURCE_Utils})
 source_group(TitaniumKit\\Geolocation      FILES ${SOURCE_Geolocation})
 source_group(TitaniumKit\\UI               FILES ${SOURCE_UI})
@@ -392,7 +370,6 @@ set(SOURCE_ALL_EXCEPT_DATABASE
   ${SOURCE_Utils}
   ${SOURCE_Switch}
   ${SOURCE_UI}
-  ${SOURCE_Map}
   ${SOURCE_Geolocation}
   ${SOURCE_TiLogger_detail}
 )

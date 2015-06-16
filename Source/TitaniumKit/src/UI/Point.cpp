@@ -13,7 +13,7 @@ namespace Titanium
 	{
 		using namespace HAL;
 
-		Point js_to_Point(const JSObject& object)
+		TITANIUMKIT_EXPORT Point js_to_Point(const JSObject& object)
 		{
 			Point point;
 			if (object.HasProperty("x")) {
@@ -25,7 +25,7 @@ namespace Titanium
 			return point;
 		};
 
-		JSObject Point_to_js(const JSContext& js_context, const Point& point)
+		TITANIUMKIT_EXPORT JSObject Point_to_js(const JSContext& js_context, const Point& point)
 		{
 			auto object = js_context.CreateObject();
 			object.SetProperty("x", js_context.CreateNumber(point.x));

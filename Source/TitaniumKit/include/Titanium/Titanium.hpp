@@ -31,6 +31,5 @@
 #include "Titanium/MediaModule.hpp"
 #include "Titanium/NetworkModule.hpp"
 #include "Titanium/XML.hpp"
-#include "Titanium/MapModule.hpp"
 
 #endif  // _TITANIUM_HPP_

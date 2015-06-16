@@ -5,16 +5,17 @@
 * Licensed under the terms of the Apache Public License.
 * Please see the LICENSE included with this distribution for details.
 */
-#include "RequireHook.hpp"
-#include "TitaniumWindows/Utility.hpp"
-#include "HAL/HAL.hpp"
-#include <collection.h>
 
 //// NATIVE_MODULE_INCLUDES START
 <% for(var i=0; i<native_module_includes.length; i++) { -%>
 #include "<%= native_module_includes[i] %>"
 <% } -%>
 //// NATIVE_MODULE_INCLUDES END
+
+#include "RequireHook.hpp"
+#include "TitaniumWindows/Utility.hpp"
+#include "HAL/HAL.hpp"
+#include <collection.h>
 
 namespace TitaniumWindows_Native
 {

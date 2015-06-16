@@ -144,12 +144,12 @@ WindowsModuleBuilder.prototype.loginfo = function loginfo(next) {
 WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 	var _t = this;
 
-	function build(sln, config, arch, next) {
+	function build(sln, config, arch, cb) {
 		// user may skip specific architecture by using CLI.
 		// at least we are skipping WindowsStore.ARM for now
 		if (!fs.existsSync(sln)) {
 			_t.logger.info('Skipping ' + sln);
-			next();
+			cb();
 			return;
 		}
 		var p = spawn(_t.windowsInfo.selectedVisualStudio.vcvarsall, [
@@ -165,7 +165,7 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 			if (code != 0) {
 				process.exit(code);
 			}
-			next();
+			cb();
 		});
 	}
 
@@ -240,12 +240,19 @@ WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
 	wrench.mkdirSyncRecursive(moduleDir);
 
 	// copy necesary folders and files
-	wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'documentation'), path.join(moduleDir, 'documenation'));
-	wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'example'), path.join(moduleDir, 'example'));
-	wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'assets'), path.join(moduleDir, 'assets'));
-	wrench.copyDirSyncRecursive(path.join(this.projectDir, 'include'), path.join(moduleDir, 'include'));
+	if (fs.existsSync(path.join(this.projectDir, '..', 'documentation'))) {
+		wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'documentation'), path.join(moduleDir, 'documenation'));
+		wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'example'), path.join(moduleDir, 'example'));
+		wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'assets'), path.join(moduleDir, 'assets'));
+		fs.createReadStream(path.join(this.projectDir, '..', 'LICENSE')).pipe(fs.createWriteStream(path.join(moduleDir, 'LICENSE')));
 
-	fs.createReadStream(path.join(this.projectDir, '..', 'LICENSE')).pipe(fs.createWriteStream(path.join(moduleDir, 'LICENSE')));
+	} else if (fs.existsSync(path.join(this.projectDir, 'documentation'))) {
+		wrench.copyDirSyncRecursive(path.join(this.projectDir, 'documentation'), path.join(moduleDir, 'documenation'));
+		wrench.copyDirSyncRecursive(path.join(this.projectDir, 'example'), path.join(moduleDir, 'example'));
+		wrench.copyDirSyncRecursive(path.join(this.projectDir, 'assets'), path.join(moduleDir, 'assets'));
+		fs.createReadStream(path.join(this.projectDir, 'LICENSE')).pipe(fs.createWriteStream(path.join(moduleDir, 'LICENSE')));
+	}
+	wrench.copyDirSyncRecursive(path.join(this.projectDir, 'include'), path.join(moduleDir, 'include'));
 	fs.createReadStream(path.join(this.projectDir, 'manifest')).pipe(fs.createWriteStream(path.join(moduleDir, 'manifest')));
 	fs.createReadStream(path.join(this.projectDir, 'timodule.xml')).pipe(fs.createWriteStream(path.join(moduleDir, 'timodule.xml')));
 

@@ -19,7 +19,6 @@
 #include "TitaniumWindows/Accelerometer.hpp"
 #include "TitaniumWindows/Filesystem.hpp"
 #include "TitaniumWindows/Network.hpp"
-#include "TitaniumWindows/Map.hpp"
 #include "TitaniumWindows/Blob.hpp"
 #include "TitaniumWindows/File.hpp"
 #include "TitaniumWindows/HTTPClient.hpp"
@@ -83,8 +82,6 @@ namespace TitaniumWindows
 		                                                            .NetworkObject(js_context__.CreateObject(JSExport<TitaniumWindows::NetworkModule>::Class()))
 		                                                            .HTTPClientObject(js_context__.CreateObject(JSExport<TitaniumWindows::Network::HTTPClient>::Class()))
 		                                                            .WebViewObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::WebView>::Class()))
-		                                                            .MapViewObject(js_context__.CreateObject(JSExport<TitaniumWindows::Map::View>::Class()))
-		                                                            .MapAnnotationObject(js_context__.CreateObject(JSExport<TitaniumWindows::Map::Annotation>::Class()))
 		                                                            .TableViewObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::TableView>::Class()))
 		                                                            .TableViewRowObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::TableViewRow>::Class()))
 		                                                            .ActivityIndicatorObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::ActivityIndicator>::Class()))
