@@ -12,18 +12,21 @@ describe('Titanium', function () {
         should(Ti.version).be.a.String;
         should(Ti.getVersion).be.a.Function;
         should(Ti.getVersion()).be.a.String;
+        should(Ti.version).not.eql('__TITANIUM_VERSION__');
         finish();
     });
     it('buildDate', function (finish) {
         should(Ti.buildDate).be.a.String;
         should(Ti.getBuildDate).be.a.Function;
         should(Ti.getBuildDate()).be.a.String;
+        should(Ti.buildDate).not.eql('__TITANIUM_BUILD_DATE__');
         finish();
     });
     it('buildHash', function (finish) {
         should(Ti.buildHash).be.a.String;
         should(Ti.getBuildHash).be.a.Function;
         should(Ti.getBuildHash()).be.a.String;
+        should(Ti.buildHash).not.eql('__TITANIUM_BUILD_HASH__');
         finish();
     });
     it('userAgent', function (finish) {
