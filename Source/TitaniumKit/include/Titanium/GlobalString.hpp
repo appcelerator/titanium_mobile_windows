@@ -43,6 +43,8 @@ namespace Titanium
 #endif
 
 		static void JSExportInitialize();
+
+		static JSObject GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
 		
 		TITANIUM_FUNCTION_DEF(formatCurrency);
 		TITANIUM_FUNCTION_DEF(formatDate);

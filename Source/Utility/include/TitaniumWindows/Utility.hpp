@@ -19,6 +19,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cstdint>
+#include "HAL/HAL.hpp"
 
 #define EPOCH_BIAS 116444736000000000 // Number of 100 nanosecond units from 1/1/1601 (windows epoch) to 1/1/1970 (unix epoch)
 
@@ -141,6 +142,14 @@ namespace TitaniumWindows
 			long long intervals = d.UniversalTime - EPOCH_BIAS; // this gives us number of 100 nanosecond intervals since unix epoch
 			long long milliseconds = intervals / 10000; // convert 100 nanosecond intervals to milliseconds
 			return std::chrono::milliseconds(milliseconds); // wrap in data type
+		}
+
+		static Windows::Foundation::DateTime GetDateTime(const HAL::JSValue& dateObject) 
+		{
+			Windows::Foundation::DateTime date;
+			const auto intervals = static_cast<std::uint64_t>(static_cast<double>(dateObject)) * 10000;
+			date.UniversalTime = intervals + EPOCH_BIAS;
+			return date;
 		}
 
 	}  // namespace Utility

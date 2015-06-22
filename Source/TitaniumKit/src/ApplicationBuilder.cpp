@@ -174,7 +174,10 @@ namespace Titanium
 		// XML
 		titanium.SetProperty("XML", xml__, { JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete });
 
-		// Global.String
+		// Titanium.String keeps a reference to Global.String module
+		titanium.SetProperty("String", global_string__, { JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete });
+
+		// Attach all Ti.String properties onto global String
 		auto stringObj = static_cast<JSObject>(global_object__.GetProperty("String"));
 		for (const auto& property_name : static_cast<std::vector<JSString>>(global_string__.GetPropertyNames())) {
 			stringObj.SetProperty(property_name, global_string__.GetProperty(property_name));
@@ -220,6 +223,17 @@ namespace Titanium
 	ApplicationBuilder& ApplicationBuilder::TiObject(const JSObject& ti) TITANIUM_NOEXCEPT
 	{
 		ti__ = ti;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::GlobalString() const TITANIUM_NOEXCEPT
+	{
+		return global_string__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::GlobalString(const JSObject& global_string) TITANIUM_NOEXCEPT
+	{
+		global_string__ = global_string;
 		return *this;
 	}
 

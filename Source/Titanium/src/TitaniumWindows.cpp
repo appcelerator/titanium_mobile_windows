@@ -8,6 +8,7 @@
 
 #include "TitaniumWindows/TitaniumWindows.hpp"
 #include "TitaniumWindows/GlobalObject.hpp"
+#include "TitaniumWindows/GlobalString.hpp"
 #include "TitaniumWindows/UIModule.hpp"
 #include "TitaniumWindows/TiModule.hpp"
 #include "TitaniumWindows/API.hpp"
@@ -55,6 +56,7 @@ namespace TitaniumWindows
 	{
 		application__ = std::make_shared<Titanium::Application>(Titanium::ApplicationBuilder(js_context__)
 		                                                            .TiObject(js_context__.CreateObject(JSExport<TitaniumWindows::TiModule>::Class()))
+		                                                            .GlobalString(js_context__.CreateObject(JSExport<TitaniumWindows::GlobalString>::Class()))
 		                                                            .UIObject(js_context__.CreateObject(JSExport<TitaniumWindows::UIModule>::Class()))
 		                                                            .APIObject(js_context__.CreateObject(JSExport<TitaniumWindows::API>::Class()))
 		                                                            .AppObject(js_context__.CreateObject(JSExport<TitaniumWindows::AppModule>::Class()))

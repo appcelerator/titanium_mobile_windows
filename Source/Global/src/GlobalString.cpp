@@ -8,6 +8,7 @@
 
 #include "TitaniumWindows/GlobalString.hpp"
 #include "Titanium/detail/TiBase.hpp"
+#include "TitaniumWindows/Utility.hpp"
 
 namespace TitaniumWindows
 {
@@ -26,26 +27,43 @@ namespace TitaniumWindows
 
 	std::string GlobalString::formatCurrency(double value) TITANIUM_NOEXCEPT
 	{
-		TITANIUM_LOG_ERROR("GlobalString::formatCurrency: Unimplemented");
-		return std::to_string(value);
+		const auto userCurrency = Windows::System::UserProfile::GlobalizationPreferences::Currencies->First()->Current;
+		const auto formatter = ref new Windows::Globalization::NumberFormatting::CurrencyFormatter(userCurrency);
+
+		return TitaniumWindows::Utility::ConvertString(formatter->Format(value));
 	}
 
-	std::string GlobalString::formatDate(JSObject date, std::string format) TITANIUM_NOEXCEPT
+	std::string GlobalString::formatDate(JSObject dateObject, std::string format) TITANIUM_NOEXCEPT
 	{
-		TITANIUM_LOG_ERROR("GlobalString::formatDate: Unimplemented");
-		return static_cast<std::string>(static_cast<JSValue>(date));
+		using namespace Windows::Globalization::DateTimeFormatting;
+		DateTimeFormatter^ formatter;
+		if (format == "short") {
+			formatter = ref new DateTimeFormatter("shortdate");
+		} else {
+			formatter = ref new DateTimeFormatter("longdate");
+		}
+		const auto date = TitaniumWindows::Utility::GetDateTime(dateObject);
+		return TitaniumWindows::Utility::ConvertString(formatter->Format(date));
 	}
 
 	std::string GlobalString::formatDecimal(double value, std::string locale, std::string pattern) TITANIUM_NOEXCEPT
 	{
-		TITANIUM_LOG_ERROR("GlobalString::formatDecimal: Unimplemented");
-		return std::to_string(value);
+		// TODO: support locale and pattern
+		const auto formatter = ref new Windows::Globalization::NumberFormatting::DecimalFormatter();
+		return TitaniumWindows::Utility::ConvertString(formatter->FormatDouble(value));
 	}
 
-	std::string GlobalString::formatTime(JSObject date, std::string format) TITANIUM_NOEXCEPT
+	std::string GlobalString::formatTime(JSObject dateObject, std::string format) TITANIUM_NOEXCEPT
 	{
-		TITANIUM_LOG_ERROR("GlobalString::formatTime: Unimplemented");
-		return static_cast<std::string>(static_cast<JSValue>(date));
+		using namespace Windows::Globalization::DateTimeFormatting;
+		DateTimeFormatter^ formatter;
+		if (format == "short") {
+			formatter = ref new DateTimeFormatter("shorttime");
+		} else {
+			formatter = ref new DateTimeFormatter("longtime");
+		}
+		const auto date = TitaniumWindows::Utility::GetDateTime(dateObject);
+		return TitaniumWindows::Utility::ConvertString(formatter->Format(date));
 	}
 
 }  // namespace TitaniumWindows
