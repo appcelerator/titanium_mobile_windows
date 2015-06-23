@@ -9,7 +9,7 @@
 #ifndef _TITANIUM_TIUTIL_HPP_
 #define _TITANIUM_TIUTIL_HPP_
 
-#include "Titanium/detail/TiBase.hpp"
+#include "TitaniumKit_EXPORT.h"
 
 #include <string>
 

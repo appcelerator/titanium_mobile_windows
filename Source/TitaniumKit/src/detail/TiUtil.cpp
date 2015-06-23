@@ -7,9 +7,8 @@
  */
 
 #include "Titanium/detail/TiUtil.hpp"
+#include "Titanium/detail/TiLogger.hpp"
 
-#include <algorithm>
-#include <sstream>
 #include <stdexcept>
 
 namespace Titanium

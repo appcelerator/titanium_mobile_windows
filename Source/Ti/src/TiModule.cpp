@@ -16,12 +16,17 @@ namespace TitaniumWindows
 	{
 		TITANIUM_LOG_DEBUG("TitaniumWindows::TiModule::ctor");
 		setUserAgent("__TITANIUM_USER_AGENT__");
-		version__ = loadVersion("__TITANIUM_VERSION__");
 	}
 
 	TiModule::~TiModule()
 	{
 		TITANIUM_LOG_DEBUG("TitaniumWindows::TiModule::dtor");
+	}
+
+	void TiModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
+	{
+		Titanium::TiModule::postCallAsConstructor(js_context, arguments);
+		version__ = loadVersion(js_context, "__TITANIUM_VERSION__");
 	}
 
 	void TiModule::JSExportInitialize()
@@ -30,31 +35,31 @@ namespace TitaniumWindows
 		JSExport<TiModule>::SetParent(JSExport<Titanium::TiModule>::Class());
 	}
 
-	std::string TiModule::loadVersion(const std::string& defaultValue)
+	std::string TiModule::loadVersion(const JSContext& context, const std::string& defaultValue)
 	{
 		// FIXME Code copied from AppModule!!!
 		// Statically create json JSValue to load _app_info_.json once
-		static JSValue json = get_context().CreateUndefined();
+		static JSValue json = context.CreateUndefined();
 
 		// Statically create loadJson javascript function
-		static JSFunction loadJson = get_context().CreateFunction(
+		static JSFunction loadJson = context.CreateFunction(
 			"var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory+Ti.Filesystem.separator+'_app_info_.json');"
 			"if (file.exists()) return JSON.parse(file.read().text);"
 			);
 
 		// Statically create readJson javascript function
-		static JSFunction readJson = get_context().CreateFunction(
+		static JSFunction readJson = context.CreateFunction(
 			"if (json != undefined && property in json) return json[property];"
 			"return null;",
 			{ "json", "property" }
 		);
 
 		// Load _app_info_.json
-		if (json.IsUndefined()) json = loadJson(get_context().get_global_object());
+		if (json.IsUndefined()) json = loadJson(context.get_global_object());
 
 		// Read property
-		std::vector<JSValue> args = { json, get_context().CreateString("sdkVersion") };
-		auto result = readJson(args, get_context().get_global_object());
+		std::vector<JSValue> args = { json, context.CreateString("sdkVersion") };
+		auto result = readJson(args, context.get_global_object());
 
 		// Return property value if it exists
 		if (!result.IsNull()) {

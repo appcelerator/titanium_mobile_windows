@@ -32,6 +32,7 @@ namespace TitaniumWindows
 		TiModule& operator=(TiModule&&) = default;
 #endif
 
+		virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override final;
 		static void JSExportInitialize();
 
 	protected:
@@ -40,7 +41,7 @@ namespace TitaniumWindows
 		virtual std::string buildHash() const TITANIUM_NOEXCEPT override final;
 
 	private:
-		std::string loadVersion(const std::string&);
+		std::string loadVersion(const JSContext&, const std::string&);
 #pragma warning(push)
 #pragma warning(disable : 4251)
 		std::string version__;
