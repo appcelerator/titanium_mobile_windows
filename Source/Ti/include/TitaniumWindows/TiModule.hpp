@@ -40,6 +40,7 @@ namespace TitaniumWindows
 		virtual std::string buildHash() const TITANIUM_NOEXCEPT override final;
 
 	private:
+		std::string loadVersion(const std::string&);
 #pragma warning(push)
 #pragma warning(disable : 4251)
 		std::string version__;
