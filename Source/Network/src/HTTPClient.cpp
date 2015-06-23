@@ -193,7 +193,12 @@ namespace TitaniumWindows
 					if (!disposed__ && httpClient__) {
 						onreadystatechange(readyState__);
 
-						onload(0, "Response has been loaded.", true);
+						if (status__ >= 400 && status__ <= 599) {
+       						onerror(status__, "HTTP Error", false);
+       					} else {
+       						onload(0, "Response has been loaded.", true);
+       					}
+
 						onsendstream(1.0);
 						ondatastream(1.0);
 					}

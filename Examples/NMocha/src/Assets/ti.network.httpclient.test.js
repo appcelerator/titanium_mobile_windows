@@ -45,6 +45,24 @@ describe("Titanium.Network.HTTPClient", function () {
         xhr.send();
     });
 
+    it("TIMOB-19042", function (finish) {
+        this.timeout(6e4);
+
+        var xhr = Ti.Network.createHTTPClient();
+        xhr.setTimeout(6e4);
+
+        xhr.onload = function (e) {
+            finish(new Error("onload shouldn't fire for an URL returning 404"));
+        };
+        xhr.onerror = function (e) {
+            should(e.code).eql(404);
+            finish();
+        };
+
+        xhr.open("GET", "http://www.httpbin.org/gert"); // BAD URL, should get 404
+        xhr.send();
+    });
+
     // https://appcelerator.lighthouseapp.com/projects/32238/tickets/2156-android-invalid-redirect-alert-on-xhr-file-download
     // https://appcelerator.lighthouseapp.com/projects/32238/tickets/1381-android-buffer-large-xhr-downloads
     it("largeFileWithRedirect", function (finish) {
