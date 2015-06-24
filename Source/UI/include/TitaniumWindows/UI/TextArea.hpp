@@ -9,7 +9,8 @@
 #ifndef _TITANIUMWINDOWS_TEXTAREA_HPP_
 #define _TITANIUMWINDOWS_TEXTAREA_HPP_
 
-#include "TitaniumWindows/UI/detail/UIBase.hpp"
+#include "TitaniumWindows_UI_EXPORT.h"
+#include "Titanium/UI/TextArea.hpp"
 
 namespace TitaniumWindows
 {

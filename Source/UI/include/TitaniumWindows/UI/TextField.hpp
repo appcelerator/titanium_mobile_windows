@@ -9,7 +9,8 @@
 #ifndef _TITANIUMWINDOWS_UI_TEXTFIELD_HPP_
 #define _TITANIUMWINDOWS_UI_TEXTFIELD_HPP_
 
-#include "TitaniumWindows/UI/detail/UIBase.hpp"
+#include "TitaniumWindows_UI_EXPORT.h"
+#include "Titanium/UI/TextField.hpp"
 
 namespace TitaniumWindows
 {

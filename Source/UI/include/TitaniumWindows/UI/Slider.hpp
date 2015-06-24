@@ -9,7 +9,8 @@
 #ifndef _TITANIUMWINDOWS_UI_SLIDER_HPP_
 #define _TITANIUMWINDOWS_UI_SLIDER_HPP_
 
-#include "TitaniumWindows/UI/detail/UIBase.hpp"
+#include "TitaniumWindows_UI_EXPORT.h"
+#include "Titanium/UI/Slider.hpp"
 
 namespace TitaniumWindows
 {

@@ -7,8 +7,6 @@
 #ifndef _TITANIUM_FILESYSTEM_HPP_
 #define _TITANIUM_FILESYSTEM_HPP_
 
-#include "Titanium/Module.hpp"
-#include "Titanium/Filesystem/Constants.hpp"
 #include "Titanium/Filesystem/File.hpp"
 #include "Titanium/Filesystem/FileStream.hpp"
 

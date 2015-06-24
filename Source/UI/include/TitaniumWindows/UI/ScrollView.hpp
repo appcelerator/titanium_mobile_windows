@@ -9,7 +9,8 @@
 #ifndef _TITANIUMWINDOWS_UI_SCROLLVIEW_HPP_
 #define _TITANIUMWINDOWS_UI_SCROLLVIEW_HPP_
 
-#include "TitaniumWindows/UI/detail/UIBase.hpp"
+#include "TitaniumWindows_UI_EXPORT.h"
+#include "Titanium/UI/ScrollView.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 
 namespace TitaniumWindows

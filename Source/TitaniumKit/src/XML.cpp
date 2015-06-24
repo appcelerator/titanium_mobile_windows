@@ -95,16 +95,6 @@ this.exports.serializeToString = function(_xml) {
 		return false;
 	}
 
-	JSObject XML::getParseStringFunction() const TITANIUM_NOEXCEPT
-	{
-		return func_parseString__;
-	}
-
-	JSObject XML::getSerializeToStringFunction() const TITANIUM_NOEXCEPT
-	{
-		return func_serializeToString__;
-	}
-
 	TITANIUM_FUNCTION(XML, parseString)
 	{
 		const auto js_context = this_object.get_context();
@@ -114,7 +104,7 @@ this.exports.serializeToString = function(_xml) {
 		const auto loaded = object_ptr->loadJS();
 
 		if (loaded && arguments.size() > 0) {
-			return object_ptr->getParseStringFunction()(arguments, ti_xml__);
+			return object_ptr->func_parseString__(arguments, this_object);
 		} else {
 			TITANIUM_LOG_ERROR("Failed to execute XML.parseString");
 			return get_context().CreateNull();
@@ -130,7 +120,7 @@ this.exports.serializeToString = function(_xml) {
 		const auto loaded = object_ptr->loadJS();
 
 		if (loaded && arguments.size() > 0) {
-			return object_ptr->getSerializeToStringFunction()(arguments, ti_xml__);
+			return object_ptr->func_serializeToString__(arguments, ti_xml__);
 		} else {
 			TITANIUM_LOG_ERROR("Failed to execute XML.serializeToString");
 			return get_context().CreateNull();

@@ -40,9 +40,6 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(parseString);
 		TITANIUM_FUNCTION_DEF(serializeToString);
 
-		JSObject getParseStringFunction() const TITANIUM_NOEXCEPT;
-		JSObject getSerializeToStringFunction() const TITANIUM_NOEXCEPT;
-
 	private:
 		JSObject ti_xml__;
 		JSObject func_parseString__;

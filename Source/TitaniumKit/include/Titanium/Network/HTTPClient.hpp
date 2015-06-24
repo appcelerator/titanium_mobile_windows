@@ -400,7 +400,6 @@ namespace Titanium
 			std::string password__;
 			RequestState readyState__;
 			std::vector<std::uint8_t> responseData__;
-			JSValue responseXML__;
 			JSValue securityManager__;
 			std::uint32_t status__;
 			std::string statusText__;

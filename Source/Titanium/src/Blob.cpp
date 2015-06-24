@@ -5,10 +5,7 @@
  */
 
 #include "TitaniumWindows/Blob.hpp"
-#include "Titanium/detail/TiBase.hpp"
-#include <iostream>
-#include <objbase.h>
-#include "TitaniumWindows/File.hpp"
+#include "TitaniumWindows/Utility.hpp"
 #include <boost/algorithm/string/predicate.hpp>
 
 namespace TitaniumWindows

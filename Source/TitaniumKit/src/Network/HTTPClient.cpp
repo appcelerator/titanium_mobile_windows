@@ -23,7 +23,6 @@ namespace Titanium
 			, loading__(js_context.CreateNumber(static_cast<uint32_t>(RequestState::Loading)))
 			, opened__(js_context.CreateNumber(static_cast<uint32_t>(RequestState::Opened)))
 			, unsent__(js_context.CreateNumber(static_cast<uint32_t>(RequestState::Unsent)))
-			, responseXML__(js_context.CreateNull())
 			, securityManager__(js_context.CreateNull())
 			, status__(200)
 			, readyState__(RequestState::Unsent)
@@ -57,7 +56,6 @@ namespace Titanium
 			auto data = get_responseData();
 			return std::string(data.begin(), data.end());
 		}
-
 
 		std::string HTTPClient::get_statusText() const TITANIUM_NOEXCEPT
 		{
@@ -355,7 +353,24 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(HTTPClient, responseXML)
 		{
-			return responseXML__;
+			auto text = js_get_responseText();
+			if (text.IsNull()) {
+				return text;
+			}
+
+			auto global_object = get_context().get_global_object();
+
+			auto ti = global_object.GetProperty("Titanium");
+			auto Titanium = static_cast<JSObject>(ti);
+			auto xml = Titanium.GetProperty("XML");
+			auto XML = static_cast<JSObject>(xml);
+
+			auto parseString = XML.GetProperty("parseString");
+			auto parseStringObject = static_cast<JSObject>(parseString);
+			std::vector<JSValue> arguments = { text };
+			auto result = parseStringObject(arguments, global_object);
+
+			return result;
 		}
 
 		TITANIUM_FUNCTION(HTTPClient, getResponseXML)

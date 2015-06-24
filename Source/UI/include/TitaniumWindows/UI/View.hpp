@@ -9,7 +9,8 @@
 #ifndef _TITANIUMWINDOWS_UI_VIEW_HPP_
 #define _TITANIUMWINDOWS_UI_VIEW_HPP_
 
-#include "TitaniumWindows/UI/detail/UIBase.hpp"
+#include "TitaniumWindows_UI_EXPORT.h"
+#include "Titanium/UI/View.hpp"
 
 namespace TitaniumWindows
 {

@@ -7,6 +7,26 @@
 var should = require('./should');
 
 describe("Titanium.Network.HTTPClient", function () {
+    it("responseXML", function (finish) {
+        this.timeout(6e4);
+
+        var xhr = Ti.Network.createHTTPClient();
+        xhr.setTimeout(6e4);
+
+        xhr.onload = function (e) {
+            should(xhr.responseXML === null).be.false;
+            should(xhr.responseXML.nodeType).eql(9); // DOCUMENT_NODE
+            finish();
+        };
+        xhr.onerror = function (e) {
+            Ti.API.debug(e);
+            finish(new Error('failed to retrieve RSS feed: ' + e));
+        };
+
+        xhr.open("GET", "http://www.appcelerator.com/feed");
+        xhr.send();
+    });
+
     // Test for TIMOB-4513
     it.skip("secureValidateProperty", function (finish) {
         var xhr = Ti.Network.createHTTPClient();

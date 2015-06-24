@@ -9,8 +9,8 @@
 #ifndef _TITANIUMWINDOWS_EMAILDIALOG_HPP_
 #define _TITANIUMWINDOWS_EMAILDIALOG_HPP_
 
-#include "TitaniumWindows/UI/detail/UIBase.hpp"
-#include <vector>
+#include "TitaniumWindows_UI_EXPORT.h"
+#include "Titanium/UI/EmailDialog.hpp"
 #include <Windows.h>
 
 namespace TitaniumWindows

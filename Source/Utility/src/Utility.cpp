@@ -8,7 +8,6 @@
  */
 
 #include "TitaniumWindows/Utility.hpp"
-#include "Titanium/detail/TiBase.hpp"
 
 namespace TitaniumWindows
 {

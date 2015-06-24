@@ -5,7 +5,6 @@
  */
 
 #include "TitaniumWindows/Filesystem.hpp"
-#include "Titanium/detail/TiBase.hpp"
 #include <iostream>
 #include <objbase.h>
 #include "TitaniumWindows/Utility.hpp"

@@ -9,7 +9,7 @@
 #ifndef _TITANIUMWINDOWS_PROGRESSBAR_HPP_
 #define _TITANIUMWINDOWS_PROGRESSBAR_HPP_
 
-#include "TitaniumWindows/UI/detail/UIBase.hpp"
+#include "TitaniumWindows_UI_EXPORT.h"
 #include "Titanium/UI/ProgressBar.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 

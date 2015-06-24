@@ -47,7 +47,6 @@ endif()
 
 set(SOURCE_Filesystem
   include/TitaniumWindows/Filesystem.hpp
-  include/TitaniumWindows/detail/FilesystemBase.hpp
   src/Filesystem.cpp
   )
 

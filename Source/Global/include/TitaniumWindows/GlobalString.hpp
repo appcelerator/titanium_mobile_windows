@@ -9,7 +9,7 @@
 #ifndef _TITANIUMWINDOWS_GLOBALSTRING_HPP_
 #define _TITANIUMWINDOWS_GLOBALSTRING_HPP_
 
-#include "TitaniumWindows/detail/GlobalBase.hpp"
+#include "TitaniumWindows_Global_EXPORT.h"
 #include "Titanium/GlobalString.hpp"
 
 namespace TitaniumWindows

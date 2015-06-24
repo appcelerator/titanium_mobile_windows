@@ -22,7 +22,6 @@
 #include "TitaniumWindows/Map.hpp"
 #include "TitaniumWindows/Blob.hpp"
 #include "TitaniumWindows/File.hpp"
-#include "TitaniumWindows/HTTPClient.hpp"
 #include "TitaniumWindows/Media.hpp"
 #include "TitaniumWindows/Geolocation.hpp"
 #include "TitaniumWindows/Locale.hpp"

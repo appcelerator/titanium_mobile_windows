@@ -9,7 +9,8 @@
 #ifndef _TITANIUMWINDOWS_GLOBALOBJECT_HPP_
 #define _TITANIUMWINDOWS_GLOBALOBJECT_HPP_
 
-#include "TitaniumWindows/detail/GlobalBase.hpp"
+#include "TitaniumWindows_Global_EXPORT.h"
+#include "Titanium/GlobalObject.hpp"
 
 namespace TitaniumWindows
 {
