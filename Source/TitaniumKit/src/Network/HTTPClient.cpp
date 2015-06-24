@@ -458,11 +458,10 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_SETTER(HTTPClient, ondatastream)
 		{
-			using namespace std::placeholders;
-
-			ondatastream__ = argument;
+			ondatastream__ = argument; // allow setting to null/undefined
 
 			if (ondatastream__.IsObject() && static_cast<JSObject>(ondatastream__).IsFunction()) {
+				using namespace std::placeholders;
 				datastream.connect(std::bind(&HTTPClient::ondatastream, this, _1));
 			}
 
@@ -479,11 +478,10 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_SETTER(HTTPClient, onerror)
 		{
-			using namespace std::placeholders;
-
-			onerror__ = argument;
+			onerror__ = argument; // allow setting to null/undefined
 
 			if (onerror__.IsObject() && static_cast<JSObject>(onerror__).IsFunction()) {
+				using namespace std::placeholders;
 				error.connect(std::bind(&HTTPClient::onerror, this, _1, _2, _3));
 			}
 
@@ -500,11 +498,11 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_SETTER(HTTPClient, onload)
 		{
-			using namespace std::placeholders;
-
-			onload__ = argument;
+			onload__ = argument; // allow setting to null/undefined
 
 			if (onload__.IsObject() && static_cast<JSObject>(onload__).IsFunction()) {
+				using namespace std::placeholders;
+				// TODO Only connect if no slots yet!
 				loaded.connect(std::bind(&HTTPClient::onload, this, _1, _2, _3));
 			}
 
@@ -521,11 +519,10 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_SETTER(HTTPClient, onreadystatechange)
 		{
-			using namespace std::placeholders;
-
-			onreadystatechange__ = argument;
+			onreadystatechange__ = argument; // allow setting to null/undefined
 
 			if (onreadystatechange__.IsObject() && static_cast<JSObject>(onreadystatechange__).IsFunction()) {
+				using namespace std::placeholders;
 				readystatechange.connect(std::bind(&HTTPClient::onreadystatechange, this, _1));
 			}
 
@@ -542,11 +539,10 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_SETTER(HTTPClient, onsendstream)
 		{
-			using namespace std::placeholders;
-
-			onsendstream__ = argument;
+			onsendstream__ = argument; // allow setting to null/undefined
 
 			if (onsendstream__.IsObject() && static_cast<JSObject>(onsendstream__).IsFunction()) {
+				using namespace std::placeholders;
 				sendstream.connect(std::bind(&HTTPClient::onsendstream, this, _1));
 			}
 
