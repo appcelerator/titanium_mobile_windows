@@ -51,6 +51,7 @@
 #endif
 
 #include "TitaniumKit_EXPORT.h"
+#include "Titanium/detail/TiImpl.hpp"
 #include "HAL/HAL.hpp"
 
 // For defining the bridge function for a function property exposed on JS Object (hpp)
