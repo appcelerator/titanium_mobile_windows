@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cctype>
 #include <collection.h>
+#include <Windows.h>
 
 #include "TitaniumWindows/Utility.hpp"
 
@@ -831,7 +832,17 @@ namespace TitaniumWindows
 				prop.value = "UI.FILL";
 			}
 
-			auto ppi = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->LogicalDpi;
+			auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
+			// FIXME We should look at _what_ property is and determine if it's vertical or horizontal to know
+			// if we should use x or y dpi - since they _can_ differ. On emulators I've seen them be 365 and 366, so typically it's unusual to have wildly different scaling
+			auto dpiX = info->RawDpiX;
+			//auto dpiY = info->RawDpiY;
+			auto rppp = info->RawPixelsPerViewPixel;
+			auto ppi = dpiX / rppp;
+#else
+			auto ppi = info->LogicalDpi;
+#endif
 			Titanium::LayoutEngine::populateLayoutPoperties(prop, &layout_node__->properties, ppi);
 
 			if (isLoaded()) {
