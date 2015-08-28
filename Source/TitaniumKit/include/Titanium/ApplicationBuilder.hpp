@@ -101,6 +101,15 @@ namespace Titanium
 		JSObject CodecObject() const TITANIUM_NOEXCEPT;
 		ApplicationBuilder& CodecObject(const JSObject&) TITANIUM_NOEXCEPT;
 
+		JSObject ContactsObject() const TITANIUM_NOEXCEPT;
+		ApplicationBuilder& ContactsObject(const JSObject&) TITANIUM_NOEXCEPT;
+
+		JSObject GroupObject() const TITANIUM_NOEXCEPT;
+		ApplicationBuilder& GroupObject(const JSObject&) TITANIUM_NOEXCEPT;
+
+		JSObject PersonObject() const TITANIUM_NOEXCEPT;
+		ApplicationBuilder& PersonObject(const JSObject&) TITANIUM_NOEXCEPT;
+
 		JSObject ViewObject() const TITANIUM_NOEXCEPT;
 		ApplicationBuilder& ViewObject(const JSObject&) TITANIUM_NOEXCEPT;
 
@@ -266,6 +275,9 @@ namespace Titanium
 		JSObject bufferstream__;
 		JSObject blobstream__;
 		JSObject buffer__;
+		JSObject person__;
+		JSObject group__;
+		JSObject contacts__;
 		JSObject clipboard__;
 		JSObject textarea__;
 		JSObject notification__;

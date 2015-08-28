@@ -11,6 +11,9 @@
 #include "Titanium/ApplicationBuilder.hpp"
 #include "TitaniumWindows/TiModule.hpp"
 #include "TitaniumWindows/UIModule.hpp"
+#include "TitaniumWindows/Contacts/Person.hpp"
+#include "TitaniumWindows/Contacts/Group.hpp"
+#include "TitaniumWindows/Contacts.hpp"
 #include "TitaniumWindows/UI/Clipboard.hpp"
 #include "TitaniumWindows/API.hpp"
 #include "TitaniumWindows/AppModule.hpp"
@@ -112,6 +115,9 @@ namespace TitaniumWindows
 		                                                            .GeolocationObject(js_context__.CreateObject(JSExport<TitaniumWindows::Geolocation>::Class()))
 		                                                            .AccelerometerObject(js_context__.CreateObject(JSExport<TitaniumWindows::Accelerometer>::Class()))
 		                                                            .ViewObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::View>::Class()))
+		                                                            .PersonObject(js_context__.CreateObject(JSExport<TitaniumWindows::Contacts::Person>::Class()))
+		                                                            .GroupObject(js_context__.CreateObject(JSExport<TitaniumWindows::Contacts::Group>::Class()))
+		                                                            .ContactsObject(js_context__.CreateObject(JSExport<TitaniumWindows::ContactsModule>::Class()))
 		                                                            .ClipboardObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::Clipboard>::Class()))
 		                                                            .TextAreaObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::TextArea>::Class()))
 		                                                            .NotificationObject(js_context__.CreateObject(JSExport<TitaniumWindows::UI::Notification>::Class()))
