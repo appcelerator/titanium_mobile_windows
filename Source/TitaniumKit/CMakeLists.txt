@@ -386,6 +386,35 @@ set(SOURCE_Geolocation
   src/Geolocation/Constants.cpp
 )
 
+set(SOURCE_Contacts
+  include/Titanium/Contacts.hpp
+  src/Contacts.cpp
+  include/Titanium/Contacts/Group.hpp
+  src/Contacts/Group.cpp
+  include/Titanium/Contacts/Person.hpp
+  src/Contacts/Person.cpp
+  include/Titanium/Contacts/Constants.hpp
+  src/Contacts/Constants.cpp
+  include/Titanium/Contacts/ShowContactsParams.hpp
+  src/Contacts/ShowContactsParams.cpp
+  include/Titanium/Contacts/Addresses.hpp
+  src/Contacts/Addresses.cpp
+  include/Titanium/Contacts/AlternateBirthday.hpp
+  src/Contacts/AlternateBirthday.cpp
+  include/Titanium/Contacts/Dates.hpp
+  src/Contacts/Dates.cpp
+  include/Titanium/Contacts/Emails.hpp
+  src/Contacts/Emails.cpp
+  include/Titanium/Contacts/InstantMessages.hpp
+  src/Contacts/InstantMessages.cpp
+  include/Titanium/Contacts/Phones.hpp
+  src/Contacts/Phones.cpp
+  include/Titanium/Contacts/RelatedNames.hpp
+  src/Contacts/RelatedNames.cpp
+  include/Titanium/Contacts/Urls.hpp
+  src/Contacts/Urls.cpp
+)
+
 source_group(TitaniumKit                   FILES ${SOURCE_TitaniumKit})
 source_group(TitaniumKit\\detail           FILES ${SOURCE_TitaniumKit_detail})
 source_group(TitaniumKit\\Ti               FILES ${SOURCE_Ti})
@@ -408,6 +437,7 @@ source_group(TitaniumKit\\XML              FILES ${SOURCE_XML})
 source_group(TitaniumKit\\Map              FILES ${SOURCE_Map})
 source_group(TitaniumKit\\Utils            FILES ${SOURCE_Utils})
 source_group(TitaniumKit\\Geolocation      FILES ${SOURCE_Geolocation})
+source_group(TitaniumKit\\Contacts         FILES ${SOURCE_Contacts})
 source_group(TitaniumKit\\UI               FILES ${SOURCE_UI})
 source_group(TitaniumKit\\TiLogger\\detail FILES ${SOURCE_TiLogger_detail})
 
@@ -436,6 +466,7 @@ set(SOURCE_ALL_EXCEPT_DATABASE
   ${SOURCE_XML}
   ${SOURCE_Utils}
   ${SOURCE_Switch}
+  ${SOURCE_Contacts}
   ${SOURCE_UI}
   ${SOURCE_Map}
   ${SOURCE_Geolocation}

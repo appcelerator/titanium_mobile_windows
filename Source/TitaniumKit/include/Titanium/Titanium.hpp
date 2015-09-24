@@ -13,11 +13,11 @@
 
 #include "Titanium/ApplicationBuilder.hpp"
 #include "Titanium/Application.hpp"
-
 #include "Titanium/GlobalObject.hpp"
 #include "Titanium/TiModule.hpp"
 #include "Titanium/API.hpp"
 #include "Titanium/UIModule.hpp"
+#include "Titanium/Contacts.hpp"
 #include "Titanium/GeolocationModule.hpp"
 #include "Titanium/Utils.hpp"
 #include "Titanium/App.hpp"

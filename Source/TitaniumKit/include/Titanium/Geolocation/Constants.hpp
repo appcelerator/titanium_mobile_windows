@@ -96,11 +96,10 @@ namespace std
 		}
 	};
 
-	using Titanium::Geolocation::AUTHORIZATION;
 	template <>
-	struct hash<AUTHORIZATION>
+	struct hash<Titanium::Geolocation::AUTHORIZATION>
 	{
-		using argument_type = AUTHORIZATION;
+		using argument_type = Titanium::Geolocation::AUTHORIZATION;
 		using result_type = std::size_t;
 		using underlying_type = std::underlying_type<argument_type>::type;
 		std::hash<underlying_type> hash_function = std::hash<underlying_type>();

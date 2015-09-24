@@ -80,6 +80,15 @@ set(SOURCE_Platform
   src/DisplayCaps.cpp
   )
 
+set(SOURCE_Contacts
+  include/TitaniumWindows/Contacts.hpp
+  include/TitaniumWindows/Contacts/Group.hpp
+  include/TitaniumWindows/Contacts/Person.hpp
+  src/Contacts.cpp
+  src/Contacts/Person.cpp
+  src/Contacts/Group.cpp
+  )
+
 set(SOURCE_Utils
   include/TitaniumWindows/Utils.hpp
   src/Utils.cpp
@@ -91,6 +100,7 @@ source_group(Titanium\\API FILES ${SOURCE_API})
 source_group(Titanium\\App FILES ${SOURCE_App})
 source_group(Titanium\\Locale FILES ${SOURCE_Locale})
 source_group(Titanium\\Platform FILES ${SOURCE_Platform})
+source_group(Titanium\\Contacts FILES ${SOURCE_Contacts})
 source_group(Titanium\\Utils FILES ${SOURCE_Utils})
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -103,6 +113,7 @@ add_library(TitaniumWindows_Ti SHARED
   ${SOURCE_App}
   ${SOURCE_Locale}
   ${SOURCE_Platform}
+  ${SOURCE_Contacts}
   ${SOURCE_Utils}
   )
 

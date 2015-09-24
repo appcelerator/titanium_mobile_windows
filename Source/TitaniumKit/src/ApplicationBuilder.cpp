@@ -14,6 +14,9 @@
 #include "Titanium/TiModule.hpp"
 #include "Titanium/UIModule.hpp"
 #include "Titanium/Codec.hpp"
+#include "Titanium/Contacts/Person.hpp"
+#include "Titanium/Contacts/Group.hpp"
+#include "Titanium/Contacts.hpp"
 #include "Titanium/UI/Clipboard.hpp"
 #include "Titanium/API.hpp"
 #include "Titanium/Locale.hpp"
@@ -100,6 +103,9 @@ namespace Titanium
 		  locale__(js_context__.CreateObject(JSExport<Titanium::Locale>::Class())),
 		  view__(js_context__.CreateObject(JSExport<Titanium::UI::View>::Class())),
 		  codec__(js_context__.CreateObject(JSExport<Titanium::Codec::CodecModule>::Class())),
+	      person__(js_context__.CreateObject(JSExport<Titanium::Contacts::Person>::Class())),
+	      group__(js_context__.CreateObject(JSExport<Titanium::Contacts::Group>::Class())),
+	      contacts__(js_context__.CreateObject(JSExport<Titanium::ContactsModule>::Class())),
 		  clipboard__(js_context__.CreateObject(JSExport<Titanium::UI::Clipboard>::Class())),
 		  textarea__(js_context__.CreateObject(JSExport<Titanium::UI::TextArea>::Class())),
 		  notification__(js_context__.CreateObject(JSExport<Titanium::UI::Notification>::Class())),
@@ -261,7 +267,10 @@ namespace Titanium
 		// Locale
 		titanium.SetProperty("Locale", locale__, { JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete });
 
-		JSString builtin_functions_script = R"js(
+		titanium.SetProperty("Contacts", contacts__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+		contacts__.SetProperty("Group", group__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+		contacts__.SetProperty("Person", person__, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
+JSString builtin_functions_script = R"js(
 			  console = {};
 			  console.log   = Ti.API.info;
 			  console.info  = Ti.API.info;
@@ -560,6 +569,39 @@ namespace Titanium
 	ApplicationBuilder& ApplicationBuilder::CodecObject(const JSObject& codec) TITANIUM_NOEXCEPT
 	{
 		codec__ = codec;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::ContactsObject() const TITANIUM_NOEXCEPT
+	{
+		return contacts__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::ContactsObject(const JSObject& Contacts) TITANIUM_NOEXCEPT
+	{
+		contacts__ = Contacts;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::GroupObject() const TITANIUM_NOEXCEPT
+	{
+		return group__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::GroupObject(const JSObject& Group) TITANIUM_NOEXCEPT
+	{
+		group__ = Group;
+		return *this;
+	}
+
+	JSObject ApplicationBuilder::PersonObject() const TITANIUM_NOEXCEPT
+	{
+		return person__;
+	}
+
+	ApplicationBuilder& ApplicationBuilder::PersonObject(const JSObject& Person) TITANIUM_NOEXCEPT
+	{
+		person__ = Person;
 		return *this;
 	}
 
