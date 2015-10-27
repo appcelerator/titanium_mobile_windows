@@ -240,54 +240,71 @@ function outputJUnitXML(jsonResults, next) {
 	next();
 }
 
-async.series([
-	function (next) {
-		// If this is already installed we don't re-install, thankfully
-		console.log("Installing SDK from master branch");
-		installSDK(next);
-	},
-	function (next) {
-		getSDKInstallDir(next);
-	},
-	function (next) {
-		console.log("Copying built Windows SDK into master SDK");
-		copyWindowsIntoSDK(sdkPath, next);
-	},
-	function (next) {
-		if (hadWindowsSDK) {
-			next();
-		} else {
-			addWindowsToSDKManifest(sdkPath, next);
-		}
-	},
-	function (next) {
-		console.log("Generating Windows project");
-		generateWindowsProject(next);
+/**
+ * Installs the SDK from master branch, copies a built Windows SDK into it, generates a Titanium mobile project
+ * for Windows SDK, sets up the project, copies unit tests into it from Examples/NMocha/src/Aseets,
+ * and then runs the project in a Windows simulator which will run the mocha unit tests. The test results are piped to
+ * the CLi, which takes them and generates a JUnit test result XML report for the Jenkins build machine.
+ */
+function test(callback) {
+	async.series([
+		function (next) {
+			// If this is already installed we don't re-install, thankfully
+			console.log("Installing SDK from master branch");
+			installSDK(next);
+		},
+		function (next) {
+			getSDKInstallDir(next);
+		},
+		function (next) {
+			console.log("Copying built Windows SDK into master SDK");
+			copyWindowsIntoSDK(sdkPath, next);
+		},
+		function (next) {
+			if (hadWindowsSDK) {
+				next();
+			} else {
+				addWindowsToSDKManifest(sdkPath, next);
+			}
+		},
+		function (next) {
+			console.log("Generating Windows project");
+			generateWindowsProject(next);
 
-	},
-	function (next) {
-		console.log("Adding properties for tiapp.xml");
-		addTiAppProperties(next);
-	},
-	function (next) {
-		console.log("Copying test scripts into project");
-		copyMochaAssets(next);
-	},
-	function (next) {
-		console.log("Launching test project in simulator");
-		runBuild(next, 1);
-	},
-	function (next) {
-		parseTestResults(testResults, next);
-	},
-	function (next) {
-		outputJUnitXML(jsonResults, next);
-	}
-], function (err, results) {
-	if (err) {
-		console.error(err.toString().red);
-		process.exit(1);
-	} else {
-		process.exit(0);
-	}
-});
+		},
+		function (next) {
+			console.log("Adding properties for tiapp.xml");
+			addTiAppProperties(next);
+		},
+		function (next) {
+			console.log("Copying test scripts into project");
+			copyMochaAssets(next);
+		},
+		function (next) {
+			console.log("Launching test project in simulator");
+			runBuild(next, 1);
+		},
+		function (next) {
+			parseTestResults(testResults, next);
+		},
+		function (next) {
+			outputJUnitXML(jsonResults, next);
+		}
+	], callback);
+}
+
+// public API
+exports.test = test;
+
+// When run as single script.
+if (module.id === ".") {
+	test(function (err, results) {
+		if (err) {
+			console.error(err.toString().red);
+			process.exit(1);
+		} else {
+			process.exit(0);
+		}
+	});
+}
+
