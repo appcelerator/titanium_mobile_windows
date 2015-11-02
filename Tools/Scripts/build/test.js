@@ -42,9 +42,11 @@ function getSDKInstallDir(next) {
 			selectedSDK;
 		if (error !== null) {
 		  next('Failed to get SDK install dir: ' + error);
+		  return;
 		}
 
 		out = JSON.parse(stdout);
+		console.log(stdout);
 		selectedSDK = out['titaniumCLI']['selectedSDK'];
 
 		sdkPath = out['titanium'][selectedSDK]['path'];

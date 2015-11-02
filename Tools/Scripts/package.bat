@@ -19,7 +19,7 @@ call node setup.js --no-color --no-progress-bars
 
 cd build
 call npm install .
-call node build.js
+call node build.js --only WindowsPhone-x86
 call node test.js
 rmdir node_modules /Q /S
 cd ..\..\..
