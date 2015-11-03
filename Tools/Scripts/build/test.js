@@ -39,7 +39,8 @@ function installSDK(next) {
 function getSDKInstallDir(next) {
 	var prc = exec('node "' + titanium + '" info -o json', function (error, stdout, stderr) {
 		var out,
-			selectedSDK;
+			selectedSDK,
+			blah;
 		if (error !== null) {
 		  next('Failed to get SDK install dir: ' + error);
 		  return;
@@ -48,9 +49,25 @@ function getSDKInstallDir(next) {
 		out = JSON.parse(stdout);
 		console.log(stdout);
 		selectedSDK = out['titaniumCLI']['selectedSDK'];
-
 		sdkPath = out['titanium'][selectedSDK]['path'];
-		next();
+
+		//	
+		blah = spawn(out['windows']['windowsphone']['8.1']['deployCmd'], ['/EnumerateDevices']);
+		blah.stdout.on('data', function (data) {
+			console.log(data.toString());
+		});
+		blah.stderr.on('data', function (data) {
+			console.error(data.toString());
+		});
+		blah.on('close', function (code) {
+			if (code != 0) {
+				console.log(code);
+				next("Failed to create project");
+			} else {
+				next();
+			}
+		});
+		//next();
 	});
 }
 
