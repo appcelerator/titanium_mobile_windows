@@ -37,7 +37,7 @@ function installSDK(next) {
 }
 
 function getSDKInstallDir(next) {
-	var prc = exec('node "' + titanium + '" info -o json -t titanium', function (error, stdout, stderr) {
+	var prc = exec('node "' + titanium + '" info -o json', function (error, stdout, stderr) {
 		var out,
 			selectedSDK;
 		if (error !== null) {
