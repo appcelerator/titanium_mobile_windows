@@ -1,8 +1,7 @@
-
 /**
  * Sets up a Windows machine for Titanium Mobile Windows/HAL/TitaniumKit development.
  *
- * @module commands/setup
+ * @module setup
  *
  * @copyright
  * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
@@ -72,15 +71,17 @@ function downloadURL(url, callback) {
 			var total = parseInt(req.headers['content-length']),
 				bar;
 			
-			bar = new appc.progress('  :paddedPercent [:bar] :etas', {
-				complete: '='.cyan,
-				incomplete: '.'.grey,
-				width: 40,
-				total: total
-			});
+			if (!process.argv.indexOf('--quiet') && !process.argv.indexOf('--no-progress-bars')) {
+				bar = new appc.progress('  :paddedPercent [:bar] :etas', {
+					complete: '='.cyan,
+					incomplete: '.'.grey,
+					width: 40,
+					total: total
+				});
+			}
 
 			req.on('data', function (buffer) {
-				bar.tick(buffer.length);
+				bar && bar.tick(buffer.length);
 			});
 			
 
@@ -95,7 +96,7 @@ function downloadURL(url, callback) {
 			// we don't know how big the file is, display a spinner
 			var busy;
 
-			if (!cli.argv.quiet && !!cli.argv['progress-bars']) {
+			if (!process.argv.indexOf('--quiet') && !process.argv.indexOf('--no-progress-bars')) {
 				busy = new appc.busyindicator;
 				busy.start();
 			}
@@ -117,14 +118,15 @@ function extract(filename, installLocation, keepFiles, callback) {
 	appc.zip.unzip(filename, installLocation, {
 		visitor: function (entry, i, total) {
 			if (i == 0) {
-				bar = new appc.progress('  :paddedPercent [:bar]', {
-					complete: '='.cyan,
-					incomplete: '.'.grey,
-					width: 40,
-					total: total
-				});
+				if(!process.argv.indexOf('--quiet') && !process.argv.indexOf('--no-progress-bars')) {
+					bar = new appc.progress('  :paddedPercent [:bar]', {
+						complete: '='.cyan,
+						incomplete: '.'.grey,
+						width: 40,
+						total: total
+					});
+				}
 			}
-
 			bar && bar.tick();
 		}
 	}, function (err, extracted, total) {
@@ -149,7 +151,7 @@ function extract(filename, installLocation, keepFiles, callback) {
 function setENV(key, value, next) {
 	var prc;
 	if (os.platform() === 'win32') {
-		// RSet the env var "permanently" for user
+		// Set the env var "permanently" for user
 		prc = spawn('SetX', [key, value]);
 		//prc.stdout.on('data', function (data) {
 		//   console.log(data.toString());
@@ -173,158 +175,137 @@ function setENV(key, value, next) {
 	}
 }
 
-// We could change this to series, but we'd have to ditch the progress bars above
-async.series([
-	function (next) {
-		console.log("Setting up Boost libraries...");
-		var boostRoot = path.join(home, "boost_1_57_0");
-		if (typeof process.env.BOOST_ROOT !== 'undefined') {
-			var existing = path.normalize(process.env.BOOST_ROOT);
-			// What if location it points to doesn't exist. We should download there!
-			if (!fs.existsSync(existing)) {
-				// download to location user lready has env var set to
-				downloadURL(BOOST_URL, function (filename) {
-					extract(filename, path.normalize(existing + "\\.."), true, function() {
-						console.log((symbols.ok + ' Boost 1.57.0 headers downloaded to $BOOST_ROOT').green);
-						next();
-					});
-				});
-			} else {
-				// Nothing to do, we're all set
-				console.log((symbols.ok + ' BOOST_ROOT set').green);
-				next();
-			}
-			// if env var isn't set, but destination exists, just set env var
-		} else if (fs.existsSync(boostRoot)) {
-			setENV('BOOST_ROOT', boostRoot, next);
-		} else {
-			// no env var and no destination. Download, extract, and set env var
-			downloadURL(BOOST_URL, function (filename) {
-				extract(filename, home, true, function () {
-					setENV('BOOST_ROOT', boostRoot, next);
-				});
-			});
-		}
-	},
-	function (next) {
-		console.log("\nSetting up GTest...");
-		var gtest_root = path.join(home, "gtest-1.7.0-windows"); // FIXME What about mac?
-		if (typeof process.env.GTEST_ROOT !== 'undefined') {
-			var existing = path.normalize(process.env.GTEST_ROOT);
-			// What if location it points to doesn't exist. We should download there!
-			if (!fs.existsSync(existing)) {
-				// download!
-				downloadURL(GTEST_URL, function (filename) {
-					extract(filename, path.normalize(existing + "\\.."), true, function() {
-						console.log((symbols.ok + ' GTest 1.7.0 downloaded to $GTEST_ROOT').green);
-						next();
-					});
-				});
-			} else {
-				// Nothing to do, we're all set
-				console.log((symbols.ok + ' GTEST_ROOT set').green);
-				next();
-			}
-		}
-		else if (fs.existsSync(gtest_root)) {
-			setENV('GTEST_ROOT', gtest_root, next);
-		}
-		else {
-			downloadURL(GTEST_URL, function (filename) {
-				extract(filename, home, true, function () {
-					setENV('GTEST_ROOT', gtest_root, next);
-				});
-			});
-		}
-	},
-	function (next) {
-		if (os.platform() === 'win32') {
-			console.log("\nSetting up JavaScriptCore pre-built libraries...");
-			var jscHome = path.join(home, "JavaScriptCore");
-			if (typeof process.env.JavaScriptCore_HOME !== 'undefined') {
-				var existing = path.normalize(process.env.JavaScriptCore_HOME);
-				// What if location it points to doesn't exist. We should download there!
-				if (!fs.existsSync(existing)) {
-					// download!
-					downloadURL(JSC_URL, function (filename) {
-						extract(filename, path.normalize(existing + "\\.."), true, function() {
-							console.log((symbols.ok + ' JavaScriptCore downloaded to $JavaScriptCore_HOME').green);
-							next();
-						});
-					});
-				} else {
-					// Nothing to do, we're all set
-					console.log((symbols.ok + ' JavaScriptCore_HOME set').green);
-					next();
-				}
-			} else if (fs.existsSync(jscHome)) {
-				setENV('JavaScriptCore_HOME', jscHome, next);
-			} else {
-				downloadURL(JSC_URL, function (filename) {
-					extract(filename, home, true, function() {
-						setENV('JavaScriptCore_HOME', jscHome, next);
-					});
-				});
-			}
-		} else {
-			next(); // TODO Do we need to do anything for Mac?
-		}
-	},
-	// Add the included cmake bin dir to the user's PATH?
-	function (next) {
-		console.log("\nAppending included cmake to PATH...");
-		var cmakeBinPath = path.join(__dirname, '..', '..', 'cli', 'vendor', 'cmake', 'bin');
-		if (process.env.PATH.indexOf(cmakeBinPath) == -1) {
-			console.log("Appending %s to PATH", cmakeBinPath);
-			setENV('PATH', process.env.PATH + ';' + cmakeBinPath, next);
-		} else {
-			// If we can find cmake.exe on PATH, don't append it
-			console.log((symbols.ok + ' Included cmake on PATH').green);
-			next();
-		}
-//    },
-//    // Change Windows PowerShell permissions
-//    function (next) {
-//    	// FIXME This is hanging on my machine now! Also, do we need this for developing TitaniumKit/HAL/Windows? I don't think we do
-//    	if (os.platform() === 'win32') {
-//    		var output = '',
-//				prc = spawn(process.env.SystemRoot + '\\system32\\WindowsPowerShell\\v1.0\\powershell.exe', ['Get-ExecutionPolicy', '-Scope', 'CurrentUser']);
-//			prc.stdout.on('data', function (data) {
-//			    output += data.toString();
-//			});
-//
-//			prc.on('close', function (code) {
-//				output = output.trim();
-//				// Check to make sure Execution Policy is liberal enough for us!
-//				if (output !== 'RemoteSigned' && output !== 'Unrestricted') {
-//		    		console.log("Changing PowerShell policy to RemoteSigned for CLI");
-//					var p = spawn(process.env.SystemRoot + '\\system32\\WindowsPowerShell\\v1.0\\powershell.exe', ['Set-ExecutionPolicy', '-ExecutionPolicy', 'RemoteSigned', '-Scope', 'CurrentUser']);
-//					p.stdout.on('data', function (data) {
-//					    console.log(data.toString());
-//					});
-//
-//					p.on('close', function (code) {
-//						if (code != 0) {
-//							next("Failed to change PowerShell policy");
-//						} else {
-//							console.log((symbols.ok + ' PowerShell ExecutionPolicy set to "RemoteSigned"').green);
-//					    	next();
-//						}
-//					});
-//				}
-//				else {
-//					console.log((symbols.ok + ' PowerShell ExecutionPolicy at least "RemoteSigned"').green);
-//					next();
-//				}
-//			});
-//		} else {
-//			next();
-//		}
+/**
+ * Used to determine if there is an existing install of JSC and it's fromt he same URL as we want.
+ */
+function isUpToDate(destination, url) {
+	var urlFile = path.join(destination, 'SOURCE_URL'),
+		contents = '';
+	if (!fs.existsSync(destination) || !fs.existsSync(urlFile)) {
+		return false;
 	}
-	// TODO Download a VS2013 version? (It's Huuuuuuge! Many GB!)
-], function (err, results) {
-	if (err) {
-		console.error((symbols.error + ' ' + err.toString()).red);
-		process.exit(1);
+	// read contents of urlFile
+	contents = fs.readFileSync(urlFile).toString();
+	// check if it's the same as url
+	return contents === url;
+}
+
+function writeSourceURL(destination, url) {
+	var urlFile = path.join(destination, 'SOURCE_URL');
+	fs.writeFileSync(urlFile, url);
+}
+
+/**
+ * Common logic for downloading a zip file from an URL for a dependency and setting up the right ENV var to point at the unzipped folder.
+ **/
+function downloadIfNecessary(envKey, defaultDest, url, next) {
+	var envValue = process.env[envKey],
+		destination = (typeof envValue !== 'undefined') ? path.normalize(envValue) : defaultDest;
+
+	// Does it already exist, and is it up to date?
+	if (!isUpToDate(destination, url)) {
+		downloadURL(url, function (filename) {
+			// What if it _does_ exist and is out of date? We should "wipe it", or move it...
+			if (fs.existsSync(destination)) {
+				console.log("Destination for " + url + " already exists, wiping before extracting.");
+				// TODO move/rename it instead of deleting it?
+				wrench.rmdirSyncRecursive(destination);
+			}
+			// Etxract to parent of destionation...
+			var dest = path.normalize(destination + "\\..");
+			extract(filename, dest, true, function() {
+				writeSourceURL(destination, url);
+				next();
+			});
+		});
+	} else {
+		// Nothing to do, we're all set
+		console.log((symbols.ok + ' ' + envKey + ' set').green);
+		next();
+	}	
+}
+
+/**
+ * Downloads Boost headers from BOOST_URL if necessary, and sets BOOST_ROOT env var to it.
+ */
+function setupBoost(next) {
+	console.log("Setting up Boost libraries...");
+	var boostRoot = path.join(home, "boost_1_57_0");
+	downloadIfNecessary('BOOST_ROOT', boostRoot, BOOST_URL, next);
+}
+
+/**
+ * Downloads GTest from GTEST_URL if necessary, and sets GTEST_ROOT env var to it.
+ */
+function setupGTest(next) {
+	console.log("Setting up GTest...");
+	var gtestRoot = path.join(home, "gtest-1.7.0-windows"); // FIXME What about mac?
+	downloadIfNecessary('GTEST_ROOT', gtestRoot, GTEST_URL, next);
+}
+
+/**
+ * Downloads JavaScriptCore from JSC_URL if necessary, and sets JavaScriptCore_HOME env var to it.
+ */
+function setupJSC(next) {
+	console.log("Setting up JavaScriptCore pre-built libraries...");
+	var jscHome = path.join(home, "JavaScriptCore");
+	downloadIfNecessary('JavaScriptCore_HOME', jscHome, JSC_URL, next);
+}
+
+/**
+ * Modifies PATH to include bin folder of included cmake.
+ **/
+function setupCMake(next) {
+	console.log("Appending included cmake to PATH...");
+	var cmakeBinPath = path.join(__dirname, '..', '..', 'cli', 'vendor', 'cmake', 'bin');
+	if (process.env.PATH.indexOf(cmakeBinPath) == -1) {
+		console.log("Appending %s to PATH", cmakeBinPath);
+		setENV('PATH', process.env.PATH + ';' + cmakeBinPath, next);
+	} else {
+		// If we can find cmake.exe on PATH, don't append it
+		console.log((symbols.ok + ' Included cmake on PATH').green);
+		next();
 	}
-});
+}
+
+function setup(callback) {
+	// We could change this to series, but we'd have to ditch the progress bars above
+	async.series([
+		function (next) {
+			setupBoost(next);
+		},
+		function (next) {
+			setupGTest(next);
+		},
+		function (next) {
+			if (os.platform() === 'win32') {
+				setupJSC(next);
+			} else {
+				next(); // TODO Do we need to do anything for Mac?
+			}
+		},
+		// Add the included cmake bin dir to the user's PATH?
+		function (next) {
+			setupCMake(next);
+		}
+		// TODO Download a VS2013 version? (It's Huuuuuuge! Many GB!)
+	], callback);
+}
+
+// public API
+exports.setup = setup;
+exports.setupBoost = setupBoost;
+exports.setupGTest = setupGTest;
+exports.setupJSC = setupJSC;
+exports.setupCMake = setupCMake;
+
+// When run as single script.
+if (module.id === ".") {
+	setup(function (err, results) {
+		if (err) {
+			console.error((symbols.error + ' ' + err.toString()).red);
+			process.exit(1);
+		}
+		process.exit(0);
+	});
+}
