@@ -29,7 +29,7 @@ var async = require('async'),
 	  err: '✖',
 	  dot: '․'
 	},
-	JSC_URL = "http://timobile.appcelerator.com.s3.amazonaws.com/jscore/JavaScriptCore-Windows-1439837221.zip",
+	JSC_URL = "http://studio-jenkins.appcelerator.org/job/JavaScriptCore-chris/lastSuccessfulBuild/artifact/dist/JavaScriptCore-Windows-1446025802.zip",
 	GTEST_URL = (os.platform() === 'win32') ? "http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-windows.zip" : "http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-osx.zip",
 	BOOST_URL = "http://timobile.appcelerator.com.s3.amazonaws.com/boost_1_57_0.zip";
 
@@ -70,7 +70,7 @@ function downloadURL(url, callback) {
 			// we know how big the file is, display the progress bar
 			var total = parseInt(req.headers['content-length']),
 				bar;
-			
+
 			if (!process.argv.indexOf('--quiet') && !process.argv.indexOf('--no-progress-bars')) {
 				bar = new appc.progress('  :paddedPercent [:bar] :etas', {
 					complete: '='.cyan,
@@ -83,7 +83,7 @@ function downloadURL(url, callback) {
 			req.on('data', function (buffer) {
 				bar && bar.tick(buffer.length);
 			});
-			
+
 
 			tempStream.on('close', function () {
 				if (bar) {
@@ -222,7 +222,7 @@ function downloadIfNecessary(envKey, defaultDest, url, next) {
 		// Nothing to do, we're all set
 		console.log((symbols.ok + ' ' + envKey + ' set').green);
 		next();
-	}	
+	}
 }
 
 /**
