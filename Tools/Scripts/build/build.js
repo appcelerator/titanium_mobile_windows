@@ -36,17 +36,18 @@ var path = require('path'),
  * @param platform {String} 'WindowsPhone' || 'WindowsStore'
  * @param arch {String} 'x86' || 'ARM'
  * @param parallel {Boolean} should we run MSBuild in parallel?
+ * @param quiet {Boolean} log stdout of processes?
  * @param callback {Function} what to invoke when done/errored
  */
-function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, msBuildVersion, platform, arch, parallel, callback) {
+function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, msBuildVersion, platform, arch, parallel, quiet, callback) {
 	var platformAbbrev = (platform == 'WindowsPhone') ? 'phone' : 'store';
 	console.log('Building ' + platform + ' ' + sdkVersion + ' ' + arch + ': ' + buildType);
 	async.series([
 		function (next) {
-			runCMake(sourceDir, path.join(buildDir, platformAbbrev, arch), buildType, sdkVersion, msBuildVersion, platform, arch, next);
+			runCMake(sourceDir, path.join(buildDir, platformAbbrev, arch), buildType, sdkVersion, msBuildVersion, platform, arch, quiet, next);
 		},
 		function (next) {
-			runMSBuild(msBuildVersion, path.join(buildDir, platformAbbrev, arch, 'TitaniumWindows.sln'), buildType, arch, parallel, next);
+			runMSBuild(msBuildVersion, path.join(buildDir, platformAbbrev, arch, 'TitaniumWindows.sln'), buildType, arch, parallel, quiet, next);
 		},
 		function (next) {
 			copyToDistribution(buildDir, destDir, buildType, platform, arch, next);
@@ -93,14 +94,15 @@ function updateBuildValuesInTitaniumModule(tiModuleCPP, callback) {
 }
 
 /**
- * @param sourceDir Where the source is
- * @param buildDir Where to build the project
- * @param buildType 'Release' || 'Debug'
- * @param platform 'WindowsPhone' || 'WindowsStore'
- * @param arch 'x86' || 'ARM'
- * @param callback what to invoke when done/errored
+ * @param sourceDir {String} Where the source is
+ * @param buildDir {String} Where to build the project
+ * @param buildType {String} 'Release' || 'Debug'
+ * @param platform {String} 'WindowsPhone' || 'WindowsStore'
+ * @param arch {String} 'x86' || 'ARM'
+ * @param quiet {Boolean} log stdout of process?
+ * @param callback {Function} what to invoke when done/errored
  */
-function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, platform, arch, callback) {
+function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, platform, arch, quiet, callback) {
 	var generator = msBuildVersion == MSBUILD_14 ? VS_2015_GENERATOR : VS_2013_GENERATOR;
 
 	// If the buildDir already exists, wipe it
@@ -133,25 +135,26 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
 	];
 
 	var options = {cwd: buildDir};
-	spawnWithArgs('CMake', cmakeLocation, args, options, callback);
+	spawnWithArgs('CMake', cmakeLocation, args, options, quiet, callback);
 }
 
 /**
- * @param msBuildVersion The version of MSBuild to run: '12.0' or '14.0'
- * @param slnFile The VS solution file to build.
- * @param buildType 'Release' || 'Debug'
- * @param arch 'x86' || 'ARM'
- * @param parallel Run msbuild in parallel? (/m option)
- * @param callback what to invoke when done/errored
+ * @param msBuildVersion {String} The version of MSBuild to run: '12.0' or '14.0'
+ * @param slnFile {Stirng} The VS solution file to build.
+ * @param buildType {String} 'Release' || 'Debug'
+ * @param arch {String} 'x86' || 'ARM'
+ * @param parallel {Boolean} Run msbuild in parallel? (/m option)
+ * @param quiet {Boolean} log stdout of process?
+ * @param callback {Function} what to invoke when done/errored
  */
-function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, callback) {
+function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet, callback) {
 	var args = ['/p:Configuration=' + buildType];
 	if ('ARM' == arch) {
 		args.unshift('/p:Platform=ARM');
 	}
 	args.unshift(slnFile);
 	parallel && args.push('/m');
-	spawnWithArgs('MSBuild', 'C:/Program Files (x86)/MSBuild/' + msBuildVersion + '/Bin/MSBuild.exe', args, {}, callback);
+	spawnWithArgs('MSBuild', 'C:/Program Files (x86)/MSBuild/' + msBuildVersion + '/Bin/MSBuild.exe', args, {}, quiet, callback);
 }
 
 /**
@@ -290,6 +293,8 @@ function copyFile(from, to) {
  * @param msBuildVersion {String} '12.0' || '14.0'
  * @param targets {Array[String]}
  * @param options {Object}
+ * @param options.parallel {Boolean} Run builds in parallel?
+ * @param options.quiet {Boolean} Log stdout of processes?
  * @param finished {Function} callback
  **/
 function build(sdkVersion, msBuildVersion, targets, options, finished) {
@@ -304,7 +309,7 @@ function build(sdkVersion, msBuildVersion, targets, options, finished) {
 		function buildAndPackageAll(next) {
 			(options.parallel ? async.each : async.eachSeries)(targets, function (configuration, next) {
 				var parts = configuration.split('-'); // target platform (WindowsStore|WindowsPhone), arch (ARM|x86)
-				buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, 'Release', sdkVersion, msBuildVersion, parts[0], parts[1], next);
+				buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, 'Release', sdkVersion, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet, next);
 			}, next);
 		},
 		function measureTimeElapsed(next) {
