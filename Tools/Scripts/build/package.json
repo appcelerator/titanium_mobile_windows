@@ -24,7 +24,8 @@
     "ejs": "~2.2.4",
   	"wrench": "~1.5.4",
     "titanium": "git://github.com/appcelerator/titanium.git#master",
-    "windowslib": "0.1.21"
+    "windowslib": "0.1.21",
+    "commander": "*"
   },
   "engines": {
     "node": ">=0.8"
