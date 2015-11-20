@@ -337,6 +337,7 @@ if (module.id === ".") {
 			.option('-j, --javascriptcore [javascriptcore]', 'Override the source URL for JavaScriptCore', JSC_URL)
 			.option('-g, --gtest [gtest]', 'Override the source URL for GTest', GTEST_URL)
 			.option('-b, --boost [boost]', 'Override the source URL for Boost', BOOST_URL)
+			.allowUnknownOption()
 			.parse(process.argv);
 
 		setup({
