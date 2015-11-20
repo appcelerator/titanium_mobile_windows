@@ -21,13 +21,12 @@ var async = require('async'),
 	temp = require('temp'),
 	wrench = require('wrench'),
 	appc = require('node-appc'),
-	home = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA,
+	HOME = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA,
 	spawn = require('child_process').spawn,
 	os = require('os'),
-	symbols = {
-	  ok: '✓',
-	  err: '✖',
-	  dot: '․'
+	SYMBOLS = {
+		OK: '✓',
+		ERROR: '✖'
 	},
 	JSC_URL = "http://timobile.appcelerator.com.s3.amazonaws.com/jscore/JavaScriptCore-Windows-1446025802.zip",
 	GTEST_URL = (os.platform() === 'win32') ? "http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-windows.zip" : "http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-osx.zip",
@@ -36,9 +35,8 @@ var async = require('async'),
 
 // With node.js on Windows: use symbols available in terminal default fonts
 if ('win32' == os.platform()) {
-	symbols.ok = '\u221A';
-	symbols.err = '\u00D7';
-	symbols.dot = '.';
+	SYMBOLS.OK = '\u221A';
+	SYMBOLS.ERROR = '\u00D7';
 }
 
 function downloadURL(url, callback) {
@@ -70,7 +68,7 @@ function downloadURL(url, callback) {
 			// we know how big the file is, display the progress bar
 			var total = parseInt(req.headers['content-length']),
 				bar;
-			
+
 			if (!process.argv.indexOf('--quiet') && !process.argv.indexOf('--no-progress-bars')) {
 				bar = new appc.progress('  :paddedPercent [:bar] :etas', {
 					complete: '='.cyan,
@@ -83,7 +81,7 @@ function downloadURL(url, callback) {
 			req.on('data', function (buffer) {
 				bar && bar.tick(buffer.length);
 			});
-			
+
 
 			tempStream.on('close', function () {
 				if (bar) {
@@ -163,7 +161,7 @@ function setENV(key, value, next) {
 				next("Failed to run SETX");
 			} else {
 				// FIXME Can't seem to run SET to also set for current session!
-				console.log((symbols.ok + ' ' + key + ' set').green);
+				console.log((SYMBOLS.OK + ' ' + key + ' set').green);
 				next();
 			}
 		});
@@ -220,36 +218,57 @@ function downloadIfNecessary(envKey, defaultDest, url, next) {
 		});
 	} else {
 		// Nothing to do, we're all set
-		console.log((symbols.ok + ' ' + envKey + ' set').green);
+		console.log((SYMBOLS.OK + ' ' + envKey + ' set').green);
 		next();
-	}	
+	}
 }
 
 /**
  * Downloads Boost headers from BOOST_URL if necessary, and sets BOOST_ROOT env var to it.
+ * @param [url] {String} override source URL to grab Boost from.
+ * @param next {Function} callback function when finished
  */
-function setupBoost(next) {
+function setupBoost(url, next) {
+	if (typeof url == 'function') {
+		next = url;
+		url = BOOST_URL;
+	}
+
 	console.log("Setting up Boost libraries...");
-	var boostRoot = path.join(home, "boost_1_57_0");
-	downloadIfNecessary('BOOST_ROOT', boostRoot, BOOST_URL, next);
+	var boostRoot = path.join(HOME, "boost_1_57_0");
+	downloadIfNecessary('BOOST_ROOT', boostRoot, url, next);
 }
 
 /**
  * Downloads GTest from GTEST_URL if necessary, and sets GTEST_ROOT env var to it.
+ * @param [url] {String} override source URL to grab GTest from.
+ * @param next {Function} callback function when finished
  */
-function setupGTest(next) {
+function setupGTest(url, next) {
+	if (typeof url == 'function') {
+		next = url;
+		url = GTEST_URL;
+	}
+
 	console.log("Setting up GTest...");
-	var gtestRoot = path.join(home, "gtest-1.7.0-windows"); // FIXME What about mac?
-	downloadIfNecessary('GTEST_ROOT', gtestRoot, GTEST_URL, next);
+	var gtestRoot = path.join(HOME, "gtest-1.7.0-windows"); // FIXME What about mac?
+	downloadIfNecessary('GTEST_ROOT', gtestRoot, url, next);
 }
 
 /**
  * Downloads JavaScriptCore from JSC_URL if necessary, and sets JavaScriptCore_HOME env var to it.
+ * @param [url] {String} override source URL to grab JSC from.
+ * @param next {Function} callback function when finished
  */
-function setupJSC(next) {
+function setupJSC(url, next) {
+	if (typeof url == 'function') {
+		next = url;
+		url = JSC_URL;
+	}
+
 	console.log("Setting up JavaScriptCore pre-built libraries...");
-	var jscHome = path.join(home, "JavaScriptCore");
-	downloadIfNecessary('JavaScriptCore_HOME', jscHome, JSC_URL, next);
+	var jscHome = path.join(HOME, "JavaScriptCore");
+	downloadIfNecessary('JavaScriptCore_HOME', jscHome, url, next);
 }
 
 /**
@@ -263,32 +282,41 @@ function setupCMake(next) {
 		setENV('PATH', process.env.PATH + ';' + cmakeBinPath, next);
 	} else {
 		// If we can find cmake.exe on PATH, don't append it
-		console.log((symbols.ok + ' Included cmake on PATH').green);
+		console.log((SYMBOLS.OK + ' Included cmake on PATH').green);
 		next();
 	}
 }
 
-function setup(callback) {
-	// We could change this to series, but we'd have to ditch the progress bars above
+/**
+ * @param [overrides] {Object}
+ * @param [overrides.boost] {String} Source URL to use for Boost
+ * @param [overrides.gtest] {String} Source URL to use for GTest
+ * @param [overrides.jsc] {String} Source URL to use for JavaScriptCore
+ * @param callback {Function} callback function when finished
+ **/
+function setup(overrides, callback) {
+	if (typeof overrides == 'function') {
+		callback = overrides;
+		overrides = {};
+	}
+	// We could change this to parallel, but we'd have to ditch the progress bars above
 	async.series([
 		function (next) {
-			setupBoost(next);
+			setupBoost(overrides.boost, next);
 		},
 		function (next) {
-			setupGTest(next);
+			setupGTest(overrides.gtest, next);
 		},
 		function (next) {
 			if (os.platform() === 'win32') {
-				setupJSC(next);
+				setupJSC(overrides.jsc, next);
 			} else {
-				next(); // TODO Do we need to do anything for Mac?
+				next();
 			}
 		},
 		// Add the included cmake bin dir to the user's PATH?
-		function (next) {
-			setupCMake(next);
-		}
-		// TODO Download a VS2013 version? (It's Huuuuuuge! Many GB!)
+		setupCMake
+		// TODO Download a VS2013/VS2015 version? (It's Huuuuuuge! Many GB!)
 	], callback);
 }
 
@@ -301,11 +329,26 @@ exports.setupCMake = setupCMake;
 
 // When run as single script.
 if (module.id === ".") {
-	setup(function (err, results) {
-		if (err) {
-			console.error((symbols.error + ' ' + err.toString()).red);
-			process.exit(1);
-		}
-		process.exit(0);
-	});
+	(function () {
+		var program = require('commander');
+
+		program
+			.version('0.0.1')
+			.option('-j, --javascriptcore [javascriptcore]', 'Override the source URL for JavaScriptCore', JSC_URL)
+			.option('-g, --gtest [gtest]', 'Override the source URL for GTest', GTEST_URL)
+			.option('-b, --boost [boost]', 'Override the source URL for Boost', BOOST_URL)
+			.parse(process.argv);
+
+		setup({
+			boost: program.boost,
+			gtest: program.gtest,
+			jsc: program.javascriptcore
+		}, function (err, results) {
+			if (err) {
+				console.error((SYMBOLS.ERROR + ' ' + err.toString()).red);
+				process.exit(1);
+			}
+			process.exit(0);
+		});
+	})();
 }
