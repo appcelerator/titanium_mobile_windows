@@ -153,10 +153,9 @@ function extract(filename, installLocation, keepFiles, callback) {
 }
 
 function setENV(key, value, next) {
-	var prc;
 	if (os.platform() === 'win32') {
 		// Set the env var "permanently" for user
-		prc = spawn('SetX', [key, value]);
+		var prc = spawn('setx', [key, value]);
 		//prc.stdout.on('data', function (data) {
 		//   console.log(data.toString());
 		//});
@@ -204,7 +203,16 @@ function writeSourceURL(destination, url) {
  **/
 function downloadIfNecessary(envKey, defaultDest, url, next) {
 	var envValue = process.env[envKey],
-		destination = (typeof envValue !== 'undefined') ? path.normalize(envValue) : defaultDest;
+		destination = '';
+
+	// retreive environment variable
+	if (typeof envValue !== 'undefined') {
+		destination = path.normalize(envValue);
+	} else {
+		// set environment variable
+		destination = defaultDest;
+		setENV(envKey, defaultDest);
+	}
 
 	// Does it already exist, and is it up to date?
 	if (!isUpToDate(destination, url)) {
