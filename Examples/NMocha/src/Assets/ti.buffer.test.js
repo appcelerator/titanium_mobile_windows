@@ -352,8 +352,7 @@ describe("buffer", function() {
 	    finish();
 	});
 
-	// Skip on Windows 10 for now, it hangs
-	(Ti.Platform.version.indexOf('10.0' == 0) ? it.skip : it)("testAutoEncodeUTF-16", function (finish) {
+	it("testAutoEncodeUTF-16", function (finish) {
 	    // 8 Byte long in Big Endian (most significant byte first)
 	    var buffer = Ti.createBuffer({
 	        value: 305419896,
@@ -370,8 +369,7 @@ describe("buffer", function() {
 	    finish();
 	});
 
-    // Skip on Windows 10 for now, it hangs
-	(Ti.Platform.version.indexOf('10.0' == 0) ? it.skip : it)("testAutoEncodeUTF-16", function (finish) {
+	it("testAutoEncodeUTF-16", function (finish) {
 		// 4 byte int in Little Endian (least significant byte first)
 		var buffer = Ti.createBuffer({
 			value: 305419896,

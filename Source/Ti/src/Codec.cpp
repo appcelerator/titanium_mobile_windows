@@ -15,6 +15,7 @@ namespace TitaniumWindows
 {
 	using namespace Titanium::Codec;
 	using namespace Windows::Security::Cryptography;
+	using namespace concurrency;
 
 	Codec::Codec(const JSContext& js_context) TITANIUM_NOEXCEPT
 		: Titanium::Codec::CodecModule(js_context)
@@ -67,16 +68,16 @@ namespace TitaniumWindows
 			writer->WriteInt64(static_cast<std::int64_t>(options.source)); break;
 		}
 
-		concurrency::event event;
+		event event;
 		std::uint32_t bytesLoaded = 0;
-		concurrency::create_task(writer->StoreAsync()).then([writer](std::uint32_t) {
+		create_task(writer->StoreAsync(), task_continuation_context::use_arbitrary()).then([writer](std::uint32_t) {
 			return writer->FlushAsync();
-		}).then([reader, stream](bool) {
+		}, task_continuation_context::use_arbitrary()).then([reader, stream](bool) {
 			return reader->LoadAsync(static_cast<std::uint32_t>(stream->Size));
-		}).then([reader,&bytesLoaded,  &event](concurrency::task<std::uint32_t> task) {
+		}, task_continuation_context::use_arbitrary()).then([reader,&bytesLoaded,  &event](task<std::uint32_t> task) {
 			bytesLoaded = task.get();
 			event.set();
-		}, concurrency::task_continuation_context::use_arbitrary());
+		}, task_continuation_context::use_arbitrary());
 		event.wait();
 
 		auto source_data = TitaniumWindows::Utility::GetContentFromBuffer(reader->ReadBuffer(bytesLoaded));
