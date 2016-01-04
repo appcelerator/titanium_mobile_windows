@@ -2,7 +2,7 @@
  * Runs an app on a Windows Phone device or emulator.
  *
  * @copyright
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
  *
  * @license
  * Licensed under the terms of the Apache Public License
@@ -195,10 +195,11 @@ exports.init = function (logger, config, cli) {
 				}
 
 				var tiapp = builder.tiapp,
+					sanitizedName = sanitizeProjectName(tiapp.name),
 					// name of the directory holding appx and dependencies subfolder
-					dirName = sanitizeProjectName(tiapp.name) + '_' + appc.version.format(tiapp.version, 4, 4, true) + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test');
+					dirName = sanitizedName + '_' + appc.version.format(tiapp.version, 4, 4, true) + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test');
 					// path to folder holding appx
-					appxDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizeProjectName(tiapp.name), dirName),
+					appxDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
 					// path to folder holding depencies of the app
 					dependenciesDir = path.resolve(appxDir, 'Dependencies', (builder.cmakeArch == 'Win32') ? 'x86' : builder.cmakeArch),
 					// Options for installing app
