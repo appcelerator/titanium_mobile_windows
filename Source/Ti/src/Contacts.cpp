@@ -65,18 +65,15 @@ namespace TitaniumWindows
 		// Windows 10+ API!
 		std::vector<std::shared_ptr<Titanium::Contacts::Group>> result;
 		// FIXME Should we grab the contact store during requestAuthorization?
-		const auto ctx = get_context();
 		concurrency::event event;
+		IVectorView<ContactList^>^ lists;
 		concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
 		.then([](ContactStore^ store) {
 			return store->FindContactListsAsync();
 		}, concurrency::task_continuation_context::use_arbitrary())
-		.then([this, &result, &event, &ctx] (concurrency::task<IVectorView<ContactList^>^> task) {
+		.then([&lists, &event] (concurrency::task<IVectorView<ContactList^>^> task) {
 			try {
-				const auto lists = task.get();
-				for (const auto list : lists) {
-					result.push_back(listToGroup(ctx, list));
-				}
+				lists = task.get();
 			}
 			catch (Platform::AccessDeniedException^ ade) {
 				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: Access denied: ", ade->Message->Data());
@@ -94,6 +91,11 @@ namespace TitaniumWindows
 		}, concurrency::task_continuation_context::use_arbitrary());
 		event.wait();
 
+		const auto ctx = get_context();
+		for (const auto list : lists) {
+			result.push_back(listToGroup(ctx, list));
+		}
+
 		return result;
 #else
 		TITANIUM_LOG_WARN("Ti.Contacts.getAllGroups: Not supported in Windows 8.1");
@@ -107,18 +109,16 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 		// FIXME Should we grab the contact store during requestAuthorization?
 		try {
-			const auto ctx = get_context();
+			
+			IVectorView<Contact^>^ contacts;
 			concurrency::event event;
 			concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
 			.then([](ContactStore^ store) {
 				return store->FindContactsAsync();
 			}, concurrency::task_continuation_context::use_arbitrary())
-			.then([&result, &event, &ctx] (concurrency::task<IVectorView<Contact^>^> task) {
+			.then([&contacts, &event] (concurrency::task<IVectorView<Contact^>^> task) {
 				try {
-					const auto contacts = task.get();
-					for (auto contact : contacts) {
-						result.push_back(contactToPerson(ctx, contact));
-					}
+					contacts = task.get();
 				} catch (Platform::AccessDeniedException^ ade) {
 					TITANIUM_LOG_ERROR("Ti.Contacts.getAllPeople: Access denied: ", ade->Message->Data());
 				} catch (Platform::COMException^ e) {
@@ -126,11 +126,19 @@ namespace TitaniumWindows
 				} catch (const std::exception& e) {
 					TITANIUM_LOG_ERROR("Ti.Contacts.getAllPeople: ", e.what());
 				} catch (...) {
-					TITANIUM_LOG_ERROR("i.Contacts.getAllPeople: Unknown error");
+					TITANIUM_LOG_ERROR("Ti.Contacts.getAllPeople: Unknown error");
 				}
 				event.set();
 			}, concurrency::task_continuation_context::use_arbitrary());
 			event.wait();
+
+			if (contacts) {
+				const auto ctx = get_context();
+				for (auto contact : contacts) {
+					result.push_back(contactToPerson(ctx, contact));
+				}
+			}
+
 		} catch (Platform::AccessDeniedException^ ade) {
 			TITANIUM_LOG_ERROR("Ti.Contacts.getAllPeople: Access denied: ", ade->Message->Data());
 		} catch (const std::exception& e) {
@@ -150,18 +158,19 @@ namespace TitaniumWindows
 		// Windows 10+ API!
 		TITANIUM_ASSERT(id.IsString());
 		const auto identifier = TitaniumWindows::Utility::ConvertUTF8String(static_cast<std::string>(id));
-		const auto ctx = get_context();
+		
 		std::shared_ptr<Titanium::Contacts::Group> result = nullptr;
 		// FIXME Should we grab the contact store during requestAuthorization?
+		ContactList^ list;
 
 		concurrency::event event;
 		concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
 		.then([&identifier](ContactStore^ store) {
 			return store->GetContactListAsync(identifier);
 		}, concurrency::task_continuation_context::use_arbitrary())
-		.then([&result, &event, &ctx] (concurrency::task<ContactList^> task) {
+		.then([&list, &event] (concurrency::task<ContactList^> task) {
 			try {
-				result = listToGroup(ctx, task.get());
+				list = task.get();
 			}
 			catch (Platform::AccessDeniedException^ ade) {
 				TITANIUM_LOG_ERROR("Ti.Contacts.getGroupByIdentifier: Access denied:", ade->Message->Data());
@@ -182,6 +191,11 @@ namespace TitaniumWindows
 		}, concurrency::task_continuation_context::use_arbitrary());
 		event.wait();
 
+		if (list) {
+			const auto ctx = get_context();
+			result = listToGroup(ctx, list);
+		}
+
 		return result;
 #else
 		TITANIUM_LOG_WARN("Ti.Contacts.getGroupByIdentifier: Not supported in Windows 8.1");
@@ -194,19 +208,16 @@ namespace TitaniumWindows
 		std::vector<std::shared_ptr<Titanium::Contacts::Person>> result;
 #if defined(IS_WINDOWS_10)
 		// FIXME Should we grab the contact store during requestAuthorization?
-		const auto ctx = get_context();
+		IVectorView<Contact^>^ contacts;
 		const auto query = TitaniumWindows::Utility::ConvertUTF8String(name);
 		concurrency::event event;
 		concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
 		.then([&query](ContactStore^ store) {
 			return store->FindContactsAsync(query);
 		}, concurrency::task_continuation_context::use_arbitrary())
-		.then([&result, &event, &ctx](concurrency::task<IVectorView<Contact^>^> task) {
+		.then([&contacts, &event](concurrency::task<IVectorView<Contact^>^> task) {
 			try {
-				const auto contacts = task.get();
-				for (const auto contact : contacts) {
-					result.push_back(contactToPerson(ctx, contact));
-				}
+				contacts = task.get();
 			}
 			catch (Platform::AccessDeniedException^ ade) {
 				TITANIUM_LOG_ERROR("Ti.Contacts.getPeopleWithName: Access denied:", ade->Message->Data());
@@ -223,6 +234,13 @@ namespace TitaniumWindows
 			event.set();
 		}, concurrency::task_continuation_context::use_arbitrary());
 		event.wait();
+
+		if (contacts) {
+			const auto ctx = get_context();
+			for (const auto contact : contacts) {
+				result.push_back(contactToPerson(ctx, contact));
+			}
+		}
 #else
 		TITANIUM_LOG_ERROR("Ti.Contacts.getPeopleWithName: Contact access not allowed on Windows 8.1 Store/Desktop apps");
 #endif
@@ -236,15 +254,15 @@ namespace TitaniumWindows
 		// FIXME Should we grab the contact store during requestAuthorization?
 		TITANIUM_ASSERT(id.IsString());
 		const auto identifier = TitaniumWindows::Utility::ConvertUTF8String(static_cast<std::string>(id));
-		const auto ctx = get_context();
+		Contact^ contact;
 		concurrency::event event;
 		concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
 		.then([&identifier](ContactStore^ store) {
 			return store->GetContactAsync(identifier);
 		}, concurrency::task_continuation_context::use_arbitrary())
-		.then([&result, &event, &ctx](concurrency::task<Contact^> task) {
+		.then([&contact, &event](concurrency::task<Contact^> task) {
 			try {
-				result = contactToPerson(ctx, task.get());
+				contact = task.get();
 			}
 			catch (Platform::AccessDeniedException^ ade) {
 				TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: Access denied:", ade->Message->Data());
@@ -264,6 +282,11 @@ namespace TitaniumWindows
 			event.set();
 		}, concurrency::task_continuation_context::use_arbitrary());
 		event.wait();
+
+		if (contact) {
+			const auto ctx = get_context();
+			result = contactToPerson(ctx, contact);
+		}
 #else
 		TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: Contact access not allowed on Windows 8.1 Store/Desktop apps");
 #endif
@@ -289,6 +312,7 @@ namespace TitaniumWindows
 
 	void ContactsModule::save(const std::vector<std::shared_ptr<Titanium::Contacts::Person>>& contacts) TITANIUM_NOEXCEPT
 	{
+		// TODO Commit any created groups, remove any removed groups!
 		TITANIUM_LOG_WARN("Ti.Contacts.save is not implemented yet");
 	}
 

@@ -32,6 +32,7 @@ namespace TitaniumWindows
 		void Group::construct(Windows::ApplicationModel::Contacts::ContactList^ list)
 		{
 			contact_list__ = list;
+			// TODO Set properties like name, identifier, etc!
 		}
 #endif
 

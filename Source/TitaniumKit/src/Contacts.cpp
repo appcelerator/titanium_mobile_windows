@@ -227,7 +227,7 @@ namespace Titanium
 		if (group != nullptr) {
 			return group->get_object();
 		}
-		return get_context().CreateUndefined();
+		return get_context().CreateNull();
 	}
 
 	TITANIUM_FUNCTION(ContactsModule, getGroupByIdentifier)
@@ -238,7 +238,7 @@ namespace Titanium
 		if (group != nullptr) {
 			return group->get_object();
 		}
-		return get_context().CreateUndefined();
+		return get_context().CreateNull();
 	}
 
 	TITANIUM_FUNCTION(ContactsModule, getPeopleWithName)
@@ -260,7 +260,7 @@ namespace Titanium
 		if (person != nullptr) {
 			return person->get_object();
 		}
-		return get_context().CreateUndefined();
+		return get_context().CreateNull();
 	}
 
 	TITANIUM_FUNCTION(ContactsModule, getPersonByIdentifier)
@@ -271,7 +271,7 @@ namespace Titanium
 		if (person != nullptr) {
 			return person->get_object();
 		}
-		return get_context().CreateUndefined();
+		return get_context().CreateNull();
 	}
 
 	TITANIUM_FUNCTION(ContactsModule, removeGroup)
