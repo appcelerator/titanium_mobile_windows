@@ -7,171 +7,219 @@
 var should = require('./should');
 
 describe("Titanium.Contacts", function() {
-    it('apiName', function (finish) {
-        should(function () {
-            should(Ti.Contacts.apiName).be.eql("Titanium.Contacts");
-        }).not.throw();
-        finish();
-    });
+	it('apiName', function (finish) {
+		should(function () {
+			should(Ti.Contacts.apiName).be.eql("Titanium.Contacts");
+		}).not.throw();
+		finish();
+	});
 
 	it('AUTHORIZATION_AUTHORIZED', function (finish) {
-        should(function () {
-            should(Ti.Contacts.AUTHORIZATION_AUTHORIZED).not.be.undefined;
-            should(Ti.Contacts.AUTHORIZATION_AUTHORIZED).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Contacts.AUTHORIZATION_AUTHORIZED;
-            Ti.Contacts.AUTHORIZATION_AUTHORIZED = 1234;
-            should(Ti.Contacts.AUTHORIZATION_AUTHORIZED).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    it('AUTHORIZATION_DENIED', function (finish) {
-        should(function () {
-            should(Ti.Contacts.AUTHORIZATION_DENIED).not.be.undefined;
-            should(Ti.Contacts.AUTHORIZATION_DENIED).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Contacts.AUTHORIZATION_DENIED;
-            Ti.Contacts.AUTHORIZATION_DENIED = 1234;
-            should(Ti.Contacts.AUTHORIZATION_DENIED).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    it('AUTHORIZATION_RESTRICTED', function (finish) {
-        should(function () {
-            should(Ti.Contacts.AUTHORIZATION_RESTRICTED).not.be.undefined;
-            should(Ti.Contacts.AUTHORIZATION_RESTRICTED).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Contacts.AUTHORIZATION_RESTRICTED;
-            Ti.Contacts.AUTHORIZATION_RESTRICTED = 1234;
-            should(Ti.Contacts.AUTHORIZATION_RESTRICTED).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    it('AUTHORIZATION_UNKNOWN', function (finish) {
-        should(function () {
-            should(Ti.Contacts.AUTHORIZATION_UNKNOWN).not.be.undefined;
-            should(Ti.Contacts.AUTHORIZATION_UNKNOWN).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Contacts.AUTHORIZATION_UNKNOWN;
-            Ti.Contacts.AUTHORIZATION_UNKNOWN = 1234;
-            should(Ti.Contacts.AUTHORIZATION_UNKNOWN).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    it('CONTACTS_KIND_ORGANIZATION', function (finish) {
-        should(function () {
-            should(Ti.Contacts.CONTACTS_KIND_ORGANIZATION).not.be.undefined;
-            should(Ti.Contacts.CONTACTS_KIND_ORGANIZATION).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Contacts.CONTACTS_KIND_ORGANIZATION;
-            Ti.Contacts.CONTACTS_KIND_ORGANIZATION = 1234;
-            should(Ti.Contacts.CONTACTS_KIND_ORGANIZATION).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    it('CONTACTS_KIND_PERSON', function (finish) {
-        should(function () {
-            should(Ti.Contacts.CONTACTS_KIND_PERSON).not.be.undefined;
-            should(Ti.Contacts.CONTACTS_KIND_PERSON).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Contacts.CONTACTS_KIND_PERSON;
-            Ti.Contacts.CONTACTS_KIND_PERSON = 1234;
-            should(Ti.Contacts.CONTACTS_KIND_PERSON).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    it('CONTACTS_SORT_FIRST_NAME', function (finish) {
-        should(function () {
-            should(Ti.Contacts.CONTACTS_SORT_FIRST_NAME).not.be.undefined;
-            should(Ti.Contacts.CONTACTS_SORT_FIRST_NAME).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Contacts.CONTACTS_SORT_FIRST_NAME;
-            Ti.Contacts.CONTACTS_SORT_FIRST_NAME = 1234;
-            should(Ti.Contacts.CONTACTS_SORT_FIRST_NAME).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    it('CONTACTS_SORT_LAST_NAME', function (finish) {
-        should(function () {
-            should(Ti.Contacts.CONTACTS_SORT_LAST_NAME).not.be.undefined;
-            should(Ti.Contacts.CONTACTS_SORT_LAST_NAME).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Contacts.CONTACTS_SORT_LAST_NAME;
-            Ti.Contacts.CONTACTS_SORT_LAST_NAME = 1234;
-            should(Ti.Contacts.CONTACTS_SORT_LAST_NAME).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    it('contactsAuthorization', function (finish) {
-        should(function () {
-            should(Ti.Contacts.contactsAuthorization).not.be.undefined;
-            should(Ti.Contacts.contactsAuthorization).be.a.Number;
-            // should be one of the authorization contants
-            should([
-            	Ti.Contacts.AUTHORIZATION_UNKNOWN,
-            	Ti.Contacts.AUTHORIZATION_RESTRICTED,
-            	Ti.Contacts.AUTHORIZATION_DENIED,
-            	Ti.Contacts.AUTHORIZATION_AUTHORIZED
-            ]).containEql(Ti.Contacts.contactsAuthorization);
-        }).not.throw();
-        finish();
-    });
-    it("createGroup", function(finish) {
+		should(function () {
+			should(Ti.Contacts.AUTHORIZATION_AUTHORIZED).not.be.undefined;
+			should(Ti.Contacts.AUTHORIZATION_AUTHORIZED).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Contacts.AUTHORIZATION_AUTHORIZED;
+			Ti.Contacts.AUTHORIZATION_AUTHORIZED = 1234;
+			should(Ti.Contacts.AUTHORIZATION_AUTHORIZED).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+	it('AUTHORIZATION_DENIED', function (finish) {
+		should(function () {
+			should(Ti.Contacts.AUTHORIZATION_DENIED).not.be.undefined;
+			should(Ti.Contacts.AUTHORIZATION_DENIED).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Contacts.AUTHORIZATION_DENIED;
+			Ti.Contacts.AUTHORIZATION_DENIED = 1234;
+			should(Ti.Contacts.AUTHORIZATION_DENIED).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+	it('AUTHORIZATION_RESTRICTED', function (finish) {
+		should(function () {
+			should(Ti.Contacts.AUTHORIZATION_RESTRICTED).not.be.undefined;
+			should(Ti.Contacts.AUTHORIZATION_RESTRICTED).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Contacts.AUTHORIZATION_RESTRICTED;
+			Ti.Contacts.AUTHORIZATION_RESTRICTED = 1234;
+			should(Ti.Contacts.AUTHORIZATION_RESTRICTED).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+	it('AUTHORIZATION_UNKNOWN', function (finish) {
+		should(function () {
+			should(Ti.Contacts.AUTHORIZATION_UNKNOWN).not.be.undefined;
+			should(Ti.Contacts.AUTHORIZATION_UNKNOWN).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Contacts.AUTHORIZATION_UNKNOWN;
+			Ti.Contacts.AUTHORIZATION_UNKNOWN = 1234;
+			should(Ti.Contacts.AUTHORIZATION_UNKNOWN).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+	it('CONTACTS_KIND_ORGANIZATION', function (finish) {
+		should(function () {
+			should(Ti.Contacts.CONTACTS_KIND_ORGANIZATION).not.be.undefined;
+			should(Ti.Contacts.CONTACTS_KIND_ORGANIZATION).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Contacts.CONTACTS_KIND_ORGANIZATION;
+			Ti.Contacts.CONTACTS_KIND_ORGANIZATION = 1234;
+			should(Ti.Contacts.CONTACTS_KIND_ORGANIZATION).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+	it('CONTACTS_KIND_PERSON', function (finish) {
+		should(function () {
+			should(Ti.Contacts.CONTACTS_KIND_PERSON).not.be.undefined;
+			should(Ti.Contacts.CONTACTS_KIND_PERSON).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Contacts.CONTACTS_KIND_PERSON;
+			Ti.Contacts.CONTACTS_KIND_PERSON = 1234;
+			should(Ti.Contacts.CONTACTS_KIND_PERSON).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+	it('CONTACTS_SORT_FIRST_NAME', function (finish) {
+		should(function () {
+			should(Ti.Contacts.CONTACTS_SORT_FIRST_NAME).not.be.undefined;
+			should(Ti.Contacts.CONTACTS_SORT_FIRST_NAME).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Contacts.CONTACTS_SORT_FIRST_NAME;
+			Ti.Contacts.CONTACTS_SORT_FIRST_NAME = 1234;
+			should(Ti.Contacts.CONTACTS_SORT_FIRST_NAME).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+	it('CONTACTS_SORT_LAST_NAME', function (finish) {
+		should(function () {
+			should(Ti.Contacts.CONTACTS_SORT_LAST_NAME).not.be.undefined;
+			should(Ti.Contacts.CONTACTS_SORT_LAST_NAME).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Contacts.CONTACTS_SORT_LAST_NAME;
+			Ti.Contacts.CONTACTS_SORT_LAST_NAME = 1234;
+			should(Ti.Contacts.CONTACTS_SORT_LAST_NAME).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+	it('contactsAuthorization', function (finish) {
+		should(function () {
+			should(Ti.Contacts.contactsAuthorization).not.be.undefined;
+			should(Ti.Contacts.contactsAuthorization).be.a.Number;
+			// should be one of the authorization contants
+			should([
+				Ti.Contacts.AUTHORIZATION_UNKNOWN,
+				Ti.Contacts.AUTHORIZATION_RESTRICTED,
+				Ti.Contacts.AUTHORIZATION_DENIED,
+				Ti.Contacts.AUTHORIZATION_AUTHORIZED
+			]).containEql(Ti.Contacts.contactsAuthorization);
+		}).not.throw();
+		finish();
+	});
+	it("createGroup", function(finish) {
 		should(Ti.Contacts.createGroup).be.a.Function;
-		// TODO Now test that it returns a Ti.Contacts.Group
+		// exercising Ti.Contacts.Group creation is done in ti.contacts.group.test.js
 		finish();
 	});
 	it("createPerson", function(finish) {
 		should(Ti.Contacts.createPerson).be.a.Function;
-		// TODO Now test that it returns a Ti.Contacts.Person
+		// exercising Ti.Contacts.Person creation is done in ti.contacts.person.test.js
 		finish();
 	});
-    // Skip on Windows 10 for now, it causes exception and doesn't continue!
-	(Ti.Platform.version.indexOf('10.0' == 0) ? it.skip : it)("getAllGroups", function (finish) {
+	it("getAllGroups", function (finish) {
 		should(Ti.Contacts.getAllGroups).be.a.Function;
-		// TODO Now test that it returns an array of Ti.Contacts.Group
-		should(Ti.Contacts.getAllGroups()).be.an.Array;
+		var groups = Ti.Contacts.getAllGroups();
+		should(groups).be.an.Array;
+		for (var i = 0; i < groups.length; i++) {
+			should(groups[i]).not.be.null;
+			should(groups[i].apiName).be.eql("Titanium.Contacts.Group");
+		}
 		finish();
 	});
 	it("getAllPeople", function(finish) {
 		should(Ti.Contacts.getAllPeople).be.a.Function;
-		// TODO Now test that it returns a an array of Ti.Contacts.Person
-		should(Ti.Contacts.getAllPeople()).be.an.Array;
+		var people = Ti.Contacts.getAllPeople();
+		should(people).be.an.Array;
+		for (var i = 0; i < people.length; i++) {
+			should(people[i]).not.be.null;
+			should(people[i].apiName).be.eql("Titanium.Contacts.Person");
+		}
 		finish();
 	});
 	it("getGroupByID", function(finish) {
 		should(Ti.Contacts.getGroupByID).be.a.Function;
-		// TODO Now test that it returns a Ti.Contacts.Group
+		// deprecated, do no more for now
 		finish();
 	});
 	it("getGroupByIdentifier", function(finish) {
 		should(Ti.Contacts.getGroupByIdentifier).be.a.Function;
-		// TODO Now test that it returns a Ti.Contacts.Group
+		var noGroup = Ti.Contacts.getGroupByIdentifier("doesntexist");
+		should(noGroup).be.null;
+
+		var group = Ti.Contacts.createGroup({name: 'mygroup'});
+		Ti.Contacts.save();
+		var queriedGroup = Ti.Contacts.getGroupByIdentifier(group.identifier);
+		should(queriedGroup.name).be.eql(group.name);
+		should(queriedGroup.identifier).be.eql(group.identifier);
 		finish();
 	});
 	it("getPeopleWithName", function(finish) {
 		should(Ti.Contacts.getPeopleWithName).be.a.Function;
-		should(Ti.Contacts.getPeopleWithName("smith")).be.an.Array;
+		var smiths = Ti.Contacts.getPeopleWithName("smith");
+		should(smiths).be.an.Array;
 		finish();
 	});
 	it("getPersonByID", function(finish) {
 		should(Ti.Contacts.getPersonByID).be.a.Function;
-		// TODO Now test that it returns a Ti.Contacts.Person
+		// deprecated, do no more for now
 		finish();
 	});
 	it("getPersonByIdentifier", function(finish) {
 		should(Ti.Contacts.getPersonByIdentifier).be.a.Function;
-		// TODO Now test that it returns a Ti.Contacts.Person
+		// check for a person by bad identifier
+		var noPerson = Ti.Contacts.getPersonByIdentifier("doesntexist");
+		should(noPerson).be.null;
+		// create a person
+		var person = Ti.Contacts.createPerson({
+		  firstName:'Arthur',
+		  lastName:'Evans'
+		});
+		Ti.Contacts.save();
+		// Query for person we created
+		var identifier = person.identifier;
+		var queriedPerson = Ti.Contacts.getPersonByIdentifier(identifier);
+		should(queriedPerson.name).be.eql(person.name);
+		should(queriedPerson.identifier).be.eql(identifier);
+		// remove the person
+		Ti.Contacts.removePerson(queriedPerson);
+		Ti.Contacts.save();
+		// Make sure it got removed
+		queriedPerson = Ti.Contacts.getPersonByIdentifier(identifier);
+		should(queriedPerson).be.null;
 		finish();
 	});
 	it("removeGroup", function(finish) {
 		should(Ti.Contacts.removeGroup).be.a.Function;
-		// TODO Test the method
+		// Create a group
+		var group = Ti.Contacts.createGroup({name: 'removeme'});
+		Ti.Contacts.save();
+
+		// Make sure it now exists
+		var identifier = group.identifier;
+		var queriedGroup = Ti.Contacts.getGroupByIdentifier(identifier);
+		should(queriedGroup.name).be.eql(group.name);
+		should(queriedGroup.identifier).be.eql(identifier);
+		// remove the group
+		Ti.Contacts.removeGroup(group);
+		Ti.Contacts.save();
+		// Make sure it got removed
+		queriedGroup = Ti.Contacts.getGroupByIdentifier(identifier);
+		should(queriedGroup).be.null;
 		finish();
 	});
 	it("removePerson", function(finish) {
 		should(Ti.Contacts.removePerson).be.a.Function;
-		// TODO Test the method
+		// We exercise removal in getPersonByIdentifier
 		finish();
 	});
 	it("requestAuthorization", function(finish) {
@@ -186,7 +234,7 @@ describe("Titanium.Contacts", function() {
 	});
 	it("save", function(finish) {
 		should(Ti.Contacts.save).be.a.Function;
-		// TODO Test the method
+		// We exercise save above when we test adding/removing groups and person
 		finish();
 	});
 	it("showContacts", function(finish) {

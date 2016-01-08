@@ -65,22 +65,33 @@ namespace TitaniumWindows
 		// Windows 10+ API!
 		std::vector<std::shared_ptr<Titanium::Contacts::Group>> result;
 		// FIXME Should we grab the contact store during requestAuthorization?
+		const auto ctx = get_context();
 		concurrency::event event;
-		concurrency::create_task(ContactManager::RequestStoreAsync()).then([](ContactStore^ store) {
+		concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
+		.then([](ContactStore^ store) {
 			return store->FindContactListsAsync();
 		}, concurrency::task_continuation_context::use_arbitrary())
-		.then([this, &result, &event] (concurrency::task<IVectorView<ContactList^>^> task) {
+		.then([this, &result, &event, &ctx] (concurrency::task<IVectorView<ContactList^>^> task) {
 			try {
 				const auto lists = task.get();
 				for (const auto list : lists) {
-					result.push_back(listToGroup(get_context(), list));
+					result.push_back(listToGroup(ctx, list));
 				}
 			}
+			catch (Platform::AccessDeniedException^ ade) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: Access denied: ", ade->Message->Data());
+			}
+			catch (Platform::COMException^ e) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: ", e->Message->Data());
+			}
+			catch (const std::exception& e) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: ", e.what());
+			}
 			catch (...) {
-				// TODO Log something here?
+				TITANIUM_LOG_ERROR("i.Contacts.getAllGroups: Unknown error");
 			}
 			event.set();
-		});
+		}, concurrency::task_continuation_context::use_arbitrary());
 		event.wait();
 
 		return result;
@@ -152,6 +163,18 @@ namespace TitaniumWindows
 			try {
 				result = listToGroup(ctx, task.get());
 			}
+			catch (Platform::AccessDeniedException^ ade) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getGroupByIdentifier: Access denied:", ade->Message->Data());
+			}
+			catch (Platform::InvalidArgumentException^ iae) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getGroupByIdentifier: Invalid identifier: ", iae->Message->Data());
+			}
+			catch (Platform::COMException^ ce) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getGroupByIdentifier: ", ce->Message->Data());
+			}
+			catch (const std::exception& e) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getGroupByIdentifier: ", e.what());
+			}
 			catch (...) {
 				// TODO Log something here?
 			}
@@ -222,6 +245,18 @@ namespace TitaniumWindows
 		.then([&result, &event, &ctx](concurrency::task<Contact^> task) {
 			try {
 				result = contactToPerson(ctx, task.get());
+			}
+			catch (Platform::AccessDeniedException^ ade) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: Access denied:", ade->Message->Data());
+			}
+			catch (Platform::InvalidArgumentException^ iae) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: Invalid identifier: ", iae->Message->Data());
+			}
+			catch (Platform::COMException^ ce) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: ", ce->Message->Data());
+		}
+			catch (const std::exception& e) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: ", e.what());
 			}
 			catch (...) {
 				// TODO Log something here?
