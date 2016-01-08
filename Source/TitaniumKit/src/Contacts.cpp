@@ -198,6 +198,7 @@ namespace Titanium
 	{
 		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
 		CREATE_TITANIUM_CONTACTS(Person);
+		// TODO call save() after!
 	}
 
 	TITANIUM_FUNCTION(ContactsModule, getAllGroups)

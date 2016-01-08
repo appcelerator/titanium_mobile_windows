@@ -48,7 +48,8 @@ namespace TitaniumWindows
 			void construct(Windows::ApplicationModel::Contacts::ContactList^ list);
 #endif
 
-			void removeList();
+			virtual void create();
+			virtual void removeList();
 
 			virtual void add(const std::shared_ptr<Titanium::Contacts::Person>& person) TITANIUM_NOEXCEPT;
 			virtual std::vector<std::shared_ptr<Titanium::Contacts::Person>> members() TITANIUM_NOEXCEPT;

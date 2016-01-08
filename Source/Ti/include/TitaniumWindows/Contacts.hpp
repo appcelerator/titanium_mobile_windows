@@ -16,6 +16,11 @@ namespace TitaniumWindows
 {
 	using namespace HAL;
 
+	namespace Contacts
+	{
+		class Group;
+	}
+
 	/*!
 	  @class ContactsModule
 	  @ingroup Titanium.Contacts
@@ -46,12 +51,17 @@ namespace TitaniumWindows
 		virtual std::shared_ptr<Titanium::Contacts::Group> getGroupByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT override final;
 		virtual std::vector<std::shared_ptr<Titanium::Contacts::Person>> getPeopleWithName(const std::string& name) TITANIUM_NOEXCEPT override final;
 		virtual std::shared_ptr<Titanium::Contacts::Person> getPersonByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT override final;
+		virtual JSValue js_createGroup(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT override final;
 		virtual void removeGroup(const std::shared_ptr<Titanium::Contacts::Group>& group) TITANIUM_NOEXCEPT override final;
 		virtual void removePerson(const std::shared_ptr<Titanium::Contacts::Person>& person) TITANIUM_NOEXCEPT override final;
 		virtual void revert() TITANIUM_NOEXCEPT override final;
 		virtual void save(const std::vector<std::shared_ptr<Titanium::Contacts::Person>>& contacts) TITANIUM_NOEXCEPT override final;
 		virtual void showContacts(const Titanium::Contacts::ShowContactsParams& params) TITANIUM_NOEXCEPT override final;
 		virtual void requestAuthorization(JSObject& callback) TITANIUM_NOEXCEPT override final;
+
+	private:
+		std::vector<std::shared_ptr<TitaniumWindows::Contacts::Group>> to_create;
+		std::vector<std::shared_ptr<TitaniumWindows::Contacts::Group>> to_remove;
 	};
 }  // namespace TitaniumWindows
 #endif // _TITANIUMWINDOWS_CONTACTS_HPP_

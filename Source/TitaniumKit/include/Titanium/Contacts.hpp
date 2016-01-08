@@ -199,7 +199,7 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_READONLY_DEF(contactsAuthorization);
 
-		TITANIUM_FUNCTION_DEF(createGroup);
+		virtual TITANIUM_FUNCTION_DEF(createGroup);
 		TITANIUM_FUNCTION_DEF(createPerson);
 		TITANIUM_FUNCTION_DEF(getAllGroups);
 		TITANIUM_FUNCTION_DEF(getAllPeople);

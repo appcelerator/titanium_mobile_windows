@@ -151,17 +151,35 @@ describe("Titanium.Contacts", function() {
 		// deprecated, do no more for now
 		finish();
 	});
-	it("getGroupByIdentifier", function(finish) {
-		should(Ti.Contacts.getGroupByIdentifier).be.a.Function;
-		var noGroup = Ti.Contacts.getGroupByIdentifier("doesntexist");
-		should(noGroup).be.null;
+	it("getGroupByIdentifier", function (finish) {
+	    should(Ti.Contacts.getGroupByIdentifier).be.a.Function;
+	    var noGroup = Ti.Contacts.getGroupByIdentifier("doesntexist");
+	    should(noGroup).be.null;
+	    finish();
+	});
+	it("Group add/remove", function (finish) {
+	    // Look for existing group and remove it first before we try to create dupe (which fails)
+	    var allGroups = Ti.Contacts.getAllGroups();
+	    for (var i = 0; i < allGroups.length; i++) {
+	        if (allGroups[i].name == 'mygroup') {
+	            Ti.Contacts.removeGroup(allGroups[i]);
+	            Ti.Contacts.save();
+	            break;
+	        }
+	    }
 
-		var group = Ti.Contacts.createGroup({name: 'mygroup'});
-		Ti.Contacts.save();
-		var queriedGroup = Ti.Contacts.getGroupByIdentifier(group.identifier);
-		should(queriedGroup.name).be.eql(group.name);
-		should(queriedGroup.identifier).be.eql(group.identifier);
-		finish();
+	    var group = Ti.Contacts.createGroup({ name: 'mygroup' });
+	    Ti.Contacts.save();
+
+	    var queriedGroup = Ti.Contacts.getGroupByIdentifier(group.identifier);
+	    should(queriedGroup.name).be.eql(group.name);
+	    should(queriedGroup.identifier).be.eql(group.identifier);
+
+	    // Now remove the group we created to clean up properly
+	    Ti.Contacts.removeGroup(group);
+	    Ti.Contacts.save();
+
+	    finish();
 	});
 	it("getPeopleWithName", function(finish) {
 		should(Ti.Contacts.getPeopleWithName).be.a.Function;
@@ -179,47 +197,38 @@ describe("Titanium.Contacts", function() {
 		// check for a person by bad identifier
 		var noPerson = Ti.Contacts.getPersonByIdentifier("doesntexist");
 		should(noPerson).be.null;
-		// create a person
-		var person = Ti.Contacts.createPerson({
-		  firstName:'Arthur',
-		  lastName:'Evans'
-		});
-		Ti.Contacts.save();
-		// Query for person we created
-		var identifier = person.identifier;
-		var queriedPerson = Ti.Contacts.getPersonByIdentifier(identifier);
-		should(queriedPerson.name).be.eql(person.name);
-		should(queriedPerson.identifier).be.eql(identifier);
-		// remove the person
-		Ti.Contacts.removePerson(queriedPerson);
-		Ti.Contacts.save();
-		// Make sure it got removed
-		queriedPerson = Ti.Contacts.getPersonByIdentifier(identifier);
-		should(queriedPerson).be.null;
 		finish();
 	});
-	it("removeGroup", function(finish) {
-		should(Ti.Contacts.removeGroup).be.a.Function;
-		// Create a group
-		var group = Ti.Contacts.createGroup({name: 'removeme'});
-		Ti.Contacts.save();
+	it("Person add/remove", function (finish) {
+	    // TODO Remove Arthur first if he already exists!
 
-		// Make sure it now exists
-		var identifier = group.identifier;
-		var queriedGroup = Ti.Contacts.getGroupByIdentifier(identifier);
-		should(queriedGroup.name).be.eql(group.name);
-		should(queriedGroup.identifier).be.eql(identifier);
-		// remove the group
-		Ti.Contacts.removeGroup(group);
-		Ti.Contacts.save();
-		// Make sure it got removed
-		queriedGroup = Ti.Contacts.getGroupByIdentifier(identifier);
-		should(queriedGroup).be.null;
+	    // create a person
+	    var person = Ti.Contacts.createPerson({
+	        firstName: 'Arthur',
+	        lastName: 'Evans'
+	    });
+	    Ti.Contacts.save();
+	    // Query for person we created
+	    var identifier = person.identifier;
+	    var queriedPerson = Ti.Contacts.getPersonByIdentifier(identifier);
+	    should(queriedPerson.name).be.eql(person.name);
+	    should(queriedPerson.identifier).be.eql(identifier);
+	    // remove the person
+	    Ti.Contacts.removePerson(queriedPerson);
+	    Ti.Contacts.save();
+	    // Make sure they got removed
+	    queriedPerson = Ti.Contacts.getPersonByIdentifier(identifier);
+	    should(queriedPerson).be.null;
+	    finish();
+	});
+	it("removeGroup", function(finish) {
+	    should(Ti.Contacts.removeGroup).be.a.Function;
+        // We exercise removal in Group add/remove
 		finish();
 	});
 	it("removePerson", function(finish) {
 		should(Ti.Contacts.removePerson).be.a.Function;
-		// We exercise removal in getPersonByIdentifier
+		// We exercise removal in Person add/remove
 		finish();
 	});
 	it("requestAuthorization", function(finish) {

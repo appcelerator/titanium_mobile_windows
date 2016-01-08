@@ -17,6 +17,8 @@ namespace TitaniumWindows
 {
 	namespace Contacts
 	{
+		using namespace Windows::ApplicationModel::Contacts;
+
 		Group::Group(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			: Titanium::Contacts::Group(js_context, arguments)
 		{
@@ -142,12 +144,72 @@ namespace TitaniumWindows
 			TITANIUM_LOG_WARN("Group::recordId property is read-only");
 		}
 
+		void Group::create()
+		{
+#if defined(IS_WINDOWS_10)
+			const auto name = TitaniumWindows::Utility::ConvertUTF8String(get_name());
+
+			concurrency::event event;
+			concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AppContactsReadWrite), concurrency::task_continuation_context::use_arbitrary())
+			.then([&name](ContactStore^ store) {
+				return store->CreateContactListAsync(name);
+			}, concurrency::task_continuation_context::use_arbitrary())
+			.then([this, &event](concurrency::task<ContactList^> task) {
+				try {
+					construct(task.get());
+				}
+				catch (Platform::AccessDeniedException^ ade) {
+					TITANIUM_LOG_ERROR("Ti.Contacts.Group.create: Access denied:", ade->Message->Data());
+				}
+				catch (Platform::COMException^ ce) {
+					TITANIUM_LOG_ERROR("Ti.Contacts.Group.create: ", ce->Message->Data());
+				}
+				catch (const std::exception& e) {
+					TITANIUM_LOG_ERROR("Ti.Contacts.Group.create: ", e.what());
+				}
+				catch (...) {
+					// TODO Log something here?
+				}
+				event.set();
+			}, concurrency::task_continuation_context::use_arbitrary());
+			event.wait();
+#else
+			TITANIUM_LOG_WARN("Group::create: Unimplemented");
+#endif
+		}
+
 		void Group::removeList()
 		{
 #if defined(IS_WINDOWS_10)
 			// Do we need to make this sync? I don't think we do...
 			if (contact_list__) {
-				contact_list__->DeleteAsync();
+				// We can't call DeleteAsync on this list because we likely looked it up via read only store
+				// So let's try and get it via a read/write store and delete it
+				concurrency::event event;
+				concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AppContactsReadWrite), concurrency::task_continuation_context::use_arbitrary())
+					.then([this](ContactStore^ store) {
+					return store->GetContactListAsync(contact_list__->Id);
+				}, concurrency::task_continuation_context::use_arbitrary())
+						.then([this, &event](concurrency::task<ContactList^> task) {
+					try {
+						auto list = task.get();
+						list->DeleteAsync();
+					}
+					catch (Platform::AccessDeniedException^ ade) {
+						TITANIUM_LOG_ERROR("Ti.Contacts.Group.removeList: Access denied:", ade->Message->Data());
+					}
+					catch (Platform::COMException^ ce) {
+						TITANIUM_LOG_ERROR("Ti.Contacts.Group.removeList: ", ce->Message->Data());
+					}
+					catch (const std::exception& e) {
+						TITANIUM_LOG_ERROR("Ti.Contacts.Group.removeList: ", e.what());
+					}
+					catch (...) {
+						// TODO Log something here?
+					}
+					event.set();
+				}, concurrency::task_continuation_context::use_arbitrary());
+				event.wait();
 			}
 #else
 			TITANIUM_LOG_WARN("Group::removeList: Unimplemented");

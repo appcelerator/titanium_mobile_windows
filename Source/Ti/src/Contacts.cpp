@@ -293,10 +293,22 @@ namespace TitaniumWindows
 		return result;
 	}
 
+	JSValue ContactsModule::js_createGroup(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	{
+		auto result = Titanium::ContactsModule::js_createGroup(arguments, this_object);
+		// record group we'll need to save later!
+		if (result.IsObject()) {
+			auto object = static_cast<JSObject>(result);
+			auto group_ptr = object.GetPrivate<TitaniumWindows::Contacts::Group>();
+			to_create.push_back(group_ptr);
+		}
+		return result;
+	}
+
 	void ContactsModule::removeGroup(const std::shared_ptr<Titanium::Contacts::Group>& group) TITANIUM_NOEXCEPT
 	{
 		std::shared_ptr<TitaniumWindows::Contacts::Group> win_group = std::dynamic_pointer_cast<TitaniumWindows::Contacts::Group>(group);
-		win_group->removeList();
+		to_remove.push_back(win_group);
 	}
 
 	void ContactsModule::removePerson(const std::shared_ptr<Titanium::Contacts::Person>& person) TITANIUM_NOEXCEPT
@@ -313,7 +325,15 @@ namespace TitaniumWindows
 	void ContactsModule::save(const std::vector<std::shared_ptr<Titanium::Contacts::Person>>& contacts) TITANIUM_NOEXCEPT
 	{
 		// TODO Commit any created groups, remove any removed groups!
-		TITANIUM_LOG_WARN("Ti.Contacts.save is not implemented yet");
+		for (auto group : to_create) {
+			group->create();
+		}
+		to_create.clear();
+		// Remove any pending!
+		for (auto group : to_remove) {
+			group->removeList();
+		}
+		to_remove.clear();
 	}
 
 	void ContactsModule::showContacts(const Titanium::Contacts::ShowContactsParams& params) TITANIUM_NOEXCEPT
