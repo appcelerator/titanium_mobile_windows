@@ -11,6 +11,7 @@
 
 #include "TitaniumWindows_Ti_EXPORT.h"
 #include "Titanium/Contacts.hpp"
+#include "TitaniumWindows/WindowsMacros.hpp"
 
 namespace TitaniumWindows
 {
@@ -52,6 +53,7 @@ namespace TitaniumWindows
 		virtual std::vector<std::shared_ptr<Titanium::Contacts::Person>> getPeopleWithName(const std::string& name) TITANIUM_NOEXCEPT override final;
 		virtual std::shared_ptr<Titanium::Contacts::Person> getPersonByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT override final;
 		virtual JSValue js_createGroup(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT override final;
+		virtual JSValue js_createPerson(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT override final;
 		virtual void removeGroup(const std::shared_ptr<Titanium::Contacts::Group>& group) TITANIUM_NOEXCEPT override final;
 		virtual void removePerson(const std::shared_ptr<Titanium::Contacts::Person>& person) TITANIUM_NOEXCEPT override final;
 		virtual void revert() TITANIUM_NOEXCEPT override final;

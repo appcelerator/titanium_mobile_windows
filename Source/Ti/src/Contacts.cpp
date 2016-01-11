@@ -13,7 +13,6 @@
 #include "TitaniumWindows/Contacts/Group.hpp"
 #include "TitaniumWindows/Contacts/Person.hpp"
 #include "TitaniumWindows/Utility.hpp"
-#include "TitaniumWindows/WindowsMacros.hpp"
 #include <ppltasks.h>
 #include <collection.h>
 #include <concrt.h>
@@ -35,30 +34,6 @@ namespace TitaniumWindows
 		JSExport<ContactsModule>::SetParent(JSExport<Titanium::ContactsModule>::Class());
 	}
 
-#if defined(IS_WINDOWS_10)
-	// Windows 10+ API!
-	static std::shared_ptr<Titanium::Contacts::Group> listToGroup(const JSContext& context, Windows::ApplicationModel::Contacts::ContactList^ contact_list) TITANIUM_NOEXCEPT
-	{
-		// convert the contact_list to a Group object!
-		auto Group = context.CreateObject(JSExport<TitaniumWindows::Contacts::Group>::Class());
-		auto group = Group.CallAsConstructor();
-		auto group_ptr = group.GetPrivate<TitaniumWindows::Contacts::Group>();
-		group_ptr->construct(contact_list);
-
-		return group.GetPrivate<Titanium::Contacts::Group>();
-	}
-#endif
-
-	static std::shared_ptr<Titanium::Contacts::Person> contactToPerson(const JSContext& context, Windows::ApplicationModel::Contacts::Contact^ contact) TITANIUM_NOEXCEPT
-	{
-		auto Person = context.CreateObject(JSExport<TitaniumWindows::Contacts::Person>::Class());
-		auto person = Person.CallAsConstructor();
-		auto person_ptr = person.GetPrivate<TitaniumWindows::Contacts::Person>();
-		person_ptr->construct(contact);
-
-		return person.GetPrivate<Titanium::Contacts::Person>();
-	}
-
 	std::vector<std::shared_ptr<Titanium::Contacts::Group>> ContactsModule::getAllGroups() TITANIUM_NOEXCEPT
 	{
 #if defined(IS_WINDOWS_10)
@@ -67,7 +42,7 @@ namespace TitaniumWindows
 		// FIXME Should we grab the contact store during requestAuthorization?
 		concurrency::event event;
 		IVectorView<ContactList^>^ lists;
-		concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
+		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
 		.then([](ContactStore^ store) {
 			return store->FindContactListsAsync();
 		}, concurrency::task_continuation_context::use_arbitrary())
@@ -85,7 +60,7 @@ namespace TitaniumWindows
 				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: ", e.what());
 			}
 			catch (...) {
-				TITANIUM_LOG_ERROR("i.Contacts.getAllGroups: Unknown error");
+				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: Unknown error");
 			}
 			event.set();
 		}, concurrency::task_continuation_context::use_arbitrary());
@@ -93,7 +68,7 @@ namespace TitaniumWindows
 
 		const auto ctx = get_context();
 		for (const auto list : lists) {
-			result.push_back(listToGroup(ctx, list));
+			result.push_back(TitaniumWindows::Contacts::listToGroup(ctx, list));
 		}
 
 		return result;
@@ -112,7 +87,7 @@ namespace TitaniumWindows
 			
 			IVectorView<Contact^>^ contacts;
 			concurrency::event event;
-			concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
+			concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
 			.then([](ContactStore^ store) {
 				return store->FindContactsAsync();
 			}, concurrency::task_continuation_context::use_arbitrary())
@@ -135,7 +110,7 @@ namespace TitaniumWindows
 			if (contacts) {
 				const auto ctx = get_context();
 				for (auto contact : contacts) {
-					result.push_back(contactToPerson(ctx, contact));
+					result.push_back(TitaniumWindows::Contacts::contactToPerson(ctx, contact));
 				}
 			}
 
@@ -164,7 +139,7 @@ namespace TitaniumWindows
 		ContactList^ list;
 
 		concurrency::event event;
-		concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
+		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
 		.then([&identifier](ContactStore^ store) {
 			return store->GetContactListAsync(identifier);
 		}, concurrency::task_continuation_context::use_arbitrary())
@@ -193,7 +168,7 @@ namespace TitaniumWindows
 
 		if (list) {
 			const auto ctx = get_context();
-			result = listToGroup(ctx, list);
+			result = TitaniumWindows::Contacts::listToGroup(ctx, list);
 		}
 
 		return result;
@@ -211,7 +186,7 @@ namespace TitaniumWindows
 		IVectorView<Contact^>^ contacts;
 		const auto query = TitaniumWindows::Utility::ConvertUTF8String(name);
 		concurrency::event event;
-		concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
+		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
 		.then([&query](ContactStore^ store) {
 			return store->FindContactsAsync(query);
 		}, concurrency::task_continuation_context::use_arbitrary())
@@ -238,7 +213,7 @@ namespace TitaniumWindows
 		if (contacts) {
 			const auto ctx = get_context();
 			for (const auto contact : contacts) {
-				result.push_back(contactToPerson(ctx, contact));
+				result.push_back(TitaniumWindows::Contacts::contactToPerson(ctx, contact));
 			}
 		}
 #else
@@ -256,7 +231,7 @@ namespace TitaniumWindows
 		const auto identifier = TitaniumWindows::Utility::ConvertUTF8String(static_cast<std::string>(id));
 		Contact^ contact;
 		concurrency::event event;
-		concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
+		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
 		.then([&identifier](ContactStore^ store) {
 			return store->GetContactAsync(identifier);
 		}, concurrency::task_continuation_context::use_arbitrary())
@@ -285,7 +260,7 @@ namespace TitaniumWindows
 
 		if (contact) {
 			const auto ctx = get_context();
-			result = contactToPerson(ctx, contact);
+			result = TitaniumWindows::Contacts::contactToPerson(ctx, contact);
 		}
 #else
 		TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: Contact access not allowed on Windows 8.1 Store/Desktop apps");
@@ -301,6 +276,43 @@ namespace TitaniumWindows
 			auto object = static_cast<JSObject>(result);
 			auto group_ptr = object.GetPrivate<TitaniumWindows::Contacts::Group>();
 			to_create.push_back(group_ptr);
+		}
+		return result;
+	}
+
+	JSValue ContactsModule::js_createPerson(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	{
+		auto result = Titanium::ContactsModule::js_createPerson(arguments, this_object);
+		if (result.IsObject()) {
+			// save first so we know any pending groups are created...
+			std::vector<std::shared_ptr<Titanium::Contacts::Person>> contacts;
+			save(contacts);
+
+			// get or create a "Default" group to place the people into!
+			// TODO for performance sake, hold onto default group ptr?
+			std::shared_ptr<Titanium::Contacts::Group> default_group = nullptr;
+			const auto groups = getAllGroups();
+			for (const auto group : groups) {
+				if (group->get_name() == "Default") {
+					default_group = group;
+					break;
+				}
+			}
+			if (!default_group) {
+				const auto context = get_context();
+				auto arg_object = context.CreateObject();
+				arg_object.SetProperty("name", context.CreateString("Default"));
+				std::vector<JSValue> group_arguments = { arg_object };
+				auto result = Titanium::ContactsModule::js_createGroup(group_arguments, this_object);
+				auto object = static_cast<JSObject>(result);
+				auto default_win_group = object.GetPrivate<TitaniumWindows::Contacts::Group>();
+				default_win_group->create();
+				default_group = default_win_group;
+			}
+
+			auto person_object = static_cast<JSObject>(result);
+			auto person = person_object.GetPrivate<TitaniumWindows::Contacts::Person>();
+			default_group->add(person);
 		}
 		return result;
 	}
@@ -379,7 +391,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 		if (Titanium::Contacts::AUTHORIZATION::UNKNOWN == contactsAuthorization__) {
 			concurrency::event event;
-			concurrency::create_task(ContactManager::RequestStoreAsync(), concurrency::task_continuation_context::use_arbitrary())
+			concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
 			.then([&callback, &event, &e, this](concurrency::task<ContactStore^> task) {
 				try {
 					task.get(); // TODO Set a field to hold the store for re-use in the other methods?

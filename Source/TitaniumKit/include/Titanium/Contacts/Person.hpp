@@ -123,6 +123,13 @@ namespace Titanium
 
 			/*!
 			  @property
+			  @abstract identifier
+			  @discussion Identifier of the person.
+			*/
+			TITANIUM_PROPERTY_IMPL_READONLY_DEF(std::string, identifier);
+
+			/*!
+			  @property
 			  @abstract image
 			  @discussion Image for the person. Single value.
 			*/
@@ -279,6 +286,7 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(firstPhonetic);
 			TITANIUM_PROPERTY_DEF(fullName);
 			TITANIUM_PROPERTY_READONLY_DEF(id);
+			TITANIUM_PROPERTY_READONLY_DEF(identifier);
 			TITANIUM_PROPERTY_DEF(image);
 			TITANIUM_PROPERTY_DEF(instantMessage);
 			TITANIUM_PROPERTY_DEF(jobTitle);
@@ -319,6 +327,7 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getFullName);
 			TITANIUM_FUNCTION_DEF(setFullName);
 			TITANIUM_FUNCTION_DEF(getId);
+			TITANIUM_FUNCTION_DEF(getIdentifier);
 			TITANIUM_FUNCTION_DEF(getImage);
 			TITANIUM_FUNCTION_DEF(setImage);
 			TITANIUM_FUNCTION_DEF(getInstantMessage);
@@ -371,6 +380,7 @@ namespace Titanium
 			std::string firstPhonetic__;
 			std::string fullName__;
 			JSValue id__;
+			std::string identifier__;
 			std::shared_ptr<::Titanium::Blob> image__;
 			InstantMessages instantMessage__;
 			std::string jobTitle__;

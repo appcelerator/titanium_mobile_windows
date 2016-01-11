@@ -28,8 +28,10 @@ namespace TitaniumWindows
 
 		void Person::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 		{
-			Titanium::Contacts::Person::postCallAsConstructor(js_context, arguments);	
 			contact__ = ref new Contact();
+			Titanium::Contacts::Person::postCallAsConstructor(js_context, arguments);
+
+			// TODO Add this person to a default contact list we maintain!
 		}
 
 		void Person::construct(Windows::ApplicationModel::Contacts::Contact^ contact)
@@ -346,7 +348,12 @@ namespace TitaniumWindows
 
 		JSValue Person::get_id() const TITANIUM_NOEXCEPT
 		{
-			return get_context().CreateString(TitaniumWindows::Utility::ConvertUTF8String(contact__->Id));
+			return get_context().CreateString(get_identifier());
+		}
+
+		std::string Person::get_identifier() const TITANIUM_NOEXCEPT
+		{
+			return TitaniumWindows::Utility::ConvertUTF8String(contact__->Id);
 		}
 
 		void Person::set_image(const std::shared_ptr<::Titanium::Blob>& image) TITANIUM_NOEXCEPT
@@ -925,8 +932,9 @@ namespace TitaniumWindows
 		ContactWebsite^ Person::createWebsite(const std::string& value, const std::string& type) TITANIUM_NOEXCEPT
 		{
 			auto website = ref new ContactWebsite();
-			// FIXME Windows 10+ API
-			//website->RawValue = TitaniumWindows::Utility::ConvertUTF8String(value);
+#if defined(IS_WINDOWS_10)
+			website->RawValue = TitaniumWindows::Utility::ConvertUTF8String(value);
+#endif
 			website->Uri = ref new Windows::Foundation::Uri(TitaniumWindows::Utility::ConvertUTF8String(value));
 			// Store the Titanium url type in the Description field
 			website->Description = TitaniumWindows::Utility::ConvertUTF8String(type);
@@ -936,8 +944,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 		Windows::ApplicationModel::Contacts::Contact^ Person::GetContact()
 		{
-			TITANIUM_LOG_WARN("Person::GetContact: Unimplemented");
-			return nullptr;
+			return contact__;
 		}
 #endif
 
@@ -947,7 +954,7 @@ namespace TitaniumWindows
 			auto list_id = contact__->ContactListId;
 			// Pull up the contact list associated with this contact...
 			ContactList^ result;
-			concurrency::create_task(ContactManager::RequestStoreAsync()).then([&list_id](ContactStore^ store) {
+			concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AppContactsReadWrite)).then([&list_id](ContactStore^ store) {
 				return store->GetContactListAsync(list_id);
 			}, concurrency::task_continuation_context::use_arbitrary())
 			.then([this, &result] (concurrency::task<ContactList^> task) {
@@ -966,6 +973,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 		void Person::removeFromList(ContactList^ list)
 		{
+			// FIXME We need to move the contact to some "default" list we generate
 			list->DeleteContactAsync(contact__);
 		}
 #endif

@@ -19,6 +19,7 @@ namespace TitaniumWindows
 	namespace Contacts
 	{
 		using namespace HAL;
+		using namespace Windows::ApplicationModel::Contacts;
 
 		/*!
 		  @class Group
@@ -45,7 +46,7 @@ namespace TitaniumWindows
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 #if defined(IS_WINDOWS_10)
-			void construct(Windows::ApplicationModel::Contacts::ContactList^ list);
+			void construct(ContactList^ list);
 #endif
 
 			virtual void create();
@@ -63,9 +64,24 @@ namespace TitaniumWindows
 
 		private:
 #if defined(IS_WINDOWS_10)
-			Windows::ApplicationModel::Contacts::ContactList^ contact_list__;
+			bool is_writable__{ false };
+			ContactList^ contact_list__;
+			ContactList^ get_writable_list();
 #endif
 		};
+
+#if defined(IS_WINDOWS_10)
+		static std::shared_ptr<Titanium::Contacts::Group> listToGroup(const JSContext& context, ContactList^ contact_list) TITANIUM_NOEXCEPT
+		{
+			// convert the contact_list to a Group object!
+			auto Group = context.CreateObject(JSExport<TitaniumWindows::Contacts::Group>::Class());
+			auto group = Group.CallAsConstructor();
+			auto group_ptr = group.GetPrivate<TitaniumWindows::Contacts::Group>();
+			group_ptr->construct(contact_list);
+
+			return group.GetPrivate<Titanium::Contacts::Group>();
+		}
+#endif
 	}  // namespace Contacts
 }  // namespace TitaniumWindows
 #endif // _TITANIUMWINDOWS_GROUP_HPP_

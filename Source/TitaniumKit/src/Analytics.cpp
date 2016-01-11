@@ -103,7 +103,7 @@ namespace Titanium
 			auto func = analytics->getTiObject().GetProperty("featureEvent");
 			return static_cast<JSObject>(func)(arguments, this_object);
 		} else {
-			TITANIUM_LOG_ERROR("Failed to execute Database.featureEvent");
+			TITANIUM_LOG_ERROR("Failed to execute Analytics.featureEvent");
 			return this_object.get_context().CreateNull();
 		}
 	}
@@ -119,7 +119,7 @@ namespace Titanium
 			auto func = analytics->getTiObject().GetProperty("navEvent");
 			return static_cast<JSObject>(func)(arguments, this_object);
 		} else {
-			TITANIUM_LOG_ERROR("Failed to execute Database.navEvent");
+			TITANIUM_LOG_ERROR("Failed to execute Analytics.navEvent");
 			return get_context().CreateNull();
 		}
 	}

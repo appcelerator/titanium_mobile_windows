@@ -172,12 +172,17 @@ describe("Titanium.Contacts", function() {
 	    Ti.Contacts.save();
 
 	    var queriedGroup = Ti.Contacts.getGroupByIdentifier(group.identifier);
+	    should(queriedGroup).not.be.null;
 	    should(queriedGroup.name).be.eql(group.name);
 	    should(queriedGroup.identifier).be.eql(group.identifier);
 
 	    // Now remove the group we created to clean up properly
 	    Ti.Contacts.removeGroup(group);
 	    Ti.Contacts.save();
+
+        // Make sure it was removed
+	    queriedGroup = Ti.Contacts.getGroupByIdentifier(group.identifier);
+	    should(queriedGroup).be.null;
 
 	    finish();
 	});
@@ -208,16 +213,20 @@ describe("Titanium.Contacts", function() {
 	        lastName: 'Evans'
 	    });
 	    Ti.Contacts.save();
+
 	    // Query for person we created
-	    var identifier = person.identifier;
-	    var queriedPerson = Ti.Contacts.getPersonByIdentifier(identifier);
-	    should(queriedPerson.name).be.eql(person.name);
-	    should(queriedPerson.identifier).be.eql(identifier);
+	    var queriedPerson = Ti.Contacts.getPersonByIdentifier(person.identifier);
+	    should(queriedPerson).not.be.null;
+	    should(queriedPerson.firstName).be.eql(person.firstName);
+	    should(queriedPerson.lastName).be.eql(person.lastName);
+	    should(queriedPerson.identifier).be.eql(person.identifier);
+
 	    // remove the person
 	    Ti.Contacts.removePerson(queriedPerson);
 	    Ti.Contacts.save();
+
 	    // Make sure they got removed
-	    queriedPerson = Ti.Contacts.getPersonByIdentifier(identifier);
+	    queriedPerson = Ti.Contacts.getPersonByIdentifier(person.identifier);
 	    should(queriedPerson).be.null;
 	    finish();
 	});

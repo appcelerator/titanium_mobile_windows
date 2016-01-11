@@ -19,6 +19,7 @@ namespace TitaniumWindows
 	namespace Contacts
 	{
 		using namespace HAL;
+		using namespace Windows::ApplicationModel::Contacts;
 
 		/*!
 		  @class Person
@@ -44,7 +45,7 @@ namespace TitaniumWindows
 
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
-			void construct(Windows::ApplicationModel::Contacts::Contact^ contact);
+			void construct(Contact^ contact);
 
 			virtual Titanium::Contacts::Addresses get_address() const TITANIUM_NOEXCEPT override final;
 			virtual void set_address(const Titanium::Contacts::Addresses&) TITANIUM_NOEXCEPT override final;
@@ -64,6 +65,7 @@ namespace TitaniumWindows
 			virtual std::string get_fullName() const TITANIUM_NOEXCEPT override final;
 			virtual void set_fullName(const std::string&) TITANIUM_NOEXCEPT override final;
 			virtual JSValue get_id() const TITANIUM_NOEXCEPT override final;
+			virtual std::string get_identifier() const TITANIUM_NOEXCEPT override final;
 			virtual void set_image(const std::shared_ptr<::Titanium::Blob>&) TITANIUM_NOEXCEPT override final;
 			virtual Titanium::Contacts::InstantMessages get_instantMessage() const TITANIUM_NOEXCEPT override final;
 			virtual void set_instantMessage(const Titanium::Contacts::InstantMessages&) TITANIUM_NOEXCEPT override final;
@@ -98,20 +100,30 @@ namespace TitaniumWindows
 
 			void remove();
 #if defined(IS_WINDOWS_10)
-			Windows::ApplicationModel::Contacts::Contact^ GetContact();
-			void removeFromList(Windows::ApplicationModel::Contacts::ContactList^ list);
+			Contact^ GetContact();
+			void removeFromList(ContactList^ list);
 #endif
 		private:
-			Windows::ApplicationModel::Contacts::ContactAddress^ Person::createAddress(const Titanium::Contacts::Address&, Windows::ApplicationModel::Contacts::ContactAddressKind) TITANIUM_NOEXCEPT;
-			Windows::ApplicationModel::Contacts::ContactDate^ Person::createDate(const std::string&, Windows::ApplicationModel::Contacts::ContactDateKind) TITANIUM_NOEXCEPT;
-			Windows::ApplicationModel::Contacts::ContactEmail^ Person::createEmail(const std::string&, Windows::ApplicationModel::Contacts::ContactEmailKind) TITANIUM_NOEXCEPT;
-			Windows::ApplicationModel::Contacts::ContactWebsite^ Person::createWebsite(const std::string&, const std::string&) TITANIUM_NOEXCEPT;
-			Windows::ApplicationModel::Contacts::ContactPhone^ Person::createPhone(const std::string&, const std::string&, Windows::ApplicationModel::Contacts::ContactPhoneKind) TITANIUM_NOEXCEPT;
-			Windows::ApplicationModel::Contacts::ContactConnectedServiceAccount^ Person::createInstantMessage(const Titanium::Contacts::InstantMessage&) TITANIUM_NOEXCEPT;
-			Windows::ApplicationModel::Contacts::ContactSignificantOther^ Person::createSignificantOther(const std::string&, const std::string&) TITANIUM_NOEXCEPT;
+			ContactAddress^ Person::createAddress(const Titanium::Contacts::Address&, ContactAddressKind) TITANIUM_NOEXCEPT;
+			ContactDate^ Person::createDate(const std::string&, ContactDateKind) TITANIUM_NOEXCEPT;
+			ContactEmail^ Person::createEmail(const std::string&, ContactEmailKind) TITANIUM_NOEXCEPT;
+			ContactWebsite^ Person::createWebsite(const std::string&, const std::string&) TITANIUM_NOEXCEPT;
+			ContactPhone^ Person::createPhone(const std::string&, const std::string&, ContactPhoneKind) TITANIUM_NOEXCEPT;
+			ContactConnectedServiceAccount^ Person::createInstantMessage(const Titanium::Contacts::InstantMessage&) TITANIUM_NOEXCEPT;
+			ContactSignificantOther^ Person::createSignificantOther(const std::string&, const std::string&) TITANIUM_NOEXCEPT;
 
-			Windows::ApplicationModel::Contacts::Contact^ contact__;
+			Contact^ contact__;
 		};
+
+		static std::shared_ptr<Titanium::Contacts::Person> contactToPerson(const JSContext& context, Contact^ contact) TITANIUM_NOEXCEPT
+		{
+			auto Person = context.CreateObject(JSExport<TitaniumWindows::Contacts::Person>::Class());
+			auto person = Person.CallAsConstructor();
+			auto person_ptr = person.GetPrivate<TitaniumWindows::Contacts::Person>();
+			person_ptr->construct(contact);
+
+			return person.GetPrivate<Titanium::Contacts::Person>();
+		}
 	}  // namespace Contacts
 }  // namespace TitaniumWindows
 #endif // _TITANIUMWINDOWS_PERSON_HPP_

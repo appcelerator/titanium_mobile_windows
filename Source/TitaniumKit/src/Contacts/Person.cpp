@@ -29,6 +29,7 @@ namespace Titanium
 			firstPhonetic__(""),
 			fullName__(""),
 			id__(js_context.CreateNull()),
+			identifier__(""),
 			instantMessage__(Titanium::Contacts::create_empty_InstantMessages(js_context)),
 			jobTitle__(""),
 			kind__(KIND::PERSON),
@@ -69,6 +70,7 @@ namespace Titanium
 			return get_firstName() + " " + middle + " " + get_lastName();
 		}
 		TITANIUM_PROPERTY_READ(Person, JSValue, id)
+		TITANIUM_PROPERTY_READ(Person, std::string, identifier)
 		TITANIUM_PROPERTY_READWRITE(Person, std::shared_ptr<Titanium::Blob>, image)
 		TITANIUM_PROPERTY_READWRITE(Person, InstantMessages, instantMessage)
 		TITANIUM_PROPERTY_READWRITE(Person, std::string, jobTitle)
@@ -104,6 +106,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Person, firstPhonetic);
 			TITANIUM_ADD_PROPERTY(Person, fullName);
 			TITANIUM_ADD_PROPERTY_READONLY(Person, id);
+			TITANIUM_ADD_PROPERTY_READONLY(Person, identifier);
 			TITANIUM_ADD_PROPERTY(Person, image);
 			TITANIUM_ADD_PROPERTY(Person, instantMessage);
 			TITANIUM_ADD_PROPERTY(Person, jobTitle);
@@ -144,6 +147,7 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Person, getFullName);
 			TITANIUM_ADD_FUNCTION(Person, setFullName);
 			TITANIUM_ADD_FUNCTION(Person, getId);
+			TITANIUM_ADD_FUNCTION(Person, getIdentifier);
 			TITANIUM_ADD_FUNCTION(Person, getImage);
 			TITANIUM_ADD_FUNCTION(Person, setImage);
 			TITANIUM_ADD_FUNCTION(Person, getInstantMessage);
@@ -219,6 +223,8 @@ namespace Titanium
 		{
 			return get_id();
 		}
+
+		TITANIUM_PROPERTY_GETTER_STRING(Person, identifier);
 
 		TITANIUM_PROPERTY_GETTER_OBJECT(Person, image)
 		TITANIUM_PROPERTY_SETTER_OBJECT(Person, image, Blob)
@@ -314,6 +320,8 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_SETTER(Person, setFullName, fullName)
 
 		TITANIUM_FUNCTION_AS_GETTER(Person, getId, id)
+
+		TITANIUM_FUNCTION_AS_GETTER(Person, getIdentifier, identifier)
 
 		TITANIUM_FUNCTION_AS_GETTER(Person, getImage, image)
 		TITANIUM_FUNCTION_AS_SETTER(Person, setImage, image)
