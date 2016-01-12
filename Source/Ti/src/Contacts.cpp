@@ -36,8 +36,7 @@ namespace TitaniumWindows
 
 	std::vector<std::shared_ptr<Titanium::Contacts::Group>> ContactsModule::getAllGroups() TITANIUM_NOEXCEPT
 	{
-		// TODO We need to load this from the Database! Call out to the Group static object to do this?
-		return std::vector<std::shared_ptr<Titanium::Contacts::Group>>();
+		return TitaniumWindows::Contacts::Group::getAllGroups(get_context());
 	}
 
 	std::vector<std::shared_ptr<Titanium::Contacts::Person>> ContactsModule::getAllPeople(const uint32_t& limit) TITANIUM_NOEXCEPT
@@ -46,7 +45,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 		// FIXME Should we grab the contact store during requestAuthorization?
 		try {
-			
+
 			IVectorView<Contact^>^ contacts;
 			concurrency::event event;
 			concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
@@ -91,13 +90,12 @@ namespace TitaniumWindows
 
 	std::shared_ptr<Titanium::Contacts::Group> ContactsModule::getGroupByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT
 	{
-		// TODO We need to load this from the database!
 #if defined(IS_WINDOWS_10)
-
+		return TitaniumWindows::Contacts::Group::getGroupByIdentifier(id, get_context());
 #else
 		TITANIUM_LOG_WARN("Ti.Contacts.getGroupByIdentifier: Not supported in Windows 8.1");
-#endif
 		return nullptr;
+#endif
 	}
 
 	std::vector<std::shared_ptr<Titanium::Contacts::Person>> ContactsModule::getPeopleWithName(const std::string& name) TITANIUM_NOEXCEPT

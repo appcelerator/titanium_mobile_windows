@@ -29,7 +29,7 @@ namespace TitaniumWindows
 		{
 
 		public:
-			
+
 			Group(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 			virtual ~Group()               = default;
 			Group(const Group&)            = default;
@@ -41,6 +41,8 @@ namespace TitaniumWindows
 
 			static void JSExportInitialize();
 			static JSObject GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
+			static std::vector<std::shared_ptr<Titanium::Contacts::Group>> getAllGroups(const JSContext& js_context) TITANIUM_NOEXCEPT;
+			static std::shared_ptr<Titanium::Contacts::Group> getGroupByIdentifier(const JSValue& id, const JSContext& js_context) TITANIUM_NOEXCEPT;
 
 			virtual void create();
 			virtual void removeList();

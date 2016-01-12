@@ -1,8 +1,8 @@
 
 function Group(name, identifier, recordId) {
-    this.name = name;
-    this.identifier = identifier; // generated UUID upon creation
-	this.recordId = recordId; // Number, becomes rowid of entry in DB	
+	this.name = name;
+	this.identifier = identifier; // generated UUID upon creation
+	this.recordId = recordId; // Number, becomes rowid of entry in DB
 }
 
 /**
@@ -17,16 +17,14 @@ function createDatabase() {
 }
 
 /**
- * TODO Move to Group.create()?
- * Creates a group with the given name.
+ * Creates a group with the given name and returns it.
  **/
-Group.prototype.create = function (name) {
-    var db = createDatabase(),
-        identifier = Ti.Platform.createUUID();
+Group.create = function (name) {
+	var db = createDatabase(),
+		identifier = Ti.Platform.createUUID();
 	try {
 		db.execute('INSERT INTO groups (name, identifier) VALUES (?, ?)', name, identifier);
-		this.recordId = db.lastInsertRowId;
-		this.identifier = identifier;
+		return new Group(name, identifier, db.lastInsertRowId);
 	}
 	finally {
 		db.close();
@@ -64,14 +62,14 @@ Group.prototype.remove = function (person) {
  *
  **/
 Group.prototype.destroy = function () {
-    var db = createDatabase();
-    try {
-        db.execute('DELETE FROM people_groups WHERE (group_id IS ?)', this.recordId);
-        db.execute('DELETE FROM groups WHERE (rowid IS ?)', this.recordId);
-    }
-    finally {
-        db.close();
-    }
+	var db = createDatabase();
+	try {
+		db.execute('DELETE FROM people_groups WHERE (group_id IS ?)', this.recordId);
+		db.execute('DELETE FROM groups WHERE (rowid IS ?)', this.recordId);
+	}
+	finally {
+		db.close();
+	}
 };
 
 /**
@@ -83,24 +81,24 @@ Group.prototype.memberIdentifiers = function () {
 		rows,
 		identifiers = [];
 	// group hasn't been saved yet
-	if (recordId == null) {
-		return [];
+	if (this.recordId == null) {
+		return identifiers;
 	}
 
 	db = createDatabase();
 	try {
-	    rows = db.execute('SELECT person_identifier FROM people_groups WHERE (group_id IS ?)', this.recordId);
-	    try {
-	        while (rows.isValidRow()) {
-	            identifiers.push(rows.fieldByName('person_identifier'));
-	            rows.next();
-	        }
-	        return identifiers;
-	    }
-        finally {
-            if (rows) {
-		        rows.close();
-		    }
+		rows = db.execute('SELECT person_identifier FROM people_groups WHERE (group_id IS ?)', this.recordId);
+		try {
+			while (rows.isValidRow()) {
+				identifiers.push(rows.fieldByName('person_identifier'));
+				rows.next();
+			}
+			return identifiers;
+		}
+		finally {
+			if (rows) {
+				rows.close();
+			}
 		}
 	}
 	finally {
@@ -120,13 +118,13 @@ Group.prototype.memberIdentifiers = function () {
  * @return {Array[Ti.Contacts.Person]}
  **/
 Group.prototype.members = function () {
-    var identifiers = memberIdentifiers(),
-           result = [];
-    for (var i = 0; i < identifiers.length; i++) {
-        identifiers = memberIdentifiers(),
-           result.push(Ti.Contacts.getPersonByIdentifier(identifiers[i]));
-    }
-    return result;
+	var identifiers = memberIdentifiers(),
+			result = [];
+	// TODO Any way we can grab them async/in parallel?
+	for (var i = 0; i < identifiers.length; i++) {
+		result.push(Ti.Contacts.getPersonByIdentifier(identifiers[i]));
+	}
+	return result;
 };
 
 /**
@@ -134,26 +132,48 @@ Group.prototype.members = function () {
  * @return {Array[Group]}
  **/
 Group.getAllGroups = function () {
-    var db = createDatabase(),
-        rows,
-        groups = [];
-    try {
-        rows = db.execute('SELECT ALL FROM groups');
-        try {
-            while (rows.isValidRow()) {
-                groups.push(new Group(rows.fieldByName('name'), rows.fieldByName('identifier'), rows.fieldByName('rowid')));
-                rows.next();
-            }
-            return groups;
-        }
-        finally {
-            rows.close();
-        }
-    }
-    finally {
-        db.close();
-    }
+	var db = createDatabase(),
+		rows,
+		groups = [];
+	try {
+		rows = db.execute('SELECT ALL FROM groups');
+		try {
+			while (rows.isValidRow()) {
+				groups.push(new Group(rows.fieldByName('name'), rows.fieldByName('identifier'), rows.fieldByName('rowid')));
+				rows.next();
+			}
+			return groups;
+		}
+		finally {
+			rows.close();
+		}
+	}
+	finally {
+		db.close();
+	}
 };
+
+Group.getGroupByIdentifier = function (identifier) {
+	var db = createDatabase(),
+		rows,
+		group;
+	try {
+		rows = db.execute('SELECT ALL FROM groups WHERE identifier = ?', identifier);
+		try {
+			if (rows.isValidRow()) {
+				group = new Group(rows.fieldByName('name'), rows.fieldByName('identifier'), rows.fieldByName('rowid'));
+			}
+			return group;
+		}
+		finally {
+			rows.close();
+		}
+	}
+	finally {
+		db.close();
+	}
+};
+
 
 // API
 exports = Group;

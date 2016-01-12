@@ -13,15 +13,11 @@
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/Contacts/group_js.hpp"
 #include <memory>
-#include <concrt.h>
-#include <collection.h>
 
 namespace TitaniumWindows
 {
 	namespace Contacts
 	{
-		using namespace Windows::Foundation::Collections;
-		using namespace Windows::ApplicationModel::Contacts;
 
 		Group::Group(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			: Titanium::Contacts::Group(js_context, arguments),
@@ -33,7 +29,7 @@ namespace TitaniumWindows
 
 		bool Group::loadJS()
 		{
-			if (ti_contacts_group__.HasProperty("add") && ti_contacts_group__.HasProperty("remove") && ti_contacts_group__.HasProperty("members")) {
+			if (ti_contacts_group__.HasProperty("getAllGroups")) {
 				return true;
 			}
 
@@ -97,6 +93,7 @@ namespace TitaniumWindows
 			// See https://msdn.microsoft.com/en-us/library/windows/apps/windows.applicationmodel.contacts.contactnameorder.aspx
 			// https://msdn.microsoft.com/en-us/library/windows/apps/windows.applicationmodel.contacts.contactmanager.systemsortorder.aspx
 			TITANIUM_LOG_WARN("Group::sortedMembers: Unimplemented");
+			// TODO Just grab all the members and sort them ourself?
 			return members();
 		}
 
@@ -145,6 +142,53 @@ namespace TitaniumWindows
 			return static_cast<JSObject>(Group_property);
 		}
 
+		std::shared_ptr<Titanium::Contacts::Group> Group::getAllGroups(const JSContext& js_context) TITANIUM_NOEXCEPT
+		{
+			std::vector<std::shared_ptr<Titanium::Contacts::Group>> all_groups;
+			const auto GroupType = GetStaticObject(js_context);
+			const auto group = GroupType.GetPrivate<Group>();
+
+			// lazy loading
+			const auto loaded = group->loadJS();
+			if (loaded) {
+				auto getAllGroups_func = ti_contacts_group__.GetProperty("getAllGroups");
+				auto groups = static_cast<JSObject>(getAllGroups_func)(js_context.get_global_object());
+				// We need to wrap the group in a Ti.Contacts.Group instance!
+				for (auto group_obj in groups) {
+					auto instance = GroupType.CallAsConstructor();
+					auto win_group = instance.GetPrivate<TitaniumWindows::Contacts::Group>();
+					win_group.js_instance__ = group_obj;
+					all_groups.push_back(win_group);
+				}
+			}
+			else {
+				TITANIUM_LOG_ERROR("Failed to execute Ti.Contacts.getAllGroups");
+			}
+			return all_groups;
+		}
+
+		std::shared_ptr<Titanium::Contacts::Group> Group::getGroupByIdentifier(const JSValue& id, const JSContext& js_context) TITANIUM_NOEXCEPT
+		{
+			const auto GroupType = GetStaticObject(js_context);
+			const auto group = GroupType.GetPrivate<Group>();
+
+			// lazy loading
+			const auto loaded = group->loadJS();
+			if (loaded) {
+				auto getGroupByIdentifier_func = ti_contacts_group__.GetProperty("getGroupByIdentifier");
+				auto result_group = static_cast<JSObject>(getGroupByIdentifier_func)(id, js_context.get_global_object());
+				// TODO We need to generate a new Ti.Contacts.Group, then set the js_instance__ on it!
+				auto instance = GroupType.CallAsConstructor();
+				auto win_group = instance.GetPrivate<TitaniumWindows::Contacts::Group>();
+				win_group.js_instance__ = result_group;
+				return win_group;
+			}
+			else {
+				TITANIUM_LOG_ERROR("Failed to execute Ti.Contacts.getGroupByIdentifier");
+			}
+			return nullptr;
+		}
+
 		void Group::create()
 		{
 			const auto group = GetStaticObject(get_context()).GetPrivate<Group>();
@@ -152,9 +196,8 @@ namespace TitaniumWindows
 			// lazy loading
 			const auto loaded = group->loadJS();
 			if (loaded) {
-				js_instance__ = ti_contacts_group__.CallAsConstructor(get_name());
-				auto create_func = js_instance__.GetProperty("create");
-				static_cast<JSObject>(create_func)(js_instance__);
+				auto create_func = ti_contacts_group__.GetProperty("create");
+				static_cast<JSObject>(create_func)(get_context().CreateString(get_name()), js_instance__);
 			}
 			else {
 				TITANIUM_LOG_ERROR("Failed to execute Ti.Contacts.createGroup");
