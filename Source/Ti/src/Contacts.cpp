@@ -36,46 +36,8 @@ namespace TitaniumWindows
 
 	std::vector<std::shared_ptr<Titanium::Contacts::Group>> ContactsModule::getAllGroups() TITANIUM_NOEXCEPT
 	{
-#if defined(IS_WINDOWS_10)
-		// Windows 10+ API!
-		std::vector<std::shared_ptr<Titanium::Contacts::Group>> result;
-		// FIXME Should we grab the contact store during requestAuthorization?
-		concurrency::event event;
-		IVectorView<ContactList^>^ lists;
-		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
-		.then([](ContactStore^ store) {
-			return store->FindContactListsAsync();
-		}, concurrency::task_continuation_context::use_arbitrary())
-		.then([&lists, &event] (concurrency::task<IVectorView<ContactList^>^> task) {
-			try {
-				lists = task.get();
-			}
-			catch (Platform::AccessDeniedException^ ade) {
-				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: Access denied: ", ade->Message->Data());
-			}
-			catch (Platform::COMException^ e) {
-				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: ", e->Message->Data());
-			}
-			catch (const std::exception& e) {
-				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: ", e.what());
-			}
-			catch (...) {
-				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: Unknown error");
-			}
-			event.set();
-		}, concurrency::task_continuation_context::use_arbitrary());
-		event.wait();
-
-		const auto ctx = get_context();
-		for (const auto list : lists) {
-			result.push_back(TitaniumWindows::Contacts::listToGroup(ctx, list));
-		}
-
-		return result;
-#else
-		TITANIUM_LOG_WARN("Ti.Contacts.getAllGroups: Not supported in Windows 8.1");
+		// TODO We need to load this from the Database! Call out to the Group static object to do this?
 		return std::vector<std::shared_ptr<Titanium::Contacts::Group>>();
-#endif
 	}
 
 	std::vector<std::shared_ptr<Titanium::Contacts::Person>> ContactsModule::getAllPeople(const uint32_t& limit) TITANIUM_NOEXCEPT
@@ -129,53 +91,13 @@ namespace TitaniumWindows
 
 	std::shared_ptr<Titanium::Contacts::Group> ContactsModule::getGroupByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT
 	{
+		// TODO We need to load this from the database!
 #if defined(IS_WINDOWS_10)
-		// Windows 10+ API!
-		TITANIUM_ASSERT(id.IsString());
-		const auto identifier = TitaniumWindows::Utility::ConvertUTF8String(static_cast<std::string>(id));
-		
-		std::shared_ptr<Titanium::Contacts::Group> result = nullptr;
-		// FIXME Should we grab the contact store during requestAuthorization?
-		ContactList^ list;
 
-		concurrency::event event;
-		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
-		.then([&identifier](ContactStore^ store) {
-			return store->GetContactListAsync(identifier);
-		}, concurrency::task_continuation_context::use_arbitrary())
-		.then([&list, &event] (concurrency::task<ContactList^> task) {
-			try {
-				list = task.get();
-			}
-			catch (Platform::AccessDeniedException^ ade) {
-				TITANIUM_LOG_ERROR("Ti.Contacts.getGroupByIdentifier: Access denied:", ade->Message->Data());
-			}
-			catch (Platform::InvalidArgumentException^ iae) {
-				TITANIUM_LOG_ERROR("Ti.Contacts.getGroupByIdentifier: Invalid identifier: ", iae->Message->Data());
-			}
-			catch (Platform::COMException^ ce) {
-				TITANIUM_LOG_ERROR("Ti.Contacts.getGroupByIdentifier: ", ce->Message->Data());
-			}
-			catch (const std::exception& e) {
-				TITANIUM_LOG_ERROR("Ti.Contacts.getGroupByIdentifier: ", e.what());
-			}
-			catch (...) {
-				// TODO Log something here?
-			}
-			event.set();
-		}, concurrency::task_continuation_context::use_arbitrary());
-		event.wait();
-
-		if (list) {
-			const auto ctx = get_context();
-			result = TitaniumWindows::Contacts::listToGroup(ctx, list);
-		}
-
-		return result;
 #else
 		TITANIUM_LOG_WARN("Ti.Contacts.getGroupByIdentifier: Not supported in Windows 8.1");
-		return nullptr;
 #endif
+		return nullptr;
 	}
 
 	std::vector<std::shared_ptr<Titanium::Contacts::Person>> ContactsModule::getPeopleWithName(const std::string& name) TITANIUM_NOEXCEPT
@@ -280,40 +202,96 @@ namespace TitaniumWindows
 		return result;
 	}
 
+#if defined(IS_WINDOWS_10)
+	// TODO Maybe we should store this in a field so we don't have to look it up every time?
+	ContactList^ ContactsModule::getDefaultContactList()
+	{
+		// Grab the app's contact list
+		ContactList^ default_list;
+		ContactStore^ contact_store;
+
+		// Search to see if it exists
+		concurrency::event event;
+		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AppContactsReadWrite), concurrency::task_continuation_context::use_arbitrary())
+			.then([&contact_store](ContactStore^ store) {
+			contact_store = store;
+			return store->FindContactListsAsync();
+		}, concurrency::task_continuation_context::use_arbitrary())
+			.then([&default_list, &event](concurrency::task<IVectorView<ContactList^>^> task) {
+			try {
+				const auto lists = task.get();
+				for (const auto list : lists) {
+					if (list->DisplayName == "Default") {
+						// This is the list we'll add everyone to
+						default_list = list;
+						break;
+					}
+				}
+			}
+			catch (Platform::AccessDeniedException^ ade) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: Access denied: ", ade->Message->Data());
+			}
+			catch (Platform::COMException^ e) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: ", e->Message->Data());
+			}
+			catch (const std::exception& e) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: ", e.what());
+			}
+			catch (...) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.getAllGroups: Unknown error");
+			}
+			event.set();
+		}, concurrency::task_continuation_context::use_arbitrary());
+		event.wait();
+
+		if (default_list) {
+			return default_list;
+		}
+
+		// Must create the default contact list
+		concurrency::event create_event;
+		concurrency::create_task(contact_store->CreateContactListAsync("Default"), concurrency::task_continuation_context::use_arbitrary())
+		.then([&default_list, &create_event](concurrency::task<ContactList^> task) {
+			try {
+				default_list = task.get();
+			}
+			catch (Platform::AccessDeniedException^ ade) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.Group.create: Access denied:", ade->Message->Data());
+			}
+			catch (Platform::COMException^ ce) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.Group.create: ", ce->Message->Data());
+			}
+			catch (const std::exception& e) {
+				TITANIUM_LOG_ERROR("Ti.Contacts.Group.create: ", e.what());
+			}
+			catch (...) {
+				// TODO Log something here?
+			}
+			create_event.set();
+		}, concurrency::task_continuation_context::use_arbitrary());
+		create_event.wait();
+
+		return default_list;
+	}
+#endif
+
 	JSValue ContactsModule::js_createPerson(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		auto result = Titanium::ContactsModule::js_createPerson(arguments, this_object);
+#if defined(IS_WINDOWS_10)
 		if (result.IsObject()) {
 			// save first so we know any pending groups are created...
+			// FIXME move save call up to TitaniumKit level!
 			std::vector<std::shared_ptr<Titanium::Contacts::Person>> contacts;
 			save(contacts);
 
-			// get or create a "Default" group to place the people into!
-			// TODO for performance sake, hold onto default group ptr?
-			std::shared_ptr<Titanium::Contacts::Group> default_group = nullptr;
-			const auto groups = getAllGroups();
-			for (const auto group : groups) {
-				if (group->get_name() == "Default") {
-					default_group = group;
-					break;
-				}
-			}
-			if (!default_group) {
-				const auto context = get_context();
-				auto arg_object = context.CreateObject();
-				arg_object.SetProperty("name", context.CreateString("Default"));
-				std::vector<JSValue> group_arguments = { arg_object };
-				auto result = Titanium::ContactsModule::js_createGroup(group_arguments, this_object);
-				auto object = static_cast<JSObject>(result);
-				auto default_win_group = object.GetPrivate<TitaniumWindows::Contacts::Group>();
-				default_win_group->create();
-				default_group = default_win_group;
-			}
-
+			// Add the person to the app's single contact list
 			auto person_object = static_cast<JSObject>(result);
 			auto person = person_object.GetPrivate<TitaniumWindows::Contacts::Person>();
-			default_group->add(person);
+			auto list = getDefaultContactList();
+			list->SaveContactAsync(person->GetContact());
 		}
+#endif
 		return result;
 	}
 
@@ -336,7 +314,7 @@ namespace TitaniumWindows
 
 	void ContactsModule::save(const std::vector<std::shared_ptr<Titanium::Contacts::Person>>& contacts) TITANIUM_NOEXCEPT
 	{
-		// TODO Commit any created groups, remove any removed groups!
+		// Commit any created groups, remove any removed groups!
 		for (auto group : to_create) {
 			group->create();
 		}

@@ -20,7 +20,7 @@ namespace Titanium
 	}
 
 	void API::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
-		HAL_LOG_DEBUG("API:: postCallAsConstructor ", this);
+		TITANIUM_LOG_DEBUG("API:: postCallAsConstructor ", this);
 	}
 
 	API::~API() TITANIUM_NOEXCEPT

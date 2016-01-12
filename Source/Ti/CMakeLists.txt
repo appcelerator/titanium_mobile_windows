@@ -25,6 +25,7 @@ option(TitaniumWindows_Ti_DISABLE_TESTS "Disable compiling the tests" OFF)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 get_filename_component(APPCELERATOR_CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake ABSOLUTE)
+list(INSERT CMAKE_MODULE_PATH 0 ${APPCELERATOR_CMAKE_MODULE_PATH})
 
 # Define helper functions and macros.
 include(${APPCELERATOR_CMAKE_MODULE_PATH}/internal_utils.cmake)
@@ -44,6 +45,12 @@ if(NOT TARGET TitaniumWindows_Utility)
   get_filename_component(Utility_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../Utility ABSOLUTE)
   add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
 endif()
+
+include(precompiled_header)
+
+# Convert group.js into a c string in an hpp that we can include
+include(GenerateCPPHeaderFile)
+generate_cpp_header_file(resource_group_js_hpp ${PROJECT_SOURCE_DIR}/src/Contacts/group.js ${PROJECT_SOURCE_DIR}/include/TitaniumWindows/Contacts/group_js.hpp)
 
 set(SOURCE_Ti
   include/TitaniumWindows/TiModule.hpp
@@ -82,11 +89,13 @@ set(SOURCE_Platform
 
 set(SOURCE_Contacts
   include/TitaniumWindows/Contacts.hpp
+  include/TitaniumWindows/Contacts/group_js.hpp
   include/TitaniumWindows/Contacts/Group.hpp
   include/TitaniumWindows/Contacts/Person.hpp
   src/Contacts.cpp
   src/Contacts/Person.cpp
   src/Contacts/Group.cpp
+  src/Contacts/group.js
   )
 
 set(SOURCE_Utils

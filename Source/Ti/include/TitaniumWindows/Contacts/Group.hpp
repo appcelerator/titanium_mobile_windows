@@ -11,7 +11,6 @@
 
 #include "TitaniumWindows_Ti_EXPORT.h"
 #include "Titanium/Contacts/Group.hpp"
-#include "TitaniumWindows/WindowsMacros.hpp"
 #include <sdkddkver.h>
 
 namespace TitaniumWindows
@@ -19,7 +18,6 @@ namespace TitaniumWindows
 	namespace Contacts
 	{
 		using namespace HAL;
-		using namespace Windows::ApplicationModel::Contacts;
 
 		/*!
 		  @class Group
@@ -42,12 +40,7 @@ namespace TitaniumWindows
 #endif
 
 			static void JSExportInitialize();
-
-			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
-
-#if defined(IS_WINDOWS_10)
-			void construct(ContactList^ list);
-#endif
+			static JSObject GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
 
 			virtual void create();
 			virtual void removeList();
@@ -62,26 +55,12 @@ namespace TitaniumWindows
 			virtual void set_name(const std::string&) TITANIUM_NOEXCEPT override final;
 			virtual void set_recordId(const uint32_t&) TITANIUM_NOEXCEPT override final;
 
+			bool loadJS();
+
 		private:
-#if defined(IS_WINDOWS_10)
-			bool is_writable__{ false };
-			ContactList^ contact_list__;
-			ContactList^ get_writable_list();
-#endif
+			JSObject ti_contacts_group__; // The loaded module for group.js
+			JSObject js_instance__; // The instance of a Group on the JS side from group.js
 		};
-
-#if defined(IS_WINDOWS_10)
-		static std::shared_ptr<Titanium::Contacts::Group> listToGroup(const JSContext& context, ContactList^ contact_list) TITANIUM_NOEXCEPT
-		{
-			// convert the contact_list to a Group object!
-			auto Group = context.CreateObject(JSExport<TitaniumWindows::Contacts::Group>::Class());
-			auto group = Group.CallAsConstructor();
-			auto group_ptr = group.GetPrivate<TitaniumWindows::Contacts::Group>();
-			group_ptr->construct(contact_list);
-
-			return group.GetPrivate<Titanium::Contacts::Group>();
-		}
-#endif
 	}  // namespace Contacts
 }  // namespace TitaniumWindows
 #endif // _TITANIUMWINDOWS_GROUP_HPP_

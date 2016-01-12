@@ -62,6 +62,9 @@ namespace TitaniumWindows
 		virtual void requestAuthorization(JSObject& callback) TITANIUM_NOEXCEPT override final;
 
 	private:
+#if defined(IS_WINDOWS_10)
+		Windows::ApplicationModel::Contacts::ContactList^ getDefaultContactList();
+#endif
 		std::vector<std::shared_ptr<TitaniumWindows::Contacts::Group>> to_create;
 		std::vector<std::shared_ptr<TitaniumWindows::Contacts::Group>> to_remove;
 	};

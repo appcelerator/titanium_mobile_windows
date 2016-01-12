@@ -30,14 +30,11 @@ namespace TitaniumWindows
 		{
 			contact__ = ref new Contact();
 			Titanium::Contacts::Person::postCallAsConstructor(js_context, arguments);
-
-			// TODO Add this person to a default contact list we maintain!
 		}
 
 		void Person::construct(Windows::ApplicationModel::Contacts::Contact^ contact)
 		{
 			contact__ = contact;
-			// TODO Set all the fields? If we're overriding all the getters, this won't matter
 		}
 
 		void Person::JSExportInitialize() {
@@ -950,6 +947,7 @@ namespace TitaniumWindows
 
 		void Person::remove()
 		{
+			// TODO Remove from any contact lists in DB
 #if defined(IS_WINDOWS_10)
 			auto list_id = contact__->ContactListId;
 			// Pull up the contact list associated with this contact...
@@ -973,7 +971,6 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 		void Person::removeFromList(ContactList^ list)
 		{
-			// FIXME We need to move the contact to some "default" list we generate
 			list->DeleteContactAsync(contact__);
 		}
 #endif

@@ -21,7 +21,7 @@ namespace Titanium
     }
 
 	void Analytics::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
-		HAL_LOG_DEBUG("Analytics:: postCallAsConstructor ", this);
+		TITANIUM_LOG_DEBUG("Analytics:: postCallAsConstructor ", this);
 	}
 
 	bool Analytics::loadJS()
