@@ -152,9 +152,10 @@ function generateWindowsProject(next) {
 /**
  * Add required properties for our unit tests to the tiapp.xml
  *
+ * @params sdkVersion {String} '8.1'||'10.0'
  * @param next {Function} callback function
  **/
-function addTiAppProperties(next) {
+function addTiAppProperties(sdkVersion, next) {
 	var tiapp_xml = path.join(projectDir, 'tiapp.xml');
 
 	// Not so smart but this should work...
@@ -166,6 +167,13 @@ function addTiAppProperties(next) {
 			content.push('\t<property name="presetBool" type="bool">true</property>');
 			content.push('\t<property name="presetInt" type="int">1337</property>');
 			content.push('\t<property name="presetDouble" type="double">1.23456</property>');
+			content.push('\t<windows><manifest><Capabilities><Capability Name=\"internetClient\" />');
+			if (sdkVersion == WIN_10) {
+				content.push('\t<uap:Capability Name=\"contacts\" />');
+			} else {
+				content.push('\t<Capability Name=\"contacts\" />');
+			}
+			content.push('\t</Capabilities></manifest></windows>');
 		}
 	});
 	fs.writeFileSync(tiapp_xml, content.join('\n'));
@@ -383,7 +391,7 @@ function test(sdkVersion, msbuild, target, deviceId, callback) {
 		},
 		function (next) {
 			console.log("Adding properties for tiapp.xml");
-			addTiAppProperties(next);
+			addTiAppProperties(sdkVersion, next);
 		},
 		function (next) {
 			console.log("Copying test scripts into project");
