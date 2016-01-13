@@ -117,9 +117,8 @@ namespace Titanium
 			  @property
 			  @abstract id
 			  @discussion Record identifier of the person. Single value.
-			  This value is a Number on iOS, and is a String on Windows.
 			*/
-			TITANIUM_PROPERTY_IMPL_READONLY_DEF(JSValue, id);
+			TITANIUM_PROPERTY_IMPL_READONLY_DEF(int32_t, id);
 
 			/*!
 			  @property
@@ -232,9 +231,8 @@ namespace Titanium
 			  @property
 			  @abstract recordId
 			  @discussion Record identifier of the person. Single value.
-			  This value is a Number on iOS, and is a String on Windows.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(JSValue, recordId);
+			TITANIUM_PROPERTY_IMPL_DEF(uint32_t, recordId);
 
 			/*!
 			  @property
@@ -379,7 +377,7 @@ namespace Titanium
 			std::string firstName__;
 			std::string firstPhonetic__;
 			std::string fullName__;
-			JSValue id__;
+			int32_t id__;
 			std::string identifier__;
 			std::shared_ptr<::Titanium::Blob> image__;
 			InstantMessages instantMessage__;
@@ -395,7 +393,7 @@ namespace Titanium
 			std::string organization__;
 			Phones phone__;
 			std::string prefix__;
-			JSValue recordId__;
+			uint32_t recordId__;
 			RelatedNames relatedNames__;
 			InstantMessages socialProfile__;
 			std::string suffix__;

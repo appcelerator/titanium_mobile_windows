@@ -28,7 +28,7 @@ namespace Titanium
 			firstName__(""),
 			firstPhonetic__(""),
 			fullName__(""),
-			id__(js_context.CreateNull()),
+			id__(0),
 			identifier__(""),
 			instantMessage__(Titanium::Contacts::create_empty_InstantMessages(js_context)),
 			jobTitle__(""),
@@ -43,7 +43,7 @@ namespace Titanium
 			organization__(""),
 			phone__(Titanium::Contacts::create_empty_Phones(js_context)),
 			prefix__(""),
-			recordId__(js_context.CreateNull()),
+			recordId__(0),
 			relatedNames__(Titanium::Contacts::create_empty_RelatedNames(js_context)),
 			socialProfile__(Titanium::Contacts::create_empty_InstantMessages(js_context)),
 			suffix__(""),
@@ -69,7 +69,7 @@ namespace Titanium
 			}
 			return get_firstName() + " " + middle + " " + get_lastName();
 		}
-		TITANIUM_PROPERTY_READ(Person, JSValue, id)
+		TITANIUM_PROPERTY_READ(Person, int32_t, id)
 		TITANIUM_PROPERTY_READ(Person, std::string, identifier)
 		TITANIUM_PROPERTY_READWRITE(Person, std::shared_ptr<Titanium::Blob>, image)
 		TITANIUM_PROPERTY_READWRITE(Person, InstantMessages, instantMessage)
@@ -85,7 +85,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Person, std::string, organization)
 		TITANIUM_PROPERTY_READWRITE(Person, Phones, phone)
 		TITANIUM_PROPERTY_READWRITE(Person, std::string, prefix)
-		TITANIUM_PROPERTY_READWRITE(Person, JSValue, recordId)
+		TITANIUM_PROPERTY_READWRITE(Person, uint32_t, recordId)
 		TITANIUM_PROPERTY_READWRITE(Person, RelatedNames, relatedNames)
 		TITANIUM_PROPERTY_READWRITE(Person, InstantMessages, socialProfile)
 		TITANIUM_PROPERTY_READWRITE(Person, std::string, suffix)
@@ -219,10 +219,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER_STRING(Person, fullName);
 		TITANIUM_PROPERTY_SETTER_STRING(Person, fullName);
 
-		TITANIUM_PROPERTY_GETTER(Person, id)
-		{
-			return get_id();
-		}
+		TITANIUM_PROPERTY_GETTER_INT(Person, id);
 
 		TITANIUM_PROPERTY_GETTER_STRING(Person, identifier);
 
@@ -267,16 +264,8 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER_STRING(Person, prefix);
 		TITANIUM_PROPERTY_SETTER_STRING(Person, prefix);
 
-		TITANIUM_PROPERTY_GETTER(Person, recordId)
-		{
-			return get_recordId();
-		}
-
-		TITANIUM_PROPERTY_SETTER(Person, recordId)
-		{
-			set_recordId(argument);
-			return true;
-		}
+		TITANIUM_PROPERTY_GETTER_UINT(Person, recordId);
+		TITANIUM_PROPERTY_SETTER_UINT(Person, recordId);
 
 		TITANIUM_PROPERTY_GETTER_STRUCT(Person, relatedNames, RelatedNames)
 		TITANIUM_PROPERTY_SETTER_STRUCT(Person, relatedNames, RelatedNames)

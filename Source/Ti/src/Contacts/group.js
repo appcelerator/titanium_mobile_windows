@@ -9,10 +9,9 @@ function Group(name, identifier, recordId) {
  * Create Database if necessary and set up tables. Opens the Database for operations. Callers must close the database when done!
  **/
 function createDatabase() {
-	var db = Ti.Database.open('appc_contacts');
-	db.execute('CREATE TABLE IF NOT EXISTS people_groups (group_id INTEGER PRIMARY KEY, person_identifier TEXT)');
-	db.execute('CREATE TABLE IF NOT EXISTS groups (name TEXT, identifier TEXT)');
-
+    var db = Ti.Database.open('appc_contacts');
+    db.execute('CREATE TABLE IF NOT EXISTS people_groups (group_id INTEGER PRIMARY KEY, person_identifier TEXT)');
+    db.execute('CREATE TABLE IF NOT EXISTS groups (name TEXT, identifier TEXT)');
 	return db;
 }
 
@@ -27,7 +26,7 @@ Group.create = function (name) {
 		return new Group(name, identifier, db.lastInsertRowId);
 	}
 	finally {
-		db.close();
+	    db && db.close();
 	}
 };
 
@@ -40,7 +39,7 @@ Group.prototype.add = function (person) {
 		db.execute('INSERT INTO people_groups (group_id, person_identifier) VALUES (?, ?)', this.recordId, person.identifier);
 	}
 	finally {
-		db.close();
+	    db && db.close();
 	}
 };
 
@@ -53,7 +52,7 @@ Group.prototype.remove = function (person) {
 		db.execute('DELETE FROM people_groups WHERE (group_id IS ? AND person_identifier IS ?)', this.recordId, person.identifier);
 	}
 	finally {
-		db.close();
+	    db && db.close();
 	}
 };
 
@@ -68,7 +67,7 @@ Group.prototype.destroy = function () {
 		db.execute('DELETE FROM groups WHERE (rowid IS ?)', this.recordId);
 	}
 	finally {
-		db.close();
+	    db && db.close();
 	}
 };
 
@@ -96,15 +95,11 @@ Group.prototype.memberIdentifiers = function () {
 			return identifiers;
 		}
 		finally {
-			if (rows) {
-				rows.close();
-			}
+		    rows && rows.close();
 		}
 	}
 	finally {
-		if (db) {
-			db.close();
-		}
+	    db && db.close();
 	}
 };
 
@@ -136,7 +131,7 @@ Group.getAllGroups = function () {
 		rows,
 		groups = [];
 	try {
-		rows = db.execute('SELECT ALL FROM groups');
+		rows = db.execute('SELECT * FROM groups');
 		try {
 			while (rows.isValidRow()) {
 				groups.push(new Group(rows.fieldByName('name'), rows.fieldByName('identifier'), rows.fieldByName('rowid')));
@@ -145,11 +140,11 @@ Group.getAllGroups = function () {
 			return groups;
 		}
 		finally {
-			rows.close();
+			rows && rows.close();
 		}
 	}
 	finally {
-		db.close();
+	    db && db.close();
 	}
 };
 
@@ -158,7 +153,7 @@ Group.getGroupByIdentifier = function (identifier) {
 		rows,
 		group;
 	try {
-		rows = db.execute('SELECT ALL FROM groups WHERE identifier = ?', identifier);
+		rows = db.execute('SELECT * FROM groups WHERE identifier = ?', identifier);
 		try {
 			if (rows.isValidRow()) {
 				group = new Group(rows.fieldByName('name'), rows.fieldByName('identifier'), rows.fieldByName('rowid'));
@@ -166,14 +161,14 @@ Group.getGroupByIdentifier = function (identifier) {
 			return group;
 		}
 		finally {
-			rows.close();
+		    rows && rows.close();
 		}
 	}
 	finally {
-		db.close();
+	    db && db.close();
 	}
 };
 
 
 // API
-exports = Group;
+this.exports = Group;

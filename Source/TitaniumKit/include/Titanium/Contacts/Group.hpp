@@ -1,7 +1,7 @@
 /**
  * TitaniumKit Titanium.Contacts.Group
  *
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -35,7 +35,7 @@ namespace Titanium
 			  @abstract identifier
 			  @discussion Identifier of the group.
 			*/
-			TITANIUM_PROPERTY_IMPL_READONLY_DEF(JSValue, identifier);
+			TITANIUM_PROPERTY_IMPL_READONLY_DEF(std::string, identifier);
 
 			/*!
 			  @property
@@ -107,8 +107,9 @@ namespace Titanium
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
-			std::string name__;
-			uint32_t recordId__;
+			std::string identifier__{};
+			std::string name__{};
+			uint32_t recordId__{0};
 #pragma warning(pop)
 		};
 

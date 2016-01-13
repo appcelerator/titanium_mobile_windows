@@ -29,7 +29,8 @@ namespace TitaniumWindows
 		TITANIUM_LOG_DEBUG("Contacts::ctor Initialize");
 	}
 
-	void ContactsModule::JSExportInitialize() {
+	void ContactsModule::JSExportInitialize()
+	{
 		JSExport<ContactsModule>::SetClassVersion(1);
 		JSExport<ContactsModule>::SetParent(JSExport<Titanium::ContactsModule>::Class());
 	}
@@ -88,7 +89,7 @@ namespace TitaniumWindows
 		return result;
 	}
 
-	std::shared_ptr<Titanium::Contacts::Group> ContactsModule::getGroupByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT
+	std::shared_ptr<Titanium::Contacts::Group> ContactsModule::getGroupByIdentifier(const std::string& id) TITANIUM_NOEXCEPT
 	{
 #if defined(IS_WINDOWS_10)
 		return TitaniumWindows::Contacts::Group::getGroupByIdentifier(id, get_context());
@@ -142,14 +143,13 @@ namespace TitaniumWindows
 		return result;
 	}
 
-	std::shared_ptr<Titanium::Contacts::Person> ContactsModule::getPersonByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT
+	std::shared_ptr<Titanium::Contacts::Person> ContactsModule::getPersonByIdentifier(const std::string& id) TITANIUM_NOEXCEPT
 	{
 		std::shared_ptr<Titanium::Contacts::Person> result = nullptr;
 #if defined(IS_WINDOWS_10)
 		// FIXME Should we grab the contact store during requestAuthorization?
-		TITANIUM_ASSERT(id.IsString());
-		const auto identifier = TitaniumWindows::Utility::ConvertUTF8String(static_cast<std::string>(id));
 		Contact^ contact;
+		const auto identifier = Utility::ConvertUTF8String(id);
 		concurrency::event event;
 		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
 		.then([&identifier](ContactStore^ store) {
@@ -242,7 +242,8 @@ namespace TitaniumWindows
 		}, concurrency::task_continuation_context::use_arbitrary());
 		event.wait();
 
-		if (default_list) {
+		// if we get the default list or couldn't get the store (access denied?) return what we have now
+		if (default_list || !contact_store) {
 			return default_list;
 		}
 
@@ -287,7 +288,29 @@ namespace TitaniumWindows
 			auto person_object = static_cast<JSObject>(result);
 			auto person = person_object.GetPrivate<TitaniumWindows::Contacts::Person>();
 			auto list = getDefaultContactList();
-			list->SaveContactAsync(person->GetContact());
+			auto contact = person->GetContact();
+			// sync save
+			concurrency::event event;
+			concurrency::create_task(list->SaveContactAsync(contact), concurrency::task_continuation_context::use_arbitrary())
+				.then([&event](concurrency::task<void> task) {
+				try {
+					task.get();
+				}
+				catch (Platform::AccessDeniedException^ ade) {
+					TITANIUM_LOG_ERROR("Ti.Contacts.createPerson: Access denied:", ade->Message->Data());
+				}
+				catch (Platform::COMException^ ce) {
+					TITANIUM_LOG_ERROR("Ti.Contacts.createPerson: ", ce->Message->Data());
+				}
+				catch (const std::exception& e) {
+					TITANIUM_LOG_ERROR("Ti.Contacts.createPerson: ", e.what());
+				}
+				catch (...) {
+					// TODO Log something here?
+				}
+				event.set();
+			}, concurrency::task_continuation_context::use_arbitrary());
+			event.wait();
 		}
 #endif
 		return result;
@@ -339,7 +362,7 @@ namespace TitaniumWindows
 					} else {
 						// Look up the contact by id so we get all their fields and not just the phone number as we specified above
 						// This is a workaround for needing to specify one field for Phone.
-						auto person = getPersonByIdentifier(params.callbacks.selectedPerson.get_context().CreateString(TitaniumWindows::Utility::ConvertUTF8String(contact->Id)));
+						auto person = getPersonByIdentifier(TitaniumWindows::Utility::ConvertUTF8String(contact->Id));
 						params.callbacks.onselectedPerson(person);
 					}
 				} catch (Platform::COMException^ ce) {

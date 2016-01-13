@@ -49,9 +49,9 @@ namespace TitaniumWindows
 
 		virtual std::vector<std::shared_ptr<Titanium::Contacts::Group>> getAllGroups() TITANIUM_NOEXCEPT override final;
 		virtual std::vector<std::shared_ptr<Titanium::Contacts::Person>> getAllPeople(const uint32_t& limit) TITANIUM_NOEXCEPT override final;
-		virtual std::shared_ptr<Titanium::Contacts::Group> getGroupByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT override final;
+		virtual std::shared_ptr<Titanium::Contacts::Group> getGroupByIdentifier(const std::string& id) TITANIUM_NOEXCEPT override final;
 		virtual std::vector<std::shared_ptr<Titanium::Contacts::Person>> getPeopleWithName(const std::string& name) TITANIUM_NOEXCEPT override final;
-		virtual std::shared_ptr<Titanium::Contacts::Person> getPersonByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT override final;
+		virtual std::shared_ptr<Titanium::Contacts::Person> getPersonByIdentifier(const std::string& id) TITANIUM_NOEXCEPT override final;
 		virtual JSValue js_createGroup(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT override final;
 		virtual JSValue js_createPerson(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT override final;
 		virtual void removeGroup(const std::shared_ptr<Titanium::Contacts::Group>& group) TITANIUM_NOEXCEPT override final;

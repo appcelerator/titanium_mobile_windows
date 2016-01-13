@@ -64,7 +64,6 @@ namespace TitaniumWindows
 			virtual void set_firstPhonetic(const std::string&) TITANIUM_NOEXCEPT override final;
 			virtual std::string get_fullName() const TITANIUM_NOEXCEPT override final;
 			virtual void set_fullName(const std::string&) TITANIUM_NOEXCEPT override final;
-			virtual JSValue get_id() const TITANIUM_NOEXCEPT override final;
 			virtual std::string get_identifier() const TITANIUM_NOEXCEPT override final;
 			virtual void set_image(const std::shared_ptr<::Titanium::Blob>&) TITANIUM_NOEXCEPT override final;
 			virtual Titanium::Contacts::InstantMessages get_instantMessage() const TITANIUM_NOEXCEPT override final;
@@ -100,8 +99,7 @@ namespace TitaniumWindows
 
 			void remove();
 #if defined(IS_WINDOWS_10)
-			Contact^ GetContact();
-			void removeFromList(ContactList^ list);
+			Contact^ GetContact() const;
 #endif
 		private:
 			ContactAddress^ Person::createAddress(const Titanium::Contacts::Address&, ContactAddressKind) TITANIUM_NOEXCEPT;
@@ -112,7 +110,7 @@ namespace TitaniumWindows
 			ContactConnectedServiceAccount^ Person::createInstantMessage(const Titanium::Contacts::InstantMessage&) TITANIUM_NOEXCEPT;
 			ContactSignificantOther^ Person::createSignificantOther(const std::string&, const std::string&) TITANIUM_NOEXCEPT;
 
-			Contact^ contact__;
+			Contact^ contact__{ nullptr };
 		};
 
 		static std::shared_ptr<Titanium::Contacts::Person> contactToPerson(const JSContext& context, Contact^ contact) TITANIUM_NOEXCEPT

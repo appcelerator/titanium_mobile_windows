@@ -1,7 +1,7 @@
 /**
  * TitaniumKit Titanium.Contacts.Group
  *
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -16,17 +16,11 @@ namespace Titanium
 	{
 
 		Group::Group(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Contacts.Group"),
-			name__(""),
-			recordId__(0)
+			: Module(js_context, "Titanium.Contacts.Group")
 		{
 		}
 
-		JSValue Group::get_identifier() const TITANIUM_NOEXCEPT
-		{
-			return get_context().CreateNull();
-		}
-
+		TITANIUM_PROPERTY_READ(Group, std::string, identifier)
 		TITANIUM_PROPERTY_READWRITE(Group, std::string, name)
 		TITANIUM_PROPERTY_READWRITE(Group, uint32_t, recordId)
 
@@ -70,16 +64,13 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Group, setRecordId);
 		}
 
-		TITANIUM_PROPERTY_GETTER(Group, identifier)
-		{
-			return get_identifier();
-		}
+		TITANIUM_PROPERTY_GETTER_STRING(Group, identifier);
 
 		TITANIUM_PROPERTY_GETTER_STRING(Group, name);
 		TITANIUM_PROPERTY_SETTER_STRING(Group, name);
 
-		TITANIUM_PROPERTY_GETTER_INT(Group, recordId);
-		TITANIUM_PROPERTY_SETTER_INT(Group, recordId);
+		TITANIUM_PROPERTY_GETTER_UINT(Group, recordId);
+		TITANIUM_PROPERTY_SETTER_UINT(Group, recordId);
 
 		TITANIUM_FUNCTION(Group, add)
 		{

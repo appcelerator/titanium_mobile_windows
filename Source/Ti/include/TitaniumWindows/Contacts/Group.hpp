@@ -40,28 +40,32 @@ namespace TitaniumWindows
 #endif
 
 			static void JSExportInitialize();
+
 			static JSObject GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			static std::vector<std::shared_ptr<Titanium::Contacts::Group>> getAllGroups(const JSContext& js_context) TITANIUM_NOEXCEPT;
-			static std::shared_ptr<Titanium::Contacts::Group> getGroupByIdentifier(const JSValue& id, const JSContext& js_context) TITANIUM_NOEXCEPT;
+			static std::vector<std::shared_ptr<Titanium::Contacts::Group>> getAllGroups(const JSContext&) TITANIUM_NOEXCEPT;
+			static std::shared_ptr<Titanium::Contacts::Group> getGroupByIdentifier(const std::string&, const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual void create();
 			virtual void removeList();
 
-			virtual void add(const std::shared_ptr<Titanium::Contacts::Person>& person) TITANIUM_NOEXCEPT;
-			virtual std::vector<std::shared_ptr<Titanium::Contacts::Person>> members() TITANIUM_NOEXCEPT;
-			virtual void remove(const std::shared_ptr<Titanium::Contacts::Person>& person) TITANIUM_NOEXCEPT;
-			virtual std::vector<std::shared_ptr<Titanium::Contacts::Person>> sortedMembers(const Titanium::Contacts::SORT& sortBy) TITANIUM_NOEXCEPT override final;
+			virtual void add(const std::shared_ptr<Titanium::Contacts::Person>&) TITANIUM_NOEXCEPT override final;
+			virtual std::vector<std::shared_ptr<Titanium::Contacts::Person>> members() TITANIUM_NOEXCEPT override final;
+			virtual void remove(const std::shared_ptr<Titanium::Contacts::Person>&) TITANIUM_NOEXCEPT override final;
+			virtual std::vector<std::shared_ptr<Titanium::Contacts::Person>> sortedMembers(const Titanium::Contacts::SORT&) TITANIUM_NOEXCEPT override final;
 
-			virtual JSValue get_identifier() const TITANIUM_NOEXCEPT override final;
+			virtual std::string get_identifier() const TITANIUM_NOEXCEPT override final;
 			virtual std::string get_name() const TITANIUM_NOEXCEPT override final;
 			virtual void set_name(const std::string&) TITANIUM_NOEXCEPT override final;
 			virtual void set_recordId(const uint32_t&) TITANIUM_NOEXCEPT override final;
 
 			bool loadJS();
+			JSObject getTiObject() {
+				return ti_contacts_group__;
+			}
 
 		private:
 			JSObject ti_contacts_group__; // The loaded module for group.js
-			JSObject js_instance__; // The instance of a Group on the JS side from group.js
+			JSValue js_instance__; // The instance of a Group on the JS side from group.js
 		};
 	}  // namespace Contacts
 }  // namespace TitaniumWindows

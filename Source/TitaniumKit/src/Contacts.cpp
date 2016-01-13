@@ -1,7 +1,7 @@
 /**
  * TitaniumKit Titanium.Contacts
  *
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -97,12 +97,13 @@ namespace Titanium
 		return std::vector<std::shared_ptr<Contacts::Person>>();
 	}
 
-	std::shared_ptr<Contacts::Group> ContactsModule::getGroupByID(const JSValue& id) TITANIUM_NOEXCEPT
+	std::shared_ptr<Contacts::Group> ContactsModule::getGroupByID(const int32_t& id) TITANIUM_NOEXCEPT
 	{
-		return getGroupByIdentifier(id);
+		TITANIUM_LOG_WARN("ContactsModule::getGroupByID: Unimplemented");
+		return nullptr;
 	}
 
-	std::shared_ptr<Contacts::Group> ContactsModule::getGroupByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT
+	std::shared_ptr<Contacts::Group> ContactsModule::getGroupByIdentifier(const std::string& id) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("ContactsModule::getGroupByIdentifier: Unimplemented");
 		return nullptr;
@@ -114,12 +115,13 @@ namespace Titanium
 		return std::vector<std::shared_ptr<Contacts::Person>>();
 	}
 
-	std::shared_ptr<Contacts::Person> ContactsModule::getPersonByID(const JSValue& id) TITANIUM_NOEXCEPT
+	std::shared_ptr<Contacts::Person> ContactsModule::getPersonByID(const int32_t& id) TITANIUM_NOEXCEPT
 	{
-		return getPersonByID(id);
+		TITANIUM_LOG_WARN("ContactsModule::getPersonByID: Unimplemented");
+		return nullptr;
 	}
 
-	std::shared_ptr<Contacts::Person> ContactsModule::getPersonByIdentifier(const JSValue& id) TITANIUM_NOEXCEPT
+	std::shared_ptr<Contacts::Person> ContactsModule::getPersonByIdentifier(const std::string& id) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("ContactsModule::getPersonByIdentifier: Unimplemented");
 		return nullptr;
@@ -222,9 +224,8 @@ namespace Titanium
 
 	TITANIUM_FUNCTION(ContactsModule, getGroupByID)
 	{
-		// TODO Assert it's a number on iOS? String on Windows?
-		TITANIUM_ASSERT(arguments.size() > 0);
-		auto group = getGroupByID(arguments.at(0));
+		ENSURE_INT_AT_INDEX(id, 0);
+		auto group = getGroupByID(id);
 		if (group != nullptr) {
 			return group->get_object();
 		}
@@ -233,9 +234,8 @@ namespace Titanium
 
 	TITANIUM_FUNCTION(ContactsModule, getGroupByIdentifier)
 	{
-		// TODO Assert it's a number on iOS? String on Windows?
-		TITANIUM_ASSERT(arguments.size() > 0);
-		auto group = getGroupByIdentifier(arguments.at(0));
+		ENSURE_STRING_AT_INDEX(id, 0);
+		auto group = getGroupByIdentifier(id);
 		if (group != nullptr) {
 			return group->get_object();
 		}
@@ -255,9 +255,8 @@ namespace Titanium
 
 	TITANIUM_FUNCTION(ContactsModule, getPersonByID)
 	{
-		// TODO Assert it's a number on iOS? String on Windows?
-		TITANIUM_ASSERT(arguments.size() > 0);
-		auto person = getPersonByID(arguments.at(0));
+		ENSURE_INT_AT_INDEX(id, 0);
+		auto person = getPersonByID(id);
 		if (person != nullptr) {
 			return person->get_object();
 		}
@@ -266,9 +265,8 @@ namespace Titanium
 
 	TITANIUM_FUNCTION(ContactsModule, getPersonByIdentifier)
 	{
-		// TODO Assert it's a number on iOS? String on Windows?
-		TITANIUM_ASSERT(arguments.size() > 0);
-		auto person = getPersonByIdentifier(arguments.at(0));
+		ENSURE_STRING_AT_INDEX(id, 0);
+		auto person = getPersonByIdentifier(id);
 		if (person != nullptr) {
 			return person->get_object();
 		}
