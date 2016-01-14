@@ -65,8 +65,11 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 		Windows::ApplicationModel::Contacts::ContactList^ getDefaultContactList();
 #endif
+#pragma warning(push)
+#pragma warning(disable : 4251)
 		std::vector<std::shared_ptr<TitaniumWindows::Contacts::Group>> to_create;
 		std::vector<std::shared_ptr<TitaniumWindows::Contacts::Group>> to_remove;
+#pragma warning(pop)
 	};
 }  // namespace TitaniumWindows
 #endif // _TITANIUMWINDOWS_CONTACTS_HPP_

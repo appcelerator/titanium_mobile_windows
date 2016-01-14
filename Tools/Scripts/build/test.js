@@ -171,7 +171,7 @@ function addTiAppProperties(sdkVersion, next) {
 			if (sdkVersion == WIN_10) {
 				content.push('\t<uap:Capability Name=\"contacts\" />');
 			} else {
-				content.push('\t<Capability Name=\"contacts\" />');
+				content.push('\t<m3:Capability Name=\"contacts\" />');
 			}
 			content.push('\t</Capabilities></manifest></windows>');
 		}
