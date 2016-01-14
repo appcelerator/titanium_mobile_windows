@@ -18,22 +18,28 @@ const
 
 exports.cliVersion = '>=3.2';
 
+function sanitizeProjectName(str) {
+	return str.replace(/[^a-zA-Z0-9_]/g, '_').replace(/_+/g, '_').split(/[\W_]/).map(function (s) { return appc.string.capitalize(s); }).join('');
+}
+
 exports.init = function (logger, config, cli) {
 	cli.on('build.post.compile', {
 		priority: 10000,
 		post: function (builder, finished) {
-			if (builder.buildOnly || builder.target !== 'dist-winstore') {
+			if (builder.buildOnly || !/^dist-(phone|win)store$/.test(builder.target)) {
 				return finished();
 			}
 
 			var outputDir = builder.outputDir,
-				wpARMDir = builder.cmakeTargetDir,
-				releaseDir = path.join(wpARMDir, 'Release'),
-				bundle = path.join(releaseDir, fs.readdirSync(releaseDir).filter(function (f) {
-					return f.indexOf('_Bundle') >= 0;
-				})[0]),
-				appx = path.join(bundle, fs.readdirSync(bundle).filter(function (f) {
-					return f.indexOf('.appx') >= 0 && f.indexOf('_scale') === -1;
+				tiapp = builder.tiapp,
+				sanitizedName = sanitizeProjectName(tiapp.name),
+				// name of the directory holding appx and dependencies subfolder
+				dirName = sanitizedName + '_' + appc.version.format(tiapp.version, 4, 4, true) + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test');
+				// path to folder holding appx
+				appxDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
+				appxExtensions = ['.appx', '.appxbundle'],
+				appx = path.join(bundle, fs.readdirSync(appxDir).filter(function (f) {
+					return appxExtensions.indexOf(path.extname(f)) !== -1;
 				})[0]),
 				dest = path.join(outputDir, path.basename(appx));
 
