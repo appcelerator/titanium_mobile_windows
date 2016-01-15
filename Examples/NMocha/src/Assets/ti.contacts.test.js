@@ -157,7 +157,8 @@ describe("Titanium.Contacts", function() {
 	    should(noGroup).be.null;
 	    finish();
 	});
-	it("Group add/remove", function (finish) {
+	// Skip on Windows 8.1
+	(Ti.Platform.version.indexOf('8.1' == 0) ? it.skip : it)("Group add/remove", function (finish) {
 	    // Look for existing group and remove it first before we try to create dupe (which fails)
 	    var allGroups = Ti.Contacts.getAllGroups();
 	    for (var i = 0; i < allGroups.length; i++) {
@@ -204,7 +205,8 @@ describe("Titanium.Contacts", function() {
 		should(noPerson).be.null;
 		finish();
 	});
-	it("Person add/remove", function (finish) {
+	// Skip on Windows 8.1
+	(Ti.Platform.version.indexOf('8.1' == 0) ? it.skip : it)("Person add/remove", function (finish) {
 	    // TODO Remove Arthur first if he already exists!
 
 	    // create a person
