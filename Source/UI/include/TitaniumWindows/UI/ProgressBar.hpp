@@ -69,11 +69,15 @@ namespace TitaniumWindows
 			virtual void set_max(const double&)   TITANIUM_NOEXCEPT override;
 			virtual void set_value(const double&) TITANIUM_NOEXCEPT override;
 			virtual void set_color(const std::string&) TITANIUM_NOEXCEPT override;
+			virtual void set_backgroundColor(const std::string&) TITANIUM_NOEXCEPT override;
+			virtual void set_backgroundDisabledColor(const std::string&) TITANIUM_NOEXCEPT override;
 
 		private:
 			Windows::UI::Xaml::Controls::StackPanel^ panel__;
 			Windows::UI::Xaml::Controls::ProgressBar^ bar__;
 			Windows::UI::Xaml::Controls::TextBlock^ label__;
+			Windows::UI::Xaml::Media::SolidColorBrush^ backgroundColorBrush__;
+			Windows::UI::Xaml::Media::SolidColorBrush^ backgroundDisabledColorBrush__;
 
 		};
 	}  // namespace UI

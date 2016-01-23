@@ -17,6 +17,8 @@ namespace Titanium
 
 		ProgressBar::ProgressBar(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: View(js_context, "Titanium.UI.ProgressBar"),
+			backgroundColor__(""),
+			backgroundDisabledColor__(""),
 			color__(""),
 			max__(1.0),
 			message__(""),
@@ -25,6 +27,8 @@ namespace Titanium
 		{
 		}
 
+		TITANIUM_PROPERTY_READWRITE(ProgressBar, std::string, backgroundColor)
+		TITANIUM_PROPERTY_READWRITE(ProgressBar, std::string, backgroundDisabledColor)
 		TITANIUM_PROPERTY_READWRITE(ProgressBar, std::string, color)
 		TITANIUM_PROPERTY_READWRITE(ProgressBar, Font, font)
 		TITANIUM_PROPERTY_READWRITE(ProgressBar, double, max)
@@ -37,6 +41,8 @@ namespace Titanium
 			JSExport<ProgressBar>::SetClassVersion(1);
 			JSExport<ProgressBar>::SetParent(JSExport<View>::Class());
 
+			TITANIUM_ADD_PROPERTY(ProgressBar, backgroundColor);
+			TITANIUM_ADD_PROPERTY(ProgressBar, backgroundDisabledColor);
 			TITANIUM_ADD_PROPERTY(ProgressBar, color);
 			TITANIUM_ADD_PROPERTY(ProgressBar, font);
 			TITANIUM_ADD_PROPERTY(ProgressBar, max);
@@ -45,6 +51,10 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(ProgressBar, style);
 			TITANIUM_ADD_PROPERTY(ProgressBar, value);
 
+			TITANIUM_ADD_FUNCTION(ProgressBar, getBackgroundColor);
+			TITANIUM_ADD_FUNCTION(ProgressBar, setBackgroundColor);
+			TITANIUM_ADD_FUNCTION(ProgressBar, getBackgroundDisabledColor);
+			TITANIUM_ADD_FUNCTION(ProgressBar, setBackgroundDisabledColor);
 			TITANIUM_ADD_FUNCTION(ProgressBar, getColor);
 			TITANIUM_ADD_FUNCTION(ProgressBar, setColor);
 			TITANIUM_ADD_FUNCTION(ProgressBar, getFont);
@@ -60,6 +70,12 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(ProgressBar, getValue);
 			TITANIUM_ADD_FUNCTION(ProgressBar, setValue);
 		}
+
+		TITANIUM_PROPERTY_GETTER_STRING(ProgressBar, backgroundColor)
+		TITANIUM_PROPERTY_SETTER_STRING(ProgressBar, backgroundColor)
+
+		TITANIUM_PROPERTY_GETTER_STRING(ProgressBar, backgroundDisabledColor)
+		TITANIUM_PROPERTY_SETTER_STRING(ProgressBar, backgroundDisabledColor)
 
 		TITANIUM_PROPERTY_GETTER_STRING(ProgressBar, color)
 		TITANIUM_PROPERTY_SETTER_STRING(ProgressBar, color)
@@ -82,6 +98,10 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER_UNIMPLEMENTED(ProgressBar, style)
 		TITANIUM_PROPERTY_SETTER_UNIMPLEMENTED(ProgressBar, style)
 
+		TITANIUM_FUNCTION_AS_GETTER(ProgressBar, getBackgroundColor, backgroundColor)
+		TITANIUM_FUNCTION_AS_SETTER(ProgressBar, setBackgroundColor, backgroundColor)
+		TITANIUM_FUNCTION_AS_GETTER(ProgressBar, getBackgroundDisabledColor, backgroundDisabledColor)
+		TITANIUM_FUNCTION_AS_SETTER(ProgressBar, setBackgroundDisabledColor, backgroundDisabledColor)
 		TITANIUM_FUNCTION_AS_GETTER(ProgressBar, getColor, color)
 		TITANIUM_FUNCTION_AS_SETTER(ProgressBar, setColor, color)
 		TITANIUM_FUNCTION_AS_GETTER(ProgressBar, getFont, font)

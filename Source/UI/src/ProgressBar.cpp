@@ -46,7 +46,18 @@ namespace TitaniumWindows
 			panel__->Orientation = Windows::UI::Xaml::Controls::Orientation::Vertical;
 
 			bar__ = ref new Windows::UI::Xaml::Controls::ProgressBar();
-			bar__->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Gray);
+			backgroundColorBrush__ = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Gray);
+			bar__->Background = backgroundColorBrush__;
+			bar__->IsEnabledChanged += ref new Windows::UI::Xaml::DependencyPropertyChangedEventHandler(
+				[=](Platform::Object^ sender, DependencyPropertyChangedEventArgs^ e) {
+					auto control = dynamic_cast<Windows::UI::Xaml::Controls::Control^>(sender);
+					if (control->IsEnabled) {
+						control->Background = backgroundColorBrush__;
+					} else {
+						control->Background = backgroundDisabledColorBrush__;
+					}
+				}
+			);
 
 			label__ = ref new Windows::UI::Xaml::Controls::TextBlock();
 			label__->Text = "";
@@ -107,6 +118,24 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ProgressBar::set_color(colorName);
 			bar__->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(WindowsViewLayoutDelegate::ColorForName(colorName));
+		}
+
+		void ProgressBar::set_backgroundColor(const std::string& colorName) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::ProgressBar::set_backgroundColor(colorName);
+			backgroundColorBrush__ = ref new Windows::UI::Xaml::Media::SolidColorBrush(WindowsViewLayoutDelegate::ColorForName(colorName));
+			if (bar__->IsEnabled) {
+				bar__->Background = backgroundColorBrush__;
+			}
+		}
+		
+		void ProgressBar::set_backgroundDisabledColor(const std::string& colorName) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::ProgressBar::set_backgroundDisabledColor(colorName);
+			backgroundDisabledColorBrush__ = ref new Windows::UI::Xaml::Media::SolidColorBrush(WindowsViewLayoutDelegate::ColorForName(colorName));
+			if (!bar__->IsEnabled) {
+				bar__->Background = backgroundDisabledColorBrush__;
+			}
 		}
 
 	}  // namespace UI

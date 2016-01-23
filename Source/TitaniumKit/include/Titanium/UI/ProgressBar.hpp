@@ -31,6 +31,20 @@ namespace Titanium
 
 			/*!
 			  @property
+			  @abstract backgroundColor
+			  @discussion Background color of the view, as a color name or hex triplet.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, backgroundColor);
+
+			/*!
+			  @property
+			  @abstract backgroundDisabledColor
+			  @discussion Disabled background color of the view, as a color name or hex triplet.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, backgroundDisabledColor);
+
+			/*!
+			  @property
 			  @abstract color
 			  @discussion Color of the progress bar text, as a color name or hex triplet.
 			*/
@@ -83,6 +97,8 @@ namespace Titanium
 
 			static void JSExportInitialize();
 
+			TITANIUM_PROPERTY_DEF(backgroundColor);
+			TITANIUM_PROPERTY_DEF(backgroundDisabledColor);
 			TITANIUM_PROPERTY_DEF(color);
 			TITANIUM_PROPERTY_DEF(font);
 			TITANIUM_PROPERTY_DEF(max);
@@ -93,6 +109,10 @@ namespace Titanium
 
 			TITANIUM_FUNCTION_DEF(remove);
 			TITANIUM_FUNCTION_DEF(add);
+			TITANIUM_FUNCTION_DEF(getBackgroundColor);
+			TITANIUM_FUNCTION_DEF(setBackgroundColor);
+			TITANIUM_FUNCTION_DEF(getBackgroundDisabledColor);
+			TITANIUM_FUNCTION_DEF(setBackgroundDisabledColor);
 			TITANIUM_FUNCTION_DEF(getColor);
 			TITANIUM_FUNCTION_DEF(setColor);
 			TITANIUM_FUNCTION_DEF(getFont);
@@ -111,6 +131,8 @@ namespace Titanium
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
+			std::string backgroundColor__;
+			std::string backgroundDisabledColor__;
 			std::string color__;
 			Font font__;
 			double max__;
