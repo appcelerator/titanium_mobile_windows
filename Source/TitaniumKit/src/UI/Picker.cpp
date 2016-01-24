@@ -64,7 +64,7 @@ namespace Titanium
 		}
 
 		Picker::Picker(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context)
+			: View(js_context, "Titanium.UI.Picker")
 			, countDownDuration__(0)
 			, format24__(false)
 			, minuteInterval__(1)

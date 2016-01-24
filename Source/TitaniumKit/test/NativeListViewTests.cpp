@@ -280,20 +280,13 @@ TEST_F(ListViewTests, basic_functionality)
 	XCTAssertTrue(UI.HasProperty("createListView"));
 	XCTAssertTrue(UI.HasProperty("createListSection"));
 
-	auto View = js_context.CreateObject(JSExport<NativeListViewExample>::Class());
-	auto view_ptr = View.GetPrivate<NativeListViewExample>();
-	XCTAssertNotEqual(nullptr, view_ptr);
-
-	UI.SetProperty("ListView", View);
-	UI.SetProperty("ListSection", js_context.CreateObject(JSExport<Titanium::UI::ListSection>::Class()));
+	auto ListView = js_context.CreateObject(JSExport<NativeListViewExample>::Class());
+	auto ListSection = js_context.CreateObject(JSExport<Titanium::UI::ListSection>::Class());
 
 	XCTAssertTrue(UI.HasProperty("ListView"));
 	XCTAssertTrue(UI.HasProperty("ListSection"));
 
-	JSValue result = js_context.CreateNull();
-	XCTAssertNoThrow(result = js_context.JSEvaluateScript("Ti.UI.createListView();"));
-	XCTAssertTrue(result.IsObject());
-	JSObject view = static_cast<JSObject>(result);
+	JSObject view = ListView.CallAsConstructor();
 
 	XCTAssertTrue(view.HasProperty("sections"));
 	XCTAssertTrue(view.HasProperty("footerTitle"));
@@ -315,9 +308,7 @@ TEST_F(ListViewTests, basic_functionality)
 	XCTAssertTrue(view.HasProperty("replaceSectionAt"));
 	XCTAssertTrue(view.HasProperty("setMarker"));
 
-	XCTAssertNoThrow(result = js_context.JSEvaluateScript("Ti.UI.createListSection();"));
-	XCTAssertTrue(result.IsObject());
-	JSObject section = static_cast<JSObject>(result);
+	JSObject section = ListSection.CallAsConstructor();
 
 	XCTAssertTrue(section.HasProperty("footerTitle"));
 	XCTAssertTrue(section.HasProperty("footerView"));

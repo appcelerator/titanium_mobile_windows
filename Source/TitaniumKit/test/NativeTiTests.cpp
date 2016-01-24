@@ -35,22 +35,15 @@ TEST_F(TitaniumTests, logging)
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
 	auto global_object = js_context.get_global_object();
 
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
 	auto Titanium = js_context.CreateObject(JSExport<NativeTiExample>::Class());
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
 	auto Titanium_ptr = Titanium.GetPrivate<NativeTiExample>();
 	XCTAssertNotEqual(nullptr, Titanium_ptr);
 
 	XCTAssertTrue(Titanium.HasProperty("version"));
 	XCTAssertTrue(Titanium.HasProperty("getVersion"));
 	XCTAssertTrue(Titanium.HasProperty("createBuffer"));
+
+	global_object.SetProperty("Ti", Titanium);
 
 	auto result = js_context.JSEvaluateScript("Ti.version;");
 	XCTAssertTrue(result.IsString());
@@ -72,6 +65,4 @@ TEST_F(TitaniumTests, logging)
 	std::string userAgent = static_cast<std::string>(result);
 	XCTAssertEqual("__TITANIUM_USER_AGENT__", userAgent);
 
-	auto json_result = js_context.JSEvaluateScript("JSON.stringify(Ti);");
-	XCTAssertTrue(static_cast<std::string>(json_result).find("\"version\":") != std::string::npos);
 }

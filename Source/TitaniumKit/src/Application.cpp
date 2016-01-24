@@ -7,13 +7,12 @@
  */
 
 #include "Titanium/Application.hpp"
-#include "Titanium/ApplicationBuilder.hpp"
 #include <sstream>
 
 namespace Titanium
 {
-	Application::Application(const ApplicationBuilder& builder)
-	    : js_context__(builder.js_context__)
+	Application::Application(const JSContext& js_context)
+	    : js_context__(js_context)
 	{
 	}
 

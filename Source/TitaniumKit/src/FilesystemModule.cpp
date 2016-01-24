@@ -37,23 +37,20 @@ namespace Titanium
 	FilesystemModule::FilesystemModule(const JSContext& js_context) TITANIUM_NOEXCEPT
 	    : Module(js_context, "Titanium.Filesystem")
 	    , openStreamFunc__(createOpenStreamFunction(js_context))
-	    , mode_read__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::READ)))
-	    , mode_write__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::WRITE)))
-	    , mode_append__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::APPEND)))
 	{
 	}
 
 	TITANIUM_PROPERTY_GETTER(FilesystemModule, MODE_READ)
 	{
-		return mode_read__;
+		return get_context().CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::READ));
 	}
 	TITANIUM_PROPERTY_GETTER(FilesystemModule, MODE_WRITE)
 	{
-		return mode_write__;
+		return get_context().CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::WRITE));
 	}
 	TITANIUM_PROPERTY_GETTER(FilesystemModule, MODE_APPEND)
 	{
-		return mode_append__;
+		return get_context().CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::APPEND));
 	}
 
 	std::string FilesystemModule::separator() const TITANIUM_NOEXCEPT
@@ -153,18 +150,20 @@ namespace Titanium
 		TITANIUM_ADD_FUNCTION(FilesystemModule, createTempFile);
 		TITANIUM_ADD_FUNCTION(FilesystemModule, isExternalStoragePresent);
 		TITANIUM_ADD_FUNCTION(FilesystemModule, openStream);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, MODE_READ);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, MODE_WRITE);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, MODE_APPEND);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, separator);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, lineEnding);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, applicationCacheDirectory);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, applicationDataDirectory);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, applicationDirectory);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, applicationSupportDirectory);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, externalStorageDirectory);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, resourcesDirectory);
-		TITANIUM_ADD_PROPERTY_READONLY(FilesystemModule, tempDirectory);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, File);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, FileStream);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, MODE_READ);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, MODE_WRITE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, MODE_APPEND);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, separator);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, lineEnding);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, applicationCacheDirectory);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, applicationDataDirectory);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, applicationDirectory);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, applicationSupportDirectory);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, externalStorageDirectory);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, resourcesDirectory);
+		TITANIUM_ADD_CONSTANT_PROPERTY(FilesystemModule, tempDirectory);
 		TITANIUM_ADD_FUNCTION(FilesystemModule, getSeparator);
 		TITANIUM_ADD_FUNCTION(FilesystemModule, getLineEnding);
 		TITANIUM_ADD_FUNCTION(FilesystemModule, getApplicationCacheDirectory);
@@ -333,5 +332,24 @@ namespace Titanium
 	{
 		return get_context().CreateString(tempDirectory());
 	}
+	TITANIUM_PROPERTY_GETTER(FilesystemModule, File)
+	{
+		return get_context().CreateObject(file__);
+	}
+	TITANIUM_PROPERTY_GETTER(FilesystemModule, FileStream)
+	{
+		return get_context().CreateObject(filestream__);
+	}
 
+	FilesystemModule& FilesystemModule::FileClass(const JSClass& file) TITANIUM_NOEXCEPT
+	{
+		file__ = file;
+		return *this;
+	}
+
+	FilesystemModule& FilesystemModule::FileStreamClass(const JSClass& filestream) TITANIUM_NOEXCEPT
+	{
+		filestream__ = filestream;
+		return *this;
+	}
 }  // namespace Titanium

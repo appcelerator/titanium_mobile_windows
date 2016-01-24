@@ -260,14 +260,21 @@ namespace Titanium
 		TITANIUM_LOG_WARN("AppModule::_restart: Unimplemented");
 	}
 
+	AppModule& AppModule::PropertiesClass(const JSClass& Properties) TITANIUM_NOEXCEPT
+	{
+		properties__ = Properties;
+		return *this;
+	}
+
 	void AppModule::JSExportInitialize() {
 		JSExport<AppModule>::SetClassVersion(1);
 		JSExport<AppModule>::SetParent(JSExport<Module>::Class());
 
 		TITANIUM_ADD_FUNCTION(AppModule, _loadAppInfo);
 
-		TITANIUM_ADD_PROPERTY_READONLY(AppModule, EVENT_ACCESSIBILITY_ANNOUNCEMENT);
-		TITANIUM_ADD_PROPERTY_READONLY(AppModule, EVENT_ACCESSIBILITY_CHANGED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(AppModule, EVENT_ACCESSIBILITY_ANNOUNCEMENT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(AppModule, EVENT_ACCESSIBILITY_CHANGED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(AppModule, Properties);
 
 		TITANIUM_ADD_PROPERTY_READONLY(AppModule, accessibilityEnabled);
 		TITANIUM_ADD_PROPERTY_READONLY(AppModule, analytics);
@@ -343,6 +350,11 @@ namespace Titanium
 		object_ptr->loadAppInfo();
 
 		return get_context().CreateUndefined();
+	}
+
+	TITANIUM_PROPERTY_GETTER(AppModule, Properties)
+	{
+		return get_context().CreateObject(properties__);
 	}
 
 	TITANIUM_PROPERTY_GETTER(AppModule, accessibilityEnabled)

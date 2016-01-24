@@ -212,6 +212,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(url);
 		TITANIUM_PROPERTY_READONLY_DEF(version);
 		TITANIUM_PROPERTY_READONLY_DEF(_sdkVersion);
+		TITANIUM_PROPERTY_READONLY_DEF(Properties);
 
 		TITANIUM_FUNCTION_DEF(fireSystemEvent);
 		TITANIUM_FUNCTION_DEF(getAccessibilityEnabled);
@@ -236,9 +237,12 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(getVersion);
 		TITANIUM_FUNCTION_DEF(_restart);
 
+		AppModule& PropertiesClass(const JSClass&) TITANIUM_NOEXCEPT;
+
 	protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
+		JSClass properties__;
 		JSValue app_info__;
 		bool accessibilityEnabled__;
 		bool analytics__;

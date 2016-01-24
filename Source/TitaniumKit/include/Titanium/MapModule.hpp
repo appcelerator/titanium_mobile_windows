@@ -31,6 +31,11 @@ namespace Titanium
 	{
 
 	public:
+		TITANIUM_PROPERTY_READONLY_DEF(Annotation);
+		TITANIUM_PROPERTY_READONLY_DEF(Camera);
+		TITANIUM_PROPERTY_READONLY_DEF(Route);
+		TITANIUM_PROPERTY_READONLY_DEF(View);
+
 		TITANIUM_PROPERTY_READONLY_DEF(HYBRID_TYPE);
 		TITANIUM_PROPERTY_READONLY_DEF(SATELLITE_TYPE);
 		TITANIUM_PROPERTY_READONLY_DEF(NORMAL_TYPE);
@@ -114,31 +119,16 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(createView);
 		TITANIUM_FUNCTION_DEF(isGooglePlayServicesAvailable);
 
-	private:
-		JSValue hybrid_type__;
-		JSValue satellite_type__;
-		JSValue normal_type__;
-		JSValue terrain_type__;
-		JSValue annotation_drag_state_end__;
-		JSValue annotation_drag_state_start__;
-		JSValue annotation_azure__;
-		JSValue annotation_blue__;
-		JSValue annotation_cyan__;
-		JSValue annotation_green__;
-		JSValue annotation_magenta__;
-		JSValue annotation_orange__;
-		JSValue annotation_purple__;
-		JSValue annotation_red__;
-		JSValue annotation_rose__;
-		JSValue annotation_violet__;
-		JSValue annotation_yellow__;
-		JSValue overlay_level_above_labels__;
-		JSValue overlay_level_above_roads__;
-		JSValue service_disabled__;
-		JSValue service_invalid__;
-		JSValue service_missing__;
-		JSValue service_version_update_required__;
-		JSValue success__;
+		MapModule& ViewClass(const JSClass&) TITANIUM_NOEXCEPT;
+		MapModule& AnnotationClass(const JSClass&) TITANIUM_NOEXCEPT;
+		MapModule& CameraClass(const JSClass&) TITANIUM_NOEXCEPT;
+		MapModule& RouteClass(const JSClass&) TITANIUM_NOEXCEPT;
+
+	protected:
+		JSClass annotation__;
+		JSClass camera__;
+		JSClass route__;
+		JSClass view__;
 	};
 } // namespace Titanium
 

@@ -15,12 +15,10 @@ namespace Titanium
 {
 	using namespace HAL;
 
-	class ApplicationBuilder;
-
 	class TITANIUMKIT_EXPORT Application final
 	{
 	public:
-		Application(const ApplicationBuilder& builder);
+		Application(const JSContext& js_context);
 
 		JSValue Run(const std::string& app_js);
 

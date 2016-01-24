@@ -162,6 +162,11 @@ namespace Titanium
 		*/
 		virtual void unregisterForPushNotifications() TITANIUM_NOEXCEPT;
 
+		NetworkModule& HTTPClientClass(const JSClass&) TITANIUM_NOEXCEPT;
+		NetworkModule& CookieClass(const JSClass&) TITANIUM_NOEXCEPT;
+		
+		TITANIUM_PROPERTY_READONLY_DEF(HTTPClient);
+		TITANIUM_PROPERTY_READONLY_DEF(Cookie);
 		TITANIUM_PROPERTY_READONLY_DEF(NETWORK_LAN);
 		TITANIUM_PROPERTY_READONLY_DEF(NETWORK_MOBILE);
 		TITANIUM_PROPERTY_READONLY_DEF(NETWORK_NONE);
@@ -222,30 +227,11 @@ namespace Titanium
 
 		static void JSExportInitialize();
 
-	private:
+	protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
-		JSValue network_lan__;
-		JSValue network_mobile__;
-		JSValue network_none__;
-		JSValue network_unknown__;
-		JSValue network_wifi__;
-		JSValue notification_type_alert__;
-		JSValue notification_type_badge__;
-		JSValue notification_type_sound__;
-		JSValue notification_type_newsstand__;
-		JSValue read_mode__;
-		JSValue read_write_mode__;
-		JSValue write_mode__;
-		JSValue socket_closed__;
-		JSValue socket_connected__;
-		JSValue socket_error__;
-		JSValue socket_initialized__;
-		JSValue socket_listening__;
-		JSValue tls_version_1_0__;
-		JSValue tls_version_1_1__;
-		JSValue tls_version_1_2__;
-		JSValue progress_unknown__;
+		JSClass httpclient__;
+		JSClass cookie__;
 		
 		Network::TYPE networkType__;
 		std::string networkTypeName__;
