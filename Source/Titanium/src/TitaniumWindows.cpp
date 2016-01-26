@@ -8,7 +8,6 @@
 
 #include "TitaniumWindows/TitaniumWindows.hpp"
 #include "Titanium/Application.hpp"
-#include "Titanium/ApplicationBuilder.hpp"
 #include "TitaniumWindows/TiModule.hpp"
 #include "TitaniumWindows/UIModule.hpp"
 #include "TitaniumWindows/Contacts/Person.hpp"
