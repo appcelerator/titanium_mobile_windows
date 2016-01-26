@@ -56,7 +56,7 @@ namespace Titanium
 				if (bytesToRead == 0) {
 					callback(error, -1);
 				} else {
-					callback(error, bytesToRead);
+					callback(error, static_cast<std::uint32_t>(bytesToRead));
 				}
 			});
 		}
@@ -65,7 +65,7 @@ namespace Titanium
 		{
 			file__->readAllBytesAsync([this, buffer, callback](const Titanium::ErrorResponse& error, const std::vector<std::uint8_t>& data) {
 				buffer->construct(data);
-				totalBytesProcessed__ = data.size();
+				totalBytesProcessed__ = static_cast<std::uint32_t>(data.size());
 				callback(error, get_object().GetPrivate<IOStream>());
 			});
 		}

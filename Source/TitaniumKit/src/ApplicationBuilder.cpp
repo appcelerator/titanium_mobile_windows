@@ -317,7 +317,7 @@ JSString builtin_functions_script = R"js(
 
 		js_context__.JSEvaluateScript(builtin_functions_script);
 
-		return Application(*this);
+		return Application(js_context__);
 	}
 
 	JSObject ApplicationBuilder::TiObject() const TITANIUM_NOEXCEPT

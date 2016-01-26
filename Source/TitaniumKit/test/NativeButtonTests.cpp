@@ -38,21 +38,7 @@ TEST_F(ButtonTests, basic_functionality)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
 	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("UI"));
 	auto UI = js_context.CreateObject(JSExport<Titanium::UIModule>::Class());
-	Titanium.SetProperty("UI", UI, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("UI"));
 
 	// Inherited from Titanium::Module.
 	XCTAssertTrue(UI.HasProperty("addEventListener"));
@@ -71,12 +57,11 @@ TEST_F(ButtonTests, basic_functionality)
 	UI.SetProperty("Button", Button);
 	XCTAssertTrue(UI.HasProperty("Button"));
 
-	JSValue result = js_context.CreateNull();
-	XCTAssertNoThrow(result = js_context.JSEvaluateScript("Ti.UI.createButton();"));
-	XCTAssertTrue(result.IsObject());
-	JSObject button = static_cast<JSObject>(result);
+	auto button = Button.CallAsConstructor();
 	XCTAssertTrue(button.HasProperty("title"));
 
-	auto json_result = js_context.JSEvaluateScript("JSON.stringify(Ti.UI.createButton());");
+	global_object.SetProperty("button", button);
+
+	auto json_result = js_context.JSEvaluateScript("JSON.stringify(button);");
 	XCTAssertTrue(static_cast<std::string>(json_result).find("\"textAlign\":") != std::string::npos);
 }

@@ -39,35 +39,14 @@ TEST_F(WebViewTests, basic_functionality)
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
 	auto global_object = js_context.get_global_object();
 
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("UI"));
-	auto UI = js_context.CreateObject(JSExport<Titanium::UIModule>::Class());
-	Titanium.SetProperty("UI", UI, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("UI"));
-
-	XCTAssertTrue(UI.HasProperty("createWebView"));
-
 	auto WebView = js_context.CreateObject(JSExport<NativeWebViewExample>::Class());
 	auto webview_ptr = WebView.GetPrivate<NativeWebViewExample>();
 	XCTAssertNotEqual(nullptr, webview_ptr);
 
-	UI.SetProperty("WebView", WebView);
-	XCTAssertTrue(UI.HasProperty("WebView"));
-
-	auto result = js_context.JSEvaluateScript("Ti.UI.createWebView();");
-	XCTAssertTrue(result.IsObject());
-	JSObject webview = static_cast<JSObject>(result);
+	JSObject webview = WebView.CallAsConstructor();
 	XCTAssertTrue(webview.HasProperty("canGoBack"));
 
-	global_object.SetProperty("webview", result);
+	global_object.SetProperty("webview", webview);
 	auto json_result = js_context.JSEvaluateScript("JSON.stringify(webview);");
 	XCTAssertTrue(static_cast<std::string>(json_result).find("\"url\":") != std::string::npos);
 }

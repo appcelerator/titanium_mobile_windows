@@ -167,10 +167,15 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(resourcesDirectory);
 		TITANIUM_PROPERTY_READONLY_DEF(tempDirectory);
 
+		TITANIUM_PROPERTY_READONLY_DEF(File);
+		TITANIUM_PROPERTY_READONLY_DEF(FileStream);
+
+		FilesystemModule& FileClass(const JSClass&) TITANIUM_NOEXCEPT;
+		FilesystemModule& FileStreamClass(const JSClass&) TITANIUM_NOEXCEPT;
+
 	protected:
-		JSValue mode_read__;
-		JSValue mode_write__;
-		JSValue mode_append__;
+		JSClass file__;
+		JSClass filestream__;
 		JSFunction openStreamFunc__;
 		JSFunction createOpenStreamFunction(const JSContext& js_context) TITANIUM_NOEXCEPT;
 

@@ -31,56 +31,70 @@ namespace Titanium
 
 	ContactsModule::ContactsModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 		: Module(js_context, "Titanium.Contacts"),
-		CONTACTS_KIND_ORGANIZATION__(js_context.CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::KIND::ORGANIZATION))),
-		CONTACTS_KIND_PERSON__(js_context.CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::KIND::PERSON))),
-		CONTACTS_SORT_FIRST_NAME__(js_context.CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::SORT::FIRST_NAME))),
-		CONTACTS_SORT_LAST_NAME__(js_context.CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::SORT::LAST_NAME))),
-		AUTHORIZATION_AUTHORIZED__(js_context.CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::AUTHORIZATION::AUTHORIZED))),
-		AUTHORIZATION_DENIED__(js_context.CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::AUTHORIZATION::DENIED))),
-		AUTHORIZATION_RESTRICTED__(js_context.CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::AUTHORIZATION::RESTRICTED))),
-		AUTHORIZATION_UNKNOWN__(js_context.CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::AUTHORIZATION::UNKNOWN))),
 		contactsAuthorization__(Titanium::Contacts::AUTHORIZATION::UNKNOWN)
 	{
 	}
 
+	ContactsModule& ContactsModule::GroupClass(const JSClass& Group) TITANIUM_NOEXCEPT
+	{
+		group__ = Group;
+		return *this;
+	}
+
+	ContactsModule& ContactsModule::PersonClass(const JSClass& Person) TITANIUM_NOEXCEPT
+	{
+		person__ = Person;
+		return *this;
+	}
+
+	TITANIUM_PROPERTY_GETTER(ContactsModule, Group)
+	{
+		return get_context().CreateObject(group__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(ContactsModule, Person)
+	{
+		return get_context().CreateObject(person__);
+	}
+
 	TITANIUM_PROPERTY_GETTER(ContactsModule, CONTACTS_KIND_ORGANIZATION)
 	{
-		return CONTACTS_KIND_ORGANIZATION__;
+		return get_context().CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::KIND::ORGANIZATION));
 	}
 
 	TITANIUM_PROPERTY_GETTER(ContactsModule, CONTACTS_KIND_PERSON)
 	{
-		return CONTACTS_KIND_PERSON__;
+		return get_context().CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::KIND::PERSON));
 	}
 
 	TITANIUM_PROPERTY_GETTER(ContactsModule, CONTACTS_SORT_FIRST_NAME)
 	{
-		return CONTACTS_SORT_FIRST_NAME__;
+		return get_context().CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::SORT::FIRST_NAME));
 	}
 
 	TITANIUM_PROPERTY_GETTER(ContactsModule, CONTACTS_SORT_LAST_NAME)
 	{
-		return CONTACTS_SORT_LAST_NAME__;
+		return get_context().CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::SORT::LAST_NAME));
 	}
 
 	TITANIUM_PROPERTY_GETTER(ContactsModule, AUTHORIZATION_AUTHORIZED)
 	{
-		return AUTHORIZATION_AUTHORIZED__;
+		return get_context().CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::AUTHORIZATION::AUTHORIZED));
 	}
 
 	TITANIUM_PROPERTY_GETTER(ContactsModule, AUTHORIZATION_DENIED)
 	{
-		return AUTHORIZATION_DENIED__;
+		return get_context().CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::AUTHORIZATION::DENIED));
 	}
 
 	TITANIUM_PROPERTY_GETTER(ContactsModule, AUTHORIZATION_RESTRICTED)
 	{
-		return AUTHORIZATION_RESTRICTED__;
+		return get_context().CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::AUTHORIZATION::RESTRICTED));
 	}
 
 	TITANIUM_PROPERTY_GETTER(ContactsModule, AUTHORIZATION_UNKNOWN)
 	{
-		return AUTHORIZATION_UNKNOWN__;
+		return get_context().CreateNumber(Titanium::Contacts::Constants::to_underlying_type(Titanium::Contacts::AUTHORIZATION::UNKNOWN));
 	}
 
 	TITANIUM_PROPERTY_READ(ContactsModule, Contacts::AUTHORIZATION, contactsAuthorization);
@@ -162,14 +176,16 @@ namespace Titanium
 		JSExport<ContactsModule>::SetClassVersion(1);
 		JSExport<ContactsModule>::SetParent(JSExport<Module>::Class());
 
-		TITANIUM_ADD_PROPERTY_READONLY(ContactsModule, CONTACTS_KIND_ORGANIZATION);
-		TITANIUM_ADD_PROPERTY_READONLY(ContactsModule, CONTACTS_KIND_PERSON);
-		TITANIUM_ADD_PROPERTY_READONLY(ContactsModule, CONTACTS_SORT_FIRST_NAME);
-		TITANIUM_ADD_PROPERTY_READONLY(ContactsModule, CONTACTS_SORT_LAST_NAME);
-		TITANIUM_ADD_PROPERTY_READONLY(ContactsModule, AUTHORIZATION_AUTHORIZED);
-		TITANIUM_ADD_PROPERTY_READONLY(ContactsModule, AUTHORIZATION_DENIED);
-		TITANIUM_ADD_PROPERTY_READONLY(ContactsModule, AUTHORIZATION_RESTRICTED);
-		TITANIUM_ADD_PROPERTY_READONLY(ContactsModule, AUTHORIZATION_UNKNOWN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, Group);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, Person);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, CONTACTS_KIND_ORGANIZATION);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, CONTACTS_KIND_PERSON);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, CONTACTS_SORT_FIRST_NAME);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, CONTACTS_SORT_LAST_NAME);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, AUTHORIZATION_AUTHORIZED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, AUTHORIZATION_DENIED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, AUTHORIZATION_RESTRICTED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(ContactsModule, AUTHORIZATION_UNKNOWN);
 		TITANIUM_ADD_PROPERTY_READONLY(ContactsModule, contactsAuthorization);
 
 		TITANIUM_ADD_FUNCTION(ContactsModule, createGroup);

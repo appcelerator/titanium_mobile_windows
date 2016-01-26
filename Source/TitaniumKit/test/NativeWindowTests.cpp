@@ -39,20 +39,7 @@ TEST_F(WindowTests, basic_functionality)
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
 	auto global_object = js_context.get_global_object();
 
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("UI"));
 	auto UI = js_context.CreateObject(JSExport<Titanium::UIModule>::Class());
-	Titanium.SetProperty("UI", UI, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("UI"));
 
 	// Inherited from Titanium::Module.
 	XCTAssertTrue(UI.HasProperty("addEventListener"));
@@ -71,13 +58,10 @@ TEST_F(WindowTests, basic_functionality)
 	UI.SetProperty("Window", Window);
 	XCTAssertTrue(UI.HasProperty("Window"));
 
-	auto result = js_context.JSEvaluateScript("Ti.UI.createWindow();");
-	XCTAssertTrue(result.IsObject());
-	JSObject window = static_cast<JSObject>(result);
+	auto window = Window.CallAsConstructor();
 	XCTAssertTrue(window.HasProperty("open"));
 
-	XCTAssertNoThrow(js_context.JSEvaluateScript("var window = Ti.UI.createWindow(); window.open();"));
+	global_object.SetProperty("window", window);
 
-	auto json_result = js_context.JSEvaluateScript("JSON.stringify(window);");
-	XCTAssertTrue(static_cast<std::string>(json_result).find("\"backgroundColor\":") != std::string::npos);
+	XCTAssertNoThrow(js_context.JSEvaluateScript("window.open();"));
 }
