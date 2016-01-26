@@ -40,22 +40,7 @@ protected:
 TEST_F(MediaTests, BasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Media"));
 	auto Media = js_context.CreateObject(JSExport<Titanium::MediaModule>::Class());
-	Titanium.SetProperty("Media", Media, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Media"));
 
 	XCTAssertTrue(Media.HasProperty("AUDIO_FILEFORMAT_3GP2"));
 	XCTAssertTrue(Media.HasProperty("AUDIO_FILEFORMAT_3GPP"));
@@ -228,36 +213,12 @@ TEST_F(MediaTests, BasicFeatures)
 	XCTAssertTrue(Media.HasProperty("getPeakMicrophonePower"));
 	XCTAssertTrue(Media.HasProperty("getSystemMusicPlayer"));
 	XCTAssertTrue(Media.HasProperty("getVolume"));
-
-	auto json_result = js_context.JSEvaluateScript("JSON.stringify(Ti.Media);");
-	XCTAssertTrue(static_cast<std::string>(json_result).find("\"appMusicPlayer\":") != std::string::npos);
 }
 
 TEST_F(MediaTests, AudioPlayerBasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Media"));
-	auto Media = js_context.CreateObject(JSExport<Titanium::MediaModule>::Class());
-	Titanium.SetProperty("Media", Media, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Media"));
-
-	XCTAssertFalse(Media.HasProperty("AudioPlayer"));
 	auto AudioPlayer = js_context.CreateObject(JSExport<Titanium::Media::AudioPlayer>::Class());
-	Media.SetProperty("AudioPlayer", AudioPlayer, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Media.HasProperty("AudioPlayer"));
-
 
 	XCTAssertTrue(AudioPlayer.HasProperty("STATE_BUFFERING"));
 	XCTAssertTrue(AudioPlayer.HasProperty("STATE_INITIALIZED"));
@@ -318,27 +279,7 @@ TEST_F(MediaTests, AudioPlayerBasicFeatures)
 TEST_F(MediaTests, AudioRecorderBasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Media"));
-	auto Media = js_context.CreateObject(JSExport<Titanium::MediaModule>::Class());
-	Titanium.SetProperty("Media", Media, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Media"));
-
-	XCTAssertFalse(Media.HasProperty("AudioRecorder"));
 	auto AudioRecorder = js_context.CreateObject(JSExport<Titanium::Media::AudioRecorder>::Class());
-	Media.SetProperty("AudioRecorder", AudioRecorder, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Media.HasProperty("AudioRecorder"));
 
 	XCTAssertTrue(AudioRecorder.HasProperty("compression"));
 	XCTAssertTrue(AudioRecorder.HasProperty("format"));
@@ -362,27 +303,7 @@ TEST_F(MediaTests, AudioRecorderBasicFeatures)
 TEST_F(MediaTests, AudioItemBasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Media"));
-	auto Media = js_context.CreateObject(JSExport<Titanium::MediaModule>::Class());
-	Titanium.SetProperty("Media", Media, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Media"));
-
-	XCTAssertFalse(Media.HasProperty("Item"));
 	auto Item = js_context.CreateObject(JSExport<Titanium::Media::Item>::Class());
-	Media.SetProperty("Item", Item, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Media.HasProperty("Item"));
 
 	XCTAssertTrue(Item.HasProperty("albumArtist"));
 	XCTAssertTrue(Item.HasProperty("albumTitle"));
@@ -428,27 +349,7 @@ TEST_F(MediaTests, AudioItemBasicFeatures)
 TEST_F(MediaTests, MusicPlayerBasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Media"));
-	auto Media = js_context.CreateObject(JSExport<Titanium::MediaModule>::Class());
-	Titanium.SetProperty("Media", Media, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Media"));
-
-	XCTAssertFalse(Media.HasProperty("MusicPlayer"));
 	auto MusicPlayer = js_context.CreateObject(JSExport<Titanium::Media::MusicPlayer>::Class());
-	Media.SetProperty("MusicPlayer", MusicPlayer, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Media.HasProperty("MusicPlayer"));
 
 	XCTAssertTrue(MusicPlayer.HasProperty("currentPlaybackTime"));
 	XCTAssertTrue(MusicPlayer.HasProperty("nowPlaying"));
@@ -482,27 +383,7 @@ TEST_F(MediaTests, MusicPlayerBasicFeatures)
 TEST_F(MediaTests, SoundBasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Media"));
-	auto Media = js_context.CreateObject(JSExport<Titanium::MediaModule>::Class());
-	Titanium.SetProperty("Media", Media, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Media"));
-
-	XCTAssertFalse(Media.HasProperty("Sound"));
 	auto Sound = js_context.CreateObject(JSExport<Titanium::Media::Sound>::Class());
-	Media.SetProperty("Sound", Sound, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Media.HasProperty("Sound"));
 
 	XCTAssertTrue(Sound.HasProperty("STATE_BUFFERING"));
 	XCTAssertTrue(Sound.HasProperty("STATE_INITIALIZED"));
@@ -544,27 +425,7 @@ TEST_F(MediaTests, SoundBasicFeatures)
 TEST_F(MediaTests, VideoPlayerBasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Media"));
-	auto Media = js_context.CreateObject(JSExport<Titanium::MediaModule>::Class());
-	Titanium.SetProperty("Media", Media, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Media"));
-
-	XCTAssertFalse(Media.HasProperty("VideoPlayer"));
 	auto VideoPlayer = js_context.CreateObject(JSExport<Titanium::Media::VideoPlayer>::Class());
-	Media.SetProperty("VideoPlayer", VideoPlayer, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Media.HasProperty("VideoPlayer"));
 
 	XCTAssertTrue(VideoPlayer.HasProperty("allowsAirPlay"));
 	XCTAssertTrue(VideoPlayer.HasProperty("autoplay"));

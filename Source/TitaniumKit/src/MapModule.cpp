@@ -12,156 +12,177 @@
 namespace Titanium
 {
     MapModule::MapModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-        : Module(js_context, "Titanium.Map"),
-		hybrid_type__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::HYBRID))),
-		satellite_type__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::SATELLITE))),
-		normal_type__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::NORMAL))),
-		terrain_type__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::TERRAIN))),
-		annotation_drag_state_end__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_DRAG_STATE::END))),
-		annotation_drag_state_start__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_DRAG_STATE::START))),
-		annotation_azure__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::AZURE))),
-		annotation_blue__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::BLUE))),
-		annotation_cyan__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::CYAN))),
-		annotation_green__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::GREEN))),
-		annotation_magenta__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::MAGENTA))),
-		annotation_orange__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::ORANGE))),
-		annotation_purple__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::PURPLE))),
-		annotation_red__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::RED))),
-		annotation_rose__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::ROSE))),
-		annotation_violet__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::VIOLET))),
-		annotation_yellow__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::YELLOW))),
-		overlay_level_above_labels__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::OVERLAY_LEVEL::ABOVE_LABELS))),
-		overlay_level_above_roads__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::OVERLAY_LEVEL::ABOVE_ROADS))),
-		service_disabled__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::DISABLED))),
-		service_invalid__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::INVALID))),
-		service_missing__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::MISSING))),
-		service_version_update_required__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::VERSION_UPDATE_REQUIRED))),
-		success__(js_context.CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::SUCCESS)))
+        : Module(js_context, "Titanium.Map")
     {
 		TITANIUM_LOG_DEBUG("MapModule:: ctor ", this);
 	}
 
-	void MapModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
+	void MapModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+	{
 		HAL_LOG_DEBUG("MapModule:: postCallAsConstructor ", this);
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, HYBRID_TYPE)
 	{
-		return hybrid_type__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::HYBRID));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, SATELLITE_TYPE)
 	{
-		return satellite_type__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::SATELLITE));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, NORMAL_TYPE)
 	{
-		return normal_type__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::NORMAL));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, TERRAIN_TYPE)
 	{
-		return terrain_type__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::MAP_TYPE::TERRAIN));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_DRAG_STATE_END)
 	{
-		return annotation_drag_state_end__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_DRAG_STATE::END));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_DRAG_STATE_START)
 	{
-		return annotation_drag_state_start__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_DRAG_STATE::START));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_AZURE)
 	{
-		return annotation_azure__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::AZURE));
 	}
 	
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_BLUE)
 	{
-		return annotation_blue__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::BLUE));
 	}
 	
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_CYAN)
 	{
-		return annotation_cyan__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::CYAN));
 	}
 		
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_GREEN)
 	{
-		return annotation_green__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::GREEN));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_MAGENTA)
 	{
-		return annotation_magenta__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::MAGENTA));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_ORANGE)
 	{
-		return annotation_orange__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::ORANGE));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_PURPLE)
 	{
-		return annotation_purple__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::PURPLE));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_RED)
 	{
-		return annotation_red__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::RED));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_ROSE)
 	{
-		return annotation_rose__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::ROSE));
 	}
 		
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_VIOLET)
 	{
-		return annotation_violet__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::VIOLET));
 	}
 		
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_YELLOW)
 	{
-		return annotation_yellow__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::YELLOW));
 	}
 	TITANIUM_PROPERTY_GETTER(MapModule, OVERLAY_LEVEL_ABOVE_LABELS)
 	{
-		return overlay_level_above_labels__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::OVERLAY_LEVEL::ABOVE_LABELS));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, OVERLAY_LEVEL_ABOVE_ROADS)
 	{
-		return overlay_level_above_roads__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::OVERLAY_LEVEL::ABOVE_ROADS));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, SERVICE_DISABLED)
 	{
-		return service_disabled__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::DISABLED));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, SERVICE_INVALID)
 	{
-		return service_invalid__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::INVALID));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, SERVICE_MISSING)
 	{
-		return service_missing__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::MISSING));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, SERVICE_VERSION_UPDATE_REQUIRED)
 	{
-		return service_version_update_required__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::VERSION_UPDATE_REQUIRED));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MapModule, SUCCESS)
 	{
-		return success__;
+		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::GOOGLE_PLAY_SERVICE_STATE::SUCCESS));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MapModule, Camera)
+	{
+		return get_context().CreateObject(camera__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(MapModule, Annotation)
+	{
+		return get_context().CreateObject(annotation__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(MapModule, Route)
+	{
+		return get_context().CreateObject(route__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(MapModule, View)
+	{
+		return get_context().CreateObject(view__);
+	}
+
+	MapModule& MapModule::AnnotationClass(const JSClass& annotation) TITANIUM_NOEXCEPT
+	{
+		annotation__ = annotation;
+		return *this;
+	}
+
+	MapModule& MapModule::CameraClass(const JSClass& camera) TITANIUM_NOEXCEPT
+	{
+		camera__ = camera;
+		return *this;
+	}
+
+	MapModule& MapModule::RouteClass(const JSClass& route) TITANIUM_NOEXCEPT
+	{
+		route__ = route;
+		return *this;
+	}
+
+	MapModule& MapModule::ViewClass(const JSClass& view) TITANIUM_NOEXCEPT
+	{
+		view__ = view;
+		return *this;
 	}
 
 	JSObject MapModule::createView(const JSObject& parameters, JSObject& this_object) TITANIUM_NOEXCEPT
@@ -257,30 +278,34 @@ namespace Titanium
 		JSExport<MapModule>::SetClassVersion(1);
 		JSExport<MapModule>::SetParent(JSExport<Module>::Class());
 
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, HYBRID_TYPE);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, SATELLITE_TYPE);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, NORMAL_TYPE);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, TERRAIN_TYPE);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_DRAG_STATE_END);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_DRAG_STATE_START);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_AZURE);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_BLUE);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_CYAN);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_GREEN);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_MAGENTA);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_ORANGE);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_PURPLE);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_RED);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_ROSE);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_VIOLET);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, ANNOTATION_YELLOW);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, OVERLAY_LEVEL_ABOVE_LABELS);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, OVERLAY_LEVEL_ABOVE_ROADS);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, SERVICE_DISABLED);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, SERVICE_INVALID);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, SERVICE_MISSING);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, SERVICE_VERSION_UPDATE_REQUIRED);
-		TITANIUM_ADD_PROPERTY_READONLY(MapModule, SUCCESS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, HYBRID_TYPE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, SATELLITE_TYPE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, NORMAL_TYPE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, TERRAIN_TYPE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_DRAG_STATE_END);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_DRAG_STATE_START);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_AZURE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_BLUE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_CYAN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_GREEN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_MAGENTA);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_ORANGE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_PURPLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_RED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_ROSE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_VIOLET);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, ANNOTATION_YELLOW);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, OVERLAY_LEVEL_ABOVE_LABELS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, OVERLAY_LEVEL_ABOVE_ROADS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, SERVICE_DISABLED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, SERVICE_INVALID);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, SERVICE_MISSING);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, SERVICE_VERSION_UPDATE_REQUIRED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, SUCCESS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, Annotation);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, Camera);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, Route);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MapModule, View);
 
 		TITANIUM_ADD_FUNCTION(MapModule, createView);
 		TITANIUM_ADD_FUNCTION(MapModule, createAnnotation);

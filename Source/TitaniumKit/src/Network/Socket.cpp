@@ -13,15 +13,8 @@ namespace Titanium
 {
 	namespace Network
 	{
-
-
 		SocketModule::SocketModule(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: Module(js_context, "Titanium.Network.Socket")
-			, initialized__(js_context.CreateNumber(static_cast<std::uint32_t>(Socket::State::Initialized)))
-			, connected__(js_context.CreateNumber(static_cast<std::uint32_t>(Socket::State::Connected)))
-			, listening__(js_context.CreateNumber(static_cast<std::uint32_t>(Socket::State::Listening)))
-			, closed__(js_context.CreateNumber(static_cast<std::uint32_t>(Socket::State::Closed)))
-			, error__(js_context.CreateNumber(static_cast<std::uint32_t>(Socket::State::Error)))
 		{
 		}
 
@@ -30,39 +23,63 @@ namespace Titanium
 			JSExport<SocketModule>::SetClassVersion(1);
 			JSExport<SocketModule>::SetParent(JSExport<Module>::Class());
 
-			TITANIUM_ADD_PROPERTY_READONLY(SocketModule, INITIALIZED);
-			TITANIUM_ADD_PROPERTY_READONLY(SocketModule, CONNECTED);
-			TITANIUM_ADD_PROPERTY_READONLY(SocketModule, LISTENING);
-			TITANIUM_ADD_PROPERTY_READONLY(SocketModule, CLOSED);
-			TITANIUM_ADD_PROPERTY_READONLY(SocketModule, ERROR);
+			TITANIUM_ADD_CONSTANT_PROPERTY(SocketModule, INITIALIZED);
+			TITANIUM_ADD_CONSTANT_PROPERTY(SocketModule, CONNECTED);
+			TITANIUM_ADD_CONSTANT_PROPERTY(SocketModule, LISTENING);
+			TITANIUM_ADD_CONSTANT_PROPERTY(SocketModule, CLOSED);
+			TITANIUM_ADD_CONSTANT_PROPERTY(SocketModule, ERROR);
+			TITANIUM_ADD_CONSTANT_PROPERTY(SocketModule, TCP);
+			TITANIUM_ADD_CONSTANT_PROPERTY(SocketModule, UDP);
 
 			TITANIUM_ADD_FUNCTION(SocketModule, createTCP);
 			TITANIUM_ADD_FUNCTION(SocketModule, createUDP);
 		}
 
+		SocketModule& SocketModule::TCPClass(const JSClass& tcp) TITANIUM_NOEXCEPT
+		{
+			tcp__ = tcp;
+			return *this;
+		}
+
+		SocketModule& SocketModule::UDPClass(const JSClass& udp) TITANIUM_NOEXCEPT
+		{
+			udp__ = udp;
+			return *this;
+		}
+
 		TITANIUM_PROPERTY_GETTER(SocketModule, INITIALIZED)
 		{
-			return initialized__;
+			return get_context().CreateNumber(static_cast<std::uint32_t>(Socket::State::Initialized));
 		}
 
 		TITANIUM_PROPERTY_GETTER(SocketModule, CONNECTED)
 		{
-			return connected__;
+			return get_context().CreateNumber(static_cast<std::uint32_t>(Socket::State::Connected));
 		}
 
 		TITANIUM_PROPERTY_GETTER(SocketModule, LISTENING)
 		{
-			return listening__;
+			return get_context().CreateNumber(static_cast<std::uint32_t>(Socket::State::Listening));
 		}
 
 		TITANIUM_PROPERTY_GETTER(SocketModule, CLOSED)
 		{
-			return closed__;
+			return get_context().CreateNumber(static_cast<std::uint32_t>(Socket::State::Closed));
 		}
 
 		TITANIUM_PROPERTY_GETTER(SocketModule, ERROR)
 		{
-			return error__;
+			return get_context().CreateNumber(static_cast<std::uint32_t>(Socket::State::Error));
+		}
+
+		TITANIUM_PROPERTY_GETTER(SocketModule, TCP)
+		{
+			return get_context().CreateObject(tcp__);
+		}
+
+		TITANIUM_PROPERTY_GETTER(SocketModule, UDP)
+		{
+			return get_context().CreateObject(udp__);
 		}
 
 		TITANIUM_FUNCTION(SocketModule, createTCP)

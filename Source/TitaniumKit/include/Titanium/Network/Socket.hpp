@@ -10,6 +10,7 @@
 #define _TITANIUM_SOCKET_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 
 namespace Titanium
 {
@@ -56,18 +57,19 @@ namespace Titanium
 			TITANIUM_PROPERTY_READONLY_DEF(LISTENING);
 			TITANIUM_PROPERTY_READONLY_DEF(CLOSED);
 			TITANIUM_PROPERTY_READONLY_DEF(ERROR);
+			TITANIUM_PROPERTY_READONLY_DEF(TCP);
+			TITANIUM_PROPERTY_READONLY_DEF(UDP);
 
 			TITANIUM_FUNCTION_DEF(createTCP);
 			TITANIUM_FUNCTION_DEF(createUDP);
 
+			SocketModule& TCPClass(const JSClass&) TITANIUM_NOEXCEPT;
+			SocketModule& UDPClass(const JSClass&) TITANIUM_NOEXCEPT;
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
-			JSValue initialized__;
-			JSValue connected__;
-			JSValue listening__;
-			JSValue closed__;
-			JSValue error__;
+			JSClass tcp__;
+			JSClass udp__;
 #pragma warning(pop)
 		};
 

@@ -36,119 +36,6 @@ namespace Titanium
 
 	MediaModule::MediaModule(const JSContext& js_context) TITANIUM_NOEXCEPT
 		: Module(js_context, "Titanium.Media")
-		, audio_fileformat_3gp2__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::ThreeGP2)))
-		, audio_fileformat_3gpp__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::ThreeGPP)))
-		, audio_fileformat_aiff__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Aiff)))
-		, audio_fileformat_amr__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Amr)))
-		, audio_fileformat_caf__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Caf)))
-		, audio_fileformat_mp3__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Mp3)))
-		, audio_fileformat_mp4__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Mp4)))
-		, audio_fileformat_mp4a__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Mp4a)))
-		, audio_fileformat_wave__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Wave)))
-		, audio_format_aac__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Aac)))
-		, audio_format_alaw__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Alaw)))
-		, audio_format_apple_lossless__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::AppleLossless)))
-		, audio_format_ilbc__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Ilbc)))
-		, audio_format_ima4__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Ima4)))
-		, audio_format_linear_pcm__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::LinearPCM)))
-		, audio_format_ulaw__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Ulaw)))
-		, audio_session_category_ambient__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::Ambient)))
-		, audio_session_category_playback__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::Playback)))
-		, audio_session_category_play_and_record__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::PlayAndRecord)))
-		, audio_session_category_record__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::Record)))
-		, audio_session_category_solo_ambient__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::SoloAmbient)))
-		, audio_session_override_route_none__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionOverrideRoute::None)))
-		, audio_session_override_route_speaker__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionOverrideRoute::Speaker)))
-		, audio_session_port_linein__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::LineIn)))
-		, audio_session_port_builtinmic__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BuiltinMic)))
-		, audio_session_port_headsetmic__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::HeadSetMic)))
-		, audio_session_port_lineout__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::LineOut)))
-		, audio_session_port_headphones__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::HeadPhones)))
-		, audio_session_port_bluetootha2dp__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BluetoothA2DP)))
-		, audio_session_port_builtinreceiver__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BuiltinReceiver)))
-		, audio_session_port_builtinspeaker__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BuiltinSpeaker)))
-		, audio_session_port_hdmi__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::Hdmi)))
-		, audio_session_port_airplay__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::Airplay)))
-		, audio_session_port_bluetoothhfp__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BluetoothHFP)))
-		, audio_session_port_usbaudio__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::USBAudio)))
-		, audio_session_port_bluetoothle__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BluetoothLE)))
-		, audio_session_port_caraudio__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::CarAudio)))
-		, camera_flash_auto__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::FlashAuto)))
-		, camera_flash_off__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::FlashOff)))
-		, camera_flash_on__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::FlashOn)))
-		, camera_front__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::Front)))
-		, camera_rear__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::Rear)))
-		, device_busy__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::State::DeviceBusy)))
-		, media_type_photo__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MediaType::Photo)))
-		, media_type_video__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MediaType::Video)))
-		, music_media_type_all__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::All)))
-		, music_media_type_any_audio__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::AnyAudio)))
-		, music_media_type_audiobook__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::AudioBook)))
-		, music_media_type_music__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::Music)))
-		, music_media_type_podcast__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::Podcast)))
-		, music_media_group_title__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Title)))
-		, music_media_group_album__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Album)))
-		, music_media_group_artist__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Artist)))
-		, music_media_group_album_artist__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::AlbumArtist)))
-		, music_media_group_composer__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Composer)))
-		, music_media_group_genre__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Genre)))
-		, music_media_group_playlist__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Playlist)))
-		, music_media_group_podcast_title__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::PodcastTitle)))
-		, music_player_repeat_all__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerRepeat::All)))
-		, music_player_repeat_default__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerRepeat::Default)))
-		, music_player_repeat_none__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerRepeat::None)))
-		, music_player_repeat_one__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerRepeat::One)))
-		, music_player_shuffle_albums__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerShuffle::Albums)))
-		, music_player_shuffle_default__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerShuffle::Default)))
-		, music_player_shuffle_none__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerShuffle::None)))
-		, music_player_shuffle_songs__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerShuffle::Songs)))
-		, music_player_state_interrupted__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::Interrupted)))
-		, music_player_state_paused__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::Paused)))
-		, music_player_state_playing__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::Playing)))
-		, music_player_state_seek_backward__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::SeekBackward)))
-		, music_player_state_seek_forward__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::SeekForward)))
-		, music_player_state_stopped__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::Stopped)))
-		, no_camera__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::State::NoCamera)))
-		, no_video__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::State::NoVideo)))
-		, quality_high__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::Quality::High)))
-		, quality_low__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::Quality::Low)))
-		, quality_medium__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::Quality::Medium)))
-		, unknown_error__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::Error::Unknown)))
-		, video_control_default__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::Default)))
-		, video_control_embedded__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::Embedded)))
-		, video_control_fullscreen__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::Fullscreen)))
-		, video_control_hidden__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::Hidden)))
-		, video_control_none__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::None)))
-		, video_finish_reason_playback_ended__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoFinishReason::PlaybackEnded)))
-		, video_finish_reason_playback_error__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoFinishReason::PlaybackError)))
-		, video_finish_reason_user_exited__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoFinishReason::UserExited)))
-		, video_load_state_playable__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoLoadState::Playable)))
-		, video_load_state_playthrough_ok__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoLoadState::PlaythroughOK)))
-		, video_load_state_stalled__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoLoadState::Stalled)))
-		, video_load_state_unknown__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoLoadState::Unknown)))
-		, video_media_type_audio__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoMediaType::Audio)))
-		, video_media_type_none__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoMediaType::None)))
-		, video_media_type_video__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoMediaType::Video)))
-		, video_playback_state_interrupted__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::Interrupted)))
-		, video_playback_state_paused__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::Paused)))
-		, video_playback_state_playing__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::Playing)))
-		, video_playback_state_seeking_backward__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::SeekingBackward)))
-		, video_playback_state_seeking_forward__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::SeekingForward)))
-		, video_playback_state_stopped__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::Stopped)))
-		, video_repeat_mode_none__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoRepeatMode::None)))
-		, video_repeat_mode_one__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoRepeatMode::One)))
-		, video_scaling_aspect_fill__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoScaling::AspectFill)))
-		, video_scaling_aspect_fit__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoScaling::AspectFit)))
-		, video_scaling_mode_fill__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoScaling::ModeFill)))
-		, video_scaling_none__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoScaling::None)))
-		, video_source_type_file__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoSourceType::File)))
-		, video_source_type_streaming__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoSourceType::Streaming)))
-		, video_source_type_unknown__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoSourceType::Unknown)))
-		, video_time_option_exact__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::Exact)))
-		, video_time_option_nearest_keyframe__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::NearestKeyframe)))
-		, video_time_option_closest_sync__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::ClosestSync)))
-		, video_time_option_next_sync__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::NextSync)))
-		, video_time_option_previous_sync__(js_context.CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::PreviousSync)))
 		, appMusicPlayer__(get_context().CreateNull())
 		, audioPlaying__(false)
 		, audioSessionCategory__(Media::AudioSessionCategory::Playback)
@@ -283,119 +170,125 @@ namespace Titanium
 		JSExport<MediaModule>::SetClassVersion(1);
 		JSExport<MediaModule>::SetParent(JSExport<Module>::Class());
 
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FILEFORMAT_3GP2);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FILEFORMAT_3GPP);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FILEFORMAT_AIFF);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FILEFORMAT_AMR);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FILEFORMAT_CAF);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FILEFORMAT_MP3);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FILEFORMAT_MP4);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FILEFORMAT_MP4A);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FILEFORMAT_WAVE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FORMAT_AAC);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FORMAT_ALAW);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FORMAT_APPLE_LOSSLESS);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FORMAT_ILBC);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FORMAT_IMA4);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FORMAT_LINEAR_PCM);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_FORMAT_ULAW);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_CATEGORY_AMBIENT);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_CATEGORY_PLAYBACK);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_CATEGORY_PLAY_AND_RECORD);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_CATEGORY_RECORD);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_CATEGORY_SOLO_AMBIENT);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_OVERRIDE_ROUTE_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_OVERRIDE_ROUTE_SPEAKER);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_LINEIN);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_BUILTINMIC);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_HEADSETMIC);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_LINEOUT);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_HEADPHONES);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHA2DP);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_BUILTINRECEIVER);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_BUILTINSPEAKER);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_HDMI);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_AIRPLAY);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHHFP);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_USBAUDIO);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHLE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, AUDIO_SESSION_PORT_CARAUDIO);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, CAMERA_FLASH_AUTO);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, CAMERA_FLASH_OFF);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, CAMERA_FLASH_ON);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, CAMERA_FRONT);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, CAMERA_REAR);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, DEVICE_BUSY);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MEDIA_TYPE_PHOTO);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MEDIA_TYPE_VIDEO);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_TYPE_ALL);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_TYPE_ANY_AUDIO);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_TYPE_AUDIOBOOK);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_TYPE_MUSIC);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_TYPE_PODCAST);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_GROUP_TITLE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_GROUP_ALBUM);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_GROUP_ARTIST);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_GROUP_ALBUM_ARTIST);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_GROUP_COMPOSER);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_GROUP_GENRE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_GROUP_PLAYLIST);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_MEDIA_GROUP_PODCAST_TITLE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_REPEAT_ALL);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_REPEAT_DEFAULT);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_REPEAT_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_REPEAT_ONE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_SHUFFLE_ALBUMS);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_SHUFFLE_DEFAULT);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_SHUFFLE_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_SHUFFLE_SONGS);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_STATE_INTERRUPTED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_STATE_PAUSED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_STATE_PLAYING);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_STATE_SEEK_BACKWARD);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_STATE_SEEK_FORWARD);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, MUSIC_PLAYER_STATE_STOPPED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, NO_CAMERA);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, NO_VIDEO);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, QUALITY_HIGH);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, QUALITY_LOW);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, QUALITY_MEDIUM);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, UNKNOWN_ERROR);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_CONTROL_DEFAULT);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_CONTROL_EMBEDDED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_CONTROL_FULLSCREEN);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_CONTROL_HIDDEN);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_CONTROL_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_FINISH_REASON_PLAYBACK_ENDED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_FINISH_REASON_PLAYBACK_ERROR);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_FINISH_REASON_USER_EXITED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_LOAD_STATE_PLAYABLE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_LOAD_STATE_PLAYTHROUGH_OK);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_LOAD_STATE_STALLED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_LOAD_STATE_UNKNOWN);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_MEDIA_TYPE_AUDIO);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_MEDIA_TYPE_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_MEDIA_TYPE_VIDEO);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_PLAYBACK_STATE_INTERRUPTED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_PLAYBACK_STATE_PAUSED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_PLAYBACK_STATE_PLAYING);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_PLAYBACK_STATE_SEEKING_BACKWARD);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_PLAYBACK_STATE_SEEKING_FORWARD);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_PLAYBACK_STATE_STOPPED);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_REPEAT_MODE_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_REPEAT_MODE_ONE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_SCALING_ASPECT_FILL);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_SCALING_ASPECT_FIT);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_SCALING_MODE_FILL);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_SCALING_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_SOURCE_TYPE_FILE);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_SOURCE_TYPE_STREAMING);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_SOURCE_TYPE_UNKNOWN);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_TIME_OPTION_EXACT);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_TIME_OPTION_NEAREST_KEYFRAME);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_TIME_OPTION_CLOSEST_SYNC);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_TIME_OPTION_NEXT_SYNC);
-		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, VIDEO_TIME_OPTION_PREVIOUS_SYNC);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AudioPlayer);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AudioRecorder);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, Item);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MusicPlayer);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, Sound);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VideoPlayer);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FILEFORMAT_3GP2);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FILEFORMAT_3GPP);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FILEFORMAT_AIFF);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FILEFORMAT_AMR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FILEFORMAT_CAF);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FILEFORMAT_MP3);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FILEFORMAT_MP4);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FILEFORMAT_MP4A);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FILEFORMAT_WAVE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FORMAT_AAC);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FORMAT_ALAW);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FORMAT_APPLE_LOSSLESS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FORMAT_ILBC);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FORMAT_IMA4);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FORMAT_LINEAR_PCM);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_FORMAT_ULAW);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_CATEGORY_AMBIENT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_CATEGORY_PLAYBACK);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_CATEGORY_PLAY_AND_RECORD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_CATEGORY_RECORD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_CATEGORY_SOLO_AMBIENT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_OVERRIDE_ROUTE_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_OVERRIDE_ROUTE_SPEAKER);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_LINEIN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_BUILTINMIC);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_HEADSETMIC);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_LINEOUT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_HEADPHONES);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHA2DP);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_BUILTINRECEIVER);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_BUILTINSPEAKER);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_HDMI);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_AIRPLAY);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHHFP);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_USBAUDIO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_CARAUDIO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_FLASH_AUTO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_FLASH_OFF);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_FLASH_ON);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_FRONT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_REAR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, DEVICE_BUSY);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MEDIA_TYPE_PHOTO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MEDIA_TYPE_VIDEO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_TYPE_ALL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_TYPE_ANY_AUDIO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_TYPE_AUDIOBOOK);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_TYPE_MUSIC);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_TYPE_PODCAST);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_GROUP_TITLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_GROUP_ALBUM);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_GROUP_ARTIST);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_GROUP_ALBUM_ARTIST);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_GROUP_COMPOSER);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_GROUP_GENRE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_GROUP_PLAYLIST);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_MEDIA_GROUP_PODCAST_TITLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_REPEAT_ALL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_REPEAT_DEFAULT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_REPEAT_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_REPEAT_ONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_SHUFFLE_ALBUMS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_SHUFFLE_DEFAULT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_SHUFFLE_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_SHUFFLE_SONGS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_STATE_INTERRUPTED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_STATE_PAUSED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_STATE_PLAYING);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_STATE_SEEK_BACKWARD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_STATE_SEEK_FORWARD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, MUSIC_PLAYER_STATE_STOPPED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, NO_CAMERA);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, NO_VIDEO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, QUALITY_HIGH);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, QUALITY_LOW);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, QUALITY_MEDIUM);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, UNKNOWN_ERROR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_CONTROL_DEFAULT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_CONTROL_EMBEDDED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_CONTROL_FULLSCREEN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_CONTROL_HIDDEN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_CONTROL_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_FINISH_REASON_PLAYBACK_ENDED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_FINISH_REASON_PLAYBACK_ERROR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_FINISH_REASON_USER_EXITED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_LOAD_STATE_PLAYABLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_LOAD_STATE_PLAYTHROUGH_OK);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_LOAD_STATE_STALLED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_LOAD_STATE_UNKNOWN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_MEDIA_TYPE_AUDIO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_MEDIA_TYPE_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_MEDIA_TYPE_VIDEO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_PLAYBACK_STATE_INTERRUPTED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_PLAYBACK_STATE_PAUSED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_PLAYBACK_STATE_PLAYING);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_PLAYBACK_STATE_SEEKING_BACKWARD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_PLAYBACK_STATE_SEEKING_FORWARD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_PLAYBACK_STATE_STOPPED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_REPEAT_MODE_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_REPEAT_MODE_ONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_ASPECT_FILL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_ASPECT_FIT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_MODE_FILL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SOURCE_TYPE_FILE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SOURCE_TYPE_STREAMING);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SOURCE_TYPE_UNKNOWN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_TIME_OPTION_EXACT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_TIME_OPTION_NEAREST_KEYFRAME);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_TIME_OPTION_CLOSEST_SYNC);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_TIME_OPTION_NEXT_SYNC);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_TIME_OPTION_PREVIOUS_SYNC);
 		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, appMusicPlayer);
 		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, audioPlaying);
 		TITANIUM_ADD_PROPERTY(MediaModule, audioSessionCategory);
@@ -461,569 +354,634 @@ namespace Titanium
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FILEFORMAT_3GP2)
 	{
-		return audio_fileformat_3gp2__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::ThreeGP2));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FILEFORMAT_3GPP)
 	{
-		return audio_fileformat_3gpp__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::ThreeGPP));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FILEFORMAT_AIFF)
 	{
-		return audio_fileformat_aiff__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Aiff));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FILEFORMAT_AMR)
 	{
-		return audio_fileformat_amr__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Amr));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FILEFORMAT_CAF)
 	{
-		return audio_fileformat_caf__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Caf));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FILEFORMAT_MP3)
 	{
-		return audio_fileformat_mp3__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Mp3));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FILEFORMAT_MP4)
 	{
-		return audio_fileformat_mp4__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Mp4));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FILEFORMAT_MP4A)
 	{
-		return audio_fileformat_mp4a__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Mp4a));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FILEFORMAT_WAVE)
 	{
-		return audio_fileformat_wave__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFileFormat::Wave));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FORMAT_AAC)
 	{
-		return audio_format_aac__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Aac));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FORMAT_ALAW)
 	{
-		return audio_format_alaw__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Alaw));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FORMAT_APPLE_LOSSLESS)
 	{
-		return audio_format_apple_lossless__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::AppleLossless));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FORMAT_ILBC)
 	{
-		return audio_format_ilbc__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Ilbc));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FORMAT_IMA4)
 	{
-		return audio_format_ima4__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Ima4));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FORMAT_LINEAR_PCM)
 	{
-		return audio_format_linear_pcm__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::LinearPCM));
 	}
 
-	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_FORMAT_ULAW)
+	TITANIUM_PROPERTY_GETTER(MediaModule,  AUDIO_FORMAT_ULAW)
 	{
-		return audio_format_ulaw__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioFormat::Ulaw));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_CATEGORY_AMBIENT)
 	{
-		return audio_session_category_ambient__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::Ambient));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_CATEGORY_PLAYBACK)
 	{
-		return audio_session_category_playback__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::Playback));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_CATEGORY_PLAY_AND_RECORD)
 	{
-		return audio_session_category_play_and_record__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::PlayAndRecord));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_CATEGORY_RECORD)
 	{
-		return audio_session_category_record__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::Record));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_CATEGORY_SOLO_AMBIENT)
 	{
-		return audio_session_category_solo_ambient__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionCategory::SoloAmbient));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_OVERRIDE_ROUTE_NONE)
 	{
-		return audio_session_override_route_none__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionOverrideRoute::None));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_OVERRIDE_ROUTE_SPEAKER)
 	{
-		return audio_session_override_route_speaker__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionOverrideRoute::Speaker));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_LINEIN)
 	{
-		return audio_session_port_linein__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::LineIn));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_BUILTINMIC)
 	{
-		return audio_session_port_builtinmic__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BuiltinMic));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_HEADSETMIC)
 	{
-		return audio_session_port_headsetmic__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::HeadSetMic));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_LINEOUT)
 	{
-		return audio_session_port_lineout__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::LineOut));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_HEADPHONES)
 	{
-		return audio_session_port_headphones__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::HeadPhones));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHA2DP)
 	{
-		return audio_session_port_bluetootha2dp__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BluetoothA2DP));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_BUILTINRECEIVER)
 	{
-		return audio_session_port_builtinreceiver__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BuiltinReceiver));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_BUILTINSPEAKER)
 	{
-		return audio_session_port_builtinspeaker__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BuiltinSpeaker));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_HDMI)
 	{
-		return audio_session_port_hdmi__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::Hdmi));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_AIRPLAY)
 	{
-		return audio_session_port_airplay__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::Airplay));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHHFP)
 	{
-		return audio_session_port_bluetoothhfp__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BluetoothHFP));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_USBAUDIO)
 	{
-		return audio_session_port_usbaudio__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::USBAudio));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHLE)
 	{
-		return audio_session_port_bluetoothle__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::BluetoothLE));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_CARAUDIO)
 	{
-		return audio_session_port_caraudio__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::CarAudio));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_FLASH_AUTO)
 	{
-		return camera_flash_auto__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::FlashAuto));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_FLASH_OFF)
 	{
-		return camera_flash_off__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::FlashOff));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_FLASH_ON)
 	{
-		return camera_flash_on__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::FlashOn));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_FRONT)
 	{
-		return camera_front__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::Front));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_REAR)
 	{
-		return camera_rear__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::CameraOption::Rear));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, DEVICE_BUSY)
 	{
-		return device_busy__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::State::DeviceBusy));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MEDIA_TYPE_PHOTO)
 	{
-		return media_type_photo__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MediaType::Photo));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MEDIA_TYPE_VIDEO)
 	{
-		return media_type_video__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MediaType::Video));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_TYPE_ALL)
 	{
-		return music_media_type_all__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::All));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_TYPE_ANY_AUDIO)
 	{
-		return music_media_type_any_audio__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::AnyAudio));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_TYPE_AUDIOBOOK)
 	{
-		return music_media_type_audiobook__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::AudioBook));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_TYPE_MUSIC)
 	{
-		return music_media_type_music__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::Music));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_TYPE_PODCAST)
 	{
-		return music_media_type_podcast__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaType::Podcast));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_GROUP_TITLE)
 	{
-		return music_media_group_title__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Title));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_GROUP_ALBUM)
 	{
-		return music_media_group_album__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Album));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_GROUP_ARTIST)
 	{
-		return music_media_group_artist__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Artist));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_GROUP_ALBUM_ARTIST)
 	{
-		return music_media_group_album_artist__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::AlbumArtist));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_GROUP_COMPOSER)
 	{
-		return music_media_group_composer__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Composer));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_GROUP_GENRE)
 	{
-		return music_media_group_genre__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Genre));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_GROUP_PLAYLIST)
 	{
-		return music_media_group_playlist__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::Playlist));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_MEDIA_GROUP_PODCAST_TITLE)
 	{
-		return music_media_group_podcast_title__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicMediaGroup::PodcastTitle));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_REPEAT_ALL)
 	{
-		return music_player_repeat_all__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerRepeat::All));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_REPEAT_DEFAULT)
 	{
-		return music_player_repeat_default__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerRepeat::Default));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_REPEAT_NONE)
 	{
-		return music_player_repeat_none__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerRepeat::None));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_REPEAT_ONE)
 	{
-		return music_player_repeat_one__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerRepeat::One));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_SHUFFLE_ALBUMS)
 	{
-		return music_player_shuffle_albums__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerShuffle::Albums));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_SHUFFLE_DEFAULT)
 	{
-		return music_player_shuffle_default__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerShuffle::Default));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_SHUFFLE_NONE)
 	{
-		return music_player_shuffle_none__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerShuffle::None));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_SHUFFLE_SONGS)
 	{
-		return music_player_shuffle_songs__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerShuffle::Songs));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_STATE_INTERRUPTED)
 	{
-		return music_player_state_interrupted__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::Interrupted));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_STATE_PAUSED)
 	{
-		return music_player_state_paused__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::Paused));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_STATE_PLAYING)
 	{
-		return music_player_state_playing__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::Playing));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_STATE_SEEK_BACKWARD)
 	{
-		return music_player_state_seek_backward__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::SeekBackward));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_STATE_SEEK_FORWARD)
 	{
-		return music_player_state_seek_forward__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::SeekForward));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, MUSIC_PLAYER_STATE_STOPPED)
 	{
-		return music_player_state_stopped__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::MusicPlayerState::Stopped));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, NO_CAMERA)
 	{
-		return no_camera__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::State::NoCamera));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, NO_VIDEO)
 	{
-		return no_video__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::State::NoVideo));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, QUALITY_HIGH)
 	{
-		return quality_high__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::Quality::High));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, QUALITY_LOW)
 	{
-		return quality_low__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::Quality::Low));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, QUALITY_MEDIUM)
 	{
-		return quality_medium__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::Quality::Medium));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, UNKNOWN_ERROR)
 	{
-		return unknown_error__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::Error::Unknown));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_CONTROL_DEFAULT)
 	{
-		return video_control_default__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::Default));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_CONTROL_EMBEDDED)
 	{
-		return video_control_embedded__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::Embedded));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_CONTROL_FULLSCREEN)
 	{
-		return video_control_fullscreen__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::Fullscreen));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_CONTROL_HIDDEN)
 	{
-		return video_control_hidden__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::Hidden));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_CONTROL_NONE)
 	{
-		return video_control_none__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoControlStyle::None));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_FINISH_REASON_PLAYBACK_ENDED)
 	{
-		return video_finish_reason_playback_ended__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoFinishReason::PlaybackEnded));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_FINISH_REASON_PLAYBACK_ERROR)
 	{
-		return video_finish_reason_playback_error__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoFinishReason::PlaybackError));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_FINISH_REASON_USER_EXITED)
 	{
-		return video_finish_reason_user_exited__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoFinishReason::UserExited));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_LOAD_STATE_PLAYABLE)
 	{
-		return video_load_state_playable__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoLoadState::Playable));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_LOAD_STATE_PLAYTHROUGH_OK)
 	{
-		return video_load_state_playthrough_ok__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoLoadState::PlaythroughOK));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_LOAD_STATE_STALLED)
 	{
-		return video_load_state_stalled__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoLoadState::Stalled));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_LOAD_STATE_UNKNOWN)
 	{
-		return video_load_state_unknown__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoLoadState::Unknown));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_MEDIA_TYPE_AUDIO)
 	{
-		return video_media_type_audio__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoMediaType::Audio));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_MEDIA_TYPE_NONE)
 	{
-		return video_media_type_none__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoMediaType::None));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_MEDIA_TYPE_VIDEO)
 	{
-		return video_media_type_video__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoMediaType::Video));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_PLAYBACK_STATE_INTERRUPTED)
 	{
-		return video_playback_state_interrupted__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::Interrupted));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_PLAYBACK_STATE_PAUSED)
 	{
-		return video_playback_state_paused__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::Paused));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_PLAYBACK_STATE_PLAYING)
 	{
-		return video_playback_state_playing__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::Playing));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_PLAYBACK_STATE_SEEKING_BACKWARD)
 	{
-		return video_playback_state_seeking_backward__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::SeekingBackward));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_PLAYBACK_STATE_SEEKING_FORWARD)
 	{
-		return video_playback_state_seeking_forward__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::SeekingForward));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_PLAYBACK_STATE_STOPPED)
 	{
-		return video_playback_state_stopped__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoPlaybackState::Stopped));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_REPEAT_MODE_NONE)
 	{
-		return video_repeat_mode_none__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoRepeatMode::None));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_REPEAT_MODE_ONE)
 	{
-		return video_repeat_mode_one__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoRepeatMode::One));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SCALING_ASPECT_FILL)
 	{
-		return video_scaling_aspect_fill__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoScaling::AspectFill));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SCALING_ASPECT_FIT)
 	{
-		return video_scaling_aspect_fit__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoScaling::AspectFit));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SCALING_MODE_FILL)
 	{
-		return video_scaling_mode_fill__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoScaling::ModeFill));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SCALING_NONE)
 	{
-		return video_scaling_none__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoScaling::None));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SOURCE_TYPE_FILE)
 	{
-		return video_source_type_file__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoSourceType::File));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SOURCE_TYPE_STREAMING)
 	{
-		return video_source_type_streaming__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoSourceType::Streaming));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SOURCE_TYPE_UNKNOWN)
 	{
-		return video_source_type_unknown__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoSourceType::Unknown));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_TIME_OPTION_EXACT)
 	{
-		return video_time_option_exact__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::Exact));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_TIME_OPTION_NEAREST_KEYFRAME)
 	{
-		return video_time_option_nearest_keyframe__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::NearestKeyframe));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_TIME_OPTION_CLOSEST_SYNC)
 	{
-		return video_time_option_closest_sync__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::ClosestSync));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_TIME_OPTION_NEXT_SYNC)
 	{
-		return video_time_option_next_sync__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::NextSync));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_TIME_OPTION_PREVIOUS_SYNC)
 	{
-		return video_time_option_previous_sync__;
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoTimeOption::PreviousSync));
 	}
 
+	TITANIUM_PROPERTY_GETTER(MediaModule, AudioPlayer)
+	{
+		return get_context().CreateObject(audioPlayer__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, AudioRecorder)
+	{
+		return get_context().CreateObject(audioRecorder__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, Item)
+	{
+		return get_context().CreateObject(item__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, MusicPlayer)
+	{
+		return get_context().CreateObject(musicPlayer__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, Sound)
+	{
+		return get_context().CreateObject(sound__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, VideoPlayer)
+	{
+		return get_context().CreateObject(videoPlayer__);
+	}
+	
+	MediaModule& MediaModule::AudioPlayerClass(const JSClass& player) TITANIUM_NOEXCEPT
+	{
+		audioPlayer__ = player;
+		return *this;
+	}
+
+	MediaModule& MediaModule::AudioRecorderClass(const JSClass& recorder) TITANIUM_NOEXCEPT
+	{
+		audioRecorder__ = recorder;
+		return *this;
+	}
+
+	MediaModule& MediaModule::ItemClass(const JSClass& item) TITANIUM_NOEXCEPT
+	{
+		item__ = item;
+		return *this;
+	}
+
+	MediaModule& MediaModule::MusicPlayerClass(const JSClass& player) TITANIUM_NOEXCEPT
+	{
+		musicPlayer__ = player;
+		return *this;
+	}
+
+	MediaModule& MediaModule::SoundClass(const JSClass& sound) TITANIUM_NOEXCEPT
+	{
+		sound__ = sound;
+		return *this;
+	}
+	
+	MediaModule& MediaModule::VideoPlayerClass(const JSClass& player) TITANIUM_NOEXCEPT
+	{
+		videoPlayer__ = player;
+		return *this;
+	}
 	TITANIUM_PROPERTY_GETTER(MediaModule, appMusicPlayer)
 	{
 		return appMusicPlayer__;

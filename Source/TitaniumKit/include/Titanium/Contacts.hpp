@@ -197,6 +197,9 @@ namespace Titanium
 		*/
 		TITANIUM_PROPERTY_READONLY_DEF(AUTHORIZATION_UNKNOWN);
 
+		TITANIUM_PROPERTY_READONLY_DEF(Group);
+		TITANIUM_PROPERTY_READONLY_DEF(Person);
+
 		TITANIUM_PROPERTY_READONLY_DEF(contactsAuthorization);
 
 		virtual TITANIUM_FUNCTION_DEF(createGroup);
@@ -216,17 +219,13 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(showContacts);
 		TITANIUM_FUNCTION_DEF(getContactsAuthorization);
 
+		ContactsModule& GroupClass(const JSClass&) TITANIUM_NOEXCEPT;
+		ContactsModule& PersonClass(const JSClass&) TITANIUM_NOEXCEPT;
 	protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
-		JSValue CONTACTS_KIND_ORGANIZATION__;
-		JSValue CONTACTS_KIND_PERSON__;
-		JSValue CONTACTS_SORT_FIRST_NAME__;
-		JSValue CONTACTS_SORT_LAST_NAME__;
-		JSValue AUTHORIZATION_AUTHORIZED__;
-		JSValue AUTHORIZATION_DENIED__;
-		JSValue AUTHORIZATION_RESTRICTED__;
-		JSValue AUTHORIZATION_UNKNOWN__;
+		JSClass group__;
+		JSClass person__;
 		Contacts::AUTHORIZATION contactsAuthorization__;
 #pragma warning(pop)
 	};

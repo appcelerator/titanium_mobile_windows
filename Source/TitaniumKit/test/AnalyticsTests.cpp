@@ -34,22 +34,7 @@ protected:
 TEST_F(AnalyticsTests, BasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Analytics"));
 	auto Analytics = js_context.CreateObject(JSExport<Titanium::Analytics>::Class());
-	Titanium.SetProperty("Analytics", Analytics, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Analytics"));
 
 	XCTAssertTrue(Analytics.HasProperty("featureEvent"));
 	XCTAssertTrue(Analytics.HasProperty("getLastEvent"));

@@ -38,32 +38,16 @@ protected:
 TEST_F(NetworkTests, BasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
 
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
+	auto global_object = js_context.get_global_object();
 	auto Titanium = js_context.CreateObject();
 	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Network"));
 	auto Network = js_context.CreateObject(JSExport<Titanium::NetworkModule>::Class());
-	Titanium.SetProperty("Network", Network, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Network"));
+	auto Network_ptr = Network.GetPrivate<Titanium::NetworkModule>()->
+		HTTPClientClass(JSExport<Titanium::Network::HTTPClient>::Class()).
+		CookieClass(JSExport<Titanium::Network::Cookie>::Class());
 
-	XCTAssertFalse(Titanium.HasProperty("XML"));
-	auto XML = js_context.CreateObject(JSExport<Titanium::XML>::Class());
-	Titanium.SetProperty("XML", XML, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("XML"));
-
-	XCTAssertFalse(Network.HasProperty("HTTPClient"));
-	auto HTTPClient = js_context.CreateObject(JSExport<NativeHTTPClientExample>::Class());
-	Network.SetProperty("HTTPClient", HTTPClient, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Network.HasProperty("HTTPClient"));
+	Titanium.SetProperty("Network", Network);
 
 	XCTAssertTrue(Network.HasProperty("NETWORK_LAN"));
 	XCTAssertTrue(Network.HasProperty("NETWORK_MOBILE"));
@@ -112,35 +96,12 @@ TEST_F(NetworkTests, BasicFeatures)
 	XCTAssertTrue(Network.HasProperty("getRemoteNotificationsEnabled"));
 	XCTAssertTrue(Network.HasProperty("getHttpURLFormatter"));
 	XCTAssertTrue(Network.HasProperty("setHttpURLFormatter"));
-
-	auto json_result = js_context.JSEvaluateScript("JSON.stringify(Ti.Network.createHTTPClient());");
-	XCTAssertTrue(static_cast<std::string>(json_result).find("\"connectionType\":\"\"") != std::string::npos);
 }
 
 TEST_F(NetworkTests, CookieBasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Network"));
-	auto Network = js_context.CreateObject(JSExport<Titanium::NetworkModule>::Class());
-	Titanium.SetProperty("Network", Network, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Network"));
-
-	XCTAssertFalse(Network.HasProperty("Cookie"));
 	auto Cookie = js_context.CreateObject(JSExport<Titanium::Network::Cookie>::Class());
-	Network.SetProperty("Cookie", Cookie, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Network.HasProperty("Cookie"));
 
 	XCTAssertTrue(Cookie.HasProperty("comment"));
 	XCTAssertTrue(Cookie.HasProperty("domain"));
@@ -178,26 +139,17 @@ TEST_F(NetworkTests, HTTPClientBasicFeatures)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
 	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
 	auto Titanium = js_context.CreateObject();
 	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
 
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("Network"));
 	auto Network = js_context.CreateObject(JSExport<Titanium::NetworkModule>::Class());
-	Titanium.SetProperty("Network", Network, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("Network"));
+	auto Network_ptr = Network.GetPrivate<Titanium::NetworkModule>()->
+		HTTPClientClass(JSExport<Titanium::Network::HTTPClient>::Class()).
+		CookieClass(JSExport<Titanium::Network::Cookie>::Class());
 
-	XCTAssertFalse(Network.HasProperty("HTTPClient"));
-	auto HTTPClient = js_context.CreateObject(JSExport<NativeHTTPClientExample>::Class());
-	Network.SetProperty("HTTPClient", HTTPClient, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Network.HasProperty("HTTPClient"));
+	Titanium.SetProperty("Network", Network);
+
+	auto HTTPClient = static_cast<JSObject>(Network.GetProperty("HTTPClient"));
 
 	XCTAssertTrue(HTTPClient.HasProperty("autoEncodeUrl"));
 	XCTAssertTrue(HTTPClient.HasProperty("autoRedirect"));

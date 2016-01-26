@@ -64,6 +64,10 @@ JSExport<MODULE>::AddFunctionProperty(#NAME, std::mem_fn(&MODULE::js_##NAME))
 #define TITANIUM_ADD_PROPERTY_READONLY(MODULE, NAME) \
 JSExport<MODULE>::AddValueProperty(#NAME, std::mem_fn(&MODULE::js_get_##NAME))
 
+// For adding a value as a constant property on the JS Object this type backs (cpp, in JSExportInitialize)
+#define TITANIUM_ADD_CONSTANT_PROPERTY(MODULE, NAME) \
+JSExport<MODULE>::AddConstantProperty(#NAME, std::mem_fn(&MODULE::js_get_##NAME))
+
 // For adding a value as a property on the JS Object this type backs (cpp, in JSExportInitialize)
 #define TITANIUM_ADD_PROPERTY(MODULE, NAME) \
 JSExport<MODULE>::AddValueProperty(#NAME, std::mem_fn(&MODULE::js_get_##NAME), std::mem_fn(&MODULE::js_set_##NAME))

@@ -40,22 +40,7 @@ protected:
 TEST_F(UITests, properties)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
-
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
-	auto Titanium = js_context.CreateObject();
-	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("UI"));
 	auto UI = js_context.CreateObject(JSExport<Titanium::UIModule>::Class());
-	Titanium.SetProperty("UI", UI, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("UI"));
 
 	// Inherited from Titanium::Module.
 	XCTAssertTrue(UI.HasProperty("addEventListener"));
@@ -239,29 +224,13 @@ TEST_F(UITests, Attribute)
 TEST_F(UITests, AttributedString)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
 
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
+	auto global_object = js_context.get_global_object();
 	auto Titanium = js_context.CreateObject();
 	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("UI"));
 	auto UI = js_context.CreateObject(JSExport<Titanium::UIModule>::Class());
-	Titanium.SetProperty("UI", UI, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("UI"));
-
-	XCTAssertFalse(UI.HasProperty("AttributedString"));
-	auto AttributedString = js_context.CreateObject(JSExport<Titanium::UI::AttributedString>::Class());
-	UI.SetProperty("AttributedString", AttributedString, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(UI.HasProperty("AttributedString"));
-
-	XCTAssertTrue(UI.HasProperty("createAttributedString"));
+	auto UI_ptr = UI.GetPrivate<Titanium::UIModule>()->AttributedStringClass(JSExport<Titanium::UI::AttributedString>::Class());
+	Titanium.SetProperty("UI", UI);
 
 	std::string script = R"js(
 	var text =  'Bacon ipsum dolor Appcelerator Titanium rocks!';
@@ -296,32 +265,21 @@ TEST_F(UITests, AttributedString)
 TEST_F(UITests, ActivityIndicator)
 {
 	JSContext js_context = js_context_group.CreateContext(JSExport<Titanium::GlobalObject>::Class());
-	auto global_object = js_context.get_global_object();
 
-	XCTAssertFalse(global_object.HasProperty("Titanium"));
+	auto global_object = js_context.get_global_object();
 	auto Titanium = js_context.CreateObject();
 	global_object.SetProperty("Titanium", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Titanium"));
-
-	// Make the alias "Ti" for the "Titanium" property.
-	XCTAssertFalse(global_object.HasProperty("Ti"));
-	global_object.SetProperty("Ti", Titanium, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(global_object.HasProperty("Ti"));
-
-	XCTAssertFalse(Titanium.HasProperty("UI"));
 	auto UI = js_context.CreateObject(JSExport<Titanium::UIModule>::Class());
-	Titanium.SetProperty("UI", UI, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
-	XCTAssertTrue(Titanium.HasProperty("UI"));
+	auto UI_ptr = UI.GetPrivate<Titanium::UIModule>()->
+		ActivityIndicatorClass(JSExport<Titanium::UI::ActivityIndicator>::Class()).
+		ActivityIndicatorStyleClass(JSExport<Titanium::UI::ActivityIndicatorStyle>::Class());
+	Titanium.SetProperty("UI", UI);
 
-	XCTAssertFalse(UI.HasProperty("ActivityIndicator"));
-	auto ActivityIndicator = js_context.CreateObject(JSExport<Titanium::UI::ActivityIndicator>::Class());
-	UI.SetProperty("ActivityIndicator", ActivityIndicator, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 	XCTAssertTrue(UI.HasProperty("ActivityIndicator"));
-
-	XCTAssertFalse(UI.HasProperty("ActivityIndicatorStyle"));
-	auto ActivityIndicatorStyle = js_context.CreateObject(JSExport<Titanium::UI::ActivityIndicatorStyle>::Class());
-	UI.SetProperty("ActivityIndicatorStyle", ActivityIndicatorStyle, {JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete});
 	XCTAssertTrue(UI.HasProperty("ActivityIndicatorStyle"));
+
+	auto ActivityIndicator = static_cast<JSObject>(UI.GetProperty("ActivityIndicator"));
+	auto ActivityIndicatorStyle = static_cast<JSObject>(UI.GetProperty("ActivityIndicatorStyle"));
 
 	XCTAssertTrue(ActivityIndicatorStyle.HasProperty("BIG"));
 	XCTAssertTrue(ActivityIndicatorStyle.HasProperty("BIG_DARK"));
@@ -336,8 +294,8 @@ TEST_F(UITests, ActivityIndicator)
 
 	XCTAssertTrue(UI.HasProperty("createActivityIndicator"));
 
-	XCTAssertNoThrow(js_context.JSEvaluateScript("var indicator = Ti.UI.createActivityIndicator();"));
-	XCTAssertTrue(static_cast<bool>(js_context.JSEvaluateScript("indicator.style == Ti.UI.ActivityIndicatorStyle.PLAIN")));
+	XCTAssertNoThrow(js_context.JSEvaluateScript("var indicator = Titanium.UI.createActivityIndicator();"));
+	XCTAssertTrue(static_cast<bool>(js_context.JSEvaluateScript("indicator.style == Titanium.UI.ActivityIndicatorStyle.PLAIN")));
 
 	// make sure JSON.stringify returns ActivityIndicatorStyle-specific property
 	auto json_result = js_context.JSEvaluateScript("JSON.stringify(indicator);");

@@ -11,27 +11,6 @@ namespace Titanium
 {
 	NetworkModule::NetworkModule(const JSContext& js_context) TITANIUM_NOEXCEPT
 	    : Module(js_context, "Titanium.Network")
-		, network_lan__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::LAN)))
-		, network_mobile__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::MOBILE)))
-		, network_none__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::NONE)))
-		, network_unknown__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::UNKNOWN)))
-		, network_wifi__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::WIFI)))
-		, notification_type_alert__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::NOTIFICATION_TYPE::ALERT)))
-		, notification_type_badge__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::NOTIFICATION_TYPE::BADGE)))
-		, notification_type_sound__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::NOTIFICATION_TYPE::SOUND)))
-		, notification_type_newsstand__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::NOTIFICATION_TYPE::NEWSSTAND)))
-		, read_mode__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::MODE::READ)))
-		, read_write_mode__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::MODE::READ_WRITE)))
-		, write_mode__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::MODE::WRITE)))
-		, socket_closed__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::SOCKET::CLOSED)))
-		, socket_connected__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::SOCKET::CONNECTED)))
-		, socket_error__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::SOCKET::ERROR)))
-		, socket_initialized__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::SOCKET::INITIALIZED)))
-		, socket_listening__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::SOCKET::LISTENING)))
-		, tls_version_1_0__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TLS_VERSION::_1_0)))
-		, tls_version_1_1__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TLS_VERSION::_1_1)))
-		, tls_version_1_2__(js_context.CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TLS_VERSION::_1_2)))
-		, progress_unknown__(js_context.CreateNumber(Titanium::Network::Constants::PROGRESS_UNKNOWN))
 		, networkType__(Titanium::Network::TYPE::UNKNOWN)
 		, networkTypeName__(Titanium::Network::Constants::to_string(Titanium::Network::TYPE::UNKNOWN))
 		, online__(false)
@@ -48,6 +27,18 @@ namespace Titanium
 	TITANIUM_PROPERTY_READ(NetworkModule, std::vector<Network::NOTIFICATION_TYPE>, remoteNotificationTypes);
 	TITANIUM_PROPERTY_READ(NetworkModule, bool, remoteNotificationsEnabled);
 	TITANIUM_PROPERTY_READ(NetworkModule, bool, online);
+
+	NetworkModule& NetworkModule::HTTPClientClass(const JSClass& httpclient) TITANIUM_NOEXCEPT
+	{
+		httpclient__ = httpclient;
+		return *this;
+	}
+
+	NetworkModule& NetworkModule::CookieClass(const JSClass& cookie) TITANIUM_NOEXCEPT
+	{
+		cookie__ = cookie;
+		return *this;
+	}
 
 	void NetworkModule::addHTTPCookie(std::shared_ptr<Network::Cookie> cookie) TITANIUM_NOEXCEPT
 	{
@@ -118,69 +109,79 @@ namespace Titanium
 		TITANIUM_LOG_WARN("NetworkModule::unregisterForPushNotifications: unimplemented");
 	}
 
+	TITANIUM_PROPERTY_GETTER(NetworkModule, HTTPClient)
+	{
+		return get_context().CreateObject(httpclient__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(NetworkModule, Cookie)
+	{
+		return get_context().CreateObject(cookie__);
+	}
+
 	TITANIUM_PROPERTY_GETTER(NetworkModule, NETWORK_LAN)
 	{
-		return network_lan__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::LAN));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, NETWORK_MOBILE)
 	{
-		return network_mobile__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::MOBILE));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, NETWORK_NONE)
 	{
-		return network_none__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::NONE));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, NETWORK_UNKNOWN)
 	{
-		return network_none__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::UNKNOWN));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, NETWORK_WIFI)
 	{
-		return network_wifi__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TYPE::WIFI));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, NOTIFICATION_TYPE_ALERT)
 	{
-		return notification_type_alert__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::NOTIFICATION_TYPE::ALERT));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, NOTIFICATION_TYPE_BADGE)
 	{
-		return notification_type_badge__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::NOTIFICATION_TYPE::BADGE));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, NOTIFICATION_TYPE_NEWSSTAND)
 	{
-		return notification_type_newsstand__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::NOTIFICATION_TYPE::NEWSSTAND));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, NOTIFICATION_TYPE_SOUND)
 	{
-		return notification_type_sound__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::NOTIFICATION_TYPE::SOUND));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, PROGRESS_UNKNOWN)
 	{
-		return progress_unknown__;
+		return get_context().CreateNumber(Titanium::Network::Constants::PROGRESS_UNKNOWN);
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, TLS_VERSION_1_0)
 	{
-		return tls_version_1_0__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TLS_VERSION::_1_0));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, TLS_VERSION_1_1)
 	{
-		return tls_version_1_1__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TLS_VERSION::_1_1));
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, TLS_VERSION_1_2)
 	{
-		return tls_version_1_2__;
+		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(Titanium::Network::TLS_VERSION::_1_2));
 	}
 
 	void NetworkModule::JSExportInitialize()
@@ -188,19 +189,21 @@ namespace Titanium
 		JSExport<NetworkModule>::SetClassVersion(1);
 		JSExport<NetworkModule>::SetParent(JSExport<Module>::Class());
 
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, NETWORK_LAN);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, NETWORK_MOBILE);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, NETWORK_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, NETWORK_UNKNOWN);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, NETWORK_WIFI);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, NOTIFICATION_TYPE_ALERT);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, NOTIFICATION_TYPE_BADGE);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, NOTIFICATION_TYPE_SOUND);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, NOTIFICATION_TYPE_NEWSSTAND);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, TLS_VERSION_1_0);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, TLS_VERSION_1_1);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, TLS_VERSION_1_2);
-		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, PROGRESS_UNKNOWN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, HTTPClient);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, Cookie);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, NETWORK_LAN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, NETWORK_MOBILE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, NETWORK_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, NETWORK_UNKNOWN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, NETWORK_WIFI);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, NOTIFICATION_TYPE_ALERT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, NOTIFICATION_TYPE_BADGE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, NOTIFICATION_TYPE_SOUND);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, NOTIFICATION_TYPE_NEWSSTAND);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, TLS_VERSION_1_0);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, TLS_VERSION_1_1);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, TLS_VERSION_1_2);
+		TITANIUM_ADD_CONSTANT_PROPERTY(NetworkModule, PROGRESS_UNKNOWN);
 		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, allHTTPCookies);
 		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, networkType);
 		TITANIUM_ADD_PROPERTY_READONLY(NetworkModule, networkTypeName);

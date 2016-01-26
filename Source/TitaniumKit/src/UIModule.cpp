@@ -31,151 +31,7 @@ namespace Titanium
 {
 
 	UIModule::UIModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium.UI"),
-	      animation_curve_ease_in__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ANIMATION_CURVE::EASE_IN))),
-	      animation_curve_ease_in_out__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ANIMATION_CURVE::EASE_IN_OUT))),
-	      animation_curve_ease_out__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ANIMATION_CURVE::EASE_OUT))),
-	      animation_curve_linear__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ANIMATION_CURVE::LINEAR))),
-	      autolink_all__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::ALL))),
-	      autolink_calendar__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::CALENDAR))),
-	      autolink_email_addresses__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::EMAIL_ADDRESSES))),
-	      autolink_map_addresses__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::MAP_ADDRESSES))),
-	      autolink_none__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::NONE))),
-	      autolink_phone_numbers__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::PHONE_NUMBERS))),
-	      autolink_urls__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::URLS))),
-	      extend_edge_all__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::ALL))),
-	      extend_edge_bottom__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::BOTTOM))),
-	      extend_edge_left__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::LEFT))),
-	      extend_edge_none__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::NONE))),
-	      extend_edge_right__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::RIGHT))),
-	      extend_edge_top__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::TOP))),
-	      face_down__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::FACE_DOWN))),
-	      face_up__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::FACE_UP))),
-	      fill__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL))),
-	      inherit__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::INHERIT))),
-	      input_borderstyle_bezel__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BORDERSTYLE::BEZEL))),
-	      input_borderstyle_line__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BORDERSTYLE::LINE))),
-	      input_borderstyle_none__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BORDERSTYLE::NONE))),
-	      input_borderstyle_rounded__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BORDERSTYLE::ROUNDED))),
-	      input_buttonmode_always__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BUTTONMODE::ALWAYS))),
-	      input_buttonmode_never__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BUTTONMODE::NEVER))),
-	      input_buttonmode_onblur__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BUTTONMODE::ONBLUR))),
-	      input_buttonmode_onfocus__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BUTTONMODE::ONFOCUS))),
-	      keyboard_appearance_alert__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD_APPEARANCE::ALERT))),
-	      keyboard_appearance_default__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD_APPEARANCE::DEFAULT))),
-	      keyboard_ascii__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::ASCII))),
-	      keyboard_decimal_pad__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::DECIMAL_PAD))),
-	      keyboard_default__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::DEFAULT))),
-	      keyboard_email__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::EMAIL))),
-	      keyboard_namephone_pad__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::NAMEPHONE_PAD))),
-	      keyboard_numbers_punctuation__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::NUMBERS_PUNCTUATION))),
-	      keyboard_number_pad__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::NUMBER_PAD))),
-	      keyboard_phone_pad__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::PHONE_PAD))),
-	      keyboard_url__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::URL))),
-	      landscape_left__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::LANDSCAPE_LEFT))),
-	      landscape_right__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::LANDSCAPE_RIGHT))),
-	      list_accessory_type_checkmark__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ACCESSORY_TYPE::CHECKMARK))),
-	      list_accessory_type_detail__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ACCESSORY_TYPE::DETAIL))),
-	      list_accessory_type_disclosure__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ACCESSORY_TYPE::DISCLOSURE))),
-	      list_accessory_type_none__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ACCESSORY_TYPE::NONE))),
-	      list_item_template_contacts__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ITEM_TEMPLATE::CONTACTS))),
-	      list_item_template_default__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ITEM_TEMPLATE::DEFAULT))),
-	      list_item_template_settings__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ITEM_TEMPLATE::SETTINGS))),
-	      list_item_template_subtitle__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ITEM_TEMPLATE::SUBTITLE))),
-	      notification_duration_long__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::NOTIFICATION_DURATION::LONG))),
-	      notification_duration_short__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::NOTIFICATION_DURATION::SHORT))),
-	      picker_type_count_down_timer__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::COUNT_DOWN_TIMER))),
-	      picker_type_date__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::DATE))),
-	      picker_type_date_and_time__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::DATE_AND_TIME))),
-	      picker_type_plain__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::PLAIN))),
-	      picker_type_time__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::TIME))),
-	      portrait__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::PORTRAIT))),
-	      returnkey_default__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::DEFAULT))),
-	      returnkey_done__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::DONE))),
-	      returnkey_emergency_call__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::EMERGENCY_CALL))),
-	      returnkey_go__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::GO))),
-	      returnkey_google__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::GOOGLE))),
-	      returnkey_join__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::JOIN))),
-	      returnkey_next__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::NEXT))),
-	      returnkey_route__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::ROUTE))),
-	      returnkey_search__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::SEARCH))),
-	      returnkey_send__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::SEND))),
-	      returnkey_yahoo__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::YAHOO))),
-	      size__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE))),
-	      text_alignment_center__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_ALIGNMENT::CENTER))),
-	      text_alignment_left__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_ALIGNMENT::LEFT))),
-	      text_alignment_right__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_ALIGNMENT::RIGHT))),
-	      text_autocapitalization_all__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_AUTOCAPITALIZATION::ALL))),
-	      text_autocapitalization_none__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_AUTOCAPITALIZATION::NONE))),
-	      text_autocapitalization_sentences__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_AUTOCAPITALIZATION::SENTENCES))),
-	      text_autocapitalization_words__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_AUTOCAPITALIZATION::WORDS))),
-	      text_style_body__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::BODY))),
-	      text_style_caption1__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::CAPTION1))),
-	      text_style_caption2__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::CAPTION2))),
-	      text_style_footnote__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::FOOTNOTE))),
-	      text_style_headline__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::HEADLINE))),
-	      text_style_subheadline__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::SUBHEADLINE))),
-	      text_vertical_alignment_bottom__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_VERTICAL_ALIGNMENT::BOTTOM))),
-	      text_vertical_alignment_center__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_VERTICAL_ALIGNMENT::CENTER))),
-	      text_vertical_alignment_top__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_VERTICAL_ALIGNMENT::TOP))),
-	      unit_cm__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::CM))),
-	      unit_dip__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::DIP))),
-	      unit_in__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::IN))),
-	      unit_mm__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::MM))),
-	      unit_px__(js_context.CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::PX))),
-	      unknown__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::UNKNOWN))),
-	      upside_portrait__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::UPSIDE_PORTRAIT))),
-	      url_error_authentication__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::AUTHENTICATION))),
-	      url_error_bad_url__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::BAD_URL))),
-	      url_error_connect__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::CONNECT))),
-	      url_error_file__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::FILE))),
-	      url_error_file_not_found__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::FILE_NOT_FOUND))),
-	      url_error_host_lookup__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::HOST_LOOKUP))),
-	      url_error_redirect_loop__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::REDIRECT_LOOP))),
-	      url_error_ssl_failed__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::SSL_FAILED))),
-	      url_error_timeout__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::TIMEOUT))),
-	      url_error_unknown__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::UNKNOWN))),
-	      url_error_unsupported_scheme__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::UNSUPPORTED_SCHEME))),
-	      attribute_type_FONT__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::FONT))),
-	      attribute_type_FOREGROUND_COLOR__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::FOREGROUND_COLOR))),
-	      attribute_type_BACKGROUND_COLOR__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::BACKGROUND_COLOR))),
-	      attribute_type_STRIKETHROUGH_STYLE__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::STRIKETHROUGH_STYLE))),
-	      attribute_type_UNDERLINES_STYLE__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::UNDERLINES_STYLE))),
-	      attribute_type_LINK__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::LINK))),
-	      attribute_type_UNDERLINE_COLOR__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::UNDERLINE_COLOR))),
-	      attribute_type_KERN__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::KERN))),
-	      attribute_type_STROKE_COLOR__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::STROKE_COLOR))),
-	      attribute_type_STROKE_WIDTH__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::STROKE_WIDTH))),
-	      attribute_type_SHADOW__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::SHADOW))),
-	      attribute_type_WRITING_DIRECTION__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::WRITING_DIRECTION))),
-	      attribute_type_TEXT_EFFECT__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::TEXT_EFFECT))),
-	      attribute_type_BASELINE_OFFSET__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::BASELINE_OFFSET))),
-	      attribute_type_STRIKETHROUGH_COLOR__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::STRIKETHROUGH_COLOR))),
-	      attribute_type_OBLIQUENESS__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::OBLIQUENESS))),
-	      attribute_type_EXPANSION__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::EXPANSION))),
-	      attribute_type_LINE_BREAK__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::LINE_BREAK))),
-	      attribute_style_UNDERLINE_NONE__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_NONE))),
-	      attribute_style_UNDERLINE_SINGLE__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_SINGLE))),
-	      attribute_style_UNDERLINE_THICK__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_THICK))),
-	      attribute_style_UNDERLINE_DOUBLE__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_DOUBLE))),
-	      attribute_style_UNDERLINE_PATTERN_SOLID__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_SOLID))),
-	      attribute_style_UNDERLINE_PATTERN_DOT__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_DOT))),
-	      attribute_style_UNDERLINE_PATTERN_DASH__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_DASH))),
-	      attribute_style_UNDERLINE_PATTERN_DASH_DOT__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_DASH_DOT))),
-	      attribute_style_UNDERLINE_PATTERN_DASH_DOT_DOT__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_DASH_DOT_DOT))),
-	      attribute_style_UNDERLINE_BY_WORD__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_BY_WORD))),
-	      attribute_style_WRITING_DIRECTION_EMBEDDING__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_EMBEDDING))),
-	      attribute_style_WRITING_DIRECTION_OVERRIDE__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_OVERRIDE))),
-	      attribute_style_WRITING_DIRECTION_NATURAL__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_NATURAL))),
-	      attribute_style_WRITING_DIRECTION_LEFT_TO_RIGHT__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_LEFT_TO_RIGHT))),
-	      attribute_style_WRITING_DIRECTION_RIGHT_TO_LEFT__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_RIGHT_TO_LEFT))),
-	      attribute_style_TEXT_EFFECT_LETTERPRESS__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::TEXT_EFFECT_LETTERPRESS))),
-	      attribute_style_LINE_BREAK_BY_WORD_WRAPPING__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_WORD_WRAPPING))),
-	      attribute_style_LINE_BREAK_BY_CHAR_WRAPPING__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_CHAR_WRAPPING))),
-	      attribute_style_LINE_BREAK_BY_CLIPPING__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_CLIPPING))),
-	      attribute_style_LINE_BREAK_BY_TRUNCATING_HEAD__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_TRUNCATING_HEAD))),
-	      attribute_style_LINE_BREAK_BY_TRUNCATING_TAIL__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_TRUNCATING_TAIL))),
-	      attribute_style_LINE_BREAK_BY_TRUNCATING_MIDDLE__(js_context.CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_TRUNCATING_MIDDLE)))
+	    : Module(js_context, "Titanium.UI")
 	{
 		TITANIUM_LOG_DEBUG("UIModule:: ctor ", this);
 	}
@@ -192,580 +48,580 @@ namespace Titanium
 
 	TITANIUM_PROPERTY_GETTER(UIModule, ANIMATION_CURVE_EASE_IN)
 	{
-		return animation_curve_ease_in__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ANIMATION_CURVE::EASE_IN));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ANIMATION_CURVE_EASE_IN_OUT)
 	{
-		return animation_curve_ease_in_out__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ANIMATION_CURVE::EASE_IN_OUT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ANIMATION_CURVE_EASE_OUT)
 	{
-		return animation_curve_ease_out__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ANIMATION_CURVE::EASE_OUT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ANIMATION_CURVE_LINEAR)
 	{
-		return animation_curve_linear__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ANIMATION_CURVE::LINEAR));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, AUTOLINK_ALL)
 	{
-		return autolink_all__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::ALL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, AUTOLINK_CALENDAR)
 	{
-		return autolink_calendar__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::CALENDAR));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, AUTOLINK_EMAIL_ADDRESSES)
 	{
-		return autolink_email_addresses__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::EMAIL_ADDRESSES));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, AUTOLINK_MAP_ADDRESSES)
 	{
-		return autolink_map_addresses__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::MAP_ADDRESSES));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, AUTOLINK_NONE)
 	{
-		return autolink_none__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::NONE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, AUTOLINK_PHONE_NUMBERS)
 	{
-		return autolink_phone_numbers__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::PHONE_NUMBERS));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, AUTOLINK_URLS)
 	{
-		return autolink_urls__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::AUTOLINK::URLS));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, EXTEND_EDGE_ALL)
 	{
-		return extend_edge_all__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::ALL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, EXTEND_EDGE_BOTTOM)
 	{
-		return extend_edge_bottom__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::BOTTOM));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, EXTEND_EDGE_LEFT)
 	{
-		return extend_edge_left__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::LEFT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, EXTEND_EDGE_NONE)
 	{
-		return extend_edge_none__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::NONE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, EXTEND_EDGE_RIGHT)
 	{
-		return extend_edge_right__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::RIGHT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, EXTEND_EDGE_TOP)
 	{
-		return extend_edge_top__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::EXTEND_EDGE::TOP));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, FACE_DOWN)
 	{
-		return face_down__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::FACE_DOWN));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, FACE_UP)
 	{
-		return face_up__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::FACE_UP));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, FILL)
 	{
-		return fill__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, INHERIT)
 	{
-		return inherit__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::INHERIT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, INPUT_BORDERSTYLE_BEZEL)
 	{
-		return input_borderstyle_bezel__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BORDERSTYLE::BEZEL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, INPUT_BORDERSTYLE_LINE)
 	{
-		return input_borderstyle_line__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BORDERSTYLE::LINE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, INPUT_BORDERSTYLE_NONE)
 	{
-		return input_borderstyle_none__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BORDERSTYLE::NONE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, INPUT_BORDERSTYLE_ROUNDED)
 	{
-		return input_borderstyle_rounded__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BORDERSTYLE::ROUNDED));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, INPUT_BUTTONMODE_ALWAYS)
 	{
-		return input_buttonmode_always__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BUTTONMODE::ALWAYS));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, INPUT_BUTTONMODE_NEVER)
 	{
-		return input_buttonmode_never__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BUTTONMODE::NEVER));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, INPUT_BUTTONMODE_ONBLUR)
 	{
-		return input_buttonmode_onblur__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BUTTONMODE::ONBLUR));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, INPUT_BUTTONMODE_ONFOCUS)
 	{
-		return input_buttonmode_onfocus__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::INPUT_BUTTONMODE::ONFOCUS));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_APPEARANCE_ALERT)
 	{
-		return keyboard_appearance_alert__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD_APPEARANCE::ALERT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_APPEARANCE_DEFAULT)
 	{
-		return keyboard_appearance_default__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD_APPEARANCE::DEFAULT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_ASCII)
 	{
-		return keyboard_ascii__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::ASCII));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_DECIMAL_PAD)
 	{
-		return keyboard_decimal_pad__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::DECIMAL_PAD));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_DEFAULT)
 	{
-		return keyboard_default__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::DEFAULT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_EMAIL)
 	{
-		return keyboard_email__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::EMAIL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_NAMEPHONE_PAD)
 	{
-		return keyboard_namephone_pad__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::NAMEPHONE_PAD));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_NUMBERS_PUNCTUATION)
 	{
-		return keyboard_numbers_punctuation__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::NUMBERS_PUNCTUATION));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_NUMBER_PAD)
 	{
-		return keyboard_number_pad__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::NUMBER_PAD));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_PHONE_PAD)
 	{
-		return keyboard_phone_pad__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::PHONE_PAD));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, KEYBOARD_URL)
 	{
-		return keyboard_url__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::KEYBOARD::URL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LANDSCAPE_LEFT)
 	{
-		return landscape_left__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::LANDSCAPE_LEFT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LANDSCAPE_RIGHT)
 	{
-		return landscape_right__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::LANDSCAPE_RIGHT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LIST_ACCESSORY_TYPE_CHECKMARK)
 	{
-		return list_accessory_type_checkmark__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ACCESSORY_TYPE::CHECKMARK));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LIST_ACCESSORY_TYPE_DETAIL)
 	{
-		return list_accessory_type_detail__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ACCESSORY_TYPE::DETAIL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LIST_ACCESSORY_TYPE_DISCLOSURE)
 	{
-		return list_accessory_type_disclosure__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ACCESSORY_TYPE::DISCLOSURE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LIST_ACCESSORY_TYPE_NONE)
 	{
-		return list_accessory_type_none__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ACCESSORY_TYPE::NONE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LIST_ITEM_TEMPLATE_CONTACTS)
 	{
-		return list_item_template_contacts__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ITEM_TEMPLATE::CONTACTS));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LIST_ITEM_TEMPLATE_DEFAULT)
 	{
-		return list_item_template_default__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ITEM_TEMPLATE::DEFAULT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LIST_ITEM_TEMPLATE_SETTINGS)
 	{
-		return list_item_template_settings__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ITEM_TEMPLATE::SETTINGS));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, LIST_ITEM_TEMPLATE_SUBTITLE)
 	{
-		return list_item_template_subtitle__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::LIST_ITEM_TEMPLATE::SUBTITLE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, NOTIFICATION_DURATION_LONG)
 	{
-		return notification_duration_long__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::NOTIFICATION_DURATION::LONG));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, NOTIFICATION_DURATION_SHORT)
 	{
-		return notification_duration_short__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::NOTIFICATION_DURATION::SHORT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, PICKER_TYPE_COUNT_DOWN_TIMER)
 	{
-		return picker_type_count_down_timer__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::COUNT_DOWN_TIMER));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, PICKER_TYPE_DATE)
 	{
-		return picker_type_date__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::DATE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, PICKER_TYPE_DATE_AND_TIME)
 	{
-		return picker_type_date_and_time__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::DATE_AND_TIME));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, PICKER_TYPE_PLAIN)
 	{
-		return picker_type_plain__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::PLAIN));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, PICKER_TYPE_TIME)
 	{
-		return picker_type_time__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::PICKER_TYPE::TIME));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, PORTRAIT)
 	{
-		return portrait__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::PORTRAIT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_DEFAULT)
 	{
-		return returnkey_default__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::DEFAULT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_DONE)
 	{
-		return returnkey_done__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::DONE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_EMERGENCY_CALL)
 	{
-		return returnkey_emergency_call__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::EMERGENCY_CALL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_GO)
 	{
-		return returnkey_go__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::GO));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_GOOGLE)
 	{
-		return returnkey_google__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::GOOGLE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_JOIN)
 	{
-		return returnkey_join__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::JOIN));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_NEXT)
 	{
-		return returnkey_next__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::NEXT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_ROUTE)
 	{
-		return returnkey_route__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::ROUTE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_SEARCH)
 	{
-		return returnkey_search__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::SEARCH));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_SEND)
 	{
-		return returnkey_send__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::SEND));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, RETURNKEY_YAHOO)
 	{
-		return returnkey_yahoo__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::RETURNKEY::YAHOO));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, SIZE)
 	{
-		return size__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_ALIGNMENT_CENTER)
 	{
-		return text_alignment_center__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_ALIGNMENT::CENTER));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_ALIGNMENT_LEFT)
 	{
-		return text_alignment_left__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_ALIGNMENT::LEFT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_ALIGNMENT_RIGHT)
 	{
-		return text_alignment_right__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_ALIGNMENT::RIGHT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_AUTOCAPITALIZATION_ALL)
 	{
-		return text_autocapitalization_all__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_AUTOCAPITALIZATION::ALL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_AUTOCAPITALIZATION_NONE)
 	{
-		return text_autocapitalization_none__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_AUTOCAPITALIZATION::NONE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_AUTOCAPITALIZATION_SENTENCES)
 	{
-		return text_autocapitalization_sentences__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_AUTOCAPITALIZATION::SENTENCES));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_AUTOCAPITALIZATION_WORDS)
 	{
-		return text_autocapitalization_words__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_AUTOCAPITALIZATION::WORDS));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_STYLE_BODY)
 	{
-		return text_style_body__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::BODY));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_STYLE_CAPTION1)
 	{
-		return text_style_caption1__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::CAPTION1));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_STYLE_CAPTION2)
 	{
-		return text_style_caption2__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::CAPTION2));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_STYLE_FOOTNOTE)
 	{
-		return text_style_footnote__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::FOOTNOTE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_STYLE_HEADLINE)
 	{
-		return text_style_headline__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::HEADLINE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_STYLE_SUBHEADLINE)
 	{
-		return text_style_subheadline__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::TEXT_STYLE::SUBHEADLINE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_VERTICAL_ALIGNMENT_BOTTOM)
 	{
-		return text_vertical_alignment_bottom__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_VERTICAL_ALIGNMENT::BOTTOM));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_VERTICAL_ALIGNMENT_CENTER)
 	{
-		return text_vertical_alignment_center__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_VERTICAL_ALIGNMENT::CENTER));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, TEXT_VERTICAL_ALIGNMENT_TOP)
 	{
-		return text_vertical_alignment_top__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::TEXT_VERTICAL_ALIGNMENT::TOP));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_CM)
 	{
-		return unit_cm__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::CM));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_DIP)
 	{
-		return unit_dip__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::DIP));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_IN)
 	{
-		return unit_in__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::IN));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_MM)
 	{
-		return unit_mm__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::MM));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_PX)
 	{
-		return unit_px__;
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::PX));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNKNOWN)
 	{
-		return unknown__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::UNKNOWN));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UPSIDE_PORTRAIT)
 	{
-		return upside_portrait__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::UPSIDE_PORTRAIT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_AUTHENTICATION)
 	{
-		return url_error_authentication__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::AUTHENTICATION));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_BAD_URL)
 	{
-		return url_error_bad_url__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::BAD_URL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_CONNECT)
 	{
-		return url_error_connect__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::CONNECT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_FILE)
 	{
-		return url_error_file__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::FILE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_FILE_NOT_FOUND)
 	{
-		return url_error_file_not_found__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::FILE_NOT_FOUND));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_HOST_LOOKUP)
 	{
-		return url_error_host_lookup__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::HOST_LOOKUP));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_REDIRECT_LOOP)
 	{
-		return url_error_redirect_loop__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::REDIRECT_LOOP));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_SSL_FAILED)
 	{
-		return url_error_ssl_failed__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::SSL_FAILED));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_TIMEOUT)
 	{
-		return url_error_timeout__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::TIMEOUT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_UNKNOWN)
 	{
-		return url_error_unknown__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::UNKNOWN));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, URL_ERROR_UNSUPPORTED_SCHEME)
 	{
-		return url_error_unsupported_scheme__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::URL_ERROR::UNSUPPORTED_SCHEME));
 	}
 
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_FONT)
 	{
-		return attribute_type_FONT__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::FONT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_FOREGROUND_COLOR)
 	{
-		return attribute_type_FOREGROUND_COLOR__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::FOREGROUND_COLOR));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_BACKGROUND_COLOR)
 	{
-		return attribute_type_BACKGROUND_COLOR__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::BACKGROUND_COLOR));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_STRIKETHROUGH_STYLE)
 	{
-		return attribute_type_STRIKETHROUGH_STYLE__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::STRIKETHROUGH_STYLE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINES_STYLE)
 	{
-		return attribute_type_UNDERLINES_STYLE__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::UNDERLINES_STYLE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_LINK)
 	{
-		return attribute_type_LINK__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::LINK));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_COLOR)
 	{
-		return attribute_type_UNDERLINE_COLOR__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::UNDERLINE_COLOR));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_KERN)
 	{
-		return attribute_type_KERN__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::KERN));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_STROKE_COLOR)
 	{
-		return attribute_type_STROKE_COLOR__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::STROKE_COLOR));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_STROKE_WIDTH)
 	{
-		return attribute_type_STROKE_WIDTH__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::STROKE_WIDTH));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_SHADOW)
 	{
-		return attribute_type_SHADOW__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::SHADOW));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_WRITING_DIRECTION)
 	{
-		return attribute_type_WRITING_DIRECTION__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::WRITING_DIRECTION));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_TEXT_EFFECT)
 	{
-		return attribute_type_TEXT_EFFECT__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::TEXT_EFFECT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_BASELINE_OFFSET)
 	{
-		return attribute_type_BASELINE_OFFSET__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::BASELINE_OFFSET));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_STRIKETHROUGH_COLOR)
 	{
-		return attribute_type_STRIKETHROUGH_COLOR__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::STRIKETHROUGH_COLOR));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_OBLIQUENESS)
 	{
-		return attribute_type_OBLIQUENESS__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::OBLIQUENESS));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_EXPANSION)
 	{
-		return attribute_type_EXPANSION__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::EXPANSION));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_LINE_BREAK)
 	{
-		return attribute_type_LINE_BREAK__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_TYPE::LINE_BREAK));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_STYLE_NONE)
 	{
-		return attribute_style_UNDERLINE_NONE__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_NONE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_STYLE_SINGLE)
 	{
-		return attribute_style_UNDERLINE_SINGLE__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_SINGLE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_STYLE_THICK)
 	{
-		return attribute_style_UNDERLINE_THICK__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_THICK));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_STYLE_DOUBLE)
 	{
-		return attribute_style_UNDERLINE_DOUBLE__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_DOUBLE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_SOLID)
 	{
-		return attribute_style_UNDERLINE_PATTERN_SOLID__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_SOLID));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DOT)
 	{
-		return attribute_style_UNDERLINE_PATTERN_DOT__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_DOT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DASH)
 	{
-		return attribute_style_UNDERLINE_PATTERN_DASH__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_DASH));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DASH_DOT)
 	{
-		return attribute_style_UNDERLINE_PATTERN_DASH_DOT__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_DASH_DOT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DASH_DOT_DOT)
 	{
-		return attribute_style_UNDERLINE_PATTERN_DASH_DOT_DOT__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_PATTERN_DASH_DOT_DOT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_UNDERLINE_BY_WORD)
 	{
-		return attribute_style_UNDERLINE_BY_WORD__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::UNDERLINE_BY_WORD));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_WRITING_DIRECTION_EMBEDDING)
 	{
-		return attribute_style_WRITING_DIRECTION_EMBEDDING__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_EMBEDDING));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_WRITING_DIRECTION_OVERRIDE)
 	{
-		return attribute_style_WRITING_DIRECTION_OVERRIDE__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_OVERRIDE));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_WRITING_DIRECTION_NATURAL)
 	{
-		return attribute_style_WRITING_DIRECTION_NATURAL__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_NATURAL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_WRITING_DIRECTION_LEFT_TO_RIGHT)
 	{
-		return attribute_style_WRITING_DIRECTION_LEFT_TO_RIGHT__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_LEFT_TO_RIGHT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_WRITING_DIRECTION_RIGHT_TO_LEFT)
 	{
-		return attribute_style_WRITING_DIRECTION_RIGHT_TO_LEFT__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::WRITING_DIRECTION_RIGHT_TO_LEFT));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_LETTERPRESS_STYLE)
 	{
-		return attribute_style_TEXT_EFFECT_LETTERPRESS__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::TEXT_EFFECT_LETTERPRESS));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_LINE_BREAK_BY_WORD_WRAPPING)
 	{
-		return attribute_style_LINE_BREAK_BY_WORD_WRAPPING__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_WORD_WRAPPING));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_LINE_BREAK_BY_CHAR_WRAPPING)
 	{
-		return attribute_style_LINE_BREAK_BY_CHAR_WRAPPING__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_CHAR_WRAPPING));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_LINE_BREAK_BY_CLIPPING)
 	{
-		return attribute_style_LINE_BREAK_BY_CLIPPING__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_CLIPPING));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_HEAD)
 	{
-		return attribute_style_LINE_BREAK_BY_TRUNCATING_HEAD__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_TRUNCATING_HEAD));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_TAIL)
 	{
-		return attribute_style_LINE_BREAK_BY_TRUNCATING_TAIL__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_TRUNCATING_TAIL));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_MIDDLE)
 	{
-		return attribute_style_LINE_BREAK_BY_TRUNCATING_MIDDLE__;
+		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ATTRIBUTE_STYLE::LINE_BREAK_BY_TRUNCATING_MIDDLE));
 	}
 
 	void UIModule::JSExportInitialize()
@@ -816,150 +672,348 @@ namespace Titanium
 		TITANIUM_ADD_PROPERTY_READONLY(UIModule, currentWindow);
 		TITANIUM_ADD_FUNCTION(UIModule, getCurrentWindow);
 
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ANIMATION_CURVE_EASE_IN);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ANIMATION_CURVE_EASE_IN_OUT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ANIMATION_CURVE_EASE_OUT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ANIMATION_CURVE_LINEAR);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, AUTOLINK_ALL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, AUTOLINK_CALENDAR);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, AUTOLINK_EMAIL_ADDRESSES);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, AUTOLINK_MAP_ADDRESSES);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, AUTOLINK_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, AUTOLINK_PHONE_NUMBERS);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, AUTOLINK_URLS);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, EXTEND_EDGE_ALL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, EXTEND_EDGE_BOTTOM);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, EXTEND_EDGE_LEFT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, EXTEND_EDGE_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, EXTEND_EDGE_RIGHT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, EXTEND_EDGE_TOP);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, FACE_DOWN);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, FACE_UP);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, FILL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, INHERIT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, INPUT_BORDERSTYLE_BEZEL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, INPUT_BORDERSTYLE_LINE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, INPUT_BORDERSTYLE_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, INPUT_BORDERSTYLE_ROUNDED);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, INPUT_BUTTONMODE_ALWAYS);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, INPUT_BUTTONMODE_NEVER);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, INPUT_BUTTONMODE_ONBLUR);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, INPUT_BUTTONMODE_ONFOCUS);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_APPEARANCE_ALERT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_APPEARANCE_DEFAULT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_ASCII);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_DECIMAL_PAD);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_DEFAULT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_EMAIL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_NAMEPHONE_PAD);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_NUMBERS_PUNCTUATION);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_NUMBER_PAD);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_PHONE_PAD);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, KEYBOARD_URL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LANDSCAPE_LEFT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LANDSCAPE_RIGHT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LIST_ACCESSORY_TYPE_CHECKMARK);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LIST_ACCESSORY_TYPE_DETAIL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LIST_ACCESSORY_TYPE_DISCLOSURE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LIST_ACCESSORY_TYPE_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LIST_ITEM_TEMPLATE_CONTACTS);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LIST_ITEM_TEMPLATE_DEFAULT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LIST_ITEM_TEMPLATE_SETTINGS);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, LIST_ITEM_TEMPLATE_SUBTITLE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, NOTIFICATION_DURATION_LONG);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, NOTIFICATION_DURATION_SHORT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, PICKER_TYPE_COUNT_DOWN_TIMER);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, PICKER_TYPE_DATE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, PICKER_TYPE_DATE_AND_TIME);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, PICKER_TYPE_PLAIN);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, PICKER_TYPE_TIME);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, PORTRAIT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_DEFAULT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_DONE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_EMERGENCY_CALL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_GO);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_GOOGLE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_JOIN);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_NEXT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_ROUTE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_SEARCH);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_SEND);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, RETURNKEY_YAHOO);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, SIZE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_ALIGNMENT_CENTER);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_ALIGNMENT_LEFT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_ALIGNMENT_RIGHT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_AUTOCAPITALIZATION_ALL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_AUTOCAPITALIZATION_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_AUTOCAPITALIZATION_SENTENCES);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_AUTOCAPITALIZATION_WORDS);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_STYLE_BODY);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_STYLE_CAPTION1);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_STYLE_CAPTION2);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_STYLE_FOOTNOTE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_STYLE_HEADLINE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_STYLE_SUBHEADLINE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_VERTICAL_ALIGNMENT_BOTTOM);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_VERTICAL_ALIGNMENT_CENTER);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, TEXT_VERTICAL_ALIGNMENT_TOP);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, UNIT_CM);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, UNIT_DIP);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, UNIT_IN);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, UNIT_MM);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, UNIT_PX);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, UNKNOWN);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, UPSIDE_PORTRAIT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_AUTHENTICATION);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_BAD_URL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_CONNECT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_FILE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_FILE_NOT_FOUND);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_HOST_LOOKUP);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_REDIRECT_LOOP);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_SSL_FAILED);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_TIMEOUT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_UNKNOWN);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, URL_ERROR_UNSUPPORTED_SCHEME);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_FONT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_FOREGROUND_COLOR);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_BACKGROUND_COLOR);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_STRIKETHROUGH_STYLE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINES_STYLE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_LINK);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_COLOR);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_KERN);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_STROKE_COLOR);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_STROKE_WIDTH);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_SHADOW);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_WRITING_DIRECTION);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_TEXT_EFFECT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_BASELINE_OFFSET);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_STRIKETHROUGH_COLOR);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_OBLIQUENESS);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_EXPANSION);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_LINE_BREAK);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_STYLE_NONE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_STYLE_SINGLE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_STYLE_THICK);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_STYLE_DOUBLE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_SOLID);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DOT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DASH);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DASH_DOT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DASH_DOT_DOT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_UNDERLINE_BY_WORD);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_WRITING_DIRECTION_EMBEDDING);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_WRITING_DIRECTION_OVERRIDE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_WRITING_DIRECTION_NATURAL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_WRITING_DIRECTION_LEFT_TO_RIGHT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_WRITING_DIRECTION_RIGHT_TO_LEFT);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_LETTERPRESS_STYLE);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_LINE_BREAK_BY_WORD_WRAPPING);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_LINE_BREAK_BY_CHAR_WRAPPING);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_LINE_BREAK_BY_CLIPPING);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_HEAD);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_TAIL);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_MIDDLE);		
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ANIMATION_CURVE_EASE_IN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ANIMATION_CURVE_EASE_IN_OUT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ANIMATION_CURVE_EASE_OUT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ANIMATION_CURVE_LINEAR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AUTOLINK_ALL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AUTOLINK_CALENDAR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AUTOLINK_EMAIL_ADDRESSES);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AUTOLINK_MAP_ADDRESSES);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AUTOLINK_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AUTOLINK_PHONE_NUMBERS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AUTOLINK_URLS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, EXTEND_EDGE_ALL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, EXTEND_EDGE_BOTTOM);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, EXTEND_EDGE_LEFT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, EXTEND_EDGE_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, EXTEND_EDGE_RIGHT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, EXTEND_EDGE_TOP);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, FACE_DOWN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, FACE_UP);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, FILL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, INHERIT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, INPUT_BORDERSTYLE_BEZEL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, INPUT_BORDERSTYLE_LINE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, INPUT_BORDERSTYLE_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, INPUT_BORDERSTYLE_ROUNDED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, INPUT_BUTTONMODE_ALWAYS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, INPUT_BUTTONMODE_NEVER);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, INPUT_BUTTONMODE_ONBLUR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, INPUT_BUTTONMODE_ONFOCUS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_APPEARANCE_ALERT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_APPEARANCE_DEFAULT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_ASCII);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_DECIMAL_PAD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_DEFAULT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_EMAIL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_NAMEPHONE_PAD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_NUMBERS_PUNCTUATION);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_NUMBER_PAD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_PHONE_PAD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, KEYBOARD_URL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LANDSCAPE_LEFT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LANDSCAPE_RIGHT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LIST_ACCESSORY_TYPE_CHECKMARK);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LIST_ACCESSORY_TYPE_DETAIL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LIST_ACCESSORY_TYPE_DISCLOSURE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LIST_ACCESSORY_TYPE_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LIST_ITEM_TEMPLATE_CONTACTS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LIST_ITEM_TEMPLATE_DEFAULT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LIST_ITEM_TEMPLATE_SETTINGS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, LIST_ITEM_TEMPLATE_SUBTITLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, NOTIFICATION_DURATION_LONG);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, NOTIFICATION_DURATION_SHORT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, PICKER_TYPE_COUNT_DOWN_TIMER);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, PICKER_TYPE_DATE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, PICKER_TYPE_DATE_AND_TIME);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, PICKER_TYPE_PLAIN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, PICKER_TYPE_TIME);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, PORTRAIT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_DEFAULT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_DONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_EMERGENCY_CALL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_GO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_GOOGLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_JOIN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_NEXT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_ROUTE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_SEARCH);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_SEND);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, RETURNKEY_YAHOO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, SIZE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_ALIGNMENT_CENTER);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_ALIGNMENT_LEFT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_ALIGNMENT_RIGHT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_AUTOCAPITALIZATION_ALL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_AUTOCAPITALIZATION_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_AUTOCAPITALIZATION_SENTENCES);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_AUTOCAPITALIZATION_WORDS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_STYLE_BODY);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_STYLE_CAPTION1);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_STYLE_CAPTION2);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_STYLE_FOOTNOTE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_STYLE_HEADLINE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_STYLE_SUBHEADLINE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_VERTICAL_ALIGNMENT_BOTTOM);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_VERTICAL_ALIGNMENT_CENTER);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TEXT_VERTICAL_ALIGNMENT_TOP);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNIT_CM);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNIT_DIP);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNIT_IN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNIT_MM);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNIT_PX);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNKNOWN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UPSIDE_PORTRAIT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_AUTHENTICATION);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_BAD_URL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_CONNECT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_FILE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_FILE_NOT_FOUND);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_HOST_LOOKUP);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_REDIRECT_LOOP);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_SSL_FAILED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_TIMEOUT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_UNKNOWN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_UNSUPPORTED_SCHEME);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_FONT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_FOREGROUND_COLOR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_BACKGROUND_COLOR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_STRIKETHROUGH_STYLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINES_STYLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINK);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_COLOR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_KERN);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_STROKE_COLOR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_STROKE_WIDTH);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_SHADOW);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_WRITING_DIRECTION);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_TEXT_EFFECT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_BASELINE_OFFSET);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_STRIKETHROUGH_COLOR);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_OBLIQUENESS);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_EXPANSION);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_STYLE_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_STYLE_SINGLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_STYLE_THICK);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_STYLE_DOUBLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_SOLID);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DOT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DASH);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DASH_DOT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_PATTERN_DASH_DOT_DOT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_UNDERLINE_BY_WORD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_WRITING_DIRECTION_EMBEDDING);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_WRITING_DIRECTION_OVERRIDE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_WRITING_DIRECTION_NATURAL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_WRITING_DIRECTION_LEFT_TO_RIGHT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_WRITING_DIRECTION_RIGHT_TO_LEFT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LETTERPRESS_STYLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK_BY_WORD_WRAPPING);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK_BY_CHAR_WRAPPING);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK_BY_CLIPPING);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_HEAD);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_TAIL);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_MIDDLE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, 2DMatrix);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ActivityIndicator);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ActivityIndicatorStyle);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AlertDialog);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Animation);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AttributedString);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Button);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Clipboard);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, EmailDialog);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ImageView);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Label);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ListView);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ListSection);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Notification);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, OptionDialog);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ProgressBar);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Picker);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, PickerRow);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, PickerColumn);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ScrollableView);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ScrollView);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Slider);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Switch);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Tab);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TabGroup);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TableView);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TableViewSection);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TableViewRow);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TextArea);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TextField);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, View);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, WebView);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Window);		
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, 2DMatrix)
+	{
+		return get_context().CreateObject(twodmatrix__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, ActivityIndicator)
+	{
+		return get_context().CreateObject(activityIndicator__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, ActivityIndicatorStyle)
+	{
+		return get_context().CreateObject(activityIndicatorStyle__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, AlertDialog)
+	{
+		return get_context().CreateObject(alertDialog__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Animation)
+	{
+		return get_context().CreateObject(animation__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, AttributedString)
+	{
+		return get_context().CreateObject(attributedString__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Button)
+	{
+		return get_context().CreateObject(button__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Clipboard)
+	{
+		return get_context().CreateObject(clipboard__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, EmailDialog)
+	{
+		return get_context().CreateObject(emaildialog__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, ImageView)
+	{
+		return get_context().CreateObject(imageview__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Label)
+	{
+		return get_context().CreateObject(label__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, ListView)
+	{
+		return get_context().CreateObject(listview__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, ListSection)
+	{
+		return get_context().CreateObject(listsection__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Notification)
+	{
+		return get_context().CreateObject(notification__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, OptionDialog)
+	{
+		return get_context().CreateObject(optionDialog__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, ProgressBar)
+	{
+		return get_context().CreateObject(progressBar__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Picker)
+	{
+		return get_context().CreateObject(picker__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, PickerRow)
+	{
+		return get_context().CreateObject(pickerrow__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, PickerColumn)
+	{
+		return get_context().CreateObject(pickercolumn__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, ScrollableView)
+	{
+		return get_context().CreateObject(scrollableView__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, ScrollView)
+	{
+		return get_context().CreateObject(scrollview__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Slider)
+	{
+		return get_context().CreateObject(slider__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Switch)
+	{
+		return get_context().CreateObject(switch__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Tab)
+	{
+		return get_context().CreateObject(tab__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, TabGroup)
+	{
+		return get_context().CreateObject(tabgroup__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, TableView)
+	{
+		return get_context().CreateObject(tableview__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, TableViewSection)
+	{
+		return get_context().CreateObject(tableviewsection__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, TableViewRow)
+	{
+		return get_context().CreateObject(tableviewrow__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, TextArea)
+	{
+		return get_context().CreateObject(textarea__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, TextField)
+	{
+		return get_context().CreateObject(textField__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, View)
+	{
+		return get_context().CreateObject(view__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, WebView)
+	{
+		return get_context().CreateObject(webview__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Window)
+	{
+		return get_context().CreateObject(window__);
 	}
 
 	TITANIUM_FUNCTION(UIModule, create2DMatrix)
@@ -1226,5 +1280,203 @@ namespace Titanium
 	TITANIUM_FUNCTION_AS_GETTER(UIModule, getCurrentTab, currentTab)
 	TITANIUM_FUNCTION_AS_SETTER(UIModule, setCurrentTab, currentTab)
 	TITANIUM_FUNCTION_AS_GETTER(UIModule, getCurrentWindow, currentWindow)
+
+	UIModule& UIModule::ListViewClass(const JSClass& ListView) TITANIUM_NOEXCEPT
+	{
+		listview__ = ListView;
+		return *this;
+	}
+
+	UIModule& UIModule::ListSectionClass(const JSClass& ListSection) TITANIUM_NOEXCEPT
+	{
+		listsection__ = ListSection;
+		return *this;
+	}
+
+	UIModule& UIModule::EmailDialogClass(const JSClass& EmailDialog) TITANIUM_NOEXCEPT
+	{
+		emaildialog__ = EmailDialog;
+		return *this;
+	}
+
+	UIModule& UIModule::AnimationClass(const JSClass& Animation) TITANIUM_NOEXCEPT
+	{
+		animation__ = Animation;
+		return *this;
+	}
+
+	UIModule& UIModule::SwitchClass(const JSClass& Switch) TITANIUM_NOEXCEPT
+	{
+		switch__ = Switch;
+		return *this;
+	}
+	
+	UIModule& UIModule::TwoDMatrixClass(const JSClass& TwoDMatrix) TITANIUM_NOEXCEPT
+	{
+		twodmatrix__ = TwoDMatrix;
+		return *this;
+	}
+
+	UIModule& UIModule::NotificationClass(const JSClass& Notification) TITANIUM_NOEXCEPT
+	{
+		notification__ = Notification;
+		return *this;
+	}
+
+	UIModule& UIModule::TextAreaClass(const JSClass& TextArea) TITANIUM_NOEXCEPT
+	{
+		textarea__ = TextArea;
+		return *this;
+	}
+
+	UIModule& UIModule::ClipboardClass(const JSClass& Clipboard) TITANIUM_NOEXCEPT
+	{
+		clipboard__ = Clipboard;
+		return *this;
+	}
+
+	UIModule& UIModule::ViewClass(const JSClass& View) TITANIUM_NOEXCEPT
+	{
+		view__ = View;
+		return *this;
+	}
+
+	UIModule& UIModule::WindowClass(const JSClass& window) TITANIUM_NOEXCEPT
+	{
+		window__ = window;
+		return *this;
+	}
+
+	UIModule& UIModule::ButtonClass(const JSClass& button) TITANIUM_NOEXCEPT
+	{
+		button__ = button;
+		return *this;
+	}
+
+	UIModule& UIModule::SliderClass(const JSClass& slider) TITANIUM_NOEXCEPT
+	{
+		slider__ = slider;
+		return *this;
+	}
+
+	UIModule& UIModule::AlertDialogClass(const JSClass& alertDialog) TITANIUM_NOEXCEPT
+	{
+		alertDialog__ = alertDialog;
+		return *this;
+	}
+
+	UIModule& UIModule::ImageViewClass(const JSClass& imageview) TITANIUM_NOEXCEPT
+	{
+		imageview__ = imageview;
+		return *this;
+	}
+
+	UIModule& UIModule::LabelClass(const JSClass& label) TITANIUM_NOEXCEPT
+	{
+		label__ = label;
+		return *this;
+	}
+
+	UIModule& UIModule::ScrollViewClass(const JSClass& view) TITANIUM_NOEXCEPT
+	{
+		scrollview__ = view;
+		return *this;
+	}
+
+	UIModule& UIModule::TextFieldClass(const JSClass& view) TITANIUM_NOEXCEPT
+	{
+		textField__ = view;
+		return *this;
+	}
+
+	UIModule& UIModule::WebViewClass(const JSClass& webview) TITANIUM_NOEXCEPT
+	{
+		webview__ = webview;
+		return *this;
+	}
+
+	UIModule& UIModule::Tab(const JSClass& view) TITANIUM_NOEXCEPT
+	{
+		tab__ = view;
+		return *this;
+	}
+
+	UIModule& UIModule::TabGroup(const JSClass& view) TITANIUM_NOEXCEPT
+	{
+		tabgroup__ = view;
+		return *this;
+	}
+
+	UIModule& UIModule::TableViewClass(const JSClass& TableView) TITANIUM_NOEXCEPT
+	{
+		tableview__ = TableView;
+		return *this;
+	}
+
+	UIModule& UIModule::TableViewSectionClass(const JSClass& TableViewSection) TITANIUM_NOEXCEPT
+	{
+		tableviewsection__ = TableViewSection;
+		return *this;
+	}
+
+	UIModule& UIModule::TableViewRowClass(const JSClass& TableViewRow) TITANIUM_NOEXCEPT
+	{
+		tableviewrow__ = TableViewRow;
+		return *this;
+	}
+
+	UIModule& UIModule::ActivityIndicatorClass(const JSClass& value) TITANIUM_NOEXCEPT
+	{
+		activityIndicator__ = value;
+		return *this;
+	}
+
+	UIModule& UIModule::ActivityIndicatorStyleClass(const JSClass& value) TITANIUM_NOEXCEPT
+	{
+		activityIndicatorStyle__ = value;
+		return *this;
+	}
+
+	UIModule& UIModule::OptionDialogClass(const JSClass& value) TITANIUM_NOEXCEPT
+	{
+		optionDialog__ = value;
+		return *this;
+	}
+
+	UIModule& UIModule::ProgressBarClass(const JSClass& value) TITANIUM_NOEXCEPT
+	{
+		progressBar__ = value;
+		return *this;
+	}
+
+	UIModule& UIModule::PickerClass(const JSClass& value) TITANIUM_NOEXCEPT
+	{
+		picker__ = value;
+		return *this;
+	}
+
+	UIModule& UIModule::PickerRowClass(const JSClass& value) TITANIUM_NOEXCEPT
+	{
+		pickerrow__ = value;
+		return *this;
+	}
+
+	UIModule& UIModule::PickerColumnClass(const JSClass& value) TITANIUM_NOEXCEPT
+	{
+		pickercolumn__ = value;
+		return *this;
+	}
+
+	UIModule& UIModule::ScrollableViewClass(const JSClass& value) TITANIUM_NOEXCEPT
+	{
+		scrollableView__ = value;
+		return *this;
+	}
+
+	UIModule& UIModule::AttributedStringClass(const JSClass& value) TITANIUM_NOEXCEPT
+	{
+		attributedString__ = value;
+		return *this;
+	}
 
 }  // namespace Titanium
