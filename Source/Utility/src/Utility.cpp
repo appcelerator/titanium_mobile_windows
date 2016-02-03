@@ -9,7 +9,7 @@
 
 #include "TitaniumWindows/Utility.hpp"
 #include "HAL/HAL.hpp"
-#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string.hpp>
 #include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include <ctime>
@@ -160,14 +160,33 @@ namespace TitaniumWindows
 		Windows::Foundation::Uri^ GetUriFromPath(const std::string& path) 
 		{
 			std::string modified = path;
+
+			// fix backslash
+			boost::replace_all<std::string>(modified, "\\", "/");
+
 			// if the path isn't an http/s URI already, fix URI to point to local files in app
 			if (!boost::starts_with(modified, "http://") && !boost::starts_with(modified, "https://")) {
-				// URIs must be absolute
-				if (!boost::starts_with(modified, "/")) {
-					modified = "/" + modified;
+
+				// fix root folder path
+				auto rootFolder = TitaniumWindows::Utility::ConvertString(Windows::ApplicationModel::Package::Current->InstalledLocation->Path);
+				boost::replace_all<std::string>(rootFolder, "\\", "/");
+				boost::replace_all<std::string>(modified, rootFolder, "ms-appx:///");
+				
+				// fix local folder path
+				auto localFolder = TitaniumWindows::Utility::ConvertString(Windows::Storage::ApplicationData::Current->LocalFolder->Path);
+				boost::replace_all<std::string>(localFolder, "\\", "/");
+				boost::replace_all<std::string>(modified, localFolder, "ms-appdata:///local");
+
+				// fix relative path with application directory
+				if (!boost::starts_with(modified, "ms-appx:") && !boost::starts_with(modified, "ms-appdata:")) {
+
+					// always absolute path
+					if (!boost::starts_with(modified, "/")) {
+						modified = "/" + modified;
+					}
+
+					modified = "ms-appx://" + modified;
 				}
-				// use MS's in-app URL scheme
-				modified = "ms-appx://" + modified;
 			}
 			return ref new Windows::Foundation::Uri(TitaniumWindows::Utility::ConvertUTF8String(modified));
 		}
@@ -175,6 +194,10 @@ namespace TitaniumWindows
 		Windows::Foundation::Uri^ GetWebUriFromPath(const std::string& path)
 		{
 			std::string modified = path;
+
+			// fix backslash
+			boost::replace_all<std::string>(modified, "\\", "/");
+
 			// if the path isn't an http/s URI already, fix URI to point to local files in app
 			if (!boost::starts_with(modified, "http://") && !boost::starts_with(modified, "https://")) {
 				// URIs must be absolute

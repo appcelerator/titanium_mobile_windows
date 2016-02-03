@@ -12,6 +12,7 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "Titanium/Blob.hpp"
 #include <ppltasks.h>
+#include <boost/algorithm/string.hpp>
 
 namespace TitaniumWindows
 {
@@ -210,7 +211,7 @@ namespace TitaniumWindows
 
 			const auto uri = TitaniumWindows::Utility::GetUriFromPath(path);
 			// check if we're loading from local file
-			if (uri->SchemeName == "ms-appx") {
+			if (boost::starts_with(TitaniumWindows::Utility::ConvertString(uri->SchemeName), "ms-")) {
 				concurrency::create_task(StorageFile::GetFileFromApplicationUriAsync(uri)).then([this](concurrency::task<StorageFile^> task){
 					try {
 						auto file = task.get();
