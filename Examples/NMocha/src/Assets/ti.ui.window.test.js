@@ -10,7 +10,7 @@ var should = require('should');
 
 describe("Titanium.UI.Window", function () {
 
-    it("window_size_is_read_only", function (finish) {
+    ((Ti.Platform.version.indexOf('10.0' == 0) && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("window_size_is_read_only", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue',
@@ -28,7 +28,7 @@ describe("Titanium.UI.Window", function () {
         w.open();
     });
 
-    it("window_position_is_read_only", function (finish) {
+    ((Ti.Platform.version.indexOf('10.0' == 0) && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("window_position_is_read_only", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'green',
@@ -46,7 +46,7 @@ describe("Titanium.UI.Window", function () {
         w.open();
     });
 
-    it("window_post_layout", function (finish) {
+    ((Ti.Platform.version.indexOf('10.0' == 0) && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("window_post_layout", function (finish) {
         this.timeout(5000);
         var win = Ti.UI.createWindow({
             backgroundColor: 'yellow'

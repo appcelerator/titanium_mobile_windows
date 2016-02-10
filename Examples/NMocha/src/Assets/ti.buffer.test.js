@@ -237,6 +237,8 @@ describe("buffer", function() {
 		finish();
 	});
 	it("testToStringAndBlob", function(finish) {
+		this.timeout(2000);
+		this.slow(1000);
 		// just a simple ascii string
 		var buffer = Ti.createBuffer({
 			length: 12
@@ -272,6 +274,8 @@ describe("buffer", function() {
 		finish();
 	});
 	it("testAutoEncodeUTF-8", function(finish) {
+		this.timeout(2000);
+		this.slow(1000);
 	    // default UTF8
 	    var buffer = Ti.createBuffer({
 	        value: "appcelerator"
@@ -305,6 +309,8 @@ describe("buffer", function() {
 	});
 
 	it("testAutoEncodeUTF-16", function(finish) {
+		this.timeout(2000);
+		this.slow(1000);
 	    // UTF-16
 	    var buffer = Ti.createBuffer({
 	        value: "appcelerator",
@@ -353,6 +359,8 @@ describe("buffer", function() {
 	});
 
 	it("testAutoEncodeBigEndian", function (finish) {
+		this.timeout(2000);
+		this.slow(1000);
 	    // 8 Byte long in Big Endian (most significant byte first)
 	    var buffer = Ti.createBuffer({
 	        value: 305419896,
@@ -370,6 +378,8 @@ describe("buffer", function() {
 	});
 
 	it("testAutoEncodeLittleEndian", function (finish) {
+		this.timeout(2000);
+		this.slow(1000);
 		// 4 byte int in Little Endian (least significant byte first)
 		var buffer = Ti.createBuffer({
 			value: 305419896,
