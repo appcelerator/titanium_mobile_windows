@@ -214,7 +214,7 @@ describe("Titanium.UI.View", function () {
 			}, 3000);
 		});
 
-		view.addEventListener('postlayout', function () {
+		b.addEventListener('postlayout', function () {
 			Ti.API.info("Got postlayout event");
 			var result = b.convertPointToView({ x: 123, y: 23 }, a);
 			should(result).be.an.Object;

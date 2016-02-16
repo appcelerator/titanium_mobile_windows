@@ -337,7 +337,7 @@ function generateAppxManifestForPlatform(target, properties) {
 				else {
 					if (win81BaseCapabilities.indexOf(name) != -1) {
 						capabilities.push('<Capability Name="' + name + '" />');
-					} else if (win81M3Capabilities.indexOf(name) != -1) {
+					} else if (target == 'phone' && win81M3Capabilities.indexOf(name) != -1) {
 						capabilities.push('<m3:Capability Name="' + name + '" />');
 					}
 				}

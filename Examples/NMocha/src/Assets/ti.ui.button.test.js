@@ -47,7 +47,7 @@ describe("Titanium.UI.Button", function () {
         w.open();
     });
 
-    it("backgroundColor/Image", function (finish) {
+    ((Ti.Platform.version.indexOf('10.0' == 0) && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("backgroundColor/Image", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'

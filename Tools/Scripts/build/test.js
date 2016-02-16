@@ -242,8 +242,20 @@ function getDeviceId(sdkVersion, target, next) {
 function runBuild(target, deviceId, sdkVersion, count, next) {
 	var prc,
 		inResults = false,
-		done = false;
-	prc = spawn('node', [titanium, 'build', '--project-dir', projectDir, '--platform', 'windows', '--target', target, '--wp-sdk', sdkVersion, '--win-publisher-id', '13AFB724-65F2-4F30-8994-C79399EDBD80', '--device-id', deviceId, '--no-prompt', '--no-colors']);
+		done = false,
+		args = [
+			titanium, 'build',
+			'--project-dir', projectDir,
+			'--platform', 'windows',
+			'--target', target,
+			'--wp-sdk', sdkVersion,
+			'--win-publisher-id', '13AFB724-65F2-4F30-8994-C79399EDBD80',
+			'--no-prompt', '--no-colors'
+		];
+	if (deviceId) {
+		args = args.concat('--device-id', deviceId);
+	}
+	prc = spawn('node', args);
 	prc.stdout.on('data', function (data) {
 		console.log(data.toString());
 		var lines = data.toString().trim().match(/^.*([\n\r]+|$)/gm);
@@ -408,7 +420,7 @@ function test(sdkVersion, msbuild, target, deviceId, callback) {
 			copyMochaAssets(next);
 		},
 		function (next) {
-			if (deviceId) {
+			if (deviceId || target == 'ws-local') {
 				return next();
 			}
 

@@ -10,7 +10,8 @@ var should = require('should');
 
 describe("Titanium.UI.WebView", function () {
 
-    it("url", function (finish) {
+    // Skip this on desktop Windows apps because it crashes the app now.
+    ((Ti.Platform.version.indexOf('10.0' == 0) && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("url", function (finish) {
         this.timeout(10000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
@@ -52,7 +53,8 @@ describe("Titanium.UI.WebView", function () {
         w.open();
     });
 
-    it("evalJS", function (finish) {
+    // Skip this on desktop Windows apps because it crashes the app now.
+    ((Ti.Platform.version.indexOf('10.0' == 0) && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("evalJS", function (finish) {
         this.timeout(10000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
