@@ -109,7 +109,7 @@ describe("Titanium.UI.Layout", function () {
         });
         win.open();
     });
-    
+
     // functional test case #1016, #1018
     // ViewTop and ViewBottom
     it("viewTop", function (finish) {
@@ -257,7 +257,7 @@ describe("Titanium.UI.Layout", function () {
         win.add(parentView);
         win.open();
     });
-    
+
     // functional test #1034/1034a/1034b UndefinedLeft
     it("undefinedLeft", function (finish) {
         var win = createWindow({}, finish);
@@ -331,7 +331,7 @@ describe("Titanium.UI.Layout", function () {
         win.add(view);
         win.open();
     });
-    
+
     // functional test #1037, #1037a, #1037b
     // UndefinedHeight Implicit calculations
     it("undefinedHeight", function (finish) {
@@ -517,7 +517,7 @@ describe("Titanium.UI.Layout", function () {
         win.add(view);
         win.open();
     });
-    
+
     // functional test #1048 CenterYPrecedence
     it.skip("centerYPrecedence", function (finish) {
         var win = createWindow({}, finish);
@@ -620,7 +620,7 @@ describe("Titanium.UI.Layout", function () {
         win.add(label);
         win.open();
     });
-    
+
     // functional test #1106 ZIndexMultiple
     it("zIndexMultiple", function (finish) {
         var win = createWindow({}, finish);
@@ -673,7 +673,7 @@ describe("Titanium.UI.Layout", function () {
         win.add(view1);
         win.open();
     });
-    
+
     it("fillInVerticalLayout", function (finish) {
         var win = createWindow({}, finish);
         var parent = Ti.UI.createView({
@@ -692,7 +692,7 @@ describe("Titanium.UI.Layout", function () {
         });
         win.open();
     });
-    
+
     it("sizeFillConflict", function (finish) {
         var win = createWindow({}, finish);
         var grandParent = Ti.UI.createView({
@@ -753,7 +753,7 @@ describe("Titanium.UI.Layout", function () {
         });
         win.open();
     });
-    
+
     // Functional Test #1001 #1002 #1003 #1004 #1005 #1006
     it("unitMeasurements", function (finish) {
         var win = createWindow({}, finish);
@@ -789,7 +789,7 @@ describe("Titanium.UI.Layout", function () {
         });
         win.open();
     });
-    
+
     // Scrollview
     /*
     it("scrollViewAutoContentHeight", function (finish) {
@@ -805,12 +805,12 @@ describe("Titanium.UI.Layout", function () {
         win.addEventListener("postlayout", function (e) {
             should(view2.size.width).eql(scrollView.size.width);
             should(view2.size.height).eql(scrollView.size.height);
-            
+
         });
         win.add(scrollView);
         win.open();
     });
-    
+
     it("scrollViewLargeContentHeight", function (finish) {
         var win = Ti.UI.createWindow({}, finish);
         var scrollView = Titanium.UI.createScrollView({
@@ -824,12 +824,12 @@ describe("Titanium.UI.Layout", function () {
         win.addEventListener("postlayout", function (e) {
             should(view2.size.width).eql(scrollView.size.width);
             should(view2.size.height).eql(2e3);
-            
+
         });
         win.add(scrollView);
         win.open();
     });
-    
+
     it("scrollViewMinimumContentHeight", function (finish) {
         var win = Ti.UI.createWindow({}, finish);
         var scrollView = Titanium.UI.createScrollView({
@@ -843,12 +843,12 @@ describe("Titanium.UI.Layout", function () {
         win.addEventListener("postlayout", function (e) {
             should(view2.size.width).eql(scrollView.size.width);
             should(view2.size.height).eql(scrollView.size.height);
-            
+
         });
         win.add(scrollView);
         win.open();
     });
-    
+
     it("horizontalScrollViewMinimumContentHeight", function (finish) {
         var win = Ti.UI.createWindow({}, finish);
         var scrollView = Titanium.UI.createScrollView({
@@ -863,7 +863,7 @@ describe("Titanium.UI.Layout", function () {
         win.addEventListener("postlayout", function (e) {
             should(view2.size.width).eql(scrollView.size.width);
             should(view2.size.height).eql(scrollView.size.height);
-            
+
         });
         win.add(scrollView);
         win.open();
@@ -882,7 +882,7 @@ describe("Titanium.UI.Layout", function () {
         win.addEventListener("postlayout", function (e) {
             should(view2.size.width).eql(scrollView.size.width);
             should(view2.size.height).eql(scrollView.size.height);
-            
+
         });
         win.add(scrollView);
         win.open();
@@ -921,7 +921,7 @@ describe("Titanium.UI.Layout", function () {
         });
         win.open();
     });
-    
+
     //TIMOB-8891
     it("scrollViewWithLargeVerticalLayoutChild", function (finish) {
         var win = createWindow({}, finish);
@@ -986,11 +986,11 @@ describe("Titanium.UI.Layout", function () {
         should(Ti.UI.convertUnits("100in", Ti.UI.UNIT_CM)).eql(254);
         // 1097
         should(Ti.UI.convertUnits("abc", Ti.UI.UNIT_PX)).eql(0);
-        
+
     });
     */
 
-    it("twoPins", function (finish) {
+    ((Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("twoPins", function (finish) {
         var win = createWindow({}, finish);
         var view = Ti.UI.createView({
             width: 100,

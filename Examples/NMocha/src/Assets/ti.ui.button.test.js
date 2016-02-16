@@ -29,7 +29,8 @@ describe("Titanium.UI.Button", function () {
     });
 
     // Skip on Windows 10 for now, it hangs
-    (Ti.Platform.version.indexOf('10.0' == 0) ? it.skip : it)("image(Blob)", function (finish) {
+    ((Ti.Platform.version.indexOf('10.0') == 0) ||
+	(Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("image(Blob)", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
@@ -47,7 +48,7 @@ describe("Titanium.UI.Button", function () {
         w.open();
     });
 
-    ((Ti.Platform.version.indexOf('10.0' == 0) && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("backgroundColor/Image", function (finish) {
+    (Ti.Platform.osname === 'windowsstore' ? it.skip : it)("backgroundColor/Image", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
@@ -69,7 +70,7 @@ describe("Titanium.UI.Button", function () {
         w.open();
     });
 
-    it("backgroundFocusedColor/Image", function (finish) {
+    ((Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("backgroundFocusedColor/Image", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
@@ -91,7 +92,7 @@ describe("Titanium.UI.Button", function () {
         w.open();
     });
 
-    it("backgroundSelectedColor/Image", function (finish) {
+    ((Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("backgroundSelectedColor/Image", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
@@ -113,7 +114,7 @@ describe("Titanium.UI.Button", function () {
         w.open();
     });
 
-    it("backgroundDisabledColor/Image", function (finish) {
+    ((Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("backgroundDisabledColor/Image", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
@@ -135,7 +136,7 @@ describe("Titanium.UI.Button", function () {
         w.open();
     });
 
-    it("backgroundGradient", function (finish) {
+    ((Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("backgroundGradient", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
@@ -161,7 +162,7 @@ describe("Titanium.UI.Button", function () {
         w.open();
     });
 
-    it("border", function (finish) {
+    ((Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("border", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
@@ -183,7 +184,7 @@ describe("Titanium.UI.Button", function () {
         w.open();
     });
 
-    it("rect and size", function (finish) {
+    ((Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("rect and size", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
