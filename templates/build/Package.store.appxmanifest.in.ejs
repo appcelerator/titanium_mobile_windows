@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest"
-	 xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest"
-   xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest">
+	 xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
 
   <Identity Name="@PACKAGE_GUID@"
 	    Publisher="@PUBLISHER_ID@"
@@ -30,7 +29,7 @@
     <%- manifest.Resources[i] %>
 <% } -%>
   </Resources>
-  
+
   <Applications>
     <Application Id="App"
 		 Executable="$targetnametoken$.exe"
@@ -61,11 +60,11 @@
 
     </Application>
   </Applications>
-  
+
   <Capabilities>
 <% for(var i = 0; i < manifest.Capabilities.length; i++) { -%>
     <%- manifest.Capabilities[i] %>
 <% } -%>
   </Capabilities>
-  
+
 </Package>
