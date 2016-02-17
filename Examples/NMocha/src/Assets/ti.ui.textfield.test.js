@@ -1,12 +1,17 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var should = require('./should');
+var should = require('./should'),
+    didFocus = false;
 
 describe("Titanium.UI.TextField", function () {
+
+    beforeEach(function() {
+        didFocus = false;
+    });
 
     it("apiName", function (finish) {
         var textfield = Ti.UI.createTextField({
@@ -132,6 +137,8 @@ describe("Titanium.UI.TextField", function () {
         win.add(bgView);
 
         win.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             should(bgView.height).be.eql(100);
             should(textfield.height).not.be.greaterThan(100);
             setTimeout(function() {
