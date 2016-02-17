@@ -1,13 +1,19 @@
-
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var should = require('./should');
+var should = require('./should'),
+    didFocus = false,
+    didPostLayout = false;
 
 describe("Titanium.UI.Label", function () {
+
+    beforeEach(function() {
+        didFocus = false;
+        didPostLayout = false;
+    });
 
     it("apiName", function (finish) {
         var label = Ti.UI.createLabel({
@@ -105,9 +111,13 @@ describe("Titanium.UI.Label", function () {
         });
         win.add(label);
         win.addEventListener('postlayout', function () {
+            if (didPostLayout) return;
+            didPostLayout = true;
             should(label.size.width).not.be.greaterThan(win.size.width);
         });
         win.addEventListener('focus', function() {
+            if (didFocus) return;
+            didFocus = true;
             setTimeout(function() {
                 win.close();
                 finish();
@@ -134,10 +144,14 @@ describe("Titanium.UI.Label", function () {
         win.add(bgView);
 
         win.addEventListener('postlayout', function () {
+            if (didPostLayout) return;
+            didPostLayout = true;
             should(bgView.size.height).be.eql(100);
             should(label.size.height).not.be.greaterThan(100);
         });
         win.addEventListener('focus', function() {
+            if (didFocus) return;
+            didFocus = true;
             setTimeout(function() {
                 win.close();
                 finish();

@@ -1,14 +1,19 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 require('ti-mocha');
-var should = require('should');
+var should = require('should'),
+    didFocus = false;
 
 describe("Titanium.UI.Window", function () {
+
+    beforeEach(function() {
+        didFocus = false;
+    });
 
     ((Ti.Platform.version.indexOf('10.0' == 0) && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("window_size_is_read_only", function (finish) {
         this.timeout(5000);
@@ -18,6 +23,8 @@ describe("Titanium.UI.Window", function () {
             height: 100
         });
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             should(w.size.width).not.be.eql(100);
             should(w.size.height).not.be.eql(100);
             setTimeout(function () {
@@ -36,6 +43,8 @@ describe("Titanium.UI.Window", function () {
             right: 100
         });
         w.addEventListener("focus", function () {
+            if (didFocus) return;
+            didFocus = true;
             should(w.rect.left).not.be.eql(100);
             should(w.rect.right).not.be.eql(100);
             setTimeout(function () {
@@ -70,6 +79,8 @@ describe("Titanium.UI.Window", function () {
         });
         var view = Ti.UI.createView();
         win.addEventListener('focus', function() {
+            if (didFocus) return;
+            didFocus = true;
             should(win.children.length).be.eql(1);
             win.remove(win.children[0]);
             should(win.children.length).be.eql(0);
@@ -141,6 +152,8 @@ describe("Titanium.UI.Window", function () {
             backgroundColor: 'yellow'
         });
         win.addEventListener("focus", function (e) {
+            if (didFocus) return;
+            didFocus = true;
             should(Ti.UI.currentWindow).be.eql(win);
             setTimeout(function () {
                 win.close();
