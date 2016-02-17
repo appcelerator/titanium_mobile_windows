@@ -1,15 +1,22 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('./should');
+var should = require('./should'),
+	didFocus = false;
 
 describe("Ti.UI.Picker", function() {
+	this.timeout(5000);
+
+	beforeEach(function() {
+		didFocus = false;
+		didPostlayout = false;
+	});
+
 	it("DatePicker", function(finish) {
-	    this.timeout(5000);
 		var date = new Date();
 		var win = Ti.UI.createWindow({
 			backgroundColor: "#000"
@@ -20,6 +27,8 @@ describe("Ti.UI.Picker", function() {
 		});
 		win.add(picker);
 		win.addEventListener('focus', function() {
+			if (didFocus) return;
+			didFocus = true;
 			should(function() {
 				should(picker.getValue()).be.eql(date);
 			}).not.throw();
@@ -31,7 +40,6 @@ describe("Ti.UI.Picker", function() {
 		win.open();
 	});
 	it("TimePicker", function(finish) {
-	    this.timeout(5000);
 		var date = new Date();
 		var win = Ti.UI.createWindow({
 			backgroundColor: "#000"
@@ -42,6 +50,8 @@ describe("Ti.UI.Picker", function() {
 		});
 		win.add(picker);
 		win.addEventListener('focus', function() {
+			if (didFocus) return;
+			didFocus = true;
 			should(function() {
 				should(picker.getValue()).be.eql(date);
 			}).not.throw();
@@ -53,7 +63,6 @@ describe("Ti.UI.Picker", function() {
 		win.open();
 	});
 	it("PlainPicker", function(finish) {
-	    this.timeout(5000);
 		var win = Ti.UI.createWindow({
 			backgroundColor: "#000"
 		});
@@ -62,6 +71,8 @@ describe("Ti.UI.Picker", function() {
 		});
 		win.add(picker);
 		win.addEventListener('focus', function() {
+			if (didFocus) return;
+			didFocus = true;
 			should(function() {
 				should(picker).be.an.Object;
 				picker.getValue();
@@ -73,5 +84,5 @@ describe("Ti.UI.Picker", function() {
 		});
 		win.open();
 	});
-	
+
 });

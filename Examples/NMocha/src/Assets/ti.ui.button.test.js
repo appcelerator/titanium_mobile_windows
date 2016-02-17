@@ -6,9 +6,14 @@
  */
 
 require('ti-mocha');
-var should = require('should');
+var should = require('should'),
+    didFocus = false;
 
 describe("Titanium.UI.Button", function () {
+
+    beforeEach(function() {
+        didFocus = false;
+    });
 
     it("image(String)", function (finish) {
         this.timeout(5000);
@@ -18,6 +23,8 @@ describe("Titanium.UI.Button", function () {
         var view = Ti.UI.createButton({ title: 'push button' });
         w.add(view);
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             view.image = "Logo.png";
             should(view.image).be.eql("Logo.png");
             setTimeout(function () {
@@ -30,7 +37,7 @@ describe("Titanium.UI.Button", function () {
 
     // Skip on Windows 10 for now, it hangs
     ((Ti.Platform.version.indexOf('10.0') == 0) ||
-	(Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("image(Blob)", function (finish) {
+    (Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("image(Blob)", function (finish) {
         this.timeout(5000);
         var w = Ti.UI.createWindow({
             backgroundColor: 'blue'
@@ -38,6 +45,8 @@ describe("Titanium.UI.Button", function () {
         var view = Ti.UI.createButton({ title: 'push button' });
         w.add(view);
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             view.image = Ti.Filesystem.getFile('Logo.png').read();
             should(view.image).be.an.Object;
             setTimeout(function () {
@@ -56,6 +65,8 @@ describe("Titanium.UI.Button", function () {
         var view = Ti.UI.createButton({ title: 'push button' });
         w.add(view);
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             should(view.backgroundColor).be.a.String;
             should(view.backgroundImage).be.a.String;
             view.backgroundColor = "white";
@@ -78,6 +89,8 @@ describe("Titanium.UI.Button", function () {
         var view = Ti.UI.createButton({ title: 'push button' });
         w.add(view);
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             should(view.backgroundFocusedColor).be.a.String;
             should(view.backgroundFocusedImage).be.a.String;
             view.backgroundFocusedColor = "white";
@@ -100,6 +113,8 @@ describe("Titanium.UI.Button", function () {
         var view = Ti.UI.createButton({ title: 'push button' });
         w.add(view);
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             should(view.backgroundSelectedColor).be.a.String;
             should(view.backgroundSelectedImage).be.a.String;
             view.backgroundSelectedColor = "white";
@@ -122,6 +137,8 @@ describe("Titanium.UI.Button", function () {
         var view = Ti.UI.createButton({ title: 'push button' });
         w.add(view);
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             should(view.backgroundDisabledColor).be.a.String;
             should(view.backgroundDisabledImage).be.a.String;
             view.backgroundDisabledColor = "white";
@@ -150,6 +167,8 @@ describe("Titanium.UI.Button", function () {
         };
         w.add(view);
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             should(view.backgroundGradient.type).be.eql("linear");
             should(view.backgroundGradient.startPoint).be.an.Object;
             should(view.backgroundGradient.endPoint).be.an.Object;
@@ -170,6 +189,8 @@ describe("Titanium.UI.Button", function () {
         var view = Ti.UI.createButton({ title: 'push button' });
         w.add(view);
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             should(view.borderColor).be.a.String;
             should(view.borderWidth).be.a.Number;
             view.borderColor = "blue";
@@ -193,6 +214,8 @@ describe("Titanium.UI.Button", function () {
         w.add(view);
 
         w.addEventListener('focus', function () {
+            if (didFocus) return;
+            didFocus = true;
             setTimeout(function () {
                 w.close();
                 finish();
