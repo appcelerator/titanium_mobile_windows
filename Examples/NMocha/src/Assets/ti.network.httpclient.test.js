@@ -1,13 +1,13 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 var should = require('./should');
 
 describe("Titanium.Network.HTTPClient", function () {
-    it("responseXML", function (finish) {
+    ((Ti.Platform.version.indexOf('6.3.9600') == 0 && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("responseXML", function (finish) {
         this.timeout(6e4);
 
         var xhr = Ti.Network.createHTTPClient();
