@@ -444,7 +444,7 @@ function test(sdkVersion, msbuild, target, deviceId, prefix, callback) {
 			parseTestResults(testResults, next);
 		},
 		function (next) {
-			outputJUnitXML(jsonResults, next);
+			outputJUnitXML(jsonResults, prefix, next);
 		}
 	], callback);
 }
