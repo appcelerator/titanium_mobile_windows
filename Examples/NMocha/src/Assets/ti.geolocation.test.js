@@ -6,7 +6,7 @@
  */
 var should = require('./should');
 
-describe('Ti.Geolocation', function () {
+describe('Titanium.Geolocation', function () {
 
     it('apiName', function (finish) {
         should(function () {

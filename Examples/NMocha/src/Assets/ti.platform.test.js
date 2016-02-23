@@ -141,7 +141,7 @@ describe("Titanium.Platform", function () {
     });
 });
 
-describe("Ti.Platform.DisplayCaps", function () {
+describe("Titanium.Platform.DisplayCaps", function () {
     it.skip("platformHeight", function (finish) {
         should(Ti.Platform.displayCaps.platformHeight).be.a.Number;
         should(Ti.Platform.displayCaps.platformHeight > 0).be.eql(true);

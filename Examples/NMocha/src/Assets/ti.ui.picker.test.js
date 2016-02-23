@@ -8,7 +8,7 @@
 var should = require('./should'),
 	didFocus = false;
 
-describe("Ti.UI.Picker", function() {
+describe("Titanium.UI.Picker", function() {
 	this.timeout(5000);
 
 	beforeEach(function() {

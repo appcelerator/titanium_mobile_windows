@@ -7,7 +7,7 @@
 
 var should = require('./should');
 
-describe("Ti.UI.2DMatrix", function() {
+describe("Titanium.UI.2DMatrix", function() {
 	it("testInvert", function(finish) {
 		var matrix1 = Ti.UI.create2DMatrix();
 		var matrix2 = Ti.UI.create2DMatrix();
