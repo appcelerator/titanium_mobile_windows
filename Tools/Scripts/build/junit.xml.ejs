@@ -3,7 +3,7 @@
 suites.forEach(function(currentSuite)
 {
 -%>
-	<testsuite name="<%= currentSuite.suite %>"
+	<testsuite name="<%= prefix ? (prefix + '.') : '' %><%= currentSuite.suite %>"
 		tests="<%= currentSuite.tests.length %>"
 		failures="<%= currentSuite.failures %>"
 	    skipped="<%= (currentSuite.tests.length - currentSuite.failures - currentSuite.passes) %>"
@@ -14,8 +14,8 @@ suites.forEach(function(currentSuite)
 	if (currentSuite.tests.length === 0 && currentSuite.failures > 0)
 	{
 -%>
-		<testcase classname="<%= currentSuite.suite %>"
-	    	name="<%= currentSuite.suite %> before">
+		<testcase classname="<%= prefix ? (prefix + '.') : '' %><%= currentSuite.suite %>"
+	    	name="<%= prefix ? (prefix + '.') : '' %><%= currentSuite.suite %> before">
 	    	<failure message="Failed during before hook" />
 		</testcase>
 <%
@@ -25,15 +25,19 @@ suites.forEach(function(currentSuite)
 		{
 -%>
 		<testcase
-		 classname="<%= currentSuite.suite %>"
+		 classname="<%= prefix ? (prefix + '.') : '' %><%= currentSuite.suite %>"
 	     name="<%= test.title %>"
 	     time="<%= (test.duration / 1000.0) %>"
 <% 			if (test.state == "failed") { -%>
 		>
-			<failure message="<%= test.error.message ? test.error.message : '' %>" type="<%= test.error.name ? test.error.name : '' %>">
-<%  // FIXME report error tag versus failure if test.err.message doesn't exist? TODO Do a unified diff here! See https://github.com/futurice/mocha-jenkins-reporter/blob/master/lib/jenkins.js -%>
-				<%= test.error.stack %>		
+<% 				if (test.error.message) { -%>
+			<failure message="<%= test.error.message %>" type="<%= test.error.name ? test.error.name : '' %>">
+<%  // TODO Do a unified diff here! See https://github.com/futurice/mocha-jenkins-reporter/blob/master/lib/jenkins.js -%>
+				<%= test.error.stack %>
 	        </failure>
+<% 				} else { -%>
+			<error message="Failed at line <%= test.error.line %>, column <%= test.error.column %>" />
+<% 				} -%>
 	    </testcase>
 <% 			} else if (test.state === 'skipped') { -%>
 	    >
