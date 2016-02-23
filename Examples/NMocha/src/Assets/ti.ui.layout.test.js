@@ -814,7 +814,8 @@ describe("Titanium.UI.Layout", function () {
     });
 
     // Functional Test #1001 #1002 #1003 #1004 #1005 #1006
-    it("unitMeasurements", function (finish) {
+	// Skip on Windows 10 Desktop for now, it hangs
+    (((Ti.Platform.version.indexOf('10.0') == 0) && Ti.Platform.osname === 'windowsstore') ? it.skip : it)("unitMeasurements", function (finish) {
         var win = createWindow({}, finish);
         var child = Ti.UI.createView({
             height: "50mm",
