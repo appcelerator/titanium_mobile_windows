@@ -1068,4 +1068,25 @@ describe("Titanium.XML", function () {
         should(thirdNewAttr.specified).be.true;
         finish();
     });
+
+	it("evaluate", function(finish) {
+		var xml = Ti.XML.parseString("<returnXml>\n" +
+"    <methodStatus>\n" +
+"        <statusType>success</statusType>\n" +
+"    </methodStatus>\n" +
+"    <parametersReturn />\n" +
+"</returnXml>");
+		var statusType = xml.evaluate("/returnXml/methodStatus/statusType");
+		should(statusType).be.an.Object;
+		should(statusType.item(0).text).eql("success"); // Isn't it textContent?
+        var statusTypeList = xml.getElementsByTagName("statusType");
+        should(statusTypeList === null).be.eql(false);
+        should(statusTypeList.length).eql(1);
+        should(statusTypeList.item(0)).be.an.Object;
+        var item = statusTypeList.item(0);
+        should(item.firstChild.data).eql("success");
+        should(item.firstChild.nodeValue).eql("success");
+        should(item.nodeName).eql("statusType");
+        finish();
+    });
 });
