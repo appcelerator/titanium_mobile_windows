@@ -358,6 +358,66 @@ namespace TitaniumWindows
 			}
 		}
 
+		// hmm, is there any better way to do clear the cache?
+		// we might want to provide more unified way for this
+		JSExport<TitaniumWindows::TiModule>::EvictAllCache();
+		JSExport<TitaniumWindows::GlobalString>::EvictAllCache();
+		JSExport<TitaniumWindows::UIModule>::EvictAllCache();
+		JSExport<TitaniumWindows::API>::EvictAllCache();
+		JSExport<TitaniumWindows::AppModule>::EvictAllCache();
+		JSExport<TitaniumWindows::Codec>::EvictAllCache();
+		JSExport<TitaniumWindows::Locale>::EvictAllCache();
+		JSExport<TitaniumWindows::Platform>::EvictAllCache();
+		JSExport<TitaniumWindows::Gesture>::EvictAllCache();
+		JSExport<TitaniumWindows::Geolocation>::EvictAllCache();
+		JSExport<TitaniumWindows::Accelerometer>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::View>::EvictAllCache();
+		JSExport<TitaniumWindows::Contacts::Person>::EvictAllCache();
+		JSExport<TitaniumWindows::Contacts::Group>::EvictAllCache();
+		JSExport<TitaniumWindows::ContactsModule>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::Clipboard>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::TextArea>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::Notification>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::Switch>::EvictAllCache();
+		JSExport<TitaniumWindows::Utils>::EvictAllCache();
+		JSExport<TitaniumWindows::App::Properties>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::EmailDialog>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::Window>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::Button>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::AlertDialog>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::ImageView>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::Label>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::ScrollView>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::Slider>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::TextField>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::ListView>::EvictAllCache();
+		JSExport<TitaniumWindows::Blob>::EvictAllCache();
+		JSExport<TitaniumWindows::FilesystemModule>::EvictAllCache();
+		JSExport<TitaniumWindows::Filesystem::File>::EvictAllCache();
+		JSExport<TitaniumWindows::NetworkModule>::EvictAllCache();
+		JSExport<TitaniumWindows::Network::HTTPClient>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::WebView>::EvictAllCache();
+		JSExport<TitaniumWindows::Map::View>::EvictAllCache();
+		JSExport<TitaniumWindows::Map::Annotation>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::Tab>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::TabGroup>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::TableView>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::TableViewRow>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::ActivityIndicator>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::OptionDialog>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::Picker>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::PickerRow>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::PickerColumn>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::ProgressBar>::EvictAllCache();
+		JSExport<TitaniumWindows::UI::ScrollableView>::EvictAllCache();
+		JSExport<TitaniumWindows::MediaModule>::EvictAllCache();
+		JSExport<TitaniumWindows::Media::Item>::EvictAllCache();
+		JSExport<TitaniumWindows::Media::AudioPlayer>::EvictAllCache();
+		JSExport<TitaniumWindows::Media::AudioRecorder>::EvictAllCache();
+		JSExport<TitaniumWindows::Media::Sound>::EvictAllCache();
+		JSExport<TitaniumWindows::Media::MusicPlayer>::EvictAllCache();
+		JSExport<TitaniumWindows::Media::VideoPlayer>::EvictAllCache();
+
 		deferral->Complete();
 	}
 
