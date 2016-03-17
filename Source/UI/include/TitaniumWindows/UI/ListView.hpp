@@ -104,7 +104,8 @@ namespace TitaniumWindows
 
 			std::vector<Windows::UI::Xaml::UIElement^> unfiltered_headers__;
 			std::vector<std::vector<Titanium::UI::ListDataItem>> unfiltered_sectionItems__;
-			std::vector<std::shared_ptr<Titanium::UI::View>> headers_as_view__;
+			std::vector<std::shared_ptr<Titanium::UI::View>> headerViews__;
+			std::vector<std::shared_ptr<Titanium::UI::View>> footerViews__;
 #pragma warning(pop)
 
 			Windows::Foundation::EventRegistrationToken itemclick_event__;

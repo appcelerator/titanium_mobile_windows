@@ -74,10 +74,14 @@ namespace TitaniumWindows
 			unfiltered_headers__.clear();
 			unfiltered_sectionItems__.clear();
 
-			for (const auto view : headers_as_view__) {
+			for (const auto view : headerViews__) {
 				unregisterListViewItemAsLayoutNode(view);
 			}
-			headers_as_view__.clear();
+			headerViews__.clear();
+			for (const auto view : footerViews__) {
+				unregisterListViewItemAsLayoutNode(view);
+			}
+			footerViews__.clear();
 		}
 
 		void ListView::JSExportInitialize() 
@@ -399,31 +403,59 @@ namespace TitaniumWindows
 			const auto views = createSectionViewAt<TitaniumWindows::UI::View>(sectionIndex);
 			TITANIUM_ASSERT(views.size() == itemsCountToBeCreated);
 
-			// Set section header
+			// set section header
 			const auto section = sections__.at(sectionIndex);
-			const auto view = section->get_headerView();
-			if (view != nullptr) {
-				auto windows_view = dynamic_cast<TitaniumWindows::UI::View*>(view.get());
-				auto component = windows_view->getComponent();
-				group->Append(component);
+			const auto headerView = section->get_headerView();
+			if (headerView != nullptr) {
+				const auto view = dynamic_cast<TitaniumWindows::UI::View*>(headerView.get());
+				if (view == nullptr) {
+					TITANIUM_LOG_ERROR("ListView: headerView must be of type Titanium.UI.View");
+				} else {
+					const auto component = view->getComponent();
+					group->Append(component);
 
-				// Add as child view to make layout engine work
-				registerListViewItemAsLayoutNode(view);
-				headers_as_view__.push_back(view);
-			} else {
+					// add as child view to make layout engine work
+					registerListViewItemAsLayoutNode(headerView);
+					headerViews__.push_back(headerView);
+				}
+			} else if (!section->get_headerTitle().empty()) {
 				Controls::ListViewHeaderItem^ header = ref new Controls::ListViewHeaderItem();
-				auto headerText = ref new Controls::TextBlock();
+				const auto headerText = ref new Controls::TextBlock();
 				headerText->Text = Utility::ConvertUTF8String(section->get_headerTitle());
-				headerText->FontSize = 28; // Change this?
+				headerText->FontSize = 28; // change this?
 				header->Content = headerText;
 				group->Append(header);
 			}
 
 			for (uint32_t itemIndex = 0; itemIndex < views.size(); itemIndex++) {
-				auto view = views.at(itemIndex);
+				const auto view = views.at(itemIndex);
 				appendListViewItemForSection(view, group);
 				section->setViewForSectionItem(itemIndex, view);
 			}
+
+			// set footer
+			const auto footerView = section->get_footerView();
+			if (footerView != nullptr) {
+				const auto view = dynamic_cast<TitaniumWindows::UI::View*>(footerView.get());
+				if (view == nullptr) {
+					TITANIUM_LOG_ERROR("ListView: footerView must be of type Titanium.UI.View");
+				} else {
+					const auto component = view->getComponent();
+					group->Append(component);
+
+					// add as child view to make layout engine work
+					registerListViewItemAsLayoutNode(footerView);
+					footerViews__.push_back(footerView);
+				}
+			} else if (!section->get_footerTitle().empty()) {
+				Controls::ListViewHeaderItem^ footer = ref new Controls::ListViewHeaderItem();
+				const auto footerText = ref new Controls::TextBlock();
+				footerText->Text = Utility::ConvertUTF8String(section->get_footerTitle());
+				footerText->FontSize = 28; // change this?
+				footer->Content = footerText;
+				group->Append(footer);
+			}
+
 			return group;
 		}
 
