@@ -18,9 +18,16 @@ module.exports = function configOptionWindowsPublisherID(order) {
 		callback(null, value);
 	}
 
+	function shouldPrompt(argv) {
+		// You need to check abbreviated form too here because they are not expanded yet
+		return (argv['T'] === 'dist-phonestore' || argv['target']      === 'dist-phonestore') ||
+		       (argv['T'] === 'dist-winstore'   || argv['target']      === 'dist-winstore') ||
+		       (argv['D'] === 'production'      || argv['deploy-type'] === 'production');
+	}
+
 	return {
 		abbr: 'I',
-		default: this.cli.argv['deploy-type'] !== 'production' ? '00000000-0000-1000-8000-000000000000' : this.config.get('windows.publisherId'),
+		default: !shouldPrompt(this.cli.argv) ? '00000000-0000-1000-8000-000000000000' : this.config.get('windows.publisherId'),
 		desc: __('your Windows publisher ID, obtained from %s', 'https://dev.windows.com/en-us/Account/Management'.cyan),
 		hint: __('id'),
 		order: order,
@@ -33,7 +40,7 @@ module.exports = function configOptionWindowsPublisherID(order) {
 		validate: validate,
 		required: true,
 		verifyIfRequired: function (callback) {
-			callback(this.cli.argv['deploy-type'] === 'production');
+			callback(shouldPrompt(this.cli.argv));
 		}.bind(this)
 	};
 };

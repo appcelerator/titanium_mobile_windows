@@ -62,6 +62,10 @@ function config(logger, config, cli) {
 		}
 	}
 
+	function shouldForceProduction(argv) {
+		return (argv['target'] === 'dist-phonestore' || argv['target'] === 'dist-winstore');
+	}
+
 	// we hook into the pre-validate event so that we can stop the build before
 	// prompting if we know the build is going to fail.
 	//
@@ -79,6 +83,11 @@ function config(logger, config, cli) {
 		assertIssue(this.windowsInfo.issues, 'WINDOWS_MSBUILD_ERROR');
 		assertIssue(this.windowsInfo.issues, 'WINDOWS_MSBUILD_TOO_OLD');
 
+		// force production build when you package the app
+		if (shouldForceProduction(cli.argv)) {
+			cli.argv['deploy-type'] = 'production';
+		}
+	
 		callback();
 	}.bind(this));
 
