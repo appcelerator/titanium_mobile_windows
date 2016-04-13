@@ -16,27 +16,38 @@ describe('Ti.App.Windows.BackgroundService', function () {
         finish();
     });
 
-    it('locationServiceEnabled', function (finish) {
-        should(Ti.App.Windows.BackgroundService.locationServiceEnabled).be.Boolean;
-        Ti.App.Windows.BackgroundService.locationServiceEnabled = true;
-        should(Ti.App.Windows.BackgroundService.locationServiceEnabled).be.true;
-        Ti.App.Windows.BackgroundService.locationServiceEnabled = false;
-        should(Ti.App.Windows.BackgroundService.locationServiceEnabled).be.false;
-        finish();
-    });
-
     it('registerTimerTask', function (finish) {
-        var task = Ti.App.Windows.BackgroundService.registerTimerTask(function() {
-            Ti.API.info('registerTimerTask');
-        }, 15, true);
+        var task = Ti.App.Windows.BackgroundService.registerTimerTask('TitaniumWindows_Ti.BackgroundServiceTask', 15, true);
+        should(task).be.an.Object;
+        should(task.unregister).be.a.Function;
+        should(task.taskId).be.a.Number;
         task.unregister();
         finish();
     });
 
+    it('unregisterTask(task)', function (finish) {
+        var task = Ti.App.Windows.BackgroundService.registerTimerTask('TitaniumWindows_Ti.BackgroundServiceTask', 15, true);
+        should(task).be.an.Object;
+        should(task.unregister).be.a.Function;
+        should(task.taskId).be.a.Number;
+        Ti.App.Windows.BackgroundService.unregisterTask(task);
+        finish();
+    });
+
+    it('unregisterTask(task id)', function (finish) {
+        var task = Ti.App.Windows.BackgroundService.registerTimerTask('TitaniumWindows_Ti.BackgroundServiceTask', 15, true);
+        should(task).be.an.Object;
+        should(task.unregister).be.a.Function;
+        should(task.taskId).be.a.Number;
+        Ti.App.Windows.BackgroundService.unregisterTask(task.taskId);
+        finish();
+    });
+
     it('unregisterAllTasks', function (finish) {
-        var task = Ti.App.Windows.BackgroundService.registerTimerTask(function() {
-            Ti.API.info('unregisterAllTasks');
-        }, 15, true);
+        var task = Ti.App.Windows.BackgroundService.registerTimerTask('TitaniumWindows_Ti.BackgroundServiceTask', 15, true);
+        should(task).be.an.Object;
+        should(task.unregister).be.a.Function;
+        should(task.taskId).be.a.Number;
         Ti.App.Windows.BackgroundService.unregisterAllTasks();
         finish();
     });

@@ -46,9 +46,8 @@ namespace TitaniumWindows
 				static void JSExportInitialize();
 				virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
-				void construct(const std::uint32_t& id, BackgroundTaskRegistration^ registration, JSObject& callback);
+				void construct(const std::uint32_t& id, BackgroundTaskRegistration^ registration);
 				void unregister();
-				void taskCompleted(const bool& canceled = false);
 
 				/*!
 				  @property
@@ -56,6 +55,7 @@ namespace TitaniumWindows
 				  @discussiona taskId that is associated with this task. Read-Only.
 				*/
 				TITANIUM_PROPERTY_IMPL_READONLY_DEF(std::uint32_t, taskId);
+				TITANIUM_PROPERTY_READONLY_DEF(taskId);
 
 				/*!
 				  method
@@ -67,9 +67,7 @@ namespace TitaniumWindows
 			protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
-				JSObject callback__;
 				std::uint32_t taskId__{ 0 };
-				Windows::Foundation::EventRegistrationToken completed_event__;
 #pragma warning(pop)
 			};
 		} // namespace WindowsXaml

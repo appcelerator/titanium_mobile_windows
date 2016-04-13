@@ -20,7 +20,8 @@ namespace TitaniumWindows_Ti
 {
 	/*
 	 * @class
-	 * @discussion This is background task for BackgroundService.
+	 * @discussion This is background task for BackgroundService maintenance.
+	        This task is only used for testing/debugging purpose.
 	        Entrypoint: TitaniumWindows_Ti.BackgroundServiceTask
 	 */
 	[Windows::Foundation::Metadata::WebHostHidden]
@@ -30,12 +31,6 @@ namespace TitaniumWindows_Ti
 		virtual void Run(Windows::ApplicationModel::Background::IBackgroundTaskInstance^ taskInstance);
 	};
 }
-
-namespace Titanium
-{
-	struct LocationCoordinates;
-}
-
 namespace TitaniumWindows
 {
 	namespace App
@@ -77,41 +72,32 @@ namespace TitaniumWindows
 
 				/*!
 				  @method
+				  @abstract unregisterTask
+				  @param task (task object or task id)
+				  @discussion Unregisters registered background task associated with this application.
+				*/
+				TITANIUM_FUNCTION_DEF(unregisterTask);
+
+				/*!
+				  @method
 				  @abstract unregisterAllTasks
 				  @discussion Unregisters all registered background task associated with this application.
 				*/
 				TITANIUM_FUNCTION_DEF(unregisterAllTasks);
 
-				/*!
-				  @property
-				  @abstract locationServiceEnabled
-				  @discussion Indicates to enable or disable location services in background. If it's enabled, task callback will contain location data.
-				*/
-				TITANIUM_PROPERTY_DEF(locationServiceEnabled);
-
 				static void JSExportInitialize();
 				virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
-				std::shared_ptr<BackgroundServiceTask> registerTimerTask(JSObject& callback, const std::uint32_t& freshnessTime, const bool& oneShot, Windows::ApplicationModel::Background::IBackgroundCondition^ condition = nullptr);
-				std::shared_ptr<BackgroundServiceTask> registerTask(JSObject& callback, Windows::ApplicationModel::Background::IBackgroundTrigger^ trigger, Windows::ApplicationModel::Background::IBackgroundCondition^ condition);
+				std::shared_ptr<BackgroundServiceTask> registerTimerTask(::Platform::String^ entryPoint, const std::uint32_t& freshnessTime, const bool& oneShot, Windows::ApplicationModel::Background::IBackgroundCondition^ condition = nullptr);
+				std::shared_ptr<BackgroundServiceTask> registerTask(::Platform::String^ entryPoint, Windows::ApplicationModel::Background::IBackgroundTrigger^ trigger, Windows::ApplicationModel::Background::IBackgroundCondition^ condition);
 
 				static Windows::ApplicationModel::Background::IBackgroundTaskRegistration^ GetTask(const std::uint32_t& id);
 				static void UnregisterTask(const std::uint32_t& id);
 				static void UnregisterTasks();
-
-				static bool Get_LocationServiceEnabled() TITANIUM_NOEXCEPT;
-				static void Set_LocationServiceEnabled(const bool&) TITANIUM_NOEXCEPT;
-
-				static void ResetLastGeoposition() TITANIUM_NOEXCEPT;
-				static void UpdateLastGeoposition(Windows::Devices::Geolocation::Geoposition^) TITANIUM_NOEXCEPT;
-				static Titanium::LocationCoordinates GetLastGeoposition() TITANIUM_NOEXCEPT;
 			protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
-				static ::Platform::String^ TASK_ENTRYPOINT_NAME;
 				static std::atomic<std::uint32_t> task_id_generator__;
-				static ::Platform::String^ LAST_GEOLOCATION_KEY;
-				static ::Platform::String^ GEOLOCATION_ENABLED_KEY;
 #pragma warning(pop)
 			};
 		} // namespace WindowsXaml

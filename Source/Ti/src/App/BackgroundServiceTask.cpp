@@ -19,7 +19,6 @@ namespace TitaniumWindows
 		{
 			BackgroundServiceTask::BackgroundServiceTask(const JSContext& js_context) TITANIUM_NOEXCEPT
 				: Titanium::Module(js_context, "Titanium.App.Windows.BackgroundServiceTask")
-				, callback__(js_context.CreateObject())
 			{
 				TITANIUM_LOG_DEBUG("BackgroundServiceTask::ctor Initialize");
 			}
@@ -27,12 +26,6 @@ namespace TitaniumWindows
 			BackgroundServiceTask::~BackgroundServiceTask() 
 			{
 				TITANIUM_LOG_DEBUG("BackgroundServiceTask::dtor");
-
-				// Make sure we remove all listeners
-				const auto task = BackgroundService::GetTask(taskId__);
-				if (task) {
-					task->Completed -= completed_event__;
-				}
 			}
 
 			void BackgroundServiceTask::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
@@ -46,36 +39,14 @@ namespace TitaniumWindows
 				JSExport<BackgroundServiceTask>::SetClassVersion(1);
 				JSExport<BackgroundServiceTask>::SetParent(JSExport<Titanium::Module>::Class());
 				TITANIUM_ADD_FUNCTION(BackgroundServiceTask, unregister);
+				TITANIUM_ADD_PROPERTY_READONLY(BackgroundServiceTask, taskId);
 			}
 
 			TITANIUM_PROPERTY_READ(BackgroundServiceTask, std::uint32_t, taskId);
 
-			void BackgroundServiceTask::taskCompleted(const bool& canceled) 
-			{
-				TITANIUM_ASSERT(callback__.IsFunction());
-
-				const auto ctx = get_context();
-
-				auto e = ctx.CreateObject();
-				e.SetProperty("source", get_object());
-				e.SetProperty("canceled", ctx.CreateBoolean(canceled));
-
-				auto pos = TitaniumWindows::App::WindowsXaml::BackgroundService::GetLastGeoposition();
-				if (pos.available) {
-					e.SetProperty("location", LocationCoordinates_to_js(ctx, pos));
-				}
-
-				const std::vector<JSValue> callback_args{ e };
-				callback__(callback_args, get_object());
-			}
-
-			void BackgroundServiceTask::construct(const std::uint32_t& id, BackgroundTaskRegistration^ registration, JSObject& callback)
+			void BackgroundServiceTask::construct(const std::uint32_t& id, BackgroundTaskRegistration^ registration)
 			{
 				taskId__   = id;
-				callback__ = callback;
-				completed_event__ = registration->Completed += ref new BackgroundTaskCompletedEventHandler([this](BackgroundTaskRegistration^ task, BackgroundTaskCompletedEventArgs^ args) {
-					taskCompleted();
-				});
 			}
 
 			void BackgroundServiceTask::unregister()
@@ -83,9 +54,10 @@ namespace TitaniumWindows
 				const auto task = BackgroundService::GetTask(taskId__);
 				if (task) {
 					task->Unregister(true);
-					taskCompleted(true);
 				}
 			}
+
+			TITANIUM_PROPERTY_GETTER_INT(BackgroundServiceTask, taskId);
 
 			TITANIUM_FUNCTION(BackgroundServiceTask, unregister)
 			{

@@ -8,6 +8,59 @@
 #include "<%- moduleIdAsIdentifier %>.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 
+using namespace Windows::ApplicationModel::Background;
+
+namespace <%- moduleIdAsIdentifier %>
+{
+	/*
+	 * @class
+	 * @discussion This is background task for BackgroundService.
+	 *             EntryPoint: <%- moduleIdAsIdentifier %>.BackgroundServiceTask
+	 *
+	 *   Don't remove this class because Windows Store submission process requires
+	 *   at least one C++/CX class in winmd. (TIMOB-20192)
+	 * 
+	 *   ## Usage: (JavaScript) ##
+	 *     var task = Ti.App.Windows.BackgroundService.registerTimerTask(
+	 *                '<%- moduleIdAsIdentifier %>.BackgroundServiceTask', 15, false);
+	 *
+	 *   ## tiapp.xml ##
+	 *   <windows>
+	 *     <manifest>
+	 *       <Extensions>
+	 *         <Extension Category="windows.backgroundTasks" EntryPoint="<%- moduleIdAsIdentifier %>.BackgroundServiceTask">
+	 *           <BackgroundTasks>
+	 *             <Task Type="timer" />
+	 *           </BackgroundTasks>
+	 *         </Extension>
+	 *       </Extensions>
+	 *     </manifest>
+	 *   </windows>
+	 *
+	 */
+	[Windows::Foundation::Metadata::WebHostHidden]
+	public ref class BackgroundServiceTask sealed : public Windows::ApplicationModel::Background::IBackgroundTask
+	{
+	public:
+		virtual void Run(Windows::ApplicationModel::Background::IBackgroundTaskInstance^ taskInstance);
+	};
+
+	/*
+	 * BackgroundServiceTask::Run implementation
+	 */
+	void BackgroundServiceTask::Run(IBackgroundTaskInstance^ taskInstance)
+	{
+		const auto deferral = taskInstance->GetDeferral();
+
+		//
+		// BACKGROUND TASK: IMPLEMENT SOMETHING USEFUL HERE :)
+		//
+
+		// Inform this task has finished
+		deferral->Complete();
+	}
+}
+
 <%
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -76,7 +129,7 @@
 <%- indent %>		//      https://github.com/appcelerator/HAL
 <%- indent %>		// 
 <%- indent %>		// Setter should return true if the property was set, otherwise false.
-<%- indent %>   // 
+<%- indent %>		// 
 <%- indent %>		return true;
 <%- indent %>	}
 
