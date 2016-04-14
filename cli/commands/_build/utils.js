@@ -30,10 +30,20 @@ function getTargetDevices() {
 	}
 
 	var target = this.cli.argv.target,
-		wpsdk = this.cli.argv['wp-sdk'];
+		wpsdk = this.cli.argv['wp-sdk'],
+		wpsdkDefault = this.cli.argv['$_'].indexOf('-S') === -1 && this.cli.argv['$_'].indexOf('--wp-sdk') === -1;
 
-	if (target === 'wp-emulator' && this.windowsInfo.emulators && Array.isArray(this.windowsInfo.emulators[wpsdk])) {
-		return this.deviceCache = this.windowsInfo.emulators[wpsdk];
+	if (target === 'wp-emulator' && this.windowsInfo.emulators) {
+		Object.keys(this.windowsInfo.emulators).forEach(function (sdk) {
+			if (wpsdkDefault || sdk === wpsdk) {
+				if (this.deviceCache) {
+					this.deviceCache = this.windowsInfo.emulators[sdk].concat(this.deviceCache);
+				} else {
+					this.deviceCache = this.windowsInfo.emulators[sdk];
+				}
+			}
+		}, this);
+		return this.deviceCache;
 	} else if (target === 'wp-device' && Array.isArray(this.windowsInfo.devices)) {
 		return this.deviceCache = this.windowsInfo.devices;
 	}

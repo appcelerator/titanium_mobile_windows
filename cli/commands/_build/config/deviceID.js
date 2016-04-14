@@ -18,20 +18,22 @@ module.exports = function configOptionDeviceID(order) {
 			return callback(new Error(__('Invalid device id')));
 		}
 
-		var devices = this.getTargetDevices();
+		var devices = this.getTargetDevices(),
+			dev = null;
 
-		if (cli.argv.target === 'wp-emulator' && value === 'xd' && devices[0]) {
-			// pick first emulator
+		// xd: first emulator
+		// de: first device
+		if (cli.argv.target === 'wp-emulator' && value === 'xd' ||
+			cli.argv.target === 'wp-device' && value === 'de' && devices[0]) {
+			
+			// use wpsdk for device
+			if (devices[0].wpsdk) {
+				cli.argv['wp-sdk'] = devices[0].wpsdk;
+			}
 			return callback(null, devices[0].udid);
 		}
 
-		if (cli.argv.target === 'wp-device' && value === 'de' && devices[0]) {
-			// pick first device
-			return callback(null, devices[0].udid);
-		}
-
-		var dev;
-
+		// validate device
 		if (!devices.some(function (d) {
 				if (d.udid == value || d.name === value) {
 					dev = d;
@@ -41,6 +43,11 @@ module.exports = function configOptionDeviceID(order) {
 				return false;
 			})) {
 			return callback(new Error(__('Invalid device id "%s"', value)));
+		}
+
+		// use wpsdk specified for device
+		if (dev.wpsdk) {
+			cli.argv['wp-sdk'] = dev.wpsdk;
 		}
 
 		// check the device
