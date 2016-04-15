@@ -288,8 +288,10 @@ namespace TitaniumWindows
 			// Set type safe headers. Content-Type is the most popular may need to set others.
 			auto it = requestHeaders__.find("Content-Type");
 			if (it != requestHeaders__.end()) {
-				request->Content->Headers->ContentType =
-					ref new Windows::Web::Http::Headers::HttpMediaTypeHeaderValue(TitaniumWindows::Utility::ConvertString(it->second));
+				if (request->Content) {
+					request->Content->Headers->ContentType =
+						ref new Windows::Web::Http::Headers::HttpMediaTypeHeaderValue(TitaniumWindows::Utility::ConvertString(it->second));
+				}
 				requestHeaders__.erase(it);
 			}
 			// User Agent
