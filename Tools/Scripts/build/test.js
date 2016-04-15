@@ -370,6 +370,37 @@ function outputJUnitXML(jsonResults, prefix, next) {
 }
 
 /**
+ * Remove all CI SDKs installed. Skip GA releases, and skip the passed in SDK path we just installed.
+ * @param  {String} sdkPath The SDK we just installed for testing. Keep this one in case next run can use it.
+ * @param {Function} next
+ */
+function cleanNonGaSDKs(sdkPath, next) {
+	var prc = exec('node "' + titanium + '" sdk list -o json', function (error, stdout, stderr) {
+		var out,
+			installedSDKs;
+		if (error !== null) {
+			return next('Failed to get list of SDKs: ' + error);
+		}
+
+		out = JSON.parse(stdout);
+		installedSDKs = out.installed;
+		// Loop over the SDKs and remove any where the key doesn't end in GA, or the value isn't sdkPath
+		async.each(Object.keys(installedSDKs), function (item, callback) {
+			var thisSDKPath = installedSDKs[item];
+			if (item.slice(-2) === 'GA') { // skip GA releases
+				return callback(null);
+			}
+			if (thisSDKPath === sdkPath) { // skip SDK we just installed
+				return callback(null);
+			}
+			wrench.rmdirRecursive(thisSDKPath, callback);
+		}, function(err) {
+			next(err);
+		});
+	});
+}
+
+/**
  * Installs the SDK from master branch, copies a built Windows SDK into it, generates a Titanium mobile project
  * for Windows SDK, sets up the project, copies unit tests into it from Examples/NMocha/src/Aseets,
  * and then runs the project in a Windows simulator which will run the mocha unit tests. The test results are piped to
@@ -448,7 +479,11 @@ function test(sdkVersion, msbuild, target, deviceId, prefix, callback) {
 		function (next) {
 			outputJUnitXML(jsonResults, prefix, next);
 		}
-	], callback);
+	], function (err, results) {
+		cleanNonGaSDKs(sdkPath, function (cleanupErr) {
+			callback(err || cleanupErr, results);
+		});
+	});
 }
 
 // public API
