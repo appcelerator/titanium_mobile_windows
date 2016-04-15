@@ -10,6 +10,7 @@
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/UI/Label.hpp"
+#include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
 
 namespace TitaniumWindows
 {
@@ -72,6 +73,26 @@ namespace TitaniumWindows
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::FILL);
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
 			getViewLayoutDelegate<ActivityIndicatorLayoutDelegate>()->setComponent(panel__);
+		}
+
+		void ActivityIndicator::set_color(const std::string& colorName) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::ActivityIndicator::set_color(colorName);
+			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
+			label__->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
+		}
+
+		void ActivityIndicator::set_indicatorColor(const std::string& colorName) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::ActivityIndicator::set_indicatorColor(colorName);
+			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
+			ring__->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
+		}
+
+		void ActivityIndicator::set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::ActivityIndicator::set_font(font);
+			TitaniumWindows::UI::ViewHelper::SetFont<Windows::UI::Xaml::Controls::TextBlock^>(get_context(), label__, font);
 		}
 
 		void ActivityIndicator::set_message(const std::string& message) TITANIUM_NOEXCEPT

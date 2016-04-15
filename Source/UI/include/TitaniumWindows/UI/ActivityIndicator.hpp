@@ -44,10 +44,7 @@ namespace TitaniumWindows
 		{
 
 		public:
-			TITANIUM_PROPERTY_UNIMPLEMENTED(color);
-			TITANIUM_PROPERTY_UNIMPLEMENTED(font);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(style);
-			TITANIUM_PROPERTY_UNIMPLEMENTED(indicatorColor);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(indicatorDiameter);
 
 			ActivityIndicator(const JSContext&) TITANIUM_NOEXCEPT;
@@ -64,7 +61,10 @@ namespace TitaniumWindows
 
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
-			virtual void set_message(const std::string& message) TITANIUM_NOEXCEPT override;
+			virtual void set_color(const std::string& color)      TITANIUM_NOEXCEPT override;
+			virtual void set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT override;
+			virtual void set_message(const std::string& message)  TITANIUM_NOEXCEPT override;
+			virtual void set_indicatorColor(const std::string& color) TITANIUM_NOEXCEPT override;
 
 		private:
 			Windows::UI::Xaml::Controls::StackPanel^ panel__;
