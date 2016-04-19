@@ -11,7 +11,7 @@
     <PublisherDisplayName>@PUBLISHER_DISPLAY_NAME@</PublisherDisplayName>
     <Logo>StoreLogo.png</Logo>
 <% for(var i = 0; i < manifest.Properties.length; i++) { -%>
-    <%- manifest.Properties[i] %>
+    <%- manifest.Properties[i].toString() %>
 <% } -%>
   </Properties>
 
@@ -19,14 +19,14 @@
     <OSMinVersion>6.3</OSMinVersion>
     <OSMaxVersionTested>6.3</OSMaxVersionTested>
 <% for(var i = 0; i < manifest.Prerequisites.length; i++) { -%>
-    <%- manifest.Prerequisites[i] %>
+    <%- manifest.Prerequisites[i].toString() %>
 <% } -%>
   </Prerequisites>
 
   <Resources>
     <Resource Language="x-generate" />
 <% for(var i = 0; i < manifest.Resources.length; i++) { -%>
-    <%- manifest.Resources[i] %>
+    <%- manifest.Resources[i].toString() %>
 <% } -%>
   </Resources>
 
@@ -37,8 +37,8 @@
       <m2:VisualElements
           DisplayName="ms-resource:app_name"
           Description="ms-resource:app_description"
-          BackgroundColor="#171717"
-          ForegroundText="light"
+          BackgroundColor="<%= manifest.Applications.Application.VisualElements.BackgroundColor %>"
+          ForegroundText="<%= manifest.Applications.Application.VisualElements.ForegroundText %>"
           Square150x150Logo="Logo.png"
           Square30x30Logo="SmallLogo.png"
           ToastCapable="true">
@@ -47,13 +47,13 @@
             <m2:ShowOn Tile="square150x150Logo" />
           </m2:ShowNameOnTiles>
         </m2:DefaultTile>
-        <m2:SplashScreen BackgroundColor="#b41100" Image="SplashScreen.png" />
+        <m2:SplashScreen BackgroundColor="<%= manifest.Applications.Application.VisualElements.SplashScreen.BackgroundColor %>" Image="SplashScreen.png" />
       </m2:VisualElements>
 
 <% if (manifest.Extensions.length > 0) { -%>
       <Extensions>
 <% for(var i = 0; i < manifest.Extensions.length; i++) { -%>
-      <%- manifest.Extensions[i] %>
+      <%- manifest.Extensions[i].toString() %>
 <% } -%>
       </Extensions>
 <% } -%>
@@ -63,7 +63,7 @@
 
   <Capabilities>
 <% for(var i = 0; i < manifest.Capabilities.length; i++) { -%>
-    <%- manifest.Capabilities[i] %>
+    <%- manifest.Capabilities[i].toString() %>
 <% } -%>
   </Capabilities>
 
