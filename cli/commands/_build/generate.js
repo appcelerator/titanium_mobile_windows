@@ -367,6 +367,25 @@ function generateAppxManifestForPlatform(target, properties) {
 	properties.Resources = properties.Resources || [];
 	properties.Extensions = properties.Extensions || [];
 
+	// Extensions (we kept them as xml nodes to make this below easier!)
+	var requiresBadgeLogo = false,
+	    extensions = [];
+	properties.Extensions.forEach(function (node) {
+		if (node.tagName == 'Extension' && node.childNodes) {
+			for (var i = 0; i < node.childNodes.length; i++) {
+				var cnode = node.childNodes.item(i);
+				// appxmanifest needs badge logo when you enable background task.
+				if (cnode && cnode.tagName == 'BackgroundTasks') {
+					requiresBadgeLogo = true;
+					break;
+				}
+			}
+		}
+		extensions.push(node.toString());
+	});
+	properties.Extensions = extensions;
+	properties.requiresBadgeLogo = requiresBadgeLogo;
+
 	this.logger.info(__('Writing appxmanifest %s', dest));
 	fs.writeFileSync(dest, ejs.render(template, {
 		manifest: properties
@@ -425,6 +444,8 @@ function generateAppxManifest(next) {
 					elements = [];
 				appc.xml.forEachElement(node, function (elm) {
 					if (key == 'Capabilities') { // keep capability as tags
+						elements.push(elm);
+					} else if (key == 'Extensions') { // keep extension as tags
 						elements.push(elm);
 					} else {
 						elements.push(elm.toString());

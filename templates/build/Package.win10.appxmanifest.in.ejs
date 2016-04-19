@@ -43,7 +43,9 @@
         Square44x44Logo="Square44x44Logo.png"
         Description="ms-resource:app_description"
         BackgroundColor="transparent">
+<% if (manifest.requiresBadgeLogo) { -%>
         <uap:LockScreen Notification="badge" BadgeLogo="Square24x24Logo.png" />
+<% } -%>
         <uap:DefaultTile Square71x71Logo="Square71x71Logo.png"/>
         <uap:SplashScreen Image="SplashScreen.png" />
       </uap:VisualElements>
