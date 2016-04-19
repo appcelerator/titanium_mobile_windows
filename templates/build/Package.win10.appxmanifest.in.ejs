@@ -29,7 +29,7 @@
   <Resources>
     <Resource Language="x-generate" />
 <% for(var i = 0; i < manifest.Resources.length; i++) { -%>
-    <%- manifest.Resources[i] %>
+    <%- manifest.Resources[i].toString() %>
 <% } -%>
   </Resources>
 
@@ -42,16 +42,16 @@
         Square150x150Logo="Square150x150Logo.png"
         Square44x44Logo="Square44x44Logo.png"
         Description="ms-resource:app_description"
-        BackgroundColor="transparent">
+        BackgroundColor="<%= manifest.Applications.Application.VisualElements.BackgroundColor %>">
         <uap:LockScreen Notification="badge" BadgeLogo="Square24x24Logo.png" />
         <uap:DefaultTile Square71x71Logo="Square71x71Logo.png"/>
-        <uap:SplashScreen Image="SplashScreen.png" />
+        <uap:SplashScreen Image="SplashScreen.png" BackgroundColor="<%= manifest.Applications.Application.VisualElements.SplashScreen.BackgroundColor %>" />
       </uap:VisualElements>
 
 <% if (manifest.Extensions.length > 0) { -%>
       <Extensions>
 <% for(var i = 0; i < manifest.Extensions.length; i++) { -%>
-      <%- manifest.Extensions[i] %>
+      <%- manifest.Extensions[i].toString() %>
 <% } -%>
       </Extensions>
 <% } -%>
@@ -61,7 +61,7 @@
 
   <Capabilities>
 <% for(var i = 0; i < manifest.Capabilities.length; i++) { -%>
-    <%- manifest.Capabilities[i] %>
+    <%- manifest.Capabilities[i].toString() %>
 <% } -%>
   </Capabilities>
 </Package>
