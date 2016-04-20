@@ -18,6 +18,7 @@ var MODULE_NAME = moduleIdAsIdentifier.toUpperCase();
 
 #include "<%- moduleIdAsIdentifier %>_EXPORT.h"
 #include "Titanium/detail/TiBase.hpp"
+#include "Titanium/Module.hpp"
 
 <%
   var namespaces = moduleId.split('.'),
@@ -34,7 +35,7 @@ var MODULE_NAME = moduleIdAsIdentifier.toUpperCase();
 -%>
 <%- indent %>	using namespace HAL;
 
-<%- indent %>	class <%- MODULE_NAME %>_EXPORT <%- className %> : public JSExportObject, public JSExport<<%- className %>>
+<%- indent %>	class <%- MODULE_NAME %>_EXPORT <%- className %> : public Titanium::Module, public JSExport<<%- className %>>
 <%- indent %>	{
 <%- indent %>		public:
 <%- indent %>			<%- className %>(const JSContext&) TITANIUM_NOEXCEPT;

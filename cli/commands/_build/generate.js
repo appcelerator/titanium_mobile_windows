@@ -8,6 +8,7 @@ var appc = require('node-appc'),
 	path = require('path'),
 	ti = require('titanium-sdk'),
 	wrench = require('wrench'),
+	defaultsdeep = require('lodash.defaultsdeep'),
 	__ = appc.i18n(__dirname).__;
 
 /*
@@ -367,23 +368,48 @@ function generateAppxManifestForPlatform(target, properties) {
 	properties.Resources = properties.Resources || [];
 	properties.Extensions = properties.Extensions || [];
 
-	// Extensions (we kept them as xml nodes to make this below easier!)
-	var requiresBadgeLogo = false,
-	    extensions = [];
+	var applications = {};
+	if (properties.Applications) {
+		// Turn the xml to JSON!
+		function xmlToObject(node) {
+			var obj = {};
+			appc.xml.forEachAttr(node, function (item) {
+				obj[item.name] = item.value;
+			});
+			appc.xml.forEachElement(node, function (elm) {
+				obj[elm.tagName] = xmlToObject(elm);
+			});
+			return obj;
+		};
+		applications['Application'] = xmlToObject(properties.Applications[0]);
+	}
+	// now merge with our default colors
+	var defaultApplications = {
+		Application: {
+			VisualElements: {
+				BackgroundColor: 'transparent',
+				ForegroundText: 'light',
+				SplashScreen: {
+					BackgroundColor: '#b41100'
+				}
+			}
+		}
+	};
+	properties.Applications = defaultsdeep(applications, defaultApplications);
+
+	// Enable badge logo only when BackgroundTask Extension is used.
+	var requiresBadgeLogo = false;
 	properties.Extensions.forEach(function (node) {
 		if (node.tagName == 'Extension' && node.childNodes) {
 			for (var i = 0; i < node.childNodes.length; i++) {
 				var cnode = node.childNodes.item(i);
-				// appxmanifest needs badge logo when you enable background task.
 				if (cnode && cnode.tagName == 'BackgroundTasks') {
 					requiresBadgeLogo = true;
 					break;
 				}
 			}
 		}
-		extensions.push(node.toString());
 	});
-	properties.Extensions = extensions;
 	properties.requiresBadgeLogo = requiresBadgeLogo;
 
 	this.logger.info(__('Writing appxmanifest %s', dest));
@@ -442,14 +468,9 @@ function generateAppxManifest(next) {
 			appc.xml.forEachElement(root, function (node) {
 				var key = node.tagName,
 					elements = [];
+				// gather all the child tags
 				appc.xml.forEachElement(node, function (elm) {
-					if (key == 'Capabilities') { // keep capability as tags
-						elements.push(elm);
-					} else if (key == 'Extensions') { // keep extension as tags
-						elements.push(elm);
-					} else {
-						elements.push(elm.toString());
-					}
+					elements.push(elm);
 				});
 
 				xprops.phone['8.1'][key] = xprops.phone['8.1'][key] || [];

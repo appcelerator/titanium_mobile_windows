@@ -78,7 +78,7 @@ namespace <%- moduleIdAsIdentifier %>
   }
 -%>
 <%- indent %>	<%- className %>::<%- className %>(const JSContext& js_context) TITANIUM_NOEXCEPT
-<%- indent %>		: JSExportObject(js_context)
+<%- indent %>		: Titanium::Module(js_context, "<%- moduleId %>")
 <%- indent %>	{
 <%- indent %>		TITANIUM_LOG_DEBUG("<%- className %>::ctor Initialize");
 <%- indent %>	}
@@ -94,7 +94,7 @@ namespace <%- moduleIdAsIdentifier %>
 <%- indent %>	void <%- className %>::JSExportInitialize()
 <%- indent %>	{
 <%- indent %>		JSExport<<%- className %>>::SetClassVersion(1);
-<%- indent %>		JSExport<<%- className %>>::SetParent(JSExport<JSExportObject>::Class());
+<%- indent %>		JSExport<<%- className %>>::SetParent(JSExport<Titanium::Module>::Class());
 <%- indent %>		TITANIUM_ADD_PROPERTY(<%- className %>, exampleProp);
 <%- indent %>		TITANIUM_ADD_FUNCTION(<%- className %>, example);
 <%- indent %>	}
