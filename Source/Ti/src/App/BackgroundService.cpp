@@ -79,6 +79,7 @@ namespace TitaniumWindows
 				JSExport<BackgroundService>::SetParent(JSExport<Titanium::Module>::Class());
 
 				TITANIUM_ADD_FUNCTION(BackgroundService, registerTimerTask);
+				TITANIUM_ADD_FUNCTION(BackgroundService, registerPushNotificationTask);
 				TITANIUM_ADD_FUNCTION(BackgroundService, unregisterTask);
 				TITANIUM_ADD_FUNCTION(BackgroundService, unregisterAllTasks);
 			}
@@ -86,6 +87,11 @@ namespace TitaniumWindows
 			std::shared_ptr<BackgroundServiceTask> BackgroundService::registerTimerTask(::Platform::String^ entryPoint, const std::uint32_t& freshnessTime, const bool& oneShot, IBackgroundCondition^ condition)
 			{
 				return registerTask(entryPoint, ref new TimeTrigger(freshnessTime, oneShot), condition);
+			}
+
+			std::shared_ptr<BackgroundServiceTask> BackgroundService::registerPushNotificationTask(::Platform::String^ entryPoint, Windows::ApplicationModel::Background::IBackgroundCondition^ condition)
+			{
+				return registerTask(entryPoint, ref new PushNotificationTrigger(), condition);
 			}
 
 			std::shared_ptr<BackgroundServiceTask> BackgroundService::registerTask(::Platform::String^ entryPoint, IBackgroundTrigger^ trigger, IBackgroundCondition^ condition)
@@ -173,6 +179,16 @@ namespace TitaniumWindows
 				ENSURE_OPTIONAL_UINT_AT_INDEX(freshnessTime, 1, 15);
 				ENSURE_OPTIONAL_BOOL_AT_INDEX(oneShot, 2, false);
 				const auto task = registerTimerTask(TitaniumWindows::Utility::ConvertString(entryPoint), freshnessTime, oneShot);
+				if (task) {
+					return task->get_object();
+				}
+				return get_context().CreateNull();
+			}
+
+			TITANIUM_FUNCTION(BackgroundService, registerPushNotificationTask)
+			{
+				ENSURE_STRING_AT_INDEX(entryPoint, 0);
+				const auto task = registerPushNotificationTask(TitaniumWindows::Utility::ConvertString(entryPoint));
 				if (task) {
 					return task->get_object();
 				}

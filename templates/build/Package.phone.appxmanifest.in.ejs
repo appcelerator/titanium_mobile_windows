@@ -3,11 +3,11 @@
 	 xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest"
    xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest"
 	 xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  
+
   <Identity Name="@PACKAGE_GUID@"
 	    Publisher="@PUBLISHER_ID@"
 	    Version="@VERSION@" />
-  
+
   <mp:PhoneIdentity PhoneProductId="@PHONE_PRODUCT_ID@"
         PhonePublisherId="@PHONE_PUBLISHER_ID@" />
 
@@ -16,22 +16,22 @@
     <PublisherDisplayName>@PUBLISHER_DISPLAY_NAME@</PublisherDisplayName>
     <Logo>StoreLogo.png</Logo>
 <% for(var i = 0; i < manifest.Properties.length; i++) { -%>
-    <%- manifest.Properties[i] %>
+    <%- manifest.Properties[i].toString() %>
 <% } -%>
   </Properties>
-  
+
   <Prerequisites>
     <OSMinVersion>6.3.1</OSMinVersion>
     <OSMaxVersionTested>6.3.1</OSMaxVersionTested>
 <% for(var i = 0; i < manifest.Prerequisites.length; i++) { -%>
-    <%- manifest.Prerequisites[i] %>
+    <%- manifest.Prerequisites[i].toString() %>
 <% } -%>
   </Prerequisites>
 
   <Resources>
     <Resource Language="x-generate" />
 <% for(var i = 0; i < manifest.Resources.length; i++) { -%>
-    <%- manifest.Resources[i] %>
+    <%- manifest.Resources[i].toString() %>
 <% } -%>
   </Resources>
 
@@ -42,34 +42,34 @@
       <m3:VisualElements
           DisplayName="ms-resource:app_name"
           Description="ms-resource:app_description"
-          BackgroundColor="#171717"
-          ForegroundText="light"
-          Square150x150Logo="Square150x150Logo.png" 
-          Square44x44Logo="Square44x44Logo.png" 
+          BackgroundColor="<%= manifest.Applications.Application.VisualElements.BackgroundColor %>"
+          ForegroundText="<%= manifest.Applications.Application.VisualElements.ForegroundText %>"
+          Square150x150Logo="Square150x150Logo.png"
+          Square44x44Logo="Square44x44Logo.png"
           ToastCapable="true">
         <m3:DefaultTile ShortName="ms-resource:app_name" Square71x71Logo="Square71x71Logo.png">
           <m3:ShowNameOnTiles>
             <m3:ShowOn Tile="square150x150Logo" />
           </m3:ShowNameOnTiles>
         </m3:DefaultTile>
-        <m3:SplashScreen BackgroundColor="#b41100" Image="SplashScreen480x800.png" />
+        <m3:SplashScreen BackgroundColor="<%= manifest.Applications.Application.VisualElements.SplashScreen.BackgroundColor %>" Image="SplashScreen480x800.png" />
       </m3:VisualElements>
 
 <% if (manifest.Extensions.length > 0) { -%>
       <Extensions>
 <% for(var i = 0; i < manifest.Extensions.length; i++) { -%>
-      <%- manifest.Extensions[i] %>
+      <%- manifest.Extensions[i].toString() %>
 <% } -%>
       </Extensions>
 <% } -%>
 
     </Application>
   </Applications>
-  
+
   <Capabilities>
 <% for(var i = 0; i < manifest.Capabilities.length; i++) { -%>
-    <%- manifest.Capabilities[i] %>
+    <%- manifest.Capabilities[i].toString() %>
 <% } -%>
   </Capabilities>
-  
+
 </Package>

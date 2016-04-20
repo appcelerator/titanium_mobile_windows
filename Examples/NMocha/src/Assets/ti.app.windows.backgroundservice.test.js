@@ -25,6 +25,15 @@ describe('Ti.App.Windows.BackgroundService', function () {
         finish();
     });
 
+    it('registerPushNotificationTask', function (finish) {
+        var task = Ti.App.Windows.BackgroundService.registerPushNotificationTask('TitaniumWindows_Ti.BackgroundServiceTask');
+        should(task).be.an.Object;
+        should(task.unregister).be.a.Function;
+        should(task.taskId).be.a.Number;
+        task.unregister();
+        finish();
+    });
+
     it('unregisterTask(task)', function (finish) {
         var task = Ti.App.Windows.BackgroundService.registerTimerTask('TitaniumWindows_Ti.BackgroundServiceTask', 15, true);
         should(task).be.an.Object;
