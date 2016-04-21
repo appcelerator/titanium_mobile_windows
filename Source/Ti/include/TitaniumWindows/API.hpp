@@ -11,33 +11,11 @@
 
 #include "Titanium/API.hpp"
 #include "TitaniumWindows_Ti_EXPORT.h"
-#include <agents.h>
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
 	using namespace HAL;
-
-	/*!
-	  This is an agent that is meant to connect over TCP to the CLi and forward logs over the socket. If unable to make a connection,
-	  or not running under CLI we will forward logs to std::clog.
-	*/
-	class log_forwarder : public concurrency::agent
-	{
-	public:
-		explicit log_forwarder() {}
-
-		// Retrieves any error that occurs during the life of the agent.
-		bool get_error(std::exception& e)
-		{
-			return try_receive(_error, e);
-		}
-
-	protected:
-		void run();
-
-	private:
-		concurrency::overwrite_buffer<std::exception> _error;
-	};
 
 	/*!
 	  @class API
@@ -49,13 +27,6 @@ namespace TitaniumWindows
 	{
 	public:
 		TITANIUM_FUNCTION_UNIMPLEMENTED(timestamp);
-
-		static bool done__;
-#pragma warning(push)
-#pragma warning(disable : 4251)
-		static concurrency::unbounded_buffer<std::string> buffer__; // Buffer used to store log messages that we haven't written yet
-		log_forwarder reader__; // agent/thread that writes the actual log messages to CLI/debug
-#pragma warning(pop)
 
 		virtual void postInitialize(JSObject& js_object) override;
 
@@ -72,10 +43,12 @@ namespace TitaniumWindows
 		static void JSExportInitialize();
 
 	protected:
+#pragma warning(push)
+#pragma warning(disable : 4251)
 		virtual void log(const std::string& message) const TITANIUM_NOEXCEPT override final;
+		std::shared_ptr<LogForwarder> logger__;
+#pragma warning(pop)
 
-	private:
-		void connect();
 	};
 }  // namespace TitaniumWindows
 

@@ -48,6 +48,8 @@ set(SOURCE_Utility
   src/Utility.cpp
   include/TitaniumWindows/WindowsMacros.hpp
   src/TitaniumEntryPoint.cpp
+  include/TitaniumWindows/LogForwarder.hpp
+  src/LogForwarder.cpp
   )
 
 source_group(Titanium\\Utility FILES ${SOURCE_Utility})
