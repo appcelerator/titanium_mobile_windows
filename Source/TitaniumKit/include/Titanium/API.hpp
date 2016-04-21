@@ -143,7 +143,8 @@ namespace Titanium
 			API_WARN,
 			API_ERROR,
 			API_DEBUG,
-			API_TRACE
+			API_TRACE,
+			API_UNKNOWN
 		};
 
 		void log(LogSeverityLevel log_severity_level, const std::string& message) const TITANIUM_NOEXCEPT;

@@ -62,13 +62,22 @@ namespace TitaniumWindows
 				/*!
 				  @method
 				  @abstract registerTimerTask
-				  @param callback Sets callback that is invoked on time event. Callback param: { source [object], canceled [bool] }
+				  @param entryPoint Sets callback C++/CX class name that is invoked on time event. Callback class should implement Windows::ApplicationModel::Background::IBackgroundTask.
 				  @param freshnessTime Sets interval of a time event in minutes. Windows requires at least 15 minutes
 				  @param oneShot Sets whether the time event trigger will be used only once or each time the FreshnessTime interval elapses.
 				  @return BackgroundServiceTask object
 				  @discussion Register a time event that triggers a background task to run.
 				*/
 				TITANIUM_FUNCTION_DEF(registerTimerTask);
+
+				/*!
+				  @method
+				  @abstract registerPushNotificationTask
+				  @param entryPoint Sets callback C++/CX class name that is invoked on time event. Callback class should implement Windows::ApplicationModel::Background::IBackgroundTask.
+				  @return BackgroundServiceTask object
+				  @discussion Register a push notification event that triggers a background task to run.
+				*/
+				TITANIUM_FUNCTION_DEF(registerPushNotificationTask);
 
 				/*!
 				  @method
@@ -88,6 +97,7 @@ namespace TitaniumWindows
 				static void JSExportInitialize();
 				virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
+				std::shared_ptr<BackgroundServiceTask> registerPushNotificationTask(::Platform::String^ entryPoint, Windows::ApplicationModel::Background::IBackgroundCondition^ condition = nullptr);
 				std::shared_ptr<BackgroundServiceTask> registerTimerTask(::Platform::String^ entryPoint, const std::uint32_t& freshnessTime, const bool& oneShot, Windows::ApplicationModel::Background::IBackgroundCondition^ condition = nullptr);
 				std::shared_ptr<BackgroundServiceTask> registerTask(::Platform::String^ entryPoint, Windows::ApplicationModel::Background::IBackgroundTrigger^ trigger, Windows::ApplicationModel::Background::IBackgroundCondition^ condition);
 

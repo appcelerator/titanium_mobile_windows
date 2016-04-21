@@ -397,6 +397,21 @@ function generateAppxManifestForPlatform(target, properties) {
 	};
 	properties.Applications = defaultsdeep(applications, defaultApplications);
 
+	// Enable badge logo only when BackgroundTask Extension is used.
+	var requiresBadgeLogo = false;
+	properties.Extensions.forEach(function (node) {
+		if (node.tagName == 'Extension' && node.childNodes) {
+			for (var i = 0; i < node.childNodes.length; i++) {
+				var cnode = node.childNodes.item(i);
+				if (cnode && cnode.tagName == 'BackgroundTasks') {
+					requiresBadgeLogo = true;
+					break;
+				}
+			}
+		}
+	});
+	properties.requiresBadgeLogo = requiresBadgeLogo;
+
 	this.logger.info(__('Writing appxmanifest %s', dest));
 	fs.writeFileSync(dest, ejs.render(template, {
 		manifest: properties

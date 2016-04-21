@@ -81,10 +81,9 @@ namespace Titanium
 			case LogSeverityLevel::API_TRACE:
 				os << "[TRACE] ";
 				break;
-
 			default:
-				os << "[INFO] ";
-				break;
+				// prints nothings
+				return;
 		}
 
 		os << message;
@@ -109,7 +108,7 @@ namespace Titanium
       log_severity_level_map.emplace("trace", LogSeverityLevel::API_TRACE);
 		});
 
-		LogSeverityLevel log_severity_level = LogSeverityLevel::API_INFO;
+		LogSeverityLevel log_severity_level = LogSeverityLevel::API_UNKNOWN;
 		const auto position = log_severity_level_map.find(level);
 
 		if (position != log_severity_level_map.end()) {
@@ -197,7 +196,7 @@ namespace Titanium
 		ENSURE_STRING_AT_INDEX(message, 1);
 		
 		const auto js_context = this_object.get_context();
-		GetStaticObject(js_context).GetPrivate<API>()->log(message);
+		GetStaticObject(js_context).GetPrivate<API>()->log(level, message);
 		return js_context.CreateUndefined();
 	}
 

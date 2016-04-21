@@ -42,6 +42,9 @@
           Square150x150Logo="Logo.png"
           Square30x30Logo="SmallLogo.png"
           ToastCapable="true">
+<% if (manifest.requiresBadgeLogo) { -%>
+        <m2:LockScreen Notification="badge" BadgeLogo="Square24x24Logo.png" />
+<% } -%>
         <m2:DefaultTile ShortName="ms-resource:app_name">
           <m2:ShowNameOnTiles>
             <m2:ShowOn Tile="square150x150Logo" />
