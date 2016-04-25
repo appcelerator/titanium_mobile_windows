@@ -43,8 +43,13 @@ namespace Titanium
 		TITANIUMKIT_EXPORT ListDataItem js_to_ListDataItem(const JSObject& object);
 		TITANIUMKIT_EXPORT JSObject ListDataItem_to_js(const JSContext& js_context, const ListDataItem& item);
 
-		// Case-insensitive query ListDataItem title 
-		TITANIUMKIT_EXPORT bool ListDataItem_contains(const ListDataItem& item, const std::string& query);
+		/*!
+		  Query ListDataItem title/searchableText
+		  @param item List data item
+		  @param query Query parameter. Should be lower-cased when caseInsensitive is true
+		  @param caseInsensitive Determines whether query is case insensitive
+		*/
+		TITANIUMKIT_EXPORT bool ListDataItem_contains(const ListDataItem& item, const std::string& query, const bool& caseInsensitive);
 
 		/*!
 		  @class

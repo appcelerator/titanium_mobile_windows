@@ -10,6 +10,7 @@
 #include "Titanium/UI/ListViewAnimationProperties.hpp"
 #include "Titanium/UI/SearchBar.hpp"
 #include "Titanium/UI/listview_js.hpp"
+#include <boost/algorithm/string.hpp>
 
 namespace Titanium
 {
@@ -102,10 +103,12 @@ namespace Titanium
 			// Create default section to show results
 			const auto section = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI.createListSection({ headerTitle: 'Search Results' });")).GetPrivate<Titanium::UI::ListSection>();
 			const std::vector<std::shared_ptr<ListSection>> sections { section };
+			const auto caseInsensitive = get_caseInsensitiveSearch();
+			const auto normalizedQuery = caseInsensitive ? boost::algorithm::to_lower_copy(query) : query;
 			std::vector<ListDataItem> items;
 			for (const auto section : model__->get_saved_sections()) {
 				for (const auto item : section->get_items()) {
-					if (ListDataItem_contains(item, query)) {
+					if (ListDataItem_contains(item, normalizedQuery, caseInsensitive)) {
 						items.push_back(item);
 					}
 				}
@@ -120,10 +123,12 @@ namespace Titanium
 				model__->save();
 			}
 
+			const auto caseInsensitive = get_caseInsensitiveSearch();
+			const auto normalizedQuery = caseInsensitive ? boost::algorithm::to_lower_copy(query) : query;
 			std::vector<std::string> suggestions;
 			for (const auto section : model__->get_saved_sections()) {
 				for (const auto item : section->get_items()) {
-					if (ListDataItem_contains(item, query)) {
+					if (ListDataItem_contains(item, normalizedQuery, caseInsensitive)) {
 						suggestions.push_back(static_cast<std::string>(item.properties.at("title")));
 					}
 				}

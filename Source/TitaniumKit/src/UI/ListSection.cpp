@@ -61,14 +61,19 @@ namespace Titanium
 			return items;
 		}
 
-		bool ListDataItem_contains(const ListDataItem& item, const std::string& query)
+		bool ListDataItem_contains(const ListDataItem& item, const std::string& query, const bool& caseInsensitive)
 		{
-			if (item.properties.find("title") == item.properties.end()) {
+			const auto notFound = item.properties.end();
+			const auto searchableTextFound = (item.properties.find("searchableText") != notFound);
+			if (!searchableTextFound && (item.properties.find("title") == notFound)) {
 				return false;
 			}
-			const auto title = static_cast<std::string>(item.properties.at("title"));
-			const auto pos = boost::algorithm::to_lower_copy(title).find(boost::algorithm::to_lower_copy(query));
-			return pos != std::string::npos;
+			const auto content = searchableTextFound ? static_cast<std::string>(item.properties.at("searchableText")) : static_cast<std::string>(item.properties.at("title"));
+			if (caseInsensitive) {
+				return (boost::algorithm::to_lower_copy(content).find(query) != std::string::npos);
+			} else {
+				return (content.find(query) != std::string::npos);
+			}
 		}
 
 		ListSection::ListSection(const JSContext& js_context) TITANIUM_NOEXCEPT
