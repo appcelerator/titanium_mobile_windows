@@ -215,6 +215,7 @@ exports.init = function (logger, config, cli) {
 
 				function installApp(deviceId, xapFile, opts, next) {
 					// Now install the real app
+					logger.info(__('Installing the application...'));
 					windowslib.install(deviceId, xapFile, appc.util.mix({
 								appGuid: builder.phoneProductId,
 								// launching an app on Win 10 device fails right now!
@@ -272,6 +273,7 @@ exports.init = function (logger, config, cli) {
 				});
 				possibleDependencies.forEach(function(file) {
 					installs.push(function (next) {
+						logger.info(__('Installing dependency: %s', file));
 						windowslib.install(builder.deviceId, path.resolve(dependenciesDir, file), installOnlyOpts)
 						.on('installed', function (handle) {
 							next();
