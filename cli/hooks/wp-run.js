@@ -161,9 +161,6 @@ exports.init = function (logger, config, cli) {
 		post: function (builder, finished) {
 			if (builder.buildOnly || !/^wp-emulator|wp-device$/.test(builder.target)) return finished();
 
-			var delta = appc.time.prettyDiff(cli.startTime, Date.now());
-			logger.info(__('Finished building the application in %s', delta.cyan));
-
 			function install() {
 				if (logRelay) {
 					// start the log relay server
@@ -213,15 +210,22 @@ exports.init = function (logger, config, cli) {
 							skipLaunch: true
 					}, opts),
 					appxExtensions = ['.appx', '.appxbundle'],
-					installs = [];
+					installs = [],
+					isWin10Device = (builder.target == 'wp-device' && builder.wpsdk == '10.0');
 
 				function installApp(deviceId, xapFile, opts, next) {
 					// Now install the real app
 					windowslib.install(deviceId, xapFile, appc.util.mix({
-								appGuid: builder.phoneProductId
+								appGuid: builder.phoneProductId,
+								// launching an app on Win 10 device fails right now!
+								skipLaunch: isWin10Device
 							}, opts))
 						.on('installed', function (handle) {
-							logger.info(__('Finished launching the application'));
+							if (isWin10Device) {
+								logger.warn(__('Due to a bug in Windows tooling, we are unable to launch apps for you on Windows 10 Mobile devices. Please launch the app manually.'));
+							} else {
+								logger.info(__('Finished launching the application'));
+							}
 
 							// watch for when the emulator is quit, if necessary
 							if (builder.target == 'wp-emulator') {
@@ -294,7 +298,7 @@ exports.init = function (logger, config, cli) {
 					});
 				});
 
-				logger.info(__('Installing and launching the application'));
+				logger.info(__('Installing and launching the application. Please wait as this may take some time...'));
 				async.series(installs, function (err, results) {
 					if (err) {
 						logger.error(err);
