@@ -36,6 +36,7 @@ list(INSERT CMAKE_MODULE_PATH 0 ${APPCELERATOR_CMAKE_MODULE_PATH})
 
 find_package(HAL REQUIRED)
 find_package(TitaniumKit REQUIRED)
+find_package(TitaniumWindows_Utility REQUIRED)
 
 enable_testing()
 
@@ -61,11 +62,13 @@ target_include_directories(<%- moduleIdAsIdentifier %> PUBLIC
   ${PROJECT_SOURCE_DIR}/include
   $<TARGET_PROPERTY:HAL,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
   )
 
 target_link_libraries(<%- moduleIdAsIdentifier %>
   HAL
   TitaniumKit
+  TitaniumWindows_Utility
   )
 
 set_target_properties(<%- moduleIdAsIdentifier %> PROPERTIES VS_WINRT_COMPONENT TRUE)
