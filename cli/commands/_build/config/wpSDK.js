@@ -10,7 +10,7 @@ var appc = require('node-appc'),
  * @returns {Object}
  */
 module.exports = function configOptionWPSDK(order) {
-	var defaultTarget = '8.1',
+	var defaultTarget = '10.0',
 		sdkTargets = [],
 		unsupportedTargets = ['8.0'];
 
