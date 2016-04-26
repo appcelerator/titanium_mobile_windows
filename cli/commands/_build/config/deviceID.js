@@ -35,7 +35,8 @@ module.exports = function configOptionDeviceID(order) {
 
 		// validate device
 		if (!devices.some(function (d) {
-				if (d.udid == value || d.name === value) {
+			// because we specify ignorecase below, we may get the name lowercased!
+				if (d.udid == value || d.name.toLowerCase() === value.toLowerCase()) {
 					dev = d;
 					value = d.udid;
 					return true;
