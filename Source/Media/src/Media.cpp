@@ -10,13 +10,15 @@
 #include "Titanium/Media/Item.hpp"
 #include "Titanium/Media/CameraOptionsType.hpp"
 #include "Titanium/Media/MediaQueryType.hpp"
-#include "TitaniumWindows/Utility.hpp"
 #include "Titanium/detail/TiImpl.hpp"
-#include "TitaniumWindows/AppModule.hpp"
-#include "TitaniumWindows/WindowsMacros.hpp"
+#include <windows.h>
 #include <ppltasks.h>
 #include <collection.h>
 #include <concrt.h>
+#include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
+#include "TitaniumWindows/AppModule.hpp"
+#include "TitaniumWindows/WindowsMacros.hpp"
 
 #define GET_TITANIUM_APP(VARNAME) \
   const auto ctx = get_context(); \
@@ -153,7 +155,7 @@ namespace TitaniumWindows
 				item->set_title(TitaniumWindows::Utility::ConvertString(properties->Title));
 				item->set_albumTrackNumber(properties->TrackNumber);
 			} catch (Platform::Exception^ e) {
-				TITANIUM_LOG_WARN("MediaModule: Failed to get music properties: ", TitaniumWindows::Utility::ConvertString(e->Message));
+				TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to get music properties: ", TitaniumWindows::Utility::ConvertString(e->Message));
 			}
 			event.set();
 		});
@@ -172,7 +174,7 @@ namespace TitaniumWindows
 				try {
 					items.push_back(getMediaItem(ctx, task.get()));
 				} catch (Platform::Exception^ e) {
-					TITANIUM_LOG_WARN("MediaModule: Failed to access music file: ", TitaniumWindows::Utility::ConvertString(e->Message));
+					TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to access music file: ", TitaniumWindows::Utility::ConvertString(e->Message));
 				}
 				event.set();
 			}, concurrency::task_continuation_context::use_arbitrary());
@@ -184,7 +186,7 @@ namespace TitaniumWindows
 	void MediaModule::_postOpenMusicLibrary(const std::vector<std::string>& files) TITANIUM_NOEXCEPT
 	{
 		if (!waitingForOpenMusicLibrary__) {
-			TITANIUM_LOG_WARN("MediaModule::_postOpenMusicLibrary: Invalid state");
+			TITANIUM_MODULE_LOG_WARN("MediaModule::_postOpenMusicLibrary: Invalid state");
 			return;
 		}
 
@@ -260,7 +262,7 @@ namespace TitaniumWindows
 	void MediaModule::_postOpenPhotoGallery(const std::vector<std::string>& files) TITANIUM_NOEXCEPT
 	{
 		if (!waitingForOpenPhotoGallery__) {
-			TITANIUM_LOG_WARN("MediaModule::_postOpenPhotoGallery: Invalid state");
+			TITANIUM_MODULE_LOG_WARN("MediaModule::_postOpenPhotoGallery: Invalid state");
 			return;
 		}
 
@@ -303,7 +305,7 @@ namespace TitaniumWindows
 				try {
 					videoSupported = task.get()->Size > 0;
 				} catch (Platform::Exception^ ex) {
-					TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
+					TITANIUM_MODULE_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
 				}
 				event.set();
 			}, concurrency::task_continuation_context::use_arbitrary());
@@ -369,7 +371,7 @@ namespace TitaniumWindows
 			try {
 				stopTask.get();
 			} catch (Platform::Exception^ e) {
-				TITANIUM_LOG_WARN("MediaModule: Failed to stop camera preview: ", TitaniumWindows::Utility::ConvertString(e->Message));
+				TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to stop camera preview: ", TitaniumWindows::Utility::ConvertString(e->Message));
 			}
 			TitaniumWindows::Utility::RemoveViewFromCurrentWindow(captureElement__);
 			captureElement__->Source = nullptr;
@@ -384,7 +386,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 
 		if (cameraPreviewStarted__) {
-			TITANIUM_LOG_WARN("Failed to showCamera(): Camera is already visible.");
+			TITANIUM_MODULE_LOG_WARN("Failed to showCamera(): Camera is already visible.");
 			return;
 		}
 
@@ -401,11 +403,11 @@ namespace TitaniumWindows
 					try {
 						previewTask.get();
 					} catch (Platform::Exception^ e) {
-						TITANIUM_LOG_WARN("MediaModule: Failed to start camera preview: ", TitaniumWindows::Utility::ConvertString(e->Message));
+						TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to start camera preview: ", TitaniumWindows::Utility::ConvertString(e->Message));
 					}
 				});
 			} catch (Platform::Exception^ e) {
-				TITANIUM_LOG_WARN("MediaModule: Failed to initialize capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
+				TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to initialize capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
 			}
 		});
 		TitaniumWindows::Utility::SetViewForCurrentWindow(captureElement__, camera_navigated_event__);
@@ -457,7 +459,7 @@ namespace TitaniumWindows
 			obj.SetProperty("volume", ctx.CreateNumber(1));
 			break;
 		default:
-			TITANIUM_LOG_WARN("MediaModule: Unknown volume");
+			TITANIUM_MODULE_LOG_WARN("MediaModule: Unknown volume");
 			obj.SetProperty("volume", ctx.CreateNumber(0));
 			break;
 		}
@@ -499,16 +501,16 @@ namespace TitaniumWindows
 						recordTask.get();
 					} catch (Platform::Exception^ e) {
 						const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-						TITANIUM_LOG_WARN("MediaModule: Failure on start taking photo: ", message);
+						TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start taking photo: ", message);
 					}
 				});
 			} catch (Platform::Exception^ e) {
 				const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-				TITANIUM_LOG_WARN("MediaModule: Failure on start taking photo: ", message);
+				TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start taking photo: ", message);
 			}
 	});
 #else
-		TITANIUM_LOG_WARN("MediaModule::takePicture: Not available for Windows Store app");
+		TITANIUM_MODULE_LOG_WARN("MediaModule::takePicture: Not available for Windows Store app");
 #endif
 	}
 
@@ -526,17 +528,17 @@ namespace TitaniumWindows
 						recordTask.get();
 					} catch (Platform::Exception^ e) {
 						const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-						TITANIUM_LOG_WARN("MediaModule: Failure on start taking video: ", message);
+						TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start taking video: ", message);
 					}
 				});
 			} catch (Platform::Exception^ e) {
 				const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-				TITANIUM_LOG_WARN("MediaModule: Failure on start taking video: ", message);
+				TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start taking video: ", message);
 			}
 		});
 
 #else
-		TITANIUM_LOG_WARN("MediaModule::startVideoCapture: Not available for Windows Store app");
+		TITANIUM_MODULE_LOG_WARN("MediaModule::startVideoCapture: Not available for Windows Store app");
 #endif
 	}
 
@@ -548,11 +550,11 @@ namespace TitaniumWindows
 			try {
 				stopTask.get();
 			} catch (Platform::Exception^ e) {
-				TITANIUM_LOG_WARN("MediaModule: Failed to stop camera preview: ", TitaniumWindows::Utility::ConvertString(e->Message));
+				TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to stop camera preview: ", TitaniumWindows::Utility::ConvertString(e->Message));
 			}
 		});
 #else
-		TITANIUM_LOG_WARN("MediaModule::stopVideoCapture: Not available for Windows Store app");
+		TITANIUM_MODULE_LOG_WARN("MediaModule::stopVideoCapture: Not available for Windows Store app");
 #endif
 	}
 
@@ -598,18 +600,18 @@ namespace TitaniumWindows
 						takeScreenshotDone(callback, TitaniumWindows::Utility::ConvertString(file->Path), false);
 					} catch (Platform::Exception^ e) {
 						const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-						TITANIUM_LOG_WARN("MediaModule: Failure on start capturing screen: ", message);
+						TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start capturing screen: ", message);
 						takeScreenshotDone(callback);
 					}
 				});
 			} catch (Platform::Exception^ e) {
 				const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-				TITANIUM_LOG_WARN("MediaModule: Failure on start capturing screen: ", message);
+				TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start capturing screen: ", message);
 				takeScreenshotDone(callback);
 			}
 		});
 #else
-		TITANIUM_LOG_WARN("MediaModule::takeScreenshotToFile: Unimplemented");
+		TITANIUM_MODULE_LOG_WARN("MediaModule::takeScreenshotToFile: Unimplemented");
 #endif
 	}
 
@@ -642,25 +644,25 @@ namespace TitaniumWindows
 				auto mediaCapture = mediaCapture__.Get();
 
 				mediaCapture->RecordLimitationExceeded += ref new RecordLimitationExceededEventHandler([this, callback](MediaCapture^ sender) {
-					TITANIUM_LOG_WARN("MediaModule: Stopping screen capture on exceeding max record duration");
+					TITANIUM_MODULE_LOG_WARN("MediaModule: Stopping screen capture on exceeding max record duration");
 					takeScreenshotDone(callback);
 				});
 				mediaCapture->Failed += ref new MediaCaptureFailedEventHandler([this, callback](MediaCapture^ sender, MediaCaptureFailedEventArgs^ e) {
 					const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-					TITANIUM_LOG_WARN("MediaModule: Failed to capture screen: ", message);
+					TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to capture screen: ", message);
 					takeScreenshotDone(callback);
 				});
 
 				takeScreenshotToFile(callback);
 			} catch (Platform::Exception ^ e) {
 				const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-				TITANIUM_LOG_WARN("MediaModule: Failed to initialize capture device: ", message);
+				TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to initialize capture device: ", message);
 				takeScreenshotDone(callback);
 			}
 		});
 
 #else
-		TITANIUM_LOG_WARN("MediaModule::takeScreenshot: Unimplemented");
+		TITANIUM_MODULE_LOG_WARN("MediaModule::takeScreenshot: Unimplemented");
 #endif
 	}
 
@@ -707,7 +709,7 @@ namespace TitaniumWindows
 		}
 
 #else
-		TITANIUM_LOG_WARN("MediaModule::vibrate: Not supported");
+		TITANIUM_MODULE_LOG_WARN("MediaModule::vibrate: Not supported");
 #endif
 	}
 

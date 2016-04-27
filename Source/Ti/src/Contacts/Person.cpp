@@ -8,10 +8,12 @@
 
 #include "Titanium/detail/TiBase.hpp"
 #include "Titanium/Blob.hpp"
-#include "TitaniumWindows/Contacts/Person.hpp"
-#include "TitaniumWindows/Utility.hpp"
+#include <windows.h>
 #include <ppltasks.h>
 #include <concrt.h>
+#include "TitaniumWindows/Contacts/Person.hpp"
+#include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
@@ -115,7 +117,7 @@ namespace TitaniumWindows
 			
 			//contact__->ImportantDates->Append(date);
 
-			TITANIUM_LOG_WARN("Person::set_alternateBirthday: Unimplemented");
+			TITANIUM_MODULE_LOG_WARN("Person::set_alternateBirthday: Unimplemented");
 		}
 
 		std::string dateToString(ContactDate^ date) TITANIUM_NOEXCEPT
@@ -340,7 +342,7 @@ namespace TitaniumWindows
 		void Person::set_fullName(const std::string& fullName) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_fullName(fullName);
-			TITANIUM_LOG_WARN("Person::set_fullName: Read-only on Windows 8.1 and Windows 10");
+			TITANIUM_MODULE_LOG_WARN("Person::set_fullName: Read-only on Windows 8.1 and Windows 10");
 		}
 
 		std::string Person::get_identifier() const TITANIUM_NOEXCEPT
@@ -355,7 +357,7 @@ namespace TitaniumWindows
 			//auto file = image->get_file();
 			//std::dynamic_pointer_cast<TitaniumWindows::Filesystem::File>(file);
 			//contact__->Thumbnail = 
-			TITANIUM_LOG_WARN("Person::set_image: Unimplemented");
+			TITANIUM_MODULE_LOG_WARN("Person::set_image: Unimplemented");
 		}
 
 		Titanium::Contacts::InstantMessages Person::get_instantMessage() const TITANIUM_NOEXCEPT
@@ -434,7 +436,7 @@ namespace TitaniumWindows
 		void Person::set_kind(const Titanium::Contacts::KIND& kind) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_kind(kind);
-			TITANIUM_LOG_WARN("Person::set_kind: Unimplemented");
+			TITANIUM_MODULE_LOG_WARN("Person::set_kind: Unimplemented");
 		}
 
 		std::string Person::get_lastName() const TITANIUM_NOEXCEPT
@@ -473,7 +475,7 @@ namespace TitaniumWindows
 		void Person::set_middlePhonetic(const std::string& middlePhonetic) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_middlePhonetic(middlePhonetic);
-			TITANIUM_LOG_WARN("Person::set_middlePhonetic: Unimplemented");
+			TITANIUM_MODULE_LOG_WARN("Person::set_middlePhonetic: Unimplemented");
 		}
 
 		std::string Person::get_nickname() const TITANIUM_NOEXCEPT
@@ -491,7 +493,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 			contact__->Nickname = TitaniumWindows::Utility::ConvertUTF8String(nickname);
 #else
-			TITANIUM_LOG_WARN("Person::set_nickname: Unimplemented");
+			TITANIUM_MODULE_LOG_WARN("Person::set_nickname: Unimplemented");
 #endif
 		}
 
@@ -965,7 +967,7 @@ namespace TitaniumWindows
 			}, concurrency::task_continuation_context::use_arbitrary());
 			event.wait();
 #else
-			TITANIUM_LOG_WARN("Person::remove: Unimplemented");
+			TITANIUM_MODULE_LOG_WARN("Person::remove: Unimplemented");
 #endif
 		}
 

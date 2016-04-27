@@ -334,8 +334,6 @@ set(SOURCE_TiLogger_detail
   include/Titanium/detail/TiLoggerPolicyInterface.hpp
   include/Titanium/detail/TiLoggerPolicyConsole.hpp
   include/Titanium/detail/TiLoggerPolicyFile.hpp
-  include/Titanium/detail/TiLoggerPimpl.hpp
-  src/detail/TiLoggerPimpl.cpp
   )
 
 set(SOURCE_App

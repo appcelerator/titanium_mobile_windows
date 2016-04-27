@@ -10,6 +10,7 @@
 #define _TITANIUM_DETAIL_TILOGGERPOLICYINTERFACE_HPP_
 
 #include "TitaniumKit_EXPORT.h"
+#include <string>
 
 namespace Titanium
 {

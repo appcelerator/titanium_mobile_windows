@@ -7,8 +7,10 @@
 #include "TitaniumWindows/Filesystem.hpp"
 #include "Titanium/Filesystem/FileStream.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include <windows.h>
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 #include <iostream>
 #include <objbase.h>
 
@@ -49,7 +51,7 @@ namespace TitaniumWindows
 		const auto value = Windows::Storage::ApplicationData::Current->LocalCacheFolder->Path;
 		return TitaniumWindows::Utility::ConvertString(value) + separator(); // FIXME Only append separator if not already there!
 #else
-		TITANIUM_LOG_WARN("Filesystem.applicationCacheDirectory is not supported on Windows Store.");
+		TITANIUM_MODULE_LOG_WARN("Filesystem.applicationCacheDirectory is not supported on Windows Store.");
 		return "";
 #endif
 	}

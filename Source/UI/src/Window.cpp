@@ -7,14 +7,15 @@
  */
 
 #include "TitaniumWindows/UI/Window.hpp"
-#include "TitaniumWindows/UI/View.hpp"
-#include "TitaniumWindows/UI/Windows/CommandBar.hpp"
-#include "TitaniumWindows/UI/Tab.hpp"
 #include "Titanium/App.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UIModule.hpp"
-#include "TitaniumWindows/WindowsMacros.hpp"
 #include <windows.h>
+#include "TitaniumWindows/WindowsMacros.hpp"
+#include "TitaniumWindows/UI/View.hpp"
+#include "TitaniumWindows/UI/Windows/CommandBar.hpp"
+#include "TitaniumWindows/UI/Tab.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
@@ -159,7 +160,7 @@ namespace TitaniumWindows
 					}
 
 					if (!found) {
-						TITANIUM_LOG_WARN("Window.close: Window is not opened or already closed");
+						TITANIUM_MODULE_LOG_WARN("Window.close: Window is not opened or already closed");
 					}
 
 				} else {

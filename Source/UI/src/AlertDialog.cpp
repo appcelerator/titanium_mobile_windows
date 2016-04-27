@@ -7,9 +7,10 @@
 */
 
 #include "TitaniumWindows/UI/AlertDialog.hpp"
-#include "TitaniumWindows/Utility.hpp"
 #include "Titanium/API.hpp"
-#include "Titanium/detail/TiLogger.hpp"
+#include <windows.h>
+#include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
@@ -111,11 +112,11 @@ namespace TitaniumWindows
 		{
 #if defined(IS_WINDOWS_10)
 			if (IS_WINDOWS_MOBILE) {
-				TITANIUM_LOG_WARN("AlertDialog::hide() is not supported on Windows 10 Mobile");
+				TITANIUM_MODULE_LOG_WARN("AlertDialog::hide() is not supported on Windows 10 Mobile");
 				return;
 			}
 #elif defined(IS_WINDOWS_PHONE)
-			TITANIUM_LOG_WARN("AlertDialog::hide() is not supported on Windows Phone");
+			TITANIUM_MODULE_LOG_WARN("AlertDialog::hide() is not supported on Windows Phone");
 			return;
 #endif
 			if (dialog_task__ != nullptr) {

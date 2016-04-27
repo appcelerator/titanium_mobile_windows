@@ -16,6 +16,7 @@
 #include <string>
 #include <algorithm>
 #include <cctype>
+#include <windows.h>
 #include <ppltasks.h>
 #include <concrt.h>
 #include <collection.h>
@@ -23,6 +24,7 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -84,7 +86,7 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::blur()
 		{
-			TITANIUM_LOG_WARN("blur() is not supported on Windows");
+			TITANIUM_MODULE_LOG_WARN("blur() is not supported on Windows");
 		}
 
 		void WindowsViewLayoutDelegate::focus()
@@ -92,7 +94,7 @@ namespace TitaniumWindows
 			if (is_control__) {
 				dynamic_cast<Control^>(component__)->Focus(FocusState::Programmatic);
 			} else {
-				TITANIUM_LOG_WARN("focus() is not supported for this control");
+				TITANIUM_MODULE_LOG_WARN("focus() is not supported for this control");
 			}
 		}
 
@@ -588,7 +590,7 @@ namespace TitaniumWindows
 				}
 				updateBackground(backgroundLinearGradientBrush__);
 			} else {
-				TITANIUM_LOG_WARN("WindowsViewLayoutDelegate::set_backgroundGradient: Only \"linear\" is supported for gradient type on Windows");
+				TITANIUM_MODULE_LOG_WARN("WindowsViewLayoutDelegate::set_backgroundGradient: Only \"linear\" is supported for gradient type on Windows");
 			}
 		}
 

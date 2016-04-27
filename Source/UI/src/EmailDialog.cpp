@@ -7,10 +7,12 @@
  */
 
 #include "TitaniumWindows/UI/EmailDialog.hpp"
-#include "TitaniumWindows/Utility.hpp"
 #include "Titanium/detail/TiLogger.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include <windows.h>
+#include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
@@ -65,7 +67,7 @@ namespace TitaniumWindows
 				});
 			}
 #else
-			TITANIUM_LOG_WARN("[WARN] EmailDialog not supported on Windows Store apps.");
+			TITANIUM_MODULE_LOG_WARN("EmailDialog not supported on Windows Store apps.");
 #endif
 		}
 

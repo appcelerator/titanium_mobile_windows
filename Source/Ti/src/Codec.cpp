@@ -7,9 +7,11 @@
 #include "TitaniumWindows/Codec.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/Buffer.hpp"
-#include "TitaniumWindows/Utility.hpp"
+#include <windows.h>
 #include <ppltasks.h>
 #include <concrt.h>
+#include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
@@ -38,14 +40,14 @@ namespace TitaniumWindows
 		using namespace Windows::Storage::Streams;
 
 		if (options.dest == nullptr) {
-			TITANIUM_LOG_WARN("Codec::encodeNumber: No dest speciied");
+			TITANIUM_MODULE_LOG_WARN("Codec::encodeNumber: No dest speciied");
 			return 0;
 		}
 
 		auto dest_data = options.dest->get_data();
 
 		if (dest_data.size() <= options.position) {
-			TITANIUM_LOG_WARN("Codec::encodeNumber: Invalid position ", options.position, " for data size ", dest_data.size());
+			TITANIUM_MODULE_LOG_WARN("Codec::encodeNumber: Invalid position ", options.position, " for data size ", dest_data.size());
 			return 0;
 		}
 
@@ -152,7 +154,7 @@ namespace TitaniumWindows
 	std::uint32_t Codec::encodeString(const EncodeStringDict& options) TITANIUM_NOEXCEPT
 	{
 		if (options.dest == nullptr) {
-			TITANIUM_LOG_WARN("Codec::encodeString: No dest speciied");
+			TITANIUM_MODULE_LOG_WARN("Codec::encodeString: No dest speciied");
 			return 0;
 		}
 
@@ -194,7 +196,7 @@ namespace TitaniumWindows
 	std::string Codec::decodeString(const DecodeStringDict& options) TITANIUM_NOEXCEPT
 	{
 		if (options.source == nullptr) {
-			TITANIUM_LOG_WARN("Codec::decodeString: No source speciied");
+			TITANIUM_MODULE_LOG_WARN("Codec::decodeString: No source speciied");
 			return "";
 		}
 
