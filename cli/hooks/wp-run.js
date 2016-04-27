@@ -210,23 +210,21 @@ exports.init = function (logger, config, cli) {
 							skipLaunch: true
 					}, opts),
 					appxExtensions = ['.appx', '.appxbundle'],
-					installs = [],
-					isWin10Device = (builder.target == 'wp-device' && builder.wpsdk == '10.0');
+					installs = [];
 
 				function installApp(deviceId, xapFile, opts, next) {
 					// Now install the real app
+					var installed = false;
 					logger.info(__('Installing the application...'));
 					windowslib.install(deviceId, xapFile, appc.util.mix({
-								appGuid: builder.phoneProductId,
-								// launching an app on Win 10 device fails right now!
-								skipLaunch: isWin10Device
+								appGuid: builder.phoneProductId
 							}, opts))
+						.on('launched', function () {
+							logger.info(__('Finished launching the application'));
+						})
 						.on('installed', function (handle) {
-							if (isWin10Device) {
-								logger.warn(__('Due to a bug in Windows tooling, we are unable to launch apps for you on Windows 10 Mobile devices. Please launch the app manually.'));
-							} else {
-								logger.info(__('Finished launching the application'));
-							}
+							installed = true;
+							logger.info(__('Finished installing the application'));
 
 							// watch for when the emulator is quit, if necessary
 							if (builder.target == 'wp-emulator') {
@@ -260,9 +258,13 @@ exports.init = function (logger, config, cli) {
 							next(err);
 						})
 						.on('error', function (err) {
-							logRelay && logRelay.stop();
-							logger.error(err.message);
-							next(err);
+							if (installed) {
+								logger.warn(__('We were unable to launch the app for you on the device/emulator due to an error (common causes include un-paired devices). Please launch the app manually.'));
+							} else {
+								logRelay && logRelay.stop();
+								logger.error(err.message);
+								next(err);
+							}
 						});
 				}
 
