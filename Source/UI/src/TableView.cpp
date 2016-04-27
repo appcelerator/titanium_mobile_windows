@@ -9,13 +9,14 @@
 #include "TitaniumWindows/UI/TableView.hpp"
 #include "TitaniumWindows/UI/TableViewRow.hpp"
 #include "Titanium/UI/TableViewSection.hpp"
+#include <collection.h>
+#include <windows.h>
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
-
-#include <collection.h>
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
@@ -386,7 +387,7 @@ namespace TitaniumWindows
 				auto rows = static_cast<Vector<UIElement^>^>(collectionViewItems__->GetAt(result.sectionIndex));
 				tableview__->ScrollIntoView(rows->GetAt(result.rowIndex));
 			} else {
-				TITANIUM_LOG_WARN("TableView::scrollToIndex: Invalid row index ", index);
+				TITANIUM_MODULE_LOG_WARN("TableView::scrollToIndex: Invalid row index ", index);
 			}
 		}
 

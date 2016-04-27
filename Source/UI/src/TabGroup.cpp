@@ -71,7 +71,7 @@ namespace TitaniumWindows
 				const bool found = listview->Items->IndexOf(e->ClickedItem, &selectedIndex);
 				if (!found) return;
 
-				TITANIUM_LOG_WARN(tabs__.size() > selectedIndex);
+				TITANIUM_ASSERT(tabs__.size() > selectedIndex);
 				set_activeTab(tabs__.at(selectedIndex));
 			});
 

@@ -9,7 +9,6 @@
 #ifndef _TITANIUM_DETAIL_TILOGGER_HPP_
 #define _TITANIUM_DETAIL_TILOGGER_HPP_
 
-#include "Titanium/detail/TiLoggerPimpl.hpp"
 #include "Titanium/detail/TiLoggerPolicyConsole.hpp"
 #include <sstream>
 #include <iomanip>
@@ -130,19 +129,19 @@ namespace Titanium
 
 			switch (severity) {
 				case TiLoggerSeverityType::Ti_TRACE:
-					log_stream__ << "TRACE: ";
+					log_stream__ << "[TRACE] ";
 					break;
 				case TiLoggerSeverityType::Ti_DEBUG:
-					log_stream__ << "DEBUG: ";
+					log_stream__ << "[DEBUG] ";
 					break;
 				case TiLoggerSeverityType::Ti_INFO:
-					log_stream__ << "INFO: ";
+					log_stream__ << "[INFO] ";
 					break;
 				case TiLoggerSeverityType::Ti_WARN:
-					log_stream__ << "WARN: ";
+					log_stream__ << "[WARN] ";
 					break;
 				case TiLoggerSeverityType::Ti_ERROR:
-					log_stream__ << "ERROR: ";
+					log_stream__ << "[ERROR] ";
 					break;
 			};
 
@@ -152,7 +151,7 @@ namespace Titanium
 		template <typename TiLoggerPolicy>
 		void TiLogger<TiLoggerPolicy>::PrintImpl()
 		{
-			ti_log_policy__.Write(TiLoggerPimpl::GetLoglineHeader(log_line_number__++) + log_stream__.str() + ".");
+			ti_log_policy__.Write(log_stream__.str());
 			log_stream__.str("");
 		}
 

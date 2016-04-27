@@ -10,31 +10,10 @@
 #define _TITANIUMWINDOWS_LOGFORWARDER_HPP_
 
 #include "TitaniumWindows_Utility_EXPORT.h"
+#include <string>
+#include "Titanium/detail/TiLoggerPolicyInterface.hpp"
+#include "Titanium/detail/TiLogger.hpp"
 #include <agents.h>
-
-// 
-// Logging macro for module debugging:
-// TITANIUM_MODULE_LOG_INFO("value: " << value);
-//
-#define TITANIUM_MODULE_LOG(level, expr) \
-	{ const auto message = static_cast<::std::ostringstream&>(std::ostringstream() << level << expr).str();  concurrency::asend(TitaniumWindows::LogForwarder::buffer__, message); }
-#define TITANIUM_MODULE_LOG_TRACE(expr) TITANIUM_MODULE_LOG("[TRACE] ", expr)
-#define TITANIUM_MODULE_LOG_DEBUG(expr) TITANIUM_MODULE_LOG("[DEBUG] ", expr)
-#define TITANIUM_MODULE_LOG_INFO(expr)  TITANIUM_MODULE_LOG("[INFO] ",  expr)
-#define TITANIUM_MODULE_LOG_WARN(expr)  TITANIUM_MODULE_LOG("[WARN] ",  expr)
-#define TITANIUM_MODULE_LOG_ERROR(expr) TITANIUM_MODULE_LOG("[ERROR] ", expr)
-
-// 
-// Logging macro for background module debugging: 
-// TITANIUM_MODULE_LOG_INFO_BACKGROUND("value: " << value);
-//
-#define TITANIUM_MODULE_LOG_BACKGROUND(level, expr) \
-	{ const auto message = static_cast<::std::ostringstream&>(std::ostringstream() << level << expr).str(); const auto logger = std::make_shared<TitaniumWindows::LogForwarder>(); logger->logSync(message); }
-#define TITANIUM_MODULE_LOG_TRACE_BACKGROUND(expr) TITANIUM_MODULE_LOG_BACKGROUND("[TRACE] ", expr)
-#define TITANIUM_MODULE_LOG_DEBUG_BACKGROUND(expr) TITANIUM_MODULE_LOG_BACKGROUND("[DEBUG] ", expr)
-#define TITANIUM_MODULE_LOG_INFO_BACKGROUND(expr)  TITANIUM_MODULE_LOG_BACKGROUND("[INFO] ",  expr)
-#define TITANIUM_MODULE_LOG_WARN_BACKGROUND(expr)  TITANIUM_MODULE_LOG_BACKGROUND("[WARN] ",  expr)
-#define TITANIUM_MODULE_LOG_ERROR_BACKGROUND(expr) TITANIUM_MODULE_LOG_BACKGROUND("[ERROR] ", expr)
 
 namespace TitaniumWindows
 {
@@ -79,7 +58,76 @@ namespace TitaniumWindows
 		void connect();
 	};
 
+	class TiLoggerPolicyAsyncLogRelay final : public Titanium::detail::TiLoggerPolicyInterface
+	{
+	public:
+		TiLoggerPolicyAsyncLogRelay(const std::string& name)
+		{
+		}
+
+		TiLoggerPolicyAsyncLogRelay()  = delete;
+		~TiLoggerPolicyAsyncLogRelay() = default;
+		TiLoggerPolicyAsyncLogRelay(const TiLoggerPolicyAsyncLogRelay&) = default;
+		TiLoggerPolicyAsyncLogRelay& operator=(const TiLoggerPolicyAsyncLogRelay&) = default;
+
+#ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
+		TiLoggerPolicyAsyncLogRelay(TiLoggerPolicyAsyncLogRelay&&) = default;
+		TiLoggerPolicyAsyncLogRelay& operator=(TiLoggerPolicyAsyncLogRelay&&) = default;
+#endif
+
+		virtual void Write(const std::string& log_message) override final
+ 		{
+ 			concurrency::asend(LogForwarder::buffer__, log_message);
+		}
+	};
+
+	class TiLoggerPolicyAsyncBackgroundLogRelay final : public Titanium::detail::TiLoggerPolicyInterface
+	{
+	public:
+		TiLoggerPolicyAsyncBackgroundLogRelay(const std::string& name)
+		{
+		}
+
+		TiLoggerPolicyAsyncBackgroundLogRelay()  = delete;
+		~TiLoggerPolicyAsyncBackgroundLogRelay() = default;
+		TiLoggerPolicyAsyncBackgroundLogRelay(const TiLoggerPolicyAsyncBackgroundLogRelay&) = default;
+		TiLoggerPolicyAsyncBackgroundLogRelay& operator=(const TiLoggerPolicyAsyncBackgroundLogRelay&) = default;
+
+#ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
+		TiLoggerPolicyAsyncBackgroundLogRelay(TiLoggerPolicyAsyncBackgroundLogRelay&&) = default;
+		TiLoggerPolicyAsyncBackgroundLogRelay& operator=(TiLoggerPolicyAsyncBackgroundLogRelay&&) = default;
+#endif
+
+		virtual void Write(const std::string& log_message) override final
+ 		{
+			const auto logger = std::make_shared<LogForwarder>();
+			logger->logSync(log_message);
+		}
+	};
 }  // namespace TitaniumWindows
+
+// 
+// Logging macro for module debugging:
+// TITANIUM_MODULE_LOG_INFO("value: ", value);
+//
+using TiLogRelayLogger_t = Titanium::detail::TiLogger<TitaniumWindows::TiLoggerPolicyAsyncLogRelay>;
+
+#define TITANIUM_MODULE_LOG_TRACE TiLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_TRACE>
+#define TITANIUM_MODULE_LOG_DEBUG TiLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_DEBUG>
+#define TITANIUM_MODULE_LOG_INFO  TiLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_INFO>
+#define TITANIUM_MODULE_LOG_WARN  TiLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_WARN>
+#define TITANIUM_MODULE_LOG_ERROR TiLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_ERROR>
+
+// 
+// Logging macro for background module debugging: 
+// TITANIUM_MODULE_LOG_INFO_BACKGROUND("value: ", value);
+//
+using TiBackgroundLogRelayLogger_t = Titanium::detail::TiLogger<TitaniumWindows::TiLoggerPolicyAsyncBackgroundLogRelay>;
+#define TITANIUM_MODULE_LOG_TRACE_BACKGROUND TiBackgroundLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_TRACE>
+#define TITANIUM_MODULE_LOG_DEBUG_BACKGROUND TiBackgroundLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_DEBUG>
+#define TITANIUM_MODULE_LOG_INFO_BACKGROUND  TiBackgroundLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_INFO>
+#define TITANIUM_MODULE_LOG_WARN_BACKGROUND  TiBackgroundLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_WARN>
+#define TITANIUM_MODULE_LOG_ERROR_BACKGROUND TiBackgroundLogRelayLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_ERROR>
 
 
 #endif  // _TITANIUMWINDOWS_LOGFORWARDER_HPP_

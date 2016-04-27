@@ -12,7 +12,9 @@
 #include "Titanium/UI/PickerRow.hpp"
 #include "TitaniumWindows/UI/PickerRow.hpp"
 #include "TitaniumWindows/UI/PickerColumn.hpp"
+#include <windows.h>
 #include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
@@ -162,7 +164,7 @@ namespace TitaniumWindows
 					plainPicker__->SetRow(picker, 0);
 				}
 			} else {
-				TITANIUM_LOG_WARN("Picker::add: Unable to modify columns. This only works with plain picker");
+				TITANIUM_MODULE_LOG_WARN("Picker::add: Unable to modify columns. This only works with plain picker");
 			}
 		}
 

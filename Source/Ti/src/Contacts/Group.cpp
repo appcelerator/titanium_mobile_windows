@@ -7,12 +7,14 @@
  */
 
 #include "TitaniumWindows/Contacts.hpp"
+#include <memory>
+#include <windows.h>
+#include <memory>
 #include "TitaniumWindows/Contacts/Group.hpp"
 #include "TitaniumWindows/Contacts/Person.hpp"
-#include "Titanium/detail/TiBase.hpp"
-#include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/Contacts/group_js.hpp"
-#include <memory>
+#include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
@@ -96,7 +98,7 @@ namespace TitaniumWindows
 		{
 			// See https://msdn.microsoft.com/en-us/library/windows/apps/windows.applicationmodel.contacts.contactnameorder.aspx
 			// https://msdn.microsoft.com/en-us/library/windows/apps/windows.applicationmodel.contacts.contactmanager.systemsortorder.aspx
-			TITANIUM_LOG_WARN("Group::sortedMembers: Unimplemented");
+			TITANIUM_MODULE_LOG_WARN("Group::sortedMembers: Unimplemented");
 			// TODO Just grab all the members and sort them ourself?
 			return members();
 		}
@@ -134,7 +136,7 @@ namespace TitaniumWindows
 
 		void Group::set_recordId(const uint32_t& recordId) TITANIUM_NOEXCEPT
 		{
-			TITANIUM_LOG_WARN("Group::recordId property is read-only");
+			TITANIUM_MODULE_LOG_WARN("Group::recordId property is read-only");
 		}
 
 		JSObject Group::GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT

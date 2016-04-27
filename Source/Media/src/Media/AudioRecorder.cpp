@@ -5,10 +5,12 @@
  */
 
 #include "TitaniumWindows/Media/AudioRecorder.hpp"
-#include "TitaniumWindows/Utility.hpp"
-#include "Titanium/detail/TiImpl.hpp"
+#include <windows.h>
 #include <ppltasks.h>
 #include <concrt.h>
+#include "TitaniumWindows/LogForwarder.hpp"
+#include "TitaniumWindows/Utility.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 
 namespace TitaniumWindows
 {
@@ -50,7 +52,7 @@ namespace TitaniumWindows
 					encodingProfile__ = MediaEncodingProfile::CreateWav(AudioEncodingQuality::Auto);
 					break;
 				default:
-					TITANIUM_LOG_WARN("AudioRecorder: Unsupported audio format");
+					TITANIUM_MODULE_LOG_WARN("AudioRecorder: Unsupported audio format");
 					return;
 			}
 			Titanium::Media::AudioRecorder::set_format(format);
@@ -74,18 +76,18 @@ namespace TitaniumWindows
 
 						mediaCapture->RecordLimitationExceeded += ref new RecordLimitationExceededEventHandler(
 							[=](MediaCapture^ sender) {
-								TITANIUM_LOG_WARN("AudioRecorder: Stopping, exceeding max record duration");
+								TITANIUM_MODULE_LOG_WARN("AudioRecorder: Stopping, exceeding max record duration");
 								stop();
 							}
 						);
 						mediaCapture->Failed += ref new MediaCaptureFailedEventHandler(
 							[=](MediaCapture^ sender, MediaCaptureFailedEventArgs^ e) {
-								TITANIUM_LOG_WARN("AudioRecorder: Failed to capture audio: ", TitaniumWindows::Utility::ConvertString(e->Message));
+							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to capture audio: ", TitaniumWindows::Utility::ConvertString(e->Message));
 								stop();
 							}
 						);
 					} catch (Platform::Exception ^ e) {
-						TITANIUM_LOG_ERROR("AudioRecorder: Failed to initialize audio capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
+						TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to initialize audio capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
 					}
 
 					std::string fileName = "AudioRecording";
@@ -134,7 +136,7 @@ namespace TitaniumWindows
 							state__ = Titanium::Media::RecordingState::Stopped;
 							delete(mediaCapture__.Get());
 						} catch (Platform::Exception ^e) {
-							TITANIUM_LOG_WARN("AudioRecorder: Failed to stop recording: ", TitaniumWindows::Utility::ConvertString(e->Message));
+							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop recording: ", TitaniumWindows::Utility::ConvertString(e->Message));
 						}
 					}
 				);
@@ -144,7 +146,7 @@ namespace TitaniumWindows
 						delete(mediaCapture__.Get());
 					}
 				} catch (Platform::Exception ^e) {
-					TITANIUM_LOG_WARN("AudioRecorder: Failed to stop audio capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
+					TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop audio capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
 				}
 			}
 
@@ -181,13 +183,13 @@ namespace TitaniumWindows
 							pauseTask.get();
 							state__ = Titanium::Media::RecordingState::Paused;
 						} catch (Platform::Exception ^e) {
-							TITANIUM_LOG_WARN("AudioRecorder: Failed to pause recording: ", TitaniumWindows::Utility::ConvertString(e->Message));
+							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to pause recording: ", TitaniumWindows::Utility::ConvertString(e->Message));
 						}
 					}
 				);
 			}
 #else
-			TITANIUM_LOG_WARN("AudioRecorder::pause: Unsupported on this version of Windows");
+			TITANIUM_MODULE_LOG_WARN("AudioRecorder::pause: Unsupported on this version of Windows");
 #endif
 		}
 
@@ -201,13 +203,13 @@ namespace TitaniumWindows
 							resumeTask.get();
 							state__ = Titanium::Media::RecordingState::Recording;
 						} catch (Platform::Exception ^e) {
-							TITANIUM_LOG_WARN("AudioRecorder: Failed to resume recording: ", TitaniumWindows::Utility::ConvertString(e->Message));
+							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to resume recording: ", TitaniumWindows::Utility::ConvertString(e->Message));
 						}
 					}
 				);
 			}
 #else
-			TITANIUM_LOG_WARN("AudioRecorder::resume: Unsupported on this version of Windows");
+			TITANIUM_MODULE_LOG_WARN("AudioRecorder::resume: Unsupported on this version of Windows");
 #endif
 		}
 	}

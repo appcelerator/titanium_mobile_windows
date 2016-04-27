@@ -4,12 +4,14 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#include <windows.h>
 #include "TitaniumWindows/Network/HTTPClient.hpp"
 #include "Titanium/detail/TiLogger.hpp"
-#include "TitaniumWindows/Utility.hpp"
 
 #include <collection.h>
 #include <ppl.h>
+#include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 using namespace concurrency;
 
@@ -118,7 +120,7 @@ namespace TitaniumWindows
 		void HTTPClient::send(const std::map<std::string, std::vector<std::uint8_t>>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
 		{
 			if (method__ == Titanium::Network::RequestMethod::Get) {
-				TITANIUM_LOG_WARN("HTTPClient::send: Data found during a GET request. Method will be changed to POST.");
+				TITANIUM_MODULE_LOG_WARN("HTTPClient::send: Data found during a GET request. Method will be changed to POST.");
 				method__ = Titanium::Network::RequestMethod::Post;
 			}
 

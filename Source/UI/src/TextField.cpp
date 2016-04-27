@@ -7,9 +7,11 @@
 */
 
 #include "TitaniumWindows/UI/TextField.hpp"
+#include "Titanium/detail/TiImpl.hpp"
+#include <windows.h>
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"
-#include "Titanium/detail/TiImpl.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
 {
@@ -208,7 +210,7 @@ namespace TitaniumWindows
 				text_box__->InputScope->Names->Clear();
 				text_box__->InputScope->Names->Append(scope_name);
 			} else {
-				TITANIUM_LOG_WARN("TextField.keyboardType can not be used with passwordMask");
+				TITANIUM_MODULE_LOG_WARN("TextField.keyboardType can not be used with passwordMask");
 			}
 		}
 
