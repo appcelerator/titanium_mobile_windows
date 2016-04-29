@@ -147,7 +147,7 @@ namespace Titanium
 			API_UNKNOWN
 		};
 
-		void log(LogSeverityLevel log_severity_level, const std::string& message) const TITANIUM_NOEXCEPT;
+		void log(LogSeverityLevel log_severity_level, const std::string& message, const std::string& custom_level = "") const TITANIUM_NOEXCEPT;
 
 		static LogSeverityLevel ToLogLevel(const std::string& level);
 	};
