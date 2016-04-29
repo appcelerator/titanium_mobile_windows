@@ -10,6 +10,7 @@
 #include "Titanium/detail/TiImpl.hpp"
 #include <unordered_map>
 #include <sstream>
+#include <boost/algorithm/string.hpp>
 
 namespace Titanium
 {
@@ -53,12 +54,12 @@ namespace Titanium
 		log(LogSeverityLevel::API_TRACE, message);
 	}
 
-	void API::log(const std::string& level, const std::string& message) const TITANIUM_NOEXCEPT
+	void API::log(const std::string& custom_level, const std::string& message) const TITANIUM_NOEXCEPT
 	{
-		log(ToLogLevel(level), message);
+		log(ToLogLevel(custom_level), message, custom_level);
 	}
 
-	void API::log(LogSeverityLevel log_severity_level, const std::string& message) const TITANIUM_NOEXCEPT
+	void API::log(LogSeverityLevel log_severity_level, const std::string& message, const std::string& custom_level) const TITANIUM_NOEXCEPT
 	{
 		std::ostringstream os;
 		switch (log_severity_level) {
@@ -82,8 +83,7 @@ namespace Titanium
 				os << "[TRACE] ";
 				break;
 			default:
-				// prints nothings
-				return;
+				os << "[DEBUG] [" << boost::to_upper_copy(custom_level) << "] ";
 		}
 
 		os << message;
