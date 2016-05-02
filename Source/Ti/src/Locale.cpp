@@ -23,14 +23,17 @@ namespace TitaniumWindows
 		const auto region = ref new GeographicRegion(GlobalizationPreferences::HomeGeographicRegion);
 
 		currentCountry__ = TitaniumWindows::Utility::ConvertString(region->CodeTwoLetter);
-		currentLocale__  = TitaniumWindows::Utility::ConvertString(GlobalizationPreferences::Languages->GetAt(0));
+		const auto languages = GlobalizationPreferences::Languages;
+		if (languages->Size > 0) {
+			currentLocale__ = TitaniumWindows::Utility::ConvertString(languages->GetAt(0));
+		} // else default is "en-US"
 
 		const auto pos = currentLocale__.find("-");
 		if (pos != std::string::npos) {
 			currentLanguage__ = currentLocale__.substr(0, pos);
 		} else {
 			currentLanguage__ = currentLocale__;
-			currentLocale__   = currentLocale__ + "-" + currentLanguage__;
+			currentLocale__   = currentLanguage__ + "-" + currentCountry__;
 		}
 	}
 
