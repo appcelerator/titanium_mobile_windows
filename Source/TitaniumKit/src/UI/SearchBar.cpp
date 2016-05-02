@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		SearchBar::SearchBar(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Ti.UI.SearchBar")
+			: View(js_context, "Titanium.UI.SearchBar")
 			, autocapitalization__(TEXT_AUTOCAPITALIZATION::NONE)
 			, autocorrect__(false)
 			, barColor__("")
@@ -47,7 +47,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(SearchBar, std::function<void(const std::string&)>, querySubmitted)
 		TITANIUM_PROPERTY_READWRITE(SearchBar, std::function<std::vector<std::string>(const std::string&)>, suggestionRequested)
 
-		void SearchBar::JSExportInitialize() 
+		void SearchBar::JSExportInitialize()
 		{
 			JSExport<SearchBar>::SetClassVersion(1);
 			JSExport<SearchBar>::SetParent(JSExport<View>::Class());
