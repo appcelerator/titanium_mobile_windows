@@ -392,7 +392,13 @@ namespace TitaniumWindows
 
 		TITANIUM_ASSERT_AND_THROW(!screenCaptureStarted__, "showCamera() can't be used during screen capture.");
 		mediaCapture__ = ref new MediaCapture();
-		concurrency::create_task(mediaCapture__->InitializeAsync()).then([this](concurrency::task<void> initTask) {
+		auto settings = ref new MediaCaptureInitializationSettings();
+		// If not capturing video, don't require audio. This way we don't need "microphone" capability to take a picture
+		if (std::find(options.mediaTypes.begin(), options.mediaTypes.end(), Titanium::Media::MediaType::Video) == options.mediaTypes.end()) {
+			settings->AudioDeviceId = "";
+			settings->StreamingCaptureMode = StreamingCaptureMode::Video;
+		}
+		concurrency::create_task(mediaCapture__->InitializeAsync(settings)).then([this](concurrency::task<void> initTask) {
 			try {
 				initTask.get();
 				auto mediaCapture = mediaCapture__.Get();
@@ -490,7 +496,7 @@ namespace TitaniumWindows
 	{
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		// CreationCollisionOption::GenerateUniqueName generates unique name such as "TiMediaPhoto (2).jpg"
-		concurrency::task<StorageFile^>(KnownFolders::VideosLibrary->CreateFileAsync("TiMediaPhoto.jpg", CreationCollisionOption::GenerateUniqueName)).then([this](concurrency::task<StorageFile^> fileTask) {
+		concurrency::task<StorageFile^>(KnownFolders::CameraRoll->CreateFileAsync("TiMediaPhoto.jpg", CreationCollisionOption::GenerateUniqueName)).then([this](concurrency::task<StorageFile^> fileTask) {
 			try {
 				auto file = fileTask.get();
 
@@ -588,7 +594,7 @@ namespace TitaniumWindows
 	{
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		// CreationCollisionOption::GenerateUniqueName generates unique name such as "TiMediaScreenCapture (2).jpg"
-		concurrency::task<StorageFile^>(KnownFolders::VideosLibrary->CreateFileAsync("TiMediaScreenCapture.jpg", CreationCollisionOption::GenerateUniqueName)).then([this, callback](concurrency::task<StorageFile^> fileTask) {
+		concurrency::task<StorageFile^>(KnownFolders::PicturesLibrary->CreateFileAsync("TiMediaScreenCapture.jpg", CreationCollisionOption::GenerateUniqueName)).then([this, callback](concurrency::task<StorageFile^> fileTask) {
 			try {
 				auto file = fileTask.get();
 
@@ -631,6 +637,7 @@ namespace TitaniumWindows
 		// TODO: Provide an API for customizing capture settings
 		auto settings = ref new MediaCaptureInitializationSettings();
 		settings->VideoSource = screenCapture->VideoSource;
+		settings->AudioDeviceId = ""; // don't require "microphone" capability for a screenshot!
 		settings->StreamingCaptureMode = StreamingCaptureMode::Video;
 
 		JSObject callback = get_context().CreateObject();
@@ -638,7 +645,7 @@ namespace TitaniumWindows
 			callback = static_cast<JSObject>(callback_value);
 		}
 
-		concurrency::create_task(mediaCapture__->InitializeAsync()).then([this, callback](concurrency::task<void> initTask) {
+		concurrency::create_task(mediaCapture__->InitializeAsync(settings)).then([this, callback](concurrency::task<void> initTask) {
 			try {
 				initTask.get();
 				auto mediaCapture = mediaCapture__.Get();
