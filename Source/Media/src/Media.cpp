@@ -19,6 +19,7 @@
 #include "TitaniumWindows/LogForwarder.hpp"
 #include "TitaniumWindows/AppModule.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include "TitaniumWindows/Blob.hpp"
 
 #define GET_TITANIUM_APP(VARNAME) \
   const auto ctx = get_context(); \
@@ -42,6 +43,9 @@ namespace TitaniumWindows
 	using namespace Windows::UI::Xaml::Controls;
 	using namespace Platform::Collections;
 	using namespace Windows::Foundation::Collections;
+	using namespace Windows::Graphics::Display;
+	using namespace Windows::Graphics::Imaging;
+	using namespace Windows::Storage;
 	using namespace Windows::Storage::Search;
 	using namespace concurrency;
 
@@ -373,6 +377,27 @@ namespace TitaniumWindows
 			} catch (Platform::Exception^ e) {
 				TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to stop camera preview: ", TitaniumWindows::Utility::ConvertString(e->Message));
 			}
+
+			if (cameraOverlay__) {
+				const std::vector<JSValue> remove_args = { cameraOverlay__->get_object() };
+				auto window = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI.currentWindow"));
+				static_cast<JSObject>(window.GetProperty("remove"))(remove_args, window);
+				cameraOverlay__ = nullptr;
+			}
+
+			if (shouldRemoveRotationEvent__) {
+				DisplayInformation::GetForCurrentView()->OrientationChanged -= camera_orientation_event__;
+				shouldRemoveRotationEvent__ = false;
+			}
+
+			// Clear showCamera callbacks
+			JSValue empty = get_context().CreateNull();
+			cameraCallbacks__.cancel  = empty;
+			cameraCallbacks__.error   = empty;
+			cameraCallbacks__.success = empty;
+
+			takingPictureState__ = nullptr;
+
 			TitaniumWindows::Utility::RemoveViewFromCurrentWindow(captureElement__);
 			captureElement__->Source = nullptr;
 			cameraPreviewStarted__ = false;
@@ -380,6 +405,48 @@ namespace TitaniumWindows
 		});
 #endif
 	}
+
+	FileProperties::PhotoOrientation MediaModule::toPhotoOrientation()
+	{
+		switch (DisplayInformation::GetForCurrentView()->CurrentOrientation)
+		{
+		case DisplayOrientations::Portrait:
+			return FileProperties::PhotoOrientation::Rotate270;
+		case DisplayOrientations::LandscapeFlipped:
+			return FileProperties::PhotoOrientation::Rotate180;
+		case DisplayOrientations::PortraitFlipped:
+			return FileProperties::PhotoOrientation::Rotate90;
+		case DisplayOrientations::Landscape:
+		default:
+			return FileProperties::PhotoOrientation::Normal;
+		}
+	}
+
+	std::uint32_t MediaModule::orientationToDegrees()
+	{
+		switch (DisplayInformation::GetForCurrentView()->CurrentOrientation) {
+		case DisplayOrientations::Portrait:
+			return 90;
+		case DisplayOrientations::LandscapeFlipped:
+			return 180;
+		case DisplayOrientations::PortraitFlipped:
+			return 270;
+		case DisplayOrientations::Landscape:
+		default:
+			return 0;
+		}
+	}
+
+#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+	void MediaModule::updatePreviewOrientation()
+	{
+		// Set rotation for preview
+		const GUID RotationKey = { 0xC380465D, 0x2271, 0x428C, { 0x9B, 0x83, 0xEC, 0xEA, 0x3B, 0x4A, 0x85, 0xC1 } };
+		const auto props = mediaCapture__->VideoDeviceController->GetMediaStreamProperties(Windows::Media::Capture::MediaStreamType::VideoPreview);
+		props->Properties->Insert(RotationKey, orientationToDegrees());
+		mediaCapture__->SetEncodingPropertiesAsync(Windows::Media::Capture::MediaStreamType::VideoPreview, props, nullptr);
+	}
+#endif
 
 	void MediaModule::showCamera(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT
 	{
@@ -398,25 +465,67 @@ namespace TitaniumWindows
 			settings->AudioDeviceId = "";
 			settings->StreamingCaptureMode = StreamingCaptureMode::Video;
 		}
-		concurrency::create_task(mediaCapture__->InitializeAsync(settings)).then([this](concurrency::task<void> initTask) {
+
+		if (options.autorotate) {
+			camera_orientation_event__ = DisplayInformation::GetForCurrentView()->OrientationChanged += 
+				ref new TypedEventHandler<DisplayInformation^, Platform::Object^>([this](DisplayInformation^ sender, Platform::Object^ args) {
+				updatePreviewOrientation();
+
+				const auto currentBounds = Windows::UI::Xaml::Window::Current->Bounds;
+				captureElement__->Width = currentBounds.Width;
+				captureElement__->Height = currentBounds.Height;
+			});
+			shouldRemoveRotationEvent__ = true;
+		}
+
+		shouldHideAfterTakingShot__ = options.autohide;
+
+		cameraCallbacks__ = options.callbacks;
+
+		concurrency::create_task(mediaCapture__->InitializeAsync(settings)).then([options, this](concurrency::task<void> initTask) {
 			try {
 				initTask.get();
 				auto mediaCapture = mediaCapture__.Get();
 				captureElement__->Source = mediaCapture;
 				this->cameraPreviewStarted__ = true;
 
-				concurrency::create_task(mediaCapture->StartPreviewAsync()).then([this](concurrency::task<void> previewTask) {
+				concurrency::create_task(mediaCapture->StartPreviewAsync()).then([options, this](concurrency::task<void> previewTask) {
 					try {
+						const auto mediaCapture = mediaCapture__.Get();
+
+						updatePreviewOrientation();
+
 						previewTask.get();
 					} catch (Platform::Exception^ e) {
-						TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to start camera preview: ", TitaniumWindows::Utility::ConvertString(e->Message));
+						const std::string errorMessage = "Ti.Media.showCamera() failed to start preview: " + TitaniumWindows::Utility::ConvertString(e->Message);
+						TITANIUM_MODULE_LOG_WARN(errorMessage);
+						Titanium::ErrorResponse error;
+						error.error = errorMessage;
+						error.success = false;
+						options.callbacks.onerror(error);
 					}
 				});
 			} catch (Platform::Exception^ e) {
-				TITANIUM_MODULE_LOG_WARN("MediaModule: Failed to initialize capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
+				const std::string errorMessage = "Ti.Media.showCamera() failed to initialize capture device: " + TitaniumWindows::Utility::ConvertString(e->Message);
+				Titanium::ErrorResponse error;
+				error.error = errorMessage;
+				error.success = false;
+				options.callbacks.onerror(error);
 			}
 		});
-		TitaniumWindows::Utility::SetViewForCurrentWindow(captureElement__, camera_navigated_event__);
+
+		TitaniumWindows::Utility::SetViewForCurrentWindow(captureElement__, camera_navigated_event__, /* visible */ true, /* fullscreen */ true);
+
+		// Add overlay view. Running on UI thread to make sure it's done after SetViewForCurrentWindow.
+		if (options.overlay) {
+			cameraOverlay__ = options.overlay;
+			TitaniumWindows::Utility::RunOnUIThread([this]() {
+				const std::vector<JSValue> add_args = { cameraOverlay__->get_object() };
+				auto window = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI.currentWindow"));
+				static_cast<JSObject>(window.GetProperty("add"))(add_args, window);
+			});
+		}
+
 #else
 		auto cameraCaptureUI = ref new CameraCaptureUI();
 
@@ -495,26 +604,72 @@ namespace TitaniumWindows
 	void MediaModule::takePicture() TITANIUM_NOEXCEPT
 	{
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-		// CreationCollisionOption::GenerateUniqueName generates unique name such as "TiMediaPhoto (2).jpg"
-		concurrency::task<StorageFile^>(KnownFolders::CameraRoll->CreateFileAsync("TiMediaPhoto.jpg", CreationCollisionOption::GenerateUniqueName)).then([this](concurrency::task<StorageFile^> fileTask) {
-			try {
-				auto file = fileTask.get();
+		takingPictureState__ = ref new TakingPictureState();
+		takingPictureState__->orientation = toPhotoOrientation();
 
-				// TODO: Provide an API to customize capture settings
-				ImageEncodingProperties^ properties = ImageEncodingProperties::CreateJpeg();
-				concurrency::create_task(mediaCapture__->CapturePhotoToStorageFileAsync(properties, file)).then([this, file](concurrency::task<void> recordTask) {
-					try {
-						recordTask.get();
-					} catch (Platform::Exception^ e) {
-						const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-						TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start taking photo: ", message);
+		auto instream = ref new Streams::InMemoryRandomAccessStream();
+
+		// TODO: Provide an API to customize capture settings
+		ImageEncodingProperties^ properties = ImageEncodingProperties::CreateJpeg();
+		concurrency::create_task(mediaCapture__->CapturePhotoToStreamAsync(properties, instream)).then([instream]() {
+			return concurrency::create_task(BitmapDecoder::CreateAsync(instream));
+		}).then([this](BitmapDecoder^ decoder) {
+			takingPictureState__->decoder = decoder;
+			// CreationCollisionOption::GenerateUniqueName generates unique name such as "TiMediaPhoto (2).jpg"
+			return KnownFolders::CameraRoll->CreateFileAsync("TiMediaPhoto.jpg", CreationCollisionOption::GenerateUniqueName);
+		}).then([this](StorageFile^ file) {
+			takingPictureState__->file = file;
+			return concurrency::create_task(takingPictureState__->file->OpenAsync(FileAccessMode::ReadWrite));
+		}).then([this](Streams::IRandomAccessStream^ outstream) {
+			takingPictureState__->outstream = outstream;
+			return concurrency::create_task(BitmapEncoder::CreateForTranscodingAsync(outstream, takingPictureState__->decoder));
+		}).then([this](BitmapEncoder^ encoder) {
+			takingPictureState__->encoder = encoder;
+			auto properties = ref new BitmapPropertySet();
+			properties->Insert("System.Photo.Orientation", ref new BitmapTypedValue((unsigned short)takingPictureState__->orientation, Windows::Foundation::PropertyType::UInt16));
+			return concurrency::create_task(takingPictureState__->encoder->BitmapProperties->SetPropertiesAsync(properties));
+		}).then([this]() {
+			return concurrency::create_task(takingPictureState__->encoder->FlushAsync());
+		}).then([this](){
+			return concurrency::create_task(takingPictureState__->outstream->FlushAsync());
+		}).then([this](bool) {
+			try {
+				const auto media_filename = takingPictureState__->file->Path;
+
+				// reset state
+				takingPictureState__->decoder = nullptr;
+				takingPictureState__->encoder = nullptr;
+				takingPictureState__->outstream = nullptr;
+				takingPictureState__->file    = nullptr;
+
+				TitaniumWindows::Utility::RunOnUIThread([this, media_filename]() {
+					// autohide
+					if (shouldHideAfterTakingShot__) {
+						this->hideCamera();
+						shouldHideAfterTakingShot__ = false;
+					}
+
+					if (cameraCallbacks__.success.IsObject()) {
+						Titanium::Media::CameraMediaItemType item;
+						item.mediaType = Titanium::Media::MediaType::Photo;
+						item.media_filename = TitaniumWindows::Utility::ConvertUTF8String(media_filename);
+
+						cameraCallbacks__.onsuccess(item);
 					}
 				});
-			} catch (Platform::Exception^ e) {
-				const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-				TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start taking photo: ", message);
+			} catch (Platform::COMException^ e) {
+				TitaniumWindows::Utility::RunOnUIThread([this, e]() {
+					const std::string message = TitaniumWindows::Utility::ConvertString(e->Message);
+					TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start taking photo: ", message);
+					if (cameraCallbacks__.error.IsObject()) {
+						Titanium::ErrorResponse error;
+						error.error = message;
+						error.success = false;
+						cameraCallbacks__.onerror(error);
+					}
+				});
 			}
-	});
+		});
 #else
 		TITANIUM_MODULE_LOG_WARN("MediaModule::takePicture: Not available for Windows Store app");
 #endif
@@ -726,6 +881,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		, fileOpenForMusicLibraryCallback__(createFileOpenForMusicLibraryFunction(js_context))
 		, fileOpenForPhotoGalleryCallback__(createFileOpenForPhotoGalleryFunction(js_context))
+		, cameraCallbacks__(Titanium::Media::create_empty_CameraOptionsTypeCallbacks(js_context))
 #endif
 		, openPhotoGalleryOptionsState__(Titanium::Media::create_empty_PhotoGalleryOptionsType(js_context))
 		, openMusicLibraryOptionsState__(Titanium::Media::create_empty_MusicLibraryOptionsType(js_context))
@@ -734,6 +890,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		vibrate_timers__ = ref new Vector<DispatcherTimer^>();
 		captureElement__ = ref new CaptureElement();
+		captureElement__->Stretch = Media::Stretch::Fill;
 #endif
 	}
 

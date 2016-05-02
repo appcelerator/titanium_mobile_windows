@@ -35,9 +35,12 @@ namespace Titanium
 			std::shared_ptr<Titanium::Blob> media;
 			MediaType mediaType;
 			bool success { true };
+
+			// we don't want to instantiate Blob object when file exists. 
+			// in that case we just hold file name, and create Blob object only on demand.
+			std::string media_filename;
 		};
 		
-		TITANIUMKIT_EXPORT CameraMediaItemType js_to_CameraMediaItemType(const JSObject& object);
 		TITANIUMKIT_EXPORT JSObject CameraMediaItemType_to_js(const JSContext& js_context, const CameraMediaItemType& config);
 		
 	} // namespace Media

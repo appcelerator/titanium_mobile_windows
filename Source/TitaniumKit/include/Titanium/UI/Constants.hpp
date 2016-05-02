@@ -621,11 +621,11 @@ namespace Titanium
 		  @constant PX Unit constant representing units in pixels.
 		*/
 		enum class TITANIUMKIT_EXPORT UNIT {
-			CM,
-			DIP,
-			IN,
-			MM,
-			PX
+			Cm,
+			Dip,
+			In,
+			Mm,
+			Px
 		};
 
 		/*!

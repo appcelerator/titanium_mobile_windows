@@ -304,7 +304,7 @@ namespace TitaniumWindows
 			return std::chrono::time_point<std::chrono::system_clock>(std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(base_date_msec + time_msec)));
 		}
 
-		void RemoveViewFromCurrentWindow(Windows::UI::Xaml::UIElement^ view) 
+		void RemoveViewFromCurrentWindow(Windows::UI::Xaml::FrameworkElement^ view)
 		{
 			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
 			TITANIUM_ASSERT_AND_THROW(rootFrame->Content, "Could not get content from current Window");
@@ -329,21 +329,26 @@ namespace TitaniumWindows
 
 
 		// Add hidden UI onto current Window
-		void SetHiddenViewForCurrentWindow(Windows::UI::Xaml::UIElement^ view, Windows::Foundation::EventRegistrationToken& token) 
+		void SetHiddenViewForCurrentWindow(Windows::UI::Xaml::FrameworkElement^ view, Windows::Foundation::EventRegistrationToken& token)
 		{
-			SetViewForCurrentWindow(view, token, false);
+			SetViewForCurrentWindow(view, token, false, false);
 		}
 
-		void SetViewForCurrentWindow(Windows::UI::Xaml::UIElement^ view, Windows::Foundation::EventRegistrationToken& token, const bool& visible)
+		void SetViewForCurrentWindow(Windows::UI::Xaml::FrameworkElement^ view, Windows::Foundation::EventRegistrationToken& token, const bool& visible, const bool& fullscreen)
 		{
 			view->Visibility = visible ? Windows::UI::Xaml::Visibility::Visible : Windows::UI::Xaml::Visibility::Collapsed;
 			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
-			const auto registerUI = ref new Windows::UI::Core::DispatchedHandler([view, rootFrame]() {
+			const auto registerUI = ref new Windows::UI::Core::DispatchedHandler([view, rootFrame, fullscreen]() {
 				if (rootFrame->Content) {
 					const auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
 					if (page && page->Content) {
 						const auto content = static_cast<Windows::UI::Xaml::Controls::Panel^>(page->Content);
 						if (content) {
+							if (fullscreen) {
+								const auto currentBounds = Windows::UI::Xaml::Window::Current->Bounds;
+								view->Width = currentBounds.Width;
+								view->Height = currentBounds.Height;
+							}
 							content->Children->Append(view);
 						}
 					}

@@ -159,17 +159,17 @@ namespace TitaniumWindows
 		//
 		// Add view onto current Window
 		//
-		TITANIUMWINDOWS_UTILITY_EXPORT void SetViewForCurrentWindow(Windows::UI::Xaml::UIElement^ view, Windows::Foundation::EventRegistrationToken& token, const bool& visible = true);
+		TITANIUMWINDOWS_UTILITY_EXPORT void SetViewForCurrentWindow(Windows::UI::Xaml::FrameworkElement^ view, Windows::Foundation::EventRegistrationToken& token, const bool& visible, const bool& fullscreen);
 
 		//
 		// Add hidden view onto current Window
 		//
-		TITANIUMWINDOWS_UTILITY_EXPORT void SetHiddenViewForCurrentWindow(Windows::UI::Xaml::UIElement^ view, Windows::Foundation::EventRegistrationToken& token);
+		TITANIUMWINDOWS_UTILITY_EXPORT void SetHiddenViewForCurrentWindow(Windows::UI::Xaml::FrameworkElement^ view, Windows::Foundation::EventRegistrationToken& token);
 
 		//
 		// Remove view from current Window
 		//
-		TITANIUMWINDOWS_UTILITY_EXPORT void RemoveViewFromCurrentWindow(Windows::UI::Xaml::UIElement^ view);
+		TITANIUMWINDOWS_UTILITY_EXPORT void RemoveViewFromCurrentWindow(Windows::UI::Xaml::FrameworkElement^ view);
 
 		//
 		// Construct Ti.Blob from given path

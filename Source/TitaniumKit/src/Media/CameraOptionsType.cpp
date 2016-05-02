@@ -17,6 +17,17 @@ namespace Titanium
 	{
 		using namespace HAL;
 		
+		CameraOptionsTypeCallbacks create_empty_CameraOptionsTypeCallbacks(const JSContext& js_context)
+		{
+			auto empty = js_context.CreateNull();
+			CameraOptionsTypeCallbacks callbacks{
+				empty,
+				empty,
+				empty
+			};
+			return callbacks;
+		}
+
 		CameraOptionsType js_to_CameraOptionsType(const JSObject& object)
 		{
 			std::vector<MediaType> mediaTypes;
@@ -91,7 +102,7 @@ namespace Titanium
 				JSOBJECT_GETPROPERTY(object, allowEditing, bool, false),
 				JSOBJECT_GETPROPERTY(object, animated, bool, true),
 				JSOBJECT_GETPROPERTY(object, arrowDirection, std::uint32_t, 0),
-				JSOBJECT_GETPROPERTY(object, autohide, bool, false),
+				JSOBJECT_GETPROPERTY(object, autohide, bool, true),
 				JSOBJECT_GETPROPERTY(object, autorotate, bool, true),
 				JSOBJECT_GETPROPERTY(object, isPopOver, bool, false),
 				mediaTypes,

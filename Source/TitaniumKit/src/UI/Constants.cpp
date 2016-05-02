@@ -1623,11 +1623,11 @@ namespace Titanium
 			static std::unordered_map<UNIT, std::string> map;
 			static std::once_flag of;
 			std::call_once(of, []() {
-      map[UNIT::CM]  = "UNIT_CM";
-      map[UNIT::DIP] = "UNIT_DIP";
-      map[UNIT::IN]  = "UNIT_IN";
-      map[UNIT::MM]  = "UNIT_MM";
-      map[UNIT::PX]  = "UNIT_PX";
+      map[UNIT::Cm]  = "UNIT_CM";
+      map[UNIT::Dip] = "UNIT_DIP";
+      map[UNIT::In]  = "UNIT_IN";
+      map[UNIT::Mm]  = "UNIT_MM";
+      map[UNIT::Px]  = "UNIT_PX";
 			});
 
 			std::string string = unknown_string;
@@ -1644,14 +1644,14 @@ namespace Titanium
 			static std::unordered_map<std::string, UNIT> map;
 			static std::once_flag of;
 			std::call_once(of, []() {
-      map["UNIT_CM"]  = UNIT::CM;
-      map["UNIT_DIP"] = UNIT::DIP;
-      map["UNIT_IN"]  = UNIT::IN;
-      map["UNIT_MM"]  = UNIT::MM;
-      map["UNIT_PX"]  = UNIT::PX;
+      map["UNIT_CM"]  = UNIT::Cm;
+      map["UNIT_DIP"] = UNIT::Dip;
+      map["UNIT_IN"]  = UNIT::In;
+      map["UNIT_MM"]  = UNIT::Mm;
+      map["UNIT_PX"]  = UNIT::Px;
 			});
 
-			UNIT unit = UNIT::DIP;
+			UNIT unit = UNIT::Dip;
 			const auto position = map.find(unitName);
 			if (position != map.end()) {
 				unit = position->second;
@@ -1667,14 +1667,14 @@ namespace Titanium
 			static std::unordered_map<std::underlying_type<UNIT>::type, UNIT> map;
 			static std::once_flag of;
 			std::call_once(of, []() {
-      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::CM)]  = UNIT::CM;
-      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::DIP)] = UNIT::DIP;
-      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::IN)]  = UNIT::IN;
-      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::MM)]  = UNIT::MM;
-      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::PX)]  = UNIT::PX;
+      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::Cm)]  = UNIT::Cm;
+      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::Dip)] = UNIT::Dip;
+      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::In)]  = UNIT::In;
+      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::Mm)]  = UNIT::Mm;
+      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::Px)]  = UNIT::Px;
 			});
 
-			UNIT unit = UNIT::DIP;
+			UNIT unit = UNIT::Dip;
 			const auto position = map.find(unit_underlying_type);
 			if (position != map.end()) {
 				unit = position->second;

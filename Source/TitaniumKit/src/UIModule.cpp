@@ -392,23 +392,23 @@ namespace Titanium
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_CM)
 	{
-		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::CM));
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::Cm));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_DIP)
 	{
-		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::DIP));
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::Dip));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_IN)
 	{
-		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::IN));
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::In));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_MM)
 	{
-		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::MM));
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::Mm));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_PX)
 	{
-		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::PX));
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::Px));
 	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNKNOWN)
 	{

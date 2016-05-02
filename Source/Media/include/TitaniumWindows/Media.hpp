@@ -9,9 +9,11 @@
 
 #include "TitaniumWindows_Media_EXPORT.h"
 #include "Titanium/MediaModule.hpp"
+#include "Titanium/Media/CameraOptionsType.hpp"
 #include "Titanium/Media/PhotoGalleryOptionsType.hpp"
 #include "Titanium/Media/MusicLibraryOptionsType.hpp"
 #include "Titanium/detail/TiBase.hpp"
+#include "Titanium/UI/View.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include <agile.h>
 #include <collection.h>
@@ -19,6 +21,16 @@
 namespace TitaniumWindows
 {
 	using namespace HAL;
+
+	ref class TakingPictureState sealed
+	{
+	internal:
+		Windows::Storage::StorageFile^ file;
+		Windows::Graphics::Imaging::BitmapDecoder^ decoder;
+		Windows::Graphics::Imaging::BitmapEncoder^ encoder;
+		Windows::Storage::Streams::IRandomAccessStream^ outstream;
+		Windows::Storage::FileProperties::PhotoOrientation orientation;
+	};
 
 	/*!
 	  @class MediaModule
@@ -164,6 +176,11 @@ namespace TitaniumWindows
 		void takeScreenshotDone(JSObject callback, const std::string& file = "", const bool& hasError = true);
 		void clearScreenshotResources();
 		void takeScreenshotToFile(JSObject callback);
+#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+		void updatePreviewOrientation();
+#endif
+		Windows::Storage::FileProperties::PhotoOrientation toPhotoOrientation();
+		std::uint32_t orientationToDegrees();
 
 		std::vector<std::shared_ptr<Titanium::Media::Item>> getMusicProperties(const std::vector<std::string>& files);
 
@@ -176,14 +193,20 @@ namespace TitaniumWindows
 		Titanium::Media::MusicLibraryOptionsType openMusicLibraryOptionsState__;
 		JSFunction js_beep__;
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+		Titanium::Media::CameraOptionsTypeCallbacks cameraCallbacks__;
+		std::shared_ptr<Titanium::UI::View> cameraOverlay__;
 		bool screenCaptureStarted__{ false };
 		bool cameraPreviewStarted__ { false };
+		bool shouldHideAfterTakingShot__{ false };
+		bool shouldRemoveRotationEvent__{ false };
 		JSFunction fileOpenForMusicLibraryCallback__;
 		JSFunction fileOpenForPhotoGalleryCallback__;
 		::Platform::Agile<Windows::Media::Capture::MediaCapture> mediaCapture__;
 		::Platform::Collections::Vector<Windows::UI::Xaml::DispatcherTimer^>^ vibrate_timers__;
 		Windows::UI::Xaml::Controls::CaptureElement^ captureElement__;
 		Windows::Foundation::EventRegistrationToken camera_navigated_event__;
+		Windows::Foundation::EventRegistrationToken camera_orientation_event__;
+		TakingPictureState^ takingPictureState__;
 #endif
 #pragma warning(pop)
 	};
