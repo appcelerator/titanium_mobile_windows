@@ -125,7 +125,7 @@ namespace Titanium
 	{
 		JSExport<API>::SetClassVersion(1);
 		JSExport<API>::SetParent(JSExport<Module>::Class());
-		
+
 		TITANIUM_ADD_FUNCTION(API, info);
 		TITANIUM_ADD_FUNCTION(API, warn);
 		TITANIUM_ADD_FUNCTION(API, error);
@@ -148,7 +148,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(API, info)
 	{
 		ENSURE_STRING_AT_INDEX(message, 0);
-		
+
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->info(message);
 		return js_context.CreateUndefined();
@@ -157,7 +157,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(API, warn)
 	{
 		ENSURE_STRING_AT_INDEX(message, 0);
-		
+
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->warn(message);
 		return js_context.CreateUndefined();
@@ -166,7 +166,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(API, error)
 	{
 		ENSURE_STRING_AT_INDEX(message, 0);
-		
+
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->error(message);
 		return js_context.CreateUndefined();
@@ -175,7 +175,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(API, debug)
 	{
 		ENSURE_STRING_AT_INDEX(message, 0);
-		
+
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->debug(message);
 		return js_context.CreateUndefined();
@@ -184,7 +184,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(API, trace)
 	{
 		ENSURE_STRING_AT_INDEX(message, 0);
-		
+
 		const auto js_context = this_object.get_context();
 		GetStaticObject(js_context).GetPrivate<API>()->trace(message);
 		return js_context.CreateUndefined();
@@ -192,11 +192,16 @@ namespace Titanium
 
 	TITANIUM_FUNCTION(API, log)
 	{
-		ENSURE_STRING_AT_INDEX(level, 0);
-		ENSURE_STRING_AT_INDEX(message, 1);
-		
 		const auto js_context = this_object.get_context();
-		GetStaticObject(js_context).GetPrivate<API>()->log(level, message);
+		if (arguments.size() == 1) {
+			ENSURE_STRING_AT_INDEX(message, 0);
+			GetStaticObject(js_context).GetPrivate<API>()->log("info", message);
+		} else if (arguments.size() == 2) {
+			ENSURE_STRING_AT_INDEX(level, 0);
+			ENSURE_STRING_AT_INDEX(message, 1);
+			GetStaticObject(js_context).GetPrivate<API>()->log(level, message);
+		}
+
 		return js_context.CreateUndefined();
 	}
 
