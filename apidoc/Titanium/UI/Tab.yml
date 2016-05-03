@@ -1,14 +1,6 @@
 name: Titanium.UI.Tab
 platforms: [windowsphone]
 properties:
-  - name: backgroundDisabledColor
-    platforms: [windowsphone]
-  - name: backgroundDisabledImage
-    platforms: [windowsphone]
-  - name: backgroundFocusedColor
-    platforms: [windowsphone]
-  - name: backgroundFocusedImage
-    platforms: [windowsphone]
   - name: backgroundImage
     platforms: [windowsphone]
   - name: backgroundSelectedColor
@@ -29,22 +21,6 @@ methods:
   - name: open
     platforms: [windowsphone]
   - name: close
-    platforms: [windowsphone]
-  - name: getBackgroundDisabledColor
-    platforms: [windowsphone]
-  - name: setBackgroundDisabledColor
-    platforms: [windowsphone]
-  - name: getBackgroundDisabledImage
-    platforms: [windowsphone]
-  - name: setBackgroundDisabledImage
-    platforms: [windowsphone]
-  - name: getBackgroundFocusedColor
-    platforms: [windowsphone]
-  - name: setBackgroundFocusedColor
-    platforms: [windowsphone]
-  - name: getBackgroundFocusedImage
-    platforms: [windowsphone]
-  - name: setBackgroundFocusedImage
     platforms: [windowsphone]
   - name: getBackgroundImage
     platforms: [windowsphone]
