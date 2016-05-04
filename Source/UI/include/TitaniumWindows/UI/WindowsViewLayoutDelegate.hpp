@@ -147,7 +147,7 @@ namespace TitaniumWindows
 
 			  Default: true
 			*/
-			virtual void set_enabled(const bool& enabled) TITANIUM_NOEXCEPT override;
+			virtual void set_touchEnabled(const bool& enabled) TITANIUM_NOEXCEPT override;
 
 			/*!
 			  @method
@@ -286,7 +286,7 @@ namespace TitaniumWindows
 			  This is an input property for specifying where the view should be positioned, and does not represent the view's calculated position.
 			*/
 			virtual void set_top(const std::string& top) TITANIUM_NOEXCEPT override;
-			
+
 			/*!
 			  @method
 
@@ -436,7 +436,7 @@ namespace TitaniumWindows
 			virtual Titanium::LayoutEngine::Node* getLayoutNode() const TITANIUM_NOEXCEPT
 			{
 				return layout_node__;
-			}	
+			}
 
 			virtual bool isLoaded() const TITANIUM_NOEXCEPT
 			{
@@ -447,7 +447,7 @@ namespace TitaniumWindows
 
 			// compute its fixed size when either width or height (not both) is Ti.UI.SIZE
 			virtual Titanium::LayoutEngine::Rect computeRelativeSize(const double& x, const double& y,  const double& baseWidth, const double& baseHeight);
- 
+
 			static Windows::UI::Color ColorForName(const std::string& colorName);
 			static Windows::UI::Color ColorForHexCode(const std::string& hexCode);
 
