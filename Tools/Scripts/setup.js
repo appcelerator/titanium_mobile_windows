@@ -38,8 +38,8 @@ var async = require('async'),
 	JSC_DIR = 'JavaScriptCore', // directory inside zipfile
 	GTEST_URL = (os.platform() === 'win32') ? 'http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-windows.zip' : 'http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-osx.zip',
 	GTEST_DIR = (os.platform() === 'win32') ? 'gtest-1.7.0-windows' : 'gtest-1.7.0-osx', // directory inside zipfile
-	BOOST_URL = 'http://timobile.appcelerator.com.s3.amazonaws.com/boost_1_57_0.zip',
-	BOOST_DIR = 'boost_1_57_0'; // directory inside zipfile
+	BOOST_URL = 'http://nchc.dl.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.zip',
+	BOOST_DIR = 'boost_1_60_0'; // directory inside zipfile
 
 
 // With node.js on Windows: use symbols available in terminal default fonts
