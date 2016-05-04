@@ -228,6 +228,7 @@ function downloadIfNecessary(envKey, defaultDest, expectedDir, url, next) {
 
 	// Does it already exist, and is it up to date?
 	if (!isUpToDate(destination, url)) {
+		// TODO What if we have local copy already in renamed folder? Look for that first!
 		downloadURL(url, function (filename) {
 			// What if it _does_ exist and is out of date? We should "wipe it", or move it...
 			if (fs.existsSync(destination)) {
@@ -236,14 +237,19 @@ function downloadIfNecessary(envKey, defaultDest, expectedDir, url, next) {
 				var base = path.basename(contents.slice(7), '.zip');
 				var byURL = path.normalize(path.join(destination, '..', base));
 				console.log('Destination for ' + url + ' already exists, moving existing directory to ' + byURL + ' before extracting.');
-				fs.renameSync(destination, byURL);
+				if (!fs.existsSync(byURL)) {
+					wrench.copyDirSyncRecursive(destination, byURL);
+				}
+
+				wrench.rmdirSyncRecursive(destination);
 			}
 			// Extract to parent of destination...
 			var dest = path.normalize(path.join(destination, '..'));
 			extract(filename, dest, true, function() {
 				// Need to rename the extracted directory to match our expected destination!
 				var extractedDir = path.join(dest, expectedDir);
-				fs.renameSync(extractedDir, destination);
+				wrench.copyDirSyncRecursive(extractedDir, destination);
+
 				writeSourceURL(destination, url);
 				next();
 			});

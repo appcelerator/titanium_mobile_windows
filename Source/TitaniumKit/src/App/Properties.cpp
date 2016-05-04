@@ -90,7 +90,7 @@ namespace Titanium
 		JSObject Properties::getObject(const std::string& property, JSObject defaultValue) TITANIUM_NOEXCEPT
 		{
 			if (hasProperty(property)) {
-				const auto string = getString(property, nullptr);
+				const auto string = getString(property, boost::none);
 				if (string) {
 					auto value = get_context().CreateValueFromJSON(*string);
 					if (value.IsObject()) {
