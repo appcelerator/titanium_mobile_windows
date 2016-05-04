@@ -284,7 +284,7 @@ namespace Titanium
 		{
 			ENSURE_STRING_AT_INDEX(property, 0);
 
-			boost::optional<std::string> defaultValue = nullptr;
+			boost::optional<std::string> defaultValue;
 			if (arguments.size() > 1) {
 				const auto _1 = arguments.at(1);
 				if (_1.IsString()) {
