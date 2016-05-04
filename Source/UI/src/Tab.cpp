@@ -45,7 +45,9 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::Tab::set_title(title);
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			pivotItem__->Header = TitaniumWindows::Utility::ConvertUTF8String(title);
+			const auto textBlock = ref new TextBlock();
+			textBlock->Text = TitaniumWindows::Utility::ConvertUTF8String(title);
+			pivotItem__->Header = textBlock;
 #else
 
 #endif
@@ -93,14 +95,19 @@ namespace TitaniumWindows
 		{
 			std::string colorName;
 			if (Titanium::UI::Tab::get_active()) {
-				auto colorName = Titanium::UI::Tab::get_activeColor();
+				colorName = Titanium::UI::Tab::get_activeColor();
 			}
 			else {
-				auto colorName = Titanium::UI::Tab::get_titleColor();
+				colorName = Titanium::UI::Tab::get_titleColor();
+			}
+			// We should use the default colors if the new color is empty!
+			if (colorName.empty()) {
+				return;
 			}
 			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			pivotItem__->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
+			const auto textBlock = safe_cast<Controls::TextBlock^>(pivotItem__->Header);
+			textBlock->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
 #else
 			// FIXME What do we do for Win 8.1 store?
 #endif
