@@ -161,7 +161,7 @@ namespace TitaniumWindows
 				try {
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
 					nativeView->Children->Append(nativeChildView);
-					newView->set_enabled(get_enabled() && newView->get_enabled());
+					newView->set_touchEnabled(get_touchEnabled() && newView->get_touchEnabled());
 				} catch (Platform::Exception^ e) {
 					detail::ThrowRuntimeError("add", Utility::ConvertString(e->Message));
 				}
@@ -248,7 +248,7 @@ namespace TitaniumWindows
 						// write encoded PNG stream to PNG buffer
 						concurrency::create_task(pngStream->ReadAsync(pngBuffer, pngBuffer->Capacity, Windows::Storage::Streams::InputStreamOptions::None)).then(
 							[this_object, callback, pngBuffer](IBuffer^) {
-								
+
 								// create Titanium.Blob from PNG buffer
 								const auto blob = this_object.get_context().CreateObject(JSExport<Titanium::Blob>::Class()).CallAsConstructor();
 								const auto blob_ptr = blob.GetPrivate<Titanium::Blob>();
@@ -594,7 +594,7 @@ namespace TitaniumWindows
 
 				//
 				// Make sure to update the position of the view because StoryBoard doesn't change actual position of it.
-				// 
+				//
 				const auto top = animation->get_top();
 				if (top) {
 					setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, std::to_string(*top));
@@ -732,7 +732,7 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::updateDisabledBackground()
 		{
-			if (get_enabled()) {
+			if (get_touchEnabled()) {
 				if (previousBackgroundBrush__ != nullptr) {
 					updateBackground(previousBackgroundBrush__);
 				}
@@ -761,7 +761,7 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ViewLayoutDelegate::set_backgroundImage(backgroundImage);
 			backgroundImageBrush__ = CreateImageBrushFromPath(backgroundImage);
-			if (get_enabled()) {
+			if (get_touchEnabled()) {
 				updateBackground(backgroundImageBrush__);
 			}
 		}
@@ -770,7 +770,7 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ViewLayoutDelegate::set_backgroundImage("");
 			backgroundImageBrush__ = CreateImageBrushFromBlob(backgroundImage);
-			if (get_enabled()) {
+			if (get_touchEnabled()) {
 				updateBackground(backgroundImageBrush__);
 			}
 		}
@@ -780,7 +780,7 @@ namespace TitaniumWindows
 			Titanium::UI::ViewLayoutDelegate::set_backgroundColor(backgroundColor);
 
 			backgroundColorBrush__ = ref new Media::SolidColorBrush(ColorForName(backgroundColor));
-			if (get_enabled()) {
+			if (get_touchEnabled()) {
 				updateBackground(backgroundColorBrush__);
 			}
 		}
@@ -846,7 +846,7 @@ namespace TitaniumWindows
 			borderColorBrush__ = ref new SolidColorBrush(ColorForName(color));
 
 			if (is_control__ || underlying_control__) {
-				// Xaml::Control descendant has its own border property. 
+				// Xaml::Control descendant has its own border property.
 				// Use it then, it usually works better than Xaml::Border. Note that it doesn't support border radius though...
 				const auto control = underlying_control__ ? underlying_control__ : dynamic_cast<Control^>(component__);
 				control->BorderBrush = borderColorBrush__;
@@ -915,9 +915,9 @@ namespace TitaniumWindows
 			setLayoutProperty(Titanium::LayoutEngine::ValueName::CenterY, std::to_string(center.y));
 		}
 
-		void WindowsViewLayoutDelegate::set_enabled(const bool& enabled) TITANIUM_NOEXCEPT
+		void WindowsViewLayoutDelegate::set_touchEnabled(const bool& enabled) TITANIUM_NOEXCEPT
 		{
-			Titanium::UI::ViewLayoutDelegate::set_enabled(enabled);
+			Titanium::UI::ViewLayoutDelegate::set_touchEnabled(enabled);
 			if (is_control__ || underlying_control__) {
 				if (underlying_control__) {
 					underlying_control__->IsEnabled = enabled;
@@ -928,7 +928,7 @@ namespace TitaniumWindows
 			updateDisabledBackground();
 
 			for (auto child : get_children()) {
-				child->getViewLayoutDelegate()->set_enabled(enabled);
+				child->getViewLayoutDelegate()->set_touchEnabled(enabled);
 			}
 		}
 
@@ -1177,7 +1177,7 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::setDefaultBackground()
 		{
-			if (get_enabled()) {
+			if (get_touchEnabled()) {
 				if (backgroundImageBrush__) {
 					updateBackground(backgroundImageBrush__);
 				} else if (backgroundColorBrush__) {

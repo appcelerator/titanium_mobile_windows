@@ -41,20 +41,17 @@ namespace TitaniumWindows
 			TITANIUM_PROPERTY_UNIMPLEMENTED(backgroundLeftCap);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(backgroundTopCap);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(clipMode);
-			TITANIUM_PROPERTY_UNIMPLEMENTED(enabled);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(focusable);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(overrideCurrentAnimation);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(pullBackgroundColor);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(softKeyboardOnFocus);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(tintColor);
-			TITANIUM_PROPERTY_UNIMPLEMENTED(touchEnabled);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(transform);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(viewShadowRadius);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(viewShadowColor);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(viewShadowOffset);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(horizontalWrap);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(keepScreenOn);
-			TITANIUM_FUNCTION_UNIMPLEMENTED(convertPointToView);
 
 			// Implemented, works with some components which uses Xaml.Controls.Control
 			// But it doesn't work on TI.UI.View because it's Xaml.Controls.Panel

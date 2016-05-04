@@ -20,7 +20,6 @@ namespace Titanium
 			borderWidth__(0),
 			touchEnabled__(true),
 			visible__(true),
-			enabled__(true),
 			defaultWidth__(Titanium::UI::LAYOUT::SIZE),
 			defaultHeight__(Titanium::UI::LAYOUT::SIZE),
 			autoLayoutForHeight__(defaultHeight__),
@@ -29,7 +28,7 @@ namespace Titanium
 			TITANIUM_LOG_DEBUG("ViewLayoutDelegate::ctor ", this);
 		}
 
-		ViewLayoutDelegate::~ViewLayoutDelegate() 
+		ViewLayoutDelegate::~ViewLayoutDelegate()
 		{
 			TITANIUM_LOG_DEBUG("ViewLayoutDelegate::dtor ", this, " with ", children__.size(), " children");
 		}
@@ -307,16 +306,6 @@ namespace Titanium
 			visible__ = visible;
 		}
 
-		bool ViewLayoutDelegate::get_enabled() const TITANIUM_NOEXCEPT
-		{
-			return enabled__;
-		}
-
-		void ViewLayoutDelegate::set_enabled(const bool& enabled) TITANIUM_NOEXCEPT
-		{
-			enabled__ = enabled;
-		}
-
 		std::string ViewLayoutDelegate::get_tintColor() const TITANIUM_NOEXCEPT
 		{
 			return tintColor__;
@@ -491,14 +480,14 @@ namespace Titanium
 		{
 			TITANIUM_LOG_WARN("ViewLayoutDelegate::disableEvent: Unimplemented");
 		}
-		
+
 		void ViewLayoutDelegate::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("ViewLayoutDelegate::enableEvent: Unimplemented");
 		}
 
 		ViewLayoutEventDelegate::ViewLayoutEventDelegate(View* view) TITANIUM_NOEXCEPT :
-			view__(view)	
+			view__(view)
 		{
 
 		}
@@ -512,7 +501,7 @@ namespace Titanium
 		{
 			return view__->get_context();
 		}
-		
+
 		void ViewLayoutEventDelegate::fireEvent(const std::string& name, const JSObject& e)
 		{
 			view__->fireEvent(name, e);
