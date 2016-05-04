@@ -77,6 +77,7 @@ namespace TitaniumWindows
 				window__->blur();
 			}
 			Titanium::UI::Tab::blur();
+			set_titleColorByState();
 		}
 
 		void Tab::focus() 
@@ -85,6 +86,36 @@ namespace TitaniumWindows
 				window__->focus();
 			}
 			Titanium::UI::Tab::focus();
+			set_titleColorByState();
+		}
+
+		void Tab::set_titleColorByState()
+		{
+			std::string colorName;
+			if (Titanium::UI::Tab::get_active()) {
+				auto colorName = Titanium::UI::Tab::get_activeColor();
+			}
+			else {
+				auto colorName = Titanium::UI::Tab::get_titleColor();
+			}
+			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
+#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+			pivotItem__->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
+#else
+			// FIXME What do we do for Win 8.1 store?
+#endif
+		}
+
+		void Tab::set_activeColor(const std::string& colorName) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Tab::set_activeColor(colorName);
+			set_titleColorByState();
+		}
+
+		void Tab::set_titleColor(const std::string& colorName) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Tab::set_titleColor(colorName);
+			set_titleColorByState();
 		}
 
 		void Tab::set_backgroundColor(const std::string& value) TITANIUM_NOEXCEPT
