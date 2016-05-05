@@ -19,11 +19,10 @@ namespace Titanium
 		class TITANIUMKIT_EXPORT TiLoggerPolicyConsole final : public TiLoggerPolicyInterface
 		{
 		public:
-			TiLoggerPolicyConsole(const std::string& name)
+			TiLoggerPolicyConsole()
 			{
 			}
 
-			TiLoggerPolicyConsole() = delete;
 			~TiLoggerPolicyConsole() = default;
 			TiLoggerPolicyConsole(const TiLoggerPolicyConsole&) = default;
 			TiLoggerPolicyConsole& operator=(const TiLoggerPolicyConsole&) = default;

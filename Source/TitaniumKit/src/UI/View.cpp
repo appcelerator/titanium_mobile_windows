@@ -829,13 +829,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, enabled)
 		{
-			TITANIUM_MODULE_LOG_WARN("Ti.UI.View.enabled property is deprecated. Please use touchEnabled.");
+			TITANIUM_API_LOG_WARN("Ti.UI.View.enabled property is deprecated. Please use touchEnabled.");
 			return js_get_touchEnabled();
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, enabled)
 		{
-			TITANIUM_MODULE_LOG_WARN("Ti.UI.View.enabled property is deprecated. Please use touchEnabled.");
+			TITANIUM_API_LOG_WARN("Ti.UI.View.enabled property is deprecated. Please use touchEnabled.");
 			return js_set_touchEnabled(argument);
 		}
 
