@@ -134,6 +134,10 @@ namespace TitaniumWindows
 			// Initialize image
 			if (!get_image().empty()) {
 				set_image(get_image());
+			} else if (get_imageAsBlob()) {
+				set_imageAsBlob(get_imageAsBlob());
+			} else if (get_imageAsFile()) {
+				set_imageAsFile(get_imageAsFile());
 			}
 		}
 
