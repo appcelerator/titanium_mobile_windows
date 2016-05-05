@@ -181,7 +181,7 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(borderRadius);
 			TITANIUM_PROPERTY_DEF(borderWidth);
 			TITANIUM_PROPERTY_DEF(clipMode);
-			TITANIUMKIT_DEPRECATED TITANIUM_PROPERTY_DEF(enabled);
+			TITANIUM_PROPERTY_DEF(enabled);
 			TITANIUM_PROPERTY_DEF(focusable);
 			TITANIUM_PROPERTY_DEF(opacity);
 			TITANIUM_PROPERTY_DEF(overrideCurrentAnimation);
