@@ -16,9 +16,13 @@ namespace Titanium
 		TiLoggerPolicyAPI::TiLoggerPolicyAPI(const JSContext& js_context) :
 			js_context__(js_context)
 		{
-			auto api = js_context__.JSEvaluateScript("Titanium.API");
-			if (api.IsObject()) {
-				api__ = static_cast<JSObject>(api).GetPrivate<Titanium::API>();
+			try {
+				auto api = js_context__.JSEvaluateScript("Titanium.API");
+				if (api.IsObject()) {
+					api__ = static_cast<JSObject>(api).GetPrivate<Titanium::API>();
+				}
+			} catch (...) {
+				// make sure logging does not throw any exception
 			}
 		}
 
