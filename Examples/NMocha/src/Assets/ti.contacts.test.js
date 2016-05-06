@@ -136,7 +136,7 @@ describe("Titanium.Contacts", function() {
 		}
 		finish();
 	});
-	it("getAllPeople", function(finish) {
+	it.skip("getAllPeople", function(finish) {
 		should(Ti.Contacts.getAllPeople).be.a.Function;
 		var people = Ti.Contacts.getAllPeople();
 		should(people).be.an.Array;
