@@ -10,6 +10,7 @@
 #define _TITANIUM_API_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/detail/TiBase.hpp"
 
 namespace Titanium
 {
@@ -112,6 +113,7 @@ namespace Titanium
 		  @result void
 		*/
 		virtual void log(const std::string& level, const std::string& message) const TITANIUM_NOEXCEPT final;
+		virtual void log(const std::string& message) const TITANIUM_NOEXCEPT;
 
 		API(const JSContext&) TITANIUM_NOEXCEPT;
 		virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
@@ -133,9 +135,6 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(debug);
 		TITANIUM_FUNCTION_DEF(trace);
 		TITANIUM_FUNCTION_DEF(log);
-
-	protected:
-		virtual void log(const std::string& message) const TITANIUM_NOEXCEPT;
 
 	private:
 		enum class LogSeverityLevel {

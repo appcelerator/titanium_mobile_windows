@@ -19,7 +19,7 @@
 namespace Titanium
 {
 	class Blob;
-	
+
 	namespace UI
 	{
 		using namespace HAL;
@@ -318,7 +318,7 @@ namespace Titanium
 
 			TITANIUM_FUNCTION_DEF(insertAt);
 			TITANIUM_FUNCTION_DEF(replaceAt);
-			
+
 			virtual void postInitialize(JSObject& this_object) override;
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;

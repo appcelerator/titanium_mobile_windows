@@ -1,7 +1,7 @@
 /**
  * TitaniumKit
  *
- * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -35,7 +35,7 @@ namespace Titanium
 
 		void View::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 		{
-			Titanium::Module::postCallAsConstructor(js_context, arguments);	
+			Titanium::Module::postCallAsConstructor(js_context, arguments);
 			setLayoutDelegate();
 		}
 
@@ -71,12 +71,12 @@ namespace Titanium
 			layoutDelegate__->animate(animation, callback, get_object());
 		}
 
-		void View::blur() 
+		void View::blur()
 		{
 			layoutDelegate__->blur();
 		}
 
-		void View::focus() 
+		void View::focus()
 		{
 			layoutDelegate__->focus();
 		}
@@ -84,7 +84,7 @@ namespace Titanium
 		void View::add(const JSObject& view) TITANIUM_NOEXCEPT
 		{
 			auto view_ptr = view.GetPrivate<View>();
-			
+
 			// For mixing Ti.Ui.View and native view.
 			if (view_ptr == nullptr) {
 				view_ptr = layoutDelegate__->rescueGetView(view);
@@ -555,15 +555,15 @@ namespace Titanium
 				JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
 				TITANIUM_ASSERT(Titanium_property.IsObject());
 				JSObject Titanium = static_cast<JSObject>(Titanium_property);
-					
+
 				JSValue UI_property = Titanium.GetProperty("UI");
 				TITANIUM_ASSERT(UI_property.IsObject());
 				JSObject UI = static_cast<JSObject>(UI_property);
-					
+
 				JSValue Animation_property = UI.GetProperty("Animation");
 				TITANIUM_ASSERT(Animation_property.IsObject());
 				JSObject Animation_Class = static_cast<JSObject>(Animation_property);
-				
+
 				auto instance = Animation_Class.CallAsConstructor();
 				Titanium::Module::applyProperties(object, instance);
 				animation = instance.GetPrivate<Titanium::UI::Animation>();
@@ -610,12 +610,12 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		TITANIUM_PROPERTY_GETTER(View, backgroundImage) 
+		TITANIUM_PROPERTY_GETTER(View, backgroundImage)
 		{
 			return get_context().CreateString(layoutDelegate__->get_backgroundImage());
 		}
 
-		TITANIUM_PROPERTY_SETTER(View, backgroundImage) 
+		TITANIUM_PROPERTY_SETTER(View, backgroundImage)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundImage(static_cast<std::string>(argument));
@@ -688,7 +688,7 @@ namespace Titanium
 			layoutDelegate__->set_center(js_to_Point(static_cast<JSObject>(argument)));
 			return true;
 		}
-		
+
 		TITANIUM_PROPERTY_GETTER(View, center)
 		{
 			return Point_to_js(get_context(), layoutDelegate__->get_center());
@@ -829,14 +829,14 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, enabled)
 		{
-			return get_context().CreateBoolean(layoutDelegate__->get_enabled());
+			TITANIUM_API_LOG_WARN("Ti.UI.View.enabled property is deprecated. Please use touchEnabled.");
+			return js_get_touchEnabled();
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, enabled)
 		{
-			TITANIUM_ASSERT(argument.IsBoolean());
-			layoutDelegate__->set_enabled(static_cast<bool>(argument));
-			return true;
+			TITANIUM_API_LOG_WARN("Ti.UI.View.enabled property is deprecated. Please use touchEnabled.");
+			return js_set_touchEnabled(argument);
 		}
 
 		TITANIUM_PROPERTY_GETTER(View, width)
@@ -851,12 +851,12 @@ namespace Titanium
 			return true;
 		}
 
-		TITANIUM_PROPERTY_GETTER(View, zIndex) 
+		TITANIUM_PROPERTY_GETTER(View, zIndex)
 		{
 			return get_context().CreateNumber(layoutDelegate__->get_zIndex());
 		}
 
-		TITANIUM_PROPERTY_SETTER(View, zIndex) 
+		TITANIUM_PROPERTY_SETTER(View, zIndex)
 		{
 			TITANIUM_ASSERT(argument.IsNumber());
 			layoutDelegate__->set_zIndex(static_cast<std::int32_t>(argument));

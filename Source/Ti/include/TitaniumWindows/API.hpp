@@ -42,10 +42,11 @@ namespace TitaniumWindows
 
 		static void JSExportInitialize();
 
+		virtual void log(const std::string& message) const TITANIUM_NOEXCEPT override final;
+
 	protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
-		virtual void log(const std::string& message) const TITANIUM_NOEXCEPT override final;
 		std::shared_ptr<LogForwarder> logger__;
 #pragma warning(pop)
 

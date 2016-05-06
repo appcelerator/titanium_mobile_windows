@@ -61,11 +61,10 @@ namespace TitaniumWindows
 	class TiLoggerPolicyAsyncLogRelay final : public Titanium::detail::TiLoggerPolicyInterface
 	{
 	public:
-		TiLoggerPolicyAsyncLogRelay(const std::string& name)
+		TiLoggerPolicyAsyncLogRelay()
 		{
 		}
 
-		TiLoggerPolicyAsyncLogRelay()  = delete;
 		~TiLoggerPolicyAsyncLogRelay() = default;
 		TiLoggerPolicyAsyncLogRelay(const TiLoggerPolicyAsyncLogRelay&) = default;
 		TiLoggerPolicyAsyncLogRelay& operator=(const TiLoggerPolicyAsyncLogRelay&) = default;
@@ -84,11 +83,10 @@ namespace TitaniumWindows
 	class TiLoggerPolicyAsyncBackgroundLogRelay final : public Titanium::detail::TiLoggerPolicyInterface
 	{
 	public:
-		TiLoggerPolicyAsyncBackgroundLogRelay(const std::string& name)
+		TiLoggerPolicyAsyncBackgroundLogRelay()
 		{
 		}
 
-		TiLoggerPolicyAsyncBackgroundLogRelay()  = delete;
 		~TiLoggerPolicyAsyncBackgroundLogRelay() = default;
 		TiLoggerPolicyAsyncBackgroundLogRelay(const TiLoggerPolicyAsyncBackgroundLogRelay&) = default;
 		TiLoggerPolicyAsyncBackgroundLogRelay& operator=(const TiLoggerPolicyAsyncBackgroundLogRelay&) = default;

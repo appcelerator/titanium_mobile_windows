@@ -26,7 +26,7 @@ namespace Titanium
 	{
 		class View;
 		class Animation;
-		
+
 		using namespace HAL;
 
 		class TITANIUMKIT_EXPORT ViewLayoutEventDelegate
@@ -84,7 +84,7 @@ namespace Titanium
 
 			  @discussion Hides the view and it's chldren in the view's hierarchy.
 
-			  @param 
+			  @param
 
 			  @result void
 			*/
@@ -95,9 +95,9 @@ namespace Titanium
 
 			  @abstract show() : void
 
-			  @discussion Causes the view and the view's hierarchy to be displayed. 
+			  @discussion Causes the view and the view's hierarchy to be displayed.
 
-			  @param 
+			  @param
 
 			  @result void
 			*/
@@ -116,27 +116,15 @@ namespace Titanium
 			virtual void set_visible(const bool& visible) TITANIUM_NOEXCEPT;
 
 			/*!
-			  @method
-
-			  @abstract enabled : Boolean
-
-			  @discussion Determines whether the view is enabled.
-
-			  Default: true
-			*/
-			virtual bool get_enabled() const TITANIUM_NOEXCEPT;
-			virtual void set_enabled(const bool& enabled) TITANIUM_NOEXCEPT;
-
-			/*!
 			@method
 
 			@abstract backgroundImage : String
 
 			@discussion Background image for the view, specified as a local file path or URL.
 
-			Default: Default behavior when `backgroundImage` is unspecified depends on the type of view and the platform. 
-			
-			For generic views, no image is used. For most controls (buttons, text fields, and so on), platform-specific default images are used. 
+			Default: Default behavior when `backgroundImage` is unspecified depends on the type of view and the platform.
+
+			For generic views, no image is used. For most controls (buttons, text fields, and so on), platform-specific default images are used.
 			*/
 			virtual std::string get_backgroundImage() const TITANIUM_NOEXCEPT;
 			virtual void set_backgroundImage(const std::string& backgroundImage) TITANIUM_NOEXCEPT;
@@ -665,7 +653,7 @@ namespace Titanium
 			std::string viewShadowColor__;
 			Point viewShadowOffset__;
 			bool horizontalWrap__ { true };
-			
+
 			Point anchorPoint__;
 			Point animatedCenter__;
 

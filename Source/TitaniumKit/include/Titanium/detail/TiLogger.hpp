@@ -10,6 +10,7 @@
 #define _TITANIUM_DETAIL_TILOGGER_HPP_
 
 #include "Titanium/detail/TiLoggerPolicyConsole.hpp"
+#include "Titanium/detail/TiLoggerPolicyAPI.hpp"
 #include <sstream>
 #include <iomanip>
 #include <cstdint>
@@ -56,9 +57,9 @@ namespace Titanium
 		class TiLogger final
 		{
 		public:
-			static std::shared_ptr<TiLogger<TiLoggerPolicy>> Instance();
+			template <typename...Args>
+			static std::shared_ptr<TiLogger<TiLoggerPolicy>> Instance(Args&&...args);
 
-			TiLogger() = delete;
 			TiLogger(const TiLogger&) = delete;
 			TiLogger& operator=(const TiLogger&) = delete;
 
@@ -71,7 +72,9 @@ namespace Titanium
 			void Print(Args... args);
 
 		private:
-			TiLogger(const std::string& name);
+			template <typename...Args>
+			TiLogger(Args&&... args);
+
 			~TiLogger() = default;
 
 			// Core printing functionality.
@@ -91,25 +94,27 @@ namespace Titanium
 				}
 			};
 
-			TiLoggerPolicy ti_log_policy__;
+			std::shared_ptr<TiLoggerPolicy> ti_log_policy__;
 			uint32_t log_line_number__{0};
 			std::ostringstream log_stream__;
 			std::mutex ti_logger_mutex__;
 		};
 
 		template <typename TiLoggerPolicy>
-		TiLogger<TiLoggerPolicy>::TiLogger(const std::string& name)
-		    : ti_log_policy__(name)
+		template <typename...Args>
+		TiLogger<TiLoggerPolicy>::TiLogger(Args&&...args)
+		    : ti_log_policy__(std::make_shared<TiLoggerPolicy>(std::forward<Args>(args)...))
 		{
 		}
 
 		template <typename TiLoggerPolicy>
-		std::shared_ptr<TiLogger<TiLoggerPolicy>> TiLogger<TiLoggerPolicy>::Instance()
+		template <typename...Args>
+		std::shared_ptr<TiLogger<TiLoggerPolicy>> TiLogger<TiLoggerPolicy>::Instance(Args&&...args)
 		{
 			static std::shared_ptr<TiLogger<TiLoggerPolicy>> instance;
 			static std::once_flag of;
-			std::call_once(of, [] {
-      instance = std::shared_ptr<TiLogger<TiLoggerPolicy>>(new TiLogger<TiLoggerPolicy>("TitaniumKit.log"), deleter{});
+			std::call_once(of, [&args...] {
+      instance = std::shared_ptr<TiLogger<TiLoggerPolicy>>(new TiLogger<TiLoggerPolicy>(std::forward<Args>(args)...), deleter{});
 			});
 
 			return instance;
@@ -151,7 +156,7 @@ namespace Titanium
 		template <typename TiLoggerPolicy>
 		void TiLogger<TiLoggerPolicy>::PrintImpl()
 		{
-			ti_log_policy__.Write(log_stream__.str());
+			ti_log_policy__->Write(log_stream__.str());
 			log_stream__.str("");
 		}
 
@@ -165,21 +170,33 @@ namespace Titanium
 
 #ifdef TITANIUM_LOGGING_ENABLE
 
-		// TODO: Add a more flexible way to specify the logging policy.
-		//using TiLogger_t = TiLogger<TiLoggerPolicyFile>;
-		using TiLogger_t = TiLogger<TiLoggerPolicyConsole>;
+		// Logging to console
+		using TiLogger_t    = TiLogger<TiLoggerPolicyConsole>;
+
+		// Logging with Ti.API
+		using TiAPILogger_t = TiLogger<TiLoggerPolicyAPI>;
 
 #define TITANIUM_LOG_TRACE Titanium::detail::TiLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_TRACE>
 #define TITANIUM_LOG_DEBUG Titanium::detail::TiLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_DEBUG>
 #define TITANIUM_LOG_INFO Titanium::detail::TiLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_INFO>
 #define TITANIUM_LOG_WARN Titanium::detail::TiLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_WARN>
 #define TITANIUM_LOG_ERROR Titanium::detail::TiLogger_t::Instance()->Print<Titanium::detail::TiLoggerSeverityType::Ti_ERROR>
+#define TITANIUM_API_LOG_TRACE Titanium::detail::TiAPILogger_t::Instance(get_context())->Print<Titanium::detail::TiLoggerSeverityType::Ti_TRACE>
+#define TITANIUM_API_LOG_DEBUG Titanium::detail::TiAPILogger_t::Instance(get_context())->Print<Titanium::detail::TiLoggerSeverityType::Ti_DEBUG>
+#define TITANIUM_API_LOG_INFO Titanium::detail::TiAPILogger_t::Instance(get_context())->Print<Titanium::detail::TiLoggerSeverityType::Ti_INFO>
+#define TITANIUM_API_LOG_WARN Titanium::detail::TiAPILogger_t::Instance(get_context())->Print<Titanium::detail::TiLoggerSeverityType::Ti_WARN>
+#define TITANIUM_API_LOG_ERROR Titanium::detail::TiAPILogger_t::Instance(get_context())->Print<Titanium::detail::TiLoggerSeverityType::Ti_ERROR>
 #else
 #define TITANIUM_LOG_TRACE(...)
 #define TITANIUM_LOG_DEBUG(...)
 #define TITANIUM_LOG_INFO(...)
 #define TITANIUM_LOG_WARN(...)
 #define TITANIUM_LOG_ERROR(...)
+#define TITANIUM_API_LOG_TRACE(...)
+#define TITANIUM_API_LOG_DEBUG(...)
+#define TITANIUM_API_LOG_INFO(...)
+#define TITANIUM_API_LOG_WARN(...)
+#define TITANIUM_API_LOG_ERROR(...)
 #endif
 	} // namespace detail
 }  // namespace Titanium

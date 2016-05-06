@@ -109,7 +109,7 @@ namespace Titanium
 			if (defaultValue) {
 				return *defaultValue;
 			}
-			return nullptr;
+			return boost::none;
 		}
 
 		bool Properties::hasProperty(const std::string& property) TITANIUM_NOEXCEPT
