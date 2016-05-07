@@ -136,8 +136,7 @@ describe("Titanium.Contacts", function() {
 		}
 		finish();
 	});
-	// Skip on Windows 10.0 for now: https://jira.appcelerator.org/browse/TIMOB-23332
-	(Ti.Platform.version.indexOf('10.0' == 0) ? it.skip : it)("getAllPeople", function(finish) {
+	it("getAllPeople", function(finish) {
 		should(Ti.Contacts.getAllPeople).be.a.Function;
 		var people = Ti.Contacts.getAllPeople();
 		should(people).be.an.Array;

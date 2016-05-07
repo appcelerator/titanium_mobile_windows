@@ -289,6 +289,11 @@ namespace TitaniumWindows
 			auto person = person_object.GetPrivate<TitaniumWindows::Contacts::Person>();
 			auto list = getDefaultContactList();
 			auto contact = person->GetContact();
+
+			if (list == nullptr) {
+				return result;
+			}
+
 			// sync save
 			concurrency::event event;
 			concurrency::create_task(list->SaveContactAsync(contact), concurrency::task_continuation_context::use_arbitrary())
