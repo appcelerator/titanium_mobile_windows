@@ -103,6 +103,13 @@ namespace Titanium
 
 			/*!
 			  @property
+			  @abstract activeColor
+			  @discussion Defines the color of the title of tab when it's active.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string , activeColor);
+
+			/*!
+			  @property
 			  @abstract activeIcon
 			  @discussion Icon URL for this tab when active.
 			*/
@@ -142,6 +149,13 @@ namespace Titanium
 			  @discussion Title for this tab.
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(std::string, title);
+
+			/*!
+			  @property
+			  @abstract titleColor
+			  @discussion Defines the color of the title of tab when it's inactive.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, titleColor);
 
 			/*!
 			  @property
@@ -210,12 +224,14 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(backgroundSelectedImage);
 			TITANIUM_PROPERTY_DEF(touchEnabled);
 			TITANIUM_PROPERTY_DEF(active);
+			TITANIUM_PROPERTY_DEF(activeColor);
 			TITANIUM_PROPERTY_DEF(activeIcon);
 			TITANIUM_PROPERTY_DEF(badge);
 			TITANIUM_PROPERTY_DEF(icon);
 			TITANIUM_PROPERTY_DEF(iconIsMask);
 			TITANIUM_PROPERTY_DEF(activeIconIsMask);
 			TITANIUM_PROPERTY_DEF(title);
+			TITANIUM_PROPERTY_DEF(titleColor);
 			TITANIUM_PROPERTY_DEF(titleid);
 			TITANIUM_PROPERTY_DEF(window);
 
@@ -241,6 +257,8 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setTouchEnabled);
 			TITANIUM_FUNCTION_DEF(getActive);
 			TITANIUM_FUNCTION_DEF(setActive);
+			TITANIUM_FUNCTION_DEF(getActiveColor);
+			TITANIUM_FUNCTION_DEF(setActiveColor);
 			TITANIUM_FUNCTION_DEF(getActiveIcon);
 			TITANIUM_FUNCTION_DEF(setActiveIcon);
 			TITANIUM_FUNCTION_DEF(getBadge);
@@ -253,6 +271,8 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setActiveIconIsMask);
 			TITANIUM_FUNCTION_DEF(getTitle);
 			TITANIUM_FUNCTION_DEF(setTitle);
+			TITANIUM_FUNCTION_DEF(getTitleColor);
+			TITANIUM_FUNCTION_DEF(setTitleColor);
 			TITANIUM_FUNCTION_DEF(getTitleid);
 			TITANIUM_FUNCTION_DEF(setTitleid);
 			TITANIUM_FUNCTION_DEF(getWindow);
@@ -271,12 +291,14 @@ namespace Titanium
 			std::string backgroundSelectedImage__;
 			bool touchEnabled__;
 			bool active__;
+			std::string activeColor__;
 			std::string activeIcon__;
 			std::string badge__;
 			std::string icon__;
 			bool iconIsMask__;
 			bool activeIconIsMask__;
 			std::string title__;
+			std::string titleColor__;
 			std::string titleid__;
 			std::shared_ptr<Window> window__;
 #pragma warning(pop)
