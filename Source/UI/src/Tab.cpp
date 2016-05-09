@@ -22,6 +22,7 @@ namespace TitaniumWindows
 
 		Tab::Tab(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: Titanium::UI::Tab(js_context)
+			, defaultForeground__(nullptr)
 		{
 		}
 
@@ -100,14 +101,18 @@ namespace TitaniumWindows
 			else {
 				colorName = Titanium::UI::Tab::get_titleColor();
 			}
-			// We should use the default colors if the new color is empty!
-			if (colorName.empty()) {
-				return;
-			}
 			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			const auto textBlock = safe_cast<Controls::TextBlock^>(pivotItem__->Header);
-			textBlock->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
+			if (defaultForeground__ == nullptr) {
+				defaultForeground__ = textBlock->Foreground;
+			}
+			if (colorName.empty()) {
+				// Use the default colors if the new color is empty
+				textBlock->Foreground = defaultForeground__;
+			} else {
+				textBlock->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
+			}
 #else
 			// FIXME What do we do for Win 8.1 store?
 #endif
