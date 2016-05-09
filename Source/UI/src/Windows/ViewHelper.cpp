@@ -11,7 +11,7 @@ namespace TitaniumWindows
 {
 	namespace UI
 	{
-		namespace ViewHelper 
+		namespace ViewHelper
 		{
 
 			using namespace Windows::UI::Xaml::Controls;
@@ -21,6 +21,7 @@ namespace TitaniumWindows
 			template void SetFont<TextBox^>(const JSContext& js_context, TextBox^, const Titanium::UI::Font&);
 			template void SetFont<Button^>(const JSContext& js_context, Button^, const Titanium::UI::Font&);
 			template void SetFont<Span^>(const JSContext& js_context, Span^, const Titanium::UI::Font&);
+			template void SetFont<PasswordBox^>(const JSContext& js_context, PasswordBox^, const Titanium::UI::Font&);
 
 			template <typename T>
 			void SetFont(const JSContext& js_context, T component, const Titanium::UI::Font& font)
