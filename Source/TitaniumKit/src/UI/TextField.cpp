@@ -43,6 +43,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(TextField, bool, editable)
 		TITANIUM_PROPERTY_READWRITE(TextField, bool, ellipsize)
 		TITANIUM_PROPERTY_READWRITE(TextField, bool, enableReturnKey)
+		TITANIUM_PROPERTY_READWRITE(TextField, Font, font)
 		TITANIUM_PROPERTY_READWRITE(TextField, std::string, hintText)
 		TITANIUM_PROPERTY_READWRITE(TextField, KEYBOARD, keyboardType)
 		TITANIUM_PROPERTY_READWRITE(TextField, INPUT_BUTTONMODE, leftButtonMode)
@@ -87,6 +88,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(TextField, editable);
 			TITANIUM_ADD_PROPERTY(TextField, ellipsize);
 			TITANIUM_ADD_PROPERTY(TextField, enableReturnKey);
+			TITANIUM_ADD_PROPERTY(TextField, font);
 			TITANIUM_ADD_PROPERTY(TextField, hintText);
 			TITANIUM_ADD_PROPERTY(TextField, keyboardType);
 			TITANIUM_ADD_PROPERTY(TextField, leftButtonMode);
@@ -121,6 +123,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(TextField, setEllipsize);
 			TITANIUM_ADD_FUNCTION(TextField, getEnableReturnKey);
 			TITANIUM_ADD_FUNCTION(TextField, setEnableReturnKey);
+			TITANIUM_ADD_FUNCTION(TextField, getFont);
+			TITANIUM_ADD_FUNCTION(TextField, setFont);
 			TITANIUM_ADD_FUNCTION(TextField, getHintText);
 			TITANIUM_ADD_FUNCTION(TextField, setHintText);
 			TITANIUM_ADD_FUNCTION(TextField, getKeyboardType);
@@ -236,6 +240,12 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_AS_GETTER(TextField, getEnableReturnKey, enableReturnKey)
 		TITANIUM_FUNCTION_AS_SETTER(TextField, setEnableReturnKey, enableReturnKey)
+
+		TITANIUM_PROPERTY_GETTER_STRUCT(TextField, font, Font)
+		TITANIUM_PROPERTY_SETTER_STRUCT(TextField, font, Font)
+
+		TITANIUM_FUNCTION_AS_GETTER(TextField, getFont, font)
+		TITANIUM_FUNCTION_AS_SETTER(TextField, setFont, font)
 
 		TITANIUM_PROPERTY_GETTER_STRING(TextField, hintText)
 		TITANIUM_PROPERTY_SETTER_STRING(TextField, hintText)

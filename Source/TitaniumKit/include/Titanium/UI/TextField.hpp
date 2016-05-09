@@ -1,7 +1,7 @@
 /**
  * TitaniumKit
  *
- * Copyright (c) 2014-2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2014-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -11,6 +11,7 @@
 
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Constants.hpp"
+#include "Titanium/UI/Font.hpp"
 
 namespace Titanium
 {
@@ -116,7 +117,12 @@ namespace Titanium
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(bool, enableReturnKey);
 
-			// TODO font!
+			/*!
+			  @property
+			  @abstract font
+			  @discussion Font to use for text.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(Font, font);
 
 			/*!
 			  @method
@@ -258,7 +264,7 @@ namespace Titanium
 
 			  @discussion Forces the field to gain focus.
 
-			  @param 
+			  @param
 
 			  @result void
 			*/
@@ -271,7 +277,7 @@ namespace Titanium
 
 			  @discussion Returns true if this text field contains text.
 
-			  @param 
+			  @param
 
 			  @result bool
 			*/
@@ -292,11 +298,11 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(attributedHintString);
 			TITANIUM_FUNCTION_DEF(getAttributedHintString);
 			TITANIUM_FUNCTION_DEF(setAttributedHintString);
-			
+
 			TITANIUM_PROPERTY_DEF(attributedString);
 			TITANIUM_FUNCTION_DEF(getAttributedString);
 			TITANIUM_FUNCTION_DEF(setAttributedString);
-			
+
 			TITANIUM_PROPERTY_DEF(autocapitalization);
 			TITANIUM_FUNCTION_DEF(getAutocapitalization);
 			TITANIUM_FUNCTION_DEF(setAutocapitalization);
@@ -324,6 +330,10 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(enableReturnKey);
 			TITANIUM_FUNCTION_DEF(getEnableReturnKey);
 			TITANIUM_FUNCTION_DEF(setEnableReturnKey);
+
+			TITANIUM_PROPERTY_DEF(font);
+			TITANIUM_FUNCTION_DEF(getFont);
+			TITANIUM_FUNCTION_DEF(setFont);
 
 			TITANIUM_PROPERTY_DEF(hintText);
 			TITANIUM_FUNCTION_DEF(getHintText);
@@ -385,6 +395,7 @@ namespace Titanium
 			bool editable__;
 			bool ellipsize__;
 			bool enableReturnKey__;
+			Font font__;
 			std::string hintText__;
 			KEYBOARD keyboardType__;
 			INPUT_BUTTONMODE leftButtonMode__;

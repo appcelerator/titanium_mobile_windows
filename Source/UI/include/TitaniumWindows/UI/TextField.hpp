@@ -61,6 +61,7 @@ namespace TitaniumWindows
 			virtual void set_editable(const bool& editable) TITANIUM_NOEXCEPT override final;
 //			virtual void set_ellipsize(const bool& ellipsize) TITANIUM_NOEXCEPT override final;
 //			virtual void set_enableReturnKey(const bool& enableReturnKey) TITANIUM_NOEXCEPT override final;
+			virtual void set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT override final;
 			virtual void set_hintText(const std::string& hintText) TITANIUM_NOEXCEPT override final;
 			virtual void set_keyboardType(const Titanium::UI::KEYBOARD& keyboardType) TITANIUM_NOEXCEPT override final;
 //			virtual void set_leftButtonMode(const Titanium::UI::INPUT_BUTTONMODE& leftButtonMode) TITANIUM_NOEXCEPT override final;

@@ -28,8 +28,8 @@ namespace TitaniumWindows
 
 		void TextField::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 		{
-			Titanium::UI::TextField::postCallAsConstructor(js_context, arguments);	
-			
+			Titanium::UI::TextField::postCallAsConstructor(js_context, arguments);
+
 			Titanium::UI::TextField::setLayoutDelegate<WindowsViewLayoutDelegate>();
 
 			// Parent of the text box.
@@ -163,6 +163,16 @@ namespace TitaniumWindows
 			} else if (password_box__) {
 				// there's no IsReadOnly property in PasswordBox.
 				password_box__->IsEnabled = !editable;
+			}
+		}
+
+		void TextField::set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::TextField::set_font(font);
+			if (text_box__) {
+				TitaniumWindows::UI::ViewHelper::SetFont<Controls::TextBox^>(get_context(), text_box__, font);
+			} else if (password_box__) {
+				TitaniumWindows::UI::ViewHelper::SetFont<Controls::PasswordBox^>(get_context(), password_box__, font);
 			}
 		}
 
