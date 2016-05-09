@@ -22,7 +22,9 @@ namespace TitaniumWindows
 
 		Tab::Tab(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: Titanium::UI::Tab(js_context)
+#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			, defaultForeground__(nullptr)
+#endif
 		{
 		}
 
