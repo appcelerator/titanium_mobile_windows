@@ -46,6 +46,13 @@ namespace TitaniumWindows
 		*/
 		virtual std::string getString(const std::string& key, const std::string& hint) TITANIUM_NOEXCEPT override;
 
+		/*!
+		  @method
+		  @abstract setLanguage
+		  @discussion Set the current language for the app.
+		*/
+		virtual void setLanguage(const std::string& language) TITANIUM_NOEXCEPT override;
+
 		Locale(const JSContext&) TITANIUM_NOEXCEPT;
 
 		virtual ~Locale();

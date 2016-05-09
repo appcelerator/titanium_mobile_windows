@@ -21,19 +21,31 @@ namespace TitaniumWindows
 		TITANIUM_LOG_DEBUG("TitaniumWindows::Locale::ctor");
 
 		const auto region = ref new GeographicRegion(GlobalizationPreferences::HomeGeographicRegion);
-
 		currentCountry__ = TitaniumWindows::Utility::ConvertString(region->CodeTwoLetter);
-		const auto languages = GlobalizationPreferences::Languages;
-		if (languages->Size > 0) {
-			currentLocale__ = TitaniumWindows::Utility::ConvertString(languages->GetAt(0));
-		} // else default is "en-US"
 
-		const auto pos = currentLocale__.find("-");
-		if (pos != std::string::npos) {
-			currentLanguage__ = currentLocale__.substr(0, pos);
+		// If they've set a preferred language for this app before, use it
+		std::string language;
+		const auto primaryLanguage = TitaniumWindows::Utility::ConvertString(ApplicationLanguages::PrimaryLanguageOverride);
+		if (!primaryLanguage.empty()) {
+			language = primaryLanguage;
 		} else {
-			currentLanguage__ = currentLocale__;
-			currentLocale__   = currentLanguage__ + "-" + currentCountry__;
+			// Otherwide grab the first language in the device preferences
+			const auto languages = GlobalizationPreferences::Languages;
+			if (languages->Size > 0) {
+				language = TitaniumWindows::Utility::ConvertString(languages->GetAt(0));
+			}
+		}
+		 // if no primary language set and no languages in prefs, we fall back to "en-US"/"en". Otherwise, let's break down the language value
+		if (!language.empty()) {
+			const auto pos = language.find("-");
+			if (pos != std::string::npos) {
+				currentLocale__ = language; // move the full value to locale
+				currentLanguage__ = language.substr(0, pos); // use just the first two chars for language
+			} else {
+				 // Should we try and mash together the language and country to make locale? It may not be a pairing that works!
+				 // For now, let's just take the short two-letter code for both language and locale
+				currentLocale__ = language;
+			}
 		}
 	}
 
@@ -74,8 +86,8 @@ namespace TitaniumWindows
 		const auto format = TitaniumWindows::Utility::ConvertUTF8String(formatter->Format(0.0));
 
 		//
-		// Assuming currency symbol appears first ("$0.0", "¥0", "NT$0.0" etc...) 
-		// 
+		// Assuming currency symbol appears first ("$0.0", "¥0", "NT$0.0" etc...)
+		//
 		const auto pos = format.find("0");
 		if (pos != std::string::npos) {
 			return format.substr(0, pos);
@@ -96,6 +108,28 @@ namespace TitaniumWindows
 			TITANIUM_LOG_ERROR("Error during Locale::getString");
 		}
 		return hint.empty() ? key : hint;
+	}
+
+	void Locale::setLanguage(const std::string& language) TITANIUM_NOEXCEPT
+	{
+		std::string locale;
+		std::string shortLanguage;
+		const auto pos = language.find("-");
+		if (pos != std::string::npos) {
+			shortLanguage = language.substr(0, pos); // language is 2 characters
+			locale = language; // locale is the full value
+		} else {
+			shortLanguage = language;
+			locale = language;
+		}
+		try {
+			ApplicationLanguages::PrimaryLanguageOverride = TitaniumWindows::Utility::ConvertUTF8String(locale);
+			// if it was a valid value (because it got set), assume we can now set our internal language/locale to match
+			currentLocale__ = locale;
+			currentLanguage__ = shortLanguage;
+		} catch (...) {
+			TITANIUM_LOG_ERROR("Error during Locale::setLanguage");
+		}
 	}
 
 	void Locale::JSExportInitialize()

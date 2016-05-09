@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -51,7 +51,12 @@ namespace Titanium
 		return hint.empty() ? key : hint;
 	}
 
-	void Locale::JSExportInitialize() 
+	void Locale::setLanguage(const std::string& language) TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_WARN("Locale::setLanguage: Unimplemented");
+	}
+
+	void Locale::JSExportInitialize()
 	{
 		JSExport<Locale>::SetClassVersion(1);
 		JSExport<Locale>::SetParent(JSExport<Module>::Class());
@@ -68,6 +73,7 @@ namespace Titanium
 		TITANIUM_ADD_FUNCTION(Locale, getCurrentLanguage);
 		TITANIUM_ADD_FUNCTION(Locale, getCurrentLocale);
 		TITANIUM_ADD_FUNCTION(Locale, getString);
+		TITANIUM_ADD_FUNCTION(Locale, setLanguage);
 	}
 
 	JSObject Locale::GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -130,6 +136,14 @@ namespace Titanium
 		ENSURE_OPTIONAL_STRING_AT_INDEX(hint, 1, "");
 		const auto ctx = this_object.get_context();
 		return ctx.CreateString(GetStaticObject(ctx).GetPrivate<Locale>()->getString(key, hint));
+	}
+
+	TITANIUM_FUNCTION(Locale, setLanguage)
+	{
+		ENSURE_STRING_AT_INDEX(language, 0);
+		const auto ctx = this_object.get_context();
+		GetStaticObject(ctx).GetPrivate<Locale>()->setLanguage(language);
+		return ctx.CreateUndefined();
 	}
 
 	TITANIUM_FUNCTION_AS_GETTER(Locale, getCurrentCountry, currentCountry)

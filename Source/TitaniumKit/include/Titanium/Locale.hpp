@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -78,6 +78,13 @@ namespace Titanium
 		*/
 		virtual std::string getString(const std::string& key, const std::string& hint) TITANIUM_NOEXCEPT;
 
+		/*!
+		  @method
+		  @abstract setLanguage
+		  @discussion Set the current language.
+		*/
+		virtual void setLanguage(const std::string& language) TITANIUM_NOEXCEPT;
+
 		Locale(const JSContext&) TITANIUM_NOEXCEPT;
 
 		virtual ~Locale() = default;
@@ -103,6 +110,7 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(getCurrentLanguage);
 		TITANIUM_FUNCTION_DEF(getCurrentLocale);
 		TITANIUM_FUNCTION_DEF(getString);
+		TITANIUM_FUNCTION_DEF(setLanguage);
 
 	protected:
 #pragma warning(push)

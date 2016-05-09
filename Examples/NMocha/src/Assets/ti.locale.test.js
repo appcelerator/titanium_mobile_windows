@@ -80,7 +80,7 @@ describe('Titanium.Locale', function () {
         should(Ti.Locale.currentLanguage).eql('en');
         finish();
     });
-    
+
     it('Ti.Locale.currentLocale', function (finish) {
         should(Ti.Locale.currentLocale).be.a.String;
         should(Ti.Locale.currentLocale).eql('en-US');
@@ -100,6 +100,18 @@ describe('Titanium.Locale', function () {
             should(string2).eql('You say さようなら and I say こんにちは!');
         }
 
+        finish();
+    });
+
+	it('Ti.Locale.setLanguage', function (finish) {
+        should(Ti.Locale.setLanguage).be.a.Function;
+        Ti.Locale.setLanguage('en-GB');
+        should(Ti.Locale.currentLocale).eql('en-GB');
+        should(Ti.Locale.currentLanguage).eql('en');
+        // TODO Should the currentCountry become 'GB'? Or stay 'US'?
+        Ti.Locale.setLanguage('fr');
+        should(Ti.Locale.currentLocale).eql('fr');
+        should(Ti.Locale.currentLanguage).eql('fr');
         finish();
     });
 });
