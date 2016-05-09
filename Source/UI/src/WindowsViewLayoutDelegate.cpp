@@ -1611,7 +1611,7 @@ namespace TitaniumWindows
 		inline std::string toLowerCase(const std::string& string)
 		{
 			std::string copy(string);
-			std::transform(string.begin(), string.end(), copy.begin(), std::tolower);
+			std::transform(string.begin(), string.end(), copy.begin(), tolower);
 			return copy;
 		}
 
