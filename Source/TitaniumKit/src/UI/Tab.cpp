@@ -32,12 +32,14 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Tab, bool, touchEnabled)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, backgroundColor)
 		TITANIUM_PROPERTY_READWRITE(Tab, bool, active)
+		TITANIUM_PROPERTY_READWRITE(Tab, std::string, activeColor)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, activeIcon)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, badge)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, icon)
 		TITANIUM_PROPERTY_READWRITE(Tab, bool, iconIsMask)
 		TITANIUM_PROPERTY_READWRITE(Tab, bool, activeIconIsMask)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, title)
+		TITANIUM_PROPERTY_READWRITE(Tab, std::string, titleColor)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, titleid)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::shared_ptr<Window>, window)
 
@@ -110,12 +112,14 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Tab, touchEnabled);
 			TITANIUM_ADD_PROPERTY(Tab, backgroundColor);
 			TITANIUM_ADD_PROPERTY(Tab, active);
+			TITANIUM_ADD_PROPERTY(Tab, activeColor);
 			TITANIUM_ADD_PROPERTY(Tab, activeIcon);
 			TITANIUM_ADD_PROPERTY(Tab, badge);
 			TITANIUM_ADD_PROPERTY(Tab, icon);
 			TITANIUM_ADD_PROPERTY(Tab, iconIsMask);
 			TITANIUM_ADD_PROPERTY(Tab, activeIconIsMask);
 			TITANIUM_ADD_PROPERTY(Tab, title);
+			TITANIUM_ADD_PROPERTY(Tab, titleColor);
 			TITANIUM_ADD_PROPERTY(Tab, titleid);
 			TITANIUM_ADD_PROPERTY(Tab, window);
 
@@ -141,6 +145,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Tab, setBackgroundColor);
 			TITANIUM_ADD_FUNCTION(Tab, getActive);
 			TITANIUM_ADD_FUNCTION(Tab, setActive);
+			TITANIUM_ADD_FUNCTION(Tab, getActiveColor);
+			TITANIUM_ADD_FUNCTION(Tab, setActiveColor);
 			TITANIUM_ADD_FUNCTION(Tab, getActiveIcon);
 			TITANIUM_ADD_FUNCTION(Tab, setActiveIcon);
 			TITANIUM_ADD_FUNCTION(Tab, getBadge);
@@ -153,6 +159,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Tab, setActiveIconIsMask);
 			TITANIUM_ADD_FUNCTION(Tab, getTitle);
 			TITANIUM_ADD_FUNCTION(Tab, setTitle);
+			TITANIUM_ADD_FUNCTION(Tab, getTitleColor);
+			TITANIUM_ADD_FUNCTION(Tab, setTitleColor);
 			TITANIUM_ADD_FUNCTION(Tab, getTitleid);
 			TITANIUM_ADD_FUNCTION(Tab, setTitleid);
 			TITANIUM_ADD_FUNCTION(Tab, getWindow);
@@ -179,6 +187,8 @@ namespace Titanium
 		TITANIUM_PROPERTY_SETTER_STRING(Tab, backgroundColor)
 		TITANIUM_PROPERTY_GETTER_BOOL(Tab, active)
 		TITANIUM_PROPERTY_SETTER_BOOL(Tab, active)
+		TITANIUM_PROPERTY_GETTER_STRING(Tab, activeColor)
+		TITANIUM_PROPERTY_SETTER_STRING(Tab, activeColor)
 		TITANIUM_PROPERTY_GETTER_STRING(Tab, activeIcon)
 		TITANIUM_PROPERTY_SETTER_STRING(Tab, activeIcon)
 		TITANIUM_PROPERTY_GETTER_STRING(Tab, badge)
@@ -191,6 +201,8 @@ namespace Titanium
 		TITANIUM_PROPERTY_SETTER_BOOL(Tab, activeIconIsMask)
 		TITANIUM_PROPERTY_GETTER_STRING(Tab, title)
 		TITANIUM_PROPERTY_SETTER_STRING(Tab, title)
+		TITANIUM_PROPERTY_GETTER_STRING(Tab, titleColor)
+		TITANIUM_PROPERTY_SETTER_STRING(Tab, titleColor)
 		TITANIUM_PROPERTY_GETTER_STRING(Tab, titleid)
 		TITANIUM_PROPERTY_SETTER_STRING(Tab, titleid)
 		TITANIUM_PROPERTY_GETTER_OBJECT(Tab, window)
@@ -236,6 +248,8 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_SETTER(Tab, setBackgroundColor, backgroundColor)
 		TITANIUM_FUNCTION_AS_GETTER(Tab, getActive, active)
 		TITANIUM_FUNCTION_AS_SETTER(Tab, setActive, active)
+		TITANIUM_FUNCTION_AS_GETTER(Tab, getActiveColor, activeColor)
+		TITANIUM_FUNCTION_AS_SETTER(Tab, setActiveColor, activeColor)
 		TITANIUM_FUNCTION_AS_GETTER(Tab, getActiveIcon, activeIcon)
 		TITANIUM_FUNCTION_AS_SETTER(Tab, setActiveIcon, activeIcon)
 		TITANIUM_FUNCTION_AS_GETTER(Tab, getBadge, badge)
@@ -248,6 +262,8 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_SETTER(Tab, setActiveIconIsMask, activeIconIsMask)
 		TITANIUM_FUNCTION_AS_GETTER(Tab, getTitle, title)
 		TITANIUM_FUNCTION_AS_SETTER(Tab, setTitle, title)
+		TITANIUM_FUNCTION_AS_GETTER(Tab, getTitleColor, titleColor)
+		TITANIUM_FUNCTION_AS_SETTER(Tab, setTitleColor, titleColor)
 		TITANIUM_FUNCTION_AS_GETTER(Tab, getTitleid, titleid)
 		TITANIUM_FUNCTION_AS_SETTER(Tab, setTitleid, titleid)
 		TITANIUM_FUNCTION_AS_GETTER(Tab, getWindow, window)

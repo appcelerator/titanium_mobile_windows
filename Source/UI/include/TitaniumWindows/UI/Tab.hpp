@@ -52,6 +52,7 @@ namespace TitaniumWindows
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 			virtual void set_title(const std::string& title) TITANIUM_NOEXCEPT override;
 			virtual void set_window(const std::shared_ptr<Titanium::UI::Window>& window) TITANIUM_NOEXCEPT override;
+			virtual void set_activeColor(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void set_backgroundColor(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void set_backgroundImage(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void set_backgroundSelectedColor(const std::string&) TITANIUM_NOEXCEPT override;
@@ -60,12 +61,15 @@ namespace TitaniumWindows
 			virtual void set_backgroundDisabledImage(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void set_backgroundFocusedColor(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void set_backgroundFocusedImage(const std::string&) TITANIUM_NOEXCEPT override;
+			virtual void set_titleColor(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void blur()  override;
 			virtual void focus() override;
 
 		private:
+			void set_titleColorByState();
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			Windows::UI::Xaml::Controls::PivotItem^ pivotItem__;
+			Windows::UI::Xaml::Media::Brush^ defaultForeground__;
 #else
 			Windows::UI::Xaml::Controls::Grid^  grid__;
 #endif

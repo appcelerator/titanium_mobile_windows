@@ -22,6 +22,9 @@ namespace TitaniumWindows
 
 		Tab::Tab(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: Titanium::UI::Tab(js_context)
+#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+			, defaultForeground__(nullptr)
+#endif
 		{
 		}
 
@@ -45,7 +48,9 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::Tab::set_title(title);
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			pivotItem__->Header = TitaniumWindows::Utility::ConvertUTF8String(title);
+			const auto textBlock = ref new TextBlock();
+			textBlock->Text = TitaniumWindows::Utility::ConvertUTF8String(title);
+			pivotItem__->Header = textBlock;
 #else
 
 #endif
@@ -77,6 +82,7 @@ namespace TitaniumWindows
 				window__->blur();
 			}
 			Titanium::UI::Tab::blur();
+			set_titleColorByState();
 		}
 
 		void Tab::focus() 
@@ -85,6 +91,45 @@ namespace TitaniumWindows
 				window__->focus();
 			}
 			Titanium::UI::Tab::focus();
+			set_titleColorByState();
+		}
+
+		void Tab::set_titleColorByState()
+		{
+			std::string colorName;
+			if (Titanium::UI::Tab::get_active()) {
+				colorName = Titanium::UI::Tab::get_activeColor();
+			}
+			else {
+				colorName = Titanium::UI::Tab::get_titleColor();
+			}
+			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
+#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+			const auto textBlock = safe_cast<Controls::TextBlock^>(pivotItem__->Header);
+			if (defaultForeground__ == nullptr) {
+				defaultForeground__ = textBlock->Foreground;
+			}
+			if (colorName.empty()) {
+				// Use the default colors if the new color is empty
+				textBlock->Foreground = defaultForeground__;
+			} else {
+				textBlock->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
+			}
+#else
+			// FIXME What do we do for Win 8.1 store?
+#endif
+		}
+
+		void Tab::set_activeColor(const std::string& colorName) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Tab::set_activeColor(colorName);
+			set_titleColorByState();
+		}
+
+		void Tab::set_titleColor(const std::string& colorName) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Tab::set_titleColor(colorName);
+			set_titleColorByState();
 		}
 
 		void Tab::set_backgroundColor(const std::string& value) TITANIUM_NOEXCEPT
