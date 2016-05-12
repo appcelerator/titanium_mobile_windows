@@ -86,7 +86,7 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::blur()
 		{
-			TITANIUM_MODULE_LOG_WARN("blur() is not supported on Windows");
+			TITANIUM_LOG_WARN("blur() is not supported on Windows");
 		}
 
 		void WindowsViewLayoutDelegate::focus()
@@ -94,7 +94,7 @@ namespace TitaniumWindows
 			if (is_control__) {
 				dynamic_cast<Control^>(component__)->Focus(FocusState::Programmatic);
 			} else {
-				TITANIUM_MODULE_LOG_WARN("focus() is not supported for this control");
+				TITANIUM_LOG_WARN("focus() is not supported for this control");
 			}
 		}
 
