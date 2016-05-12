@@ -50,17 +50,23 @@ namespace TitaniumWindows
 			bar__->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Gray);
 
 			sizechanged_event__ = panel__->SizeChanged += ref new SizeChangedEventHandler([this](Platform::Object^ sender, SizeChangedEventArgs^ e) {
-				// Make sure to resize this only when it's requested.
-				if (!sizeChanged__) {
-					return;
-				}
 				const auto fill = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL);
 				const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+
 				if (layout->get_height() != fill) {
+					// relative position from container should start from top & left
+					panel__->VerticalAlignment = VerticalAlignment::Top;
 					layout->set_height(std::to_string(e->NewSize.Height));
+				} else {
+					panel__->VerticalAlignment = VerticalAlignment::Stretch;
 				}
+
 				if (layout->get_width() != fill) {
+					// relative position from container should start from top & left
+					panel__->HorizontalAlignment = HorizontalAlignment::Left;
 					layout->set_width(std::to_string(e->NewSize.Width));
+				} else {
+					panel__->HorizontalAlignment = HorizontalAlignment::Stretch;
 				}
 			});
 
@@ -68,10 +74,6 @@ namespace TitaniumWindows
 			label__->Text = "";
 
 			label__->FontSize = TitaniumWindows::UI::Label::DefaultFontSize;
-
-			// relative position from container should start from top & left
-			panel__->VerticalAlignment = VerticalAlignment::Top;
-			panel__->HorizontalAlignment = HorizontalAlignment::Left;
 			label__->HorizontalAlignment = HorizontalAlignment::Center;
 
 			panel__->Children->Append(label__);
