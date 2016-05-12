@@ -10,6 +10,7 @@
 #include "Titanium/UIModule.hpp"
 #include "Titanium/UI/OpenWindowParams.hpp"
 #include "Titanium/UI/CloseWindowParams.hpp"
+#include "Titanium/UI/Tab.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 
 #define GET_UI() \
@@ -38,7 +39,8 @@ namespace Titanium
 		      navTintColor__(""),
 		      orientationModes__(),
 		      theme__(""),
-		      translucent__(false)
+		      translucent__(false),
+		      tab__(nullptr)
 		{
 			TITANIUM_LOG_DEBUG("Window:: ctor ", this);
 		}
@@ -50,6 +52,7 @@ namespace Titanium
 
 		void Window::close(const std::shared_ptr<CloseWindowParams>& params) TITANIUM_NOEXCEPT
 		{
+			tab__ = nullptr;
 		}
 
 		void Window::open(const std::shared_ptr<OpenWindowParams>& params) TITANIUM_NOEXCEPT
@@ -57,16 +60,6 @@ namespace Titanium
 			GET_UI();
 			const auto ui_ptr = UI.GetPrivate<Titanium::UIModule>();
 			ui_ptr->set_currentWindow(this->get_object().GetPrivate<Titanium::UI::Window>());
-		}
-
-		void Window::closeAsView()
-		{
-			fireEvent("close");
-		}
-
-		void Window::openAsView()
-		{
-			fireEvent("open");
 		}
 
 		TITANIUM_PROPERTY_READWRITE(Window, bool, exitOnClose)
@@ -81,6 +74,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Window, TitleAttributesParams, titleAttributes)
 		TITANIUM_PROPERTY_READWRITE(Window, bool, translucent)
 		TITANIUM_PROPERTY_READWRITE(Window, std::string, barColor)
+		TITANIUM_PROPERTY_READWRITE(Window, std::shared_ptr<Tab>, tab)
 
 		void Window::JSExportInitialize()
 		{

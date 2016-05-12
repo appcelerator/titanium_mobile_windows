@@ -12,6 +12,7 @@
 #include "TitaniumWindows_UI_EXPORT.h"
 #include "Titanium/UI/Window.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
+#include "TitaniumWindows/WindowsMacros.hpp"
 
 namespace TitaniumWindows
 {
@@ -87,15 +88,14 @@ namespace TitaniumWindows
 
 			virtual std::shared_ptr<TitaniumWindows::UI::WindowsXaml::CommandBar> getBottomAppBar() TITANIUM_NOEXCEPT;
 
-			virtual void enableEvents()  TITANIUM_NOEXCEPT override;
-			virtual void disableEvents() TITANIUM_NOEXCEPT override;
-
-			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
-			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
-
 			void updateWindowsCommandBar(const std::shared_ptr<TitaniumWindows::UI::WindowsXaml::CommandBar>& commandbar);
-			void updateWindowSize() TITANIUM_NOEXCEPT;
 
+#if defined(IS_WINDOWS_10)
+			void updateWindowSize() TITANIUM_NOEXCEPT;
+#endif
+
+			static void SetActiveTabWindow(const std::shared_ptr<TitaniumWindows::UI::Window>& window);
+			static void ExitApp(const JSContext& js_context);
 		private:
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -103,8 +103,6 @@ namespace TitaniumWindows
 			static std::vector<std::shared_ptr<Window>> window_stack__;
 			std::shared_ptr<TitaniumWindows::UI::WindowsXaml::CommandBar> bottomAppBar__;
 			Windows::Foundation::EventRegistrationToken backpressed_event__;
-			bool is_custom_backpress_event__ { false };
-			bool is_window_event_active__ { false };
 			bool is_tabgroup_container__ { false };
 #pragma warning(pop)
 		};

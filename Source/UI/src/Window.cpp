@@ -11,7 +11,6 @@
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UIModule.hpp"
 #include <windows.h>
-#include "TitaniumWindows/WindowsMacros.hpp"
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/Windows/CommandBar.hpp"
 #include "TitaniumWindows/UI/Tab.hpp"
@@ -22,6 +21,7 @@ namespace TitaniumWindows
 	namespace UI
 	{
 		using namespace Windows::Foundation;
+		using namespace Windows::UI::Core;
 
 		std::vector<std::shared_ptr<Window>> Window::window_stack__;
 
@@ -45,27 +45,43 @@ namespace TitaniumWindows
 			// Don't set Border to Xaml Frame content, otherwise you'll see runtime exception.
 			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(canvas__, nullptr, false);
 
+#if defined(IS_WINDOWS_10)
 			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
 			rootFrame->Navigated += ref new Windows::UI::Xaml::Navigation::NavigatedEventHandler([this](Platform::Object^, Windows::UI::Xaml::Navigation::NavigationEventArgs^) {
-				updateWindowSize();
-			});
-
-#if defined(IS_WINDOWS_PHONE)
-			using namespace Windows::Phone::UI::Input;
-
-			backpressed_event__ = HardwareButtons::BackPressed += ref new EventHandler<BackPressedEventArgs^>([this](Platform::Object ^sender, BackPressedEventArgs ^e) {
-				if (is_window_event_active__) {
-					// close current window when there's no back button listener
-					if (is_custom_backpress_event__) {
-						fireEvent("windows:back");
-					} else {
-						close(nullptr);
-					}
-					e->Handled = true;
+				// Resizing Window should be available only on Windows 10 Store App
+				if (!IS_WINDOWS_MOBILE) {
+					updateWindowSize();
 				}
+				// Update back button visibility. Note that back button is available on Store App too.
+				SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = AppViewBackButtonVisibility::Visible;
 			});
 #endif
-		}
+
+#if defined(IS_WINDOWS_10) || defined(IS_WINDOWS_PHONE)
+			// Setup back button press event
+			static std::once_flag of;
+			std::call_once(of, [this]() {
+#if defined(IS_WINDOWS_10)
+				SystemNavigationManager::GetForCurrentView()->BackRequested += ref new EventHandler<BackRequestedEventArgs^>([](Platform::Object^ sender, BackRequestedEventArgs^ e) {
+#elif defined(IS_WINDOWS_PHONE)
+				using namespace Windows::Phone::UI::Input;
+				backpressed_event__ = HardwareButtons::BackPressed += ref new EventHandler<BackPressedEventArgs^>([](Platform::Object ^sender, BackPressedEventArgs ^e) {
+#endif
+					if (TitaniumWindows::UI::Window::window_stack__.size() > 0) {
+						// Issue back event on the top window
+						const auto top_window = TitaniumWindows::UI::Window::window_stack__.back();
+
+						// For backward complatibility, we fires "windows:back" as well as "back".
+						top_window->fireEvent("windows:back");
+						top_window->fireEvent("back");
+
+						top_window->close(nullptr);
+					}
+					e->Handled = true;
+				});
+			});	
+#endif
+	}
 
 		Window::~Window() 
 		{
@@ -120,14 +136,30 @@ namespace TitaniumWindows
 		void Window::focus() 
 		{
 			updateWindowsCommandBar(getBottomAppBar());
+
+			SetActiveTabWindow(get_object().GetPrivate<Window>());
+
 			// Xaml Canvas doesn't actually fire GotFocus. Let's fire Ti event manually
 			fireEvent("focus");
 		}
 
+		void Window::SetActiveTabWindow(const std::shared_ptr<TitaniumWindows::UI::Window>& window)
+		{
+			// Tracking Window of active Tab
+			if (window->tab__) {
+				// Current Window of active Tab will be always on top of the stack
+				if (window_stack__.size() > 0) {
+					const auto top_window = window_stack__.back();
+					if (top_window->tab__) {
+						window_stack__.pop_back();
+					}
+				}
+				window_stack__.push_back(window);
+			}
+		}
+
 		void Window::close(const std::shared_ptr<Titanium::UI::CloseWindowParams>& params) TITANIUM_NOEXCEPT
 		{
-			Titanium::UI::Window::close(params);
-
 			// Fire blur & close event on this window
 			blur();
 			fireEvent("close");
@@ -135,7 +167,14 @@ namespace TitaniumWindows
 			// disable all events further because it doesn't make sense.
 			disableEvents();
 
-			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+			bool is_last_window = false;
+			if (tab__) {
+				const auto tab = std::dynamic_pointer_cast<Tab>(tab__);
+				tab->closeWindow(get_object().GetPrivate<Window>());
+				is_last_window = tab->isLastWindow();
+				tab__ = nullptr;
+			}
+
 			const auto top_window = window_stack__.back();
 			const auto is_top_window = (top_window.get() == this); // check if window.close has been issued onto the top window
 
@@ -165,45 +204,58 @@ namespace TitaniumWindows
 
 				} else {
 					window_stack__.pop_back();
-					rootFrame->GoBack();
-					
 					const auto next_window = window_stack__.back();
 
-					try {
-						rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
-						auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
-						page->Content = next_window->getComponent();
-					} catch (Platform::COMException^ e) {
-						// This may happen when current window is not actually opened yet. In this case we just can skip it.
-						// TODO: Is there any way to avoid this exception by checking if page content is valid?
-						TITANIUM_LOG_ERROR("Window.close: failed to set content for the new Window");
+					if (is_last_window) {
+						ExitApp(get_context());
+						return;
+					} else {
+						const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+						rootFrame->GoBack();
+
+						try {
+							rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
+							auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
+							page->Content = next_window->getComponent();
+						} catch (Platform::COMException^ e) {
+							// This may happen when current window is not actually opened yet. In this case we just can skip it.
+							// TODO: Is there any way to avoid this exception by checking if page content is valid?
+							TITANIUM_LOG_ERROR("Window.close: failed to set content for the new Window");
+						}
 					}
 
 					// start accepting events for the new Window
 					next_window->enableEvents();
 					next_window->focus();
 				}
+
+				Titanium::UI::Window::close(params);
 			} else if (is_top_window) {
-				JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
-				TITANIUM_ASSERT(Titanium_property.IsObject());
-				JSObject Titanium = static_cast<JSObject>(Titanium_property);
-				JSValue App_property = Titanium.GetProperty("App");
-				TITANIUM_ASSERT(App_property.IsObject());
-				std::shared_ptr<Titanium::AppModule> App = static_cast<JSObject>(App_property).GetPrivate<Titanium::AppModule>();
-
-				// fire pause events
-				App->fireEvent("pause");
-				App->fireEvent("paused");
-
-				// exit the app because there's no window to navigate back
-				window_stack__.clear();
-				Windows::UI::Xaml::Application::Current->Exit();
+				ExitApp(get_context());
 			}
 		}
 
+		void Window::ExitApp(const JSContext& js_context) 
+		{
+			JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
+			TITANIUM_ASSERT(Titanium_property.IsObject());
+			JSObject Titanium = static_cast<JSObject>(Titanium_property);
+			JSValue App_property = Titanium.GetProperty("App");
+			TITANIUM_ASSERT(App_property.IsObject());
+			std::shared_ptr<Titanium::AppModule> App = static_cast<JSObject>(App_property).GetPrivate<Titanium::AppModule>();
+
+			// fire pause events
+			App->fireEvent("pause");
+			App->fireEvent("paused");
+
+			// exit the app because there's no window to navigate back
+			window_stack__.clear();
+			Windows::UI::Xaml::Application::Current->Exit();
+		}
+
+#if defined(IS_WINDOWS_10)
 		void Window::updateWindowSize() TITANIUM_NOEXCEPT
 		{
-#if defined(IS_WINDOWS_10)
 			const auto currentBounds = Windows::UI::Xaml::Window::Current->Bounds;
 
 			const auto layout    = getViewLayoutDelegate();
@@ -225,17 +277,22 @@ namespace TitaniumWindows
 			if (!Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->TryResizeView(Size(width, height))) {
 				TITANIUM_LOG_WARN("Titanium::Window: Unable to resize root Window with size ", width, "x", height);
 			}
-#endif
 		}
+#endif
 
 		void Window::open(const std::shared_ptr<Titanium::UI::OpenWindowParams>& params) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::Window::open(params);
 
-			auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
-			rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
-			auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
-			page->Content = canvas__;
+			if (tab__) {
+				const auto tab = std::dynamic_pointer_cast<Tab>(tab__);
+				tab->openWindow(get_object().GetPrivate<Window>());
+			} else {
+				auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+				rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
+				auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
+				page->Content = canvas__;
+			}
 
 			if (window_stack__.size() > 0) {
 				// Fire blur on the last window
@@ -246,7 +303,10 @@ namespace TitaniumWindows
 				lastwin->disableEvents();
 			}
 
-			window_stack__.push_back(this->get_object().GetPrivate<Window>());
+			// Tab.open should not increase window stack. Tab.focus event does it instead.
+			if (tab__ == nullptr) {
+				window_stack__.push_back(this->get_object().GetPrivate<Window>());
+			}
 
 			// start accepting events
 			enableEvents();
@@ -314,34 +374,6 @@ namespace TitaniumWindows
 			auto view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
 			fullscreen ? view->TryEnterFullScreenMode() : view->ExitFullScreenMode();
 #endif
-		}
-
-		void Window::enableEvents() TITANIUM_NOEXCEPT
-		{
-			Titanium::Module::enableEvents();
-			is_window_event_active__ = true;
-		}
-
-		void Window::disableEvents() TITANIUM_NOEXCEPT
-		{
-			Titanium::Module::disableEvents();
-			is_window_event_active__ = false;
-		}
-
-		void Window::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::Window::enableEvent(event_name);
-			if (event_name == "windows:back") {
-				is_custom_backpress_event__ = true;
-			}
-		}
-
-		void Window::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
-		{
-			Titanium::UI::Window::disableEvent(event_name);
-			if (event_name == "windows:back") {
-				is_custom_backpress_event__ = false;
-			}
 		}
 
 		WindowLayoutDelegate::WindowLayoutDelegate() TITANIUM_NOEXCEPT
