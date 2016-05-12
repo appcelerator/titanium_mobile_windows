@@ -70,7 +70,8 @@ namespace Titanium
 		void Tab::open(const std::shared_ptr<OpenWindowParams>& options) TITANIUM_NOEXCEPT
 		{
 			if (window__) {
-				window__->openAsView();
+				window__->set_tab(get_object().GetPrivate<Tab>());
+				window__->open(options);
 			} else {
 				TITANIUM_LOG_WARN("Tab::open() failed: no window is attached");
 			}
@@ -85,7 +86,7 @@ namespace Titanium
 		void Tab::close(const std::shared_ptr<CloseWindowParams>& options) TITANIUM_NOEXCEPT
 		{
 			if (window__) {
-				window__->closeAsView();
+				window__->close(options);
 			} else {
 				TITANIUM_LOG_WARN("Tab::close() failed: no window is attached");
 			}

@@ -20,6 +20,8 @@ namespace TitaniumWindows
 	{
 		using namespace HAL;
 
+		class Window;
+
 		/*!
 		  @class Tab
 		  @ingroup Titanium.UI.Tab
@@ -65,14 +67,25 @@ namespace TitaniumWindows
 			virtual void blur()  override;
 			virtual void focus() override;
 
+			void openWindow(const std::shared_ptr<Window>& window);
+			void closeWindow(const std::shared_ptr<Window>& window);
+
+			bool isLastWindow() 
+			{
+				return (window_stack__.size() == 0);
+			}
 		private:
 			void set_titleColorByState();
+#pragma warning(push)
+#pragma warning(disable : 4251)
+			std::vector<std::shared_ptr<Window>> window_stack__;
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			Windows::UI::Xaml::Controls::PivotItem^ pivotItem__;
 			Windows::UI::Xaml::Media::Brush^ defaultForeground__;
 #else
 			Windows::UI::Xaml::Controls::Grid^  grid__;
 #endif
+#pragma warning(pop)
 		};
 	}  // namespace UI
 }  // namespace TitaniumWindows

@@ -21,6 +21,7 @@ namespace Titanium
 
 		class OpenWindowParams;
 		class CloseWindowParams;
+		class Tab;
 
 		/*!
 		  @class
@@ -45,11 +46,6 @@ namespace Titanium
 			*/
 			virtual void close(const std::shared_ptr<CloseWindowParams>& params) TITANIUM_NOEXCEPT;
 
-			/*
-			 * Closes the view of the Window, used by Ti.UI.TabGroup 
-			*/
-			virtual void closeAsView();
-
 			/*!
 			  @method
 
@@ -63,11 +59,6 @@ namespace Titanium
 			  @result void
 			*/
 			virtual void open(const std::shared_ptr<OpenWindowParams>& params) TITANIUM_NOEXCEPT;
-
-			/*
-			* Opens the view of the Window, used by Ti.UI.TabGroup
-			*/
-			virtual void openAsView();
 
 			/*!
 			  @method
@@ -233,6 +224,16 @@ namespace Titanium
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(bool, translucent);
 
+			/*!
+			@method
+
+			@abstract tab : Tab
+
+			@discussion Tab that attaches this Window
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::shared_ptr<Tab>, tab);
+
+
 			Window(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~Window() TITANIUM_NOEXCEPT;  //= default;
@@ -316,6 +317,8 @@ namespace Titanium
 
 			JSObject openWindowParams_ctor__;
 			JSObject closeWindowParams_ctor__;
+
+			std::shared_ptr<Tab> tab__;
 #pragma warning(pop)
 		};
 	} // namespace UI

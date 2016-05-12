@@ -30,7 +30,7 @@ namespace TitaniumWindows
 
 		void Tab::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 		{
-			Titanium::UI::Tab::postCallAsConstructor(js_context, arguments);	
+			Titanium::UI::Tab::postCallAsConstructor(js_context, arguments);
 
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			pivotItem__ = ref new PivotItem();
@@ -54,6 +54,35 @@ namespace TitaniumWindows
 #else
 
 #endif
+		}
+
+		void Tab::openWindow(const std::shared_ptr<Window>& window)
+		{
+			window_stack__.push_back(window);
+		}
+
+		void Tab::closeWindow(const std::shared_ptr<Window>& window)
+		{
+			if (window_stack__.size() == 1) {
+				window_stack__.pop_back();
+			} else if (window_stack__.size() > 1) {
+				const auto top_window = window_stack__.back();
+				const auto is_top_window = (top_window.get() == window.get());
+				if (is_top_window) {
+					window_stack__.pop_back();
+					const auto next_window = window_stack__.back();
+					set_window(next_window);
+					next_window->focus();
+				} else {
+					// Window is not on top. Just closing it then.
+					for (std::size_t i = 0; i < window_stack__.size(); i++) {
+						if (window_stack__.at(i).get() == window.get()) {
+							window_stack__.erase(window_stack__.begin() + i);
+							break;
+						}
+					}
+				}
+			}
 		}
 
 		void Tab::set_window(const std::shared_ptr<Titanium::UI::Window>& window) TITANIUM_NOEXCEPT
