@@ -91,14 +91,13 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::Button::set_textAlign(textAlign);
 
-			TITANIUM_LOG_WARN("Button.textAlign is not implemented yet");
-			//if (textAlign == Titanium::UI::TEXT_ALIGNMENT::CENTER) {
-			//	button__->TextAlignment = TextAlignment::Center;
-			//} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::LEFT) {
-			//	button__->TextAlignment = TextAlignment::Left;
-			//} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::RIGHT) {
-			//	button__->TextAlignment = TextAlignment::Right;
-			//}
+			if (textAlign == Titanium::UI::TEXT_ALIGNMENT::CENTER) {
+				button__->HorizontalContentAlignment = HorizontalAlignment::Center;
+			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::LEFT) {
+				button__->HorizontalContentAlignment = HorizontalAlignment::Left;
+			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::RIGHT) {
+				button__->HorizontalContentAlignment = HorizontalAlignment::Right;
+			}
 			// TODO Windows supports JUSTIFY!
 		}
 
@@ -112,11 +111,11 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::Button::set_verticalAlign(verticalAlign);
 			if (verticalAlign == Titanium::UI::TEXT_VERTICAL_ALIGNMENT::BOTTOM) {
-				button__ ->VerticalAlignment = VerticalAlignment::Bottom;
+				button__ ->VerticalContentAlignment = VerticalAlignment::Bottom;
 			} else if (verticalAlign == Titanium::UI::TEXT_VERTICAL_ALIGNMENT::CENTER) {
-				button__->VerticalAlignment = VerticalAlignment::Center;
+				button__->VerticalContentAlignment = VerticalAlignment::Center;
 			} else if (verticalAlign == Titanium::UI::TEXT_VERTICAL_ALIGNMENT::TOP) {
-				button__->VerticalAlignment = VerticalAlignment::Top;
+				button__->VerticalContentAlignment = VerticalAlignment::Top;
 			}
 			// TODO Windows supports stretch!
 		}

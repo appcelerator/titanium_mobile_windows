@@ -39,7 +39,6 @@ namespace TitaniumWindows
 		class TITANIUMWINDOWS_UI_EXPORT Button final : public Titanium::UI::Button, public JSExport<Button>
 		{
 		public:
-			TITANIUM_FUNCTION_UNIMPLEMENTED(textAlign);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(borderRadius);
 
 			Button(const JSContext&) TITANIUM_NOEXCEPT;
@@ -53,7 +52,7 @@ namespace TitaniumWindows
 #endif
 
 			static void JSExportInitialize();
-			
+
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 			virtual void set_color(const std::string& color) TITANIUM_NOEXCEPT override final;
