@@ -165,7 +165,7 @@ function Controller() {
         borderRadius: 30,
         borderWidth: 2,
         borderColor: "#C41230",
-        backgroundColor: "#33C41230",
+        backgroundColor: "#F2D0D6",
         textAlign: "center",
         font: {
             fontSize: 20,
@@ -185,7 +185,7 @@ function Controller() {
         borderRadius: 30,
         borderWidth: 2,
         borderColor: "#C41230",
-        backgroundColor: "#33C41230",
+        backgroundColor: "#F2D0D6",
         textAlign: "center",
         font: {
             fontSize: 20,
@@ -205,7 +205,7 @@ function Controller() {
         borderRadius: 30,
         borderWidth: 2,
         borderColor: "#C41230",
-        backgroundColor: "#33C41230",
+        backgroundColor: "#F2D0D6",
         textAlign: "center",
         font: {
             fontSize: 20,
