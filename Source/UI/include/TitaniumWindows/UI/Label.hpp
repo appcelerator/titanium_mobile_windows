@@ -58,7 +58,7 @@ namespace TitaniumWindows
 			Windows::UI::Xaml::Controls::Grid^ parent__;
 			Windows::UI::Xaml::Controls::TextBlock^ label__;
 			Windows::Foundation::EventRegistrationToken label_sizechanged_event__;
-			bool sizeChanged__{ true };
+			bool sizeChanged__{ false };
 		};
 	} // namespace UI
 } // namespace TitaniumWindows

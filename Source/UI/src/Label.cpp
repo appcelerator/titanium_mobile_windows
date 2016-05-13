@@ -45,12 +45,24 @@ namespace TitaniumWindows
 			parent__ = ref new Controls::Grid();
 			label__ = ref new Windows::UI::Xaml::Controls::TextBlock();
 
-			// Grid needs to resize when label text is changed
+			// In case width/height is Ti.UI.SIZE, grid needs to resize when label text is changed
 			label_sizechanged_event__ = label__->SizeChanged += ref new SizeChangedEventHandler([this](Platform::Object^ sender, SizeChangedEventArgs^ e) {
 				const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
-				if (e->PreviousSize.Height > 0 && sizeChanged__ && layout->get_height() != Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL)) {
+				if (sizeChanged__) {
 					sizeChanged__ = false;
-					layout->set_height(std::to_string(e->NewSize.Height));
+					const auto size = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
+					const auto height = layout->get_height();
+					if (height.empty() || height == size) {
+						layout->set_height(std::to_string(e->NewSize.Height));
+					}
+					const auto width = layout->get_width();
+					if (!layout->get_right().empty() && !layout->get_left().empty()) {
+						// When both left and right is specified, Label.width acts like Ti.UI.FILL on iOS. (TIMOB-23372)
+						// Not sure exactly why but we simulate what it looks like on iOS.
+						layout->set_width(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
+					} else if (width.empty() || width == size) {
+						layout->set_width(std::to_string(e->NewSize.Width));
+					}
 				}
 			});
 
@@ -58,7 +70,7 @@ namespace TitaniumWindows
 
 			label__->TextWrapping = Windows::UI::Xaml::TextWrapping::Wrap;
 			label__->TextTrimming = Windows::UI::Xaml::TextTrimming::None;
-			label__->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Top;
+			label__->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
 			label__->FontSize = DefaultFontSize;
 
 			// TIMOB-19048: max size is set to screen size by default
