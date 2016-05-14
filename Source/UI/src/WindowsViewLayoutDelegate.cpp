@@ -713,6 +713,8 @@ namespace TitaniumWindows
 				dynamic_cast<Panel^>(component__)->Background = brush;
 			} else if (is_control__) {
 				dynamic_cast<Control^>(component__)->Background = brush;
+			} else if (is_border__) {
+				dynamic_cast<Border^>(component__)->Background = brush;
 			} else {
 				TITANIUM_LOG_WARN("Unable to set background: Unknown component");
 			}
@@ -1214,6 +1216,7 @@ namespace TitaniumWindows
 			is_control__ = dynamic_cast<Controls::Control^>(component__) != nullptr;
 			is_scrollview__ = dynamic_cast<Controls::ScrollViewer^>(component__) != nullptr;
 			is_grid__    = dynamic_cast<Controls::Grid^>(component__) != nullptr;
+			is_border__ = dynamic_cast<Controls::Border^>(component__) != nullptr;
 			is_button__  = dynamic_cast<Controls::Button^>(underlying_control__) != nullptr;
 
 			loaded_event__ = component__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {

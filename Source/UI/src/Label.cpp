@@ -41,8 +41,8 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::Label::postCallAsConstructor(js_context, arguments);
 			
-			// Note: TextAlignment and VerticalAlignment does not work without parent Grid container!
-			parent__ = ref new Controls::Grid();
+			// Note: TextAlignment and VerticalAlignment does not work without parent container!
+			parent__ = ref new Windows::UI::Xaml::Controls::Border();
 			label__ = ref new Windows::UI::Xaml::Controls::TextBlock();
 
 			// In case width/height is Ti.UI.SIZE, grid needs to resize when label text is changed
@@ -80,16 +80,14 @@ namespace TitaniumWindows
 				label__->MaxHeight = current->Bounds.Height;
 			}
 
-			parent__->Children->Append(label__);
-			parent__->SetColumn(label__, 0);
-			parent__->SetRow(label__, 0);
+			parent__->Child = label__;
 
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::SIZE);
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::SIZE);
 			layoutDelegate__->set_autoLayoutForHeight(Titanium::UI::LAYOUT::SIZE);
 			layoutDelegate__->set_autoLayoutForWidth(Titanium::UI::LAYOUT::SIZE);
 
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(parent__);
+			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(parent__, nullptr, parent__);
 		}
 
 		void Label::JSExportInitialize()
