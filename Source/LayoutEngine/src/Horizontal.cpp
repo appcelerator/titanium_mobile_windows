@@ -49,6 +49,7 @@ namespace Titanium
 			unsigned int len = children.size();
 			unsigned int rowLen = 0;
 			unsigned int rowsLen = (len > 0) ? 1 : 0;
+			bool percentageFix = false;
 
 			// Calculate horizontal size and position for the children
 			for (i = 0; i < len; i++) {
@@ -60,6 +61,14 @@ namespace Titanium
 				heightLayoutCoefficients = layoutCoefficients.height;
 				sandboxWidthLayoutCoefficients = layoutCoefficients.sandboxWidth;
 				leftLayoutCoefficients = layoutCoefficients.left;
+
+				// For some reason, iOS and Android append 10% right padding to horizontal
+				// views of width Ti.UI.SIZE when an element inside uses % padding this is
+				// a workaround to offset the padding and keep parity with iOS and Android
+				if (isWidthSize && !percentageFix && leftLayoutCoefficients.x1 > 0) {
+					runningWidth -= 0.1* width;
+					percentageFix = true;
+				}
 
 				// Pedro
 				measuredWidth = widthLayoutCoefficients.x1 * width + widthLayoutCoefficients.x2 * (width - (isWidthSize ? 0 : runningWidth)) + widthLayoutCoefficients.x3;
@@ -235,13 +244,21 @@ namespace Titanium
 
 			// Width rule calculation
 			if (widthType == Size) {
-				x1 = x2 = x3 = NAN;
+				if (leftType != None && rightType != None) {
+					x2 = 1;
+					leftType == Percent && (x1 -= leftValue);
+					leftType == Fixed && (x3 -= leftValue);
+					rightType == Percent && (x1 -= rightValue);
+					rightType == Fixed && (x3 -= rightValue);
+				} else {
+					x1 = x2 = x3 = NAN;
+				}
 			} else if (widthType == Fill) {
 				x2 = 1;
-				leftType == Percent&&(x1 = -leftValue);
-				leftType == Fixed&&(x3 = -leftValue);
-				rightType == Percent&&(x1 = -rightValue);
-				rightType == Fixed&&(x3 = -rightValue);
+				leftType == Percent&&(x1 -= leftValue);
+				leftType == Fixed&&(x3 -= leftValue);
+				rightType == Percent&&(x1 -= rightValue);
+				rightType == Fixed&&(x3 -= rightValue);
 			} else if (widthType == Percent) {
 				x1 = widthValue;
 			} else if (widthType == Fixed) {

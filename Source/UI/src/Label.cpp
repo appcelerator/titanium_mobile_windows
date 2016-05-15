@@ -56,11 +56,7 @@ namespace TitaniumWindows
 						layout->set_height(std::to_string(e->NewSize.Height));
 					}
 					const auto width = layout->get_width();
-					if (!layout->get_right().empty() && !layout->get_left().empty()) {
-						// When both left and right is specified, Label.width acts like Ti.UI.FILL on iOS. (TIMOB-23372)
-						// Not sure exactly why but we simulate what it looks like on iOS.
-						layout->set_width(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
-					} else if (width.empty() || width == size) {
+					if (width.empty() || width == size) {
 						layout->set_width(std::to_string(e->NewSize.Width));
 					}
 				}
