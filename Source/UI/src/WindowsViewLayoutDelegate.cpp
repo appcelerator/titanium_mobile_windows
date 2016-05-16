@@ -709,6 +709,8 @@ namespace TitaniumWindows
 		{
 			if (underlying_control__) {
 				underlying_control__->Background = brush;
+			} else if (border__) {
+				border__->Background = brush;
 			} else if (is_panel__) {
 				dynamic_cast<Panel^>(component__)->Background = brush;
 			} else if (is_control__) {
