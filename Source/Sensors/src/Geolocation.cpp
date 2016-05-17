@@ -41,6 +41,17 @@ namespace TitaniumWindows
 			return;
 		}
 		if (geolocator_ == nullptr) {
+
+			TitaniumWindows::Utility::RunOnUIThread([this]() {
+				concurrency::create_task(Geolocator::RequestAccessAsync()).then([this](GeolocationAccessStatus status) {
+					if (status == GeolocationAccessStatus::Denied) {
+						locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::DENIED;
+					} else if (status == GeolocationAccessStatus::Allowed) {
+						locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::AUTHORIZED;
+					}
+				});
+			});
+
 			geolocator_ = ref new Geolocator();
 			geolocator_->MovementThreshold = 1;
 			geolocator_->ReportInterval = 0;
@@ -69,11 +80,18 @@ namespace TitaniumWindows
 
 				const auto func = [=](){
 					const auto ctx = get_context();
-					lastGeolocation__.SetProperty("latitude", ctx.CreateNumber(latitude));
-					lastGeolocation__.SetProperty("longitude", ctx.CreateNumber(longitude));
-					lastGeolocation__.SetProperty("altitude", ctx.CreateNumber(altitude));
-					lastGeolocation__.SetProperty("altitudeAccuracy", altitudeAccuracy ? ctx.CreateNumber(altitudeAccuracy->Value) : ctx.CreateNumber(0));
-					lastGeolocation__.SetProperty("speed", speed ? ctx.CreateNumber(speed->Value) : ctx.CreateNumber(0));
+
+					auto coords = ctx.CreateObject();
+					coords.SetProperty("latitude", ctx.CreateNumber(latitude));
+					coords.SetProperty("longitude", ctx.CreateNumber(longitude));
+					coords.SetProperty("altitude", ctx.CreateNumber(altitude));
+					coords.SetProperty("altitudeAccuracy", altitudeAccuracy ? ctx.CreateNumber(altitudeAccuracy->Value) : ctx.CreateNumber(0));
+					coords.SetProperty("speed", speed ? ctx.CreateNumber(speed->Value) : ctx.CreateNumber(0));
+
+					lastGeolocation__.SetProperty("code", ctx.CreateNumber(0.0));
+					lastGeolocation__.SetProperty("error", ctx.CreateString(""));
+					lastGeolocation__.SetProperty("success", ctx.CreateBoolean(true));
+					lastGeolocation__.SetProperty("coords", coords);
 
 					this->fireEvent("location", lastGeolocation__);
 				};
@@ -271,32 +289,44 @@ namespace TitaniumWindows
 		ensureLoadGeolocator();
 
 		concurrency::create_task(geolocator_->GetGeopositionAsync()).then([this, callback](Geoposition^ position) {
+			const auto ctx = get_context();
 			const auto data = position->Coordinate;
-			JSObject headingResponse = get_context().CreateObject();
+			JSObject headingResponse = ctx.CreateObject();
 
-			headingResponse.SetProperty("code", get_context().CreateNumber(0.0));
-			headingResponse.SetProperty("error", get_context().CreateString(""));
+			headingResponse.SetProperty("code", ctx.CreateNumber(0.0));
+			headingResponse.SetProperty("error", ctx.CreateString(""));
 
-			JSObject headingData = get_context().CreateObject();
-			headingData.SetProperty("accuracy", get_context().CreateNumber(data->Accuracy));
-			headingData.SetProperty("magneticHeading", get_context().CreateNumber(data->Heading->Value));
-			headingData.SetProperty("timestamp", get_context().CreateNumber(static_cast<double>(data->Timestamp.UniversalTime)));
-			headingData.SetProperty("trueHeading", get_context().CreateNumber(data->Heading->Value));
+			JSObject headingData = ctx.CreateObject();
+			headingData.SetProperty("accuracy", ctx.CreateNumber(data->Accuracy));
+			headingData.SetProperty("magneticHeading", ctx.CreateNumber(data->Heading->Value));
+			headingData.SetProperty("timestamp", ctx.CreateNumber(static_cast<double>(data->Timestamp.UniversalTime)));
+			headingData.SetProperty("trueHeading", ctx.CreateNumber(data->Heading->Value));
 
 			//heading_ = data->Heading->Value;
 
-			headingData.SetProperty("x", get_context().CreateNumber(0.0));
-			headingData.SetProperty("y", get_context().CreateNumber(0.0));
-			headingData.SetProperty("z", get_context().CreateNumber(0.0));
+			headingData.SetProperty("x", ctx.CreateNumber(0.0));
+			headingData.SetProperty("y", ctx.CreateNumber(0.0));
+			headingData.SetProperty("z", ctx.CreateNumber(0.0));
 
 			headingResponse.SetProperty("heading", headingData);
-			headingResponse.SetProperty("success", get_context().CreateBoolean(true));
+			headingResponse.SetProperty("success", ctx.CreateBoolean(true));
 
-			// Cast callback as non-const JSObject
-			// TODO : More elegant way of doing this
-			auto cb = static_cast<JSObject>(callback);
-			TITANIUM_ASSERT(cb.IsFunction());
-			cb({headingResponse}, get_context().get_global_object());
+			try {
+				// Cast callback as non-const JSObject
+				auto cb = static_cast<JSObject>(callback);
+				TITANIUM_ASSERT(cb.IsFunction());
+				cb({headingResponse}, get_object());
+			} catch (const HAL::detail::js_runtime_error& ex) {
+				// In case callback throws JS exception, we want to catch it.
+				std::ostringstream os;
+				os << "Runtime Error: " << ex.js_message();
+
+				const auto what = ctx.CreateString(os.str());
+				const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
+				auto rsod_func = static_cast<JSObject>(rsod);
+				rsod_func({ what }, rsod_func);
+			}
+
 		});
 	}
 
@@ -309,38 +339,49 @@ namespace TitaniumWindows
 		ensureLoadGeolocator();
 
 		concurrency::create_task(geolocator_->GetGeopositionAsync()).then([this, callback](Geoposition^ position) {
-			const auto data = position->Coordinate;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-			JSObject locationResult = get_context().CreateObject();
+			const auto ctx = get_context();
+			const auto data = position->Coordinate;    
+			JSObject locationResult = ctx.CreateObject();
 
-			locationResult.SetProperty("code", get_context().CreateNumber(0.0));
+			locationResult.SetProperty("code", ctx.CreateNumber(0.0));
+			locationResult.SetProperty("error", ctx.CreateString(""));
 
-			JSObject provider = get_context().CreateObject();
-			provider.SetProperty("power", get_context().CreateNumber(1.0));
-			provider.SetProperty("name", get_context().CreateString("network"));
-			provider.SetProperty("accuracy", get_context().CreateNumber(2.0));
+			JSObject provider = ctx.CreateObject();
+			provider.SetProperty("power", ctx.CreateNumber(1.0));
+			provider.SetProperty("name", ctx.CreateString("network"));
+			provider.SetProperty("accuracy", ctx.CreateNumber(2.0));
 			locationResult.SetProperty("provider", provider);
 
-			JSObject coords = get_context().CreateObject();
-			coords.SetProperty("altitude", get_context().CreateNumber(data->Point->Position.Altitude));
-			coords.SetProperty("speed", get_context().CreateNumber(data->Speed->Value));
-			coords.SetProperty("longitude", get_context().CreateNumber(data->Point->Position.Longitude));
-			coords.SetProperty("heading", get_context().CreateNumber(data->Heading->Value));
-			coords.SetProperty("latitude", get_context().CreateNumber(data->Point->Position.Latitude));
-			coords.SetProperty("timestamp", get_context().CreateNumber(static_cast<double>(data->Timestamp.UniversalTime)));
-			//coords.SetProperty("altitudeAccuracy", get_context().CreateNumber(data->AltitudeAccuracy->Value));
-			coords.SetProperty("accuracy", get_context().CreateNumber(data->Accuracy));
+			JSObject coords = ctx.CreateObject();
+			coords.SetProperty("altitude", ctx.CreateNumber(data->Point->Position.Altitude));
+			coords.SetProperty("speed", ctx.CreateNumber(data->Speed->Value));
+			coords.SetProperty("longitude", ctx.CreateNumber(data->Point->Position.Longitude));
+			coords.SetProperty("heading", ctx.CreateNumber(data->Heading->Value));
+			coords.SetProperty("latitude", ctx.CreateNumber(data->Point->Position.Latitude));
+			coords.SetProperty("timestamp", ctx.CreateNumber(static_cast<double>(data->Timestamp.UniversalTime)));
+			//coords.SetProperty("altitudeAccuracy", ctx.CreateNumber(data->AltitudeAccuracy->Value));
+			coords.SetProperty("accuracy", ctx.CreateNumber(data->Accuracy));
 			locationResult.SetProperty("coords", coords);
 
-			lastGeolocation__.SetProperty("longitude", get_context().CreateNumber(data->Point->Position.Longitude));
-			lastGeolocation__.SetProperty("latitude", get_context().CreateNumber(data->Point->Position.Latitude));
+			lastGeolocation__.SetProperty("longitude", ctx.CreateNumber(data->Point->Position.Longitude));
+			lastGeolocation__.SetProperty("latitude", ctx.CreateNumber(data->Point->Position.Latitude));
 
-			locationResult.SetProperty("success", get_context().CreateBoolean(true));
+			locationResult.SetProperty("success", ctx.CreateBoolean(true));
 
-			// Cast callback as non-const JSObject
-			// TODO : More elegant way of doing this
-			auto cb = static_cast<JSObject>(callback);
-			TITANIUM_ASSERT(cb.IsFunction());
-			cb({locationResult}, get_context().get_global_object());
+			try {
+				// Cast callback as non-const JSObject
+				auto cb = static_cast<JSObject>(callback);
+				cb({ locationResult }, get_object());
+			} catch (const HAL::detail::js_runtime_error& ex) {
+				// In case callback throws JS exception, we want to catch it.
+				std::ostringstream os;
+				os << "Runtime Error: " << ex.js_message();
+
+				const auto what = ctx.CreateString(os.str());
+				const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
+				auto rsod_func = static_cast<JSObject>(rsod);
+				rsod_func({ what }, rsod_func);
+			}
 		});
 	}
 
