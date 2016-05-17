@@ -17,6 +17,7 @@
 #include <concrt.h>
 
 #include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/WindowsMacros.hpp"
 
 namespace TitaniumWindows
 {
@@ -42,6 +43,7 @@ namespace TitaniumWindows
 		}
 		if (geolocator_ == nullptr) {
 
+#if defined(IS_WINDOWS_10)
 			TitaniumWindows::Utility::RunOnUIThread([this]() {
 				concurrency::create_task(Geolocator::RequestAccessAsync()).then([this](GeolocationAccessStatus status) {
 					if (status == GeolocationAccessStatus::Denied) {
@@ -51,7 +53,7 @@ namespace TitaniumWindows
 					}
 				});
 			});
-
+#endif
 			geolocator_ = ref new Geolocator();
 			geolocator_->MovementThreshold = 1;
 			geolocator_->ReportInterval = 0;
