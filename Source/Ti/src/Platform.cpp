@@ -70,23 +70,24 @@ namespace TitaniumWindows
 
 	std::string Platform::architecture() const TITANIUM_NOEXCEPT
 	{
-		// FIXME This is what architectures the _app_ supports, not the current processor architecture!
-		// Use GetNativeSystemInfo processor architecture enum value and map it? Maybe only for unknown/neutral?
-		using namespace Windows::System;
-		switch (Windows::ApplicationModel::Package::Current->Id->Architecture) {
-			case ProcessorArchitecture::Arm:
-				return "arm";
-			case ProcessorArchitecture::X86:
-				return "x86";
-			case ProcessorArchitecture::X64:
-				return "x64";
-			case ProcessorArchitecture::Neutral:
-				return "neutral";
-			default:
-				return "unknown";
+		_SYSTEM_INFO sysInfo;
+		GetNativeSystemInfo(&sysInfo);
+		unsigned value = sysInfo.wProcessorArchitecture;
+		if (value == 9) {
+			return "x64";
 		}
+		if (value == 6) {
+			return "ia64";
+		}
+		if (value == 5) {
+			return "ARM";
+		}
+		if (value == 0) {
+			return "x86";
+		}
+		return "unknown";
 	}
-	
+
 	std::uint64_t Platform::availableMemory() const TITANIUM_NOEXCEPT
 	{
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
@@ -287,20 +288,33 @@ namespace TitaniumWindows
 		});
 		return result;
 	}
+
 	std::string Platform::ostype() const TITANIUM_NOEXCEPT
 	{
-		return architecture();
+		_SYSTEM_INFO sysInfo;
+		GetNativeSystemInfo(&sysInfo);
+		unsigned value = sysInfo.wProcessorArchitecture;
+		if (value == 9 || value == 6) { // 9 = x64, 6 = ia64
+			return "64bit";
+		}
+		if (value == 5 || value == 0) { // 5 = ARM, 0 = x86
+			return "32bit";
+		}
+		return "unknown";
 	}
+
 	unsigned Platform::processorCount() const TITANIUM_NOEXCEPT
 	{
 		_SYSTEM_INFO sysInfo;
 		GetNativeSystemInfo(&sysInfo);
 		return sysInfo.dwNumberOfProcessors;
 	}
+
 	std::string Platform::runtime() const TITANIUM_NOEXCEPT
 	{
 		return "javascriptcore";
 	}
+
 	std::string Platform::username() const TITANIUM_NOEXCEPT
 	{
 #if defined(IS_WINDOWS_10)
@@ -403,6 +417,7 @@ namespace TitaniumWindows
 		const auto uri = ref new Windows::Foundation::Uri(TitaniumWindows::Utility::ConvertString(url));
 		return !uri->Suspicious;
 	}
+
 	bool Platform::openURL(const std::string& url) TITANIUM_NOEXCEPT
 	{
 		const auto uri = ref new Windows::Foundation::Uri(TitaniumWindows::Utility::ConvertString(url));
@@ -423,6 +438,7 @@ namespace TitaniumWindows
 
 		return result;
 	}
+
 	bool Platform::is24HourTimeFormat() TITANIUM_NOEXCEPT
 	{
 		return false;
