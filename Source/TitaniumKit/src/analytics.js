@@ -53,6 +53,16 @@ Analytics.prototype.saveEventQueue = function saveEventQueue() {
 };
 
 /**
+ * Converts an ISO Date string to the format required by our analytics server.
+ * (Basically replace the trailing 'Z' with +0000)
+ * @param  {String} dateString Date.prototype.toISOString()
+ * @return {String}            [description]
+ */
+function toAnalyticsDate(dateString) {
+	return dateString.replace('Z', '+0000');
+}
+
+/**
  * Creates an event and adds it to the event queue
  * @param {String} eventType - event type (e.g: 'app.feature')
  * @param {Object} data - JSON event data
@@ -62,7 +72,7 @@ Analytics.prototype.createEvent = function createEvent(eventType, data) {
 	var event = {
 		id: Ti.Platform.createUUID() + ':' + Ti.Platform.id,
 		sid: this.sessionId,
-		ts: new Date().toISOString(),
+		ts: toAnalyticsDate(new Date().toISOString()),
 		event: eventType,
 		seq: this.sequence++,
 		mid: Ti.Platform.id,
