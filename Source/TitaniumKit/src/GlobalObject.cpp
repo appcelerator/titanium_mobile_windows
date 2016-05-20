@@ -99,14 +99,14 @@ namespace Titanium
 				newparts.insert(it, last);
 			}
 		}
-			
+
 		if (allowAboveRoot) {
 			for (; up--;) {
 				std::vector<std::string>::iterator it = newparts.begin();
 				newparts.insert(it, "..");
 			}
 		}
-			
+
 		std::string newpath =  boost::algorithm::join(newparts, COMMONJS_SEPARATOR__);
 		return resolvedAbsolute ? newpath : dir + newpath;
 	}
@@ -117,7 +117,7 @@ namespace Titanium
 		checks.push_back(path);
 		checks.push_back(path+".js");
 		checks.push_back(path+".json");
-		
+
 		for (std::vector<std::string>::iterator i = checks.begin(); i!=checks.end(); i++) {
 			auto check = *i;
 			if (requiredModuleExists(check)) {
@@ -154,9 +154,16 @@ namespace Titanium
 
 	std::string GlobalObject::resolvePathAsModule(const JSObject& parent, const std::string& path, const std::string& dirname) const TITANIUM_NOEXCEPT
 	{
-		auto reqPaths = resolveRequirePaths(dirname);
 		std::string modulePath;
 		std::string resolvedPath = path;
+		// First look for "legacy" CommonJS module as node_modules/moduleId/moduleId.js
+		modulePath = resolvePathAsFile(parent, "node_modules" + COMMONJS_SEPARATOR__ + resolvedPath + COMMONJS_SEPARATOR__ + resolvedPath);
+		if (!modulePath.empty()) {
+			break;
+		}
+
+		// Now try looking up the node_modules paths
+		auto reqPaths = resolveRequirePaths(dirname);
 		if (resolvedPath.find(COMMONJS_SEPARATOR__)!=0) {
 			resolvedPath = COMMONJS_SEPARATOR__ + resolvedPath;
 		}
@@ -420,7 +427,7 @@ namespace Titanium
 			TITANIUM_LOG_WARN("GlobalObject::clearTimeout: timerId ", timerId, " is not registered");
 		}
 	}
-  
+
 	bool GlobalObject::requiredModuleExists(const std::string& path) const TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_ERROR("GlobalObject::requiredModuleExists: Unimplemented");
@@ -479,7 +486,7 @@ namespace Titanium
 		TITANIUM_LOG_DEBUG("GlobalObject::JSExportInitialize");
 		JSExport<GlobalObject>::SetClassVersion(1);
 		JSExport<GlobalObject>::SetParent(JSExport<JSExportObject>::Class());
-		
+
 		TITANIUM_ADD_PROPERTY_READONLY(GlobalObject, global);
 		TITANIUM_ADD_FUNCTION(GlobalObject, require);
 		TITANIUM_ADD_FUNCTION(GlobalObject, setTimeout);
@@ -508,7 +515,7 @@ namespace Titanium
 	{
 		ENSURE_OBJECT_AT_INDEX(function, 0);
 		ENSURE_OPTIONAL_UINT_AT_INDEX(delay, 1, 0);
-		
+
 		const auto chrono_delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(delay));
 
 		const auto global_object = this_object.get_context().get_global_object();
