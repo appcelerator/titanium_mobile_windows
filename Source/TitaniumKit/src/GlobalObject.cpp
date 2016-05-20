@@ -131,15 +131,20 @@ namespace Titanium
 	{
 		const auto packageJSONFile = path + "/package.json";
 		if (requiredModuleExists(packageJSONFile)) {
-				const auto content = readRequiredModule(parent, packageJSONFile);
-				const auto result = parent.get_context().CreateValueFromJSON(content);
-				if (result.IsObject()) {
-					const auto json = static_cast<JSObject>(result);
-					auto mainValue = json.GetProperty("main");
-					if (mainValue.IsString()) {
-						return resolvePathAsFile(parent, path+COMMONJS_SEPARATOR__+static_cast<std::string>(mainValue));
-					}
+			TITANIUM_LOG_DEBUG("package.json exists");
+			const auto content = readRequiredModule(parent, packageJSONFile);
+			TITANIUM_LOG_DEBUG("Content: " + content);
+			const auto result = parent.get_context().CreateValueFromJSON(content);
+			if (result.IsObject()) {
+				TITANIUM_LOG_DEBUG("Result from loading JSON is an object");
+				const auto json = static_cast<JSObject>(result);
+				auto mainValue = json.GetProperty("main");
+				if (mainValue.IsString()) {
+					TITANIUM_LOG_DEBUG("main: " + static_cast<std::string>(mainValue));
+					const auto resolved = resolvePath(static_cast<std::string>(mainValue), path);
+					return resolvePathAsFile(parent, resolved);
 				}
+			}
 		}
 		const auto indexFile = path + "/index.js";
 		if (requiredModuleExists(indexFile)) {
