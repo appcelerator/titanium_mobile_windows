@@ -115,10 +115,81 @@ set(SOURCE_Assets
 
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
+
+file(GLOB_RECURSE COMMONJS_INDEX_JS_DIRECTORY "modules/commonjs/commonjs.index_js/1.0.0/*.*")
+set(SOURCE_commonjs_index_js ${COMMONJS_INDEX_JS_DIRECTORY})
+source_group("node_modules/commonjs.index_js" FILES ${COMMONJS_INDEX_JS_DIRECTORY})
+set_property(SOURCE ${SOURCE_commonjs_index_js} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.index_js")
+set_property(SOURCE ${SOURCE_commonjs_index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE COMMONJS_INDEX_JSON_DIRECTORY "modules/commonjs/commonjs.index_json/1.0.0/*.*")
+set(SOURCE_commonjs_index_json ${COMMONJS_INDEX_JSON_DIRECTORY})
+source_group("node_modules/commonjs.index_json" FILES ${COMMONJS_INDEX_JSON_DIRECTORY})
+set_property(SOURCE ${SOURCE_commonjs_index_json} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.index_json")
+set_property(SOURCE ${SOURCE_commonjs_index_json} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE COMMONJS_LEGACY_DIRECTORY "modules/commonjs/commonjs.legacy/1.0.0/*.*")
+set(SOURCE_commonjs_legacy ${COMMONJS_LEGACY_DIRECTORY})
+source_group("node_modules/commonjs.legacy" FILES ${COMMONJS_LEGACY_DIRECTORY})
+set_property(SOURCE ${SOURCE_commonjs_legacy} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy")
+set_property(SOURCE ${SOURCE_commonjs_legacy} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE COMMONJS_LEGACY_INDEX_JS_DIRECTORY "modules/commonjs/commonjs.legacy.index_js/1.0.0/*.*")
+set(SOURCE_commonjs_legacy_index_js ${COMMONJS_LEGACY_INDEX_JS_DIRECTORY})
+source_group("node_modules/commonjs.legacy.index_js" FILES ${COMMONJS_LEGACY_INDEX_JS_DIRECTORY})
+set_property(SOURCE ${SOURCE_commonjs_legacy_index_js} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.index_js")
+set_property(SOURCE ${SOURCE_commonjs_legacy_index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE COMMONJS_LEGACY_INDEX_JSON_DIRECTORY "modules/commonjs/commonjs.legacy.index_json/1.0.0/*.*")
+set(SOURCE_commonjs_legacy_index_json ${COMMONJS_LEGACY_INDEX_JSON_DIRECTORY})
+source_group("node_modules/commonjs.legacy.index_json" FILES ${COMMONJS_LEGACY_INDEX_JSON_DIRECTORY})
+set_property(SOURCE ${SOURCE_commonjs_legacy_index_json} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.index_json")
+set_property(SOURCE ${SOURCE_commonjs_legacy_index_json} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE COMMONJS_LEGACY_PACKAGE_DIRECTORY "modules/commonjs/commonjs.legacy.package/1.0.0/*.*")
+set(SOURCE_commonjs_legacy_package ${COMMONJS_LEGACY_PACKAGE_DIRECTORY})
+source_group("node_modules/commonjs.legacy.package" FILES ${COMMONJS_LEGACY_PACKAGE_DIRECTORY})
+set_property(SOURCE ${SOURCE_commonjs_legacy_package} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.package")
+set_property(SOURCE ${SOURCE_commonjs_legacy_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE COMMONJS_PACKAGE_DIRECTORY "modules/commonjs/commonjs.package/1.0.0/*.*")
+set(SOURCE_commonjs_package ${COMMONJS_PACKAGE_DIRECTORY})
+source_group("node_modules/commonjs.package" FILES ${COMMONJS_PACKAGE_DIRECTORY})
+set_property(SOURCE ${SOURCE_commonjs_package} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.package")
+set_property(SOURCE ${SOURCE_commonjs_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE WITH_INDEX_JS_DIRECTORY "src/Assets/with_index_js/*.*")
+set(SOURCE_with_index_js ${WITH_INDEX_JS_DIRECTORY})
+source_group("with_index_js" FILES ${WITH_INDEX_JS_DIRECTORY})
+set_property(SOURCE ${SOURCE_with_index_js} PROPERTY VS_DEPLOYMENT_LOCATION "with_index_js")
+set_property(SOURCE ${SOURCE_with_index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE WITH_INDEX_JSON_DIRECTORY "src/Assets/with_index_json/*.*")
+set(SOURCE_with_index_json ${WITH_INDEX_JSON_DIRECTORY})
+source_group("with_index_json" FILES ${WITH_INDEX_JSON_DIRECTORY})
+set_property(SOURCE ${SOURCE_with_index_json} PROPERTY VS_DEPLOYMENT_LOCATION "with_index_json")
+set_property(SOURCE ${SOURCE_with_index_json} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE WITH_PACKAGE_DIRECTORY "src/Assets/with_package/*.*")
+set(SOURCE_with_package ${WITH_PACKAGE_DIRECTORY})
+source_group("with_package" FILES ${WITH_PACKAGE_DIRECTORY})
+set_property(SOURCE ${SOURCE_with_package} PROPERTY VS_DEPLOYMENT_LOCATION "with_package")
+set_property(SOURCE ${SOURCE_with_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   src/OutputDebugStringBuf.hpp
   ${SOURCE_Assets}
+  ${SOURCE_commonjs_index_js}
+  ${SOURCE_commonjs_index_json}
+  ${SOURCE_commonjs_legacy}
+  ${SOURCE_commonjs_legacy_index_js}
+  ${SOURCE_commonjs_legacy_index_json}
+  ${SOURCE_commonjs_legacy_package}
+  ${SOURCE_commonjs_package}
+  ${SOURCE_with_index_js}
+  ${SOURCE_with_index_json}
+  ${SOURCE_with_package}
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
