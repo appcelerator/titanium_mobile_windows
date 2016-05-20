@@ -15,7 +15,9 @@ var path = require('path'),
 	titanium = path.join(__dirname, 'node_modules', 'titanium', 'bin', 'titanium'),
 	DIST_DIR = path.join(__dirname, '..', '..', '..', 'dist'),
 	WINDOWS_DIST_DIR = path.join(DIST_DIR, 'windows'),
-	MOCHA_ASSETS_DIR = path.join(__dirname, '..', '..', '..', 'Examples', 'NMocha', 'src', 'Assets'),
+	MOCHA_DIR = path.join(__dirname, '..', '..', '..', 'Examples', 'NMocha'),
+	MOCHA_ASSETS_DIR = path.join(MOCHA_DIR, 'src', 'Assets'),
+	MOCHA_MODULES_DIR = path.join(MOCHA_DIR, 'modules'),
 	// Constants
 	WIN_8_1 = '8.1',
 	WIN_10 = '10.0',
@@ -174,6 +176,17 @@ function addTiAppProperties(sdkVersion, next) {
 			content.push('\t<Extensions> <Extension Category="windows.backgroundTasks" EntryPoint="TitaniumWindows_Ti.BackgroundServiceTask"> <BackgroundTasks> <Task Type="timer" /> <Task Type="pushNotification" /> </BackgroundTasks> </Extension> </Extensions>');
 			content.push('\t</manifest></windows>');
 		}
+		// TODO Have this look at the existing modules under the test app folder to inject them
+		// inject the test modules for require
+		else if (line.indexOf('<modules>') >= 0) {
+			content.push('<module version="1.0.0">commonjs.index_js</module>');
+			content.push('<module version="1.0.0">commonjs.index_json</module>');
+			content.push('<module version="1.0.0">commonjs.legacy</module>');
+			content.push('<module version="1.0.0">commonjs.legacy.index_js</module>');
+			content.push('<module version="1.0.0">commonjs.legacy.index_json</module>');
+			content.push('<module version="1.0.0">commonjs.legacy.package</module>');
+			content.push('<module version="1.0.0">commonjs.package</module>');
+		}
 	});
 	fs.writeFileSync(tiapp_xml, content.join('\n'));
 
@@ -186,8 +199,12 @@ function addTiAppProperties(sdkVersion, next) {
  * @param next {Function} callback function
  **/
 function copyMochaAssets(next) {
-	var dest = path.join(projectDir, 'Resources');
-	wrench.copyDirSyncRecursive(MOCHA_ASSETS_DIR, dest, {
+	// Copy over Resources
+	wrench.copyDirSyncRecursive(MOCHA_ASSETS_DIR, path.join(projectDir, 'Resources'), {
+		forceDelete: true
+	});
+	// Copy over modules
+	wrench.copyDirSyncRecursive(MOCHA_MODULES_DIR, path.join(projectDir, 'modules'), {
 		forceDelete: true
 	});
 	next();
