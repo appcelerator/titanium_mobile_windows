@@ -159,7 +159,7 @@ namespace Titanium
 		// First look for "legacy" CommonJS module as node_modules/moduleId/moduleId.js
 		modulePath = resolvePathAsFile(parent, "node_modules" + COMMONJS_SEPARATOR__ + resolvedPath + COMMONJS_SEPARATOR__ + resolvedPath);
 		if (!modulePath.empty()) {
-			break;
+			return modulePath;
 		}
 
 		// Now try looking up the node_modules paths
@@ -171,11 +171,11 @@ namespace Titanium
 			auto newResolvedPath = reqPaths[i] + resolvedPath;
 			modulePath = resolvePathAsFile(parent,newResolvedPath);
 			if (!modulePath.empty()) {
-				break;
+				return modulePath;
 			}
 			modulePath = resolvePathAsDirectory(parent,newResolvedPath);
 			if (!modulePath.empty()) {
-				break;
+				return modulePath;
 			}
 		}
 		return modulePath;
