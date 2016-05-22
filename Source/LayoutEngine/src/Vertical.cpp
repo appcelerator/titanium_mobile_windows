@@ -163,17 +163,32 @@ namespace Titanium
 
 			// Width rule evaluation
 			if (widthType == Size) {
-				x1 = x2 = NAN;
+				if (leftType != None && rightType != None) {
+					x1 = 1;
+					if (leftType == Percent) {
+						x1 -= leftValue;
+					} else if (leftType == Fixed) {
+						x2 -= leftValue;
+					}
+					if (rightType == Percent) {
+						x1 -= rightValue;
+					} else if (rightType == Fixed) {
+						x2 -= rightValue;
+					}
+				} else {
+					x1 = x2 = NAN;
+				}
 			} else if (widthType == Fill) {
 				x1 = 1;
 				if (leftType == Percent) {
 					x1 -= leftValue;
 				} else if (leftType == Fixed) {
-					x2 = -leftValue;
-				} else if (rightType == Percent) {
+					x2 -= leftValue;
+				}
+				if (rightType == Percent) {
 					x1 -= rightValue;
 				} else if (rightType == Fixed) {
-					x2 = -rightValue;
+					x2 -= rightValue;
 				}
 			} else if (widthType == Percent) {
 				x1 = widthValue;
@@ -232,10 +247,10 @@ namespace Titanium
 				x1 = x2 = x3 = NAN;
 			} else if (heightType == Fill) {
 				x2 = 1;
-				topType == Percent&&(x1 = -topValue);
-				topType == Fixed&&(x3 = -topValue);
-				bottomType == Percent&&(x1 = -bottomValue);
-				bottomType == Fixed&&(x3 = -bottomValue);
+				topType == Percent&&(x1 -= topValue);
+				topType == Fixed&&(x3 -= topValue);
+				bottomType == Percent&&(x1 -= bottomValue);
+				bottomType == Fixed&&(x3 -= bottomValue);
 			} else if (heightType == Percent) {
 				x1 = heightValue;
 			} else if (heightType == Fixed) {
