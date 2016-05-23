@@ -117,32 +117,39 @@ namespace TitaniumWindows
 			send(postData);
 		}
 
-		void HTTPClient::send(const std::map<std::string, std::vector<std::uint8_t>>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
+		void HTTPClient::send(const std::map<std::string, JSValue>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
 		{
 			if (method__ == Titanium::Network::RequestMethod::Get) {
 				TITANIUM_MODULE_LOG_WARN("HTTPClient::send: Data found during a GET request. Method will be changed to POST.");
 				method__ = Titanium::Network::RequestMethod::Post;
 			}
 
+
 			Windows::Web::Http::IHttpContent^ postData;
 			if (useMultipartForm) {
 				postData = ref new Windows::Web::Http::HttpMultipartFormDataContent();
 
 				for (auto pair : postDataPairs) {
-					Platform::String ^ name = TitaniumWindows::Utility::ConvertString(pair.first);
-					static_cast<Windows::Web::Http::HttpMultipartFormDataContent^>(postData)->Add(ref new Windows::Web::Http::HttpBufferContent(charVecToBuffer(pair.second)), name);
+					Platform::String^ name = TitaniumWindows::Utility::ConvertUTF8String(pair.first);
+					const auto value = pair.second;
+					if (value.IsObject()) {
+						auto blob_ptr = static_cast<JSObject>(value).GetPrivate<Titanium::Blob>();
+						if (blob_ptr != nullptr) {
+							static_cast<Windows::Web::Http::HttpMultipartFormDataContent^>(postData)->Add(ref new Windows::Web::Http::HttpBufferContent(charVecToBuffer(blob_ptr->getData())), name);
+							continue;
+						}
+					}
+
+					// Assume string
+					std::string str = static_cast<std::string>(value);
+					Platform::String^ converted = TitaniumWindows::Utility::ConvertUTF8String(str);
+					static_cast<Windows::Web::Http::HttpMultipartFormDataContent^>(postData)->Add(ref new Windows::Web::Http::HttpStringContent(converted), name);
 				}
 			} else {
 				auto keyValues = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
 				for (auto pair : postDataPairs) {
-					Platform::String ^ name = TitaniumWindows::Utility::ConvertString(pair.first);
-
-					std::stringstream ws_stream;
-					for (auto c : pair.second) {
-						ws_stream << c;
-					}
-
-					Platform::String ^ value = TitaniumWindows::Utility::ConvertString(ws_stream.str());
+					Platform::String^ name = TitaniumWindows::Utility::ConvertUTF8String(pair.first);
+					Platform::String^ value = TitaniumWindows::Utility::ConvertUTF8String(static_cast<std::string>(pair.second));
 					keyValues->Insert(name, value);
 				}
 
@@ -371,26 +378,13 @@ namespace TitaniumWindows
 			}
 		}
 
-		Windows::Storage::Streams::Buffer^ HTTPClient::charVecToBuffer(std::vector<std::uint8_t> char_vector)
+		Windows::Storage::Streams::IBuffer^ HTTPClient::charVecToBuffer(std::vector<std::uint8_t> char_vector)
 		{
+			using namespace Windows::Storage;
 			int size = char_vector.size();
-
-			Windows::Storage::Streams::Buffer^ buffer = ref new Windows::Storage::Streams::Buffer(size);
-			buffer->Length = size;
-
-			Microsoft::WRL::ComPtr<Windows::Storage::Streams::IBufferByteAccess> bufferByteAccess;
-			HRESULT hr = reinterpret_cast<IUnknown*>(buffer)->QueryInterface(IID_PPV_ARGS(&bufferByteAccess));
-			if (FAILED(hr)) {
-				throw ref new Platform::Exception(hr);
-			}
-
-			std::uint8_t* data = (std::uint8_t*)&char_vector[0];
-			hr = bufferByteAccess->Buffer(&data);
-			if (FAILED(hr)) {
-				throw ref new Platform::Exception(hr);
-			}
-
-			return buffer;
+			const auto writer = ref new Streams::DataWriter(ref new Streams::InMemoryRandomAccessStream());
+			writer->WriteBytes(::Platform::ArrayReference<std::uint8_t>(&char_vector[0], size));
+			return writer->DetachBuffer();
 		}
 
 		void HTTPClient::SerializeHeaders(Windows::Web::Http::HttpResponseMessage^ response)

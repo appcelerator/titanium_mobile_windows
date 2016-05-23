@@ -94,7 +94,7 @@ namespace Titanium
 			TITANIUM_LOG_WARN("HTTPClient::send: unimplemented");
 		}
 
-		void HTTPClient::send(const std::map<std::string, std::vector<std::uint8_t>>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
+		void HTTPClient::send(const std::map<std::string, JSValue>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("HTTPClient::send<data>: unimplemented");
 		}
@@ -293,24 +293,15 @@ namespace Titanium
 					send(postDataString);
 				} else {
 					bool useMultipartForm = false;
-					std::map<std::string, std::vector<std::uint8_t>> map;
+					std::map<std::string, JSValue> map;
 					JSObject sendArgs = static_cast<JSObject>(arguments.at(0));
 					for (const auto& property_name : static_cast<std::vector<JSString>>(sendArgs.GetPropertyNames())) {
 						TITANIUM_ASSERT(sendArgs.GetProperty(property_name).IsObject() || sendArgs.GetProperty(property_name).IsString());
 						JSValue prop = sendArgs.GetProperty(property_name);
 						if (prop.IsObject()) {
 							useMultipartForm = true;
-							auto blob_ptr = static_cast<JSObject>(prop).GetPrivate<Titanium::Blob>();
-							if (blob_ptr != nullptr) {
-								map.insert(std::make_pair(property_name, blob_ptr->getData()));
-							} else {
-								std::string str = static_cast<std::string>(prop);
-								map.insert(std::make_pair(property_name, std::vector<std::uint8_t>(str.begin(), str.end())));
-							}
-						} else {
-							std::string str = static_cast<std::string>(prop);
-							map.insert(std::make_pair(property_name, std::vector<std::uint8_t>(str.begin(), str.end())));
 						}
+						map.insert(std::make_pair(property_name, prop));
 					}
 					send(map, useMultipartForm);
 				}

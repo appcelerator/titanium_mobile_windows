@@ -237,7 +237,7 @@ namespace Titanium
 			  @abstract send
 			  @discussion Do an HTTP POST or PUT request with data URL encoded or contained in multipart form.
 			*/
-			virtual void send(const std::map<std::string, std::vector<std::uint8_t>>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT;
+			virtual void send(const std::map<std::string, JSValue>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
