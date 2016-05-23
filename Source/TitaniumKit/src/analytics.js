@@ -4,7 +4,7 @@
  * @module analytics
  *
  * @copyright
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-2016 by Appcelerator, Inc. All Rights Reserved.
  *
  * @license
  * Licensed under the terms of the Apache Public License
@@ -69,6 +69,7 @@ function toAnalyticsDate(dateString) {
  * @private
  */
 Analytics.prototype.createEvent = function createEvent(eventType, data) {
+	data = data || {}; // ensure we always send a "data" property, empty object if null/undefined TIMOB-23402
 	var event = {
 		id: Ti.Platform.createUUID() + ':' + Ti.Platform.id,
 		sid: this.sessionId,
@@ -77,9 +78,9 @@ Analytics.prototype.createEvent = function createEvent(eventType, data) {
 		seq: this.sequence++,
 		mid: Ti.Platform.id,
 		ver: '3',
-		aguid: Ti.App.guid
+		aguid: Ti.App.guid,
+		data: data
 	};
-	data && (event['data'] = data);
 	this.eventQueue.push(event);
 	this.lastEvent = event;
 };
