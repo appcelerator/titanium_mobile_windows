@@ -143,7 +143,7 @@ set_property(SOURCE ${SOURCE_fonts} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
-  src/OutputDebugStringBuf.hpp
+  include/OutputDebugStringBuf.hpp
   ${SOURCE_Assets}
   ${SOURCE_fonts}
 )
