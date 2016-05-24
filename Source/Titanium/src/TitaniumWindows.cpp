@@ -347,7 +347,7 @@ namespace TitaniumWindows
 		const auto store = ApplicationData::Current->LocalFolder;
 		concurrency::create_task(store->CreateFileAsync("crash.log", CreationCollisionOption::GenerateUniqueName)).then([arg](StorageFile^ file) {
 			HResult exc = arg->Exception;
-			return FileIO::WriteTextAsync(file, "Message: " + arg->Message + "\nHRESULT: " + exc.Value + "\nToString(): " + arg->ToString() + "\ntype: " + arg->GetType()->FullName;);
+			return FileIO::WriteTextAsync(file, "Message: " + arg->Message + "\nHRESULT: " + exc.Value + "\nToString(): " + arg->ToString() + "\ntype: " + arg->GetType()->FullName);
 		});
 
 		arg->Message;
