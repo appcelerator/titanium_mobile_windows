@@ -152,6 +152,7 @@ set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
 target_link_libraries(${EXE_NAME} TitaniumWindows TitaniumWindows_Native)
 
 target_include_directories(${EXE_NAME} PUBLIC
+  ${PROJECT_SOURCE_DIR}/include
   $<TARGET_PROPERTY:TitaniumWindows,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:TitaniumWindows_Native,INTERFACE_INCLUDE_DIRECTORIES>
   )
