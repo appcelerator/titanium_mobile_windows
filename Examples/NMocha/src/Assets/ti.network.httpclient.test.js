@@ -377,7 +377,7 @@ describe("Titanium.Network.HTTPClient", function () {
         });
     });
 
-    it("POST mulitpart/form-data containing Ti.Blob", function (finish) {
+    it("POST multipart/form-data containing Ti.Blob", function (finish) {
         this.timeout(6e4);
 
         var xhr = Ti.Network.createHTTPClient(),
@@ -390,29 +390,25 @@ describe("Titanium.Network.HTTPClient", function () {
         xhr.setTimeout(6e4);
 
         xhr.onload = function (e) {
-            should(function () {
-                //should(e.code).eql(200);// because our API is insane, this always returns 0
-                should(xhr.status).eql(200);
+            //should(e.code).eql(200);// because our API is insane, this always returns 0
+            should(xhr.status).eql(200);
+            var result = JSON.parse(xhr.responseText);
+            // check sent headers
+            should(result).have.property('headers');
+            should(result.headers).have.property('Content-Type');
+            should(result.headers['Content-Type']).startWith('multipart/form-data');
 
-                var result = JSON.parse(xhr.responseText);
-                // check sent headers
-                should(result).have.property('headers');
-                should(result.headers).have.property('Content-Type');
-                should(result.headers['Content-Type']).startWith('multipart/form-data');
+            // check name got added
+            should(result).have.property('form');
+            should(result.form).have.property('name');
+            should(result.form.name).eql(newName);
 
-                // check name got added
-                should(result).have.property('form');
-                should(result.form).have.property('name');
-                should(result.form.name).eql(newName);
+            // check blob data
+            should(result).have.property('files');
+            should(result.files).have.property('attachment');
+            // image/png (Android), image/png (Windows). Ideally this would match the mimetype/contenttype of the file (which it does for Android/Windows). Let's hope it does on iOS?
+            should(result.files.attachment).eql('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAsNJREFUeNrs3b1NI0EYgGG8InQZlEFCdl1AfhGRayCiABKugMvJaIECKMP53hgZ6QJujXwzuzvf97zSyoEt2Z55NLO2/LMZx/FCqt1gCASWwBJYElgCS2BJYAksgSWBJbAElgSWwBJYElgCS2BJYAksgSWBJbAElgSWwBJYElgCS2BJYAksgSWBJbAUusuOHuur6froxoolW6GUdSv8qn057jebzXukSRnH8apcPJZja8VapsPAPx4nAiqwqqxU4XBFQdUzrPtouCZQPYA1U8dzqjC4plCV5/oCFlxQRTh57x1XVFQRXhV2iysyqhCwesQVHVUYWD3hyoAqFKwecGVBFQ7WmnGV+95mQRUS1hpxZUMVFtaacP2F6ioLqtCw1oArK6rwsJbElRlVClhL4MqOKg2sOXFNoPqVBVUqWHPgmkD1Uu77OdNYp/vMeytcJ1A9ZBvnlF+mqI0LKrCq44IKrOq4oAKrOi6owKqOCyqwquOCCqzquKACqwmucuygAqsFrmuowGqBCyqwquF6+8fVv40QWGdVTtZ3X2x/n4X6lRuw5kX1Y+ImW7jAqoEq1A+RgLUiVOWc6w0usGqj2p94KwIusM5DdeKtCLjAOh8VXGA1QwUXWM1QwQVWM1RwgdUMFVxgfaK6q40KruSwyuQeQN22QAVXUlhHVLuWqOBKBmtOVHAlgbUEKriCw1oSVXZcQzJU+zlRZcY1QAUXWP+PatF/Ys2Ea4AKLrA6R5UJ1wAVXGAFQZUB1wAVXGAFQxUZ1wDV+nGBNV8/I6H6Bi6wZmobDdUJXN11GWAuDsieyvZ4ISuWwJLO2NJtIbJiCSyBJYElsASWBJbAElgSWAJLYElgCSyBJYElsASWBJbAElgSWAJLYElgCSyBJYElsASWBJbAElgSWAJLYElgCSyBJYElsASWBJbAElgSWFqyPwIMAMpfdKkmd/FSAAAAAElFTkSuQmCC');
 
-                // check blob data
-                should(result).have.property('files');
-                should(result.files).have.property('attachment');
-                should(result.files.attachment).startWith('data:');
-                // may be application/octet-stream (curl), image/png (Android)
-                // TODO Can we parse this data and make sure it's an actual match against the logo file? curl and Android matched...
-                should(result.files.attachment).endWith(';base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAsNJREFUeNrs3b1NI0EYgGG8InQZlEFCdl1AfhGRayCiABKugMvJaIECKMP53hgZ6QJujXwzuzvf97zSyoEt2Z55NLO2/LMZx/FCqt1gCASWwBJYElgCS2BJYAksgSWBJbAElgSWwBJYElgCS2BJYAksgSWBJbAElgSWwBJYElgCS2BJYAksgSWBJbAUusuOHuur6froxoolW6GUdSv8qn057jebzXukSRnH8apcPJZja8VapsPAPx4nAiqwqqxU4XBFQdUzrPtouCZQPYA1U8dzqjC4plCV5/oCFlxQRTh57x1XVFQRXhV2iysyqhCwesQVHVUYWD3hyoAqFKwecGVBFQ7WmnGV+95mQRUS1hpxZUMVFtaacP2F6ioLqtCw1oArK6rwsJbElRlVClhL4MqOKg2sOXFNoPqVBVUqWHPgmkD1Uu77OdNYp/vMeytcJ1A9ZBvnlF+mqI0LKrCq44IKrOq4oAKrOi6owKqOCyqwquOCCqzquKACqwmucuygAqsFrmuowGqBCyqwquF6+8fVv40QWGdVTtZ3X2x/n4X6lRuw5kX1Y+ImW7jAqoEq1A+RgLUiVOWc6w0usGqj2p94KwIusM5DdeKtCLjAOh8VXGA1QwUXWM1QwQVWM1RwgdUMFVxgfaK6q40KruSwyuQeQN22QAVXUlhHVLuWqOBKBmtOVHAlgbUEKriCw1oSVXZcQzJU+zlRZcY1QAUXWP+PatF/Ys2Ea4AKLrA6R5UJ1wAVXGAFQZUB1wAVXGAFQxUZ1wDV+nGBNV8/I6H6Bi6wZmobDdUJXN11GWAuDsieyvZ4ISuWwJLO2NJtIbJiCSyBJYElsASWBJbAElgSWAJLYElgCSyBJYElsASWBJbAElgSWAJLYElgCSyBJYElsASWBJbAElgSWAJLYElgCSyBJYElsASWBJbAElgSWFqyPwIMAMpfdKkmd/FSAAAAAElFTkSuQmCC');
-            }).not.throw();
             finish();
         };
         xhr.onerror = function (e) {

@@ -135,7 +135,28 @@ namespace TitaniumWindows
 					if (value.IsObject()) {
 						auto blob_ptr = static_cast<JSObject>(value).GetPrivate<Titanium::Blob>();
 						if (blob_ptr != nullptr) {
-							static_cast<Windows::Web::Http::HttpMultipartFormDataContent^>(postData)->Add(ref new Windows::Web::Http::HttpBufferContent(charVecToBuffer(blob_ptr->getData())), name);
+							Windows::Web::Http::HttpBufferContent^ fileContent = ref new Windows::Web::Http::HttpBufferContent(charVecToBuffer(blob_ptr->getData()));
+							const auto mimeType = blob_ptr->get_mimeType();
+							if (!mimeType.empty()) {
+								fileContent->Headers->ContentType = ref new Windows::Web::Http::Headers::HttpMediaTypeHeaderValue(TitaniumWindows::Utility::ConvertString(mimeType));
+							}
+							// Adding last arg (filename) makes it get treated as a file attachment like on Android
+							std::string fileName = "unknown.tmp";
+							const auto path = blob_ptr->get_nativePath();
+							if (!path.empty()) {
+								// grab last segment of path to use as filename!
+								auto separator = path.find_last_of("\\");
+								if (separator == std::string::npos) {
+									fileName = path;
+								}
+								else {
+									fileName = path.substr(separator + 1);
+								}
+							}
+							else {
+								// TODO Assume file extension by mime type?
+							}
+							static_cast<Windows::Web::Http::HttpMultipartFormDataContent^>(postData)->Add(fileContent, name, TitaniumWindows::Utility::ConvertUTF8String(fileName));
 							continue;
 						}
 					}
