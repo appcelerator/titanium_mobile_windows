@@ -91,6 +91,8 @@ namespace TitaniumWindows
 			try {
 				task.get();
 				exists = true;
+			} catch (Platform::InvalidArgumentException^ ex) {
+				exists = false;
 			} catch (Platform::COMException^ ex) {
 				exists = false;
 			}
