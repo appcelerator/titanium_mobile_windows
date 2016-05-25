@@ -277,6 +277,12 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::animate(const std::shared_ptr<Titanium::UI::Animation>& animation, JSObject& callback, const JSObject& this_object) TITANIUM_NOEXCEPT
 		{
+			if (!is_loaded__) {
+				// add animate call to queue, layout has not loaded...
+				animate_queue__.push_back({animation, callback, this_object});
+				return;
+			}
+
 			// Storyboard where we attach all the animations
 			const auto storyboard = ref new Media::Animation::Storyboard();
 
@@ -442,6 +448,7 @@ namespace TitaniumWindows
 				const auto translate = ref new Media::TranslateTransform();
 				const auto rotate = ref new Media::RotateTransform();
 				const auto composite = ref new Media::CompositeTransform(); // cheat and use composite to do scale and then skew
+				const auto properties = std::make_shared<Titanium::LayoutEngine::LayoutProperties>();
 				group->Children->Append(translate);
 				group->Children->Append(rotate);
 				group->Children->Append(composite);
@@ -450,10 +457,18 @@ namespace TitaniumWindows
 
 				const auto top = animation->get_top();
 				if (top) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, *top, properties);
+					const auto type = properties->top.valueType;
+					auto value = properties->top.value;
+
+					if (type == Titanium::LayoutEngine::ValueType::Percent) {
+						value *= layout_node__->parent->element.measuredHeight;
+					}
+
 					// TODO Bottom
 					// Because we're animating a transform, the value behaves like setting By, not To. So we need to calculate the difference and set our target To to that value
 					const auto current_top = Controls::Canvas::GetTop(component);
-					const auto diff = *top - current_top;
+					const auto diff = value - current_top;
 
 					const auto top_anim = ref new Media::Animation::DoubleAnimation();
 					top_anim->To = diff;
@@ -470,9 +485,17 @@ namespace TitaniumWindows
 
 				const auto left = animation->get_left(); // TODO Right
 				if (left) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, *left, properties);
+					const auto type = properties->left.valueType;
+					auto value = properties->left.value;
+
+					if (type == Titanium::LayoutEngine::ValueType::Percent) {
+						value *= layout_node__->parent->element.measuredWidth;
+					}
+
 					// TODO If "right", we need to calculate the current position of "right", take the diff and then do a transform By, not To
 					const auto current_left = Controls::Canvas::GetLeft(component);
-					const auto diff = *left - current_left;
+					const auto diff = value - current_left;
 
 					const auto left_anim = ref new Media::Animation::DoubleAnimation();
 					left_anim->To = diff;
@@ -487,9 +510,18 @@ namespace TitaniumWindows
 				// For width and height, we have to calculate the scale to use to achieve desired height/width, since animating the Height or Width properties are ppor performance-wise and best avoided.
 				const auto height = animation->get_height();
 				if (height) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, *height, properties);
+					const auto type = properties->height.valueType;
+					auto value = properties->height.value;
+
+					if (type == Titanium::LayoutEngine::ValueType::Percent) {
+						value *= layout_node__->parent->element.measuredHeight;
+					}
+
 					const auto height_anim = ref new Media::Animation::DoubleAnimation();
-					const auto current_height = component->Height;
-					const auto scaleY = *height / current_height;
+					const auto current_height = component->Height > 0 ? component->Height : 1;
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, std::to_string(current_height));
+					const auto scaleY = value / current_height;
 					height_anim->To = scaleY;  // TODO Need to determine scale to use to achieve the desired height!
 					height_anim->EasingFunction = ease;
 					height_anim->Duration = duration;
@@ -500,9 +532,18 @@ namespace TitaniumWindows
 
 				const auto width = animation->get_width();
 				if (width) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, *width, properties);
+					const auto type = properties->width.valueType;
+					auto value = properties->width.value;
+
+					if (type == Titanium::LayoutEngine::ValueType::Percent) {
+						value *= layout_node__->parent->element.measuredWidth;
+					}
+
 					const auto width_anim = ref new Media::Animation::DoubleAnimation();
-					const auto current_width = component->Width;
-					const auto scaleX = *width / current_width;
+					const auto current_width = component->Width > 0 ? component->Width : 1;
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, std::to_string(current_width));
+					const auto scaleX = value / current_width;
 					width_anim->To = scaleX;
 					width_anim->EasingFunction = ease;
 					width_anim->Duration = duration;
@@ -597,11 +638,20 @@ namespace TitaniumWindows
 				//
 				const auto top = animation->get_top();
 				if (top) {
-					setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, std::to_string(*top));
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, *top);
 				}
 				const auto left = animation->get_left();
 				if (left) {
-					setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, std::to_string(*left));
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, *left);
+				}
+
+				const auto width = animation->get_width();
+				if (width) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, *width);
+				}
+				const auto height = animation->get_height();
+				if (height) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, *height);
 				}
 
 				// Make sure to clear the StoryBoard because transform made by StoryBoard remains.
@@ -1472,6 +1522,12 @@ namespace TitaniumWindows
 		{
 			is_loaded__ = true;
 			requestLayout(true);
+
+			// layout has loaded, expel animation queue
+			for (auto animation : animate_queue__) {
+				animate(animation.animation, animation.callback, animation.this_object);
+			}
+			animate_queue__.clear();
 		}
 
 		Titanium::LayoutEngine::Rect WindowsViewLayoutDelegate::computeRelativeSize(const double& x, const double& y, const double& baseWidth, const double& baseHeight) {
@@ -1520,7 +1576,7 @@ namespace TitaniumWindows
 		}
 
 
-		void WindowsViewLayoutDelegate::setLayoutProperty(const Titanium::LayoutEngine::ValueName& name, const std::string& value)
+		void WindowsViewLayoutDelegate::setLayoutProperty(const Titanium::LayoutEngine::ValueName& name, const std::string& value, const std::shared_ptr<Titanium::LayoutEngine::LayoutProperties> properties)
 		{
 			Titanium::LayoutEngine::InputProperty prop;
 			prop.name = name;
@@ -1571,7 +1627,7 @@ namespace TitaniumWindows
 				const auto object_ptr = App.GetPrivate<Titanium::AppModule>();
 				defaultUnits = object_ptr->defaultUnit();
 		 	}
-			Titanium::LayoutEngine::populateLayoutProperties(prop, &layout_node__->properties, ppi, defaultUnits);
+			Titanium::LayoutEngine::populateLayoutProperties(prop, properties ? properties.get() : &layout_node__->properties, ppi, defaultUnits);
 
 			if (isLoaded()) {
 				requestLayout();

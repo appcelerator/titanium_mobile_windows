@@ -404,7 +404,7 @@ namespace TitaniumWindows
 			virtual void onLayoutEngineCallback(Titanium::LayoutEngine::Rect rect, const std::string& name);
 			virtual void updateBackgroundGradient();
 
-			virtual void setLayoutProperty(const Titanium::LayoutEngine::ValueName&, const std::string&);
+			virtual void setLayoutProperty(const Titanium::LayoutEngine::ValueName&, const std::string&, const std::shared_ptr<Titanium::LayoutEngine::LayoutProperties> = nullptr);
 
 			virtual void setComponent(Windows::UI::Xaml::FrameworkElement^ component, Windows::UI::Xaml::Controls::Control^ underlying_control = nullptr, const bool& enableBorder = true);
 			virtual void setComponent(Windows::UI::Xaml::FrameworkElement^ component, Windows::UI::Xaml::Controls::Control^ underlying_control, Windows::UI::Xaml::Controls::Border^ border);
@@ -530,6 +530,13 @@ namespace TitaniumWindows
 			bool use_own_size__ { false };
 
 			Titanium::LayoutEngine::Rect oldRect__;
+
+			struct animate_call__ {
+				std::shared_ptr<Titanium::UI::Animation> animation;
+				JSObject callback;
+				JSObject this_object;
+			};
+			std::vector<animate_call__> animate_queue__;
 
 			Windows::UI::Xaml::Media::ImageBrush^ backgroundImageBrush__{ nullptr };
 			Windows::UI::Xaml::Media::ImageBrush^ backgroundDisabledImageBrush__{ nullptr };

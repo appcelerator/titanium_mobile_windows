@@ -60,7 +60,7 @@ namespace Titanium
 			  @abstract bottom
 			  @discussion Value of the `bottom` property at the end of the animation.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<double>, bottom);
+			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<std::string>, bottom);
 
 			/*!
 			  @property
@@ -102,14 +102,14 @@ namespace Titanium
 			  @abstract height
 			  @discussion Value of the `height` property at the end of the animation.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<double>, height);
+			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<std::string>, height);
 
 			/*!
 			  @property
 			  @abstract left
 			  @discussion Value of the `left` property at the end of the animation.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<double>, left);
+			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<std::string>, left);
 
 			/*!
 			  @property
@@ -137,14 +137,14 @@ namespace Titanium
 			  @abstract right
 			  @discussion Value of the `right` property at the end of the animation.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<double>, right);
+			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<std::string>, right);
 
 			/*!
 			  @property
 			  @abstract top
 			  @discussion Value of the `top` property at the end of the animation.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<double>, top);
+			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<std::string>, top);
 
 			/*!
 			  @property
@@ -179,7 +179,7 @@ namespace Titanium
 			  @abstract width
 			  @discussion Value of the `width` property at the end of the animation.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<double>, width);
+			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<std::string>, width);
 
 			/*!
 			  @property
@@ -295,24 +295,24 @@ namespace Titanium
 				Point anchorPoint__;
 				bool autoreverse__;
 				std::string backgroundColor__;
-				boost::optional<double> bottom__;
+				boost::optional<std::string> bottom__;
 				Point center__;
 				std::string color__;
 				ANIMATION_CURVE curve__;
 				std::chrono::milliseconds delay__;
 				std::chrono::milliseconds duration__;
-				boost::optional<double> height__;
-				boost::optional<double> left__;
+				boost::optional<std::string> height__;
+				boost::optional<std::string> left__;
 				boost::optional<double> opacity__;
 				bool opaque__;
 				uint32_t repeat__;
-				boost::optional<double> right__;
-				boost::optional<double> top__;
+				boost::optional<std::string> right__;
+				boost::optional<std::string> top__;
 				std::shared_ptr<Titanium::UI::TwoDMatrix> transform__;
 				uint32_t transition__;
 				std::shared_ptr<Titanium::UI::View> view__;
 				bool visible__;
-				boost::optional<double> width__;
+				boost::optional<std::string> width__;
 				boost::optional<uint32_t> zIndex__;
 #pragma warning(pop)
 		};

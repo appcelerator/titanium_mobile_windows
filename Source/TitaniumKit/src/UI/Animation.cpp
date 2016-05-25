@@ -45,7 +45,7 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_READWRITE(Animation, std::string, backgroundColor)
 
-		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<double>, bottom)
+		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<std::string>, bottom)
 
 		TITANIUM_PROPERTY_READWRITE(Animation, Point, center)
 
@@ -57,9 +57,9 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_READWRITE(Animation, std::chrono::milliseconds, duration)
 
-		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<double>, height)
+		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<std::string>, height)
 
-		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<double>, left)
+		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<std::string>, left)
 
 		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<double>, opacity)
 
@@ -67,9 +67,9 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_READWRITE(Animation, uint32_t, repeat)
 
-		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<double>, right)
+		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<std::string>, right)
 
-		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<double>, top)
+		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<std::string>, top)
 
 		TITANIUM_PROPERTY_READWRITE(Animation, std::shared_ptr<TwoDMatrix>, transform)
 
@@ -79,7 +79,7 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_READWRITE(Animation, bool, visible)
 
-		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<double>, width)
+		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<std::string>, width)
 
 		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<uint32_t>, zIndex)
 
@@ -196,15 +196,15 @@ namespace Titanium
 		{
 			auto bottom = get_bottom();
 			if (bottom) {
-				return get_context().CreateNumber(*bottom);
+				return get_context().CreateString(*bottom);
 			}
 			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Animation, bottom)
 		{
-			TITANIUM_ASSERT(argument.IsNumber());
-			set_bottom(static_cast<double>(argument));
+			TITANIUM_ASSERT(argument.IsString());
+			set_bottom(static_cast<std::string>(argument));
 			return true;
 		}
 
@@ -274,15 +274,15 @@ namespace Titanium
 		{
 			auto height = get_height();
 			if (height) {
-				return get_context().CreateNumber(*height);
+				return get_context().CreateString(*height);
 			}
 			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Animation, height)
 		{
-			TITANIUM_ASSERT(argument.IsNumber());
-			set_height(static_cast<double>(argument));
+			TITANIUM_ASSERT(argument.IsString());
+			set_height(static_cast<std::string>(argument));
 			return true;
 		}
 
@@ -290,15 +290,15 @@ namespace Titanium
 		{
 			auto left = get_left();
 			if (left) {
-				return get_context().CreateNumber(*left);
+				return get_context().CreateString(*left);
 			}
 			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Animation, left)
 		{
-			TITANIUM_ASSERT(argument.IsNumber());
-			set_left(static_cast<double>(argument));
+			TITANIUM_ASSERT(argument.IsString());
+			set_left(static_cast<std::string>(argument));
 			return true;
 		}
 
@@ -346,15 +346,15 @@ namespace Titanium
 		{
 			auto right = get_right();
 			if (right) {
-				return get_context().CreateNumber(*right);
+				return get_context().CreateString(*right);
 			}
 			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Animation, right)
 		{
-			TITANIUM_ASSERT(argument.IsNumber());
-			set_right(static_cast<double>(argument));
+			TITANIUM_ASSERT(argument.IsString());
+			set_right(static_cast<std::string>(argument));
 			return true;
 		}
 
@@ -362,15 +362,15 @@ namespace Titanium
 		{
 			auto top = get_top();
 			if (top) {
-				get_context().CreateNumber(*top);
+				get_context().CreateString(*top);
 			}
 			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Animation, top)
 		{
-			TITANIUM_ASSERT(argument.IsNumber());
-			set_top(static_cast<double>(argument));
+			TITANIUM_ASSERT(argument.IsString());
+			set_top(static_cast<std::string>(argument));
 			return true;
 		}
 
@@ -428,15 +428,15 @@ namespace Titanium
 		{
 			auto width = get_width();
 			if (width) {
-				return get_context().CreateNumber(*width);
+				return get_context().CreateString(*width);
 			}
 			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Animation, width)
 		{
-			TITANIUM_ASSERT(argument.IsNumber());
-			set_width(static_cast<double>(argument));
+			TITANIUM_ASSERT(argument.IsString());
+			set_width(static_cast<std::string>(argument));
 			return true;
 		}
 
