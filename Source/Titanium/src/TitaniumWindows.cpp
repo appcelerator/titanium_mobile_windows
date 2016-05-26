@@ -105,6 +105,8 @@ namespace TitaniumWindows
 
 	void Application::OnLaunched(LaunchActivatedEventArgs ^ args)
 	{
+		UnhandledException += ref new Windows::UI::Xaml::UnhandledExceptionEventHandler(this, &Application::OnUnhandledException);
+
 		auto titanium = js_context__.CreateObject(JSExport<TitaniumWindows::TiModule>::Class());
 		auto titanium_ptr = titanium.GetPrivate<TitaniumWindows::TiModule>();
 
@@ -323,6 +325,30 @@ namespace TitaniumWindows
 		}
 	}
 #endif
+
+	void Application::OnUnhandledException(Object^ sender, Windows::UI::Xaml::UnhandledExceptionEventArgs^ arg)
+	{
+#if defined _DEBUG
+		if (IsDebuggerPresent()) {
+			__debugbreak();
+		}
+#endif
+		// say we've handled this one. this allows our FATAL write to complete.
+		arg->Handled = true;
+
+		const auto store = ApplicationData::Current->LocalFolder;
+		concurrency::create_task(store->CreateFileAsync("crash.log", CreationCollisionOption::GenerateUniqueName)).then([arg](concurrency::task<StorageFile^> task) {
+			try {
+				const auto file = task.get();
+				HResult exc = arg->Exception;
+				FileIO::WriteTextAsync(file, "Message: " + arg->Message + "\nHRESULT: " + exc.Value + "\nToString(): " + arg->ToString() + "\ntype: " + arg->GetType()->FullName);
+			} catch (...) {
+				// Just to make sure we don't throw another exception
+			}
+		});
+
+		Titanium::Module::ShowRedScreenOfDeath(js_context__, TitaniumWindows::Utility::ConvertString(arg->Message));
+	}
 
 	void Application::OnResuming(Object ^sender, Object ^args) 
 	{

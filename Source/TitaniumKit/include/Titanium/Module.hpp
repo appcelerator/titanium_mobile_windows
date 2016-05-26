@@ -133,8 +133,6 @@ namespace Titanium
 		virtual void fireEvent(const std::string& name) TITANIUM_NOEXCEPT final;
 		virtual void fireEvent(const std::string& name, const JSObject& event) TITANIUM_NOEXCEPT final;
 
-		virtual void showRedScreenOfDeath(const std::string& message) TITANIUM_NOEXCEPT final;
-
 		Module(const JSContext&, const std::string& apiName = "Titanium.Proxy") TITANIUM_NOEXCEPT;
 		virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
@@ -149,6 +147,7 @@ namespace Titanium
 		// TODO: The following functions can automatically be generated from
 		// the YAML API docs.
 		static void JSExportInitialize();
+		static void ShowRedScreenOfDeath(const JSContext& js_context, const std::string& message) TITANIUM_NOEXCEPT;
 
 		TITANIUM_PROPERTY_DEF(bubbleParent);
 		TITANIUM_PROPERTY_READONLY_DEF(apiName);

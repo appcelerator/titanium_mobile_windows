@@ -9,6 +9,7 @@
 #include "Titanium/GlobalObject.hpp"
 #include "Titanium/detail/TiUtil.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/Module.hpp"
 #include <sstream>
 #include <functional>
 #include <boost/algorithm/string/predicate.hpp>
@@ -382,7 +383,7 @@ namespace Titanium
 
 	void GlobalObject::InvokeCallback(const unsigned& timerId) TITANIUM_NOEXCEPT
 	{
-		try {
+		TITANIUM_EXCEPTION_CATCH_START{
 			const std::string timerId_str = "callback_" + std::to_string(timerId);
 			TITANIUM_ASSERT(callback_map__.HasProperty(timerId_str));
 			JSValue callback_property = callback_map__.GetProperty(timerId_str);
@@ -390,17 +391,7 @@ namespace Titanium
 			JSObject callback = static_cast<JSObject>(callback_property);
 			TITANIUM_ASSERT(callback.IsFunction());
 			callback(get_context().get_global_object());
-		} catch (const HAL::detail::js_runtime_error& ex) {
-			std::ostringstream os;
-			os << "Runtime Error: " << ex.js_message();
-
-			const auto ctx = get_context();
-			const auto what = ctx.CreateString(os.str());
-			const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
-			auto rsod_func = static_cast<JSObject>(rsod);
-			const std::vector<JSValue> args = { what };
-			rsod_func(args, rsod_func);
-		}
+		} TITANIUM_EXCEPTION_CATCH_END
 	}
 
 	void GlobalObject::StartTimer(Callback_t&& callback, const unsigned& timerId, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT

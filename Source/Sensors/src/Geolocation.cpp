@@ -7,7 +7,7 @@
  */
 
 #include "TitaniumWindows/Geolocation.hpp"
-#include "Titanium/detail/TiImpl.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <ppltasks.h>
@@ -45,12 +45,15 @@ namespace TitaniumWindows
 
 #if defined(IS_WINDOWS_10)
 			TitaniumWindows::Utility::RunOnUIThread([this]() {
-				concurrency::create_task(Geolocator::RequestAccessAsync()).then([this](GeolocationAccessStatus status) {
-					if (status == GeolocationAccessStatus::Denied) {
-						locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::DENIED;
-					} else if (status == GeolocationAccessStatus::Allowed) {
-						locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::AUTHORIZED;
-					}
+				concurrency::create_task(Geolocator::RequestAccessAsync()).then([this](concurrency::task<GeolocationAccessStatus> task) {
+					TITANIUM_EXCEPTION_CATCH_START {
+						const auto status = task.get();
+						if (status == GeolocationAccessStatus::Denied) {
+							locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::DENIED;
+						} else if (status == GeolocationAccessStatus::Allowed) {
+							locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::AUTHORIZED;
+						}
+					} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 				});
 			});
 #endif
@@ -244,8 +247,9 @@ namespace TitaniumWindows
 			const auto requestUri = ref new Windows::Foundation::Uri(Utility::ConvertString(requestString));
 
 			const auto httpClient = ref new HttpClient();
-			concurrency::create_task(httpClient->GetAsync(requestUri)).then([this, address, callback](HttpResponseMessage^ response) {
-				try {
+			concurrency::create_task(httpClient->GetAsync(requestUri)).then([this, address, callback](concurrency::task<HttpResponseMessage^> task) {
+				TITANIUM_EXCEPTION_CATCH_START {
+					const auto response = task.get();
 					std::vector<std::string> split_response;
 					boost::split(split_response, Utility::ConvertString(response->Content->ToString()), boost::is_any_of(","));
 
@@ -263,8 +267,7 @@ namespace TitaniumWindows
 						forwardGeocodeResponse.SetProperty("success", get_context().CreateBoolean(true));
 						forwardGeocodeResponse.SetProperty("error", get_context().CreateString(""));
 						forwardGeocodeResponse.SetProperty("code", get_context().CreateNumber(0.0));
-					}
-					else {
+					} else {
 						forwardGeocodeResponse.SetProperty("success", get_context().CreateBoolean(false));
 						forwardGeocodeResponse.SetProperty("error", get_context().CreateString("no results"));
 						forwardGeocodeResponse.SetProperty("code", get_context().CreateNumber(static_cast<double>(-1)));
@@ -275,10 +278,7 @@ namespace TitaniumWindows
 					auto cb = static_cast<JSObject>(callback);
 					TITANIUM_ASSERT(cb.IsFunction());
 					cb({ forwardGeocodeResponse }, get_context().get_global_object());
-				} catch (...) {
-					// TODO: Need to revisit - Geolocation module basically lacks exception handling during callback
-					TITANIUM_LOG_WARN("Error duging Geolocation::forwardGeocoder");
-				}
+				} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 			});
 	}
 
@@ -290,45 +290,36 @@ namespace TitaniumWindows
 
 		ensureLoadGeolocator();
 
-		concurrency::create_task(geolocator_->GetGeopositionAsync()).then([this, callback](Geoposition^ position) {
-			const auto ctx = get_context();
-			const auto data = position->Coordinate;
-			JSObject headingResponse = ctx.CreateObject();
+		concurrency::create_task(geolocator_->GetGeopositionAsync()).then([this, callback](concurrency::task<Geoposition^> task) {
+			TITANIUM_EXCEPTION_CATCH_START {
+				const auto position = task.get();
+				const auto ctx = get_context();
+				const auto data = position->Coordinate;
+				JSObject headingResponse = ctx.CreateObject();
 
-			headingResponse.SetProperty("code", ctx.CreateNumber(0.0));
-			headingResponse.SetProperty("error", ctx.CreateString(""));
+				headingResponse.SetProperty("code", ctx.CreateNumber(0.0));
+				headingResponse.SetProperty("error", ctx.CreateString(""));
 
-			JSObject headingData = ctx.CreateObject();
-			headingData.SetProperty("accuracy", ctx.CreateNumber(data->Accuracy));
-			headingData.SetProperty("magneticHeading", ctx.CreateNumber(data->Heading->Value));
-			headingData.SetProperty("timestamp", ctx.CreateNumber(static_cast<double>(data->Timestamp.UniversalTime)));
-			headingData.SetProperty("trueHeading", ctx.CreateNumber(data->Heading->Value));
+				JSObject headingData = ctx.CreateObject();
+				headingData.SetProperty("accuracy", ctx.CreateNumber(data->Accuracy));
+				headingData.SetProperty("magneticHeading", ctx.CreateNumber(data->Heading->Value));
+				headingData.SetProperty("timestamp", ctx.CreateNumber(static_cast<double>(data->Timestamp.UniversalTime)));
+				headingData.SetProperty("trueHeading", ctx.CreateNumber(data->Heading->Value));
 
-			//heading_ = data->Heading->Value;
+				//heading_ = data->Heading->Value;
 
-			headingData.SetProperty("x", ctx.CreateNumber(0.0));
-			headingData.SetProperty("y", ctx.CreateNumber(0.0));
-			headingData.SetProperty("z", ctx.CreateNumber(0.0));
+				headingData.SetProperty("x", ctx.CreateNumber(0.0));
+				headingData.SetProperty("y", ctx.CreateNumber(0.0));
+				headingData.SetProperty("z", ctx.CreateNumber(0.0));
 
-			headingResponse.SetProperty("heading", headingData);
-			headingResponse.SetProperty("success", ctx.CreateBoolean(true));
+				headingResponse.SetProperty("heading", headingData);
+				headingResponse.SetProperty("success", ctx.CreateBoolean(true));
 
-			try {
 				// Cast callback as non-const JSObject
 				auto cb = static_cast<JSObject>(callback);
 				TITANIUM_ASSERT(cb.IsFunction());
 				cb({headingResponse}, get_object());
-			} catch (const HAL::detail::js_runtime_error& ex) {
-				// In case callback throws JS exception, we want to catch it.
-				std::ostringstream os;
-				os << "Runtime Error: " << ex.js_message();
-
-				const auto what = ctx.CreateString(os.str());
-				const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
-				auto rsod_func = static_cast<JSObject>(rsod);
-				rsod_func({ what }, rsod_func);
-			}
-
+			} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 		});
 	}
 
@@ -340,50 +331,41 @@ namespace TitaniumWindows
 
 		ensureLoadGeolocator();
 
-		concurrency::create_task(geolocator_->GetGeopositionAsync()).then([this, callback](Geoposition^ position) {
-			const auto ctx = get_context();
-			const auto data = position->Coordinate;    
-			JSObject locationResult = ctx.CreateObject();
+		concurrency::create_task(geolocator_->GetGeopositionAsync()).then([this, callback](concurrency::task<Geoposition^> task) {
+			TITANIUM_EXCEPTION_CATCH_START{
+				const auto position = task.get();
+				const auto ctx = get_context();
+				const auto data = position->Coordinate;
+				JSObject locationResult = ctx.CreateObject();
 
-			locationResult.SetProperty("code", ctx.CreateNumber(0.0));
-			locationResult.SetProperty("error", ctx.CreateString(""));
+				locationResult.SetProperty("code", ctx.CreateNumber(0.0));
+				locationResult.SetProperty("error", ctx.CreateString(""));
 
-			JSObject provider = ctx.CreateObject();
-			provider.SetProperty("power", ctx.CreateNumber(1.0));
-			provider.SetProperty("name", ctx.CreateString("network"));
-			provider.SetProperty("accuracy", ctx.CreateNumber(2.0));
-			locationResult.SetProperty("provider", provider);
+				JSObject provider = ctx.CreateObject();
+				provider.SetProperty("power", ctx.CreateNumber(1.0));
+				provider.SetProperty("name", ctx.CreateString("network"));
+				provider.SetProperty("accuracy", ctx.CreateNumber(2.0));
+				locationResult.SetProperty("provider", provider);
 
-			JSObject coords = ctx.CreateObject();
-			coords.SetProperty("altitude", ctx.CreateNumber(data->Point->Position.Altitude));
-			coords.SetProperty("speed", ctx.CreateNumber(data->Speed->Value));
-			coords.SetProperty("longitude", ctx.CreateNumber(data->Point->Position.Longitude));
-			coords.SetProperty("heading", ctx.CreateNumber(data->Heading->Value));
-			coords.SetProperty("latitude", ctx.CreateNumber(data->Point->Position.Latitude));
-			coords.SetProperty("timestamp", ctx.CreateNumber(static_cast<double>(data->Timestamp.UniversalTime)));
-			//coords.SetProperty("altitudeAccuracy", ctx.CreateNumber(data->AltitudeAccuracy->Value));
-			coords.SetProperty("accuracy", ctx.CreateNumber(data->Accuracy));
-			locationResult.SetProperty("coords", coords);
+				JSObject coords = ctx.CreateObject();
+				coords.SetProperty("altitude", ctx.CreateNumber(data->Point->Position.Altitude));
+				coords.SetProperty("speed", ctx.CreateNumber(data->Speed->Value));
+				coords.SetProperty("longitude", ctx.CreateNumber(data->Point->Position.Longitude));
+				coords.SetProperty("heading", ctx.CreateNumber(data->Heading->Value));
+				coords.SetProperty("latitude", ctx.CreateNumber(data->Point->Position.Latitude));
+				coords.SetProperty("timestamp", ctx.CreateNumber(static_cast<double>(data->Timestamp.UniversalTime)));
+				//coords.SetProperty("altitudeAccuracy", ctx.CreateNumber(data->AltitudeAccuracy->Value));
+				coords.SetProperty("accuracy", ctx.CreateNumber(data->Accuracy));
+				locationResult.SetProperty("coords", coords);
 
-			lastGeolocation__.SetProperty("longitude", ctx.CreateNumber(data->Point->Position.Longitude));
-			lastGeolocation__.SetProperty("latitude", ctx.CreateNumber(data->Point->Position.Latitude));
+				lastGeolocation__.SetProperty("longitude", ctx.CreateNumber(data->Point->Position.Longitude));
+				lastGeolocation__.SetProperty("latitude", ctx.CreateNumber(data->Point->Position.Latitude));
 
-			locationResult.SetProperty("success", ctx.CreateBoolean(true));
-
-			try {
+				locationResult.SetProperty("success", ctx.CreateBoolean(true));
 				// Cast callback as non-const JSObject
 				auto cb = static_cast<JSObject>(callback);
 				cb({ locationResult }, get_object());
-			} catch (const HAL::detail::js_runtime_error& ex) {
-				// In case callback throws JS exception, we want to catch it.
-				std::ostringstream os;
-				os << "Runtime Error: " << ex.js_message();
-
-				const auto what = ctx.CreateString(os.str());
-				const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
-				auto rsod_func = static_cast<JSObject>(rsod);
-				rsod_func({ what }, rsod_func);
-			}
+			} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 		});
 	}
 
@@ -407,17 +389,17 @@ namespace TitaniumWindows
 		const auto requestUri = ref new Windows::Foundation::Uri(Utility::ConvertString(requestString));
 
 		const auto httpClient = ref new HttpClient();
-		concurrency::create_task(httpClient->GetAsync(requestUri)).then([this, callback](HttpResponseMessage^ response) {
-			auto result = get_context().CreateValueFromJSON(Utility::ConvertString(response->Content->ToString()));
+		concurrency::create_task(httpClient->GetAsync(requestUri)).then([this, callback](concurrency::task<HttpResponseMessage^> task) {
+			TITANIUM_EXCEPTION_CATCH_START{
+				const auto response = task.get();
+				auto result = get_context().CreateValueFromJSON(Utility::ConvertString(response->Content->ToString()));
 
-			// Cast callback as non-const JSObject
-			// TODO : More elegant way of doing this
-			auto cb = static_cast<JSObject>(callback);
-			TITANIUM_ASSERT(cb.IsFunction());
-			try {
+				// Cast callback as non-const JSObject
+				// TODO : More elegant way of doing this
+				auto cb = static_cast<JSObject>(callback);
+				TITANIUM_ASSERT(cb.IsFunction());
 				cb({result}, get_context().get_global_object());
-			} catch (...) {
-			}
+			} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 		});
 	}
 }  // namespace TitaniumWindows

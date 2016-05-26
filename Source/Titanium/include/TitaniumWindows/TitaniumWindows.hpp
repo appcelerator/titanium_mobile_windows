@@ -28,6 +28,7 @@ namespace TitaniumWindows
 		virtual ~Application();
 
 		virtual void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args) override;
+		void OnUnhandledException(Object^ sender, Windows::UI::Xaml::UnhandledExceptionEventArgs^ arg);
 		void OnSuspending(Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ e);
 		void OnResuming(Object ^sender, Object ^args);
 
