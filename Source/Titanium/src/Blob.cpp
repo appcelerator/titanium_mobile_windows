@@ -106,6 +106,10 @@ namespace TitaniumWindows
 
 	std::shared_ptr<Titanium::Blob> Blob::transformImage(const std::uint32_t& scaledWidth, const std::uint32_t scaledHeight, const Titanium::UI::Dimension& crop) TITANIUM_NOEXCEPT
 	{
+		if (!boost::starts_with(mimetype_, "image/")) {
+			return nullptr;
+		}
+
 		using namespace Windows::Graphics::Imaging;
 		using namespace Windows::Storage::Streams;
 

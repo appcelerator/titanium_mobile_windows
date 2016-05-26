@@ -166,4 +166,58 @@ describe("Titanium.Blob", function () {
         }).not.throw();
         finish();
     });
+    it("imageAsCropped of non-image", function (finish) {
+        var blob = Ti.Filesystem.getFile('app.js').read();
+        should(blob.imageAsCropped).be.a.Function;
+        should(function () {
+            var b = blob.imageAsCropped({ width: 50, height: 60, x: 0, y: 0 });
+            should(b).be.null;
+        }).not.throw();
+        finish();
+    });
+    it("imageAsResized of non-image", function (finish) {
+        var blob = Ti.Filesystem.getFile('app.js').read();
+        should(blob.imageAsCropped).be.a.Function;
+        should(function () {
+            var b = blob.imageAsResized(50, 60);
+            should(b).be.null;
+        }).not.throw();
+        finish();
+    });
+    it("imageAsThumbnail of non-image", function (finish) {
+        var blob = Ti.Filesystem.getFile('app.js').read();
+        should(blob.imageAsCropped).be.a.Function;
+        should(function () {
+            var b = blob.imageAsThumbnail(50);
+            should(b).be.null;
+        }).not.throw();
+        finish();
+    });
+    it("imageWithAlpha of non-image", function (finish) {
+        var blob = Ti.Filesystem.getFile('app.js').read();
+        should(blob.imageAsCropped).be.a.Function;
+        should(function () {
+            var b = blob.imageWithAlpha();
+            should(b).be.null;
+        }).not.throw();
+        finish();
+    });
+    it("imageWithRoundedCorner of non-image", function (finish) {
+        var blob = Ti.Filesystem.getFile('app.js').read();
+        should(blob.imageAsCropped).be.a.Function;
+        should(function () {
+            var b = blob.imageWithRoundedCorner(1);
+            should(b).be.null;
+        }).not.throw();
+        finish();
+    });
+    it("imageWithTransparentBorder of non-image", function (finish) {
+        var blob = Ti.Filesystem.getFile('app.js').read();
+        should(blob.imageAsCropped).be.a.Function;
+        should(function () {
+            var b = blob.imageWithTransparentBorder(1);
+            should(b).be.null;
+        }).not.throw();
+        finish();
+    });
 });
