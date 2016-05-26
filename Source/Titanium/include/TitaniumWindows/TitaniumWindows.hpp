@@ -28,7 +28,6 @@ namespace TitaniumWindows
 		virtual ~Application();
 
 		virtual void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args) override;
-		void OnUnhandledException(Object^ sender, Windows::UI::Xaml::UnhandledExceptionEventArgs^ arg);
 		void OnSuspending(Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ e);
 		void OnResuming(Object ^sender, Object ^args);
 
@@ -47,6 +46,7 @@ namespace TitaniumWindows
 #endif
 
 	private:
+		void OnUnhandledException(Object^ sender, Windows::UI::Xaml::UnhandledExceptionEventArgs^ arg);
 
 #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
 		// This code is for Windows phone apps only.
