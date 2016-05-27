@@ -283,7 +283,11 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(Annotation, customView)
 		{
-			return get_customView()->get_object();
+			const auto view = get_customView();
+			if (view) {
+				return view->get_object();
+			}
+			return get_context().CreateNull();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Annotation, customView)
@@ -343,7 +347,11 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(Annotation, leftView)
 		{
-			return get_leftView()->get_object();
+			const auto view = get_leftView();
+			if (view) {
+				return view->get_object();
+			}
+			return get_context().CreateNull();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Annotation, leftView)
@@ -391,7 +399,11 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(Annotation, rightView)
 		{
-			return get_rightView()->get_object();
+			const auto view = get_rightView();
+			if (view) {
+				return view->get_object();
+			}
+			return get_context().CreateNull();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Annotation, rightView)

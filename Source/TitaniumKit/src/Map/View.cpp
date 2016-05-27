@@ -520,7 +520,11 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, camera)
 		{
-			return get_camera()->get_object();
+			const auto camera = get_camera();
+			if (camera) {
+				return camera->get_object();
+			}
+			return get_context().CreateNull();
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, camera)

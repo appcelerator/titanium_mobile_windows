@@ -11,6 +11,7 @@
 #include "Titanium/detail/TiLogger.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include "TitaniumWindows/Map/View.hpp"
 
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 using namespace Windows::UI::Xaml::Controls::Maps;
@@ -85,6 +86,16 @@ namespace TitaniumWindows
 			TITANIUM_LOG_DEBUG("Annotation::ctor Initialize");
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			mapicon__ = ref new Windows::UI::Xaml::Controls::Grid();
+
+			mapicon__->Tapped += ref new Windows::UI::Xaml::Input::TappedEventHandler(
+				[this](Platform::Object^ sender, Windows::UI::Xaml::Input::TappedRoutedEventArgs^ e) {
+				TitaniumWindows::Map::View::HandleMapClick(
+					get_context(), 
+					TitaniumWindows::Map::View::CurrentView__,
+					get_latitude(),
+					get_longitude(),
+					get_object().GetPrivate<TitaniumWindows::Map::Annotation>());
+			});
 
 			// Draw pin
 			pin__ = ref new Windows::UI::Xaml::Shapes::Line();

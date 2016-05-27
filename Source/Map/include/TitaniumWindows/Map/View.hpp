@@ -22,6 +22,8 @@ namespace TitaniumWindows
 
 		using Annotation_shared_ptr_t = std::shared_ptr<Titanium::Map::Annotation>;
 
+		class Annotation;
+
 		/*!
 		  @class View
 		  @ingroup Titanium.Map.View
@@ -52,6 +54,14 @@ namespace TitaniumWindows
 
 			static void JSExportInitialize();
 
+#pragma warning(push)
+#pragma warning(disable : 4251)
+			// Save current View in static variable, assuming we use only one MapControl at once.
+			// Assuming it's right since that's the precondition we use static MapControl::SetLocation in Annotaiton.
+			static std::shared_ptr<View> CurrentView__;
+			static void HandleMapClick(const JSContext& js_context, const std::shared_ptr<View>& view, const double& latitude, const double& longitude, const std::shared_ptr<Annotation>& annotation) TITANIUM_NOEXCEPT;
+#pragma warning(pop)
+
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 			// properties
@@ -67,9 +77,14 @@ namespace TitaniumWindows
 			virtual void removeAnnotation(const Annotation_shared_ptr_t& annotation) TITANIUM_NOEXCEPT;
 			virtual void zoom(const uint32_t& zoom) TITANIUM_NOEXCEPT override final;
 
+#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
+			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
+#endif
 		private:
 
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+			Windows::Foundation::EventRegistrationToken click_event__;
 			Windows::UI::Xaml::Controls::Maps::MapControl^ mapview__ = { nullptr };
 #endif
 		};
