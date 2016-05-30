@@ -105,6 +105,8 @@ namespace TitaniumWindows
 
 	void Application::OnLaunched(LaunchActivatedEventArgs ^ args)
 	{
+		UnhandledException += ref new Windows::UI::Xaml::UnhandledExceptionEventHandler(this, &Application::OnUnhandledException);
+
 		auto titanium = js_context__.CreateObject(JSExport<TitaniumWindows::TiModule>::Class());
 		auto titanium_ptr = titanium.GetPrivate<TitaniumWindows::TiModule>();
 
@@ -323,6 +325,36 @@ namespace TitaniumWindows
 		}
 	}
 #endif
+
+	void Application::OnUnhandledException(Object^ sender, Windows::UI::Xaml::UnhandledExceptionEventArgs^ arg)
+	{
+#if defined _DEBUG
+		if (IsDebuggerPresent()) {
+			__debugbreak();
+		}
+#endif
+		// TODO It'd be good to try and log to Ti.API if we can at all so it shows in CLI!
+		// Maybe do red screen of death?
+
+		// At the very least, let's write to a logfile on the app
+
+		// unbind we're going to re-enter and don't want to loop...
+		//Application::Current::UnhandledException -= App_UnhandledException;
+
+		// say we've handled this one. this allows our FATAL write to complete.
+		arg->Handled = true;
+
+		const auto store = ApplicationData::Current->LocalFolder;
+		concurrency::create_task(store->CreateFileAsync("crash.log", CreationCollisionOption::GenerateUniqueName)).then([arg](StorageFile^ file) {
+			HResult exc = arg->Exception;
+			return FileIO::WriteTextAsync(file, "Message: " + arg->Message + "\nHRESULT: " + exc.Value + "\nToString(): " + arg->ToString() + "\ntype: " + arg->GetType()->FullName);
+		});
+
+		arg->Message;
+		arg->Exception;
+
+		Application::Current->Exit();
+	}
 
 	void Application::OnResuming(Object ^sender, Object ^args) 
 	{
