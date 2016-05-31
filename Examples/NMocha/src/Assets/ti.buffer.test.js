@@ -1,26 +1,32 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('./should');
+var should = require('./should'),
+	utilities = require('./utilities/utilities');
 
-describe("buffer", function() {
-	it("testAPI", function(finish) {
+describe('Titanium.Buffer', function() {
+	it('apiName', function (finish) {
+		should(Ti.Buffer.apiName).be.eql('Ti.Buffer');
+		finish();
+	});
+
+	it('testAPI', function(finish) {
 		should(Ti.createBuffer).be.a.Function;
 		var buffer = Ti.createBuffer();
 		should(buffer).be.an.Object;
-		should(buffer.apiName).be.eql("Ti.Buffer");
 		should(buffer.length).eql(0);
-		var functions = [ "append", "insert", "copy", "clone", "fill", "clear", "release", "toString", "toBlob" ];
+		var functions = [ 'append', 'insert', 'copy', 'clone', 'fill', 'clear', 'release', 'toString', 'toBlob' ];
 		for (var i = 0; i < functions.length; i++) {
 			should(buffer[functions[i]]).be.a.Function;
 		}
 		finish();
 	});
-	it("testLength", function(finish) {
+
+	it('length', function(finish) {
 		var buffer = Ti.createBuffer();
 		should(buffer.length).eql(0);
 		buffer = Ti.createBuffer({
@@ -30,7 +36,8 @@ describe("buffer", function() {
 		for (var i = 0; 100 > i; i++) should(buffer[i]).eql(0);
 		finish();
 	});
-	it("testAppend", function(finish) {
+
+	it('append()', function(finish) {
 		var buffer1 = Ti.createBuffer({
 			length: 20
 		});
@@ -71,7 +78,8 @@ describe("buffer", function() {
 		}).throw();
 		finish();
 	});
-	it("testInsert", function(finish) {
+
+	it('insert()', function(finish) {
 		var buffer1 = Ti.createBuffer({
 			length: 20
 		});
@@ -111,7 +119,8 @@ describe("buffer", function() {
 		}).throw();
 		finish();
 	});
-	it("testInsertBlogExample", function(finish) {
+
+	it('insert() blogExample', function(finish) {
 		var buffer = Ti.createBuffer({
 			length: 2
 		});
@@ -122,7 +131,7 @@ describe("buffer", function() {
 		});
 		buffer2[0] = 2;
 		buffer.insert(buffer2, 1);
-		should(String(buffer[0]) + String(buffer[1]) + String(buffer[2])).eql("123");
+		should(String(buffer[0]) + String(buffer[1]) + String(buffer[2])).eql('123');
 		should(buffer.length).eql(3);
 		should(buffer[0]).eql(1);
 		should(buffer[1]).eql(2);
@@ -132,7 +141,8 @@ describe("buffer", function() {
 		should(buffer2[0]).eql(2);
 		finish();
 	});
-	it("testCopy", function(finish) {
+
+	it('copy()', function(finish) {
 		var buffer1 = Ti.createBuffer({
 			length: 20
 		});
@@ -165,7 +175,8 @@ describe("buffer", function() {
 		}).throw();
 		finish();
 	});
-	it("testClone", function(finish) {
+
+	it('clone', function(finish) {
 		var buffer1 = Ti.createBuffer({ length: 20 });
 		buffer1[0] = 100;
 		buffer1[6] = 103;
@@ -195,7 +206,8 @@ describe("buffer", function() {
 
 		finish();
 	});
-	it("testFill", function(finish) {
+
+	it('fill()', function(finish) {
 		var buffer = Ti.createBuffer({
 			length: 20
 		});
@@ -218,7 +230,8 @@ describe("buffer", function() {
 		}).throw();
 		finish();
 	});
-	it("testClear", function(finish) {
+
+	it('clear()', function(finish) {
 		var buffer = Ti.createBuffer({
 			length: 100
 		});
@@ -228,7 +241,8 @@ describe("buffer", function() {
 		for (var i = 0; 100 > i; i++) should(buffer[i]).eql(0);
 		finish();
 	});
-	it("testRelease", function(finish) {
+
+	it('release()', function(finish) {
 		var buffer = Ti.createBuffer({
 			length: 100
 		});
@@ -236,7 +250,8 @@ describe("buffer", function() {
 		should(buffer.length).eql(0);
 		finish();
 	});
-	it("testToStringAndBlob", function(finish) {
+
+	it('toString() and toBlob()', function(finish) {
 		this.timeout(2000);
 		this.slow(1000);
 		// just a simple ascii string
@@ -267,117 +282,118 @@ describe("buffer", function() {
 		// o
 		buffer[11] = 114;
 		// r
-		should(buffer.toString()).eql("appcelerator");
+		should(buffer.toString()).eql('appcelerator');
 		var blob = buffer.toBlob();
 		should(blob.length).eql(buffer.length);
-		should(blob.text).eql("appcelerator");
+		should(blob.text).eql('appcelerator');
 		finish();
 	});
-	it("testAutoEncodeUTF-8", function(finish) {
+
+	it('defaults to UTF-8', function(finish) {
 		this.timeout(2000);
 		this.slow(1000);
-	    // default UTF8
-	    var buffer = Ti.createBuffer({
-	        value: "appcelerator"
-	    });
-	    should(buffer.length).eql(12);
-	    should(buffer[0]).eql(97);
-	    // a
-	    should(buffer[1]).eql(112);
-	    // p
-	    should(buffer[2]).eql(112);
-	    // p
-	    should(buffer[3]).eql(99);
-	    // c
-	    should(buffer[4]).eql(101);
-	    // e
-	    should(buffer[5]).eql(108);
-	    // l
-	    should(buffer[6]).eql(101);
-	    // e
-	    should(buffer[7]).eql(114);
-	    // r
-	    should(buffer[8]).eql(97);
-	    // a
-	    should(buffer[9]).eql(116);
-	    // t
-	    should(buffer[10]).eql(111);
-	    // o
-	    should(buffer[11]).eql(114);
-	    // r
-	    finish();
+		// default UTF8
+		var buffer = Ti.createBuffer({
+			value: 'appcelerator'
+		});
+		should(buffer.length).eql(12);
+		should(buffer[0]).eql(97);
+		// a
+		should(buffer[1]).eql(112);
+		// p
+		should(buffer[2]).eql(112);
+		// p
+		should(buffer[3]).eql(99);
+		// c
+		should(buffer[4]).eql(101);
+		// e
+		should(buffer[5]).eql(108);
+		// l
+		should(buffer[6]).eql(101);
+		// e
+		should(buffer[7]).eql(114);
+		// r
+		should(buffer[8]).eql(97);
+		// a
+		should(buffer[9]).eql(116);
+		// t
+		should(buffer[10]).eql(111);
+		// o
+		should(buffer[11]).eql(114);
+		// r
+		finish();
 	});
 
-	it("testAutoEncodeUTF-16", function(finish) {
+	it('encode with UTF-16', function(finish) {
 		this.timeout(2000);
 		this.slow(1000);
-	    // UTF-16
-	    var buffer = Ti.createBuffer({
-	        value: "appcelerator",
-	        type: Ti.Codec.CHARSET_UTF16
-	    });
-	    var length = 24;
-	    var start = 0;
-	    // some impls will add a UTF-16 BOM
-	    // http://en.wikipedia.org/wiki/UTF-16/UCS-2#Byte_order_encoding_schemes
-	    if (255 == buffer[0] && 254 == buffer[1]) {
-	        // UTF-16 BE
-	        length = 26;
-	        start = 1;
-	    } else if (254 == buffer[0] && 255 == buffer[1]) {
-	        // UTF-16 LE
-	        length = 26;
-	        start = 2;
-	    }
-	    should(buffer.length).eql(length);
-	    should(buffer.byteOrder).eql(Ti.Codec.getNativeByteOrder());
-	    should(buffer[start + 1]).eql(97);
-	    // a
-	    should(buffer[start + 3]).eql(112);
-	    // p
-	    should(buffer[start + 5]).eql(112);
-	    // p
-	    should(buffer[start + 7]).eql(99);
-	    // c
-	    should(buffer[start + 9]).eql(101);
-	    // e
-	    should(buffer[start + 11]).eql(108);
-	    // l
-	    should(buffer[start + 13]).eql(101);
-	    // e
-	    should(buffer[start + 15]).eql(114);
-	    // r
-	    should(buffer[start + 17]).eql(97);
-	    // a
-	    should(buffer[start + 19]).eql(116);
-	    // t
-	    should(buffer[start + 21]).eql(111);
-	    // o
-	    should(buffer[start + 23]).eql(114);
-	    // r
-	    finish();
+		// UTF-16
+		var buffer = Ti.createBuffer({
+			value: 'appcelerator',
+			type: Ti.Codec.CHARSET_UTF16
+		});
+		var length = 24;
+		var start = 0;
+		// some impls will add a UTF-16 BOM
+		// http://en.wikipedia.org/wiki/UTF-16/UCS-2#Byte_order_encoding_schemes
+		if (255 == buffer[0] && 254 == buffer[1]) {
+			// UTF-16 BE
+			length = 26;
+			start = 1;
+		} else if (254 == buffer[0] && 255 == buffer[1]) {
+			// UTF-16 LE
+			length = 26;
+			start = 2;
+		}
+		should(buffer.length).eql(length);
+		should(buffer.byteOrder).eql(Ti.Codec.getNativeByteOrder());
+		should(buffer[start + 1]).eql(97);
+		// a
+		should(buffer[start + 3]).eql(112);
+		// p
+		should(buffer[start + 5]).eql(112);
+		// p
+		should(buffer[start + 7]).eql(99);
+		// c
+		should(buffer[start + 9]).eql(101);
+		// e
+		should(buffer[start + 11]).eql(108);
+		// l
+		should(buffer[start + 13]).eql(101);
+		// e
+		should(buffer[start + 15]).eql(114);
+		// r
+		should(buffer[start + 17]).eql(97);
+		// a
+		should(buffer[start + 19]).eql(116);
+		// t
+		should(buffer[start + 21]).eql(111);
+		// o
+		should(buffer[start + 23]).eql(114);
+		// r
+		finish();
 	});
 
-	it("testAutoEncodeBigEndian", function (finish) {
+	it('testAutoEncodeBigEndian', function (finish) {
 		this.timeout(2000);
 		this.slow(1000);
-	    // 8 Byte long in Big Endian (most significant byte first)
-	    var buffer = Ti.createBuffer({
-	        value: 305419896,
-	        type: Ti.Codec.TYPE_LONG,
-	        byteOrder: Ti.Codec.BIG_ENDIAN
-	    });
-	    should(buffer.byteOrder).eql(Ti.Codec.BIG_ENDIAN);
-	    should(buffer.length).eql(8);
-	    for (var i = 0; 4 > i; i++) should(buffer[i]).eql(0);
-	    should(buffer[4]).eql(18);
-	    should(buffer[5]).eql(52);
-	    should(buffer[6]).eql(86);
-	    should(buffer[7]).eql(120);
-	    finish();
+		// 8 Byte long in Big Endian (most significant byte first)
+		var buffer = Ti.createBuffer({
+			value: 305419896,
+			type: Ti.Codec.TYPE_LONG,
+			byteOrder: Ti.Codec.BIG_ENDIAN
+		});
+		should(buffer.byteOrder).eql(Ti.Codec.BIG_ENDIAN);
+		should(buffer.length).eql(8);
+		for (var i = 0; 4 > i; i++) should(buffer[i]).eql(0);
+		should(buffer[4]).eql(18);
+		should(buffer[5]).eql(52);
+		should(buffer[6]).eql(86);
+		should(buffer[7]).eql(120);
+		finish();
 	});
 
-	it("testAutoEncodeLittleEndian", function (finish) {
+	it('testAutoEncodeLittleEndian', function (finish) {
 		this.timeout(2000);
 		this.slow(1000);
 		// 4 byte int in Little Endian (least significant byte first)

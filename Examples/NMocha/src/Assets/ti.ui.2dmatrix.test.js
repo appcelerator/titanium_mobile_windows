@@ -1,14 +1,20 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('./should');
+var should = require('./should'),
+	utilities = require('./utilities/utilities');
 
-describe("Titanium.UI.2DMatrix", function() {
-	it("testInvert", function(finish) {
+describe('Titanium.UI.2DMatrix', function() {
+	it('apiName', function (finish) {
+		should(Ti.UI['2DMatrix'].apiName).be.eql('Ti.UI.2DMatrix');
+		finish();
+	});
+
+	it('invert()', function(finish) {
 		var matrix1 = Ti.UI.create2DMatrix();
 		var matrix2 = Ti.UI.create2DMatrix();
 		should(matrix1.invert()).be.an.Object;
@@ -22,12 +28,13 @@ describe("Titanium.UI.2DMatrix", function() {
 		should(matrix1.invert()).be.an.Object;
 		finish();
 	});
-	it("testMultiply", function(finish) {
+
+	it('multiply()', function(finish) {
 		var matrix1 = Ti.UI.create2DMatrix();
 		var matrix2 = Ti.UI.create2DMatrix();
 		should(matrix1.multiply(matrix2)).be.an.Object;
 		should(matrix1.multiply(matrix1)).be.an.Object;
-		if ("android" === Ti.Platform.osname) {
+		if (utilities.isAndroid()) {
 			matrix1 = matrix1.rotate(90);
 			matrix2 = matrix2.scale(2, 1);
 			var matrix3 = matrix1.multiply(matrix2);
@@ -44,7 +51,8 @@ describe("Titanium.UI.2DMatrix", function() {
 		}
 		finish();
 	});
-	it("testRotate", function(finish) {
+
+	it('rotate()', function(finish) {
 		var matrix1 = Ti.UI.create2DMatrix();
 		should(matrix1.rotate(0)).be.an.Object;
 		should(matrix1.rotate(90)).be.an.Object;
@@ -54,14 +62,16 @@ describe("Titanium.UI.2DMatrix", function() {
 		should(matrix1.rotate(-0)).be.an.Object;
 		finish();
 	});
-	it("testScale", function(finish) {
+
+	it('scale()', function(finish) {
 		var matrix1 = Ti.UI.create2DMatrix();
 		should(matrix1.scale(50, 50)).be.an.Object;
 		should(matrix1.scale(0, -1)).be.an.Object;
 		should(matrix1.scale(-100, -100)).be.an.Object;
 		finish();
 	});
-	it("testTranslate", function(finish) {
+
+	it('translate()', function(finish) {
 		var matrix1 = Ti.UI.create2DMatrix();
 		should(matrix1.translate(-1, 0)).be.an.Object;
 		should(matrix1.translate(50, 50)).be.an.Object;

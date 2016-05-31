@@ -1,393 +1,395 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var should = require('./should');
+var should = require('./should'),
+	utilities = require('./utilities/utilities');
 
 describe('Titanium.Database', function () {
-    it('apiName', function (finish) {
-        should(function () {
-            should(Ti.Database.apiName).be.eql("Ti.Database");
-        }).not.throw();
-        finish();
-    });
-    // Check if FIELD_TYPE_DOUBLE exists and make sure it does not throw exception
-    it('FIELD_TYPE_DOUBLE', function (finish) {
-        should(function () {
-            should(Ti.Database.FIELD_TYPE_DOUBLE).not.be.undefined;
-            should(Ti.Database.FIELD_TYPE_DOUBLE).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Database.FIELD_TYPE_DOUBLE;
-            Ti.Database.FIELD_TYPE_DOUBLE = 'try_to_overwrite_READONLY_value';
-            should(Ti.Database.FIELD_TYPE_DOUBLE).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    // Check if FIELD_TYPE_FLOAT exists and make sure it does not throw exception
-    it('FIELD_TYPE_FLOAT', function (finish) {
-        should(function () {
-            should(Ti.Database.FIELD_TYPE_FLOAT).not.be.undefined;
-            should(Ti.Database.FIELD_TYPE_FLOAT).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Database.FIELD_TYPE_FLOAT;
-            Ti.Database.FIELD_TYPE_FLOAT = 'try_to_overwrite_READONLY_value';
-            should(Ti.Database.FIELD_TYPE_FLOAT).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    // Check if FIELD_TYPE_INT exists and make sure it does not throw exception
-    it('FIELD_TYPE_INT', function (finish) {
-        should(function () {
-            should(Ti.Database.FIELD_TYPE_INT).not.be.undefined;
-            should(Ti.Database.FIELD_TYPE_INT).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Database.FIELD_TYPE_INT;
-            Ti.Database.FIELD_TYPE_INT = 'try_to_overwrite_READONLY_value';
-            should(Ti.Database.FIELD_TYPE_INT).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-    // Check if FIELD_TYPE_STRING exists and make sure it does not throw exception
-    it('FIELD_TYPE_STRING', function (finish) {
-        should(function () {
-            should(Ti.Database.FIELD_TYPE_STRING).not.be.undefined;
-            should(Ti.Database.FIELD_TYPE_STRING).be.a.Number;
-            // make sure it is read-only value
-            var value = Ti.Database.FIELD_TYPE_STRING;
-            Ti.Database.FIELD_TYPE_STRING = 'try_to_overwrite_READONLY_value';
-            should(Ti.Database.FIELD_TYPE_STRING).be.eql(value);
-        }).not.throw();
-        finish();
-    });
-
-    // Check if install exists and make sure it does not throw exception
-    it('install', function (finish) {
-        should(Ti.Database.install).not.be.undefined;
-        should(Ti.Database.install).be.a.Function;
-
-        // Database name
-        var dbName = "testDbInstall";
-
-        // Copy database 'testDbResource.db' over from the application folder
-        // into the application data folder as 'testDbInstall'
-        var db = Ti.Database.install("testDbResource.db", dbName);
-
-        // Confirm 'db' is an object
-        should(db).be.a.Object;
-
-        // Confirm 'db.file' property is a valid object
-        var file = db.file;
-        Ti.API.info(db.file.name);
-        should(db.file).be.a.Object;
-
-        // Validate the 'db.lastInsertRowId' property
-        should(db.lastInsertRowId).be.a.Number;
-        should(db.lastInsertRowId).be.eql(0);
-
-        // Confirm 'db.name' is a string
-        should(db.name).be.a.String;
-        should(db.name).be.eql(dbName);
-
-        // Validate the 'db.rowsAffected' property
-        should(db.rowsAffected).be.a.Number;
-        should(db.rowsAffected).be.eql(0);
-
-        // Define test data
-        var testName = "John Smith";
-        var testNumber = 123456789;
-        var testArray = ['Smith John', 987654321];
-
-        // Execute a query to return the rows of the database
-        var rows = db.execute('SELECT rowid, text, number FROM testTable');
-
-        // Validate the returned 'rows' object
-        should(rows).be.a.Object;
-        should(rows.rowCount).be.eql(2);
-        should(rows.fieldCount).be.eql(3);
-        // Validate field names
-        should(rows.fieldName(0)).be.eql('rowid');
-        should(rows.fieldName(1)).be.eql('text');
-        should(rows.fieldName(2)).be.eql('number');
-
-        // Loop through each row
-        var index = 1;
-        while (rows.isValidRow()) {
-
-            // Validate the rowid field
-            var rowid = rows.fieldByName('rowid');
-            should(rowid).be.a.Number;
-            should(rowid).be.eql(index);
-
-            // Case insensitive search
-            rowid = rows.fieldByName('ROWID');
-            should(rowid).be.a.Number;
-            should(rowid).be.eql(index);
-
-            // Validate the text field
-            var text = rows.field(1);
-            should(text).be.a.String;
-
-            // Validate the number field
-            var number = rows.fieldByName('number');
-            should(number).be.a.Number;
-
-            //Case insensitive search
-            number = rows.fieldByName('NUMBER');
-            should(number).be.a.Number;
-
-            // Validate the test data
-            if (index == 1) {
-                should(text).be.eql(testName);
-                should(number).be.eql(testNumber);
-            } else if (index == 2) {
-                should(number).be.eql(testArray[1]);
-                should(text).be.eql(testArray[0]);
-            }
-
-            // Next row
-            rows.next();
-            index++;
-        }
-
-        // Close the 'rows' object
-        rows.close();
-
-        // test aliased field name
-        var aliased = db.execute('SELECT rowid, text AS something FROM testTable');
-
-        // Validate the returned 'rows' object
-        should(aliased).be.a.Object;
-        should(aliased.rowCount).be.eql(2);
-        should(aliased.fieldCount).be.eql(2);
-        // Validate field names
-        should(aliased.fieldName(0)).be.eql('rowid');
-        should(aliased.fieldName(1)).be.eql('something');
-
-        // Close the 'rows' object
-        aliased.close();
-
-        // Remove the 'testDbInstall' database file
-        db.remove();
-
-        // Close the database (unnecessary as remove() does this for us)
-        db.close();
-
-        // Finish mocha test
-        finish();
-    });
-
-    // Check if open exists and make sure it does not throw exception
-    it('open', function (finish) {
-        should(Ti.Database.install).not.be.undefined;
-        should(Ti.Database.install).be.a.Function;
-
-        // Database name
-        var dbName = "testDbOpen";
-
-        // Open database 'testDbOpen' if it exists in the
-        // application data folder, otherwise create a new one
-        var db = Ti.Database.open(dbName);
-
-        // Confirm 'db' is an object
-        should(db).be.a.Object;
-
-        // Confirm 'db.file' property is a valid object
-        var file = db.file;
-        should(db.file).be.a.Object;
-
-        // Validate the 'db.lastInsertRowId' property
-        should(db.lastInsertRowId).be.a.Number;
-        should(db.lastInsertRowId).be.eql(0);
-
-        // Confirm 'db.name' is a string
-        should(db.name).be.a.String;
-        should(db.name).be.eql(dbName);
-
-        // Validate the 'db.rowsAffected' property
-        should(db.rowsAffected).be.a.Number;
-        should(db.rowsAffected).be.eql(0);
-
-        // Execute a query to create a test table
-        db.execute('CREATE TABLE IF NOT EXISTS testTable (text TEXT, number INTEGER)');
-
-        // Delete any existing data if the table already existed
-        db.execute('DELETE FROM testTable');
-
-        // Define test data
-        var testName = "John Smith";
-        var testNumber = 123456789;
-
-        // Insert test data into the table
-        db.execute('INSERT INTO testTable (text, number) VALUES (?, ?)', testName, testNumber);
-
-        // Validate that only one row has been affected
-        should(db.rowsAffected).be.eql(1);
-
-        // Define more test data
-        var testArray = ['Smith John', 987654321];
+	it('apiName', function (finish) {
+		should(Ti.Database.apiName).be.eql('Ti.Database');
+		finish();
+	});
+
+	// Check if FIELD_TYPE_DOUBLE exists and make sure it does not throw exception
+	it('FIELD_TYPE_DOUBLE', function (finish) {
+		should(function () {
+			should(Ti.Database.FIELD_TYPE_DOUBLE).not.be.undefined;
+			should(Ti.Database.FIELD_TYPE_DOUBLE).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Database.FIELD_TYPE_DOUBLE;
+			Ti.Database.FIELD_TYPE_DOUBLE = 'try_to_overwrite_READONLY_value';
+			should(Ti.Database.FIELD_TYPE_DOUBLE).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+
+	// Check if FIELD_TYPE_FLOAT exists and make sure it does not throw exception
+	it('FIELD_TYPE_FLOAT', function (finish) {
+		should(function () {
+			should(Ti.Database.FIELD_TYPE_FLOAT).not.be.undefined;
+			should(Ti.Database.FIELD_TYPE_FLOAT).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Database.FIELD_TYPE_FLOAT;
+			Ti.Database.FIELD_TYPE_FLOAT = 'try_to_overwrite_READONLY_value';
+			should(Ti.Database.FIELD_TYPE_FLOAT).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+	// Check if FIELD_TYPE_INT exists and make sure it does not throw exception
+	it('FIELD_TYPE_INT', function (finish) {
+		should(function () {
+			should(Ti.Database.FIELD_TYPE_INT).not.be.undefined;
+			should(Ti.Database.FIELD_TYPE_INT).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Database.FIELD_TYPE_INT;
+			Ti.Database.FIELD_TYPE_INT = 'try_to_overwrite_READONLY_value';
+			should(Ti.Database.FIELD_TYPE_INT).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+
+	// Check if FIELD_TYPE_STRING exists and make sure it does not throw exception
+	it('FIELD_TYPE_STRING', function (finish) {
+		should(function () {
+			should(Ti.Database.FIELD_TYPE_STRING).not.be.undefined;
+			should(Ti.Database.FIELD_TYPE_STRING).be.a.Number;
+			// make sure it is read-only value
+			var value = Ti.Database.FIELD_TYPE_STRING;
+			Ti.Database.FIELD_TYPE_STRING = 'try_to_overwrite_READONLY_value';
+			should(Ti.Database.FIELD_TYPE_STRING).be.eql(value);
+		}).not.throw();
+		finish();
+	});
+
+	// Check if install exists and make sure it does not throw exception
+	it('install', function (finish) {
+		should(Ti.Database.install).not.be.undefined;
+		should(Ti.Database.install).be.a.Function;
+
+		// Database name
+		var dbName = "testDbInstall";
+
+		// Copy database 'testDbResource.db' over from the application folder
+		// into the application data folder as 'testDbInstall'
+		var db = Ti.Database.install("testDbResource.db", dbName);
+
+		// Confirm 'db' is an object
+		should(db).be.a.Object;
+
+		// Confirm 'db.file' property is a valid object
+		var file = db.file;
+		Ti.API.info(db.file.name);
+		should(db.file).be.a.Object;
+
+		// Validate the 'db.lastInsertRowId' property
+		should(db.lastInsertRowId).be.a.Number;
+		should(db.lastInsertRowId).be.eql(0);
+
+		// Confirm 'db.name' is a string
+		should(db.name).be.a.String;
+		should(db.name).be.eql(dbName);
+
+		// Validate the 'db.rowsAffected' property
+		should(db.rowsAffected).be.a.Number;
+		should(db.rowsAffected).be.eql(0);
+
+		// Define test data
+		var testName = "John Smith";
+		var testNumber = 123456789;
+		var testArray = ['Smith John', 987654321];
+
+		// Execute a query to return the rows of the database
+		var rows = db.execute('SELECT rowid, text, number FROM testTable');
+
+		// Validate the returned 'rows' object
+		should(rows).be.a.Object;
+		should(rows.rowCount).be.eql(2);
+		should(rows.fieldCount).be.eql(3);
+		// Validate field names
+		should(rows.fieldName(0)).be.eql('rowid');
+		should(rows.fieldName(1)).be.eql('text');
+		should(rows.fieldName(2)).be.eql('number');
+
+		// Loop through each row
+		var index = 1;
+		while (rows.isValidRow()) {
+
+			// Validate the rowid field
+			var rowid = rows.fieldByName('rowid');
+			should(rowid).be.a.Number;
+			should(rowid).be.eql(index);
+
+			// Case insensitive search
+			rowid = rows.fieldByName('ROWID');
+			should(rowid).be.a.Number;
+			should(rowid).be.eql(index);
+
+			// Validate the text field
+			var text = rows.field(1);
+			should(text).be.a.String;
+
+			// Validate the number field
+			var number = rows.fieldByName('number');
+			should(number).be.a.Number;
+
+			//Case insensitive search
+			number = rows.fieldByName('NUMBER');
+			should(number).be.a.Number;
+
+			// Validate the test data
+			if (index == 1) {
+				should(text).be.eql(testName);
+				should(number).be.eql(testNumber);
+			} else if (index == 2) {
+				should(number).be.eql(testArray[1]);
+				should(text).be.eql(testArray[0]);
+			}
+
+			// Next row
+			rows.next();
+			index++;
+		}
+
+		// Close the 'rows' object
+		rows.close();
+
+		// test aliased field name
+		var aliased = db.execute('SELECT rowid, text AS something FROM testTable');
+
+		// Validate the returned 'rows' object
+		should(aliased).be.a.Object;
+		should(aliased.rowCount).be.eql(2);
+		should(aliased.fieldCount).be.eql(2);
+		// Validate field names
+		should(aliased.fieldName(0)).be.eql('rowid');
+		should(aliased.fieldName(1)).be.eql('something');
+
+		// Close the 'rows' object
+		aliased.close();
+
+		// Remove the 'testDbInstall' database file
+		db.remove();
+
+		// Close the database (unnecessary as remove() does this for us)
+		db.close();
+
+		// Finish mocha test
+		finish();
+	});
+
+	// Check if open exists and make sure it does not throw exception
+	it('open', function (finish) {
+		should(Ti.Database.install).not.be.undefined;
+		should(Ti.Database.install).be.a.Function;
+
+		// Database name
+		var dbName = "testDbOpen";
+
+		// Open database 'testDbOpen' if it exists in the
+		// application data folder, otherwise create a new one
+		var db = Ti.Database.open(dbName);
+
+		// Confirm 'db' is an object
+		should(db).be.a.Object;
+
+		// Confirm 'db.file' property is a valid object
+		var file = db.file;
+		should(db.file).be.a.Object;
+
+		// Validate the 'db.lastInsertRowId' property
+		should(db.lastInsertRowId).be.a.Number;
+		should(db.lastInsertRowId).be.eql(0);
+
+		// Confirm 'db.name' is a string
+		should(db.name).be.a.String;
+		should(db.name).be.eql(dbName);
+
+		// Validate the 'db.rowsAffected' property
+		should(db.rowsAffected).be.a.Number;
+		should(db.rowsAffected).be.eql(0);
+
+		// Execute a query to create a test table
+		db.execute('CREATE TABLE IF NOT EXISTS testTable (text TEXT, number INTEGER)');
+
+		// Delete any existing data if the table already existed
+		db.execute('DELETE FROM testTable');
+
+		// Define test data
+		var testName = "John Smith";
+		var testNumber = 123456789;
+
+		// Insert test data into the table
+		db.execute('INSERT INTO testTable (text, number) VALUES (?, ?)', testName, testNumber);
+
+		// Validate that only one row has been affected
+		should(db.rowsAffected).be.eql(1);
+
+		// Define more test data
+		var testArray = ['Smith John', 987654321];
+
+		// Insert more test data into the table
+		db.execute('INSERT INTO testTable (text, number) VALUES (?, ?)', testArray);
+
+		// Validate that only one row has been affected
+		should(db.rowsAffected).be.eql(1);
+
+		// Execute a query to return the rows of the database
+		var rows = db.execute('SELECT rowid, text, number FROM testTable');
+
+		// Validate the returned 'rows' object
+		should(rows).be.a.Object;
+		should(rows.rowCount).be.eql(2);
+		should(rows.fieldCount).be.eql(3);
+		should(rows.validRow).be.true;
+		should(rows.isValidRow()).be.true;
+
+		// Loop through each row
+		var index = 1;
+		while (rows.isValidRow()) {
+
+			// Validate the rowid field
+			var rowid = rows.fieldByName('rowid');
+			should(rowid).be.a.Number;
+			should(rowid).be.eql(index);
+
+			// Validate the text field
+			var text = rows.field(1);
+			should(text).be.a.String;
 
-        // Insert more test data into the table
-        db.execute('INSERT INTO testTable (text, number) VALUES (?, ?)', testArray);
-
-        // Validate that only one row has been affected
-        should(db.rowsAffected).be.eql(1);
-
-        // Execute a query to return the rows of the database
-        var rows = db.execute('SELECT rowid, text, number FROM testTable');
-
-        // Validate the returned 'rows' object
-        should(rows).be.a.Object;
-        should(rows.rowCount).be.eql(2);
-        should(rows.fieldCount).be.eql(3);
-        should(rows.validRow).be.true;
-        should(rows.isValidRow()).be.true;
+			// Validate the number field
+			var number = rows.fieldByName('number');
+			should(number).be.a.Number;
 
-        // Loop through each row
-        var index = 1;
-        while (rows.isValidRow()) {
+			// Validate the test data
+			if (index == 1) {
+				should(text).be.eql(testName);
+				should(number).be.eql(testNumber);
+			} else if (index == 2) {
+				should(number).be.eql(testArray[1]);
+				should(text).be.eql(testArray[0]);
+			}
 
-            // Validate the rowid field
-            var rowid = rows.fieldByName('rowid');
-            should(rowid).be.a.Number;
-            should(rowid).be.eql(index);
-
-            // Validate the text field
-            var text = rows.field(1);
-            should(text).be.a.String;
+			// Next row
+			rows.next();
+			index++;
+		}
 
-            // Validate the number field
-            var number = rows.fieldByName('number');
-            should(number).be.a.Number;
+		// Close the 'rows' object
+		rows.close();
 
-            // Validate the test data
-            if (index == 1) {
-                should(text).be.eql(testName);
-                should(number).be.eql(testNumber);
-            } else if (index == 2) {
-                should(number).be.eql(testArray[1]);
-                should(text).be.eql(testArray[0]);
-            }
+		// Remove the 'testDbInstall' database file
+		db.remove();
 
-            // Next row
-            rows.next();
-            index++;
-        }
+		// Close the database (unnecessary as remove() does this for us)
+		db.close();
 
-        // Close the 'rows' object
-        rows.close();
+		// Finish the mocha test
+		finish();
+	});
 
-        // Remove the 'testDbInstall' database file
-        db.remove();
+	// Check if it guards against "closed" results
+	it('closed_guard', function (finish) {
+		// Database name
+		var dbName = "testDbOpen";
 
-        // Close the database (unnecessary as remove() does this for us)
-        db.close();
+		// Open database 'testDbOpen' if it exists in the
+		// application data folder, otherwise create a new one
+		var db = Ti.Database.open(dbName);
 
-        // Finish the mocha test
-        finish();
-    });
+		// Execute a query to create a test table
+		db.execute('CREATE TABLE IF NOT EXISTS testTable (text TEXT, number INTEGER)');
 
-    // Check if it guards against "closed" results
-    it('closed_guard', function (finish) {
-        // Database name
-        var dbName = "testDbOpen";
+		// Delete any existing data if the table already existed
+		db.execute('DELETE FROM testTable');
 
-        // Open database 'testDbOpen' if it exists in the
-        // application data folder, otherwise create a new one
-        var db = Ti.Database.open(dbName);
+		// Define test data
+		var testName = "John Smith";
+		var testNumber = 123456789;
 
-        // Execute a query to create a test table
-        db.execute('CREATE TABLE IF NOT EXISTS testTable (text TEXT, number INTEGER)');
+		// Insert test data into the table
+		db.execute('INSERT INTO testTable (text, number) VALUES (?, ?)', testName, testNumber);
 
-        // Delete any existing data if the table already existed
-        db.execute('DELETE FROM testTable');
+		// Validate that only one row has been affected
+		should(db.rowsAffected).be.eql(1);
 
-        // Define test data
-        var testName = "John Smith";
-        var testNumber = 123456789;
+		// Define more test data
+		var testArray = ['Smith John', 987654321];
 
-        // Insert test data into the table
-        db.execute('INSERT INTO testTable (text, number) VALUES (?, ?)', testName, testNumber);
+		// Insert more test data into the table
+		db.execute('INSERT INTO testTable (text, number) VALUES (?, ?)', testArray);
 
-        // Validate that only one row has been affected
-        should(db.rowsAffected).be.eql(1);
+		// Validate that only one row has been affected
+		should(db.rowsAffected).be.eql(1);
 
-        // Define more test data
-        var testArray = ['Smith John', 987654321];
+		// Execute a query to return the rows of the database
+		var rows = db.execute('SELECT rowid, text, number FROM testTable');
 
-        // Insert more test data into the table
-        db.execute('INSERT INTO testTable (text, number) VALUES (?, ?)', testArray);
+		// Validate the returned 'rows' object
+		should(rows).be.a.Object;
+		should(rows.rowCount).be.eql(2);
+		should(rows.fieldCount).be.eql(3);
+		should(rows.validRow).be.true;
 
-        // Validate that only one row has been affected
-        should(db.rowsAffected).be.eql(1);
+		// Close the 'rows' object
+		rows.close();
 
-        // Execute a query to return the rows of the database
-        var rows = db.execute('SELECT rowid, text, number FROM testTable');
+		// Make sure row is not "valid"
+		should(rows.rowCount).be.eql(0);
+		should(rows.fieldCount).be.eql(0);
+		should(rows.validRow).be.false;
 
-        // Validate the returned 'rows' object
-        should(rows).be.a.Object;
-        should(rows.rowCount).be.eql(2);
-        should(rows.fieldCount).be.eql(3);
-        should(rows.validRow).be.true;
+		// Validate the rowid field
+		var rowid = rows.fieldByName('rowid');
+		should(rowid).be.a.null;
 
-        // Close the 'rows' object
-        rows.close();
+		// Validate the closed field
+		var field1 = rows.field(1);
+		should(field1).be.a.null;
 
-        // Make sure row is not "valid"
-        should(rows.rowCount).be.eql(0);
-        should(rows.fieldCount).be.eql(0);
-        should(rows.validRow).be.false;
+		var field2 = rows.fieldByName('number');
+		should(field2).be.a.null;
 
-        // Validate the rowid field
-        var rowid = rows.fieldByName('rowid');
-        should(rowid).be.a.null;
+		// Make sure next doesn't cause crash and return false
+		should(rows.next()).be.false;
 
-        // Validate the closed field
-        var field1 = rows.field(1);
-        should(field1).be.a.null;
+		// Make sure closing again doesn't cause crash
+		rows.close();
 
-        var field2 = rows.fieldByName('number');
-        should(field2).be.a.null;
+		// Remove the 'testDbInstall' database file
+		db.remove();
 
-        // Make sure next doesn't cause crash and return false
-        should(rows.next()).be.false;
+		// Close the database (unnecessary as remove() does this for us)
+		db.close();
 
-        // Make sure closing again doesn't cause crash
-        rows.close();
+		// Finish the mocha test
+		finish();
+	});
 
-        // Remove the 'testDbInstall' database file
-        db.remove();
+	// Test behavior expected by alloy code for createCollection. See TIMOB-20222
+	it('execute returns null instead of empty result set', function (finish) {
+		should(Ti.Database.install).not.be.undefined;
+		should(Ti.Database.install).be.a.Function;
 
-        // Close the database (unnecessary as remove() does this for us)
-        db.close();
+		// Call install on a database file that doesn't exist. We should just make a new db with name 'category'
+		var db = Ti.Database.install("made.up.sqlite", "category");
 
-        // Finish the mocha test
-        finish();
-    });
+		// Confirm 'db' is an object
+		should(db).be.a.Object;
 
-    // Test behavior expected by alloy code for createCollection. See TIMOB-20222
-    it('execute returns null instead of empty result set', function (finish) {
-        should(Ti.Database.install).not.be.undefined;
-        should(Ti.Database.install).be.a.Function;
+		var rows = db.execute('pragma table_info("category");');
 
-        // Call install on a database file that doesn't exist. We should just make a new db with name 'category'
-        var db = Ti.Database.install("made.up.sqlite", "category");
+		should(rows).be.null;
 
-        // Confirm 'db' is an object
-        should(db).be.a.Object;
+		// Remove the 'category' database file
+		db.remove();
 
-        var rows = db.execute('pragma table_info("category");');
+		// Close the database (unnecessary as remove() does this for us)
+		db.close();
 
-        should(rows).be.null;
-
-        // Remove the 'category' database file
-        db.remove();
-
-        // Close the database (unnecessary as remove() does this for us)
-        db.close();
-
-        finish();
-    });
+		finish();
+	});
 
 });
