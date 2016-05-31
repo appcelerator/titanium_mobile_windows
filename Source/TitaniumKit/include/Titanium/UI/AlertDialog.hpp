@@ -86,6 +86,15 @@ namespace Titanium
 			TITANIUM_PROPERTY_IMPL_DEF(std::string, message);
 
 			/*!
+			@method
+
+			@abstract title : String
+
+			@discussion Key identifying a string in the locale file to use for the title text.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, titleid);
+
+			/*!
 			  @method
 
 			  @abstract title : String
@@ -115,6 +124,7 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(cancel);
 			TITANIUM_PROPERTY_DEF(message);
 			TITANIUM_PROPERTY_DEF(title);
+			TITANIUM_PROPERTY_DEF(titleid);
 
 			TITANIUM_FUNCTION_DEF(getButtonNames);
 			TITANIUM_FUNCTION_DEF(setButtonNames);
@@ -124,6 +134,8 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setMessage);
 			TITANIUM_FUNCTION_DEF(getTitle);
 			TITANIUM_FUNCTION_DEF(setTitle);
+			TITANIUM_FUNCTION_DEF(getTitleid);
+			TITANIUM_FUNCTION_DEF(setTitleid);
 
 		protected:
 #pragma warning(push)
@@ -132,6 +144,7 @@ namespace Titanium
 			int32_t cancel__;
 			std::string message__;
 			std::string title__;
+			std::string titleid__;
 #pragma warning(pop)
 		};
 	} // namespace UI

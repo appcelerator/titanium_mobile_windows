@@ -236,4 +236,21 @@ describe("Titanium.UI.Button", function () {
         });
         w.open();
     });
+
+    it("titleid", function (finish) {
+        var button = Ti.UI.createButton({
+            titleid: "this is my key"
+        });
+        should(button.titleid).be.a.String;
+        should(button.getTitleid).be.a.Function;
+        should(button.titleid).eql('this is my key');
+        should(button.title).eql('this is my key'); // key is used when no resources found
+        should(button.getTitleid()).eql('this is my key');
+        button.titleid = 'other text';
+        should(button.titleid).eql('other text');
+        should(button.title).eql('other text'); // key is used when no resources found
+        should(button.getTitleid()).eql('other text');
+        finish();
+    });
+
 });

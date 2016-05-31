@@ -61,6 +61,16 @@ namespace Titanium
 			TITANIUM_PROPERTY_IMPL_DEF(Font, font);
 
 			/*!
+			@method
+
+			@abstract textid : String
+
+			@discussion Key identifying a string from the locale file to use for the label text.
+
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, textid);
+
+			/*!
 			  @method
 
 			  @abstract text : String
@@ -129,6 +139,10 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getFont);
 			TITANIUM_FUNCTION_DEF(setFont);
 
+			TITANIUM_PROPERTY_DEF(textid);
+			TITANIUM_FUNCTION_DEF(getTextid);
+			TITANIUM_FUNCTION_DEF(setTextid);
+
 			TITANIUM_PROPERTY_DEF(text);
 			TITANIUM_FUNCTION_DEF(getText);
 			TITANIUM_FUNCTION_DEF(setText);
@@ -155,6 +169,7 @@ namespace Titanium
 			bool ellipsize__;
 			Font font__;
 			std::string text__;
+			std::string textid__;
 			TEXT_ALIGNMENT textAlign__;
 			TEXT_VERTICAL_ALIGNMENT verticalAlign__;
 			bool wordWrap__;
