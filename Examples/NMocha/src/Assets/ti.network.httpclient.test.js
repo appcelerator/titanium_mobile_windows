@@ -11,7 +11,7 @@ describe("Titanium.Network.HTTPClient", function () {
         var xhr = Ti.Network.createHTTPClient();
         // See https://jira.appcelerator.org/browse/TIMOB-23346
         if (Ti.Platform.osname === 'windowsstore' || Ti.Platform.osname === 'windowsphone') {
-            should(xhr.apiName).be.eql("Titanium.Network.HTTPClient");
+            should(xhr.apiName).be.eql("Ti.Network.HTTPClient");
         } else {
             should(xhr.apiName).be.eql("Ti.Network.HTTPClient");
         }

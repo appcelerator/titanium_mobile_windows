@@ -15,7 +15,7 @@ namespace Titanium
 	{
 
 		Item::Item(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Media.Item")
+			: Module(js_context, "Ti.Media.Item")
 			, albumArtist__("")
 			, albumTitle__("")
 			, albumTrackCount__(0)
@@ -57,7 +57,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Item, std::uint32_t, skipCount)
 		TITANIUM_PROPERTY_READWRITE(Item, std::string, title)
 
-		void Item::JSExportInitialize() 
+		void Item::JSExportInitialize()
 		{
 			JSExport<Item>::SetClassVersion(1);
 			JSExport<Item>::SetParent(JSExport<Module>::Class());

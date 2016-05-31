@@ -17,13 +17,13 @@ namespace TitaniumWindows
 			using namespace ::Windows::UI::Xaml;
 
 			AppBarToggleButton::AppBarToggleButton(const JSContext& js_context) TITANIUM_NOEXCEPT
-				: Titanium::Module(js_context, "Titanium.UI.Windows.AppBarToggleButton")
+				: Titanium::Module(js_context, "Ti.UI.Windows.AppBarToggleButton")
 				, icon__(js_context.CreateNull())
 			{
 				TITANIUM_LOG_DEBUG("AppBarToggleButton::ctor Initialize");
 			}
 
-			void AppBarToggleButton::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+			void AppBarToggleButton::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 			{
 				TITANIUM_LOG_DEBUG("AppBarToggleButton::postCallAsConstructor");
 				Titanium::Module::postCallAsConstructor(js_context, arguments);
@@ -31,7 +31,7 @@ namespace TitaniumWindows
 				button__ = ref new Controls::AppBarToggleButton();
 			}
 
-			void AppBarToggleButton::JSExportInitialize() 
+			void AppBarToggleButton::JSExportInitialize()
 			{
 				JSExport<AppBarToggleButton>::SetClassVersion(1);
 				JSExport<AppBarToggleButton>::SetParent(JSExport<Titanium::Module>::Class());
@@ -57,12 +57,12 @@ namespace TitaniumWindows
 				return true;
 			}
 
-			TITANIUM_PROPERTY_GETTER(AppBarToggleButton, checked) 
+			TITANIUM_PROPERTY_GETTER(AppBarToggleButton, checked)
 			{
 				return get_context().CreateBoolean(button__->IsChecked->Value);
 			}
 
-			TITANIUM_PROPERTY_SETTER(AppBarToggleButton, checked) 
+			TITANIUM_PROPERTY_SETTER(AppBarToggleButton, checked)
 			{
 				TITANIUM_ASSERT(argument.IsBoolean());
 				button__->IsChecked = static_cast<bool>(argument);

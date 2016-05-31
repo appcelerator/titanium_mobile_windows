@@ -15,7 +15,7 @@ namespace Titanium
 	namespace UI
 	{
     	TableViewRow::TableViewRow(const JSContext& js_context) TITANIUM_NOEXCEPT
-        	: View(js_context, "Titanium.UI.TableViewRow"),
+        	: View(js_context, "Ti.UI.TableViewRow"),
         	color__(""),
         	hasCheck__(false),
         	hasChild__(false),
@@ -40,7 +40,7 @@ namespace Titanium
 			return data__;
 		}
 
-		void TableViewRow::JSExportInitialize() 
+		void TableViewRow::JSExportInitialize()
 		{
 			JSExport<TableViewRow>::SetClassVersion(1);
 			JSExport<TableViewRow>::SetParent(JSExport<View>::Class());
@@ -128,7 +128,7 @@ namespace Titanium
 			return get_context().CreateString(get_title());
 		}
 
-		TITANIUM_PROPERTY_SETTER(TableViewRow, title) 
+		TITANIUM_PROPERTY_SETTER(TableViewRow, title)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			set_title(static_cast<std::string>(argument));
@@ -138,7 +138,7 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_GETTER(TableViewRow, getTitle, title)
 		TITANIUM_FUNCTION_AS_SETTER(TableViewRow, setTitle, title)
 
-		bool TableViewRow::contains(const std::string& query) 
+		bool TableViewRow::contains(const std::string& query)
 		{
 			const auto title = boost::algorithm::to_lower_copy(get_title());
 			const auto pos = title.find(boost::algorithm::to_lower_copy(query));

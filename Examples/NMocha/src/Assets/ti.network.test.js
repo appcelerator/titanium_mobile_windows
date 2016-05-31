@@ -11,7 +11,7 @@ describe("Titanium.Network", function () {
     it("apiName", function (finish) {
         // See https://jira.appcelerator.org/browse/TIMOB-23346
         if (Ti.Platform.osname === 'windowsstore' || Ti.Platform.osname === 'windowsphone') {
-            should(Ti.Network.apiName).be.eql("Titanium.Network");
+            should(Ti.Network.apiName).be.eql("Ti.Network");
         } else {
             should(Ti.Network.apiName).be.eql("Ti.Network");
         }

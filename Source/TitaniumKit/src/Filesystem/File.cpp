@@ -16,7 +16,7 @@ namespace Titanium
 	namespace Filesystem
 	{
 		File::File(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Module(js_context, "Titanium.Filesystem.File")
+		    : Module(js_context, "Ti.Filesystem.File")
 		{
 		}
 
@@ -334,7 +334,7 @@ namespace Titanium
 		{
 			ErrorResponse error;
 			error.code = -1;
-			error.success = false;			
+			error.success = false;
 			error.error = "File::readAllBytesAsync(): Unimplemented";
 			callback(error, std::vector<std::uint8_t>());
 		}

@@ -16,7 +16,7 @@ namespace Titanium
 		using namespace HAL;
 
 		CloseWindowParams::CloseWindowParams(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.UI.CloseWindowParams")
+			: Module(js_context, "Ti.UI.CloseWindowParams")
 		{
 		}
 
@@ -25,7 +25,7 @@ namespace Titanium
 			TITANIUM_ASSERT(arguments.size() > 0);
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			const auto params = static_cast<JSObject>(_0);			
+			const auto params = static_cast<JSObject>(_0);
 
 			if (params.HasProperty("animated")) {
 				const auto animated = params.GetProperty("animated");

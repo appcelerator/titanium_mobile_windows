@@ -17,12 +17,12 @@ namespace TitaniumWindows
 			using namespace ::Windows::UI::Xaml;
 
 			AppBarSeparator::AppBarSeparator(const JSContext& js_context) TITANIUM_NOEXCEPT
-				: Titanium::Module(js_context, "Titanium.UI.Windows.AppBarSeparator")
+				: Titanium::Module(js_context, "Ti.UI.Windows.AppBarSeparator")
 			{
 				TITANIUM_LOG_DEBUG("AppBarSeparator::ctor Initialize");
 			}
 
-			void AppBarSeparator::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+			void AppBarSeparator::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 			{
 				TITANIUM_LOG_DEBUG("AppBarSeparator::postCallAsConstructor");
 				Titanium::Module::postCallAsConstructor(js_context, arguments);
@@ -30,7 +30,7 @@ namespace TitaniumWindows
 				separator__ = ref new Controls::AppBarSeparator();
 			}
 
-			void AppBarSeparator::JSExportInitialize() 
+			void AppBarSeparator::JSExportInitialize()
 			{
 				JSExport<AppBarSeparator>::SetClassVersion(1);
 				JSExport<AppBarSeparator>::SetParent(JSExport<Titanium::Module>::Class());

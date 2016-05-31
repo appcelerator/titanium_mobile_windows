@@ -10,7 +10,7 @@ describe('Titanium.Geolocation', function () {
 
     it('apiName', function (finish) {
         should(function () {
-            should(Ti.Geolocation.apiName).be.eql("Titanium.Geolocation");
+            should(Ti.Geolocation.apiName).be.eql("Ti.Geolocation");
         }).not.throw();
         finish();
     });

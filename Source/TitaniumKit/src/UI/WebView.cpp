@@ -15,7 +15,7 @@ namespace Titanium
 	{
 
 		WebView::WebView(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.WebView")
+			: View(js_context, "Ti.UI.WebView")
 		{
 		}
 
@@ -136,7 +136,7 @@ namespace Titanium
 			return get_context().CreateString(get_html());
 		}
 
-		TITANIUM_PROPERTY_SETTER(WebView, html) 
+		TITANIUM_PROPERTY_SETTER(WebView, html)
 		{
 			TITANIUM_ASSERT(argument.IsString());
 			set_html(static_cast<std::string>(argument));
@@ -182,15 +182,15 @@ namespace Titanium
 		TITANIUM_FUNCTION(WebView, setHtml)
 		{
 			std::unordered_map<std::string, std::string> options;
-	    
+
 			if (arguments.size() < 1) {
 				return get_context().CreateUndefined();
 			}
-	    
+
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
 			const auto html = static_cast<std::string>(_0);
-	    
+
 			if (arguments.size() >= 2) {
 				const auto _1 = arguments.at(1);
 				TITANIUM_ASSERT(_1.IsObject());
@@ -325,7 +325,7 @@ namespace Titanium
 
 			ENSURE_OBJECT_AT_INDEX(data, 0);
 			webview_ptr->_executeListener(
-				static_cast<std::string>(data.GetProperty("type")), 
+				static_cast<std::string>(data.GetProperty("type")),
 				static_cast<std::string>(static_cast<JSValue>(data).ToJSONString()));
 
 			return get_context().CreateUndefined();

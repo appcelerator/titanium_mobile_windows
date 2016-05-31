@@ -31,7 +31,7 @@ describe("Titanium.UI.ScrollView", function () {
         should(bar.overScrollMode).be.a.Number;
         should(bar.scrollIndicatorStyle).be.a.Number;
         should(bar.apiName).be.a.String;
-        should(bar.apiName).be.eql("Titanium.UI.ScrollView");
+        should(bar.apiName).be.eql("Ti.UI.ScrollView");
 
         finish();
     });

@@ -18,7 +18,7 @@ namespace TitaniumWindows
 			using namespace Windows::UI::Xaml;
 
 			SystemIcon::SystemIcon(const JSContext& js_context) TITANIUM_NOEXCEPT
-				: Titanium::Module(js_context, "Titanium.UI.Windows.SystemIcon")
+				: Titanium::Module(js_context, "Ti.UI.Windows.SystemIcon")
 				, previous__(js_context.CreateNumber(static_cast<std::uint32_t>(Controls::Symbol::Previous)))
 				, next__(js_context.CreateNumber(static_cast<std::uint32_t>(Controls::Symbol::Next)))
 				, play__(js_context.CreateNumber(static_cast<std::uint32_t>(Controls::Symbol::Play)))
@@ -216,12 +216,12 @@ namespace TitaniumWindows
 				TITANIUM_LOG_DEBUG("SystemIcon::ctor Initialize");
 			}
 
-			void SystemIcon::postInitialize(JSObject& js_object) 
+			void SystemIcon::postInitialize(JSObject& js_object)
 			{
 				TITANIUM_LOG_DEBUG("SystemIcon::postInitialize");
 			}
 
-			void SystemIcon::JSExportInitialize() 
+			void SystemIcon::JSExportInitialize()
 			{
 				JSExport<SystemIcon>::SetClassVersion(1);
 				JSExport<SystemIcon>::SetParent(JSExport<Titanium::Module>::Class());

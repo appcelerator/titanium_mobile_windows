@@ -13,7 +13,7 @@
 namespace Titanium
 {
 	Blob::Blob(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium.Blob")
+	    : Module(js_context, "Ti.Blob")
 	{
 	}
 
@@ -37,7 +37,7 @@ namespace Titanium
 	{
 		JSExport<Blob>::SetClassVersion(1);
 		JSExport<Blob>::SetParent(JSExport<Module>::Class());
-		
+
 		TITANIUM_ADD_PROPERTY_READONLY(Blob, file);
 		TITANIUM_ADD_PROPERTY_READONLY(Blob, height);
 		TITANIUM_ADD_PROPERTY_READONLY(Blob, length);
@@ -46,7 +46,7 @@ namespace Titanium
 		TITANIUM_ADD_PROPERTY_READONLY(Blob, size);
 		TITANIUM_ADD_PROPERTY_READONLY(Blob, text);
 		TITANIUM_ADD_PROPERTY_READONLY(Blob, width);
-		
+
 		TITANIUM_ADD_FUNCTION(Blob, getFile);
 		TITANIUM_ADD_FUNCTION(Blob, getHeight);
 		TITANIUM_ADD_FUNCTION(Blob, getLength);
@@ -194,12 +194,12 @@ namespace Titanium
 		return nullptr;
 	}
 
-	TITANIUM_PROPERTY_GETTER(Blob, length)	
+	TITANIUM_PROPERTY_GETTER(Blob, length)
 	{
 		return get_context().CreateNumber(get_length());
 	}
 
-	TITANIUM_PROPERTY_GETTER(Blob, file)	
+	TITANIUM_PROPERTY_GETTER(Blob, file)
 	{
 		auto file = get_file();
 		if (file) {
@@ -208,17 +208,17 @@ namespace Titanium
 		return get_context().CreateNull();
 	}
 
-	TITANIUM_PROPERTY_GETTER(Blob, height)	
+	TITANIUM_PROPERTY_GETTER(Blob, height)
 	{
 		return get_context().CreateNumber(get_height());
 	}
 
-	TITANIUM_PROPERTY_GETTER(Blob, mimeType)	
+	TITANIUM_PROPERTY_GETTER(Blob, mimeType)
 	{
 		return get_context().CreateString(get_mimeType());
 	}
 
-	TITANIUM_PROPERTY_GETTER(Blob, nativePath)	
+	TITANIUM_PROPERTY_GETTER(Blob, nativePath)
 	{
 		const auto path = get_nativePath();
 		if (path.size() > 0) {
@@ -228,12 +228,12 @@ namespace Titanium
 		}
 	}
 
-	TITANIUM_PROPERTY_GETTER(Blob, size)	
+	TITANIUM_PROPERTY_GETTER(Blob, size)
 	{
 		return get_context().CreateNumber(get_size());
 	}
 
-	TITANIUM_PROPERTY_GETTER(Blob, text)	
+	TITANIUM_PROPERTY_GETTER(Blob, text)
 	{
 		const auto text = get_text();
 		if (text.size() > 0) {
@@ -243,7 +243,7 @@ namespace Titanium
 		}
 	}
 
-	TITANIUM_PROPERTY_GETTER(Blob, width)	
+	TITANIUM_PROPERTY_GETTER(Blob, width)
 	{
 		return get_context().CreateNumber(get_width());
 	}
@@ -264,13 +264,13 @@ namespace Titanium
 
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(Blob, imageAsCropped)
 	{
 		ENSURE_OBJECT_AT_INDEX(options, 0);
 		const auto blob = imageAsCropped(Titanium::UI::js_to_Dimension(options));
 		if (blob) {
-			return blob->get_object();	
+			return blob->get_object();
 		}
 		return get_context().CreateNull();
 	}

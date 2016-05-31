@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		AlertDialog::AlertDialog(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Module(js_context, "Titanium.UI.AlertDialog"),
+		    : Module(js_context, "Ti.UI.AlertDialog"),
 			  cancel__(-1),
 		      message__(js_context.CreateString()),
 		      title__(js_context.CreateString())

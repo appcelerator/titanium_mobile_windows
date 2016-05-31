@@ -14,7 +14,7 @@ namespace Titanium
 {
 
     Analytics::Analytics(const JSContext& js_context) TITANIUM_NOEXCEPT
-	  : Module(js_context,  "Titanium.Analytics"),
+	  : Module(js_context,  "Ti.Analytics"),
 		ti_analytics__(js_context.CreateObject())
     {
 		TITANIUM_LOG_DEBUG("Analytics:: ctor ", this);

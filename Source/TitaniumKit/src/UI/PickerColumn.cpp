@@ -15,7 +15,7 @@ namespace Titanium
 	{
 
 		PickerColumn::PickerColumn(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.PickerColumn")
+			: View(js_context, "Ti.UI.PickerColumn")
 			, selectedRow__(nullptr)
 		{
 		}
@@ -39,7 +39,7 @@ namespace Titanium
 			const auto it = std::find(rows__.begin(), rows__.end(), row);
 			if (it != rows__.end()) {
 				rows__.erase(it);
-			}			
+			}
 		}
 
 		void PickerColumn::JSExportInitialize()

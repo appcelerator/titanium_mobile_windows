@@ -16,7 +16,7 @@ namespace Titanium
 	{
 
 		FileStream::FileStream(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: IOStream(js_context, "Titanium.Filesystem.FileStream")
+			: IOStream(js_context, "Ti.Filesystem.FileStream")
 		{
 		}
 
@@ -103,8 +103,8 @@ namespace Titanium
 		{
 
 		}
-		
-		void FileStream::JSExportInitialize() 
+
+		void FileStream::JSExportInitialize()
 		{
 			JSExport<FileStream>::SetClassVersion(1);
 			JSExport<FileStream>::SetParent(JSExport<IOStream>::Class());

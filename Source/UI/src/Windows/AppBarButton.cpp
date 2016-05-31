@@ -18,13 +18,13 @@ namespace TitaniumWindows
 			using namespace ::Windows::UI::Xaml::Input;
 
 			AppBarButton::AppBarButton(const JSContext& js_context) TITANIUM_NOEXCEPT
-				: Titanium::Module(js_context, "Titanium.UI.Windows.AppBarButton")
+				: Titanium::Module(js_context, "Ti.UI.Windows.AppBarButton")
 				, icon__(js_context.CreateNull())
 			{
 				TITANIUM_LOG_DEBUG("AppBarButton::ctor Initialize");
 			}
 
-			void AppBarButton::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+			void AppBarButton::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 			{
 				TITANIUM_LOG_DEBUG("AppBarButton::postCallAsConstructor");
 				Titanium::Module::postCallAsConstructor(js_context, arguments);
@@ -32,7 +32,7 @@ namespace TitaniumWindows
 				button__ = ref new Controls::AppBarButton();
 			}
 
-			void AppBarButton::JSExportInitialize() 
+			void AppBarButton::JSExportInitialize()
 			{
 				JSExport<AppBarButton>::SetClassVersion(1);
 				JSExport<AppBarButton>::SetParent(JSExport<Titanium::Module>::Class());
@@ -40,7 +40,7 @@ namespace TitaniumWindows
 				TITANIUM_ADD_PROPERTY(AppBarButton, touchEnabled);
 			}
 
-			TITANIUM_PROPERTY_GETTER(AppBarButton, icon) 
+			TITANIUM_PROPERTY_GETTER(AppBarButton, icon)
 			{
 				return icon__;
 			}
@@ -61,7 +61,7 @@ namespace TitaniumWindows
 				return true;
 			}
 
-			TITANIUM_PROPERTY_GETTER(AppBarButton, touchEnabled) 
+			TITANIUM_PROPERTY_GETTER(AppBarButton, touchEnabled)
 			{
 				return get_context().CreateBoolean(button__->IsEnabled);
 			}

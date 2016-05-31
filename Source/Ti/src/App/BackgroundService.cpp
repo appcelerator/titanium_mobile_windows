@@ -21,12 +21,12 @@ namespace TitaniumWindows_Ti
 	void BackgroundServiceTask::Run(IBackgroundTaskInstance^ taskInstance)
 	{
 		//
-		// For debugging purpose: 
+		// For debugging purpose:
 		//   Saves run count to the local property so we can check if background task is running.
 		//   Saving value to local settings because background task runs on each interval and it does not have state.
 		//
 		//   var task = Ti.App.Windows.BackgroundService.registerTimerTask("TitaniumWindows_Ti.BackgroundServiceTask", 15, false);
-		// 
+		//
 		//   // you can check if task is running in about 15 mininutes later...note that Windows usually does not run tasks on time though.
 		//   Ti.API.info(Ti.App.Properties.getInt("TitaniumWindows_Ti.BackgroundServiceTask.count"));
 		//
@@ -51,29 +51,29 @@ namespace TitaniumWindows
 {
 	namespace App
 	{
-		namespace WindowsXaml 
+		namespace WindowsXaml
 		{
 			std::atomic<std::uint32_t> BackgroundService::task_id_generator__;
 
 			BackgroundService::BackgroundService(const JSContext& js_context) TITANIUM_NOEXCEPT
-				: Titanium::Module(js_context, "Titanium.App.Windows.BackgroundService")
+				: Titanium::Module(js_context, "Ti.App.Windows.BackgroundService")
 			{
 				TITANIUM_LOG_DEBUG("BackgroundService::ctor Initialize");
 			}
 
-			BackgroundService::~BackgroundService() 
+			BackgroundService::~BackgroundService()
 			{
 				TITANIUM_LOG_DEBUG("BackgroundService::dtor");
 				UnregisterTasks();
 			}
 
-			void BackgroundService::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+			void BackgroundService::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 			{
 				Titanium::Module::postCallAsConstructor(js_context, arguments);
 				TITANIUM_LOG_DEBUG("BackgroundService::postCallAsConstructor");
 			}
 
-			void BackgroundService::JSExportInitialize() 
+			void BackgroundService::JSExportInitialize()
 			{
 				JSExport<BackgroundService>::SetClassVersion(1);
 				JSExport<BackgroundService>::SetParent(JSExport<Titanium::Module>::Class());
@@ -123,7 +123,7 @@ namespace TitaniumWindows
 				return task;
 			}
 
-			IBackgroundTaskRegistration^ BackgroundService::GetTask(const std::uint32_t& id) 
+			IBackgroundTaskRegistration^ BackgroundService::GetTask(const std::uint32_t& id)
 			{
 				const auto taskName = Windows::ApplicationModel::Package::Current->Id->Name + "." + id;
 				const auto iter = BackgroundTaskRegistration::AllTasks->First();
@@ -157,7 +157,7 @@ namespace TitaniumWindows
 				}
 			}
 
-			void BackgroundService::UnregisterTasks() 
+			void BackgroundService::UnregisterTasks()
 			{
 				const auto taskName = TitaniumWindows::Utility::ConvertString(Windows::ApplicationModel::Package::Current->Id->Name);
 				const auto iter = BackgroundTaskRegistration::AllTasks->First();
@@ -217,7 +217,7 @@ namespace TitaniumWindows
 				return get_context().CreateUndefined();
 			}
 
-			TITANIUM_FUNCTION(BackgroundService, unregisterAllTasks) 
+			TITANIUM_FUNCTION(BackgroundService, unregisterAllTasks)
 			{
 				UnregisterTasks();
 				return get_context().CreateUndefined();

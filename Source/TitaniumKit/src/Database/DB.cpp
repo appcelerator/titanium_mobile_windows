@@ -17,7 +17,7 @@ namespace Titanium
 	namespace Database
 	{
 		DB::DB(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Module(js_context, "Titanium.Database.DB")
+		    : Module(js_context, "Ti.Database.DB")
 		{
 			TITANIUM_LOG_DEBUG("DB:: ctor ", this);
 		}

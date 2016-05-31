@@ -91,7 +91,7 @@
 namespace Titanium
 {
 	TiModule::TiModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium"),
+	    : Module(js_context, "Ti"),
 		  global_string__(JSExport<Titanium::GlobalString>::Class()),
 		  ui__(JSExport<Titanium::UIModule>::Class()),
 		  api__(JSExport<Titanium::API>::Class()),
@@ -175,7 +175,7 @@ namespace Titanium
 		TITANIUM_LOG_DEBUG("TiModule:: ctor ", this);
 	}
 
-	void TiModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+	void TiModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 	{
 		HAL_LOG_DEBUG("TiModule:: postCallAsConstructor ", this);
 	}
@@ -510,7 +510,7 @@ namespace Titanium
 
 			  // Let's set up our user agent in JS, way easier this way...
 			  Ti.userAgent = 'Appcelerator Titanium/' + Ti.version + ' (' + Ti.Platform.model + '/' + Ti.Platform.version + '; ' + Ti.Platform.osname + '; ' + Ti.Platform.locale + ';)';
-				
+
 			  Ti.Network.encodeURIComponent = encodeURIComponent;
 			  Ti.Network.decodeURIComponent = decodeURIComponent;
 
@@ -634,7 +634,7 @@ namespace Titanium
 		return *this;
 	}
 
-	
+
 	TiModule& TiModule::TwoDMatrixClass(const JSClass& TwoDMatrix) TITANIUM_NOEXCEPT
 	{
 		twodmatrix__ = TwoDMatrix;
@@ -856,7 +856,7 @@ namespace Titanium
 		sound__ = sound;
 		return *this;
 	}
-	
+
 	TiModule& TiModule::VideoPlayerClass(const JSClass& player) TITANIUM_NOEXCEPT
 	{
 		videoplayer__ = player;
@@ -1017,7 +1017,7 @@ namespace Titanium
 	{
 		const auto js_context = this_object.get_context();
 		const auto object_ptr = GetStaticObject(js_context).GetPrivate<TiModule>();
-		
+
 		object_ptr->js_set_userAgent(arguments.at(0));
 
 		return get_context().CreateUndefined();

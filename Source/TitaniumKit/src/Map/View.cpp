@@ -17,7 +17,7 @@ namespace Titanium
 	namespace Map
 	{
 		View::View(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Titanium::UI::View(js_context, "Titanium.Map.View"),
+			: Titanium::UI::View(js_context, "Ti.Map.View"),
 			animate__(false),
 			compassEnabled__(false),
 			enableZoomControls__(false),
@@ -33,58 +33,58 @@ namespace Titanium
 			zOrderOnTop__(false)
 		{
 		}
-		
+
 		void View::addAnnotation(const Annotation_shared_ptr_t& annotation) TITANIUM_NOEXCEPT
 		{
 			annotations__.push_back(annotation);
 			TITANIUM_LOG_WARN("Map::View::addAnnotation: Unimplemented");
 		}
-		
+
 		void View::addAnnotations(const std::vector<Annotation_shared_ptr_t>& annotations) TITANIUM_NOEXCEPT
 		{
 			for (Annotation_shared_ptr_t annotation : annotations) {
 				addAnnotation(annotation);
 			}
 		}
-		
+
 		void View::addRoute(const Route_shared_ptr_t& route) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Map::View::addRoute: Unimplemented");
 		}
-		
+
 		void View::animateCamera(const CameraAnimationParams& animationParams, JSObject& callback) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Map::View::animateCamera: Unimplemented");
 		}
-		
+
 		void View::deselectAnnotation(const Annotation_shared_ptr_t& annotation) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Map::View::deselectAnnotation: Unimplemented");
 		}
-		
+
 		void View::removeAllAnnotations() TITANIUM_NOEXCEPT
 		{
 			removeAnnotations(get_annotations());
 		}
-		
+
 		void View::removeAnnotation(const Annotation_shared_ptr_t& annotation) TITANIUM_NOEXCEPT
 		{
 			annotations__.erase(std::remove(annotations__.begin(), annotations__.end(), annotation), annotations__.end());
 			TITANIUM_LOG_WARN("Map::View::removeAnnotation: Unimplemented");
 		}
-		
+
 		void View::removeAnnotations(const std::vector<Annotation_shared_ptr_t>& annotations) TITANIUM_NOEXCEPT
 		{
 			for (Annotation_shared_ptr_t annotation : annotations) {
-				removeAnnotation(annotation); 
+				removeAnnotation(annotation);
 			}
 		}
-		
+
 		void View::removeRoute(const Route_shared_ptr_t& route) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Map::View::removeRoute: Unimplemented");
 		}
-		
+
 		void View::selectAnnotation(const Annotation_shared_ptr_t& annotation) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Map::View::selectAnnotation: Unimplemented");
@@ -156,7 +156,7 @@ namespace Titanium
 		{
 			return enableZoomControls__;
 		}
-		
+
 		void View::set_enableZoomControls(const bool& zoomControls) TITANIUM_NOEXCEPT
 		{
 			enableZoomControls__ = zoomControls;
@@ -277,7 +277,7 @@ namespace Titanium
 		void View::JSExportInitialize() {
 			JSExport<View>::SetClassVersion(1);
 			JSExport<View>::SetParent(JSExport<Titanium::UI::View>::Class());
-			
+
 			// methods
 			TITANIUM_ADD_FUNCTION(View, addAnnotation);
 			TITANIUM_ADD_FUNCTION(View, addAnnotations);
@@ -338,7 +338,7 @@ namespace Titanium
 			auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
 			addAnnotation(static_cast<JSObject>(_0).GetPrivate<Annotation>());
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -362,7 +362,7 @@ namespace Titanium
 			auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
 			addRoute(static_cast<JSObject>(_0).GetPrivate<Route>());
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -386,7 +386,7 @@ namespace Titanium
 			auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
 			deselectAnnotation(static_cast<JSObject>(_0).GetPrivate<Annotation>());
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -403,7 +403,7 @@ namespace Titanium
 			auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
 			removeAnnotation(static_cast<JSObject>(_0).GetPrivate<Annotation>());
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -417,40 +417,40 @@ namespace Titanium
 			TITANIUM_ASSERT(_0Obj.IsArray());
 			const auto annotations = static_cast<JSArray>(_0Obj);
 			removeAnnotations(annotations.GetPrivateItems<Annotation>());
-			
+
 			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_FUNCTION(View, removeRoute)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
 			removeRoute(static_cast<JSObject>(_0).GetPrivate<Route>());
-			
+
 			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_FUNCTION(View, selectAnnotation)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
 			selectAnnotation(static_cast<JSObject>(_0).GetPrivate<Annotation>());
-			
+
 			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_FUNCTION(View, setLocation)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
 			setLocation(js_to_MapLocationTypev2(static_cast<JSObject>(_0)));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -475,11 +475,11 @@ namespace Titanium
 		TITANIUM_FUNCTION(View, zoom)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsNumber());
 			zoom(static_cast<uint32_t>(_0));
-			
+
 			return get_context().CreateUndefined();
 		}
 

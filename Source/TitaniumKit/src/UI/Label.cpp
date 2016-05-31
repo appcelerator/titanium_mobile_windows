@@ -15,7 +15,7 @@ namespace Titanium
 	namespace UI
 	{
 		Label::Label(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context, "Titanium.UI.Label"),
+		    : View(js_context, "Ti.UI.Label"),
 		      color__(js_context.CreateString()),
 		      ellipsize__(false),
 		      text__(js_context.CreateString()),
@@ -136,7 +136,7 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_AS_GETTER(Label, getEllipsize, ellipsize)
 		TITANIUM_FUNCTION_AS_SETTER(Label, setEllipsize, ellipsize)
-		
+
 		TITANIUM_FUNCTION_AS_GETTER(Label, getFont, font)
 		TITANIUM_FUNCTION_AS_SETTER(Label, setFont, font)
 
@@ -145,7 +145,7 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_AS_GETTER(Label, getTextAlign, textAlign)
 		TITANIUM_FUNCTION_AS_SETTER(Label, setTextAlign, textAlign)
-		
+
 		TITANIUM_FUNCTION_AS_GETTER(Label, getVerticalAlign, verticalAlign)
 		TITANIUM_FUNCTION_AS_SETTER(Label, setVerticalAlign, verticalAlign)
 

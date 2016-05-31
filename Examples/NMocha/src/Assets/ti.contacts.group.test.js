@@ -10,7 +10,7 @@ describe("Titanium.Contacts.Group", function() {
 	it('identifier', function (finish) {
         should(function () {
             var group = Ti.Contacts.createGroup();
-            should(group.apiName).be.eql("Titanium.Contacts.Group");
+            should(group.apiName).be.eql("Ti.Contacts.Group");
             // must call Ti.Contacts.save to write group!
             should(group.identifier).not.be.undefined;
             //should(group.identifier).be.a.String; // null until saved?
@@ -75,7 +75,7 @@ describe("Titanium.Contacts.Group", function() {
             should(group.sortedMembers(Ti.Contacts.CONTACTS_SORT_LAST_NAME)).be.an.Array;
             // TODO Test the method
             // Test non Ti.Contants.CONTACTS_SORT values as arg
-        	
+
         }).not.throw();
         finish();
 	});

@@ -17,7 +17,7 @@ namespace Titanium
 		using namespace std;
 
 		Person::Person(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Contacts.Person"),
+			: Module(js_context, "Ti.Contacts.Person"),
 			address__(Titanium::Contacts::create_empty_Addresses(js_context)),
 			alternateBirthday__(Titanium::Contacts::create_empty_AlternateBirthday(js_context)),
 			birthday__(""),

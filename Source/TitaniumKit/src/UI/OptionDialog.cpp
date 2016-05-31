@@ -17,7 +17,7 @@ namespace Titanium
 
 
 		OptionDialog::OptionDialog(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.UI.OptionDialog"),
+			: Module(js_context, "Ti.UI.OptionDialog"),
 			cancel__(-1),
 			destructive__(-1),
 			opaquebackground__(false),
@@ -49,7 +49,7 @@ namespace Titanium
 			TITANIUM_LOG_DEBUG("OptionDialog::hide");
 		}
 
-		void OptionDialog::JSExportInitialize() 
+		void OptionDialog::JSExportInitialize()
 		{
 			JSExport<OptionDialog>::SetClassVersion(1);
 			JSExport<OptionDialog>::SetParent(JSExport<Module>::Class());

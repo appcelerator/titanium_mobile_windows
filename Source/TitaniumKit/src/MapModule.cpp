@@ -12,12 +12,12 @@
 namespace Titanium
 {
     MapModule::MapModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-        : Module(js_context, "Titanium.Map")
+        : Module(js_context, "Ti.Map")
     {
 		TITANIUM_LOG_DEBUG("MapModule:: ctor ", this);
 	}
 
-	void MapModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+	void MapModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 	{
 		HAL_LOG_DEBUG("MapModule:: postCallAsConstructor ", this);
 	}
@@ -56,17 +56,17 @@ namespace Titanium
 	{
 		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::AZURE));
 	}
-	
+
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_BLUE)
 	{
 		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::BLUE));
 	}
-	
+
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_CYAN)
 	{
 		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::CYAN));
 	}
-		
+
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_GREEN)
 	{
 		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::GREEN));
@@ -96,12 +96,12 @@ namespace Titanium
 	{
 		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::ROSE));
 	}
-		
+
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_VIOLET)
 	{
 		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::VIOLET));
 	}
-		
+
 	TITANIUM_PROPERTY_GETTER(MapModule, ANNOTATION_YELLOW)
 	{
 		return get_context().CreateNumber(Titanium::Map::Constants::to_underlying_type(Titanium::Map::ANNOTATION_COLOR::YELLOW));

@@ -19,7 +19,7 @@ namespace Titanium
 		}
 
 		Properties::Properties(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.App.Properties"),
+			: Module(js_context, "Ti.App.Properties"),
 			  stringify_function__(createStringifyFunction(js_context)),
 			  app_properties__(js_context.CreateObject())
 		{
@@ -331,7 +331,7 @@ namespace Titanium
 
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-			
+
 			object_ptr->removeProperty(property);
 			return js_context.CreateUndefined();
 		}
@@ -343,7 +343,7 @@ namespace Titanium
 
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
-			
+
 			object_ptr->setBool(property, value);
 			return js_context.CreateUndefined();
 		}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -48,6 +48,12 @@ function extractTitaniumKit(root, file, next) {
 
 		if (namespace_match) {
 			module_name = namespace_match[1];
+			// convert Ti.* to Titanium.*
+			if (module_name.indexOf('Ti.') == 0) {
+				module_name = 'Titanium.' + module_name.slice(3);
+			} else if (module_name === 'Ti') {
+				module_name = 'Titanium';
+			}
 		} else if (unknown_match) {
 			//
 			// Some modules are using special pattern for now...
@@ -144,14 +150,14 @@ function extractWhiteList(callback) {
 
 //
 // Search for platform implementation and find what's implemented
-// 
+//
 function extractWindowsKit(callback) {
 	var walker = fs.walk(path.join(__dirname, '../Source/'));
 	walker.on('file',
 		function (root, stat, next) {
 			if (/\.hpp$/.test(stat.name)) {
 				var reader = new LineReader(path.join(root, stat.name)),
-					module_name, 
+					module_name,
 					properties = [], methods = [], events = [],
 					un_properties = [], un_methods = [], un_events = [];
 				reader.on('line', function(line) {
@@ -250,7 +256,7 @@ function exportYAML() {
 		if (modulepath[0] != 'Titanium') {
 			modulepath[0] = 'Titanium';
 		}
-		var outdir = path.join(modulepath.join(path.sep));	
+		var outdir = path.join(modulepath.join(path.sep));
 		var outfile = path.join(outdir, classname + '.yml');
 		console.log('Generating ' + outfile);
 		fs.mkdirpSync(path.join(__dirname, outdir));
@@ -283,4 +289,3 @@ extract(function() {
 
 	exportYAML();
 });
-

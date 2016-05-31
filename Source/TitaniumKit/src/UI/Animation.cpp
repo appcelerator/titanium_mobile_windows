@@ -18,7 +18,7 @@ namespace Titanium
 
 
 		Animation::Animation(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.UI.Animation"),
+			: Module(js_context, "Ti.UI.Animation"),
 			autoreverse__(false),
 			backgroundColor__(""),
 			color__(""),
@@ -34,7 +34,7 @@ namespace Titanium
 			TITANIUM_LOG_DEBUG("Animation:: ctor ", this);
 		}
 
-		void Animation::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+		void Animation::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 		{
 			TITANIUM_LOG_DEBUG("Animation:: postCallAsConstructor ", this);
 		}

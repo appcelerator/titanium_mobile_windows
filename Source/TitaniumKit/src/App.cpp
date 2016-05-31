@@ -55,7 +55,7 @@ namespace Titanium
 	}
 
 	AppModule::AppModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-		: Module(js_context, "Titanium.App"),
+		: Module(js_context, "Ti.App"),
 		app_info__(get_context().CreateUndefined()),
 		accessibilityEnabled__(false),
 		analytics__(false),
@@ -148,7 +148,7 @@ namespace Titanium
 			}
 			// Validate that unit is one of our set of known units!
 			// FIXME Some platforms allow other units. See "sp" and "sip" for Android
-			if (defaultUnit__ != "mm" && defaultUnit__ != "cm" && 
+			if (defaultUnit__ != "mm" && defaultUnit__ != "cm" &&
 				defaultUnit__ != "em" && defaultUnit__ != "pt" &&
 				defaultUnit__ != "pc" && defaultUnit__ != "in" &&
 				defaultUnit__ != "px" && defaultUnit__ != "dp" &&

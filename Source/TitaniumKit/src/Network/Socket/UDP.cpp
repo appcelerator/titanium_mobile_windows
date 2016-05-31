@@ -17,7 +17,7 @@ namespace Titanium
 		{
 
 			UDP::UDP(const JSContext& js_context) TITANIUM_NOEXCEPT
-				: Module(js_context, "Titanium.Network.Socket.UDP")
+				: Module(js_context, "Ti.Network.Socket.UDP")
 				, port__(0)
 				, started__(js_context.CreateNull())
 				, data__(js_context.CreateNull())
@@ -47,7 +47,7 @@ namespace Titanium
 				TITANIUM_LOG_WARN("UDP::sendBytes: Unimplemented");
 			}
 
-			void UDP::JSExportInitialize() 
+			void UDP::JSExportInitialize()
 			{
 				JSExport<UDP>::SetClassVersion(1);
 				JSExport<UDP>::SetParent(JSExport<Module>::Class());
@@ -119,13 +119,13 @@ namespace Titanium
 				stop();
 				return get_context().CreateUndefined();
 			}
-			
+
 			TITANIUM_FUNCTION(UDP, sendString)
 			{
 				ENSURE_OPTIONAL_UINT_AT_INDEX(port, 0, 0);
 				ENSURE_OPTIONAL_STRING_AT_INDEX(host, 1, "");
 				ENSURE_OPTIONAL_STRING_AT_INDEX(data, 2, "");
-				
+
 				sendString(port, host, data);
 				return get_context().CreateUndefined();
 			}
@@ -141,7 +141,7 @@ namespace Titanium
 				for (uint32_t i = 0; i < length; i++) {
 					data.push_back(static_cast<std::uint8_t>(static_cast<std::uint32_t>(js_data.GetProperty(i))));
 				}
-				
+
 				sendBytes(port, host, data);
 				return get_context().CreateUndefined();
 			}

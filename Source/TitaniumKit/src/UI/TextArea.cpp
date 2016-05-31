@@ -35,7 +35,7 @@ namespace Titanium
 		}
 
 		TextArea::TextArea(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.TextArea"),
+			: View(js_context, "Ti.UI.TextArea"),
 			appearance__(KEYBOARD_APPEARANCE::DEFAULT),
 			autocapitalization__(TEXT_AUTOCAPITALIZATION::NONE),
 			autocorrect__(false),
@@ -385,7 +385,7 @@ namespace Titanium
 			focus();
 			return get_context().CreateUndefined();
 		}
-		
+
 		TITANIUM_FUNCTION(TextArea, hasText)
 		{
 			return get_context().CreateBoolean(hasText());

@@ -13,7 +13,7 @@ describe("Titanium.UI.ScrollableView", function () {
             
         });
         should(bar.apiName).be.a.String;
-        should(bar.apiName).be.eql("Titanium.UI.ScrollableView");
+        should(bar.apiName).be.eql("Ti.UI.ScrollableView");
         finish();
     });
 

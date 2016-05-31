@@ -15,26 +15,26 @@ namespace TitaniumWindows
 {
 	namespace App
 	{
-		namespace WindowsXaml 
+		namespace WindowsXaml
 		{
 			BackgroundServiceTask::BackgroundServiceTask(const JSContext& js_context) TITANIUM_NOEXCEPT
-				: Titanium::Module(js_context, "Titanium.App.Windows.BackgroundServiceTask")
+				: Titanium::Module(js_context, "Ti.App.Windows.BackgroundServiceTask")
 			{
 				TITANIUM_LOG_DEBUG("BackgroundServiceTask::ctor Initialize");
 			}
 
-			BackgroundServiceTask::~BackgroundServiceTask() 
+			BackgroundServiceTask::~BackgroundServiceTask()
 			{
 				TITANIUM_LOG_DEBUG("BackgroundServiceTask::dtor");
 			}
 
-			void BackgroundServiceTask::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+			void BackgroundServiceTask::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 			{
 				Titanium::Module::postCallAsConstructor(js_context, arguments);
 				TITANIUM_LOG_DEBUG("BackgroundServiceTask::postCallAsConstructor");
 			}
 
-			void BackgroundServiceTask::JSExportInitialize() 
+			void BackgroundServiceTask::JSExportInitialize()
 			{
 				JSExport<BackgroundServiceTask>::SetClassVersion(1);
 				JSExport<BackgroundServiceTask>::SetParent(JSExport<Titanium::Module>::Class());

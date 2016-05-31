@@ -9,7 +9,7 @@ var should = require('./should');
 describe('Titanium.Database', function () {
     it('apiName', function (finish) {
         should(function () {
-            should(Ti.Database.apiName).be.eql("Titanium.Database");
+            should(Ti.Database.apiName).be.eql("Ti.Database");
         }).not.throw();
         finish();
     });

@@ -16,7 +16,7 @@ namespace Titanium
 	{
 
 		MusicPlayer::MusicPlayer(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Media.MusicPlayer")
+			: Module(js_context, "Ti.Media.MusicPlayer")
 			, playbackState__(MusicPlayerState::Stopped)
 			, repeatMode__(MusicPlayerRepeat::None)
 			, shuffleMode__(MusicPlayerShuffle::None)
@@ -81,7 +81,7 @@ namespace Titanium
 			TITANIUM_LOG_WARN("MusicPlayer::stopSeeking: Unimplemented");
 		}
 
-		void MusicPlayer::JSExportInitialize() 
+		void MusicPlayer::JSExportInitialize()
 		{
 			JSExport<MusicPlayer>::SetClassVersion(1);
 			JSExport<MusicPlayer>::SetParent(JSExport<Module>::Class());

@@ -12,7 +12,7 @@ describe("Titanium.UI.EmailDialog", function () {
         should(function () {
             var email = Ti.UI.createEmailDialog();
             should(email.apiName).be.a.String;
-            should(email.apiName).be.eql("Titanium.UI.EmailDialog");
+            should(email.apiName).be.eql("Ti.UI.EmailDialog");
         }).not.throw();
         finish();
     });   

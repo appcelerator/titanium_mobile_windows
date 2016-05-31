@@ -14,7 +14,7 @@ namespace Titanium
 	{
 
 		Clipboard::Clipboard(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.Clipboard")
+			: View(js_context, "Ti.UI.Clipboard")
 		{
 		}
 

@@ -14,7 +14,7 @@ describe("Titanium.UI.ProgressBar", function () {
             message: "this is some text"
         });
         should(bar.apiName).be.a.String;
-        should(bar.apiName).be.eql("Titanium.UI.ProgressBar");
+        should(bar.apiName).be.eql("Ti.UI.ProgressBar");
         finish();
     });
 

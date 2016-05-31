@@ -20,13 +20,13 @@ namespace TitaniumWindows
 			using namespace ::Windows::UI::Xaml;
 
 			CommandBar::CommandBar(const JSContext& js_context) TITANIUM_NOEXCEPT
-				: Titanium::Module(js_context, "Titanium.UI.Windows.CommandBar")
+				: Titanium::Module(js_context, "Ti.UI.Windows.CommandBar")
 				, items__(js_context.CreateArray())
 			{
 				TITANIUM_LOG_DEBUG("CommandBar::ctor Initialize");
 			}
 
-			void CommandBar::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+			void CommandBar::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 			{
 				TITANIUM_LOG_DEBUG("CommandBar::postCallAsConstructor");
 				Titanium::Module::postCallAsConstructor(js_context, arguments);
@@ -34,7 +34,7 @@ namespace TitaniumWindows
 				commandBar__ = ref new Controls::CommandBar();
 			}
 
-			void CommandBar::JSExportInitialize() 
+			void CommandBar::JSExportInitialize()
 			{
 				JSExport<CommandBar>::SetClassVersion(1);
 				JSExport<CommandBar>::SetParent(JSExport<Titanium::Module>::Class());

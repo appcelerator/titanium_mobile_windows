@@ -12,7 +12,7 @@ describe("Titanium.UI.ActivityIndicator", function () {
     it("apiName", function (finish) {
         var activityIndicator = Ti.UI.createActivityIndicator();
         should(activityIndicator.apiName).be.a.String;
-        should(activityIndicator.apiName).be.eql("Titanium.UI.ActivityIndicator");
+        should(activityIndicator.apiName).be.eql("Ti.UI.ActivityIndicator");
         finish();
     });
 

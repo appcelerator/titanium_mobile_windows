@@ -14,7 +14,7 @@ namespace Titanium
 	namespace Platform
 	{
 		DisplayCaps::DisplayCaps(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : Module(js_context, "Titanium.Platform.DisplayCaps")
+		    : Module(js_context, "Ti.Platform.DisplayCaps")
 		{
 		}
 		void DisplayCaps::JSExportInitialize()

@@ -35,7 +35,7 @@ describe('Titanium.App', function () {
 
     it('apiName', function (finish) {
         should(Ti.App.apiName).be.a.String;
-        should(Ti.App.apiName).be.eql("Titanium.App");
+        should(Ti.App.apiName).be.eql("Ti.App");
         finish();
     });
 
@@ -122,7 +122,7 @@ describe('Titanium.App', function () {
         should(Ti.App.getDisableNetworkActivityIndicator()).be.a.Boolean;
         finish();
     });
-  
+
     it('forceSplashAsSnapshot', function (finish) {
         should(Ti.App.forceSplashAsSnapshot).be.a.Boolean;
         should(Ti.App.getForceSplashAsSnapshot).be.a.Function;

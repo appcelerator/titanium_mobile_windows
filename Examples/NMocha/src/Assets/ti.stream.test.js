@@ -36,7 +36,7 @@ describe("stream", function() {
 			});
 		}).not.throw();
 		should(rstream).not.be.null;
-		should(rstream.apiName).be.eql("Titanium.BufferStream");
+		should(rstream.apiName).be.eql("Ti.BufferStream");
 		for (var i = 0; i < this.streamFuncs.length; i++) {
 			var func = rstream[this.streamFuncs[i]];
 			should(func).be.a.Function;
@@ -159,7 +159,7 @@ describe("stream", function() {
 			mode: Ti.Stream.MODE_READ
 		});
 		should(blobStream).not.be.null;
-		should(blobStream.apiName).be.eql("Titanium.BlobStream");
+		should(blobStream.apiName).be.eql("Ti.BlobStream");
 		var blobStr = sourceBlob.toString();
 		// Performing the second read while the first read is happening
 		// mungs data that gets checked in the callback...

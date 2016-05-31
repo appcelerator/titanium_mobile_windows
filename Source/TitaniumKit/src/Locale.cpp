@@ -11,7 +11,7 @@
 namespace Titanium
 {
 	Locale::Locale(const JSContext& js_context) TITANIUM_NOEXCEPT
-		: Module(js_context, "Titanium.Locale")
+		: Module(js_context, "Ti.Locale")
 		, currentLanguage__("en")
 		, currentCountry__("US")
 		, currentLocale__("en-US")
@@ -89,7 +89,7 @@ namespace Titanium
 	}
 
 	//
-	// Escape characters with backslash. 
+	// Escape characters with backslash.
 	// Based on iOS behavior, not all backslashes are converted.
 	//
 	std::string Locale::EscapeJSCharacters(const std::string& content) TITANIUM_NOEXCEPT

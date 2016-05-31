@@ -30,7 +30,7 @@ describe("Titanium.UI.Windows.CommandBar", function () {
         var bar = Ti.UI.Windows.createCommandBar();
         should(bar).be.an.Object;
         should(bar.items).be.an.Array;
-        should(bar.apiName).be.eql("Titanium.UI.Windows.CommandBar");
+        should(bar.apiName).be.eql("Ti.UI.Windows.CommandBar");
 
         finish();
     });
@@ -43,7 +43,7 @@ describe("Titanium.UI.Windows.CommandBar", function () {
         should(button.icon).not.be.undefined;
         should(button.touchEnabled).not.be.undefined;
         should(button.touchEnabled).be.a.Boolean;
-        should(button.apiName).be.eql("Titanium.UI.Windows.AppBarButton");
+        should(button.apiName).be.eql("Ti.UI.Windows.AppBarButton");
 
         finish();
     });
@@ -58,7 +58,7 @@ describe("Titanium.UI.Windows.CommandBar", function () {
         should(button.checked).not.be.undefined;
         should(button.touchEnabled).be.a.Boolean;
         should(button.checked).be.a.Boolean;
-        should(button.apiName).be.eql("Titanium.UI.Windows.AppBarToggleButton");
+        should(button.apiName).be.eql("Ti.UI.Windows.AppBarToggleButton");
 
         finish();
     });
@@ -70,7 +70,7 @@ describe("Titanium.UI.Windows.CommandBar", function () {
         var separator = Ti.UI.Windows.createAppBarSeparator();
         should(separator).be.an.Object;
         should(separator.apiName).be.a.String;
-        should(separator.apiName).be.eql("Titanium.UI.Windows.AppBarSeparator");
+        should(separator.apiName).be.eql("Ti.UI.Windows.AppBarSeparator");
 
         finish();
     });

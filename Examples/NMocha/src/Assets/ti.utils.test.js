@@ -11,7 +11,7 @@ describe('Titanium.Utils', function () {
     it('Ti.Utils', function (finish) {
         should(Ti.Utils).not.be.undefined;
         should(Ti.Utils.apiName).be.a.String;
-        should(Ti.Utils.apiName).be.eql("Titanium.Utils");
+        should(Ti.Utils.apiName).be.eql("Ti.Utils");
         finish();
     });
     it('base64decode', function (finish) {

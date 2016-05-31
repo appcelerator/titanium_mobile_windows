@@ -24,7 +24,7 @@ namespace Titanium
 {
 
 	Buffer::Buffer(const JSContext& js_context) TITANIUM_NOEXCEPT
-		: Module(js_context, "Titanium.Buffer")
+		: Module(js_context, "Ti.Buffer")
 		, type__(Titanium::Codec::Type::Int)
 		, value__(js_context.CreateNull())
 		, byteOrder__(Titanium::Codec::ByteOrder::Unknown)
@@ -38,7 +38,7 @@ namespace Titanium
 	TITANIUM_PROPERTY_READWRITE(Buffer, std::vector<std::uint8_t>, data)
 	TITANIUM_PROPERTY_READWRITE(Buffer, Titanium::Codec::CharSet, charset)
 
-	void Buffer::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+	void Buffer::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 	{
 		Titanium::Module::postCallAsConstructor(js_context, arguments);
 
@@ -226,7 +226,7 @@ namespace Titanium
 		return false;
 	}
 
-	void Buffer::JSExportInitialize() 
+	void Buffer::JSExportInitialize()
 	{
 		JSExport<Buffer>::SetClassVersion(1);
 		JSExport<Buffer>::SetParent(JSExport<Module>::Class());
@@ -395,7 +395,7 @@ namespace Titanium
 		}
 
 		const auto buffer = clone(offset, length);
-		
+
 		if (buffer) {
 			return buffer->get_object();
 		} else {

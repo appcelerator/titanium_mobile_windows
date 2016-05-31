@@ -15,7 +15,7 @@ namespace Titanium
 	{
 
 		Notification::Notification(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.Notification"),
+			: View(js_context, "Ti.UI.Notification"),
 			message__(""),
 			duration__(NOTIFICATION_DURATION::SHORT),
 			xOffset__(0),

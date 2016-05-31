@@ -11,7 +11,7 @@ describe("Titanium.Contacts.Person", function() {
     it('apiName', function (finish) {
         should(function () {
             var person = Ti.Contacts.createPerson();
-            should(person.apiName).be.eql("Titanium.Contacts.Person");
+            should(person.apiName).be.eql("Ti.Contacts.Person");
         }).not.throw();
         finish();
     });

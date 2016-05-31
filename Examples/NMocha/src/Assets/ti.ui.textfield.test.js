@@ -18,7 +18,7 @@ describe("Titanium.UI.TextField", function () {
             value: "this is some text"
         });
         should(textfield.apiName).be.a.String;
-        should(textfield.apiName).be.eql("Titanium.UI.TextField");
+        should(textfield.apiName).be.eql("Ti.UI.TextField");
         finish();
     });
 

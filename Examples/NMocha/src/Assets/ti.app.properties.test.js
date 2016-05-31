@@ -15,7 +15,7 @@ Array.prototype.contains = function (obj) {
 describe('Titanium.App.Properties', function () {
 
     it('apiName', function (finish) {
-        should(Ti.App.Properties.apiName).be.eql("Titanium.App.Properties");
+        should(Ti.App.Properties.apiName).be.eql("Ti.App.Properties");
         finish();
     });
 

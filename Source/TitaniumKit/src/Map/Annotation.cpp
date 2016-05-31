@@ -16,7 +16,7 @@ namespace Titanium
 	{
 
 		Annotation::Annotation(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Map.Annotation"),
+			: Module(js_context, "Ti.Map.Annotation"),
 			canShowCallout__(true),
 			draggable__(false),
 			latitude__(0),
@@ -481,9 +481,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setCanShowCallout)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_canShowCallout(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -495,9 +495,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setCenterOffset)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_centerOffset(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -509,9 +509,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setCustomView)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_customView(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -523,9 +523,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setDraggable)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_draggable(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -537,9 +537,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setImage)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_image(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -551,9 +551,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setLatitude)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_latitude(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -565,9 +565,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setLeftButton)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_leftButton(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -579,9 +579,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setLeftView)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_leftView(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -593,9 +593,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setLongitude)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_longitude(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -607,9 +607,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setPincolor)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_pincolor(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -621,9 +621,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setRightButton)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_rightButton(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -635,9 +635,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setRightView)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_rightView(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -649,9 +649,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setShowInfoWindow)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_showInfoWindow(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -663,9 +663,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setSubtitle)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_subtitle(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -677,9 +677,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setSubtitleid)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_subtitleid(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -691,9 +691,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setTitle)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_title(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 
@@ -705,9 +705,9 @@ namespace Titanium
 		TITANIUM_FUNCTION(Annotation, setTitleid)
 		{
 			TITANIUM_ASSERT(arguments.size() == 1);
-			
+
 			js_set_titleid(arguments.at(0));
-			
+
 			return get_context().CreateUndefined();
 		}
 

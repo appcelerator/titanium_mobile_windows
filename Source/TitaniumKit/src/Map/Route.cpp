@@ -14,7 +14,7 @@ namespace Titanium
 	{
 
 		Route::Route(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Map.Route")
+			: Module(js_context, "Ti.Map.Route")
 		{
 		}
 

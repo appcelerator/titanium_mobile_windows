@@ -14,12 +14,12 @@ namespace Titanium
 {
 
 	BlobStream::BlobStream(const JSContext& js_context) TITANIUM_NOEXCEPT
-		: IOStream(js_context, "Titanium.BlobStream")
+		: IOStream(js_context, "Ti.BlobStream")
 	{
 
 	}
 
-	void BlobStream::construct(const std::shared_ptr<Blob>& blob) 
+	void BlobStream::construct(const std::shared_ptr<Blob>& blob)
 	{
 		TITANIUM_ASSERT(blob != nullptr);
 		blob__ = blob;
@@ -61,7 +61,7 @@ namespace Titanium
 
 	}
 
-	void BlobStream::JSExportInitialize() 
+	void BlobStream::JSExportInitialize()
 	{
 		JSExport<BlobStream>::SetClassVersion(1);
 		JSExport<BlobStream>::SetParent(JSExport<IOStream>::Class());

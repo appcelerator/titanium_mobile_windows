@@ -13,7 +13,7 @@
 namespace Titanium
 {
 	Gesture::Gesture(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium.Gesture")
+	    : Module(js_context, "Ti.Gesture")
 	{
 	}
 
@@ -27,7 +27,7 @@ namespace Titanium
 	{
 		JSExport<Gesture>::SetClassVersion(1);
 		JSExport<Gesture>::SetParent(JSExport<Module>::Class());
-		
+
 		TITANIUM_ADD_FUNCTION(Gesture, getLandscape);
 		TITANIUM_ADD_FUNCTION(Gesture, getPortrait);
 		TITANIUM_ADD_FUNCTION(Gesture, getOrientation);
@@ -55,7 +55,7 @@ namespace Titanium
 	{
 		return get_context().CreateNumber(UI::Constants::to_underlying_type(get_orientation()));
 	}
-	
+
 	TITANIUM_FUNCTION(Gesture, getOrientation)
 	{
 		const auto js_context = this_object.get_context();

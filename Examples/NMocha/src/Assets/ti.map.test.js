@@ -9,7 +9,7 @@ var should = require('./should');
 describe('Titanium.Map', function () {
      it('apiName', function (finish) {
         should(function () {
-            should(Ti.Map.apiName).be.eql("Titanium.Map");
+            should(Ti.Map.apiName).be.eql("Ti.Map");
         }).not.throw();
         finish();
     });   

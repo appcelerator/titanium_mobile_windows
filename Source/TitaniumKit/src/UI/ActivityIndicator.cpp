@@ -15,7 +15,7 @@ namespace Titanium
 	{
 
 		ActivityIndicator::ActivityIndicator(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.ActivityIndicator")
+			: View(js_context, "Ti.UI.ActivityIndicator")
 			, color__("")
 			, message__("")
 			, messageid__("")
@@ -78,7 +78,7 @@ namespace Titanium
 			return static_cast<JSValue>(font);
 		}
 
-		TITANIUM_PROPERTY_SETTER(ActivityIndicator, font) 
+		TITANIUM_PROPERTY_SETTER(ActivityIndicator, font)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			set_font(Titanium::UI::js_to_Font(static_cast<JSObject>(argument)));
