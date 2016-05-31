@@ -176,6 +176,12 @@ source_group("with_package" FILES ${WITH_PACKAGE_DIRECTORY})
 set_property(SOURCE ${SOURCE_with_package} PROPERTY VS_DEPLOYMENT_LOCATION "with_package")
 set_property(SOURCE ${SOURCE_with_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
+file(GLOB_RECURSE UTILITIES_DIRECTORY "src/Assets/utilities/*.*")
+set(SOURCE_utilities ${UTILITIES_DIRECTORY})
+source_group("utilities" FILES ${UTILITIES_DIRECTORY})
+set_property(SOURCE ${SOURCE_utilities} PROPERTY VS_DEPLOYMENT_LOCATION "utilities")
+set_property(SOURCE ${SOURCE_utilities} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   src/OutputDebugStringBuf.hpp
@@ -190,6 +196,7 @@ add_executable(${EXE_NAME} WIN32
   ${SOURCE_with_index_js}
   ${SOURCE_with_index_json}
   ${SOURCE_with_package}
+  ${SOURCE_utilities}
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
