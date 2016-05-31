@@ -199,7 +199,7 @@ namespace TitaniumWindows
 					}
 
 					if (!found) {
-						TITANIUM_MODULE_LOG_WARN("Window.close: Window is not opened or already closed");
+						TITANIUM_LOG_WARN("Window.close: Window is not opened or already closed");
 					}
 
 				} else {
