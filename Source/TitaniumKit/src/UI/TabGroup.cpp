@@ -15,7 +15,7 @@ namespace Titanium
 	namespace UI
 	{
 		TabGroup::TabGroup(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.TabGroup")
+			: View(js_context, "Ti.UI.TabGroup")
 			, activity__(js_context.CreateUndefined())
 		{
 		}
@@ -194,7 +194,7 @@ namespace Titanium
 			tabs__.erase(find(tabs__.begin(), tabs__.end(), tab));
 		}
 
-		void TabGroup::JSExportInitialize() 
+		void TabGroup::JSExportInitialize()
 		{
 			JSExport<TabGroup>::SetClassVersion(1);
 			JSExport<TabGroup>::SetParent(JSExport<View>::Class());

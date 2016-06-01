@@ -17,7 +17,7 @@ namespace Titanium
 		namespace Socket
 		{
 			TCP::TCP(const JSContext& js_context) TITANIUM_NOEXCEPT
-				: Module(js_context, "Titanium.Network.Socket.TCP")
+				: Module(js_context, "Ti.Network.Socket.TCP")
 				, host__("")
 				, port__(0)
 				, listenQueueSize__(0)
@@ -35,7 +35,7 @@ namespace Titanium
 			TITANIUM_PROPERTY_READWRITE(TCP, std::uint32_t, listenQueueSize)
 			TITANIUM_PROPERTY_READWRITE(TCP, std::chrono::milliseconds, timeout)
 
-			TITANIUM_PROPERTY_READ(TCP, State, state); 
+			TITANIUM_PROPERTY_READ(TCP, State, state);
 
 			void TCP::close() TITANIUM_NOEXCEPT
 			{
@@ -57,7 +57,7 @@ namespace Titanium
 				TITANIUM_LOG_WARN("TCP::accept: Unimplemented");
 			}
 
-			void TCP::JSExportInitialize() 
+			void TCP::JSExportInitialize()
 			{
 				JSExport<TCP>::SetClassVersion(1);
 				JSExport<TCP>::SetParent(JSExport<Module>::Class());

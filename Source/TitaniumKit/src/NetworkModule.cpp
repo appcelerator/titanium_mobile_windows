@@ -10,7 +10,7 @@
 namespace Titanium
 {
 	NetworkModule::NetworkModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium.Network")
+	    : Module(js_context, "Ti.Network")
 		, networkType__(Titanium::Network::TYPE::UNKNOWN)
 		, networkTypeName__(Titanium::Network::Constants::to_string(Titanium::Network::TYPE::UNKNOWN))
 		, online__(false)
@@ -49,7 +49,7 @@ namespace Titanium
 	{
 		TITANIUM_LOG_WARN("NetworkModule::addSystemCookie: unimplemented");
 	}
-	
+
 	std::vector<std::shared_ptr<Network::Cookie>> NetworkModule::get_allHTTPCookies() const TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("NetworkModule::get_allHTTPCookies: unimplemented");
@@ -335,17 +335,17 @@ namespace Titanium
 	TITANIUM_FUNCTION(NetworkModule, addHTTPCookie)
 	{
 		ENSURE_OBJECT_AT_INDEX(cookie, 0);
-		addHTTPCookie(cookie.GetPrivate<Network::Cookie>());	
+		addHTTPCookie(cookie.GetPrivate<Network::Cookie>());
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(NetworkModule, addSystemCookie)
 	{
 		ENSURE_OBJECT_AT_INDEX(cookie, 0);
-		addSystemCookie(cookie.GetPrivate<Network::Cookie>());	
+		addSystemCookie(cookie.GetPrivate<Network::Cookie>());
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(NetworkModule, removeAllHTTPCookies)
 	{
 		removeAllHTTPCookies();

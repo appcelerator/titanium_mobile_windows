@@ -73,17 +73,17 @@ namespace Titanium
 	}
 
 	Stream::Stream(const JSContext& js_context) TITANIUM_NOEXCEPT
-		: Module(js_context, "Titanium.Stream")
+		: Module(js_context, "Ti.Stream")
 		, promisifyFunc__(createPromisifyFunction(js_context))
 		, MODE_READ__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::READ)))
 		, MODE_WRITE__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::WRITE)))
-		, MODE_APPEND__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::APPEND))) 
+		, MODE_APPEND__(js_context.CreateNumber(Titanium::Filesystem::Constants::to_underlying_type(Titanium::Filesystem::MODE::APPEND)))
 	{
 
 	}
 
 	/*
-	 * Returns Titanium.BufferStream or Titanium.BlobStream depending on whether a Buffer or Blob is provided as the source property in params. 
+	 * Returns Titanium.BufferStream or Titanium.BlobStream depending on whether a Buffer or Blob is provided as the source property in params.
 	*/
 	std::shared_ptr<IOStream> Stream::createStream(const CreateStreamArgs& params) TITANIUM_NOEXCEPT
 	{
@@ -264,7 +264,7 @@ namespace Titanium
 		}
 	}
 
-	void Stream::JSExportInitialize() 
+	void Stream::JSExportInitialize()
 	{
 		JSExport<Stream>::SetClassVersion(1);
 		JSExport<Stream>::SetParent(JSExport<Module>::Class());
@@ -396,11 +396,11 @@ namespace Titanium
 		const auto output_stream = output_object.GetPrivate<IOStream>();
 
 		if (input_stream == nullptr || output_stream == nullptr) {
-			HAL::detail::ThrowRuntimeError("Titanium::Stream:writeStream", "Stream::writeStream: Invalid arguments"); 
+			HAL::detail::ThrowRuntimeError("Titanium::Stream:writeStream", "Stream::writeStream: Invalid arguments");
 		} else if (!input_stream->isReadable()) {
-			HAL::detail::ThrowRuntimeError("Titanium::Stream:writeStream", "Stream::writeStream: Cannot read from input stream"); 
+			HAL::detail::ThrowRuntimeError("Titanium::Stream:writeStream", "Stream::writeStream: Cannot read from input stream");
 		} else if (!output_stream->isWritable()) {
-			HAL::detail::ThrowRuntimeError("Titanium::Stream:writeStream", "Stream::writeStream: Cannot write to the stream"); 
+			HAL::detail::ThrowRuntimeError("Titanium::Stream:writeStream", "Stream::writeStream: Cannot write to the stream");
 		}
 
 		if (resultsCallback.IsFunction()) {

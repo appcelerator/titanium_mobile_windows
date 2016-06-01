@@ -12,7 +12,7 @@ describe('Titanium.Locale', function () {
         should(Ti.Locale).not.be.undefined;
         should(Ti.Locale).not.be.null;
         should(Ti.Locale).be.an.Object;
-        should(Ti.Locale.apiName).be.eql("Titanium.Locale");
+        should(Ti.Locale.apiName).be.eql("Ti.Locale");
         finish();
     });
 

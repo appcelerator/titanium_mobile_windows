@@ -16,9 +16,9 @@ namespace Titanium
 	{
 
 		using namespace Titanium::UI;
-		
+
 		VideoPlayer::VideoPlayer(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.Media.VideoPlayer")
+			: View(js_context, "Ti.Media.VideoPlayer")
 			, allowsAirPlay__(false)
 			, autoplay__(true)
 			, contentURL__("")
@@ -105,7 +105,7 @@ namespace Titanium
 			return nullptr;
 		}
 
-		void VideoPlayer::JSExportInitialize() 
+		void VideoPlayer::JSExportInitialize()
 		{
 			JSExport<VideoPlayer>::SetClassVersion(1);
 			JSExport<VideoPlayer>::SetParent(JSExport<Module>::Class());
@@ -303,7 +303,7 @@ namespace Titanium
 			release();
 			return get_context().CreateUndefined();
 		}
-		
+
 		TITANIUM_FUNCTION(VideoPlayer, requestThumbnailImagesAtTimes)
 		{
 			ENSURE_ARRAY_AT_INDEX(js_array, 0);
@@ -338,7 +338,7 @@ namespace Titanium
 		{
 			ENSURE_TIME_AT_INDEX(time, 0);
 			ENSURE_UINT_AT_INDEX(option, 1);
-			
+
 			const auto blob = thumbnailImageAtTime(time, static_cast<VideoTimeOption>(option));
 			if (blob != nullptr) {
 				return blob->get_object();

@@ -7,13 +7,22 @@
 var should = require('./should');
 
 describe("Titanium.Network.HTTPClient", function () {
+    it("apiName", function (finish) {
+        var xhr = Ti.Network.createHTTPClient();
+        // See https://jira.appcelerator.org/browse/TIMOB-23346
+        if (Ti.Platform.osname === 'windowsstore' || Ti.Platform.osname === 'windowsphone') {
+            should(xhr.apiName).be.eql("Ti.Network.HTTPClient");
+        } else {
+            should(xhr.apiName).be.eql("Ti.Network.HTTPClient");
+        }
+        finish();
+    });
+
     (Ti.Platform.osname === 'windowsstore' ? it.skip : it)("responseXML", function (finish) {
         this.timeout(6e4);
 
         var xhr = Ti.Network.createHTTPClient();
         xhr.setTimeout(6e4);
-
-        should(xhr.apiName).be.eql("Titanium.Network.HTTPClient");
 
         xhr.onload = function (e) {
             should(xhr.responseXML === null).be.false;
@@ -82,7 +91,7 @@ describe("Titanium.Network.HTTPClient", function () {
         xhr.send("TIMOB-23127");
     });
 
-	it("TIMOB-23214", function (finish) {
+    it("TIMOB-23214", function (finish) {
         this.timeout(6e4);
 
         var xhr = Ti.Network.createHTTPClient();
@@ -366,5 +375,53 @@ describe("Titanium.Network.HTTPClient", function () {
             password: "sanford1000",
             message: "check me out"
         });
+    });
+
+    it("POST multipart/form-data containing Ti.Blob", function (finish) {
+        this.timeout(6e4);
+
+        var xhr = Ti.Network.createHTTPClient(),
+            imageFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'Logo.png'),
+            newId = new Date().getTime(),
+            newName = 'HEY_YOU_GUYS_WAIT_FOR_ME-' + newId,
+            form,
+            blob = imageFile.read(imageFile);
+
+        xhr.setTimeout(6e4);
+
+        xhr.onload = function (e) {
+            //should(e.code).eql(200);// because our API is insane, this always returns 0
+            should(xhr.status).eql(200);
+            var result = JSON.parse(xhr.responseText);
+            // check sent headers
+            should(result).have.property('headers');
+            should(result.headers).have.property('Content-Type');
+            should(result.headers['Content-Type']).startWith('multipart/form-data');
+
+            // check name got added
+            should(result).have.property('form');
+            should(result.form).have.property('name');
+            should(result.form.name).eql(newName);
+
+            // check blob data
+            should(result).have.property('files');
+            should(result.files).have.property('attachment');
+            // image/png (Android), image/png (Windows). Ideally this would match the mimetype/contenttype of the file (which it does for Android/Windows). Let's hope it does on iOS?
+            should(result.files.attachment).eql('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAsNJREFUeNrs3b1NI0EYgGG8InQZlEFCdl1AfhGRayCiABKugMvJaIECKMP53hgZ6QJujXwzuzvf97zSyoEt2Z55NLO2/LMZx/FCqt1gCASWwBJYElgCS2BJYAksgSWBJbAElgSWwBJYElgCS2BJYAksgSWBJbAElgSWwBJYElgCS2BJYAksgSWBJbAUusuOHuur6froxoolW6GUdSv8qn057jebzXukSRnH8apcPJZja8VapsPAPx4nAiqwqqxU4XBFQdUzrPtouCZQPYA1U8dzqjC4plCV5/oCFlxQRTh57x1XVFQRXhV2iysyqhCwesQVHVUYWD3hyoAqFKwecGVBFQ7WmnGV+95mQRUS1hpxZUMVFtaacP2F6ioLqtCw1oArK6rwsJbElRlVClhL4MqOKg2sOXFNoPqVBVUqWHPgmkD1Uu77OdNYp/vMeytcJ1A9ZBvnlF+mqI0LKrCq44IKrOq4oAKrOi6owKqOCyqwquOCCqzquKACqwmucuygAqsFrmuowGqBCyqwquF6+8fVv40QWGdVTtZ3X2x/n4X6lRuw5kX1Y+ImW7jAqoEq1A+RgLUiVOWc6w0usGqj2p94KwIusM5DdeKtCLjAOh8VXGA1QwUXWM1QwQVWM1RwgdUMFVxgfaK6q40KruSwyuQeQN22QAVXUlhHVLuWqOBKBmtOVHAlgbUEKriCw1oSVXZcQzJU+zlRZcY1QAUXWP+PatF/Ys2Ea4AKLrA6R5UJ1wAVXGAFQZUB1wAVXGAFQxUZ1wDV+nGBNV8/I6H6Bi6wZmobDdUJXN11GWAuDsieyvZ4ISuWwJLO2NJtIbJiCSyBJYElsASWBJbAElgSWAJLYElgCSyBJYElsASWBJbAElgSWAJLYElgCSyBJYElsASWBJbAElgSWAJLYElgCSyBJYElsASWBJbAElgSWFqyPwIMAMpfdKkmd/FSAAAAAElFTkSuQmCC');
+
+            finish();
+        };
+        xhr.onerror = function (e) {
+            finish(new Error(e.error || this.responseText));
+        };
+
+        xhr.open('POST', 'http://www.httpbin.org/post');
+
+        form = {
+            name: newName,
+            attachment: blob
+        };
+
+        xhr.send(form);
     });
 });

@@ -19,7 +19,7 @@ namespace Titanium
 	namespace UI
 	{
 		Tab::Tab(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.Tab")
+			: View(js_context, "Ti.UI.Tab")
 		{
 		}
 
@@ -62,7 +62,7 @@ namespace Titanium
 			set_active(true);
 		}
 
-		void Tab::blur() 
+		void Tab::blur()
 		{
 			Titanium::UI::View::blur();
 
@@ -105,7 +105,7 @@ namespace Titanium
 			close(options);
 		}
 
-		void Tab::JSExportInitialize() 
+		void Tab::JSExportInitialize()
 		{
 			JSExport<Tab>::SetClassVersion(1);
 			JSExport<Tab>::SetParent(JSExport<View>::Class());
@@ -215,7 +215,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_SETTER_STRING(Tab, titleid)
 		TITANIUM_PROPERTY_GETTER_OBJECT(Tab, window)
 		TITANIUM_PROPERTY_SETTER_OBJECT(Tab, window, Window)
-		
+
 		TITANIUM_FUNCTION(Tab, open)
 		{
 			ENSURE_OBJECT_AT_INDEX(window, 0);

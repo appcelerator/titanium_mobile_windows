@@ -9,7 +9,7 @@ var should = require('./should');
 describe("codec", function() {
 	it("testAPI", function(finish) {
 		should(Ti.Codec).be.an.Object;
-		should(Ti.Codec.apiName).be.eql("Titanium.Codec");
+		should(Ti.Codec.apiName).be.eql("Ti.Codec");
 		var functions = [ "encodeNumber", "decodeNumber", "encodeString", "decodeString", "getNativeByteOrder" ];
 		for (var i = 0; i < functions.length; i++) should(Ti.Codec[functions[i]]).be.a.Function;
 		should(Ti.Codec.CHARSET_ASCII).eql("ascii");

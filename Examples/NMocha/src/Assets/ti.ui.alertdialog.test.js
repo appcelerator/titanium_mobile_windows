@@ -12,7 +12,7 @@ describe("Titanium.UI.AlertDialog", function () {
     it("apiName", function (finish) {
         var bar = Ti.UI.createAlertDialog();
         should(bar.apiName).be.a.String;
-        should(bar.apiName).be.eql("Titanium.UI.AlertDialog");
+        should(bar.apiName).be.eql("Ti.UI.AlertDialog");
         finish();
     });
 

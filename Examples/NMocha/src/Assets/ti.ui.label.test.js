@@ -20,7 +20,7 @@ describe("Titanium.UI.Label", function () {
             text: "this is some text"
         });
         should(label.apiName).be.a.String;
-        should(label.apiName).be.eql("Titanium.UI.Label");
+        should(label.apiName).be.eql("Ti.UI.Label");
         finish();
     });
 

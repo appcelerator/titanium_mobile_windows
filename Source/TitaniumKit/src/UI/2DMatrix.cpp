@@ -36,7 +36,7 @@ namespace Titanium
 
 
 		TwoDMatrix::TwoDMatrix(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.UI.2DMatrix"),
+			: Module(js_context, "Ti.UI.2DMatrix"),
 			a__(1),
 			b__(0),
 			c__(0),

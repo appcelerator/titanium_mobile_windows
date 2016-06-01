@@ -31,7 +31,7 @@ namespace Titanium
 {
 
 	UIModule::UIModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium.UI")
+	    : Module(js_context, "Ti.UI")
 	{
 		TITANIUM_LOG_DEBUG("UIModule:: ctor ", this);
 	}
@@ -850,7 +850,7 @@ namespace Titanium
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, TextField);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, View);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, WebView);
-		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Window);		
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Window);
 	}
 
 	TITANIUM_PROPERTY_GETTER(UIModule, 2DMatrix)
@@ -1026,7 +1026,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(UIModule, create2DMatrix)
 	{
 		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
-		
+
 		// FIXME Macros didn't work because identifiers can't start with digits!
 		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
 		TITANIUM_ASSERT(Titanium_property.IsObject());
@@ -1267,7 +1267,7 @@ namespace Titanium
 		return get_context().CreateNull();
 	}
 
-	TITANIUM_PROPERTY_SETTER(UIModule, currentTab) 
+	TITANIUM_PROPERTY_SETTER(UIModule, currentTab)
 	{
 		if (argument.IsObject()) {
 			set_currentTab(static_cast<JSObject>(argument).GetPrivate<Titanium::UI::Tab>());
@@ -1323,7 +1323,7 @@ namespace Titanium
 		switch__ = Switch;
 		return *this;
 	}
-	
+
 	UIModule& UIModule::TwoDMatrixClass(const JSClass& TwoDMatrix) TITANIUM_NOEXCEPT
 	{
 		twodmatrix__ = TwoDMatrix;

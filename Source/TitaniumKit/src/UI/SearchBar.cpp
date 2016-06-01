@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		SearchBar::SearchBar(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.SearchBar")
+			: View(js_context, "Ti.UI.SearchBar")
 			, autocapitalization__(TEXT_AUTOCAPITALIZATION::NONE)
 			, autocorrect__(false)
 			, barColor__("")

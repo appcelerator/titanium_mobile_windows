@@ -47,6 +47,7 @@ set(SOURCE_Utility
   include/TitaniumWindows/Utility.hpp
   src/Utility.cpp
   include/TitaniumWindows/WindowsMacros.hpp
+  include/TitaniumWindows/WindowsTiImpl.hpp
   src/TitaniumEntryPoint.cpp
   include/TitaniumWindows/LogForwarder.hpp
   src/LogForwarder.cpp

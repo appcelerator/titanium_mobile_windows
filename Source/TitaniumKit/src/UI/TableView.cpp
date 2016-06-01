@@ -31,7 +31,7 @@ namespace Titanium
 	namespace UI
 	{
 		TableView::TableView(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.TableView"),
+			: View(js_context, "Ti.UI.TableView"),
 			tableviewAnimationProperties_ctor__(js_context.CreateObject(JSExport<Titanium::UI::TableViewAnimationProperties>::Class())),
 			filterAttribute__(""),
 			filterAnchored__(false),
@@ -134,7 +134,7 @@ namespace Titanium
 			});
 		}
 
-		void TableView::querySubmitted(const std::string& query) 
+		void TableView::querySubmitted(const std::string& query)
 		{
 			if (query.empty()) {
 				//
@@ -165,7 +165,7 @@ namespace Titanium
 			set_sections(sections);
 		}
 
-		std::vector<std::string> TableView::suggestionRequested(const std::string& query) 
+		std::vector<std::string> TableView::suggestionRequested(const std::string& query)
 		{
 			if (!model__->isSaved()) {
 				model__->save();
@@ -187,7 +187,7 @@ namespace Titanium
 			return model__->get_sectionCount();
 		}
 
-		void TableView::createEmptyTableViewSection() 
+		void TableView::createEmptyTableViewSection()
 		{
 			const auto properties = get_context().CreateObject();
 			CREATE_TITANIUM_UI_INSTANCE(js_section, properties, TableViewSection);
@@ -335,7 +335,7 @@ namespace Titanium
 			fireEvent(name, event_args);
 		}
 
-		void TableView::JSExportInitialize() 
+		void TableView::JSExportInitialize()
 		{
 			JSExport<TableView>::SetClassVersion(1);
 			JSExport<TableView>::SetParent(JSExport<View>::Class());
@@ -531,7 +531,7 @@ namespace Titanium
 
 				appendRow(rows, animation.GetPrivate<TableViewAnimationProperties>());
 			}
-			return this_object.get_context().CreateUndefined();	
+			return this_object.get_context().CreateUndefined();
 		}
 
 		TITANIUM_FUNCTION(TableView, appendSection)
@@ -749,7 +749,7 @@ namespace Titanium
 			}
 
 			scrollToTop(index, animation.GetPrivate<TableViewAnimationProperties>());
-			
+
 			return get_context().CreateUndefined();
 		}
 

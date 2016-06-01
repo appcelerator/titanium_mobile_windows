@@ -16,7 +16,7 @@ namespace Titanium
 	namespace UI
 	{
 		Button::Button(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context, "Titanium.UI.Button"),
+		    : View(js_context, "Ti.UI.Button"),
 			  color__(js_context.CreateString()),
 			  image__(js_context.CreateString()),
 			  textAlign__(TEXT_ALIGNMENT::LEFT),
@@ -50,7 +50,7 @@ namespace Titanium
 		{
 			JSExport<Button>::SetClassVersion(1);
 			JSExport<Button>::SetParent(JSExport<View>::Class());
-			
+
 			TITANIUM_ADD_PROPERTY(Button, color);
 			TITANIUM_ADD_PROPERTY(Button, font);
 			TITANIUM_ADD_PROPERTY(Button, image);

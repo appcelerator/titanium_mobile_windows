@@ -30,7 +30,7 @@ namespace Titanium
 {
 
 	ContactsModule::ContactsModule(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-		: Module(js_context, "Titanium.Contacts"),
+		: Module(js_context, "Ti.Contacts"),
 		contactsAuthorization__(Titanium::Contacts::AUTHORIZATION::UNKNOWN)
 	{
 	}

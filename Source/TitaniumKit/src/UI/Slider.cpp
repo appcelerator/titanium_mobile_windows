@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		Slider::Slider(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context, "Titanium.UI.Slider"),
+		    : View(js_context, "Ti.UI.Slider"),
 		      max__(js_context.CreateNumber(1)),
 		      min__(js_context.CreateNumber(0)),
 		      value__(js_context.CreateNumber(0))
@@ -26,7 +26,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Slider, double, min)
 
 		TITANIUM_PROPERTY_READWRITE(Slider, double, value)
-		
+
 		void Slider::JSExportInitialize()
 		{
 			JSExport<Slider>::SetClassVersion(1);

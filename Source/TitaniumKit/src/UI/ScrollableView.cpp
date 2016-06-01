@@ -16,7 +16,7 @@ namespace Titanium
 
 
 		ScrollableView::ScrollableView(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.ScrollableView"),
+			: View(js_context, "Ti.UI.ScrollableView"),
 			cacheSize__(0),
 			currentPage__(0),
 			disableBounce__(false),
@@ -83,7 +83,7 @@ namespace Titanium
 			}
 		}
 
-		void ScrollableView::JSExportInitialize() 
+		void ScrollableView::JSExportInitialize()
 		{
 			JSExport<ScrollableView>::SetClassVersion(1);
 			JSExport<ScrollableView>::SetParent(JSExport<View>::Class());

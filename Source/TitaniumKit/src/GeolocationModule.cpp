@@ -76,7 +76,7 @@ namespace Titanium
 	}
 
 	GeolocationModule::GeolocationModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-		: Module(js_context, "Titanium.Geolocation"),
+		: Module(js_context, "Ti.Geolocation"),
 		accuracy__(Geolocation::ACCURACY::BEST),
 		activityType__(Geolocation::ACTIVITYTYPE::OTHER),
 		locationServicesAuthorization__(Geolocation::AUTHORIZATION::UNKNOWN),
@@ -275,7 +275,7 @@ namespace Titanium
 		TITANIUM_LOG_WARN("GeolocationModule::reverseGeocoder: Unimplemented");
 	}
 
-	void GeolocationModule::JSExportInitialize() 
+	void GeolocationModule::JSExportInitialize()
 	{
 		JSExport<GeolocationModule>::SetClassVersion(1);
 		JSExport<GeolocationModule>::SetParent(JSExport<Module>::Class());
@@ -288,7 +288,7 @@ namespace Titanium
 		TITANIUM_ADD_PROPERTY_READONLY(GeolocationModule, ACCURACY_THREE_KILOMETERS);
 		TITANIUM_ADD_PROPERTY_READONLY(GeolocationModule, ACCURACY_HIGH);
 		TITANIUM_ADD_PROPERTY_READONLY(GeolocationModule, ACCURACY_LOW);
-			
+
 		TITANIUM_ADD_PROPERTY_READONLY(GeolocationModule, ACTIVITYTYPE_AUTOMOTIVE_NAVIGATION);
 		TITANIUM_ADD_PROPERTY_READONLY(GeolocationModule, ACTIVITYTYPE_FITNESS);
 		TITANIUM_ADD_PROPERTY_READONLY(GeolocationModule, ACTIVITYTYPE_OTHER);

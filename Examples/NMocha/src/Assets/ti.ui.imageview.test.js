@@ -18,7 +18,7 @@ describe("Titanium.UI.ImageView", function () {
             image: "https://www.google.com/images/srpr/logo11w.png"
         });
         should(imageView.apiName).be.a.String;
-        should(imageView.apiName).be.eql("Titanium.UI.ImageView");
+        should(imageView.apiName).be.eql("Ti.UI.ImageView");
         finish();
     });
 

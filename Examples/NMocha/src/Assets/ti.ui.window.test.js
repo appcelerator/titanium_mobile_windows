@@ -230,7 +230,7 @@ describe("Titanium.UI.Window", function () {
         var win = Ti.UI.createWindow();
         should(win.toString()).be.eql("[object Window]");
         should(win.apiName).be.a.String;
-        should(win.apiName).be.eql("Titanium.UI.Window");
+        should(win.apiName).be.eql("Ti.UI.Window");
         finish();
     });
 

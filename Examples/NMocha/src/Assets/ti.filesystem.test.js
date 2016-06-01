@@ -10,7 +10,7 @@ var should = require('./should');
 describe('Titanium.Filesystem', function () {
      it('apiName', function (finish) {
         should(function () {
-            should(Ti.Filesystem.apiName).be.eql("Titanium.Filesystem");
+            should(Ti.Filesystem.apiName).be.eql("Ti.Filesystem");
         }).not.throw();
         finish();
     });   

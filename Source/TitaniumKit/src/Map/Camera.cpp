@@ -14,7 +14,7 @@ namespace Titanium
 	{
 
 		Camera::Camera(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Map.Camera")
+			: Module(js_context, "Ti.Map.Camera")
 		{
 		}
 

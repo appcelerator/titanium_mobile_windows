@@ -11,7 +11,7 @@ describe('Titanium', function () {
 
     it('apiName', function (finish) {
         should(Ti.apiName).be.a.String;
-        should(Ti.apiName).be.eql("Titanium");
+        should(Ti.apiName).be.eql("Ti");
         finish();
     });
     it('version', function (finish) {

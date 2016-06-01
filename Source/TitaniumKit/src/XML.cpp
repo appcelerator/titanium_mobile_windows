@@ -24,7 +24,7 @@ this.exports.parseString = function(_string) {
     } else {
         return result;
     }
-}; 
+};
 this.exports.serializeToString = function(_xml) {
     return new XMLSerializer().serializeToString(_xml);
 };
@@ -32,12 +32,12 @@ this.exports.serializeToString = function(_xml) {
 
 
 	XML::XML(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium.XML"),
+	    : Module(js_context, "Ti.XML"),
 		  ti_xml__(js_context.CreateObject()),
 	      func_parseString__(js_context.CreateObject()),
 	      func_serializeToString__(js_context.CreateObject())
 	{
-		// There's no "new Ti.XML()" 
+		// There's no "new Ti.XML()"
 		TITANIUM_LOG_DEBUG("XML:: ctor ", this);
 	}
 
@@ -83,13 +83,13 @@ this.exports.serializeToString = function(_xml) {
 			if (exports.HasProperty("parseString") && exports.HasProperty("serializeToString")) {
 				const auto parseString_property = exports.GetProperty("parseString");
 				const auto serializeToString_property = exports.GetProperty("serializeToString");
-				
+
 				TITANIUM_ASSERT(parseString_property.IsObject());
 				TITANIUM_ASSERT(serializeToString_property.IsObject());
-				
+
 				func_parseString__       = static_cast<JSObject>(parseString_property);
 				func_serializeToString__ = static_cast<JSObject>(serializeToString_property);
-				
+
 				return func_parseString__.IsFunction() && func_serializeToString__.IsFunction();
 			}
 		}

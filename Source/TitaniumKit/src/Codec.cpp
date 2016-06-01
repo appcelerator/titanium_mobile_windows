@@ -13,7 +13,7 @@ namespace Titanium
 	namespace Codec
 	{
 		CodecModule::CodecModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Codec")
+			: Module(js_context, "Ti.Codec")
 			, CHARSET_ASCII__(js_context.CreateString(Constants::to_string(CharSet::ASCII)))
 			, CHARSET_ISO_LATIN_1__(js_context.CreateString(Constants::to_string(CharSet::ISO_LATIN_1)))
 			, CHARSET_UTF8__(js_context.CreateString(Constants::to_string(CharSet::UTF8)))
@@ -62,7 +62,7 @@ namespace Titanium
 			return "";
 		}
 
-		std::uint32_t CodecModule::GetBOMOffsetForUnicode(const std::vector<std::uint8_t>& data, const std::uint32_t& offset, const CharSet& charset, const ByteOrder& byteOrder) 
+		std::uint32_t CodecModule::GetBOMOffsetForUnicode(const std::vector<std::uint8_t>& data, const std::uint32_t& offset, const CharSet& charset, const ByteOrder& byteOrder)
 		{
 			if (charset == CharSet::UTF8 && (data.size() >= 3 && data[offset] == 0xEF && data[offset + 1] == 0xBB && data[offset + 2] == 0xBF)) {
 				// UTF-8 with BOM
@@ -78,7 +78,7 @@ namespace Titanium
 			return offset;
 		}
 
-		void CodecModule::JSExportInitialize() 
+		void CodecModule::JSExportInitialize()
 		{
 			JSExport<CodecModule>::SetClassVersion(1);
 			JSExport<CodecModule>::SetParent(JSExport<Module>::Class());

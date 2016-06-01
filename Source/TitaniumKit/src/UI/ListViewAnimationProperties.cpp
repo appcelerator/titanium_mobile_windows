@@ -16,7 +16,7 @@ namespace Titanium
 		using namespace HAL;
 
 		ListViewAnimationProperties::ListViewAnimationProperties(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.UI.ListViewAnimationProperties")
+			: Module(js_context, "Ti.UI.ListViewAnimationProperties")
 		{
 		}
 
@@ -25,7 +25,7 @@ namespace Titanium
 			TITANIUM_ASSERT(arguments.size() > 0);
 			const auto _0 = arguments.at(0);
 			TITANIUM_ASSERT(_0.IsObject());
-			const auto js_animations = static_cast<JSObject>(_0);			
+			const auto js_animations = static_cast<JSObject>(_0);
 
 			// animated property
 			if (js_animations.HasProperty("animated")) {

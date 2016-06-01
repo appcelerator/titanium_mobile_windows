@@ -15,7 +15,7 @@ namespace Titanium
 	{
 
 		AudioRecorder::AudioRecorder(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Media.AudioRecorder")
+			: Module(js_context, "Ti.Media.AudioRecorder")
 			, compression__(AudioFormat::LinearPCM)
 			, format__(AudioFileFormat::Caf)
 			, state__(RecordingState::Stopped)
@@ -61,7 +61,7 @@ namespace Titanium
 			return nullptr;
 		}
 
-		void AudioRecorder::JSExportInitialize() 
+		void AudioRecorder::JSExportInitialize()
 		{
 			JSExport<AudioRecorder>::SetClassVersion(1);
 			JSExport<AudioRecorder>::SetParent(JSExport<Module>::Class());

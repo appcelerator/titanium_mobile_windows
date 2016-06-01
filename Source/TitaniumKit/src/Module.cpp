@@ -134,13 +134,17 @@ namespace Titanium
 		TITANIUM_LOG_DEBUG(apiName__, " afterPropertiesSet for ", this);
 	}
 
-	void Module::showRedScreenOfDeath(const std::string& message) TITANIUM_NOEXCEPT {
-		const auto ctx = get_context();
-		const auto what = ctx.CreateString(message);
-		const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
-		auto rsod_func = static_cast<JSObject>(rsod);
-		const std::vector<JSValue> args = { what };
-		rsod_func(args, rsod_func);
+	void Module::ShowRedScreenOfDeath(const JSContext& ctx, const std::string& message) TITANIUM_NOEXCEPT
+	{
+		try {
+			const auto what = ctx.CreateString(message);
+			const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
+			auto rsod_func = static_cast<JSObject>(rsod);
+			const std::vector<JSValue> args = { what };
+			rsod_func(args, rsod_func);
+		} catch (...) {
+			// Just to make sure we don't throw another exception :(
+		}
 	}
 
 	void Module::fireEvent(const std::string& name) TITANIUM_NOEXCEPT
@@ -173,7 +177,7 @@ namespace Titanium
 		}
 		event_copy.SetProperty("type", event.get_context().CreateString(name));
 
-		try {
+		TITANIUM_EXCEPTION_CATCH_START {
 			for (size_t i = 0; i < event_listener_count; ++i) {
 				JSObject callback_payload = event_listener_list.at(i);
 
@@ -200,12 +204,7 @@ namespace Titanium
 				//
 				callback({ static_cast<JSValue>(event_copy), callback }, this_object);
 			}
-		} catch (const HAL::detail::js_runtime_error& ex) {
-			std::ostringstream os;
-			os << "Runtime Error during " << name << " event: " << ex.js_message();
-
-			showRedScreenOfDeath(os.str());
-		}
+		} TITANIUM_EXCEPTION_CATCH_END
 	}
 
 	void Module::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT

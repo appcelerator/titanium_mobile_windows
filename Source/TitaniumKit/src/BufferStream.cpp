@@ -13,7 +13,7 @@ namespace Titanium
 {
 
 	BufferStream::BufferStream(const JSContext& js_context) TITANIUM_NOEXCEPT
-		: IOStream(js_context, "Titanium.BufferStream")
+		: IOStream(js_context, "Ti.BufferStream")
 	{
 
 	}
@@ -67,7 +67,7 @@ namespace Titanium
 
 	}
 
-	void BufferStream::JSExportInitialize() 
+	void BufferStream::JSExportInitialize()
 	{
 		JSExport<BufferStream>::SetClassVersion(1);
 		JSExport<BufferStream>::SetParent(JSExport<IOStream>::Class());

@@ -10,7 +10,7 @@
 namespace Titanium
 {
 	Accelerometer::Accelerometer(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium.Accelerometer")
+	    : Module(js_context, "Ti.Accelerometer")
 	{
 		TITANIUM_LOG_DEBUG("Accelerometer:: ctor ", this);
 	}

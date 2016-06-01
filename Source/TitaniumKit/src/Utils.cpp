@@ -22,7 +22,7 @@
 namespace Titanium
 {
 	Utils::Utils(const JSContext& js_context) TITANIUM_NOEXCEPT
-		: Module(js_context, "Titanium.Utils")
+		: Module(js_context, "Ti.Utils")
 	{
 	}
 
@@ -211,7 +211,7 @@ namespace Titanium
 	{
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
-			
+
 			// Titanium.Blob
 			if (_0.IsObject()) {
 				const auto js_obj = static_cast<JSObject>(_0);
@@ -233,7 +233,7 @@ namespace Titanium
 	{
 		if (arguments.size() >= 1) {
 			const auto _0 = arguments.at(0);
-			
+
 			// Titanium.Blob
 			if (_0.IsObject()) {
 				const auto js_obj = static_cast<JSObject>(_0);

@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		Switch::Switch(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.Switch"),
+			: View(js_context, "Ti.UI.Switch"),
 			enabled__(true),
 			titleOff__("Off"),
 			titleOn__("On"),

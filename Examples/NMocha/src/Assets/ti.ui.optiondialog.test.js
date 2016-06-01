@@ -13,7 +13,7 @@ describe("Titanium.UI.OptionDialog", function () {
             title: "this is some text"
         });
         should(bar.apiName).be.a.String;
-        should(bar.apiName).be.eql("Titanium.UI.OptionDialog");
+        should(bar.apiName).be.eql("Ti.UI.OptionDialog");
         finish();
     });
      

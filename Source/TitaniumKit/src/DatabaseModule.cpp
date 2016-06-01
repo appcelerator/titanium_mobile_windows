@@ -47,7 +47,7 @@ namespace Titanium
 	)TI_DB_JS";
 
 	DatabaseModule::DatabaseModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium.Database"),
+	    : Module(js_context, "Ti.Database"),
 	      field_type_double__(js_context.CreateNumber(Titanium::Database::Constants::to_underlying_type(Titanium::Database::FIELD_TYPE::DOUBLE))),
 	      field_type_float__(js_context.CreateNumber(Titanium::Database::Constants::to_underlying_type(Titanium::Database::FIELD_TYPE::FLOAT))),
 	      field_type_int__(js_context.CreateNumber(Titanium::Database::Constants::to_underlying_type(Titanium::Database::FIELD_TYPE::INT))),
@@ -57,7 +57,7 @@ namespace Titanium
 		TITANIUM_LOG_DEBUG("DatabaseModule:: ctor ", this);
 	}
 
-	void DatabaseModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
+	void DatabaseModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 	{
 		HAL_LOG_DEBUG("DatabaseModule:: postCallAsConstructor ", this);
 	}
@@ -94,7 +94,7 @@ namespace Titanium
 		}
 
 		const auto js_context = get_context();
-		
+
 		auto export_object = js_context.CreateObject();
 		export_object.SetProperty("global", js_context.get_global_object());
 		export_object.SetProperty("TiDatabase", js_context.CreateObject(JSExport<Titanium::DatabaseModule>::Class()));

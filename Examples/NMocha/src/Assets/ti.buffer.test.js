@@ -12,7 +12,7 @@ describe("buffer", function() {
 		should(Ti.createBuffer).be.a.Function;
 		var buffer = Ti.createBuffer();
 		should(buffer).be.an.Object;
-		should(buffer.apiName).be.eql("Titanium.Buffer");
+		should(buffer.apiName).be.eql("Ti.Buffer");
 		should(buffer.length).eql(0);
 		var functions = [ "append", "insert", "copy", "clone", "fill", "clear", "release", "toString", "toBlob" ];
 		for (var i = 0; i < functions.length; i++) {

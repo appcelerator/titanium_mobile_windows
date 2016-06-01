@@ -35,7 +35,7 @@ namespace Titanium
 	}
 
 	FilesystemModule::FilesystemModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-	    : Module(js_context, "Titanium.Filesystem")
+	    : Module(js_context, "Ti.Filesystem")
 	    , openStreamFunc__(createOpenStreamFunction(js_context))
 	{
 	}

@@ -15,7 +15,7 @@ namespace Titanium
 	{
 
 		AudioPlayer::AudioPlayer(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Media.AudioPlayer")
+			: Module(js_context, "Ti.Media.AudioPlayer")
 			, state_buffering__(js_context.CreateNumber(static_cast<std::uint32_t>(AudioState::Buffering)))
 			, state_initialized__(js_context.CreateNumber(static_cast<std::uint32_t>(AudioState::Initialized)))
 			, state_paused__(js_context.CreateNumber(static_cast<std::uint32_t>(AudioState::Paused)))
@@ -229,12 +229,12 @@ namespace Titanium
 		{
 			return get_context().CreateBoolean(isPaused());
 		}
-		
+
 		TITANIUM_FUNCTION(AudioPlayer, isPlaying)
 		{
 			return get_context().CreateBoolean(isPlaying());
 		}
-		
+
 		TITANIUM_FUNCTION(AudioPlayer, pause)
 		{
 			pause();
@@ -292,6 +292,6 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_SETTER(AudioPlayer, setBufferSize, bufferSize)
 		TITANIUM_FUNCTION_AS_GETTER(AudioPlayer, getTime, time)
 		TITANIUM_FUNCTION_AS_SETTER(AudioPlayer, setTime, time)
-		
+
 	} // namespace Media
 } // namespace Titanium

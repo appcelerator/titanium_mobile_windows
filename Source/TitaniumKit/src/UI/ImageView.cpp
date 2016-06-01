@@ -18,7 +18,7 @@ namespace Titanium
 	namespace UI
 	{
 		ImageView::ImageView(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context, "Titanium.UI.ImageView"),
+		    : View(js_context, "Ti.UI.ImageView"),
 			  animating__(false),
 			  autorotate__(false),
 			  decodeRetries__(5),
@@ -334,7 +334,7 @@ namespace Titanium
 			TITANIUM_ASSERT(argument.IsObject());
 			auto object = static_cast<JSObject>(argument);
 			TITANIUM_ASSERT(object.IsArray());
-			
+
 			std::vector<std::string> images;
 			std::vector<std::shared_ptr<Titanium::Blob>> imagesAsBlob;
 			std::vector<std::shared_ptr<Titanium::Filesystem::File>> imagesAsFile;
@@ -415,7 +415,7 @@ namespace Titanium
 		}
 
 		TITANIUM_FUNCTION_AS_GETTER(ImageView, getAnimating, animating)
-		
+
 		TITANIUM_FUNCTION_AS_GETTER(ImageView, getAutorotate, autorotate)
 
 		TITANIUM_FUNCTION_AS_GETTER(ImageView, getDecodeRetries, decodeRetries)

@@ -16,7 +16,7 @@ namespace Titanium
 
 
 		Cookie::Cookie(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Network.Cookie")
+			: Module(js_context, "Ti.Network.Cookie")
 			, comment__("")
 			, domain__("")
 			, expiryDate__("")
@@ -47,7 +47,7 @@ namespace Titanium
 			return false;
 		}
 
-		void Cookie::JSExportInitialize() 
+		void Cookie::JSExportInitialize()
 		{
 			JSExport<Cookie>::SetClassVersion(1);
 			JSExport<Cookie>::SetParent(JSExport<Module>::Class());

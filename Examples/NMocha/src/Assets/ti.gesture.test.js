@@ -12,7 +12,7 @@ describe('Titanium.Gesture', function () {
         should(Ti.Gesture).not.be.undefined;
         should(Ti.Gesture.addEventListener).be.a.Function;
         should(Ti.Gesture.removeEventListener).be.a.Function;
-        should(Ti.Gesture.apiName).be.eql("Titanium.Gesture");
+        should(Ti.Gesture.apiName).be.eql("Ti.Gesture");
         finish();
     });
     it('landscape', function (finish) {

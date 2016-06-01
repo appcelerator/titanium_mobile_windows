@@ -9,7 +9,7 @@ var should = require('./should');
 describe("Titanium.Contacts", function() {
 	it('apiName', function (finish) {
 		should(function () {
-			should(Ti.Contacts.apiName).be.eql("Titanium.Contacts");
+			should(Ti.Contacts.apiName).be.eql("Ti.Contacts");
 		}).not.throw();
 		finish();
 	});
@@ -132,7 +132,7 @@ describe("Titanium.Contacts", function() {
 		should(groups).be.an.Array;
 		for (var i = 0; i < groups.length; i++) {
 			should(groups[i]).not.be.null;
-			should(groups[i].apiName).be.eql("Titanium.Contacts.Group");
+			should(groups[i].apiName).be.eql("Ti.Contacts.Group");
 		}
 		finish();
 	});
@@ -143,7 +143,7 @@ describe("Titanium.Contacts", function() {
 		should(people).be.an.Array;
 		for (var i = 0; i < people.length; i++) {
 			should(people[i]).not.be.null;
-			should(people[i].apiName).be.eql("Titanium.Contacts.Person");
+			should(people[i].apiName).be.eql("Ti.Contacts.Person");
 		}
 		finish();
 	});

@@ -49,7 +49,7 @@ namespace Titanium
 						const auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(value.time_since_epoch()).count();
 						const std::vector<JSValue> date_args = { ctx.CreateNumber(static_cast<std::uint32_t>(msec)) };
 						evt.SetProperty("value", ctx.CreateDate(date_args));
-						
+
 						const std::vector<JSValue> args = { evt };
 						func(args, func);
 					}
@@ -64,7 +64,7 @@ namespace Titanium
 		}
 
 		Picker::Picker(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.Picker")
+			: View(js_context, "Ti.UI.Picker")
 			, countDownDuration__(0)
 			, format24__(false)
 			, minuteInterval__(1)
@@ -138,7 +138,7 @@ namespace Titanium
 			TITANIUM_LOG_WARN("Picker::showTimePickerDialog: Unimplemented");
 		}
 
-		void Picker::JSExportInitialize() 
+		void Picker::JSExportInitialize()
 		{
 			JSExport<Picker>::SetClassVersion(1);
 			JSExport<Picker>::SetParent(JSExport<View>::Class());

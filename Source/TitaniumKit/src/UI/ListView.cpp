@@ -17,7 +17,7 @@ namespace Titanium
 	namespace UI
 	{
 		ListView::ListView(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.ListView"),
+			: View(js_context, "Ti.UI.ListView"),
 			listviewAnimationProperties_ctor__(js_context.CreateObject(JSExport<Titanium::UI::ListViewAnimationProperties>::Class())),
 			footerTitle__(""),
 			headerTitle__(""),
@@ -32,7 +32,7 @@ namespace Titanium
 		{
 		}
 
-		std::vector<std::shared_ptr<ListSection>> ListView::get_sections() const TITANIUM_NOEXCEPT 
+		std::vector<std::shared_ptr<ListSection>> ListView::get_sections() const TITANIUM_NOEXCEPT
 		{
 			return model__->get_sections();
 		}
@@ -87,7 +87,7 @@ namespace Titanium
 
 		}
 
-		void ListView::querySubmitted(const std::string& query) 
+		void ListView::querySubmitted(const std::string& query)
 		{
 			if (query.empty()) {
 				//
@@ -187,7 +187,7 @@ namespace Titanium
 			fireEvent(name, event_args);
 		}
 
-		void ListView::JSExportInitialize() 
+		void ListView::JSExportInitialize()
 		{
 			JSExport<ListView>::SetClassVersion(1);
 			JSExport<ListView>::SetParent(JSExport<View>::Class());
@@ -196,7 +196,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(ListView, footerTitle);
 			TITANIUM_ADD_PROPERTY(ListView, headerTitle);
 			TITANIUM_ADD_PROPERTY(ListView, searchText);
-			
+
 			TITANIUM_ADD_PROPERTY(ListView, footerView);
 			TITANIUM_ADD_PROPERTY(ListView, headerView);
 			TITANIUM_ADD_PROPERTY(ListView, searchView);
@@ -291,51 +291,51 @@ namespace Titanium
 			set_headerTitle(static_cast<std::string>(argument));
 			return true;
 		}
-		
+
 		TITANIUM_PROPERTY_GETTER(ListView, footerView)
 		{
 			auto view = get_footerView();
 			if (view) {
 				return view->get_object();
 			}  else {
-				return get_context().CreateNull();	
+				return get_context().CreateNull();
 			}
 		}
-		
+
 		TITANIUM_PROPERTY_SETTER(ListView, footerView)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			set_footerView(static_cast<JSObject>(argument).GetPrivate<View>());
 			return true;
 		}
-		
+
 		TITANIUM_PROPERTY_GETTER(ListView, headerView)
 		{
 			auto view = get_headerView();
 			if (view) {
 				return view->get_object();
 			}  else {
-				return get_context().CreateNull();	
+				return get_context().CreateNull();
 			}
 		}
-		
+
 		TITANIUM_PROPERTY_SETTER(ListView, headerView)
 		{
 			TITANIUM_ASSERT(argument.IsObject());
 			set_headerView(static_cast<JSObject>(argument).GetPrivate<View>());
 			return true;
 		}
-		
+
 		TITANIUM_PROPERTY_GETTER(ListView, searchView)
 		{
 			auto view = get_searchView();
 			if (view) {
 				return view->get_object();
 			}  else {
-				return get_context().CreateNull();	
+				return get_context().CreateNull();
 			}
 		}
-		
+
 		TITANIUM_PROPERTY_SETTER(ListView, searchView)
 		{
 			TITANIUM_ASSERT(argument.IsObject());

@@ -35,7 +35,7 @@ namespace Titanium
 {
 
 	MediaModule::MediaModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-		: Module(js_context, "Titanium.Media")
+		: Module(js_context, "Ti.Media")
 		, appMusicPlayer__(get_context().CreateNull())
 		, audioPlaying__(false)
 		, audioSessionCategory__(Media::AudioSessionCategory::Playback)
@@ -48,7 +48,7 @@ namespace Titanium
 		, volume__(0)
 	{
 	}
-	
+
 	TITANIUM_PROPERTY_READ(MediaModule, bool, audioPlaying)
 	TITANIUM_PROPERTY_READWRITE(MediaModule, Media::AudioSessionCategory, audioSessionCategory)
 	TITANIUM_PROPERTY_READ(MediaModule, std::vector<Media::CameraOption>, availableCameras)
@@ -165,7 +165,7 @@ namespace Titanium
 		TITANIUM_LOG_WARN("MediaModule::requestAuthorization: Unimplemented");
 	}
 
-	void MediaModule::JSExportInitialize() 
+	void MediaModule::JSExportInitialize()
 	{
 		JSExport<MediaModule>::SetClassVersion(1);
 		JSExport<MediaModule>::SetParent(JSExport<Module>::Class());
@@ -946,7 +946,7 @@ namespace Titanium
 	{
 		return get_context().CreateObject(videoPlayer__);
 	}
-	
+
 	MediaModule& MediaModule::AudioPlayerClass(const JSClass& player) TITANIUM_NOEXCEPT
 	{
 		audioPlayer__ = player;
@@ -976,7 +976,7 @@ namespace Titanium
 		sound__ = sound;
 		return *this;
 	}
-	
+
 	MediaModule& MediaModule::VideoPlayerClass(const JSClass& player) TITANIUM_NOEXCEPT
 	{
 		videoPlayer__ = player;
@@ -1089,31 +1089,31 @@ namespace Titanium
 		beep();
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(MediaModule, hideCamera)
 	{
 		hideCamera();
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(MediaModule, hideMusicLibrary)
 	{
 		hideMusicLibrary();
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(MediaModule, isMediaTypeSupported)
 	{
 		ENSURE_STRING_AT_INDEX(source, 0);
 		ENSURE_ENUM_AT_INDEX(type, 1, Media::MediaType);
-		
+
 		return get_context().CreateBoolean(isMediaTypeSupported(source, type));
 	}
 
 	TITANIUM_FUNCTION(MediaModule, openMusicLibrary)
 	{
 		ENSURE_OBJECT_AT_INDEX(options, 0);
-		
+
 		openMusicLibrary(Media::js_to_MusicLibraryOptionsType(options));
 		return get_context().CreateUndefined();
 	}
@@ -1121,7 +1121,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(MediaModule, openPhotoGallery)
 	{
 		ENSURE_OBJECT_AT_INDEX(options, 0);
-		
+
 		openPhotoGallery(Media::js_to_PhotoGalleryOptionsType(options));
 		return get_context().CreateUndefined();
 	}
@@ -1134,13 +1134,13 @@ namespace Titanium
 	TITANIUM_FUNCTION(MediaModule, previewImage)
 	{
 		ENSURE_OBJECT_AT_INDEX(js_options, 0);
-		
+
 		std::unordered_map<std::string, Media::PreviewImageOptions> options;
-		
+
 		for (const auto& name : static_cast<std::vector<JSString>>(js_options.GetPropertyNames())) {
 			options.emplace(name, Media::js_to_PreviewImageOptions(static_cast<JSObject>(js_options.GetProperty(name))));
 		}
-		
+
 		previewImage(options);
 		return get_context().CreateUndefined();
 	}
@@ -1149,7 +1149,7 @@ namespace Titanium
 	{
 		ENSURE_OBJECT_AT_INDEX(media, 0);
 		ENSURE_OBJECT_AT_INDEX(callbacks, 1);
-		
+
 		saveToPhotoGallery(media.GetPrivate<Titanium::Filesystem::File>(), callbacks);
 		return get_context().CreateUndefined();
 	}
@@ -1157,7 +1157,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(MediaModule, setOverrideAudioRoute)
 	{
 		ENSURE_UINT_AT_INDEX(route, 0);
-		
+
 		setOverrideAudioRoute(static_cast<Media::AudioSessionOverrideRoute>(route));
 		return get_context().CreateUndefined();
 	}
@@ -1172,7 +1172,7 @@ namespace Titanium
 	TITANIUM_FUNCTION(MediaModule, queryMusicLibrary)
 	{
 		ENSURE_OBJECT_AT_INDEX(query, 0);
-		
+
 		std::vector<JSValue> js_results;
 		const auto results = queryMusicLibrary(Media::js_to_MediaQueryType(query));
 		for (const auto result : results) {
@@ -1186,31 +1186,31 @@ namespace Titanium
 		startMicrophoneMonitor();
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(MediaModule, stopMicrophoneMonitor)
 	{
 		stopMicrophoneMonitor();
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(MediaModule, takePicture)
 	{
 		takePicture();
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(MediaModule, startVideoCapture)
 	{
 		startVideoCapture();
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(MediaModule, stopVideoCapture)
 	{
 		stopVideoCapture();
 		return get_context().CreateUndefined();
 	}
-	
+
 	TITANIUM_FUNCTION(MediaModule, switchCamera)
 	{
 		ENSURE_UINT_AT_INDEX(camera, 0);
@@ -1256,13 +1256,13 @@ namespace Titanium
 		CREATE_TITANIUM_MEDIA(AudioRecorder);
 	}
 
-	TITANIUM_FUNCTION(MediaModule, createSound) 
+	TITANIUM_FUNCTION(MediaModule, createSound)
 	{
 		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
 		CREATE_TITANIUM_MEDIA(Sound);
 	}
 
-	TITANIUM_FUNCTION(MediaModule, createVideoPlayer) 
+	TITANIUM_FUNCTION(MediaModule, createVideoPlayer)
 	{
 		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
 		CREATE_TITANIUM_MEDIA(VideoPlayer);

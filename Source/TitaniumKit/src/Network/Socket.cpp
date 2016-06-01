@@ -14,11 +14,11 @@ namespace Titanium
 	namespace Network
 	{
 		SocketModule::SocketModule(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Network.Socket")
+			: Module(js_context, "Ti.Network.Socket")
 		{
 		}
 
-		void SocketModule::JSExportInitialize() 
+		void SocketModule::JSExportInitialize()
 		{
 			JSExport<SocketModule>::SetClassVersion(1);
 			JSExport<SocketModule>::SetParent(JSExport<Module>::Class());
@@ -112,7 +112,7 @@ namespace Titanium
 		TITANIUM_FUNCTION(SocketModule, createUDP)
 		{
 			TITANIUM_LOG_DEBUG("SocketModule::createUDP: ");
-			
+
 			ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
 
 			JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");

@@ -17,7 +17,7 @@ namespace Titanium
 	namespace UI
 	{
 		TableViewSection::TableViewSection(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.UI.TableViewSection"),
+			: Module(js_context, "Ti.UI.TableViewSection"),
 			footerTitle__(""),
 			headerTitle__("")
 		{
@@ -101,7 +101,7 @@ namespace Titanium
 			tableView__->fireTableViewSectionEvent(event_name, get_object().GetPrivate<TableViewSection>(), row, rowIndex, old_row);
 		}
 
-		void TableViewSection::JSExportInitialize() 
+		void TableViewSection::JSExportInitialize()
 		{
 			JSExport<TableViewSection>::SetClassVersion(1);
 			JSExport<TableViewSection>::SetParent(JSExport<Module>::Class());

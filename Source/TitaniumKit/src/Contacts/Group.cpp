@@ -16,7 +16,7 @@ namespace Titanium
 	{
 
 		Group::Group(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Contacts.Group")
+			: Module(js_context, "Ti.Contacts.Group")
 		{
 		}
 

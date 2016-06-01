@@ -13,7 +13,7 @@ namespace Titanium
 	namespace Network
 	{
 		HTTPClient::HTTPClient(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.Network.HTTPClient")
+			: Module(js_context, "Ti.Network.HTTPClient")
 			, onload__(js_context.CreateNull())
 			, onerror__(js_context.CreateNull())
 			, ondatastream__(js_context.CreateNull())
@@ -46,7 +46,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(HTTPClient, TLS_VERSION, tlsVersion)
 		TITANIUM_PROPERTY_READWRITE(HTTPClient, bool, autoRedirect)
 		TITANIUM_PROPERTY_READ(HTTPClient, bool, connected)
-		TITANIUM_PROPERTY_READ(HTTPClient, std::string, connectionType) 
+		TITANIUM_PROPERTY_READ(HTTPClient, std::string, connectionType)
 		TITANIUM_PROPERTY_READWRITE(HTTPClient, bool, enableKeepAlive)
 		TITANIUM_PROPERTY_READWRITE(HTTPClient, bool, validatesSecureCertificate)
 		TITANIUM_PROPERTY_READWRITE(HTTPClient, bool, withCredentials)
@@ -94,7 +94,7 @@ namespace Titanium
 			TITANIUM_LOG_WARN("HTTPClient::send: unimplemented");
 		}
 
-		void HTTPClient::send(const std::map<std::string, std::vector<std::uint8_t>>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
+		void HTTPClient::send(const std::map<std::string, JSValue>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("HTTPClient::send<data>: unimplemented");
 		}
@@ -103,7 +103,7 @@ namespace Titanium
 		{
 			TITANIUM_LOG_WARN("HTTPClient::send<data string>: unimplemented");
 		}
-		
+
 		void HTTPClient::setRequestHeader(const std::string& name, const std::string& value) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("HTTPClient::setRequestHeader: unimplemented");
@@ -293,24 +293,15 @@ namespace Titanium
 					send(postDataString);
 				} else {
 					bool useMultipartForm = false;
-					std::map<std::string, std::vector<std::uint8_t>> map;
+					std::map<std::string, JSValue> map;
 					JSObject sendArgs = static_cast<JSObject>(arguments.at(0));
 					for (const auto& property_name : static_cast<std::vector<JSString>>(sendArgs.GetPropertyNames())) {
 						TITANIUM_ASSERT(sendArgs.GetProperty(property_name).IsObject() || sendArgs.GetProperty(property_name).IsString());
 						JSValue prop = sendArgs.GetProperty(property_name);
 						if (prop.IsObject()) {
 							useMultipartForm = true;
-							auto blob_ptr = static_cast<JSObject>(prop).GetPrivate<Titanium::Blob>();
-							if (blob_ptr != nullptr) {
-								map.insert(std::make_pair(property_name, blob_ptr->getData()));
-							} else {
-								std::string str = static_cast<std::string>(prop);
-								map.insert(std::make_pair(property_name, std::vector<std::uint8_t>(str.begin(), str.end())));
-							}
-						} else {
-							std::string str = static_cast<std::string>(prop);
-							map.insert(std::make_pair(property_name, std::vector<std::uint8_t>(str.begin(), str.end())));
 						}
+						map.insert(std::make_pair(property_name, prop));
 					}
 					send(map, useMultipartForm);
 				}
@@ -448,31 +439,31 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, statusText)
 		TITANIUM_FUNCTION_AS_GETTER(HTTPClient, getStatusText, statusText)
 
-		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, file)	
-		TITANIUM_PROPERTY_SETTER_STRING(HTTPClient, file)	
+		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, file)
+		TITANIUM_PROPERTY_SETTER_STRING(HTTPClient, file)
 		TITANIUM_FUNCTION_AS_GETTER(HTTPClient, getFile, file)
 		TITANIUM_FUNCTION_AS_SETTER(HTTPClient, setFile, file)
 
-		TITANIUM_PROPERTY_GETTER_BOOL(HTTPClient, cache)	
-		TITANIUM_PROPERTY_SETTER_BOOL(HTTPClient, cache)	
+		TITANIUM_PROPERTY_GETTER_BOOL(HTTPClient, cache)
+		TITANIUM_PROPERTY_SETTER_BOOL(HTTPClient, cache)
 		TITANIUM_FUNCTION_AS_GETTER(HTTPClient, getCache, cache)
 		TITANIUM_FUNCTION_AS_SETTER(HTTPClient, setCache, cache)
 
-		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, domain)	
-		TITANIUM_PROPERTY_SETTER_STRING(HTTPClient, domain)	
+		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, domain)
+		TITANIUM_PROPERTY_SETTER_STRING(HTTPClient, domain)
 		TITANIUM_FUNCTION_AS_GETTER(HTTPClient, getDomain, domain)
 		TITANIUM_FUNCTION_AS_SETTER(HTTPClient, setDomain, domain)
 
-		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, location)	
+		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, location)
 		TITANIUM_FUNCTION_AS_GETTER(HTTPClient, getLocation, location)
 
-		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, username)	
-		TITANIUM_PROPERTY_SETTER_STRING(HTTPClient, username)	
+		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, username)
+		TITANIUM_PROPERTY_SETTER_STRING(HTTPClient, username)
 		TITANIUM_FUNCTION_AS_GETTER(HTTPClient, getUsername, username)
 		TITANIUM_FUNCTION_AS_SETTER(HTTPClient, setUsername, username)
 
-		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, password)	
-		TITANIUM_PROPERTY_SETTER_STRING(HTTPClient, password)	
+		TITANIUM_PROPERTY_GETTER_STRING(HTTPClient, password)
+		TITANIUM_PROPERTY_SETTER_STRING(HTTPClient, password)
 		TITANIUM_FUNCTION_AS_GETTER(HTTPClient, getPassword, password)
 		TITANIUM_FUNCTION_AS_SETTER(HTTPClient, setPassword, password)
 

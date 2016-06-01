@@ -23,7 +23,7 @@ namespace Titanium
 	{
 
 		EmailDialog::EmailDialog(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Titanium.UI.EmailDialog"),
+			: Module(js_context, "Ti.UI.EmailDialog"),
 			cancelled__(js_context.CreateNumber(0)),
 			failed__(js_context.CreateNumber(3)),
 			saved__(js_context.CreateNumber(1)),

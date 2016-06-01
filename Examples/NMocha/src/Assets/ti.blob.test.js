@@ -12,7 +12,7 @@ describe("Titanium.Blob", function () {
         var blob = Ti.Filesystem.getFile('app.js').read();
         should(blob).be.an.Object;
         should(blob).be.an.instanceof(Ti.Blob);
-        should(blob.apiName).be.eql("Titanium.Blob");
+        should(blob.apiName).be.eql("Ti.Blob");
         finish();
     });
     it.skip("constructed from image", function (finish) {

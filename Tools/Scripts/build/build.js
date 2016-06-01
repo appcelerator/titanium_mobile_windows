@@ -295,13 +295,14 @@ function copyFile(from, to) {
 /**
  * @param sdkVersion {String} '8.1' || '10.0'
  * @param msBuildVersion {String} '12.0' || '14.0'
+ * @param buildType {String} 'Release' || 'Debug'
  * @param targets {Array[String]}
  * @param options {Object}
  * @param options.parallel {Boolean} Run builds in parallel?
  * @param options.quiet {Boolean} Log stdout of processes?
  * @param finished {Function} callback
  **/
-function build(sdkVersion, msBuildVersion, targets, options, finished) {
+function build(sdkVersion, msBuildVersion, buildType, targets, options, finished) {
 	var overallTimer = process.hrtime(),
 		timer = process.hrtime(),
 		options = options || {};
@@ -313,7 +314,7 @@ function build(sdkVersion, msBuildVersion, targets, options, finished) {
 		function buildAndPackageAll(next) {
 			(options.parallel ? async.each : async.eachSeries)(targets, function (configuration, next) {
 				var parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
-				buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, 'Release', sdkVersion, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet, next);
+				buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, buildType, sdkVersion, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet, next);
 			}, next);
 		},
 		function measureTimeElapsed(next) {
@@ -387,6 +388,7 @@ if (module.id === ".") {
 		program
 			.version('0.0.1')
 			.option('-o, --only [arch]', 'Limit to specific architectures (i.e. WindowsPhone-x86)', collectArches, [])
+			.option('-c, --configuration [config]', 'Specify configuration to build (i.e. Release or Debug)', /^(Release|Debug)$/, 'Release')
 			.option('-q, --quiet', 'Be quiet')
 			.option('-p, --parallel', 'Run builds in parallel')
 			.option('-m, --msbuild [version]', 'Use a specific version of MSBuild', /^(12\.0|14\.0)$/, MSBUILD_12)
@@ -399,7 +401,7 @@ if (module.id === ".") {
 			program.msbuild = MSBUILD_14;
 		}
 
-		build(program.sdkVersion, program.msbuild, (program.only && program.only.length > 0) ? program.only : arches,
+		build(program.sdkVersion, program.msbuild, program.configuration, (program.only && program.only.length > 0) ? program.only : arches,
 			{
 				parallel: program.parallel,
 				quiet: program.quiet

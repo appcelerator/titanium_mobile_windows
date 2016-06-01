@@ -14,7 +14,7 @@ namespace Titanium
 	namespace UI
 	{
 		ScrollView::ScrollView(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context, "Titanium.UI.ScrollView")
+		    : View(js_context, "Ti.UI.ScrollView")
 		{
 		}
 

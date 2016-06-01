@@ -14,7 +14,7 @@ namespace Titanium
 	{
 
 		PickerRow::PickerRow(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.PickerRow")
+			: View(js_context, "Ti.UI.PickerRow")
 			, color__("")
 			, title__("")
 		{

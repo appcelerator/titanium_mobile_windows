@@ -16,7 +16,7 @@ namespace Titanium
 
 
 		ProgressBar::ProgressBar(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: View(js_context, "Titanium.UI.ProgressBar"),
+			: View(js_context, "Ti.UI.ProgressBar"),
 			color__(""),
 			max__(1.0),
 			message__(""),
@@ -36,7 +36,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(ProgressBar, std::string, trackTintColor)
 		TITANIUM_PROPERTY_READWRITE(ProgressBar, double, value)
 
-		void ProgressBar::JSExportInitialize() 
+		void ProgressBar::JSExportInitialize()
 		{
 			JSExport<ProgressBar>::SetClassVersion(1);
 			JSExport<ProgressBar>::SetParent(JSExport<View>::Class());

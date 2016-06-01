@@ -23,6 +23,12 @@ namespace TitaniumWindows
 {
 	namespace Map
 	{
+		using namespace Windows::UI::Xaml;
+		using namespace Windows::UI::Xaml::Controls;
+		using namespace Windows::UI::Xaml::Input;
+
+		std::shared_ptr<TitaniumWindows::Map::View> View::CurrentView__ { nullptr };
+
 		View::View(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: Titanium::Map::View(js_context)
 		{
@@ -38,6 +44,10 @@ namespace TitaniumWindows
 
 		void View::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
 			Titanium::Map::View::postCallAsConstructor(js_context, arguments);
+
+			// Save current View in static variable, assuming we use only one MapControl at once.
+			// Assuming it's right since that's the precondition we use static MapControl::SetLocation in Annotaiton.
+			CurrentView__ = get_object().GetPrivate<View>();
 
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			mapview__ = ref new MapControl();
@@ -207,5 +217,46 @@ namespace TitaniumWindows
 #endif
 		}
 
+		void View::HandleMapClick(const JSContext& ctx, const std::shared_ptr<View>& view, const double& latitude, const double& longitude, const std::shared_ptr<Annotation>& annotation) TITANIUM_NOEXCEPT
+		{
+			TITANIUM_ASSERT(view);
+
+			JSObject  eventArgs = ctx.CreateObject();
+			eventArgs.SetProperty("map", view->get_object());
+			eventArgs.SetProperty("latitude", ctx.CreateNumber(latitude));
+			eventArgs.SetProperty("longitude", ctx.CreateNumber(longitude));
+
+			if (annotation) {
+				eventArgs.SetProperty("clicksource", ctx.CreateString("pin"));
+				eventArgs.SetProperty("annotation", annotation->get_object());
+				eventArgs.SetProperty("title", ctx.CreateString(annotation->get_title()));
+				eventArgs.SetProperty("subtitle", ctx.CreateString(annotation->get_subtitle()));
+			} else {
+				eventArgs.SetProperty("clicksource", ctx.CreateNull());
+			}
+
+			view->fireEvent("click", eventArgs);
+		}
+
+#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+		void View::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
+		{
+			getViewLayoutDelegate<TitaniumWindows::UI::WindowsViewLayoutDelegate>()->filterEvents({ "click" });
+			Titanium::Map::View::enableEvent(event_name);
+			if (event_name == "click") {
+				click_event__ = mapview__->MapTapped += ref new Windows::Foundation::TypedEventHandler<MapControl^, MapInputEventArgs^>([this, event_name](MapControl^ sender, MapInputEventArgs^ e) {
+					HandleMapClick(get_context(), get_object().GetPrivate<View>(), e->Location->Position.Latitude, e->Location->Position.Longitude, nullptr);
+				});
+			}
+		}
+
+		void View::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
+		{
+			Titanium::Map::View::disableEvent(event_name);
+			if (event_name == "click") {
+				mapview__->MapTapped -= click_event__;
+			}
+		}
+#endif
 	} // namespace Map
 }  // namespace Titanium
