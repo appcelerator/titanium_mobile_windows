@@ -7,7 +7,8 @@
 var should = require('./should'),
 	utilities = require('./utilities/utilities');
 
-describe('Titanium.XML', function () {
+// FIXME overflowing local ref table with DocumentProxy: https://jira.appcelerator.org/browse/TIMOB-23460
+(utilities.isAndroid() ? describe.skip : describe)('Titanium.XML', function () {
 
 	// some common initialization specific to the xml suite
 	function countNodes(node, type) {
@@ -151,7 +152,7 @@ describe('Titanium.XML', function () {
 		finish();
 	});
 
-   // These 6 tests are adapted from the KitchenSink xml_dom test
+	// These 6 tests are adapted from the KitchenSink xml_dom test
 	it('soap', function(finish) {
 		var xml = Ti.XML.parseString(testSource['soap.xml']);
 		var fooBarList = xml.documentElement.getElementsByTagName('FooBar');
