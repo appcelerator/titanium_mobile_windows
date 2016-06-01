@@ -24,17 +24,17 @@ describe("Titanium.UI.Tab", function () {
         finish();
     });
 
-    it("text", function (finish) {
+    it("title", function (finish) {
         var tab = Ti.UI.createTab({
-            text: "this is some text"
+            title: "this is some text"
         });
-        should(tab.text).be.a.String;
-        should(tab.getText).be.a.Function;
-        should(tab.text).eql('this is some text');
-        should(tab.getText()).eql('this is some text');
-        tab.text = 'other text';
-        should(tab.text).eql('other text');
-        should(tab.getText()).eql('other text');
+        should(tab.title).be.a.String;
+        should(tab.getTitle).be.a.Function;
+        should(tab.title).eql('this is some text');
+        should(tab.getTitle()).eql('this is some text');
+        tab.title = 'other text';
+        should(tab.title).eql('other text');
+        should(tab.getTitle()).eql('other text');
         finish();
     });
 
