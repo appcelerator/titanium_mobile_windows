@@ -277,6 +277,14 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::animate(const std::shared_ptr<Titanium::UI::Animation>& animation, JSObject& callback, const JSObject& this_object) TITANIUM_NOEXCEPT
 		{
+			// TIMOB-23209: Multiple layout trasnformations (position or size) can't done at a time.
+			const auto hasLayoutTransform = animation->hasLayoutTransform();
+			if (hasLayoutTransform && is_transforming_layout__) {
+				TITANIUM_MODULE_LOG_WARN("New layout set while view animating");
+				return;
+			}
+			is_transforming_layout__ = hasLayoutTransform;
+
 			// Storyboard where we attach all the animations
 			const auto storyboard = ref new Media::Animation::Storyboard();
 
@@ -606,6 +614,8 @@ namespace TitaniumWindows
 
 				// Make sure to clear the StoryBoard because transform made by StoryBoard remains.
 				storyboard->Stop();
+
+				is_transforming_layout__ = false;
 
 				if (callback.IsFunction()) {
 					callback(this_object);

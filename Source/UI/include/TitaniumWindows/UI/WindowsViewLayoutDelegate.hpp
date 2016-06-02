@@ -528,6 +528,7 @@ namespace TitaniumWindows
 			bool is_button__{ false };
 			bool is_loaded__{false};
 			bool use_own_size__ { false };
+			bool is_transforming_layout__ { false }; // true when animate() is transforming layout
 
 			Titanium::LayoutEngine::Rect oldRect__;
 

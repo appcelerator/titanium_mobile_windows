@@ -67,7 +67,7 @@ namespace Titanium
 			  @abstract center
 			  @discussion Value of the `center` property at the end of the animation.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(Point, center);
+			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<Point>, center);
 
 			/*!
 			  @property
@@ -188,6 +188,14 @@ namespace Titanium
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(boost::optional<uint32_t>, zIndex);
 
+			/*
+			 * Check if there are layout changes (position or size)
+			 */
+			bool hasLayoutTransform()
+			{
+				return get_transform() || get_top() || get_bottom() || get_left() || get_right() || get_center() || get_width() || get_height();
+			}
+
 			Animation(const JSContext&) TITANIUM_NOEXCEPT;
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
@@ -296,7 +304,7 @@ namespace Titanium
 				bool autoreverse__;
 				std::string backgroundColor__;
 				boost::optional<double> bottom__;
-				Point center__;
+				boost::optional<Point> center__;
 				std::string color__;
 				ANIMATION_CURVE curve__;
 				std::chrono::milliseconds delay__;

@@ -47,7 +47,7 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<double>, bottom)
 
-		TITANIUM_PROPERTY_READWRITE(Animation, Point, center)
+		TITANIUM_PROPERTY_READWRITE(Animation, boost::optional<Point>, center)
 
 		TITANIUM_PROPERTY_READWRITE(Animation, std::string, color)
 
@@ -210,7 +210,11 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(Animation, center)
 		{
-			return Point_to_js(get_context(), get_center());
+			const auto center = get_center();
+			if (center) {
+				return Point_to_js(get_context(), *center);
+			}
+			return get_context().CreateUndefined();
 		}
 
 		TITANIUM_PROPERTY_SETTER(Animation, center)
