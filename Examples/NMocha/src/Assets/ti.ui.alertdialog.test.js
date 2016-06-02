@@ -27,6 +27,22 @@ describe('Titanium.UI.AlertDialog', function () {
 		finish();
 	});
 
+    it("titleid", function (finish) {
+        var bar = Ti.UI.createAlertDialog({
+            titleid: "this is my key"
+        });
+        should(bar.titleid).be.a.String;
+        should(bar.getTitleid).be.a.Function;
+        should(bar.titleid).eql('this is my key');
+        should(bar.getTitleid()).eql('this is my key');
+        should(bar.title).eql('this is my value');
+        bar.titleid = 'other text';
+        should(bar.titleid).eql('other text');
+        should(bar.getTitleid()).eql('other text');
+        should(bar.title).eql('other text'); // key is used when no resources found
+        finish();
+    });
+
 	it('message', function (finish) {
 		var bar = Ti.UI.createAlertDialog({
 			message: 'this is some text'

@@ -12,6 +12,7 @@
 #include "Titanium/UI/CloseWindowParams.hpp"
 #include "Titanium/UI/Tab.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/Locale.hpp"
 
 #define GET_UI() \
   const auto Titanium_property = get_context().get_global_object().GetProperty("Titanium"); \
@@ -78,7 +79,12 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Window, std::string, barColor)
 		TITANIUM_PROPERTY_READWRITE(Window, std::shared_ptr<Tab>, tab)
 		TITANIUM_PROPERTY_READWRITE(Window, std::string, title)
-		TITANIUM_PROPERTY_READWRITE(Window, std::string, titleid)
+		TITANIUM_PROPERTY_READ(Window, std::string, titleid)
+		void Window::set_titleid(const std::string& titleid) TITANIUM_NOEXCEPT
+		{
+			titleid__ = titleid;
+			set_title(Titanium::Locale::GetString(get_context(), titleid));
+		}
 
 		void Window::JSExportInitialize()
 		{

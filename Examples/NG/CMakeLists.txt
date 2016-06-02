@@ -126,6 +126,7 @@ set(SOURCE_Assets
   src/Assets/Square71x71Logo.png
   src/Assets/Square44x44Logo.png
   src/Assets/cricket.wav
+  src/Assets/Resources.resw
   )
 
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)

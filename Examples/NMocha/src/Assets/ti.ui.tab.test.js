@@ -39,18 +39,18 @@ describe("Titanium.UI.Tab", function () {
     });
 
     it("titleid", function (finish) {
-        var tab = Ti.UI.createTab({
+        var bar = Ti.UI.createTab({
             titleid: "this is my key"
         });
-        should(tab.titleid).be.a.String;
-        should(tab.getTitleid).be.a.Function;
-        should(tab.titleid).eql('this is my key');
-        should(tab.title).eql('this is my key'); // key is used when no resources found
-        should(tab.getTitleid()).eql('this is my key');
-        tab.titleid = 'other text';
-        should(tab.titleid).eql('other text');
-        should(tab.title).eql('other text'); // key is used when no resources found
-        should(tab.getTitleid()).eql('other text');
+        should(bar.titleid).be.a.String;
+        should(bar.getTitleid).be.a.Function;
+        should(bar.titleid).eql('this is my key');
+        should(bar.getTitleid()).eql('this is my key');
+        should(bar.title).eql('this is my value');
+        bar.titleid = 'other text';
+        should(bar.titleid).eql('other text');
+        should(bar.getTitleid()).eql('other text');
+        should(bar.title).eql('other text'); // key is used when no resources found
         finish();
     });
 
