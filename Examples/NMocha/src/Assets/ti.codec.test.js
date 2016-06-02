@@ -1,28 +1,33 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2014 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var should = require('./should');
+var should = require('./should'),
+	utilities = require('./utilities/utilities');
 
-describe("codec", function() {
-	it("testAPI", function(finish) {
+describe('Titanium.Codec', function() {
+	it('apiName', function (finish) {
+		should(Ti.Codec.apiName).be.eql('Ti.Codec');
+		finish();
+	});
+
+	it('testAPI', function(finish) {
 		should(Ti.Codec).be.an.Object;
-		should(Ti.Codec.apiName).be.eql("Ti.Codec");
-		var functions = [ "encodeNumber", "decodeNumber", "encodeString", "decodeString", "getNativeByteOrder" ];
+		var functions = [ 'encodeNumber', 'decodeNumber', 'encodeString', 'decodeString', 'getNativeByteOrder' ];
 		for (var i = 0; i < functions.length; i++) should(Ti.Codec[functions[i]]).be.a.Function;
-		should(Ti.Codec.CHARSET_ASCII).eql("ascii");
-		should(Ti.Codec.CHARSET_UTF8).eql("utf8");
-		should(Ti.Codec.CHARSET_UTF16).eql("utf16");
-		should(Ti.Codec.CHARSET_UTF16BE).eql("utf16be");
-		should(Ti.Codec.CHARSET_UTF16LE).eql("utf16le");
-		should(Ti.Codec.TYPE_BYTE).eql("byte");
-		should(Ti.Codec.TYPE_SHORT).eql("short");
-		should(Ti.Codec.TYPE_INT).eql("int");
-		should(Ti.Codec.TYPE_LONG).eql("long");
-		should(Ti.Codec.TYPE_FLOAT).eql("float");
-		should(Ti.Codec.TYPE_DOUBLE).eql("double");
+		should(Ti.Codec.CHARSET_ASCII).eql('ascii');
+		should(Ti.Codec.CHARSET_UTF8).eql('utf8');
+		should(Ti.Codec.CHARSET_UTF16).eql('utf16');
+		should(Ti.Codec.CHARSET_UTF16BE).eql('utf16be');
+		should(Ti.Codec.CHARSET_UTF16LE).eql('utf16le');
+		should(Ti.Codec.TYPE_BYTE).eql('byte');
+		should(Ti.Codec.TYPE_SHORT).eql('short');
+		should(Ti.Codec.TYPE_INT).eql('int');
+		should(Ti.Codec.TYPE_LONG).eql('long');
+		should(Ti.Codec.TYPE_FLOAT).eql('float');
+		should(Ti.Codec.TYPE_DOUBLE).eql('double');
 		should(Ti.Codec.BIG_ENDIAN).be.a.Number;
 		should(Ti.Codec.LITTLE_ENDIAN).be.a.Number;
 		console.info(Ti.Codec.getNativeByteOrder());
@@ -30,7 +35,8 @@ describe("codec", function() {
 		should([ Ti.Codec.BIG_ENDIAN, Ti.Codec.LITTLE_ENDIAN ]).containEql(Ti.Codec.getNativeByteOrder());
 		finish();
 	});
-	it("testEncodeIntegers", function (finish) {
+
+	it('testEncodeIntegers', function (finish) {
 		var buffer = Ti.createBuffer({
 			length: 8
 		});
@@ -104,7 +110,8 @@ describe("codec", function() {
 		should(buffer[0]).eql(buffer[1]);
 		finish();
 	});
-	it("testDecodeIntegers", function(finish) {
+
+	it('testDecodeIntegers', function(finish) {
 		var buffer = Ti.createBuffer({
 			length: 8
 		});
@@ -135,7 +142,8 @@ describe("codec", function() {
 		should(n).eql(30874);
 		finish();
 	});
-	it("testEncodeFloatingPoint", function (finish) {
+
+	it('testEncodeFloatingPoint', function (finish) {
 		var buffer = Ti.createBuffer({
 			length: 8
 		});
@@ -178,7 +186,8 @@ describe("codec", function() {
 		should(buffer[3]).eql(25);
 		finish();
 	});
-	it("testDecodeFloatingPoint", function(finish) {
+
+	it('testDecodeFloatingPoint', function(finish) {
 		var buffer = Ti.createBuffer({
 			length: 8
 		});
@@ -224,8 +233,9 @@ describe("codec", function() {
 		should(n.toFixed(4)).eql(1.2345);
 		finish();
 	});
-	it("testEncodeString", function(finish) {
-		var PHRASE = "Wer reitet so spät durch Nacht und Wind?";
+
+	it('testEncodeString', function(finish) {
+		var PHRASE = 'Wer reitet so spät durch Nacht und Wind?';
 		var buffer = Ti.createBuffer({
 			length: 1024
 		});
@@ -235,7 +245,7 @@ describe("codec", function() {
 		});
 		should(length).eql(PHRASE.length + 1);
 		// +1 for the umlaut char set byte
-		var umlautLoc = PHRASE.indexOf("ä");
+		var umlautLoc = PHRASE.indexOf('ä');
 		should(buffer[umlautLoc]).eql(195);
 		// C3 char set in utf-8
 		should(buffer[umlautLoc + 1]).eql(164);
@@ -248,7 +258,7 @@ describe("codec", function() {
 			charset: Ti.Codec.CHARSET_UTF16
 		});
 		should(length).eql(2 * PHRASE.length + 2);
-		// The final "+ 2" is for the BOM.
+		// The final '+ 2' is for the BOM.
 		buffer.length = length;
 		// round trip?
 		should(Ti.Codec.decodeString({
@@ -257,8 +267,9 @@ describe("codec", function() {
 		})).eql(PHRASE);
 		finish();
 	});
-	it("testDecodeString", function(finish) {
-		var TEST = "spät";
+
+	it('testDecodeString', function(finish) {
+		var TEST = 'spät';
 		var buffer = Ti.createBuffer({
 			length: 5
 		});
@@ -283,16 +294,16 @@ describe("codec", function() {
 		// BOM: Little Endian Encoding
 		buffer[0] = 255;
 		buffer[1] = 254;
-		// "s"
+		// 's'
 		buffer[2] = 115;
 		buffer[3] = 0;
-		// "p"
+		// 'p'
 		buffer[4] = 112;
 		buffer[5] = 0;
-		// "ä"
+		// 'ä'
 		buffer[6] = 228;
 		buffer[7] = 0;
-		// "t"
+		// 't'
 		buffer[8] = 116;
 		buffer[9] = 0;
 		should(Ti.Codec.decodeString({
@@ -302,25 +313,25 @@ describe("codec", function() {
 		// BOM: Big Endian Encoding
 		buffer[1] = 255;
 		buffer[0] = 254;
-		// "s"
+		// 's'
 		buffer[3] = 115;
 		buffer[2] = 0;
-		// "p"
+		// 'p'
 		buffer[5] = 112;
 		buffer[4] = 0;
-		// "ä"
+		// 'ä'
 		buffer[7] = 228;
 		buffer[6] = 0;
-		// "t"
+		// 't'
 		buffer[9] = 116;
 		buffer[8] = 0;
 		should(Ti.Codec.decodeString({
 			source: buffer,
 			charset: Ti.Codec.CHARSET_UTF16
 		})).eql(TEST);
-		// Test decoding of a string with empty data after it using "length"
+		// Test decoding of a string with empty data after it using 'length'
 		buffer = Ti.createBuffer({
-			value: "The system is down",
+			value: 'The system is down',
 			length: 100
 		});
 		should(buffer.length).eql(100);
@@ -328,7 +339,7 @@ describe("codec", function() {
 			source: buffer,
 			length: 18
 		});
-		should(str).eql("The system is down");
+		should(str).eql('The system is down');
 		finish();
 	});
 });

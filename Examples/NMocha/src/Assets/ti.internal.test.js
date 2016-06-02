@@ -11,35 +11,35 @@ var should = require('./should');
 //
 describe("ti_internal", function () {
 
-    // make sure we have setTimeout
-    it("setTimeout", function (finish) {
-        should(setTimeout).be.a.Function;
-        finish();
-    });
+	// make sure we have setTimeout
+	it("setTimeout", function (finish) {
+		should(setTimeout).be.a.Function;
+		finish();
+	});
 
-    // make sure we have setInterval
-    it("setInterval", function (finish) {
-        should(setInterval).be.a.Function;
-        finish();
-    });
+	// make sure we have setInterval
+	it("setInterval", function (finish) {
+		should(setInterval).be.a.Function;
+		finish();
+	});
 
-    // make sure we have clearTimeout
-    it("clearTimeout", function (finish) {
-        should(clearTimeout).be.a.Function;
-        finish();
-    });
+	// make sure we have clearTimeout
+	it("clearTimeout", function (finish) {
+		should(clearTimeout).be.a.Function;
+		finish();
+	});
 
-    // make sure we have clearInterval
-    it("clearInterval", function (finish) {
-        should(clearInterval).be.a.Function;
-        finish();
-    });
+	// make sure we have clearInterval
+	it("clearInterval", function (finish) {
+		should(clearInterval).be.a.Function;
+		finish();
+	});
 
-    // make sure we have console.log
-    // TODO: Is this a public API?
-    it("console.log", function (finish) {
-        should(console.log).be.a.Function;
-        finish();
-    });
+	// make sure we have console.log
+	// TODO: Is this a public API?
+	it("console.log", function (finish) {
+		should(console.log).be.a.Function;
+		finish();
+	});
 
 });
