@@ -465,8 +465,6 @@ namespace TitaniumWindows
 						value *= layout_node__->parent->element.measuredHeight;
 					}
 
-					// TODO Bottom
-					// Because we're animating a transform, the value behaves like setting By, not To. So we need to calculate the difference and set our target To to that value
 					const auto current_top = Controls::Canvas::GetTop(component);
 					const auto diff = value - current_top;
 
@@ -477,6 +475,30 @@ namespace TitaniumWindows
 					storyboard->SetTargetProperty(top_anim, "(UIElement.RenderTransform).(TransformGroup.Children)[2].(TranslateTransform.TranslateY)");
 					storyboard->SetTarget(top_anim, component);
 					storyboard->Children->Append(top_anim);
+				}
+
+				const auto bottom = animation->get_bottom();
+				if (bottom) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Bottom, *bottom, properties);
+					const auto type = properties->bottom.valueType;
+					auto value = properties->bottom.value;
+
+					if (type == Titanium::LayoutEngine::ValueType::Percent) {
+						value *= layout_node__->parent->element.measuredHeight;
+					}
+
+					const auto current_top = Controls::Canvas::GetTop(component);
+					const auto parent_height = layout_node__->parent->element.measuredHeight;
+					const auto current_height = layout_node__->element.measuredHeight;
+					const auto diff = (parent_height - current_height - value) - current_top;
+
+					const auto bottom_anim = ref new Media::Animation::DoubleAnimation();
+					bottom_anim->To = diff;
+					bottom_anim->EasingFunction = ease;
+					bottom_anim->Duration = duration;
+					storyboard->SetTargetProperty(bottom_anim, "(UIElement.RenderTransform).(TransformGroup.Children)[2].(TranslateTransform.TranslateY)");
+					storyboard->SetTarget(bottom_anim, component);
+					storyboard->Children->Append(bottom_anim);
 				}
 
 				// TODO if they specify top AND bottom and DON'T specify height, we should translate top, and treat bottom - top as height.
@@ -493,7 +515,6 @@ namespace TitaniumWindows
 						value *= layout_node__->parent->element.measuredWidth;
 					}
 
-					// TODO If "right", we need to calculate the current position of "right", take the diff and then do a transform By, not To
 					const auto current_left = Controls::Canvas::GetLeft(component);
 					const auto diff = value - current_left;
 
@@ -506,6 +527,72 @@ namespace TitaniumWindows
 					storyboard->Children->Append(left_anim);
 				}
 
+				const auto right = animation->get_right();
+				if (right) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, *right, properties);
+					const auto type = properties->right.valueType;
+					auto value = properties->right.value;
+
+					if (type == Titanium::LayoutEngine::ValueType::Percent) {
+						value *= layout_node__->parent->element.measuredWidth;
+					}
+
+					const auto current_left = Controls::Canvas::GetLeft(component);
+					const auto parent_width = layout_node__->parent->element.measuredWidth;
+					const auto current_width = layout_node__->element.measuredWidth;
+					const auto diff = (parent_width - current_width - value) - current_left;
+
+					const auto right_anim = ref new Media::Animation::DoubleAnimation();
+					right_anim->To = diff;
+					right_anim->EasingFunction = ease;
+					right_anim->Duration = duration;
+					storyboard->SetTargetProperty(right_anim, "(UIElement.RenderTransform).(TransformGroup.Children)[2].(TranslateTransform.TranslateX)");
+					storyboard->SetTarget(right_anim, component);
+					storyboard->Children->Append(right_anim);
+				}
+
+				const auto center = animation->get_center();
+				if (center) {
+					// x-axis
+					auto x_value = center->x;
+					if (!center->x_percent.empty()) {
+						setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, center->x_percent, properties);
+						x_value = properties->left.value;
+						const auto x_type = properties->left.valueType;
+						if (x_type == Titanium::LayoutEngine::ValueType::Percent) {
+							x_value *= layout_node__->parent->element.measuredWidth;
+						}
+					}
+					const auto current_left = Controls::Canvas::GetLeft(component);
+					const auto x_diff = x_value - current_left;
+					const auto x_anim = ref new Media::Animation::DoubleAnimation();
+					x_anim->To = x_diff;
+					x_anim->EasingFunction = ease;
+					x_anim->Duration = duration;
+					storyboard->SetTargetProperty(x_anim, "(UIElement.RenderTransform).(TransformGroup.Children)[2].(TranslateTransform.TranslateX)");
+					storyboard->SetTarget(x_anim, component);
+					storyboard->Children->Append(x_anim);
+
+					//y-axis
+					auto y_value = center->y;
+					if (!center->y_percent.empty()) {
+						setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, center->y_percent, properties);
+						y_value = properties->right.value;
+						const auto y_type = properties->right.valueType;
+						if (y_type == Titanium::LayoutEngine::ValueType::Percent) {
+							y_value *= layout_node__->parent->element.measuredHeight;
+						}
+					}
+					const auto current_top = Controls::Canvas::GetTop(component);
+					const auto y_diff = y_value - current_top;
+					const auto y_anim = ref new Media::Animation::DoubleAnimation();
+					y_anim->To = y_diff;
+					y_anim->EasingFunction = ease;
+					y_anim->Duration = duration;
+					storyboard->SetTargetProperty(y_anim, "(UIElement.RenderTransform).(TransformGroup.Children)[2].(TranslateTransform.TranslateY)");
+					storyboard->SetTarget(y_anim, component);
+					storyboard->Children->Append(y_anim);
+				}
 
 				// For width and height, we have to calculate the scale to use to achieve desired height/width, since animating the Height or Width properties are ppor performance-wise and best avoided.
 				const auto height = animation->get_height();
@@ -640,18 +727,26 @@ namespace TitaniumWindows
 				if (top) {
 					setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, *top);
 				}
+				const auto bottom = animation->get_bottom();
+				if (bottom) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Bottom, *bottom);
+				}
+
 				const auto left = animation->get_left();
 				if (left) {
 					setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, *left);
 				}
-
-				const auto width = animation->get_width();
-				if (width) {
-					setLayoutProperty(Titanium::LayoutEngine::ValueName::Width, *width);
+				const auto right = animation->get_right();
+				if (right) {
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, *right);
 				}
-				const auto height = animation->get_height();
-				if (height) {
-					setLayoutProperty(Titanium::LayoutEngine::ValueName::Height, *height);
+
+				const auto center = animation->get_center();
+				if (center) {
+					std::string x = center->x_percent.empty() ? std::to_string(center->x) : center->x_percent;
+					std::string y = center->y_percent.empty() ? std::to_string(center->y) : center->y_percent;
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, x);
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, y);
 				}
 
 				// Make sure to clear the StoryBoard because transform made by StoryBoard remains.
