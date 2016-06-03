@@ -53,7 +53,7 @@ function run(logger, config, cli, finished) {
 		'generateAppxManifest',
 		'generateCmakeList',
 		'runCmake',
-		'addI18nVSResources',
+		'updateVSDefaultLanguage',
 		'compileApp',
 		'writeBuildManifest',
 		'copyResultsToProject',

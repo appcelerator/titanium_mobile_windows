@@ -1,13 +1,12 @@
-var win,
-    TextBlock = require('Windows.UI.Xaml.Controls.TextBlock'),
-	text = new TextBlock();
+var win = Ti.UI.createWindow({ backgroundColor: 'green' });
 
-text.Text = "Hello, world!";
-//text.TextAlignment = TextAlignment.Center;
-//text.VerticalAlignment = VerticalAlignment.Center;
-//text.HorizontalAlignment = HorizontalAlignment.Center;
-text.FontSize = 60;
+win.addEventListener('open', function () {
+    Ti.Locale.setLanguage('en');
+    Ti.API.info('current language is: ' + Ti.Locale.getCurrentLanguage());
+    Ti.API.info('before change ' + L('this is my key'));
+    Ti.Locale.setLanguage('es');
+    Ti.API.info('new language is: ' + Ti.Locale.getCurrentLanguage());
+    Ti.API.info('after change ' + L('this is my key'));
+});
 
-win = Ti.UI.createWindow({});
-win.add(text);
 win.open();
