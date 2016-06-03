@@ -305,7 +305,6 @@ namespace Titanium
 				std::string backgroundColor__;
 				boost::optional<std::string> bottom__;
 				boost::optional<Point> center__;
-				Point center__;
 				std::string color__;
 				ANIMATION_CURVE curve__;
 				std::chrono::milliseconds delay__;
