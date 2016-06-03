@@ -182,6 +182,12 @@ source_group("utilities" FILES ${UTILITIES_DIRECTORY})
 set_property(SOURCE ${SOURCE_utilities} PROPERTY VS_DEPLOYMENT_LOCATION "utilities")
 set_property(SOURCE ${SOURCE_utilities} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
+set(SOURCE_Strings_en "src/Assets/Strings/en/Resources.resw")
+source_group("Strings\\en" FILES "src/Assets/Strings/en/Resources.resw")
+
+set(SOURCE_Strings_es "src/Assets/Strings/es/Resources.resw")
+source_group("Strings\\es" FILES "src/Assets/Strings/es/Resources.resw")
+
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   src/OutputDebugStringBuf.hpp
@@ -197,6 +203,8 @@ add_executable(${EXE_NAME} WIN32
   ${SOURCE_with_index_json}
   ${SOURCE_with_package}
   ${SOURCE_utilities}
+  ${SOURCE_Strings_en}
+  ${SOURCE_Strings_es}
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
