@@ -372,8 +372,8 @@ describe('Titanium.Network.HTTPClient', function () {
 		});
 	});
 
-	// FIXME Tests pass locally for me, but fail on Windows 8.1 and Win 10 desktop build agents
-	((utilities.isWindowsDesktop() || utilities.isWindows8_1()) ? it.skip : it)('POST multipart/form-data containing Ti.Blob', function (finish) {
+	// FIXME Tests pass locally for me, but fail on all build agents
+	it.skip('POST multipart/form-data containing Ti.Blob', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient(),

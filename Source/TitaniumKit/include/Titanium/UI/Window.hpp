@@ -214,6 +214,24 @@ namespace Titanium
 			TITANIUM_PROPERTY_IMPL_DEF(TitleAttributesParams, titleAttributes);
 
 			/*!
+			@method
+
+			@abstract title : String
+
+			@discussion Title of the window.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, title);
+
+			/*!
+			@method
+
+			@abstract titleid : String
+
+			@discussion Key identifying a string from the locale file to use for the window title.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, titleid);
+
+			/*!
 			  @method
 
 			  @abstract translucent : Boolean
@@ -293,6 +311,14 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getTitleAttributes);
 			TITANIUM_FUNCTION_DEF(setTitleAttributes);
 
+			TITANIUM_PROPERTY_DEF(title);
+			TITANIUM_FUNCTION_DEF(getTitle);
+			TITANIUM_FUNCTION_DEF(setTitle);
+
+			TITANIUM_PROPERTY_DEF(titleid);
+			TITANIUM_FUNCTION_DEF(getTitleid);
+			TITANIUM_FUNCTION_DEF(setTitleid);
+
 			TITANIUM_PROPERTY_DEF(translucent);
 			TITANIUM_FUNCTION_DEF(getTranslucent);
 			TITANIUM_FUNCTION_DEF(setTranslucent);
@@ -313,6 +339,8 @@ namespace Titanium
 			std::vector<ORIENTATION> orientationModes__;
 			std::string theme__;
 			TitleAttributesParams titleAttributes__;
+			std::string title__;
+			std::string titleid__;
 			bool translucent__;
 
 			JSObject openWindowParams_ctor__;

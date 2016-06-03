@@ -9,6 +9,7 @@
 #include "Titanium/UI/OptionDialog.hpp"
 #include "Titanium/UI/View.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/Locale.hpp"
 
 namespace Titanium
 {
@@ -37,7 +38,12 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(OptionDialog, bool, persistent)
 		TITANIUM_PROPERTY_READWRITE(OptionDialog, std::uint32_t, selectedIndex)
 		TITANIUM_PROPERTY_READWRITE(OptionDialog, std::string, title)
-		TITANIUM_PROPERTY_READWRITE(OptionDialog, std::string, titleid)
+		TITANIUM_PROPERTY_READ(OptionDialog, std::string, titleid)
+		void OptionDialog::set_titleid(const std::string& titleid) TITANIUM_NOEXCEPT
+		{
+			titleid__ = titleid;
+			set_title(Titanium::Locale::GetString(get_context(), titleid));
+		}
 
 		void OptionDialog::show(const OptionDialogShowParams& params) TITANIUM_NOEXCEPT
 		{

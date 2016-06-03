@@ -69,6 +69,15 @@ namespace Titanium
 			TITANIUM_PROPERTY_IMPL_DEF(TEXT_ALIGNMENT, textAlign);
 
 			/*!
+			@method
+
+			@abstract title : String
+
+			@discussion Key identifying a string from the locale file to use for the button title.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, titleid);
+
+			/*!
 			  @method
 
 			  @abstract title : String
@@ -114,6 +123,10 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getTextAlign);
 			TITANIUM_FUNCTION_DEF(setTextAlign);
 
+			TITANIUM_PROPERTY_DEF(titleid);
+			TITANIUM_FUNCTION_DEF(setTitleid);
+			TITANIUM_FUNCTION_DEF(getTitleid);
+
 			TITANIUM_PROPERTY_DEF(title);
 			TITANIUM_FUNCTION_DEF(setTitle);
 			TITANIUM_FUNCTION_DEF(getTitle);
@@ -131,6 +144,7 @@ namespace Titanium
 			std::shared_ptr<Titanium::Blob> imageAsBlob__;
 			TEXT_ALIGNMENT textAlign__;
 			std::string title__;
+			std::string titleid__;
 			TEXT_VERTICAL_ALIGNMENT verticalAlign__;
 #pragma warning(pop)
 		};

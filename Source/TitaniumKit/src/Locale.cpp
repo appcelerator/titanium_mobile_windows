@@ -88,6 +88,14 @@ namespace Titanium
 		return static_cast<JSObject>(Object_property);
 	}
 
+	std::string Locale::GetString(const JSContext& js_context, const std::string& key) TITANIUM_NOEXCEPT
+	{
+		const auto L = GetStaticObject(js_context);
+		auto getString = static_cast<JSObject>(L.GetProperty("getString"));
+		const std::vector<JSValue> args = { js_context.CreateString(key) };
+		return static_cast<std::string>(getString(args, L));
+	}
+
 	//
 	// Escape characters with backslash.
 	// Based on iOS behavior, not all backslashes are converted.

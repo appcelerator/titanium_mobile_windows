@@ -35,6 +35,22 @@ describe('Titanium.UI.Label', function () {
 		finish();
 	});
 
+    it("textid", function (finish) {
+        var label = Ti.UI.createLabel({
+            textid: "this is my key"
+        });
+        should(label.textid).be.a.String;
+        should(label.getTextid).be.a.Function;
+        should(label.textid).eql('this is my key');
+        should(label.getTextid()).eql('this is my key');
+        should(label.text).eql('this is my value');
+        label.textid = 'other text';
+        should(label.textid).eql('other text');
+        should(label.getTextid()).eql('other text');
+        should(label.text).eql('other text'); // key is used when no resources found
+        finish();
+    });
+
 	it('textAlign', function (finish) {
 		var label = Ti.UI.createLabel({
 			text: 'this is some text',

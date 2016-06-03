@@ -9,6 +9,7 @@
 #include "Titanium/UI/Label.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UI/AttributedString.hpp"
+#include "Titanium/Locale.hpp"
 
 namespace Titanium
 {
@@ -34,6 +35,13 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Label, Font, font)
 		TITANIUM_PROPERTY_READWRITE(Label, std::shared_ptr<AttributedString>, attributedString)
 
+		TITANIUM_PROPERTY_READ(Label, std::string, textid)
+		void Label::set_textid(const std::string& textid) TITANIUM_NOEXCEPT
+		{
+			textid__ = textid;
+			set_text(Titanium::Locale::GetString(get_context(), textid));
+		}
+
 		void Label::JSExportInitialize()
 		{
 			JSExport<Label>::SetClassVersion(1);
@@ -41,6 +49,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Label, color);
 			TITANIUM_ADD_PROPERTY(Label, ellipsize);
 			TITANIUM_ADD_PROPERTY(Label, font);
+			TITANIUM_ADD_PROPERTY(Label, textid);
 			TITANIUM_ADD_PROPERTY(Label, text);
 			TITANIUM_ADD_PROPERTY(Label, textAlign);
 			TITANIUM_ADD_PROPERTY(Label, verticalAlign);
@@ -53,6 +62,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Label, setEllipsize);
 			TITANIUM_ADD_FUNCTION(Label, getFont);
 			TITANIUM_ADD_FUNCTION(Label, setFont);
+			TITANIUM_ADD_FUNCTION(Label, getTextid);
+			TITANIUM_ADD_FUNCTION(Label, setTextid);
 			TITANIUM_ADD_FUNCTION(Label, getText);
 			TITANIUM_ADD_FUNCTION(Label, setText);
 			TITANIUM_ADD_FUNCTION(Label, getTextAlign);
@@ -83,6 +94,9 @@ namespace Titanium
 			set_font(Titanium::UI::js_to_Font(static_cast<JSObject>(argument)));
 			return true;
 		}
+
+		TITANIUM_PROPERTY_GETTER_STRING(Label, textid)
+		TITANIUM_PROPERTY_SETTER_STRING(Label, textid)
 
 		TITANIUM_PROPERTY_GETTER_STRING(Label, text)
 		TITANIUM_PROPERTY_SETTER_STRING(Label, text)
@@ -139,6 +153,9 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_AS_GETTER(Label, getFont, font)
 		TITANIUM_FUNCTION_AS_SETTER(Label, setFont, font)
+
+		TITANIUM_FUNCTION_AS_GETTER(Label, getTextid, textid)
+		TITANIUM_FUNCTION_AS_SETTER(Label, setTextid, textid)
 
 		TITANIUM_FUNCTION_AS_GETTER(Label, getText, text)
 		TITANIUM_FUNCTION_AS_SETTER(Label, setText, text)

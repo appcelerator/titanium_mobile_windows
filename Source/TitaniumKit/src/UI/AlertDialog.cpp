@@ -8,6 +8,7 @@
 
 #include "Titanium/UI/AlertDialog.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/Locale.hpp"
 
 namespace Titanium
 {
@@ -16,8 +17,9 @@ namespace Titanium
 		AlertDialog::AlertDialog(const JSContext& js_context) TITANIUM_NOEXCEPT
 		    : Module(js_context, "Ti.UI.AlertDialog"),
 			  cancel__(-1),
-		      message__(js_context.CreateString()),
-		      title__(js_context.CreateString())
+		      message__(""),
+		      title__(""),
+			  titleid__("")
 		{
 			TITANIUM_LOG_DEBUG("AlertDialog:: ctor ", this);
 		}
@@ -41,6 +43,12 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(AlertDialog, int32_t, cancel)
 		TITANIUM_PROPERTY_READWRITE(AlertDialog, std::string, message)
 		TITANIUM_PROPERTY_READWRITE(AlertDialog, std::string, title)
+		TITANIUM_PROPERTY_READ(AlertDialog, std::string, titleid)
+		void AlertDialog::set_titleid(const std::string& titleid) TITANIUM_NOEXCEPT
+		{
+			titleid__ = titleid;
+			set_title(Titanium::Locale::GetString(get_context(), titleid));
+		}
 
 		void AlertDialog::JSExportInitialize()
 		{
@@ -52,6 +60,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(AlertDialog, cancel);
 			TITANIUM_ADD_PROPERTY(AlertDialog, message);
 			TITANIUM_ADD_PROPERTY(AlertDialog, title);
+			TITANIUM_ADD_PROPERTY(AlertDialog, titleid);
 
 			TITANIUM_ADD_FUNCTION(AlertDialog, getButtonNames);
 			TITANIUM_ADD_FUNCTION(AlertDialog, setButtonNames);
@@ -61,6 +70,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(AlertDialog, setMessage);
 			TITANIUM_ADD_FUNCTION(AlertDialog, getTitle);
 			TITANIUM_ADD_FUNCTION(AlertDialog, setTitle);
+			TITANIUM_ADD_FUNCTION(AlertDialog, getTitleid);
+			TITANIUM_ADD_FUNCTION(AlertDialog, setTitleid);
 		}
 
 		TITANIUM_FUNCTION(AlertDialog, hide)
@@ -83,6 +94,8 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER_STRING(AlertDialog, title)
 		TITANIUM_PROPERTY_SETTER_STRING(AlertDialog, title)
+		TITANIUM_PROPERTY_GETTER_STRING(AlertDialog, titleid)
+		TITANIUM_PROPERTY_SETTER_STRING(AlertDialog, titleid)
 
 		TITANIUM_PROPERTY_GETTER_STRING(AlertDialog, message)
 		TITANIUM_PROPERTY_SETTER_STRING(AlertDialog, message)
@@ -95,6 +108,8 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_SETTER(AlertDialog, setMessage, message)
 		TITANIUM_FUNCTION_AS_GETTER(AlertDialog, getTitle, title)
 		TITANIUM_FUNCTION_AS_SETTER(AlertDialog, setTitle, title)
+		TITANIUM_FUNCTION_AS_GETTER(AlertDialog, getTitleid, titleid)
+		TITANIUM_FUNCTION_AS_SETTER(AlertDialog, setTitleid, titleid)
 
 	} // namespace UI
 }  // namespace Titanium

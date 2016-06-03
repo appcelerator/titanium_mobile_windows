@@ -12,6 +12,7 @@
 #include "Titanium/UI/CloseWindowParams.hpp"
 #include "Titanium/UI/Tab.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/Locale.hpp"
 
 #define GET_UI() \
   const auto Titanium_property = get_context().get_global_object().GetProperty("Titanium"); \
@@ -39,6 +40,8 @@ namespace Titanium
 		      navTintColor__(""),
 		      orientationModes__(),
 		      theme__(""),
+		      title__(""),
+		      titleid__(""),
 		      translucent__(false),
 		      tab__(nullptr)
 		{
@@ -75,6 +78,13 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Window, bool, translucent)
 		TITANIUM_PROPERTY_READWRITE(Window, std::string, barColor)
 		TITANIUM_PROPERTY_READWRITE(Window, std::shared_ptr<Tab>, tab)
+		TITANIUM_PROPERTY_READWRITE(Window, std::string, title)
+		TITANIUM_PROPERTY_READ(Window, std::string, titleid)
+		void Window::set_titleid(const std::string& titleid) TITANIUM_NOEXCEPT
+		{
+			titleid__ = titleid;
+			set_title(Titanium::Locale::GetString(get_context(), titleid));
+		}
 
 		void Window::JSExportInitialize()
 		{
@@ -96,6 +106,9 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Window, theme);
 			TITANIUM_ADD_PROPERTY(Window, titleAttributes);
 			TITANIUM_ADD_PROPERTY(Window, translucent);
+			TITANIUM_ADD_PROPERTY(Window, title);
+			TITANIUM_ADD_PROPERTY(Window, titleid);
+
 			// accessors
 			TITANIUM_ADD_FUNCTION(Window, getBarColor);
 			TITANIUM_ADD_FUNCTION(Window, setBarColor);
@@ -117,6 +130,10 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Window, setOrientationModes);
 			TITANIUM_ADD_FUNCTION(Window, getTheme);
 			TITANIUM_ADD_FUNCTION(Window, setTheme);
+			TITANIUM_ADD_FUNCTION(Window, getTitle);
+			TITANIUM_ADD_FUNCTION(Window, setTitle);
+			TITANIUM_ADD_FUNCTION(Window, getTitleid);
+			TITANIUM_ADD_FUNCTION(Window, setTitleid);
 			TITANIUM_ADD_FUNCTION(Window, getTitleAttributes);
 			TITANIUM_ADD_FUNCTION(Window, setTitleAttributes);
 			TITANIUM_ADD_FUNCTION(Window, getTranslucent);
@@ -347,5 +364,14 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_GETTER(Window, getTranslucent, translucent)
 		TITANIUM_FUNCTION_AS_SETTER(Window, setTranslucent, translucent)
 
+		TITANIUM_PROPERTY_GETTER_STRING(Window, title)
+		TITANIUM_PROPERTY_SETTER_STRING(Window, title)
+		TITANIUM_FUNCTION_AS_GETTER(Window, getTitle, title)
+		TITANIUM_FUNCTION_AS_SETTER(Window, setTitle, title)
+
+		TITANIUM_PROPERTY_GETTER_STRING(Window, titleid)
+		TITANIUM_PROPERTY_SETTER_STRING(Window, titleid)
+		TITANIUM_FUNCTION_AS_GETTER(Window, getTitleid, titleid)
+		TITANIUM_FUNCTION_AS_SETTER(Window, setTitleid, titleid)
 	} // namespace UI
 }  // namespace Titanium

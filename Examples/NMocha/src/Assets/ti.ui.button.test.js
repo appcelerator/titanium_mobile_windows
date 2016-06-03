@@ -21,6 +21,36 @@ describe('Titanium.UI.Button', function () {
 		finish();
 	});
 
+    it("title", function (finish) {
+        var bar = Ti.UI.createButton({
+            title: "this is some text"
+        });
+        should(bar.title).be.a.String;
+        should(bar.getTitle).be.a.Function;
+        should(bar.title).eql('this is some text');
+        should(bar.getTitle()).eql('this is some text');
+        bar.title = 'other text';
+        should(bar.title).eql('other text');
+        should(bar.getTitle()).eql('other text');
+        finish();
+    });
+
+    it("titleid", function (finish) {
+        var bar = Ti.UI.createButton({
+            titleid: "this is my key"
+        });
+        should(bar.titleid).be.a.String;
+        should(bar.getTitleid).be.a.Function;
+        should(bar.titleid).eql('this is my key');
+        should(bar.getTitleid()).eql('this is my key');
+        should(bar.title).eql('this is my value');
+        bar.titleid = 'other text';
+        should(bar.titleid).eql('other text');
+        should(bar.getTitleid()).eql('other text');
+        should(bar.title).eql('other text'); // key is used when no resources found
+        finish();
+    });
+
 	it('image(String)', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({

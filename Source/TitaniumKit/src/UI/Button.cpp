@@ -9,6 +9,7 @@
 #include "Titanium/UI/Button.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/Blob.hpp"
+#include "Titanium/Locale.hpp"
 
 namespace Titanium
 {
@@ -38,6 +39,13 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Button, std::string, title)
 		TITANIUM_PROPERTY_READWRITE(Button, TEXT_VERTICAL_ALIGNMENT, verticalAlign)
 
+		TITANIUM_PROPERTY_READ(Button, std::string, titleid)
+		void Button::set_titleid(const std::string& titleid) TITANIUM_NOEXCEPT
+		{
+			titleid__ = titleid;
+			set_title(Titanium::Locale::GetString(get_context(), titleid));
+		}
+
 		void Button::JSExportInitialize()
 		{
 			JSExport<Button>::SetClassVersion(1);
@@ -48,6 +56,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Button, image);
 			TITANIUM_ADD_PROPERTY(Button, textAlign);
 			TITANIUM_ADD_PROPERTY(Button, title);
+			TITANIUM_ADD_PROPERTY(Button, titleid);
 			TITANIUM_ADD_PROPERTY(Button, verticalAlign);
 
 			TITANIUM_ADD_FUNCTION(Button, getColor);
@@ -58,6 +67,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Button, setImage);
 			TITANIUM_ADD_FUNCTION(Button, getTextAlign);
 			TITANIUM_ADD_FUNCTION(Button, setTextAlign);
+			TITANIUM_ADD_FUNCTION(Button, getTitleid);
+			TITANIUM_ADD_FUNCTION(Button, setTitleid);
 			TITANIUM_ADD_FUNCTION(Button, getTitle);
 			TITANIUM_ADD_FUNCTION(Button, setTitle);
 			TITANIUM_ADD_FUNCTION(Button, getVerticalAlign);
@@ -146,6 +157,11 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_AS_GETTER(Button, getTextAlign, textAlign)
 		TITANIUM_FUNCTION_AS_SETTER(Button, setTextAlign, textAlign)
+
+		TITANIUM_PROPERTY_GETTER_STRING(Button, titleid)
+		TITANIUM_PROPERTY_SETTER_STRING(Button, titleid)
+		TITANIUM_FUNCTION_AS_GETTER(Button, getTitleid, titleid)
+		TITANIUM_FUNCTION_AS_SETTER(Button, setTitleid, titleid)
 
 		TITANIUM_PROPERTY_GETTER(Button, title)
 		{

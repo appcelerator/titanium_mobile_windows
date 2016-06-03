@@ -97,6 +97,7 @@ namespace Titanium
 
 		static void JSExportInitialize();
 		static JSObject GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
+		static std::string GetString(const JSContext& js_context, const std::string& key) TITANIUM_NOEXCEPT;
 
 		// Escape characters with backslash. Based on iOS behavior, not all backslashes are converted.
 		static std::string EscapeJSCharacters(const std::string& content) TITANIUM_NOEXCEPT;

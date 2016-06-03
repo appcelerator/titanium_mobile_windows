@@ -14,6 +14,7 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/Windows/CommandBar.hpp"
 #include "TitaniumWindows/UI/Tab.hpp"
+#include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
@@ -89,6 +90,17 @@ namespace TitaniumWindows
 			Windows::Phone::UI::Input::HardwareButtons::BackPressed -= backpressed_event__;
 #endif
 		}
+
+#if !defined(IS_WINDOWS_PHONE)
+		void Window::set_title(const std::string& title) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Window::set_title(title);
+			const auto view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
+			if (view) {
+				view->Title = TitaniumWindows::Utility::ConvertUTF8String(title);
+			}
+		}
+#endif
 
 		void Window::updateWindowsCommandBar(const std::shared_ptr<TitaniumWindows::UI::WindowsXaml::CommandBar>& commandbar)
 		{

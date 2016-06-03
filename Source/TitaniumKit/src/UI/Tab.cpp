@@ -12,6 +12,7 @@
 #include "Titanium/UIModule.hpp"
 #include "Titanium/UI/OpenWindowParams.hpp"
 #include "Titanium/UI/CloseWindowParams.hpp"
+#include "Titanium/Locale.hpp"
 
 namespace Titanium
 {
@@ -40,10 +41,16 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Tab, bool, activeIconIsMask)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, title)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, titleColor)
-		TITANIUM_PROPERTY_READWRITE(Tab, std::string, titleid)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::shared_ptr<Window>, window)
 
-		void Tab::focus()
+		TITANIUM_PROPERTY_READ(Tab, std::string, titleid)
+		void Tab::set_titleid(const std::string& titleid) TITANIUM_NOEXCEPT
+		{
+			titleid__ = titleid;
+			set_title(Titanium::Locale::GetString(get_context(), titleid));
+		}
+
+		void Tab::focus() 
 		{
 			Titanium::UI::View::focus();
 

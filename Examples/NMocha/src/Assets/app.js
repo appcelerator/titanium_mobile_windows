@@ -58,6 +58,7 @@ require('./ti.ui.scrollableview.test');
 require('./ti.ui.scrollview.test');
 require('./ti.ui.searchbar.test');
 require('./ti.ui.switch.test');
+require('./ti.ui.tab.test');
 require('./ti.ui.tableview.test');
 require('./ti.ui.textfield.test');
 require('./ti.ui.view.test');

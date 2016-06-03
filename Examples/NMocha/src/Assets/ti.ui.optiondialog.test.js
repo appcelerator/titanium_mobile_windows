@@ -28,6 +28,22 @@ describe('Titanium.UI.OptionDialog', function () {
 		finish();
 	});
 
+    it("titleid", function (finish) {
+        var bar = Ti.UI.createOptionDialog({
+            titleid: "this is my key"
+        });
+        should(bar.titleid).be.a.String;
+        should(bar.getTitleid).be.a.Function;
+        should(bar.titleid).eql('this is my key');
+        should(bar.getTitleid()).eql('this is my key');
+        should(bar.title).eql('this is my value');
+        bar.titleid = 'other text';
+        should(bar.titleid).eql('other text');
+        should(bar.getTitleid()).eql('other text');
+        should(bar.title).eql('other text'); // key is used when no resources found
+        finish();
+    });
+
 	it('buttonNames', function (finish) {
 		var bar = Ti.UI.createOptionDialog({
 		});
