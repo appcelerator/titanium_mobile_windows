@@ -108,6 +108,11 @@ set_property(SOURCE ${SOURCE_<%= key.replace(/[\.\/]/g, '_') %>} PROPERTY VS_DEP
 set_property(SOURCE ${SOURCE_<%= key.replace(/[\.\/]/g, '_') %>} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 <% } %>
 
+<% for(var i = 0; i < i18nVSResources.length; i++) { var i18n = i18nVSResources[i]; %>
+set(SOURCE_Strings_<%= i18n.locale %> "<%= i18n.file %>")
+source_group("Strings\\<%=i18n.locale %>" FILES "<%= i18n.file %>")
+<% } %>
+
 # Add all the files to the app
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
@@ -116,6 +121,9 @@ add_executable(${EXE_NAME} WIN32
 <% for(var key in sourceGroups) { -%>
   <% if (key == '.') { continue; } -%>
   ${SOURCE_<%= key.replace(/[\.\/]/g, '_') %>}
+<% } -%>
+<% for(var i = 0; i < i18nVSResources.length; i++) { var i18n = i18nVSResources[i]; %>
+  ${SOURCE_Strings_<%= i18n.locale %>}
 <% } -%>
 )
 

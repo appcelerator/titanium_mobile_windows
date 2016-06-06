@@ -26,7 +26,6 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.generateCmakeList = generateCmakeList;
 	WindowsBuilder.prototype.generateAppxManifestForPlatform = generateAppxManifestForPlatform;
 	WindowsBuilder.prototype.generateAppxManifest = generateAppxManifest;
-	WindowsBuilder.prototype.addI18nVSResources = addI18nVSResources;
 }
 
 /**
@@ -47,6 +46,8 @@ function generateI18N(next) {
 	data.en.app || (data.en.app = {});
 	data.en.app.appname || (data.en.app.appname = this.tiapp.name);
 
+	this.i18nVSResources = [];
+
 	Object.keys(data).forEach(function (locale) {
 		var destDir = path.join(this.buildTargetStringsDir, locale),
 			dest = path.join(destDir, 'Resources.resw'),
@@ -65,71 +66,31 @@ function generateI18N(next) {
 			root.appendChild(dataNode);
 		}
 
+		data[locale].app     = data[locale].app || {};
+		data[locale].strings = data[locale].strings || {};
+
 		// process default app_name
-		if (data[locale].strings && !data[locale].strings.app_name) {
-			data[locale].strings.app_name = data.en.app.appname;
-		} else if (!data[locale].strings) {
-			// add default name when there's no strings
-			addString('app_name', data.en.app.appname);
+		if (!data[locale].strings.app_name) {
+			data[locale].strings.app_name = data[locale].app.appname ? data[locale].app.appname : data.en.app.appname;
 		}
 		// process default app_description
-		if (data[locale].strings && !data[locale].strings.app_description) {
+		if (!data[locale].strings.app_description) {
 			data[locale].strings.app_description = data[locale].strings.app_name;
-		} else if (!data[locale].strings) {
-			// add default name when there's no strings
-			addString('app_description', data.en.app.appname);
 		}
 
-		data[locale].strings && Object.keys(data[locale].strings).forEach(function (name) {
+		Object.keys(data[locale].strings).forEach(function (name) {
 			addString(name, data[locale].strings[name]);
 		});
+
+		this.i18nVSResources.push({file:dest.replace(/\\/g, '/'), locale:locale});
 
 		this.logger.debug(__('Writing %s strings => %s', locale.cyan, dest.cyan));
 		fs.existsSync(destDir) || wrench.mkdirSyncRecursive(destDir);
 		fs.writeFileSync(dest, '<?xml version="1.0" encoding="UTF-8"?>\n' + dom.documentElement.toString());
-
-		// save the destination files to update the Visual Studio project later at addI18nVSItemGroup
-		this.i18nVSResources = this.i18nVSResources || [];
-		this.i18nVSResources.push(dest);
 	}, this);
 
 	next();
 };
-
-/**
- * Updates the Visual Studio project to add the generated Resources.resw file
- *
- * @param {Function} next - A function to call after resources have been generated.
- */
-function addI18nVSResources(next) {
-	if (!this.i18nVSResources) {
-		next();
-		return;
-	}
-
-	var cmakeProjectName = this.sanitizeProjectName(this.cli.tiapp.name),
-		slnFile = path.resolve(this.cmakeTargetDir, cmakeProjectName + '.sln'),
-		vcxproj = path.resolve(this.cmakeTargetDir, cmakeProjectName + '.vcxproj');
-
-	var modified = fs.readFileSync(vcxproj, 'utf8');
-	fs.existsSync(vcxproj) && fs.renameSync(vcxproj, vcxproj + '.bak');
-
-	var itemGroupContent = ['</ItemGroup>', '<ItemGroup>'];
-	for (var i = 0; i < this.i18nVSResources.length; i++) {
-		itemGroupContent.push('  <PRIResource Include="' + this.i18nVSResources[i]  + '" />');
-	}
-	itemGroupContent.push('</ItemGroup>');
-
-	// add it after the first occurrence of </ItemGroup>
-	modified = modified.replace(/<\/ItemGroup>/, itemGroupContent.join('\r\n  '));
-
-	// DefaultLanguage (forcing to "en" for now)
-	modified = modified.replace(/<DefaultLanguage>[a-zA-Z]{2}(-[a-zA-Z]{2})*<\/DefaultLanguage>/, '<DefaultLanguage>en</DefaultLanguage>');
-
-	fs.writeFileSync(vcxproj, modified);
-
-	next();
-}
 
 /**
  * Generates the native type wrappers and adds them to the Visual Studio project.
@@ -266,6 +227,7 @@ function generateCmakeList(next) {
 			phonePublisherId: this.phonePublisherId,
 			phoneProductId: this.phoneProductId,
 			sourceGroups: sourceGroups,
+			i18nVSResources: this.i18nVSResources,
 			native_modules: native_modules
 		}
 	), next);

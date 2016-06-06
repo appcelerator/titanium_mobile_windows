@@ -201,6 +201,9 @@ function addTiAppProperties(sdkVersion, next) {
 function copyMochaAssets(next) {
 	// Copy over Resources
 	wrench.copyDirSyncRecursive(MOCHA_ASSETS_DIR, path.join(projectDir, 'Resources'), {
+		forceDelete: true, exclude: /Resources.resw$/
+	});
+	wrench.copyDirSyncRecursive(path.join(MOCHA_ASSETS_DIR, 'i18n'), path.join(projectDir, 'i18n'), {
 		forceDelete: true
 	});
 	// Copy over modules

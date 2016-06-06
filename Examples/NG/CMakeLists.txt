@@ -126,7 +126,6 @@ set(SOURCE_Assets
   src/Assets/Square71x71Logo.png
   src/Assets/Square44x44Logo.png
   src/Assets/cricket.wav
-  src/Assets/Resources.resw
   )
 
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
@@ -142,11 +141,19 @@ source_group("fonts" FILES
 set_property(SOURCE ${SOURCE_fonts} PROPERTY VS_DEPLOYMENT_LOCATION "fonts")
 set_property(SOURCE ${SOURCE_fonts} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
+set(SOURCE_Strings_en "src/Assets/Strings/en/Resources.resw")
+source_group("Strings\\en" FILES "src/Assets/Strings/en/Resources.resw")
+
+set(SOURCE_Strings_es "src/Assets/Strings/es/Resources.resw")
+source_group("Strings\\es" FILES "src/Assets/Strings/es/Resources.resw")
+
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   include/OutputDebugStringBuf.hpp
   ${SOURCE_Assets}
   ${SOURCE_fonts}
+  ${SOURCE_Strings_en}
+  ${SOURCE_Strings_es}
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)

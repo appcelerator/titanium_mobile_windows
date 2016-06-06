@@ -9,6 +9,15 @@ var should = require('./should'),
 	utilities = require('./utilities/utilities');
 
 describe('Titanium.Locale', function () {
+
+    beforeEach(function () {
+        Ti.Locale.setLanguage('en-US');
+    });
+
+    afterEach(function () {
+        Ti.Locale.setLanguage('en-US');
+    });
+
 	it('apiName', function (finish) {
 		should(Ti.Locale.apiName).be.eql('Ti.Locale');
 		finish();
@@ -118,5 +127,15 @@ describe('Titanium.Locale', function () {
 		should(Ti.Locale.currentLocale).eql('fr');
 		should(Ti.Locale.currentLanguage).eql('fr');
 		finish();
+	});
+
+	it.skip('Ti.Locale.getString with Language', function (finish) {
+	    Ti.Locale.setLanguage('en-US');
+	    should(Ti.Locale.getString('this is my key')).eql('this is my value');
+	    Ti.Locale.setLanguage('en-GB');
+	    should(Ti.Locale.getString('this is my key')).eql('this is my en-GB value');
+	    Ti.Locale.setLanguage('ja');
+	    should(Ti.Locale.getString('this is my key')).eql('これは私の値です');
+	    finish();
 	});
 });

@@ -108,6 +108,10 @@ configure_file(
 
 file(GLOB_RECURSE ASSETS_DIRECTORY "src/Assets/*.*")
 
+# Exclude i18n files, that's supposed to be used from CLI
+file(GLOB_RECURSE I18N_FILES "src/Assets/i18n/*")
+list(REMOVE_ITEM ASSETS_DIRECTORY ${I18N_FILES})
+
 set(SOURCE_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
   ${ASSETS_DIRECTORY}
@@ -182,6 +186,15 @@ source_group("utilities" FILES ${UTILITIES_DIRECTORY})
 set_property(SOURCE ${SOURCE_utilities} PROPERTY VS_DEPLOYMENT_LOCATION "utilities")
 set_property(SOURCE ${SOURCE_utilities} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
+set(SOURCE_Strings_en "src/Assets/Strings/en/Resources.resw")
+source_group("Strings\\en" FILES "src/Assets/Strings/en/Resources.resw")
+
+set(SOURCE_Strings_en_GB "src/Assets/Strings/en-GB/Resources.resw")
+source_group("Strings\\en-GB" FILES "src/Assets/Strings/en-GB/Resources.resw")
+
+set(SOURCE_Strings_ja "src/Assets/Strings/ja/Resources.resw")
+source_group("Strings\\ja" FILES "src/Assets/Strings/ja/Resources.resw")
+
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   src/OutputDebugStringBuf.hpp
@@ -197,6 +210,9 @@ add_executable(${EXE_NAME} WIN32
   ${SOURCE_with_index_json}
   ${SOURCE_with_package}
   ${SOURCE_utilities}
+  ${SOURCE_Strings_en}
+  ${SOURCE_Strings_en_GB}
+  ${SOURCE_Strings_ja}
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
