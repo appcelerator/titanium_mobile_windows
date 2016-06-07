@@ -112,7 +112,7 @@ namespace Titanium
 				child = deferredLeftCalculations[i];
 				leftLayoutCoefficients = (*child).layoutCoefficients.left;
 				sandboxWidthLayoutCoefficients = (*child).layoutCoefficients.sandboxWidth;
-				(*child).measuredLeft = measuredLeft = leftLayoutCoefficients.x1 * computedSize.width + leftLayoutCoefficients.x2 * measuredWidth + leftLayoutCoefficients.x3;
+				(*child).measuredLeft = measuredLeft = leftLayoutCoefficients.x1 * computedSize.width + leftLayoutCoefficients.x2 * (*child).measuredWidth + leftLayoutCoefficients.x3;
 				(*child).measuredSandboxWidth = measuredSandboxWidth = sandboxWidthLayoutCoefficients.x1 * height + sandboxWidthLayoutCoefficients.x2 + (*child).measuredWidth + measuredLeft;
 
 				// Update the size of the component
@@ -124,7 +124,7 @@ namespace Titanium
 				child = deferredTopCalculations[i];
 				topLayoutCoefficients = (*child).layoutCoefficients.top;
 				sandboxHeightLayoutCoefficients = (*child).layoutCoefficients.sandboxHeight;
-				(*child).measuredTop = measuredTop = topLayoutCoefficients.x1 * computedSize.height + topLayoutCoefficients.x2 * measuredHeight + topLayoutCoefficients.x3;
+				(*child).measuredTop = measuredTop = topLayoutCoefficients.x1 * computedSize.height + topLayoutCoefficients.x2 * (*child).measuredHeight + topLayoutCoefficients.x3;
 				(*child).measuredSandboxHeight = measuredSandboxHeight = sandboxHeightLayoutCoefficients.x1 * height + sandboxHeightLayoutCoefficients.x2 + (*child).measuredHeight + measuredTop;
 
 				// Update the size of the component
