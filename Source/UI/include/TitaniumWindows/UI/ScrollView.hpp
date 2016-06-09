@@ -24,7 +24,7 @@ namespace TitaniumWindows
 		class TITANIUMWINDOWS_UI_EXPORT ScrollViewLayoutDelegate : public WindowsViewLayoutDelegate
 		{
 		public:
-			ScrollViewLayoutDelegate(ScrollView*, const std::shared_ptr<WindowsViewLayoutDelegate>&) TITANIUM_NOEXCEPT;
+			ScrollViewLayoutDelegate(ScrollView*, const JSObject&) TITANIUM_NOEXCEPT;
 			virtual ~ScrollViewLayoutDelegate() = default;
 
 			virtual void add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT override;
@@ -37,8 +37,10 @@ namespace TitaniumWindows
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
+			static JSFunction CreateClickCallback(const JSObject& contentView) TITANIUM_NOEXCEPT;
 			ScrollView* scrollview__;
-			std::shared_ptr<WindowsViewLayoutDelegate> contentView__;
+			JSObject contentView__;
+			JSFunction clickCallback__;
 #pragma warning(pop)
 		};
 
@@ -105,6 +107,7 @@ namespace TitaniumWindows
 			Windows::UI::Xaml::Controls::ScrollViewer^ scroll_viewer__;
 			JSObject contentView__;
 
+			Windows::Foundation::EventRegistrationToken click_event__;
 			Windows::Foundation::EventRegistrationToken dragend_event__;
 			Windows::Foundation::EventRegistrationToken dragstart_event__;
 			Windows::Foundation::EventRegistrationToken scale_event__;
