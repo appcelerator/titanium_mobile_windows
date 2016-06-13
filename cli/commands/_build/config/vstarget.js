@@ -10,11 +10,13 @@ var appc = require('node-appc'),
  * @returns {Object}
  */
 module.exports = function configOptionVisualStudioTarget(order) {
-	var defaultTarget = this.windowsInfo.selectedVisualStudio ? this.windowsInfo.selectedVisualStudio.version : undefined;
+	var defaultTarget = (this.windowsInfo && this.windowsInfo.selectedVisualStudio) ? this.windowsInfo.selectedVisualStudio.version : undefined;
 
 	var vsTargets = [];
-	for (var version in this.windowsInfo.visualstudio) {
-		vsTargets.push(version);
+	if (this.windowsInfo) {
+		for (var version in this.windowsInfo.visualstudio) {
+			vsTargets.push(version);
+		}
 	}
 
 	return {

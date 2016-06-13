@@ -14,12 +14,14 @@ module.exports = function configOptionWPSDK(order) {
 		sdkTargets = [],
 		unsupportedTargets = ['8.0'];
 
-	for (var version in this.windowsInfo.windowsphone) {
-		if (unsupportedTargets.indexOf(version) === -1) {
-			sdkTargets.push(version);
-		}
-		if (this.windowsInfo.windowsphone[version].selected) {
-			defaultTarget = version;
+	if (this.windowsInfo) {
+		for (var version in this.windowsInfo.windowsphone) {
+			if (unsupportedTargets.indexOf(version) === -1) {
+				sdkTargets.push(version);
+			}
+			if (this.windowsInfo.windowsphone[version].selected) {
+				defaultTarget = version;
+			}
 		}
 	}
 
