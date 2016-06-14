@@ -32,9 +32,6 @@ namespace Titanium
 			object.SetProperty("code", js_context.CreateNumber(config.code));
 			object.SetProperty("cropRect", Titanium::UI::Dimension_to_js(js_context, config.cropRect));
 			object.SetProperty("error", js_context.CreateString(config.error));
-			if (config.media != nullptr) {
-				object.SetProperty("media", config.media->get_object());
-			}
 			if (!config.media_filename.empty()) {
 				object.SetProperty("_media_filename", js_context.CreateString(config.media_filename));
 			}

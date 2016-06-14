@@ -271,13 +271,13 @@ namespace TitaniumWindows
 		}
 
 		if (files.size() > 0) {
-			const auto blob = TitaniumWindows::Utility::GetTiBlobForFile(get_context(), files.at(0));
-			if (blob.IsObject()) {
+			const auto filename = files.at(0);
+			if (!filename.empty()) {
 				Titanium::Media::CameraMediaItemType item;
 				item.code = 0;
 				item.success = true;
 				item.mediaType = Titanium::Media::MediaType::Photo;
-				item.media = static_cast<JSObject>(blob).GetPrivate<Titanium::Blob>();
+				item.media_filename = filename;
 				openPhotoGalleryOptionsState__.callbacks.onsuccess(item);
 			} else {
 				Titanium::ErrorResponse error;
@@ -537,12 +537,7 @@ namespace TitaniumWindows
 				Titanium::Media::CameraMediaItemType item;
 				item.mediaType = Titanium::Media::MediaType::Photo;
 				if (file != nullptr) {
-					const auto blob = TitaniumWindows::Utility::GetTiBlobForFile(get_context(), TitaniumWindows::Utility::ConvertString(file->Path));
-					if (blob.IsObject()) {
-						item.media = static_cast<JSObject>(blob).GetPrivate<Titanium::Blob>();
-					} else {
-						item.error = "Failed to create media object from file";
-					}
+					item.media_filename = TitaniumWindows::Utility::ConvertString(file->Path);
 				} else {
 					item.error = "Failed to take picture";
 				}

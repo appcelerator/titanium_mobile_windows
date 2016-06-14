@@ -32,7 +32,6 @@ namespace Titanium
 			std::int32_t code { 0 };
 			Titanium::UI::Dimension cropRect;
 			std::string error;
-			std::shared_ptr<Titanium::Blob> media;
 			MediaType mediaType;
 			bool success { true };
 
