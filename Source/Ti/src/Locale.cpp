@@ -37,15 +37,7 @@ namespace TitaniumWindows
 		}
 		 // if no primary language set and no languages in prefs, we fall back to "en-US"/"en". Otherwise, let's break down the language value
 		if (!language.empty()) {
-			const auto pos = language.find("-");
-			if (pos != std::string::npos) {
-				currentLocale__ = language; // move the full value to locale
-				currentLanguage__ = language.substr(0, pos); // use just the first two chars for language
-			} else {
-				 // Should we try and mash together the language and country to make locale? It may not be a pairing that works!
-				 // For now, let's just take the short two-letter code for both language and locale
-				currentLocale__ = language;
-			}
+			setLanguage(language);
 		}
 	}
 

@@ -1520,4 +1520,41 @@ describe('Titanium.UI.Layout', function () {
 		win.add(label);
 		win.open();
 	});
+
+    // TIMOB-23225
+	it('TIMOB-23225', function (finish) {
+	    var parent = Ti.UI.createView({
+	        height: Ti.UI.SIZE,
+	        width: Ti.UI.SIZE,
+	        backgroundColor: 'orange'
+	    });
+
+	    var v1 = Ti.UI.createView({
+	        height: 100, width: Ti.UI.FILL,
+	        backgroundColor: 'gray',
+	    });
+	    var v2 = Ti.UI.createImageView({
+	        height: 50, width: 50,
+	        top: 0, right: 0,
+	        backgroundColor: 'red',
+	    });
+	    var win = createWindow({}, finish);
+	    win.addEventListener('open', function () {
+	        setTimeout(function () {
+	            should(v1.rect.x).eql(0);
+	            should(v1.rect.y).eql(0);
+	            should(v1.rect.width).eql(parent.rect.width);
+	            should(v1.rect.height).eql(parent.rect.height);
+	            should(v2.rect.x).eql(parent.rect.width - v2.rect.width);
+	            should(v2.rect.y).eql(0);
+	            should(v2.rect.width).eql(50);
+	            should(v2.rect.width).eql(50);
+	            finish();
+	        }, 2000);
+	    });
+	    parent.add(v1);
+	    parent.add(v2);
+	    win.add(parent);
+	    win.open();
+	});
 });

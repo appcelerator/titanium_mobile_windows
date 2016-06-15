@@ -68,6 +68,9 @@ namespace TitaniumWindows
 			virtual void reload() TITANIUM_NOEXCEPT override;
 			virtual void stopLoading(const bool& hardStop) TITANIUM_NOEXCEPT override;
 
+			bool isLocalUri(Windows::Foundation::Uri^ uri) const TITANIUM_NOEXCEPT;
+
+			bool localscript_navigating__{ false };
 			bool error_event_enabled__ { false };
 			bool load_event_enabled__  { false };
 			bool beforeload_event_enabled__  { false };

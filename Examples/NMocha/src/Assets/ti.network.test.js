@@ -35,4 +35,23 @@ describe('Titanium.Network', function () {
 		should(Ti.Network.createHTTPClient).be.a.Function;
 		finish();
 	});
+
+	it('networkType', function () {
+	    should(Ti.Network.networkType).not.be.null;
+	    should(Ti.Network.networkType).be.a.Number;
+	});
+
+	it('networkTypeName', function () {
+	    should(Ti.Network.networkTypeName).not.be.null;
+	    should(Ti.Network.networkTypeName).be.a.String;
+	    if (Ti.Network.networkType == Ti.Network.NETWORK_LAN) {
+	        Ti.Network.networkTypeName.should.eql('LAN');
+	    } else if (Ti.Network.networkType == Ti.Network.NETWORK_MOBILE) {
+	        Ti.Network.networkTypeName.should.eql('MOBILE');
+	    } else if (Ti.Network.networkType == Ti.Network.NETWORK_NONE) {
+	        Ti.Network.networkTypeName.should.eql('NONE');
+	    } else if (Ti.Network.networkType == Ti.Network.NETWORK_UNKNOWN) {
+	        Ti.Network.networkTypeName.should.eql('UNKNOWN');
+	    }
+	});
 });

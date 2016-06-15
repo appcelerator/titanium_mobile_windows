@@ -13,12 +13,20 @@ namespace TitaniumWindows
 {
 	namespace UI
 	{
-
-		ScrollViewLayoutDelegate::ScrollViewLayoutDelegate(ScrollView* scrollview, const std::shared_ptr<WindowsViewLayoutDelegate>& contentView) TITANIUM_NOEXCEPT
+		ScrollViewLayoutDelegate::ScrollViewLayoutDelegate(ScrollView* scrollview, const JSObject& contentView) TITANIUM_NOEXCEPT
 			: WindowsViewLayoutDelegate()
 			, contentView__(contentView)
 			, scrollview__(scrollview)
+			, clickCallback__(CreateClickCallback(contentView))
 		{
+		}
+
+		JSFunction ScrollViewLayoutDelegate::CreateClickCallback(const JSObject& contentView)
+		{
+			const std::string script = R"JS(
+                 this._ti_scrollview_click_event_source_ = e.source;
+            )JS";
+			return contentView.get_context().CreateFunction(script, {"e"});
 		}
 
 		void ScrollViewLayoutDelegate::requestLayout(const bool& fire_event)
@@ -33,19 +41,21 @@ namespace TitaniumWindows
 		void ScrollViewLayoutDelegate::add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::add(view);
-			contentView__->add(view);
+			contentView__.GetPrivate<View>()->getViewLayoutDelegate()->add(view);
+
+			view->addEventListener("click", clickCallback__, contentView__);
 		}
 
 		void ScrollViewLayoutDelegate::set_layout(const std::string& layout) TITANIUM_NOEXCEPT
 		{
-			contentView__->set_layout(layout);
+			contentView__.GetPrivate<View>()->getViewLayoutDelegate()->set_layout(layout);
 		}
 
 		void ScrollViewLayoutDelegate::set_width(const std::string& width) TITANIUM_NOEXCEPT
 		{
 			WindowsViewLayoutDelegate::set_width(width);
 			if (width != Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE)) {
-				contentView__->set_width(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
+				contentView__.GetPrivate<View>()->getViewLayoutDelegate()->set_width(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
 			}
 		}
 
@@ -53,7 +63,7 @@ namespace TitaniumWindows
 		{
 			WindowsViewLayoutDelegate::set_height(height);
 			if (height != Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE)) {
-				contentView__->set_height(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
+				contentView__.GetPrivate<View>()->getViewLayoutDelegate()->set_height(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
 			}
 		}
 
@@ -78,7 +88,7 @@ namespace TitaniumWindows
 			auto content = contentView__.GetPrivate<TitaniumWindows::UI::View>();
 			scroll_viewer__->Content = content->getComponent();
 
-			Titanium::UI::ScrollView::setLayoutDelegate<ScrollViewLayoutDelegate>(this, content->getViewLayoutDelegate<WindowsViewLayoutDelegate>());
+			Titanium::UI::ScrollView::setLayoutDelegate<ScrollViewLayoutDelegate>(this, contentView__);
 
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::FILL);
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
@@ -113,9 +123,32 @@ namespace TitaniumWindows
 
 		void ScrollView::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			getViewLayoutDelegate<ScrollViewLayoutDelegate>()->filterEvents({ "click" });
+
 			Titanium::UI::ScrollView::enableEvent(event_name);
 
-			if (event_name == "dragend" || event_name == "dragEnd") {
+			if (event_name == "click") {
+				click_event__ = scroll_viewer__->Tapped += ref new Windows::UI::Xaml::Input::TappedEventHandler(
+					[this](Platform::Object^ sender, Windows::UI::Xaml::Input::TappedRoutedEventArgs^ e) {
+					const auto ctx = get_context();
+					const auto scroll_viewer = safe_cast<Windows::UI::Xaml::Controls::ScrollViewer^>(sender);
+					auto eventArgs = ctx.CreateObject();
+
+					// special property that saves latest click event source
+					const std::string source_property_name = "_ti_scrollview_click_event_source_";
+					const auto source = contentView__.GetProperty(source_property_name);
+					if (source.IsUndefined()) {
+						eventArgs.SetProperty("source", get_object());
+					} else {
+						eventArgs.SetProperty("source", source);
+					}
+
+					fireEvent("click", eventArgs);
+
+					// reset latest click event source
+					contentView__.SetProperty(source_property_name, ctx.CreateUndefined());
+				});
+			} else if (event_name == "dragend" || event_name == "dragEnd") {
 				dragend_event__ = scroll_viewer__->PointerReleased += ref new Windows::UI::Xaml::Input::PointerEventHandler(
 					[=](Platform::Object ^sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs ^e) {
 						fireEvent(event_name);

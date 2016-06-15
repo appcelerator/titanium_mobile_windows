@@ -1,0 +1,14 @@
+<html>
+<head>
+    <script>
+        Ti.App.addEventListener("app:fromTitanium", function(e) {
+            Ti.API.info(e.message);
+        });
+    </script>
+</head>
+<body>
+    <h2><a href="http://www.google.com/">Google.com</a></h2>
+    <h2><a href="ms-appx-web:///WebViewNextPage.htm">Follow this link and see if script works</a></h2>
+    <button onclick="Ti.App.fireEvent('app:fromWebView', { message: 'event fired from WebView, handled in Titanium' });">fromWebView</button>
+</body>
+</html>

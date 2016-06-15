@@ -443,7 +443,6 @@ namespace Titanium
 	TITANIUM_FUNCTION_AS_GETTER(NetworkModule, getHttpURLFormatter, httpURLFormatter)
 	TITANIUM_FUNCTION_AS_SETTER(NetworkModule, setHttpURLFormatter, httpURLFormatter)
 
-	TITANIUM_PROPERTY_GETTER_STRING(NetworkModule, networkTypeName);
 	TITANIUM_PROPERTY_GETTER_BOOL(NetworkModule, online);
 	TITANIUM_PROPERTY_GETTER_STRING(NetworkModule, remoteDeviceUUID);
 	TITANIUM_PROPERTY_GETTER_BOOL(NetworkModule, remoteNotificationsEnabled);
@@ -452,6 +451,12 @@ namespace Titanium
 	TITANIUM_PROPERTY_GETTER(NetworkModule, networkType)
 	{
 		return get_context().CreateNumber(Titanium::Network::Constants::to_underlying_type(get_networkType()));
+	}
+
+	TITANIUM_PROPERTY_GETTER(NetworkModule, networkTypeName)
+	{
+		const auto type = Titanium::Network::Constants::to_string(get_networkType());
+		return get_context().CreateString(type);
 	}
 
 	TITANIUM_PROPERTY_GETTER(NetworkModule, remoteNotificationTypes)

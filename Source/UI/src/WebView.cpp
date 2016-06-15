@@ -113,6 +113,8 @@ namespace TitaniumWindows
 		 */
 		void WebView::navigateWithLocalScript(const std::string& original)
 		{
+			localscript_navigating__ = true;
+
 			std::string content = original;
 
 			// common script for WebView-Titanium binding
@@ -141,6 +143,7 @@ namespace TitaniumWindows
 
 			load_event__ = webview__->NavigationCompleted += ref new Windows::Foundation::TypedEventHandler
 				<Windows::UI::Xaml::Controls::WebView^, WebViewNavigationCompletedEventArgs^>([this](Platform::Object^ sender, WebViewNavigationCompletedEventArgs^ e) {				
+				localscript_navigating__ = false;
 				loading__ = false;
 				if (e->IsSuccess && load_event_enabled__) {
 					JSObject obj = get_context().CreateObject();
@@ -159,6 +162,13 @@ namespace TitaniumWindows
 
 			beforeload_event__ = webview__->NavigationStarting += ref new Windows::Foundation::TypedEventHandler
 				<Windows::UI::Xaml::Controls::WebView^, WebViewNavigationStartingEventArgs^>([this](Platform::Object^ sender, WebViewNavigationStartingEventArgs^ e) {
+				// This means user navigates to local content via hyperlink
+				if (!localscript_navigating__ && isLocalUri(e->Uri)) {
+					e->Cancel = true;
+					set_url(TitaniumWindows::Utility::ConvertString(e->Uri->AbsoluteUri));
+					return;
+				}
+
 				loading__ = true;
 				if (beforeload_event_enabled__) {
 					JSObject obj = get_context().CreateObject();
@@ -201,7 +211,7 @@ namespace TitaniumWindows
 					auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App.fireEvent"));
 					std::vector<JSValue> args = { ctx.CreateString(arg1), ctx.CreateValueFromJSON(arg2) };
 					func(args, app);
-				} else if (command == "Ti.App.addEventListener") {
+				} else if (command == "Ti.App.addEventListener" && app_event_names.find(arg1) == app_event_names.end()) {
 					const auto app = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App"));
 					auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App.addEventListener"));
 					std::vector<JSValue> args = { ctx.CreateString(arg1), get_object().GetProperty("_executeListener") };
@@ -253,6 +263,12 @@ namespace TitaniumWindows
 			navigateWithLocalScript(html);
 		}
 
+		bool WebView::isLocalUri(Windows::Foundation::Uri^ uri) const TITANIUM_NOEXCEPT
+		{
+			const auto scheme = uri->SchemeName;
+			return (scheme == "ms-appx" || scheme == "ms-appdata" || scheme == "ms-appx-web");
+		}
+
 		std::string WebView::get_url() const TITANIUM_NOEXCEPT
 		{
 			if (webview__->Source != nullptr) {
@@ -264,9 +280,11 @@ namespace TitaniumWindows
 
 		void WebView::set_url(const std::string& url) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::WebView::set_url(url);
+
 			const auto uri = TitaniumWindows::Utility::GetUriFromPath(boost::algorithm::replace_first_copy(url, "ms-appx-web://", "ms-appx://"));
 
-			if (uri->SchemeName == "ms-appx" || uri->SchemeName == "ms-appdata") {
+			if (isLocalUri(uri)) {
 				Windows::Storage::StorageFile^ file = nullptr;
 				concurrency::event event;
 				concurrency::task<StorageFile^>(StorageFile::GetFileFromApplicationUriAsync(uri)).then([&file, &event](concurrency::task<StorageFile^> task) {
