@@ -128,7 +128,6 @@ set(SOURCE_Assets
   src/Assets/cricket.wav
   src/Assets/WebViewIndexPage.htm
   src/Assets/WebViewNextPage.htm
-  src/Assets/Resources.resw
   )
 
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
