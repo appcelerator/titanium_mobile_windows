@@ -266,7 +266,19 @@ namespace Titanium
 			return requireNativeModule(js_context, moduleId);
 		}
 
-		auto module_path = requestResolveModule(parent, moduleId);
+		std::string dirname = COMMONJS_SEPARATOR__;
+		if (parent.HasProperty("__filename")) {
+			const auto filename_obj = parent.GetProperty("__filename");
+			if (filename_obj.IsString()) {
+				const auto filename = static_cast<std::string>(filename_obj);
+				const auto pos = filename.find_last_of(COMMONJS_SEPARATOR__);
+				if (pos != std::string::npos) {
+					dirname = filename.substr(0, pos);
+				}
+			}
+		}
+
+		auto module_path = requestResolveModule(parent, moduleId, dirname);
 		if (module_path.empty()) {
 			// Fall back to assuming equivalent of "/" + moduleId?
 			module_path = requestResolveModule(parent, "/" + moduleId);
@@ -296,8 +308,8 @@ namespace Titanium
 				if (moduleId == "/app") {
 					result = js_context.JSEvaluateScript(module_js, js_context.get_global_object());
 				} else {
-					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__filename='"
-						+ moduleId + "';" + module_js + R"JS(
+					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports};this.__filename='/"
+						+ module_path + "';" + module_js + R"JS(
 						if(module.exports !== __OXP){
 							return module.exports;
 						} else {

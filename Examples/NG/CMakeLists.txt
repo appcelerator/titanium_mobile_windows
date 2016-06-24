@@ -128,6 +128,7 @@ set(SOURCE_Assets
   src/Assets/cricket.wav
   src/Assets/WebViewIndexPage.htm
   src/Assets/WebViewNextPage.htm
+  src/Assets/require_test.js
   )
 
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
@@ -149,6 +150,12 @@ source_group("Strings\\en" FILES "src/Assets/Strings/en/Resources.resw")
 set(SOURCE_Strings_es "src/Assets/Strings/es/Resources.resw")
 source_group("Strings\\es" FILES "src/Assets/Strings/es/Resources.resw")
 
+file(GLOB_RECURSE WITH_INDEX_JS_DIRECTORY "src/Assets/with_index_js/*.*")
+set(SOURCE_with_index_js ${WITH_INDEX_JS_DIRECTORY})
+source_group("with_index_js" FILES ${WITH_INDEX_JS_DIRECTORY})
+set_property(SOURCE ${SOURCE_with_index_js} PROPERTY VS_DEPLOYMENT_LOCATION "with_index_js")
+set_property(SOURCE ${SOURCE_with_index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   include/OutputDebugStringBuf.hpp
@@ -156,6 +163,7 @@ add_executable(${EXE_NAME} WIN32
   ${SOURCE_fonts}
   ${SOURCE_Strings_en}
   ${SOURCE_Strings_es}
+  ${SOURCE_with_index_js}
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
