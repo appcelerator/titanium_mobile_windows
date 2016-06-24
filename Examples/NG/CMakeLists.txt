@@ -150,6 +150,12 @@ source_group("Strings\\en" FILES "src/Assets/Strings/en/Resources.resw")
 set(SOURCE_Strings_es "src/Assets/Strings/es/Resources.resw")
 source_group("Strings\\es" FILES "src/Assets/Strings/es/Resources.resw")
 
+file(GLOB_RECURSE COMMONJS_LEGACY_PACKAGE_DIRECTORY "modules/commonjs/commonjs.legacy.package/1.0.0/*.*")
+set(SOURCE_commonjs_legacy_package ${COMMONJS_LEGACY_PACKAGE_DIRECTORY})
+source_group("node_modules/commonjs.legacy.package" FILES ${COMMONJS_LEGACY_PACKAGE_DIRECTORY})
+set_property(SOURCE ${SOURCE_commonjs_legacy_package} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.package")
+set_property(SOURCE ${SOURCE_commonjs_legacy_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
 file(GLOB_RECURSE WITH_INDEX_JS_DIRECTORY "src/Assets/with_index_js/*.*")
 set(SOURCE_with_index_js ${WITH_INDEX_JS_DIRECTORY})
 source_group("with_index_js" FILES ${WITH_INDEX_JS_DIRECTORY})
@@ -164,6 +170,7 @@ add_executable(${EXE_NAME} WIN32
   ${SOURCE_Strings_en}
   ${SOURCE_Strings_es}
   ${SOURCE_with_index_js}
+  ${SOURCE_commonjs_legacy_package}
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)

@@ -267,8 +267,8 @@ namespace Titanium
 		}
 
 		std::string dirname = COMMONJS_SEPARATOR__;
-		if (parent.HasProperty("__filename")) {
-			const auto filename_obj = parent.GetProperty("__filename");
+		if (parent.HasProperty("__TI_REQUIRED__")) {
+			const auto filename_obj = parent.GetProperty("__TI_REQUIRED__");
 			if (filename_obj.IsString()) {
 				const auto filename = static_cast<std::string>(filename_obj);
 				const auto pos = filename.find_last_of(COMMONJS_SEPARATOR__);
@@ -308,8 +308,9 @@ namespace Titanium
 				if (moduleId == "/app") {
 					result = js_context.JSEvaluateScript(module_js, js_context.get_global_object());
 				} else {
-					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports};this.__filename='/"
-						+ module_path + "';" + module_js + R"JS(
+					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__filename='/"
+						+ module_path + "';this.__TI_REQUIRED__ = __filename;" + module_js + R"JS(
+						delete this.__TI_REQUIRED__; // only available while evaluating current module
 						if(module.exports !== __OXP){
 							return module.exports;
 						} else {
