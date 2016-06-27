@@ -97,16 +97,16 @@ namespace Titanium
 			/*!
 			  @property
 			  @abstract active
-			  @discussion `true` if this tab is active, `false` if it is not. 
+			  @discussion `true` if this tab is active, `false` if it is not.
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(bool, active);
 
 			/*!
 			  @property
-			  @abstract activeColor
+			  @abstract activeTitleColor
 			  @discussion Defines the color of the title of tab when it's active.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(std::string , activeColor);
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, activeTitleColor);
 
 			/*!
 			  @property
@@ -224,7 +224,7 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(backgroundSelectedImage);
 			TITANIUM_PROPERTY_DEF(touchEnabled);
 			TITANIUM_PROPERTY_DEF(active);
-			TITANIUM_PROPERTY_DEF(activeColor);
+			TITANIUM_PROPERTY_DEF(activeTitleColor);
 			TITANIUM_PROPERTY_DEF(activeIcon);
 			TITANIUM_PROPERTY_DEF(badge);
 			TITANIUM_PROPERTY_DEF(icon);
@@ -257,8 +257,8 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setTouchEnabled);
 			TITANIUM_FUNCTION_DEF(getActive);
 			TITANIUM_FUNCTION_DEF(setActive);
-			TITANIUM_FUNCTION_DEF(getActiveColor);
-			TITANIUM_FUNCTION_DEF(setActiveColor);
+			TITANIUM_FUNCTION_DEF(getActiveTitleColor);
+			TITANIUM_FUNCTION_DEF(setActiveTitleColor);
 			TITANIUM_FUNCTION_DEF(getActiveIcon);
 			TITANIUM_FUNCTION_DEF(setActiveIcon);
 			TITANIUM_FUNCTION_DEF(getBadge);
@@ -291,7 +291,7 @@ namespace Titanium
 			std::string backgroundSelectedImage__;
 			bool touchEnabled__;
 			bool active__;
-			std::string activeColor__;
+			std::string activeTitleColor__;
 			std::string activeIcon__;
 			std::string badge__;
 			std::string icon__;

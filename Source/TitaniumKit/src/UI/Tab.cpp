@@ -33,7 +33,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Tab, bool, touchEnabled)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, backgroundColor)
 		TITANIUM_PROPERTY_READWRITE(Tab, bool, active)
-		TITANIUM_PROPERTY_READWRITE(Tab, std::string, activeColor)
+		TITANIUM_PROPERTY_READWRITE(Tab, std::string, activeTitleColor)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, activeIcon)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, badge)
 		TITANIUM_PROPERTY_READWRITE(Tab, std::string, icon)
@@ -53,7 +53,7 @@ namespace Titanium
 			}
 		}
 
-		void Tab::focus() 
+		void Tab::focus()
 		{
 			Titanium::UI::View::focus();
 
@@ -123,7 +123,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Tab, touchEnabled);
 			TITANIUM_ADD_PROPERTY(Tab, backgroundColor);
 			TITANIUM_ADD_PROPERTY(Tab, active);
-			TITANIUM_ADD_PROPERTY(Tab, activeColor);
+			TITANIUM_ADD_PROPERTY(Tab, activeTitleColor);
 			TITANIUM_ADD_PROPERTY(Tab, activeIcon);
 			TITANIUM_ADD_PROPERTY(Tab, badge);
 			TITANIUM_ADD_PROPERTY(Tab, icon);
@@ -156,8 +156,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Tab, setBackgroundColor);
 			TITANIUM_ADD_FUNCTION(Tab, getActive);
 			TITANIUM_ADD_FUNCTION(Tab, setActive);
-			TITANIUM_ADD_FUNCTION(Tab, getActiveColor);
-			TITANIUM_ADD_FUNCTION(Tab, setActiveColor);
+			TITANIUM_ADD_FUNCTION(Tab, getActiveTitleColor);
+			TITANIUM_ADD_FUNCTION(Tab, setActiveTitleColor);
 			TITANIUM_ADD_FUNCTION(Tab, getActiveIcon);
 			TITANIUM_ADD_FUNCTION(Tab, setActiveIcon);
 			TITANIUM_ADD_FUNCTION(Tab, getBadge);
@@ -198,8 +198,8 @@ namespace Titanium
 		TITANIUM_PROPERTY_SETTER_STRING(Tab, backgroundColor)
 		TITANIUM_PROPERTY_GETTER_BOOL(Tab, active)
 		TITANIUM_PROPERTY_SETTER_BOOL(Tab, active)
-		TITANIUM_PROPERTY_GETTER_STRING(Tab, activeColor)
-		TITANIUM_PROPERTY_SETTER_STRING(Tab, activeColor)
+		TITANIUM_PROPERTY_GETTER_STRING(Tab, activeTitleColor)
+		TITANIUM_PROPERTY_SETTER_STRING(Tab, activeTitleColor)
 		TITANIUM_PROPERTY_GETTER_STRING(Tab, activeIcon)
 		TITANIUM_PROPERTY_SETTER_STRING(Tab, activeIcon)
 		TITANIUM_PROPERTY_GETTER_STRING(Tab, badge)
@@ -259,8 +259,8 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_SETTER(Tab, setBackgroundColor, backgroundColor)
 		TITANIUM_FUNCTION_AS_GETTER(Tab, getActive, active)
 		TITANIUM_FUNCTION_AS_SETTER(Tab, setActive, active)
-		TITANIUM_FUNCTION_AS_GETTER(Tab, getActiveColor, activeColor)
-		TITANIUM_FUNCTION_AS_SETTER(Tab, setActiveColor, activeColor)
+		TITANIUM_FUNCTION_AS_GETTER(Tab, getActiveTitleColor, activeTitleColor)
+		TITANIUM_FUNCTION_AS_SETTER(Tab, setActiveTitleColor, activeTitleColor)
 		TITANIUM_FUNCTION_AS_GETTER(Tab, getActiveIcon, activeIcon)
 		TITANIUM_FUNCTION_AS_SETTER(Tab, setActiveIcon, activeIcon)
 		TITANIUM_FUNCTION_AS_GETTER(Tab, getBadge, badge)

@@ -105,7 +105,7 @@ namespace TitaniumWindows
 			Titanium::UI::Tab::set_window(window);
 		}
 
-		void Tab::blur() 
+		void Tab::blur()
 		{
 			if (window__) {
 				window__->blur();
@@ -114,7 +114,7 @@ namespace TitaniumWindows
 			set_titleColorByState();
 		}
 
-		void Tab::focus() 
+		void Tab::focus()
 		{
 			if (window__) {
 				window__->focus();
@@ -127,7 +127,7 @@ namespace TitaniumWindows
 		{
 			std::string colorName;
 			if (Titanium::UI::Tab::get_active()) {
-				colorName = Titanium::UI::Tab::get_activeColor();
+				colorName = Titanium::UI::Tab::get_activeTitleColor();
 			}
 			else {
 				colorName = Titanium::UI::Tab::get_titleColor();
@@ -149,9 +149,9 @@ namespace TitaniumWindows
 #endif
 		}
 
-		void Tab::set_activeColor(const std::string& colorName) TITANIUM_NOEXCEPT
+		void Tab::set_activeTitleColor(const std::string& colorName) TITANIUM_NOEXCEPT
 		{
-			Titanium::UI::Tab::set_activeColor(colorName);
+			Titanium::UI::Tab::set_activeTitleColor(colorName);
 			set_titleColorByState();
 		}
 
@@ -209,7 +209,7 @@ namespace TitaniumWindows
 			window__->getViewLayoutDelegate()->set_backgroundFocusedImage(value);
 		}
 
-		void Tab::JSExportInitialize() 
+		void Tab::JSExportInitialize()
 		{
 			JSExport<Tab>::SetClassVersion(1);
 			JSExport<Tab>::SetParent(JSExport<Titanium::UI::Tab>::Class());

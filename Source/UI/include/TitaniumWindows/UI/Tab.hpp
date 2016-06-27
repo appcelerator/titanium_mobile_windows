@@ -54,7 +54,7 @@ namespace TitaniumWindows
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 			virtual void set_title(const std::string& title) TITANIUM_NOEXCEPT override;
 			virtual void set_window(const std::shared_ptr<Titanium::UI::Window>& window) TITANIUM_NOEXCEPT override;
-			virtual void set_activeColor(const std::string&) TITANIUM_NOEXCEPT override;
+			virtual void set_activeTitleColor(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void set_backgroundColor(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void set_backgroundImage(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void set_backgroundSelectedColor(const std::string&) TITANIUM_NOEXCEPT override;
@@ -70,7 +70,7 @@ namespace TitaniumWindows
 			void openWindow(const std::shared_ptr<Window>& window);
 			void closeWindow(const std::shared_ptr<Window>& window);
 
-			bool isLastWindow() 
+			bool isLastWindow()
 			{
 				return (window_stack__.size() == 0);
 			}
