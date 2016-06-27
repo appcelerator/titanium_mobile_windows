@@ -94,7 +94,7 @@ function getSDKInstallDir(next) {
 					newpath = path.join(out.defaultInstallLocation, 'mobilesdk', 'win32', selectedSDK);
 				if (fs.existsSync(oldpath)) {
 					fs.renameSync(oldpath, newpath);
-					return next(null, out.sdks[version].path);
+					return next(null, newpath);
 				} else {
 					return next('Failed to get SDK install dir: ' + selectedSDK);
 				}
