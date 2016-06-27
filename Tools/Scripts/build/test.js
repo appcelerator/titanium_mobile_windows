@@ -74,7 +74,34 @@ function getSDKInstallDir(next) {
 		out = JSON.parse(stdout);
 		selectedSDK = out['titaniumCLI']['selectedSDK'];
 
-		next(null, out['titanium'][selectedSDK]['path']);
+		// WORKAROUND:
+		// Attempt to fix install location issue on "ti sdk install".
+		// currently Ti CLI drops version date string (.v2016xxx) from 6.0.0.v2016xxx,
+		// and it basically breaks sdk info as well as Jenkins test.
+		if (!selectedSDK) {
+			var prc = exec('node "' + titanium + '" sdk list -o json', function (error, stdout, stderr) {
+				var out = JSON.parse(stdout),
+					selectedSDK = out.activeSDK,
+					version;
+
+				Object.keys(out.sdks).forEach(function(sdk) {
+					if (out.sdks[sdk].manifest.name == selectedSDK) {
+						version = out.sdks[sdk].name;
+					}
+				});
+
+				var oldpath = path.join(out.defaultInstallLocation, 'mobilesdk', 'win32', version),
+					newpath = path.join(out.defaultInstallLocation, 'mobilesdk', 'win32', selectedSDK);
+				if (fs.existsSync(oldpath)) {
+					fs.renameSync(oldpath, newpath);
+					return next(null, out.sdks[version].path);
+				} else {
+					return next('Failed to get SDK install dir: ' + selectedSDK);
+				}
+			});
+		} else {
+			next(null, out['titanium'][selectedSDK]['path']);
+		}
 	});
 }
 
