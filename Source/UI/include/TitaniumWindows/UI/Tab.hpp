@@ -81,7 +81,6 @@ namespace TitaniumWindows
 			std::vector<std::shared_ptr<Window>> window_stack__;
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			Windows::UI::Xaml::Controls::PivotItem^ pivotItem__;
-			Windows::UI::Xaml::Media::Brush^ defaultForeground__;
 #else
 			Windows::UI::Xaml::Controls::Grid^  grid__;
 #endif
