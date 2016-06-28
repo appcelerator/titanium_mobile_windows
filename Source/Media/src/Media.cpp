@@ -30,6 +30,12 @@
   TITANIUM_ASSERT(App_property.IsObject()); \
   std::shared_ptr<TitaniumWindows::AppModule> VARNAME = static_cast<JSObject>(App_property).GetPrivate<TitaniumWindows::AppModule>();
 
+#define GENERATE_TI_ERROR_RESPONSE(MESSAGE, VARNAME) \
+Titanium::ErrorResponse VARNAME; \
+VARNAME.code = -1; \
+VARNAME.error = MESSAGE; \
+VARNAME.success = false;
+
 namespace TitaniumWindows
 {
 	using namespace Windows::Foundation;
@@ -200,10 +206,7 @@ namespace TitaniumWindows
 				item.items = getMusicProperties(files);
 
 				if (item.items.size() == 0) {
-					Titanium::ErrorResponse error;
-					error.code = -1;
-					error.error = "Failed to read music properties from file";
-					error.success = false;
+					GENERATE_TI_ERROR_RESPONSE("Failed to read music properties from file", error);
 					openMusicLibraryOptionsState__.callbacks.onerror(error);
 				} else {
 					item.representative = item.items.at(0);
@@ -211,10 +214,7 @@ namespace TitaniumWindows
 				}
 		} else {
 			// files.size() == 0 means FileOpenPicker is canceled
-			Titanium::ErrorResponse error;
-			error.code = -1;
-			error.error = "File picker is canceled";
-			error.success = false;
+			GENERATE_TI_ERROR_RESPONSE("File picker is canceled", error);
 			openMusicLibraryOptionsState__.callbacks.oncancel(error);
 		}
 
@@ -280,18 +280,12 @@ namespace TitaniumWindows
 				item.media_filename = filename;
 				openPhotoGalleryOptionsState__.callbacks.onsuccess(item);
 			} else {
-				Titanium::ErrorResponse error;
-				error.code = -1;
-				error.error = "Failed to load content from file";
-				error.success = false;
+				GENERATE_TI_ERROR_RESPONSE("Failed to load content from file", error);
 				openPhotoGalleryOptionsState__.callbacks.onerror(error);
 			}
 		} else {
 			// files.size() == 0 means FileOpenPicker is canceled
-			Titanium::ErrorResponse error;
-			error.code = -1;
-			error.error = "File picker is canceled";
-			error.success = false;
+			GENERATE_TI_ERROR_RESPONSE("File picker is canceled", error);
 			openPhotoGalleryOptionsState__.callbacks.oncancel(error);
 		}
 
@@ -371,6 +365,9 @@ namespace TitaniumWindows
 	{
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		TITANIUM_ASSERT_AND_THROW(cameraPreviewStarted__, "Camera is not visiable. Use showCamera() to show camera.");
+		if (!cameraPreviewStarted__) {
+			return;
+		}
 		concurrency::create_task(mediaCapture__->StopPreviewAsync()).then([this](concurrency::task<void> stopTask) {
 			try {
 				stopTask.get();
@@ -448,10 +445,68 @@ namespace TitaniumWindows
 	}
 #endif
 
+#if !defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+	void MediaModule::showDefaultCamera(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT
+	{
+		auto cameraCaptureUI = ref new CameraCaptureUI();
+
+		// TODO: Provide a option to specify aspect ratio
+		cameraCaptureUI->PhotoSettings->CroppedAspectRatio = Size(16, 9);
+
+		concurrency::create_task(cameraCaptureUI->CaptureFileAsync(CameraCaptureUIMode::Photo)).then([options, this](concurrency::task<StorageFile^> task) {
+			try {
+				auto fromFile = task.get();
+				if (fromFile != nullptr) {
+					// CameraCaptureUI saves picture into temporary folder. Let's move it to photo library then.
+					concurrency::task<StorageFile^>(KnownFolders::CameraRoll->CreateFileAsync("TiMediaPhoto.jpg", CreationCollisionOption::GenerateUniqueName))
+						.then([fromFile, options](concurrency::task<Windows::Storage::StorageFile^> task) {
+						try {
+							auto toFile = task.get();
+							concurrency::create_task(fromFile->MoveAndReplaceAsync(toFile)).then([toFile, options](concurrency::task<void> task) {
+								try {
+									task.get();
+									Titanium::Media::CameraMediaItemType item;
+									item.mediaType = Titanium::Media::MediaType::Photo;
+									item.media_filename = TitaniumWindows::Utility::ConvertString(toFile->Path);
+									options.callbacks.onsuccess(item);
+								} catch (Platform::Exception^ e) {
+									GENERATE_TI_ERROR_RESPONSE(TitaniumWindows::Utility::ConvertString(e->Message), error);
+									options.callbacks.onerror(error);
+								}
+							});
+						} catch (Platform::Exception^ e) {
+							GENERATE_TI_ERROR_RESPONSE(TitaniumWindows::Utility::ConvertString(e->Message), error);
+							options.callbacks.onerror(error);
+						}
+					});
+				} else {
+					GENERATE_TI_ERROR_RESPONSE("Failed to capture photo", error);
+					options.callbacks.onerror(error);
+				}
+			} catch (Platform::Exception^ e) {
+				GENERATE_TI_ERROR_RESPONSE(TitaniumWindows::Utility::ConvertString(e->Message), error);
+				options.callbacks.onerror(error);
+			}
+		});
+	}
+#endif
+
 	void MediaModule::showCamera(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT
 	{
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 
+#if defined(IS_WINDOWS_10)
+		// If there's no overlay on Windows 10 (Mobile), let's use CameraCaptureUI.
+		if (options.overlay == nullptr) {
+			showDefaultCamera(options);
+			return;
+		}
+#elif !defined(IS_WINDOWS_PHONE)
+		// For Windows 8.1 Store Apps, CameraCaptureUI is the only option.
+		showDefaultCamera(options);
+		return;
+#endif
+
+#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		if (cameraPreviewStarted__) {
 			TITANIUM_MODULE_LOG_WARN("Failed to showCamera(): Camera is already visible.");
 			return;
@@ -497,19 +552,12 @@ namespace TitaniumWindows
 
 						previewTask.get();
 					} catch (Platform::Exception^ e) {
-						const std::string errorMessage = "Ti.Media.showCamera() failed to start preview: " + TitaniumWindows::Utility::ConvertString(e->Message);
-						TITANIUM_MODULE_LOG_WARN(errorMessage);
-						Titanium::ErrorResponse error;
-						error.error = errorMessage;
-						error.success = false;
+						GENERATE_TI_ERROR_RESPONSE("Ti.Media.showCamera() failed to start preview: " + TitaniumWindows::Utility::ConvertString(e->Message), error);
 						options.callbacks.onerror(error);
 					}
 				});
 			} catch (Platform::Exception^ e) {
-				const std::string errorMessage = "Ti.Media.showCamera() failed to initialize capture device: " + TitaniumWindows::Utility::ConvertString(e->Message);
-				Titanium::ErrorResponse error;
-				error.error = errorMessage;
-				error.success = false;
+				GENERATE_TI_ERROR_RESPONSE("Ti.Media.showCamera() failed to initialize capture device: " + TitaniumWindows::Utility::ConvertString(e->Message), error);
 				options.callbacks.onerror(error);
 			}
 		});
@@ -525,30 +573,6 @@ namespace TitaniumWindows
 				static_cast<JSObject>(window.GetProperty("add"))(add_args, window);
 			});
 		}
-
-#else
-		auto cameraCaptureUI = ref new CameraCaptureUI();
-
-		// TODO: Provide a option to specify aspect ratio
-		cameraCaptureUI->PhotoSettings->CroppedAspectRatio = Size(16, 9);
-
-		concurrency::task<StorageFile^>(cameraCaptureUI->CaptureFileAsync(CameraCaptureUIMode::Photo)).then([options, this](StorageFile^ file) {
-			if (nullptr != file) {
-				Titanium::Media::CameraMediaItemType item;
-				item.mediaType = Titanium::Media::MediaType::Photo;
-				if (file != nullptr) {
-					item.media_filename = TitaniumWindows::Utility::ConvertString(file->Path);
-				} else {
-					item.error = "Failed to take picture";
-				}
-				options.callbacks.onsuccess(item);
-			} else {
-				Titanium::ErrorResponse error;
-				error.error = "Failed to take picture";
-				error.success = false;
-				options.callbacks.oncancel(error);
-			}
-		});
 #endif
 	}
 
@@ -652,14 +676,10 @@ namespace TitaniumWindows
 						cameraCallbacks__.onsuccess(item);
 					}
 				});
-			} catch (Platform::COMException^ e) {
+			} catch (Platform::Exception^ e) {
 				TitaniumWindows::Utility::RunOnUIThread([this, e]() {
-					const std::string message = TitaniumWindows::Utility::ConvertString(e->Message);
-					TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start taking photo: ", message);
 					if (cameraCallbacks__.error.IsObject()) {
-						Titanium::ErrorResponse error;
-						error.error = message;
-						error.success = false;
+						GENERATE_TI_ERROR_RESPONSE("MediaModule: Failure on start taking photo: " + TitaniumWindows::Utility::ConvertString(e->Message), error);
 						cameraCallbacks__.onerror(error);
 					}
 				});

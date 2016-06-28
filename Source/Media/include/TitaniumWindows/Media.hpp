@@ -176,6 +176,11 @@ namespace TitaniumWindows
 		void takeScreenshotDone(JSObject callback, const std::string& file = "", const bool& hasError = true);
 		void clearScreenshotResources();
 		void takeScreenshotToFile(JSObject callback);
+
+#if !defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+		void showDefaultCamera(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT;
+#endif
+
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		void updatePreviewOrientation();
 #endif
