@@ -389,7 +389,7 @@ TEST_F(GlobalObjectTests, requireNestedModule)
 	)js";
 
 	std::string module_js = R"js(
-		var hello = require('hello');
+		var hello = require('./hello');
 		module.exports = hello;
 	)js";
 
