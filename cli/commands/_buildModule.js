@@ -15,6 +15,7 @@ var archiver = require('archiver'),
 	async = require('async'),
 	appc = require('node-appc'),
 	Builder = require('titanium-sdk/lib/builder'),
+	DOMParser = require('xmldom').DOMParser,
 	fs = require('fs'),
 	os = require('os'),
 	wrench = require('wrench'),
@@ -22,7 +23,8 @@ var archiver = require('archiver'),
 	windowslib = require('windowslib'),
 	util = require('util'),
 	spawn = require('child_process').spawn,
-	types = ['WindowsPhone', 'WindowsStore', 'Windows10'],
+	defaultTypes = ['WindowsPhone', 'WindowsStore', 'Windows10'],
+	types = defaultTypes.slice(0),
 	typesMin = ['phone', 'store', 'win10'],
 	configuration = 'Release',
 	vs_architectures = {ARM:'ARM', x86:'Win32'}; // x86 -> Win32 mapping
@@ -198,6 +200,30 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 			}
 			next();
 		});
+	}
+
+	// TIMOB-23557
+	// read timodule.xml and get configuration
+	var timodule = path.join(_t.projectDir, 'timodule.xml');
+	if (fs.existsSync(timodule)) {
+		var ti_dom  = new DOMParser().parseFromString(fs.readFileSync(timodule, 'utf8').toString()),
+			ti_root = ti_dom.getElementsByTagName('windows');
+		if (ti_root.length > 0) {
+			var win_items = ti_root.item(0);
+			appc.xml.forEachElement(win_items, function (item) {
+				if (item.tagName == 'manifest') {
+					appc.xml.forEachElement(item, function(node) {
+						if (node.tagName == 'uses-sdk') {
+							var sdk_version = appc.xml.getAttr(node, 'targetSdkVersion');
+							// Remove Windows10 target only when it targets to 8.1 explicitly
+							if (sdk_version == '8.1') {
+								types = defaultTypes.slice(0, 2);
+							}
+						}
+					});
+				}
+			});
+		}
 	}
 
 	// compile module projects
