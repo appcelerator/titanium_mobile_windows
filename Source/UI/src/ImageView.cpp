@@ -166,7 +166,7 @@ namespace TitaniumWindows
 			for (size_t i = 0; i < image_count; i++) {
 				size_t index = reverse ? (image_count - 1) - i : i;
 
-				const auto bitmap = bitmaps__->GetAt(i);
+				const auto bitmap = bitmaps__->GetAt(index);
 				auto keyFrame = ref new Windows::UI::Xaml::Media::Animation::DiscreteObjectKeyFrame();
 				Windows::Foundation::TimeSpan key_time;
 				key_time.Duration = timer_interval_ticks.count() * i;
