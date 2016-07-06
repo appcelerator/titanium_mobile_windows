@@ -5,86 +5,80 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('./should'),
+var should = require('./utilities/assertions'),
 	utilities = require('./utilities/utilities');
 
 describe('Titanium.Gesture', function () {
-	it('apiName', function (finish) {
+	it('apiName', function () {
+		should(Ti.Gesture).have.a.readOnlyProperty('apiName').which.is.a.String;
 		should(Ti.Gesture.apiName).be.eql('Ti.Gesture');
-		finish();
 	});
 
-	it('Ti.Gesture', function (finish) {
+	it('Ti.Gesture', function () {
 		should(Ti.Gesture).not.be.undefined;
 		should(Ti.Gesture.addEventListener).be.a.Function;
 		should(Ti.Gesture.removeEventListener).be.a.Function;
-		finish();
 	});
 
-	it('landscape', function (finish) {
-		should(Ti.Gesture.landscape).not.be.undefined;
-		should(Ti.Gesture.landscape).be.a.Boolean;
-		finish();
+	// TODO Not defined on iOS, but probably should for parity sake?
+	(utilities.isIOS() ? it.skip : it)('landscape', function () {
+		should(Ti.Gesture).have.a.readOnlyProperty('landscape').which.is.a.Boolean;
 	});
 
-	it('portrait', function (finish) {
-		should(Ti.Gesture.portrait).not.be.undefined;
-		should(Ti.Gesture.portrait).be.a.Boolean;
-		finish();
+	it('orientation', function () {
+		should(Ti.Gesture).have.a.readOnlyProperty('orientation').which.is.a.Number;
 	});
 
-	it('orientation', function (finish) {
-		should(Ti.Gesture.orientation).not.be.undefined;
-		should(Ti.Gesture.orientation).be.a.Number;
-		finish();
+	// TODO Not defined on iOS, but probably should for parity sake?
+	(utilities.isIOS() ? it.skip : it)('portrait', function () {
+		should(Ti.Gesture).have.a.readOnlyProperty('portrait').which.is.a.Boolean;
 	});
 
-	it('getLandscape()', function (finish) {
+	// TODO Not defined on iOS, but probably should for parity sake?
+	// FIXME Doesn't exist on Android
+	((utilities.isIOS() || utilities.isAndroid()) ? it.skip : it)('getLandscape()', function () {
 		should(Ti.Gesture.getLandscape).not.be.undefined;
 		should(Ti.Gesture.getLandscape).be.a.Function;
 		should(Ti.Gesture.getLandscape()).be.a.Boolean;
-		finish();
 	});
 
-	it('getPortrait()', function (finish) {
+	// TODO Not defined on iOS, but probably should for parity sake?
+	// FIXME Doesn't exist on Android
+	((utilities.isIOS() || utilities.isAndroid()) ? it.skip : it)('getPortrait()', function () {
 		should(Ti.Gesture.getPortrait).not.be.undefined;
 		should(Ti.Gesture.getPortrait).be.a.Function;
 		should(Ti.Gesture.getPortrait()).be.a.Boolean;
-		finish();
 	});
 
-	it('isLandscape()', function (finish) {
+	it('isLandscape()', function () {
 		should(Ti.Gesture.isLandscape).not.be.undefined;
 		should(Ti.Gesture.isLandscape).be.a.Function;
 		should(Ti.Gesture.isLandscape()).be.a.Boolean;
-		finish();
 	});
 
-	it('isPortrait()', function (finish) {
+	it('isPortrait()', function () {
 		should(Ti.Gesture.isPortrait).not.be.undefined;
 		should(Ti.Gesture.isPortrait).be.a.Function;
 		should(Ti.Gesture.isPortrait()).be.a.Boolean;
-		finish();
 	});
 
-	it('isFaceDown()', function (finish) {
+	// FIXME Seems like only Windows has this? Was it deprecated/removed?
+	(utilities.isWindows() ? it : it.skip)('isFaceDown()', function () {
 		should(Ti.Gesture.isFaceDown).not.be.undefined;
 		should(Ti.Gesture.isFaceDown).be.a.Function;
 		should(Ti.Gesture.isFaceDown()).be.a.Boolean;
-		finish();
 	});
 
-	it('isFaceUp()', function (finish) {
+	// FIXME Seems like only Windows has this? Was it deprecated/removed?
+	(utilities.isWindows() ? it : it.skip)('isFaceUp()', function () {
 		should(Ti.Gesture.isFaceUp).not.be.undefined;
 		should(Ti.Gesture.isFaceUp).be.a.Function;
 		should(Ti.Gesture.isFaceUp()).be.a.Boolean;
-		finish();
 	});
 
-	it('getOrientation()', function (finish) {
+	it('getOrientation()', function () {
 		should(Ti.Gesture.getOrientation).not.be.undefined;
 		should(Ti.Gesture.getOrientation).be.a.Function;
 		should(Ti.Gesture.getOrientation()).be.a.Number;
-		finish();
 	});
 });

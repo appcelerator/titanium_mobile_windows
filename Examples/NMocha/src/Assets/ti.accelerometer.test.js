@@ -5,20 +5,18 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('./should'),
+var should = require('./utilities/assertions'),
 	utilities = require('./utilities/utilities');
 
 describe('Titanium.Accelerometer', function () {
-	it('apiName', function (finish) {
+	it('apiName', function () {
+		should(Ti.Accelerometer).have.readOnlyProperty('apiName').which.is.a.String;
 		should(Ti.Accelerometer.apiName).be.eql('Ti.Accelerometer');
-		finish();
 	});
 
-	it('exists', function (finish) {
-		should(Ti.Accelerometer).not.be.undefined;
-		should(Ti.Accelerometer).not.be.null;
+	it('exists', function () {
+		should(Ti.Accelerometer).exist;
 		should(Ti.Accelerometer.addEventListener).be.a.Function;
 		should(Ti.Accelerometer.removeEventListener).be.a.Function;
-		finish();
 	});
 });

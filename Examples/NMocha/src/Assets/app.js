@@ -1,22 +1,23 @@
 /*
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2016 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 var win = Ti.UI.createWindow({
-    backgroundColor: 'lightyellow'
+	backgroundColor: 'yellow'
 });
 win.open();
 
 require('./ti-mocha');
 var $results = [],
-    failed = false;
+	failed = false;
 
 // ============================================================================
 // Add the tests here using "require"
 require('./ti.accelerometer.test');
+require('./ti.api.test');
 require('./ti.app.test');
 require('./ti.app.properties.test');
 require('./ti.app.windows.backgroundservice.test');
@@ -28,8 +29,9 @@ require('./ti.contacts.test');
 require('./ti.contacts.group.test');
 require('./ti.contacts.person.test');
 require('./ti.database.test');
-require('./ti.filestream.test');
 require('./ti.filesystem.test');
+require('./ti.filesystem.file.test');
+require('./ti.filesystem.filestream.test');
 require('./ti.geolocation.test');
 require('./ti.gesture.test');
 require('./ti.internal.test');
@@ -38,6 +40,7 @@ require('./ti.map.test');
 require('./ti.network.test');
 require('./ti.network.httpclient.test');
 require('./ti.platform.test');
+require('./ti.platform.displaycaps.test');
 require('./ti.require.test');
 require('./ti.stream.test');
 require('./ti.test');
@@ -73,48 +76,63 @@ require('./ti.xml.test');
 // add a special mocha reporter that will time each test run using
 // our microsecond timer
 function $Reporter(runner) {
-    var started,
-        title;
+	var started,
+		title;
 
-    runner.on('suite', function (suite) {
-        title = suite.title;
-    });
+	runner.on('suite', function (suite) {
+		title = suite.title;
+	});
 
-    runner.on('test', function (test) {
-        Ti.API.info('Started: ' + test.title);
-        started = new Date().getTime();
-    });
+	runner.on('test', function (test) {
+		Ti.API.info('!TEST_START: ' + test.title);
+		started = new Date().getTime();
+	});
 
-    runner.on('fail', function (test, err) {
-        test.err = err;
-        failed = true;
-    });
+	runner.on('pending', function (test) {
+		// TODO Spit out something like !TEST_SKIP:  ?
+		started = new Date().getTime(); // reset timer. pending/skipped tests basically start and end immediately
+	});
 
-    runner.on('test end', function (test) {
-        var tdiff = new Date().getTime() - started;
-        $results.push({
-            state: test.state || 'skipped',
-            duration: tdiff,
-            suite: title,
-            title: test.title,
-            error: test.err
-        });
-    });
+	// 'pending' hook for skipped tests? Does 'pending', then immediate 'test end'. No 'test' event
+
+	runner.on('fail', function (test, err) {
+		test.err = err;
+		failed = true;
+	});
+
+	runner.on('test end', function (test) {
+		var tdiff = new Date().getTime() - started,
+			result = {
+				state: test.state || 'skipped',
+				duration: tdiff,
+				suite: title,
+				title: test.title,
+				error: test.err // TODO Include the message property on Windows!
+			},
+			stringified = JSON.stringify(result);
+
+			stringified = stringified.replace(/\\n/g, "\\n")
+					   .replace(/\\'/g, "\\'")
+					   .replace(/\\"/g, '\\"')
+					   .replace(/\\&/g, "\\&")
+					   .replace(/\\r/g, "\\r")
+					   .replace(/\\t/g, "\\t")
+					   .replace(/\\b/g, "\\b")
+					   .replace(/\\f/g, "\\f");
+			// remove non-printable and other non-valid JSON chars
+			stringified = stringified.replace(/[\u0000-\u0019]+/g,'');
+		Ti.API.info('!TEST_END: ' + stringified);
+		$results.push(result);
+	});
 };
 
 mocha.setup({
-    reporter: $Reporter,
-    quiet: true
+	reporter: $Reporter,
+	quiet: true
 });
 
 // dump the output, which will get interpreted above in the logging code
 mocha.run(function () {
-    win.backgroundColor = failed ? 'red' : 'green';
-
-    Ti.API.info('!TEST_RESULTS_START!\n' +
-        (JSON.stringify({
-            date: new Date,
-            results: $results
-        })) +
-    '\n!TEST_RESULTS_STOP!');
+	win.backgroundColor = failed ? 'red' : 'green';
+	Ti.API.info('!TEST_RESULTS_STOP!');
 });

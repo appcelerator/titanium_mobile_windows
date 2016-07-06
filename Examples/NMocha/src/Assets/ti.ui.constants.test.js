@@ -4,275 +4,225 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var should = require('./should');
+var should = require('./utilities/assertions'),
+	utilities = require('./utilities/utilities');
 
 describe('Titanium.UI', function () {
-	it('UNKNOWN', function (finish) {
-		should(Ti.UI.UNKNOWN).be.a.Number;
-		finish();
-	});
-	it('PORTRAIT', function (finish) {
-		should(Ti.UI.PORTRAIT).be.a.Number;
-		finish();
-	});
-	it('UPSIDE_PORTRAIT', function (finish) {
-		should(Ti.UI.UPSIDE_PORTRAIT).be.a.Number;
-		finish();
-	});
-	it('LANDSCAPE_LEFT', function (finish) {
-		should(Ti.UI.LANDSCAPE_LEFT).be.a.Number;
-		finish();
-	});
-	it('LANDSCAPE_RIGHT', function (finish) {
-		should(Ti.UI.LANDSCAPE_RIGHT).be.a.Number;
-		finish();
-	});
-	it('FACE_UP', function (finish) {
-		should(Ti.UI.FACE_UP).be.a.Number;
-		finish();
-	});
-	it('FACE_DOWN', function (finish) {
-		should(Ti.UI.FACE_DOWN).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_GO', function (finish) {
-		should(Ti.UI.RETURNKEY_GO).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_GOOGLE', function (finish) {
-		should(Ti.UI.RETURNKEY_GOOGLE).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_JOIN', function (finish) {
-		should(Ti.UI.RETURNKEY_JOIN).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_NEXT', function (finish) {
-		should(Ti.UI.RETURNKEY_NEXT).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_ROUTE', function (finish) {
-		should(Ti.UI.RETURNKEY_ROUTE).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_SEARCH', function (finish) {
-		should(Ti.UI.RETURNKEY_SEARCH).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_YAHOO', function (finish) {
-		should(Ti.UI.RETURNKEY_YAHOO).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_DONE', function (finish) {
-		should(Ti.UI.RETURNKEY_DONE).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_EMERGENCY_CALL', function (finish) {
-		should(Ti.UI.RETURNKEY_EMERGENCY_CALL).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_DEFAULT', function (finish) {
-		should(Ti.UI.RETURNKEY_DEFAULT).be.a.Number;
-		finish();
-	});
-	it('RETURNKEY_SEND', function (finish) {
-		should(Ti.UI.RETURNKEY_SEND).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_APPEARANCE_DEFAULT', function (finish) {
-		should(Ti.UI.KEYBOARD_APPEARANCE_DEFAULT).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_APPEARANCE_ALERT', function (finish) {
-		should(Ti.UI.KEYBOARD_APPEARANCE_ALERT).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_ASCII', function (finish) {
-		should(Ti.UI.KEYBOARD_ASCII).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_NUMBERS_PUNCTUATION', function (finish) {
-		should(Ti.UI.KEYBOARD_NUMBERS_PUNCTUATION).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_URL', function (finish) {
-		should(Ti.UI.KEYBOARD_URL).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_NUMBER_PAD', function (finish) {
-		should(Ti.UI.KEYBOARD_NUMBER_PAD).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_PHONE_PAD', function (finish) {
-		should(Ti.UI.KEYBOARD_PHONE_PAD).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_EMAIL', function (finish) {
-		should(Ti.UI.KEYBOARD_EMAIL).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_NAMEPHONE_PAD', function (finish) {
-		should(Ti.UI.KEYBOARD_NAMEPHONE_PAD).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_DEFAULT', function (finish) {
-		should(Ti.UI.KEYBOARD_DEFAULT).be.a.Number;
-		finish();
-	});
-	it('KEYBOARD_DECIMAL_PAD', function (finish) {
-		should(Ti.UI.KEYBOARD_DECIMAL_PAD).be.a.Number;
-		finish();
-	});
-	it('AUTOLINK_EMAIL_ADDRESSES', function (finish) {
-		should(Ti.UI.AUTOLINK_EMAIL_ADDRESSES).be.a.Number;
-		finish();
-	});
-	it('AUTOLINK_MAP_ADDRESSES', function (finish) {
-		should(Ti.UI.AUTOLINK_MAP_ADDRESSES).be.a.Number;
-		finish();
-	});
-	it('AUTOLINK_PHONE_NUMBERS', function (finish) {
-		should(Ti.UI.AUTOLINK_PHONE_NUMBERS).be.a.Number;
-		finish();
-	});
-	it('AUTOLINK_URLS', function (finish) {
-		should(Ti.UI.AUTOLINK_URLS).be.a.Number;
-		finish();
-	});
-	it('AUTOLINK_NONE', function (finish) {
-		should(Ti.UI.AUTOLINK_NONE).be.a.Number;
-		finish();
-	});
-	it('AUTOLINK_ALL', function (finish) {
-		should(Ti.UI.AUTOLINK_ALL).be.a.Number;
-		finish();
-	});
-	it('INPUT_BORDERSTYLE_NONE', function (finish) {
-		should(Ti.UI.INPUT_BORDERSTYLE_NONE).be.a.Number;
-		finish();
-	});
-	it('INPUT_BORDERSTYLE_ROUNDED', function (finish) {
-		should(Ti.UI.INPUT_BORDERSTYLE_ROUNDED).be.a.Number;
-		finish();
-	});
-	it('INPUT_BORDERSTYLE_BEZEL', function (finish) {
-		should(Ti.UI.INPUT_BORDERSTYLE_BEZEL).be.a.Number;
-		finish();
-	});
-	it('INPUT_BORDERSTYLE_LINE', function (finish) {
-		should(Ti.UI.INPUT_BORDERSTYLE_LINE).be.a.Number;
-		finish();
-	});
-	it('INPUT_BUTTONMODE_ONFOCUS', function (finish) {
-		should(Ti.UI.INPUT_BUTTONMODE_ONFOCUS).be.a.Number;
-		finish();
-	});
-	it('INPUT_BUTTONMODE_ALWAYS', function (finish) {
-		should(Ti.UI.INPUT_BUTTONMODE_ALWAYS).be.a.Number;
-		finish();
-	});
-	it('INPUT_BUTTONMODE_NEVER', function (finish) {
-		should(Ti.UI.INPUT_BUTTONMODE_NEVER).be.a.Number;
-		finish();
-	});
-	it('LIST_ITEM_TEMPLATE_DEFAULT', function (finish) {
-		should(Ti.UI.LIST_ITEM_TEMPLATE_DEFAULT).be.a.Number;
-		finish();
-	});
-	it('LIST_ACCESSORY_TYPE_NONE', function (finish) {
-		should(Ti.UI.LIST_ACCESSORY_TYPE_NONE).be.a.Number;
-		finish();
-	});
-	it('LIST_ACCESSORY_TYPE_CHECKMARK', function (finish) {
-		should(Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK).be.a.Number;
-		finish();
-	});
-	it('LIST_ACCESSORY_TYPE_DETAIL', function (finish) {
-		should(Ti.UI.LIST_ACCESSORY_TYPE_DETAIL).be.a.Number;
-		finish();
-	});
-	it('LIST_ACCESSORY_TYPE_DISCLOSURE', function (finish) {
-		should(Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE).be.a.Number;
-		finish();
-	});
-	it('TEXT_ALIGNMENT_LEFT', function (finish) {
-		should(Ti.UI.TEXT_ALIGNMENT_LEFT).be.a.Number; // String on Android
-		finish();
-	});
-	it('TEXT_ALIGNMENT_CENTER', function (finish) {
-		should(Ti.UI.TEXT_ALIGNMENT_CENTER).be.a.Number; // String on Android
-		finish();
-	});
-	it('TEXT_ALIGNMENT_RIGHT', function (finish) {
-		should(Ti.UI.TEXT_ALIGNMENT_RIGHT).be.a.Number; // String on Android
-		finish();
-	});
-	it('TEXT_VERTICAL_ALIGNMENT_BOTTOM', function (finish) {
-		should(Ti.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM).be.a.Number; // String on Android
-		finish();
-	});
-	it('TEXT_VERTICAL_ALIGNMENT_CENTER', function (finish) {
-		should(Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER).be.a.Number; // String on Android
-		finish();
-	});
-	it('TEXT_VERTICAL_ALIGNMENT_TOP', function (finish) {
-		should(Ti.UI.TEXT_VERTICAL_ALIGNMENT_TOP).be.a.Number; // String on Android
-		finish();
-	});
-	it('PICKER_TYPE_PLAIN', function (finish) {
-		should(Ti.UI.PICKER_TYPE_PLAIN).be.a.Number;
-		finish();
-	});
-	it('PICKER_TYPE_TIME', function (finish) {
-		should(Ti.UI.PICKER_TYPE_TIME).be.a.Number;
-		finish();
-	});
-	it('PICKER_TYPE_DATE', function (finish) {
-		should(Ti.UI.PICKER_TYPE_DATE).be.a.Number;
-		finish();
-	});
-	it('PICKER_TYPE_DATE_AND_TIME', function (finish) {
-		should(Ti.UI.PICKER_TYPE_DATE_AND_TIME).be.a.Number;
-		finish();
-	});
-	it('PICKER_TYPE_COUNT_DOWN_TIMER', function (finish) {
-		should(Ti.UI.PICKER_TYPE_COUNT_DOWN_TIMER).be.a.Number;
-		finish();
-	});
-	it('TEXT_AUTOCAPITALIZATION_NONE', function (finish) {
-		should(Ti.UI.TEXT_AUTOCAPITALIZATION_NONE).be.a.Number;
-		finish();
-	});
-	it('TEXT_AUTOCAPITALIZATION_SENTENCES', function (finish) {
-		should(Ti.UI.TEXT_AUTOCAPITALIZATION_SENTENCES).be.a.Number;
-		finish();
-	});
-	it('TEXT_AUTOCAPITALIZATION_WORDS', function (finish) {
-		should(Ti.UI.TEXT_AUTOCAPITALIZATION_WORDS).be.a.Number;
-		finish();
-	});
-	it('TEXT_AUTOCAPITALIZATION_ALL', function (finish) {
-		should(Ti.UI.TEXT_AUTOCAPITALIZATION_ALL).be.a.Number;
-		finish();
-	});
-	it('UNIT_PX', function (finish) {
-		should(Ti.UI.UNIT_PX).be.a.String;
-		finish();
-	});
-	it('UNIT_MM', function (finish) {
-		should(Ti.UI.UNIT_MM).be.a.String;
-		finish();
-	});
-	it('UNIT_CM', function (finish) {
-		should(Ti.UI.UNIT_CM).be.a.String;
-		finish();
-	});
-	it('UNIT_IN', function (finish) {
-		should(Ti.UI.UNIT_IN).be.a.String;
-		finish();
-	});
-	it('UNIT_DIP', function (finish) {
-		should(Ti.UI.UNIT_DIP).be.a.String;
-		finish();
-	});
+
+	// TODO Use the JSCA file to generate tests!
+	var ALL = ['iphone', 'ipad', 'android', 'mobileweb', 'windowsstore', 'windowsphone'],
+		NOT_ANDROID = ['iphone', 'ipad', 'mobileweb', 'windowsstore', 'windowsphone'],
+		NOT_MOBILEWEB = ['iphone', 'ipad', 'android', 'windowsstore', 'windowsphone'],
+		IOS_ONLY = ['iphone', 'ipad'],
+		IOS_AND_WINDOWS = ['iphone', 'ipad', 'windowsstore', 'windowsphone'],
+		ANDROID_AND_WINDOWS = ['android', 'windowsstore', 'windowsphone'],
+		constants = {
+			'ANIMATION_CURVE_EASE_IN': { type: 'Number', platforms: NOT_ANDROID },
+			'ANIMATION_CURVE_EASE_IN_OUT': { type: 'Number', platforms: NOT_ANDROID },
+			'ANIMATION_CURVE_EASE_OUT': { type: 'Number', platforms: NOT_ANDROID },
+			'ANIMATION_CURVE_LINEAR': { type: 'Number', platforms: NOT_ANDROID },
+
+			'ATTRIBUTE_BACKGROUND_COLOR': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'ATTRIBUTE_BASELINE_OFFSET': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_EXPANSION': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_FONT': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'ATTRIBUTE_FOREGROUND_COLOR': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'ATTRIBUTE_KERN': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LETTERPRESS_STYLE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LIGATURE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LINE_BREAK': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LINE_BREAK_BY_CHAR_WRAPPING': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LINE_BREAK_BY_CLIPPING': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_HEAD': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_MIDDLE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_TAIL': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LINE_BREAK_BY_WORD_WRAPPING': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_LINK': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'ATTRIBUTE_OBLIQUENESS': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_SHADOW': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_STRIKETHROUGH_COLOR': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_STRIKETHROUGH_STYLE': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'ATTRIBUTE_STROKE_COLOR': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_STROKE_WIDTH': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_TEXT_EFFECT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINES_STYLE': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'ATTRIBUTE_UNDERLINE_BY_WORD': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_COLOR': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_PATTERN_DASH': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_PATTERN_DASH_DOT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_PATTERN_DASH_DOT_DOT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_PATTERN_DOT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_PATTERN_SOLID': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_STYLE_DOUBLE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_STYLE_NONE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_STYLE_SINGLE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_UNDERLINE_STYLE_THICK': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_WRITING_DIRECTION': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_WRITING_DIRECTION_EMBEDDING': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_WRITING_DIRECTION_LEFT_TO_RIGHT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_WRITING_DIRECTION_NATURAL': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_WRITING_DIRECTION_OVERRIDE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'ATTRIBUTE_WRITING_DIRECTION_RIGHT_TO_LEFT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+
+			'AUTOLINK_ALL': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'AUTOLINK_CALENDAR': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'AUTOLINK_EMAIL_ADDRESSES': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'AUTOLINK_MAP_ADDRESSES': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'AUTOLINK_NONE': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'AUTOLINK_PHONE_NUMBERS': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'AUTOLINK_URLS': { type: 'Number', platforms: NOT_MOBILEWEB},
+
+			'EXTEND_EDGE_ALL': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'EXTEND_EDGE_BOTTOM': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'EXTEND_EDGE_LEFT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'EXTEND_EDGE_NONE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'EXTEND_EDGE_RIGHT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'EXTEND_EDGE_TOP': { type: 'Number', platforms: IOS_AND_WINDOWS},
+
+			'FACE_DOWN': { type: 'Number', platforms: ALL},
+			'FACE_UP': { type: 'Number', platforms: ALL},
+			'LANDSCAPE_LEFT': { type: 'Number', platforms: ALL},
+			'LANDSCAPE_RIGHT': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'PORTRAIT': { type: 'Number', platforms: ALL},
+			'UNKNOWN': { type: 'Number', platforms: ALL},
+			'UPSIDE_PORTRAIT': { type: 'Number', platforms: NOT_MOBILEWEB},
+
+			'FILL': { type: 'String', platforms: ALL},
+			'INHERIT': { type: 'String', platforms: ['mobileweb']},
+			'SIZE': { type: 'String', platforms: ALL},
+
+			'INPUT_BORDERSTYLE_BEZEL': { type: 'Number', platforms: ALL},
+			'INPUT_BORDERSTYLE_LINE': { type: 'Number', platforms: ALL},
+			'INPUT_BORDERSTYLE_NONE': { type: 'Number', platforms: ALL},
+			'INPUT_BORDERSTYLE_ROUNDED': { type: 'Number', platforms: ALL},
+
+			'INPUT_BUTTONMODE_ALWAYS': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'INPUT_BUTTONMODE_NEVER': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'INPUT_BUTTONMODE_ONBLUR': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'INPUT_BUTTONMODE_ONFOCUS': { type: 'Number', platforms: NOT_MOBILEWEB},
+
+			'INPUT_TYPE_CLASS_NUMBER': { type: 'Number', platforms: ['android']},
+			'INPUT_TYPE_CLASS_TEXT': { type: 'Number', platforms: ['android']},
+
+			'KEYBOARD_APPEARANCE_DARK': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'KEYBOARD_APPEARANCE_DEFAULT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'KEYBOARD_APPEARANCE_LIGHT': { type: 'Number', platforms: IOS_AND_WINDOWS},
+
+			'KEYBOARD_TYPE_ASCII': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'KEYBOARD_TYPE_DECIMAL_PAD': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'KEYBOARD_TYPE_DEFAULT': { type: 'Number', platforms: ALL},
+			'KEYBOARD_TYPE_EMAIL': { type: 'Number', platforms: ALL},
+			'KEYBOARD_TYPE_NAMEPHONE_PAD': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'KEYBOARD_TYPE_NUMBERS_PUNCTUATION': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'KEYBOARD_TYPE_NUMBER_PAD': { type: 'Number', platforms: ALL},
+			'KEYBOARD_TYPE_PHONE_PAD': { type: 'Number', platforms: ALL},
+			'KEYBOARD_TYPE_TWITTER': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'KEYBOARD_TYPE_URL': { type: 'Number', platforms: ALL},
+			'KEYBOARD_TYPE_WEBSEARCH': { type: 'Number', platforms: IOS_AND_WINDOWS},
+
+			'LIST_ACCESSORY_TYPE_CHECKMARK': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'LIST_ACCESSORY_TYPE_DETAIL': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'LIST_ACCESSORY_TYPE_DISCLOSURE': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'LIST_ACCESSORY_TYPE_NONE': { type: 'Number', platforms: NOT_MOBILEWEB},
+
+			'LIST_ITEM_TEMPLATE_CONTACTS': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'LIST_ITEM_TEMPLATE_DEFAULT': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'LIST_ITEM_TEMPLATE_SETTINGS': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'LIST_ITEM_TEMPLATE_SUBTITLE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+
+			'NOTIFICATION_DURATION_LONG': { type: 'Number', platforms: ANDROID_AND_WINDOWS},
+			'NOTIFICATION_DURATION_SHORT': { type: 'Number', platforms: ANDROID_AND_WINDOWS},
+
+			'PICKER_TYPE_COUNT_DOWN_TIMER': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'PICKER_TYPE_DATE': { type: 'Number', platforms: ALL},
+			'PICKER_TYPE_DATE_AND_TIME': { type: 'Number', platforms: ALL},
+			'PICKER_TYPE_PLAIN': { type: 'Number', platforms: ALL},
+			'PICKER_TYPE_TIME': { type: 'Number', platforms: ALL},
+
+			'RETURNKEY_CONTINUE': { type: 'Number', platforms: IOS_AND_WINDOWS},
+			'RETURNKEY_DEFAULT': { type: 'Number', platforms: ALL},
+			'RETURNKEY_DONE': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'RETURNKEY_EMERGENCY_CALL': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'RETURNKEY_GO': { type: 'Number', platforms: ALL},
+			'RETURNKEY_GOOGLE': { type: 'Number', platforms: ALL},
+			'RETURNKEY_JOIN': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'RETURNKEY_NEXT': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'RETURNKEY_ROUTE': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'RETURNKEY_SEARCH': { type: 'Number', platforms: ALL},
+			'RETURNKEY_SEND': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'RETURNKEY_YAHOO': { type: 'Number', platforms: ALL},
+
+			'TABLE_VIEW_SEPARATOR_STYLE_NONE': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'TABLE_VIEW_SEPARATOR_STYLE_SINGLE_LINE': { type: 'Number', platforms: NOT_MOBILEWEB},
+
+			'TEXT_AUTOCAPITALIZATION_ALL': { type: 'Number', platforms: ALL},
+			'TEXT_AUTOCAPITALIZATION_NONE': { type: 'Number', platforms: ALL},
+			'TEXT_AUTOCAPITALIZATION_SENTENCES': { type: 'Number', platforms: ALL},
+			'TEXT_AUTOCAPITALIZATION_WORDS': { type: 'Number', platforms: NOT_MOBILEWEB},
+
+			'TEXT_ELLIPSIZE_TRUNCATE_END': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'TEXT_ELLIPSIZE_TRUNCATE_MARQUEE': { type: 'Number', platforms: ['android']},
+			'TEXT_ELLIPSIZE_TRUNCATE_MIDDLE': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'TEXT_ELLIPSIZE_TRUNCATE_START': { type: 'Number', platforms: NOT_MOBILEWEB},
+
+			'TEXT_STYLE_BODY': { type: 'Number', platforms: IOS_ONLY},
+			'TEXT_STYLE_CAPTION1': { type: 'Number', platforms: IOS_ONLY},
+			'TEXT_STYLE_CAPTION2': { type: 'Number', platforms: IOS_ONLY},
+			'TEXT_STYLE_FOOTNOTE': { type: 'Number', platforms: IOS_ONLY},
+			'TEXT_STYLE_HEADLINE': { type: 'Number', platforms: IOS_ONLY},
+			'TEXT_STYLE_SUBHEADLINE': { type: 'Number', platforms: IOS_ONLY},
+
+			'UNIT_CM': { type: 'String', platforms: ALL},
+			'UNIT_DIP': { type: 'String', platforms: ALL},
+			'UNIT_IN': { type: 'String', platforms: ALL},
+			'UNIT_MM': { type: 'String', platforms: ALL},
+			'UNIT_PX': { type: 'String', platforms: ALL},
+
+			'URL_ERROR_AUTHENTICATION': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_BAD_URL': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_CONNECT': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_FILE': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_FILE_NOT_FOUND': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_HOST_LOOKUP': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_REDIRECT_LOOP': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_SSL_FAILED': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_TIMEOUT': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_UNKNOWN': { type: 'Number', platforms: NOT_MOBILEWEB},
+			'URL_ERROR_UNSUPPORTED_SCHEME': { type: 'Number', platforms: NOT_MOBILEWEB}
+		},
+		platform = Ti.Platform.osname;
+
+	for (var name in constants) {
+		if (constants.hasOwnProperty(name)) {
+			// Don't test if the constant isn't for this platform!
+			if (constants[name].platforms.indexOf(platform) === -1) { continue; }
+			if (constants[name].type == 'Number') {
+				it(name, function () {
+					should(Ti.UI).have.a.constant(name).which.is.a.Number;
+				});
+			} else if (constants[name].type == 'String') {
+				// FIXME These special constants are failing on Android and iOS. They appear to be hard-coded numbers (and not unique!)
+				((utilities.isIOS() || utilities.isAndroid()) && ['FILL', 'SIZE', 'UNIT_CM', 'UNIT_DIP', 'UNIT_IN', 'UNIT_MM', 'UNIT_PX'].indexOf(name) != -1 ? it.skip : it)(name, function () {
+					should(Ti.UI).have.a.constant(name).which.is.a.String;
+				});
+			}
+		}
+	}
+
+	// Constants that are Strings on Android and Numbers elsewhere
+	var constantsVary = [
+		'TEXT_ALIGNMENT_CENTER', 'TEXT_ALIGNMENT_LEFT', 'TEXT_ALIGNMENT_RIGHT',
+		'TEXT_VERTICAL_ALIGNMENT_BOTTOM', 'TEXT_VERTICAL_ALIGNMENT_CENTER', 'TEXT_VERTICAL_ALIGNMENT_TOP'
+	];
+	// Verify our constants that may be String or Number depending on platform.
+	for (var i = 0; i < constantsVary.length; i++) {
+		// FIXME Get these working on iOS and Android.
+		((utilities.isIOS() || utilities.isAndroid()) ? it.skip : it)(constantsVary[i], function () {
+			if (utilities.isAndroid()) {
+				should(Ti.UI).have.a.constant(constantsVary[i]).which.is.a.String;
+			} else {
+				should(Ti.UI).have.a.constant(constantsVary[i]).which.is.a.Number;
+			}
+		});
+	}
 });

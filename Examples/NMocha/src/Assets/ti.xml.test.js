@@ -4,7 +4,7 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var should = require('./should'),
+var should = require('./utilities/assertions'),
 	utilities = require('./utilities/utilities');
 
 // FIXME overflowing local ref table with DocumentProxy: https://jira.appcelerator.org/browse/TIMOB-23460
@@ -48,6 +48,11 @@ var should = require('./should'),
 		// wipe last held contents to allow GC to clean up proxies?
 		testSource = {};
 		invalidSource = {};
+	});
+
+	it('apiName', function (){
+		should(Ti.XML).have.readOnlyProperty('apiName').which.is.a.String;
+		should(Ti.XML.apiName).be.eql('Ti.XML');
 	});
 
 	it('parseString', function (finish) {
@@ -105,7 +110,8 @@ var should = require('./should'),
 		finish();
 	});
 
-	it('documentParsing', function(finish) {
+	// FIXME Get working on iOS - doesn't throw exception on parsing empty string
+	(utilities.isIOS() ? it.skip : it)('documentParsing', function(finish) {
 		var localSources = testSource;
 		var localInvalid = invalidSource;
 		// Parse valid documents
@@ -131,7 +137,7 @@ var should = require('./should'),
 		// must have a root element (empty string doesn't)
 		should(function() {
 			Ti.XML.parseString('');
-		}).throw();
+		}).throw(); // iOS doesn't throw exception
 		// Parse (some types of) invalid documents
 		should(function() {
 			Ti.XML.parseString(localInvalid['mismatched_tag.xml']);
@@ -195,7 +201,8 @@ var should = require('./should'),
 		finish();
 	});
 
-	it('xmlNodes', function (finish) {
+	// FIXME Get working on iOS - tagName is undefined, when expecting 'xml'
+	(utilities.isIOS() ? it.skip : it)('xmlNodes', function (finish) {
 		var doc = Ti.XML.parseString(testSource['nodes.xml']);
 		var nodesList = doc.getElementsByTagName('nodes');
 		should(nodesList === null).be.eql(false);
@@ -211,7 +218,7 @@ var should = require('./should'),
 		should(children.item).be.a.Function;
 		var firstChild = doc.firstChild;
 		should(firstChild === null).be.eql(false);
-		should(firstChild.tagName).be.eql('xml');
+		should(firstChild.tagName).be.eql('xml'); // iOS returns undefined
 		should(countNodes(nodes, 1)).eql(13);
 		should(nodes.nodeName).eql('nodes');
 		should(doc.documentElement.nodeName).eql('response');

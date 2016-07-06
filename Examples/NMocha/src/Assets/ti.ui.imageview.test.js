@@ -4,19 +4,19 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var should = require('./should'),
+var should = require('./utilities/assertions'),
 	utilities = require('./utilities/utilities');
 
 describe('Titanium.UI.ImageView', function () {
-	this.timeout(10000);
+	this.timeout(5000);
 
-	it('apiName', function (finish) {
-		should(Ti.UI.ImageView.apiName).be.eql('Ti.UI.ImageView');
-		finish();
+	it('apiName', function () {
+		var imageView = Ti.UI.createImageView();
+		should(imageView).have.readOnlyProperty('apiName').which.is.a.String;
+		should(imageView.apiName).be.eql('Ti.UI.ImageView');
 	});
 
-
-	it('image (URL)', function (finish) {
+	it('image (URL)', function () {
 		var imageView = Ti.UI.createImageView({
 			image: 'https://www.google.com/images/srpr/logo11w.png'
 		});
@@ -27,15 +27,18 @@ describe('Titanium.UI.ImageView', function () {
 		imageView.image = 'path/to/logo.png';
 		should(imageView.image).eql('path/to/logo.png');
 		should(imageView.getImage()).eql('path/to/logo.png');
-		finish();
 	});
 
 	(utilities.isWindows() ? it : it.skip)('image (local path)', function (finish) {
 		var imageView = Ti.UI.createImageView();
 		imageView.addEventListener('load', function() {
-			should(imageView.image).be.a.String;
-			should(imageView.image).eql(Ti.Filesystem.resourcesDirectory + 'Logo.png');
-			finish();
+			try {
+				should(imageView.image).be.a.String;
+				should(imageView.image).eql(Ti.Filesystem.resourcesDirectory + 'Logo.png');
+				finish();
+			} catch (err) {
+				finish(err);
+			}
 		});
 		imageView.image = Ti.Filesystem.resourcesDirectory + 'Logo.png';
 	});
@@ -43,9 +46,13 @@ describe('Titanium.UI.ImageView', function () {
 	(utilities.isWindows() ? it : it.skip)('image (local path with separator)', function (finish) {
 		var imageView = Ti.UI.createImageView();
 		imageView.addEventListener('load', function() {
-			should(imageView.image).be.a.String;
-			should(imageView.image).eql(Ti.Filesystem.resourcesDirectory + Ti.Filesystem.separator + 'Logo.png');
-			finish();
+			try {
+				should(imageView.image).be.a.String;
+				should(imageView.image).eql(Ti.Filesystem.resourcesDirectory + Ti.Filesystem.separator + 'Logo.png');
+				finish();
+			} catch (err) {
+				finish(err);
+			}
 		});
 		// Try appending separator
 		// It's not quite clear if we needs separator, but people often do this
@@ -55,9 +62,13 @@ describe('Titanium.UI.ImageView', function () {
 	(utilities.isWindows() ? it : it.skip)('image (local path with /)', function (finish) {
 		var imageView = Ti.UI.createImageView();
 		imageView.addEventListener('load', function() {
-			should(imageView.image).be.a.String;
-			should(imageView.image).eql(Ti.Filesystem.resourcesDirectory + '/' + 'Logo.png');
-			finish();
+			try {
+				should(imageView.image).be.a.String;
+				should(imageView.image).eql(Ti.Filesystem.resourcesDirectory + '/' + 'Logo.png');
+				finish();
+			} catch (err) {
+				finish(err);
+			}
 		});
 		// Try appending '/' for the separator
 		// Technically this is not right on Windows, but people often do this
@@ -68,9 +79,13 @@ describe('Titanium.UI.ImageView', function () {
 		var fromFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'Logo.png');
 		var imageView = Ti.UI.createImageView();
 		imageView.addEventListener('load', function() {
-			should(imageView.image).be.a.String;
-			should(imageView.image).eql(Ti.Filesystem.resourcesDirectory + 'Logo.png');
-			finish();
+			try {
+				should(imageView.image).be.a.String;
+				should(imageView.image).eql(Ti.Filesystem.resourcesDirectory + 'Logo.png');
+				finish();
+			} catch (err) {
+				finish(err);
+			}
 		});
 		imageView.image = fromFile.nativePath;
 	});
@@ -78,10 +93,13 @@ describe('Titanium.UI.ImageView', function () {
 	(utilities.isWindows() ? it : it.skip)('image (ms-appx)', function (finish) {
 		var imageView = Ti.UI.createImageView();
 		imageView.addEventListener('load', function() {
-			should(imageView.image).be.a.String;
-			should(imageView.image).eql('ms-appx:///Logo.png');
-
-			finish();
+			try {
+				should(imageView.image).be.a.String;
+				should(imageView.image).eql('ms-appx:///Logo.png');
+				finish();
+			} catch (err) {
+				finish(err);
+			}
 		});
 		imageView.image = 'ms-appx:///Logo.png';
 	});
@@ -93,10 +111,15 @@ describe('Titanium.UI.ImageView', function () {
 
 		var imageView = Ti.UI.createImageView();
 		imageView.addEventListener('load', function() {
-			should(imageView.image).be.a.String;
-			should(imageView.image).eql('ms-appdata:///local/TIMOB-20609.png');
-			toFile.deleteFile();
-			finish();
+			try {
+				should(imageView.image).be.a.String;
+				should(imageView.image).eql('ms-appdata:///local/TIMOB-20609.png');
+				finish();
+			} catch (err) {
+				finish(err);
+			} finally {
+				toFile.deleteFile();
+			}
 		});
 
 		imageView.image = 'ms-appdata:///local/TIMOB-20609.png';
@@ -107,9 +130,13 @@ describe('Titanium.UI.ImageView', function () {
 
 		var imageView = Ti.UI.createImageView();
 		imageView.addEventListener('load', function() {
-			should(imageView.image).be.an.Object;
-			should(imageView.image).eql(fromFile);
-			finish();
+			try {
+				should(imageView.image).be.an.Object;
+				should(imageView.image).eql(fromFile);
+				finish();
+			} catch (err) {
+				finish(err);
+			}
 		});
 
 		imageView.image = fromFile;
@@ -120,9 +147,13 @@ describe('Titanium.UI.ImageView', function () {
 			blob = fromFile.read();
 		var imageView = Ti.UI.createImageView();
 		imageView.addEventListener('load', function() {
-			should(imageView.image).be.an.Object;
-			should(imageView.toBlob()).eql(blob);
-			finish();
+			try {
+				should(imageView.image).be.an.Object;
+				should(imageView.toBlob()).eql(blob);
+				finish();
+			} catch (err) {
+				finish(err);
+			}
 		});
 
 		imageView.image = blob;
@@ -130,17 +161,26 @@ describe('Titanium.UI.ImageView', function () {
 
 	(utilities.isWindows() ? it : it.skip)('images', function (finish) {
 		this.timeout(6e4);
-		var win = Ti.UI.createWindow();
-		var imageView = Ti.UI.createImageView({
-			width: Ti.UI.FILL, height: Ti.UI.FILL
-		});
-		imageView.addEventListener('start', function(){
-			should(imageView.animating).be.true;
+		var win = Ti.UI.createWindow(),
+			imageView = Ti.UI.createImageView({
+				width: Ti.UI.FILL, height: Ti.UI.FILL
+			}),
+			error;
+		imageView.addEventListener('start', function() {
+			try {
+				should(imageView.animating).be.true;
+			} catch (err) {
+				error = err;
+			}
 			win.close();
-			finish();
+			finish(error);
 		});
 		imageView.addEventListener('load', function() {
-			should(imageView.animating).be.false;
+			try {
+				should(imageView.animating).be.false;
+			} catch (err) {
+				error = err;
+			}
 			imageView.start();
 		});
 		win.addEventListener('open', function() {
@@ -180,18 +220,27 @@ describe('Titanium.UI.ImageView', function () {
 
 	(utilities.isWindows() ? it : it.skip)('images (Blob)', function (finish) {
 		this.timeout(6e4);
-		var win = Ti.UI.createWindow();
-		var imageView = Ti.UI.createImageView({
-			width: Ti.UI.FILL, height: Ti.UI.FILL
-		});
+		var win = Ti.UI.createWindow(),
+			imageView = Ti.UI.createImageView({
+				width: Ti.UI.FILL, height: Ti.UI.FILL
+			}),
+			error;
 
-		imageView.addEventListener('start', function(){
-			should(imageView.animating).be.true;
+		imageView.addEventListener('start', function() {
+			try {
+				should(imageView.animating).be.true;
+			} catch (err) {
+				error = err;
+			}
 			win.close();
-			finish();
+			finish(error);
 		});
 		imageView.addEventListener('load', function() {
-			should(imageView.animating).be.false;
+			try {
+				should(imageView.animating).be.false;
+			} catch (err) {
+				error = err;
+			}
 			imageView.start();
 		});
 		win.addEventListener('open', function() {
@@ -212,6 +261,7 @@ describe('Titanium.UI.ImageView', function () {
 			height: Ti.UI.SIZE
 		});
 		var innerView = Ti.UI.createImageView({
+			image: 'http://api.randomuser.me/portraits/women/0.jpg',
 			width: 100,
 			height: Ti.UI.SIZE,
 			top: 0,
@@ -220,14 +270,18 @@ describe('Titanium.UI.ImageView', function () {
 		view.add(innerView);
 		innerView.addEventListener('load', function (e) {
 			setTimeout(function () {
-				should(innerView.size.height).eql(100);
-				should(view.size.height).eql(innerView.size.height);
-				should(view.size.width).eql(innerView.size.width);
+				var error;
+				try {
+					should(innerView.size.height).eql(100);
+					should(view.size.height).eql(innerView.size.height);
+					should(view.size.width).eql(innerView.size.width);
+				} catch (err) {
+					error = err;
+				}
 				win.close();
-				finish();
+				finish(error);
 			}, 1000);
 		});
-		innerView.image = 'http://api.randomuser.me/portraits/women/0.jpg';
 		win.add(view);
 		win.open();
 	});

@@ -4,16 +4,16 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var should = require('./should'),
+var should = require('./utilities/assertions'),
 	utilities = require('./utilities/utilities');
 
 describe('Titanium.Codec', function() {
-	it('apiName', function (finish) {
+	it('apiName', function () {
+		should(Ti.Codec).have.a.readOnlyProperty('apiName').which.is.a.String;
 		should(Ti.Codec.apiName).be.eql('Ti.Codec');
-		finish();
 	});
 
-	it('testAPI', function(finish) {
+	it('testAPI', function() {
 		should(Ti.Codec).be.an.Object;
 		var functions = [ 'encodeNumber', 'decodeNumber', 'encodeString', 'decodeString', 'getNativeByteOrder' ];
 		for (var i = 0; i < functions.length; i++) should(Ti.Codec[functions[i]]).be.a.Function;
@@ -33,10 +33,9 @@ describe('Titanium.Codec', function() {
 		console.info(Ti.Codec.getNativeByteOrder());
 		console.info(Ti.Codec.BIG_ENDIAN, Ti.Codec.LITTLE_ENDIAN);
 		should([ Ti.Codec.BIG_ENDIAN, Ti.Codec.LITTLE_ENDIAN ]).containEql(Ti.Codec.getNativeByteOrder());
-		finish();
 	});
 
-	it('testEncodeIntegers', function (finish) {
+	it('testEncodeIntegers', function () {
 		var buffer = Ti.createBuffer({
 			length: 8
 		});
@@ -108,10 +107,9 @@ describe('Titanium.Codec', function() {
 			type: Ti.Codec.TYPE_BYTE
 		});
 		should(buffer[0]).eql(buffer[1]);
-		finish();
 	});
 
-	it('testDecodeIntegers', function(finish) {
+	it('testDecodeIntegers', function() {
 		var buffer = Ti.createBuffer({
 			length: 8
 		});
@@ -140,10 +138,9 @@ describe('Titanium.Codec', function() {
 		});
 		// down casting discards the low bits (0x563412)
 		should(n).eql(30874);
-		finish();
 	});
 
-	it('testEncodeFloatingPoint', function (finish) {
+	it('testEncodeFloatingPoint', function () {
 		var buffer = Ti.createBuffer({
 			length: 8
 		});
@@ -184,10 +181,9 @@ describe('Titanium.Codec', function() {
 		should(buffer[1]).eql(158);
 		should(buffer[2]).eql(4);
 		should(buffer[3]).eql(25);
-		finish();
 	});
 
-	it('testDecodeFloatingPoint', function(finish) {
+	it('testDecodeFloatingPoint', function() {
 		var buffer = Ti.createBuffer({
 			length: 8
 		});
@@ -231,10 +227,9 @@ describe('Titanium.Codec', function() {
 			byteOrder: Ti.Codec.LITTLE_ENDIAN
 		});
 		should(n.toFixed(4)).eql(1.2345);
-		finish();
 	});
 
-	it('testEncodeString', function(finish) {
+	it('testEncodeString', function() {
 		var PHRASE = 'Wer reitet so spät durch Nacht und Wind?';
 		var buffer = Ti.createBuffer({
 			length: 1024
@@ -265,10 +260,9 @@ describe('Titanium.Codec', function() {
 			source: buffer,
 			charset: Ti.Codec.CHARSET_UTF16
 		})).eql(PHRASE);
-		finish();
 	});
 
-	it('testDecodeString', function(finish) {
+	it('testDecodeString', function() {
 		var TEST = 'spät';
 		var buffer = Ti.createBuffer({
 			length: 5
@@ -340,6 +334,5 @@ describe('Titanium.Codec', function() {
 			length: 18
 		});
 		should(str).eql('The system is down');
-		finish();
 	});
 });

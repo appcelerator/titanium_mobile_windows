@@ -5,7 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('./should'),
+var should = require('./utilities/assertions'),
 	utilities = require('./utilities/utilities'),
 	didFocus = false;
 

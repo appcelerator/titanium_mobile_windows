@@ -5,16 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('./should'),
+var should = require('./utilities/assertions'),
 	utilities = require('./utilities/utilities');
 
 describe('Titanium.Filesystem.FileStream', function () {
-	it('apiName', function (finish) {
-		should(Ti.FileStream.apiName).be.eql('Ti.Filesystem.FileStream');
-		finish();
-	});
 
-	it('before_all', function(finish) {
+	before(function() {
 		// prepare resource
 		var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'stream_test_in.txt');
 		if (file.exists()) file.deleteFile();
@@ -33,10 +29,22 @@ describe('Titanium.Filesystem.FileStream', function () {
 		if (file.exists()) file.deleteFile();
 
 		file = null;
-		finish();
 	});
 
-	it('fileStreamBasicTest', function(finish) {
+	it('apiName', function (finish) {
+		var resourceFileStream = Ti.Filesystem.openStream(Ti.Filesystem.MODE_READ, Ti.Filesystem.applicationDataDirectory, 'stream_test_in.txt');
+		try{
+			should(resourceFileStream).have.a.readOnlyProperty('apiName').which.is.a.String;
+			should(resourceFileStream.apiName).be.eql('Ti.Filesystem.FileStream');
+			finish();
+		} catch (err) {
+			finish(err);
+		} finally {
+			resourceFileStream.close();
+		}
+	});
+
+	it('fileStreamBasicTest', function() {
 		should(Ti.createBuffer).be.a.Function;
 		should(Ti.Filesystem.openStream).be.a.Function;
 		var resourceFileStream = Ti.Filesystem.openStream(Ti.Filesystem.MODE_READ, Ti.Filesystem.applicationDataDirectory, 'stream_test_in.txt');
@@ -79,10 +87,9 @@ describe('Titanium.Filesystem.FileStream', function () {
 		//read 50 byes of data from outfile into outBuffer
 		appDataFileInStream.close();
 		for (var i = 0; bytesRead > i; i++) should(inBuffer[i]).be.equal(outBuffer[i]);
-		finish();
 	});
 
-	it('fileStreamWriteTest', function(finish) {
+	it('fileStreamWriteTest', function() {
 		var infile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'stream_test_in.txt');
 		var instream = infile.open(Ti.Filesystem.MODE_READ);
 		var outfile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'fswritetest.jpg');
@@ -104,10 +111,9 @@ describe('Titanium.Filesystem.FileStream', function () {
 		var totalReadSize = inBuffer.length;
 		should(totalReadSize).be.equal(totalWriteSize);
 		instream.close();
-		finish();
 	});
 
-	it('fileStreamAppendTest', function(finish) {
+	it('fileStreamAppendTest', function() {
 		var infile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'stream_test_in.txt');
 		var instream = infile.open(Ti.Filesystem.MODE_READ);
 		var outfile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'fsappendtest.jpg');
@@ -140,10 +146,9 @@ describe('Titanium.Filesystem.FileStream', function () {
 		Ti.API.info('Total write size: ' + totalWriteSize);
 		should(totalReadSize).be.equal(bytesStreamed + totalWriteSize);
 		instream.close();
-		finish();
 	});
 
-	it('fileStreamPumpTest', function(finish) {
+	it('fileStreamPumpTest', function() {
 		var pumpInputFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'stream_test_in.txt');
 		should(pumpInputFile).be.an.Object;
 		should(pumpInputFile.open).be.a.Function;
@@ -165,10 +170,9 @@ describe('Titanium.Filesystem.FileStream', function () {
 		should(pumpStream).be.an.Object;
 		Ti.Stream.pump(pumpStream, pumpCallback, step);
 		pumpStream.close();
-		finish();
 	});
 
-	it('fileStreamWriteStreamTest', function(finish) {
+	it('fileStreamWriteStreamTest', function() {
 		var inBuffer = Ti.createBuffer({
 			value: 'huray for data, lets have a party for data1 huray for data, lets have a party for data2 huray for data, lets have a party for data3'
 		});
@@ -186,10 +190,9 @@ describe('Titanium.Filesystem.FileStream', function () {
 		// assert that the length of the outBuffer is equal to the amount of bytes that were written
 		should(bytesWritten).eql(inBuffer.length);
 		outFileStream.close();
-		finish();
 	});
 
-	it('fileStreamTruncateTest', function(finish) {
+	it('fileStreamTruncateTest', function() {
 		var inBuffer = Ti.createBuffer({
 			value: 'huray for data, lets have a party for data1 huray for data, lets have a party for data2 huray for data, lets have a party for data3'
 		});
@@ -215,6 +218,5 @@ describe('Titanium.Filesystem.FileStream', function () {
 		var truncateBuffer = Ti.Stream.readAll(inFileStream);
 		should(truncateBuffer.length).be.equal(0);
 		inFileStream.close();
-		finish();
 	});
 });

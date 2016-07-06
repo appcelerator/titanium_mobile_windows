@@ -5,21 +5,21 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var should = require('./should'),
+var should = require('./utilities/assertions'),
 	utilities = require('./utilities/utilities');
 
 describe('Titanium.UI.Switch', function () {
-	it('Ti.UI.Switch', function (finish) {
+	it('Ti.UI.Switch', function () {
 		should(Ti.UI.Switch).not.be.undefined;
-		finish();
 	});
 
-	it('apiName', function (finish) {
-		should(Ti.UI.Switch.apiName).be.eql('Ti.UI.Switch');
-		finish();
+	it('apiName', function () {
+		var switch_ctrl = Ti.UI.createSwitch();
+		should(switch_ctrl).have.readOnlyProperty('apiName').which.is.a.String;
+		should(switch_ctrl.apiName).be.eql('Ti.UI.Switch');
 	});
 
-	it('createSwitch', function (finish) {
+	it('createSwitch', function () {
 		should(Ti.UI.createSwitch).not.be.undefined;
 		should(Ti.UI.createSwitch).be.a.Function;
 
@@ -34,8 +34,6 @@ describe('Titanium.UI.Switch', function () {
 		should(switch_ctrl.value).be.eql(true);
 		switch_ctrl.value = false;
 		should(switch_ctrl.value).be.eql(false);
-
-		finish();
 	});
 
 });
