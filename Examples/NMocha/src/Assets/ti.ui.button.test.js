@@ -116,7 +116,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('backgroundFocusedColor/Image', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundFocusedColor/Image', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -140,7 +140,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('backgroundSelectedColor/Image', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundSelectedColor/Image', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -164,7 +164,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('backgroundDisabledColor/Image', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundDisabledColor/Image', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -188,7 +188,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('backgroundGradient', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundGradient', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -216,7 +216,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('border', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('border', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -240,7 +240,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('rect and size', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('rect and size', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
