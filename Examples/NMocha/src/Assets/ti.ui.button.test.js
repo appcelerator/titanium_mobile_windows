@@ -51,7 +51,7 @@ describe('Titanium.UI.Button', function () {
         finish();
     });
 
-	it('image(String)', function (finish) {
+	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('image(String)', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -116,7 +116,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('backgroundFocusedColor/Image', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundFocusedColor/Image', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
