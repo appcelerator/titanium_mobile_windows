@@ -128,9 +128,7 @@ describe('Titanium.UI.Label', function () {
 			didPostLayout = true;
 			should(label.size.width).not.be.greaterThan(win.size.width);
 		});
-		win.addEventListener('focus', function() {
-			if (didFocus) return;
-			didFocus = true;
+		win.addEventListener('open', function() {
 			setTimeout(function() {
 				win.close();
 				finish();
