@@ -257,7 +257,7 @@ namespace Titanium
 
 	void AppModule::_restart() TITANIUM_NOEXCEPT
 	{
-		TITANIUM_LOG_WARN("AppModule::_restart: Unimplemented");
+		get_context().JSEvaluateScript("eval(Ti.Filesystem.getFile('app.js').read().text)");
 	}
 
 	AppModule& AppModule::PropertiesClass(const JSClass& Properties) TITANIUM_NOEXCEPT

@@ -55,8 +55,6 @@ namespace TitaniumWindows
 		virtual void setProximityDetection(const bool&) TITANIUM_NOEXCEPT override;
 		virtual bool proximityState() const TITANIUM_NOEXCEPT override;
 
-		virtual void _restart() TITANIUM_NOEXCEPT override;
-
 	private:
 
 		static JSObject RectToJS(const JSContext& js_context, const Windows::Foundation::Rect& rect);
