@@ -19,11 +19,11 @@ namespace Titanium
 	namespace Network
 	{
 		enum class RequestState {
-			Loading,
-			Opened,
-			Done,
 			Unsent,
-			Headers_Received
+			Opened,
+			Headers_Received,
+			Loading,
+			Done
 		};
 
 		enum class RequestMethod {
