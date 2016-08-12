@@ -28,6 +28,7 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.generateAppxManifestForPlatform = generateAppxManifestForPlatform;
 	WindowsBuilder.prototype.generateAppxManifest = generateAppxManifest;
 	WindowsBuilder.prototype.addI18nVSResources = addI18nVSResources;
+	WindowsBuilder.prototype.setTargetPlatformVersion = setTargetPlatformVersion;
 }
 
 /**
@@ -111,6 +112,31 @@ function addI18nVSResources(next) {
 
 	fs.writeFileSync(vcxproj, modified);
 
+	next();
+}
+
+/**
+ * Sets the TargetPlatformVersion and TargetPlatformMinVersion for a Windows 10 build
+ *
+ * @param {Function} next - A function to call after setting the TargetPlatformVersion
+ */
+function setTargetPlatformVersion(next) {
+	var target = this.targetSdk || this.tiapp.windows['TargetPlatformVersion'],
+		min = this.targetSdk || this.tiapp.windows['TargetPlatformMinVersion'];
+
+	if (target && min && this.wpsdk == '10.0') {
+		var projectName = this.sanitizeProjectName(this.cli.tiapp.name),
+			projectPath = path.resolve(this.cmakeTargetDir, projectName + '.vcxproj'),
+			project = fs.readFileSync(projectPath, 'utf8');
+
+		this.logger.info(__('Setting TargetPlatformVersion: %s', target.cyan));
+		this.logger.info(__('Setting TargetPlatformMinVersion: %s', min.cyan));
+
+		fs.existsSync(projectPath) && fs.renameSync(projectPath, projectPath + '.bak');
+		project = project.replace(/<WindowsTargetPlatformVersion>(10\.0)(\.\d+)*<\/WindowsTargetPlatformVersion>/, '<WindowsTargetPlatformVersion>' + target + '</WindowsTargetPlatformVersion>');
+		project = project.replace(/<WindowsTargetPlatformMinVersion>(10\.0)(\.\d+)*<\/WindowsTargetPlatformMinVersion>/, '<WindowsTargetPlatformMinVersion>' + min + '</WindowsTargetPlatformMinVersion>');
+		fs.writeFileSync(projectPath, project);
+	}
 	next();
 }
 

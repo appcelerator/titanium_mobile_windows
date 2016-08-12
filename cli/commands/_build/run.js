@@ -54,6 +54,7 @@ function run(logger, config, cli, finished) {
 		'generateCmakeList',
 		'runCmake',
 		'addI18nVSResources',
+		'setTargetPlatformVersion',
 		'compileApp',
 		'writeBuildManifest',
 		'copyResultsToProject',

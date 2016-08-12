@@ -18,6 +18,7 @@ module.exports = function configOptionWPSDK(order) {
 		for (var version in this.windowsInfo.windowsphone) {
 			if (unsupportedTargets.indexOf(version) === -1) {
 				sdkTargets.push(version);
+				sdkTargets = sdkTargets.concat(this.windowsInfo.windowsphone[version].sdks);
 			}
 			if (this.windowsInfo.windowsphone[version].selected) {
 				defaultTarget = version;
@@ -28,6 +29,11 @@ module.exports = function configOptionWPSDK(order) {
 	return {
 		abbr: 'S',
 		callback: function (value) {
+			// target various Windows 10.0.X SDKs
+			if (value.startsWith('10.0.')) {
+				this.targetSdk = value;
+				this.cli.argv['wp-sdk'] = '10.0';
+			}
 			// We can use built-in temp key for local/emulator builds. For dist,
 			// insist on user/generated PFX when app requires one
 			if (this.conf.options['target'] == 'dist-winstore' ||
