@@ -618,8 +618,8 @@ describe('Titanium.UI.ListView', function () {
 		should(items.length).be.eql(6);
 		Ti.API.info('items: ' + JSON.stringify(items, null, ' '));
 		for (var i in items) {
-			Ti.API.info('items['+i+']: ' + JSON.stringify(item, null, ' '));
 			var item = items[i].properties.title;
+			Ti.API.info('items['+i+']: ' + JSON.stringify(item, null, ' '));
 		    should(item).not.be.undefined;
 		}
 
