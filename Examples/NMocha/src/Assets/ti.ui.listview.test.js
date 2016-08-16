@@ -593,9 +593,34 @@ describe('Titanium.UI.ListView', function () {
 
 		var items = section.getItems();
 		should(items.length).be.eql(6);
-		for (var i = 0; i < items.length; i++) {
+		for (var i in items) {
 		    var item = items[i].properties.title;
 		    should(item).be.eql(validation[i]);
+		}
+
+		finish();
+	});
+
+	it('getItems() loop issue', function (finish) {
+		var section = Ti.UI.createListSection({
+		        items: [
+		            {properties: {title: 'A'}},
+		            {properties: {title: 'B'}},
+		            {properties: {title: 'C'}},
+		            {properties: {title: 'D'}},
+		            {properties: {title: 'E'}},
+		            {properties: {title: 'F'}}
+		        ]
+		    }),
+		    listView = Ti.UI.createListView({sections: [section]});
+
+		var items = section.getItems();
+		should(items.length).be.eql(6);
+		Ti.API.info('items: ' + JSON.stringify(items, null, ' '));
+		for (var i in items) {
+			var item = items[i].properties.title;
+			Ti.API.info('items['+i+']: ' + JSON.stringify(item, null, ' '));
+		    should(item).not.be.undefined;
 		}
 
 		finish();
