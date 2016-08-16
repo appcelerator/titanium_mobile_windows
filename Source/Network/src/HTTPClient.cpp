@@ -16,8 +16,7 @@
 
 // FIXME: Workaround to select current thread on Windows 10 desktop. Need to revisit.
 #if defined(IS_WINDOWS_MOBILE)
-#define SELECT_CONTINUATION_CONTEXT \
-  IS_WINDOWS_MOBILE ? task_continuation_context::use_arbitrary() : task_continuation_context::use_current()
+#define SELECT_CONTINUATION_CONTEXT task_continuation_context::use_current()
 #else
 #define SELECT_CONTINUATION_CONTEXT task_continuation_context::use_arbitrary()
 #endif
