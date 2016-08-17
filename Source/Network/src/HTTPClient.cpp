@@ -14,14 +14,6 @@
 #include "TitaniumWindows/LogForwarder.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 
-// FIXME: Workaround to select current thread on Windows 10 desktop. Need to revisit.
-#if defined(IS_WINDOWS_MOBILE)
-#define SELECT_CONTINUATION_CONTEXT \
-  IS_WINDOWS_MOBILE ? task_continuation_context::use_arbitrary() : task_continuation_context::use_current()
-#else
-#define SELECT_CONTINUATION_CONTEXT task_continuation_context::use_arbitrary()
-#endif
-
 using namespace concurrency;
 
 namespace TitaniumWindows
@@ -238,7 +230,7 @@ namespace TitaniumWindows
 				SerializeHeaders(response);
 
 				return create_task(response->Content->ReadAsInputStreamAsync(), token);
-			}, SELECT_CONTINUATION_CONTEXT)
+			}, task_continuation_context::use_arbitrary())
 				.then([this, token](Windows::Storage::Streams::IInputStream^ stream) {
 				interruption_point();
 
@@ -247,7 +239,7 @@ namespace TitaniumWindows
 				// FIXME Fire ondatastream/onsendstream callbacks throughout!
 
 				return HTTPResultAsync(stream, token);
-			}, SELECT_CONTINUATION_CONTEXT)
+			}, task_continuation_context::use_arbitrary())
 				.then([this](task<Windows::Storage::Streams::IBuffer^> previousTask) {
 				try {
 					// Check if any previous task threw an exception.
@@ -290,7 +282,7 @@ namespace TitaniumWindows
 						onerror(-1, error, false);
 					}
 				}
-			}, SELECT_CONTINUATION_CONTEXT);
+			}, task_continuation_context::use_arbitrary());
 			// clang-format on
 		}
 
@@ -396,7 +388,7 @@ namespace TitaniumWindows
 				
 				// FIXME How do we pass the token on in case of readTask?
 				return responseBuffer->Length ? HTTPResultAsync(stream, token) : readTask;
-			}, SELECT_CONTINUATION_CONTEXT);
+			}, task_continuation_context::use_arbitrary());
 			// clang-format on
 		}
 

@@ -26,6 +26,7 @@ namespace Titanium
 			, unsent__(js_context.CreateNumber(static_cast<uint32_t>(RequestState::Unsent)))
 			, securityManager__(js_context.CreateNull())
 			, status__(200)
+			, unloaded__(false)
 			, readyState__(RequestState::Unsent)
 		{
 			setHTTPStatusPhrase();
@@ -591,6 +592,8 @@ namespace Titanium
 		////// slots
 		void HTTPClient::onload(const std::uint32_t code, const std::string error, const bool success) TITANIUM_NOEXCEPT
 		{
+			if (unloaded__) return;
+
 			try {
 				if (onload__.IsObject()) {
 					auto onload = static_cast<JSObject>(onload__);
@@ -617,6 +620,8 @@ namespace Titanium
 
 		void HTTPClient::onerror(const std::uint32_t code, const std::string error, const bool success) TITANIUM_NOEXCEPT
 		{
+			if (unloaded__) return;
+
 			try {
 				if (onerror__.IsObject()) {
 					auto onerror = static_cast<JSObject>(onerror__);
@@ -643,6 +648,8 @@ namespace Titanium
 
 		void HTTPClient::ondatastream(const double progress) TITANIUM_NOEXCEPT
 		{
+			if (unloaded__) return;
+
 			try {
 				if (ondatastream__.IsObject()) {
 					auto ondatastream = static_cast<JSObject>(ondatastream__);
@@ -667,6 +674,8 @@ namespace Titanium
 
 		void HTTPClient::onsendstream(const double progress) TITANIUM_NOEXCEPT
 		{
+			if (unloaded__) return;
+
 			try {
 				if (onsendstream__.IsObject()) {
 					auto onsendstream = static_cast<JSObject>(onsendstream__);
@@ -691,6 +700,8 @@ namespace Titanium
 
 		void HTTPClient::onreadystatechange(const RequestState& state) TITANIUM_NOEXCEPT
 		{
+			if (unloaded__) return;
+
 			try {
 				if (onreadystatechange__.IsObject()) {
 					auto onreadystatechange = static_cast<JSObject>(onreadystatechange__);
