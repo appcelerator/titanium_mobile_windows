@@ -42,7 +42,7 @@ describe('Titanium.UI.Layout', function () {
 
 	// functional test cases #1010, #1011, #1025, #1025a
 	//rect and size properties should not be undefined
-	it('viewSizeAndRectPx', function (finish) {
+	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('viewSizeAndRectPx', function (finish) {
 		var win = createWindow({}, finish);
 		var view = Ti.UI.createView();
 		var label = Ti.UI.createLabel({
@@ -180,7 +180,7 @@ describe('Titanium.UI.Layout', function () {
 
 	// functional test case #1022, #1024
 	// ViewWidth, ViewHeight
-	(((Ti.Platform.version.indexOf('10.0') == 0) && utilities.isWindowsDesktop()) ? it.skip : it)('viewWidth', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('viewWidth', function (finish) {
 		var win = createWindow({}, finish);
 		var view = Ti.UI.createView({
 			width: 10,
