@@ -39,7 +39,7 @@ describe('Titanium.UI.Layout', function () {
 
 	// functional test cases #1010, #1011, #1025, #1025a
 	//rect and size properties should not be undefined
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('viewSizeAndRectPx', function (finish) {
+	it('viewSizeAndRectPx', function (finish) {
 		var win = createWindow({}, finish);
 		var view = Ti.UI.createView();
 		var label = Ti.UI.createLabel({
@@ -51,10 +51,11 @@ describe('Titanium.UI.Layout', function () {
 		});
 		win.add(view);
 		win.add(label);
-		win.addEventListener('postlayout', function (e) {
+		win.addEventListener('open', function (e) {
 			if (didPostlayout) return;
 			didPostlayout = true;
-			Ti.API.info('Got postlayout');
+			Ti.API.info('Got open');
+			setTimeout(function(){
 			should(view.size).not.be.undefined;
 			should(view.size.width).not.be.undefined;
 			should(view.size.height).not.be.undefined;
@@ -90,13 +91,14 @@ describe('Titanium.UI.Layout', function () {
 			should(view.rect.y).eql(0);
 			should(win.size.height / view.size.height).eql(1);
 			should(win.size.width / view.size.width).eql(1);
+			}, 1000);
 		});
 		win.open();
 	});
 
 	// functional test cases #1012, #1014:
 	// ViewLeft and ViewRight
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('viewLeft', function (finish) {
+	it('viewLeft', function (finish) {
 		var win = createWindow({}, finish);
 		var view = Ti.UI.createView({
 			left: 10,
@@ -108,9 +110,10 @@ describe('Titanium.UI.Layout', function () {
 		});
 		win.add(view);
 		win.add(view2);
-		win.addEventListener('postlayout', function (e) {
+		win.addEventListener('open', function (e) {
 			if (didPostlayout) return;
 			didPostlayout = true;
+			setTimeout(function(){
 			should(view.left).eql(10);
 			should(view.rect.x).eql(10);
 			should(view.rect.width).eql(10);
@@ -119,6 +122,7 @@ describe('Titanium.UI.Layout', function () {
 			should(view2.rect.x).eql(win.size.width - 20);
 			should(view2.rect.width).eql(10);
 			should(view2.left).be.undefined;
+			}, 1000);
 		});
 		win.open();
 	});
