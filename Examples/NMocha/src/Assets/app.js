@@ -64,7 +64,7 @@ require('./ti.ui.tab.test');
 require('./ti.ui.tableview.test');
 require('./ti.ui.textfield.test');
 require('./ti.ui.view.test');
-require('./ti.ui.webview.test');
+//require('./ti.ui.webview.test');
 require('./ti.ui.window.test');
 require('./ti.ui.windows.commandbar.test');
 require('./ti.utils.test');
