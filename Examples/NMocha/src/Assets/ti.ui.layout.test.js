@@ -96,7 +96,7 @@ describe('Titanium.UI.Layout', function () {
 
 	// functional test cases #1012, #1014:
 	// ViewLeft and ViewRight
-	it('viewLeft', function (finish) {
+	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('viewLeft', function (finish) {
 		var win = createWindow({}, finish);
 		var view = Ti.UI.createView({
 			left: 10,
