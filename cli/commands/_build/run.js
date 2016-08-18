@@ -53,7 +53,6 @@ function run(logger, config, cli, finished) {
 		'generateAppxManifest',
 		'generateCmakeList',
 		'runCmake',
-		'addI18nVSResources',
 		'compileApp',
 		'writeBuildManifest',
 		'copyResultsToProject',
@@ -89,6 +88,13 @@ function runCmake(next) {
 		generatorName += ' ARM';
 	}
 
+	this.logger.debug(this.cmake + ' ' +
+		JSON.stringify([
+			'-G', generatorName,
+			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
+			'-DCMAKE_SYSTEM_VERSION=' + this.targetPlatformSdkVersion,
+			this.buildDir
+		], null, 2));
 	fs.existsSync(this.cmakeTargetDir) || wrench.mkdirSyncRecursive(this.cmakeTargetDir);
 	// Use spawn directly so we can pipe output as we go
 	var cmake = this.cmake;
@@ -96,7 +102,7 @@ function runCmake(next) {
 		[
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
-			'-DCMAKE_SYSTEM_VERSION=' + this.wpsdk,
+			'-DCMAKE_SYSTEM_VERSION=' + this.targetPlatformSdkVersion,
 			this.buildDir
 		],
 		{

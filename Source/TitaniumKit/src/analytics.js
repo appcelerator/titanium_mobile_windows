@@ -20,7 +20,11 @@ var ANALYTICS_URL = 'https://api.appcelerator.com/p/v3/mobile-track/',
 	EVENT_APP_NAV = 'app.nav',
 	EVENT_APP_ENROLL = 'ti.enroll',
 	EVENT_APP_FOREGROUND = 'ti.foreground',
-	EVENT_APP_BACKGROUND = 'ti.background';
+	EVENT_APP_BACKGROUND = 'ti.background',
+	FEATURE_MAX_LEVELS = 5,
+	FEATURE_MAX_SIZE = 1000,
+	FEATURE_MAX_KEYS = 35,
+	FEATURE_MAX_KEY_LENGTH = 50;
 
 /**
  * Creates the analytics object
@@ -53,13 +57,47 @@ Analytics.prototype.saveEventQueue = function saveEventQueue() {
 };
 
 /**
- * Converts an ISO Date string to the format required by our analytics server.
- * (Basically replace the trailing 'Z' with +0000)
- * @param  {String} dateString Date.prototype.toISOString()
- * @return {String}            [description]
+ * Convert an ISO date string into a SimpleDateFormat string
+ * @param  {String} ISO format date string
+ * @return {String} SimpleDateFormat string
  */
-function toAnalyticsDate(dateString) {
-	return dateString.replace('Z', '+0000');
+function toSimpleDateFormat(isoDateString) {
+	return isoDateString.replace('Z', '+0000');
+}
+
+/**
+ * Validate feature event data object meets limitations
+ * @param  {Object} Feature event data object
+ * @param {Number} Number of levels nested
+ * @return {Boolean} Boolean result of validation
+ */
+function validateFeatureEvent(obj, level) {
+	if (level > FEATURE_MAX_LEVELS) {
+		Ti.API.warn('Feature event exceeds ' + FEATURE_MAX_LEVELS + ' level limit.');
+		return false;
+	}
+	if (!obj) {
+		Ti.API.warn('Feature event data object is undefined.');
+		return false;
+	}
+	if (level == 0 && JSON.stringify(obj).length > FEATURE_MAX_SIZE) {
+		Ti.API.warn('Feature event data object exceeds ' + FEATURE_MAX_SIZE + ' size limit.');
+		return false;
+	}
+	if (Object.keys(obj).length > FEATURE_MAX_KEYS) {
+		Ti.API.warn('Feature event data object exceeds ' + FEATURE_MAX_KEYS + ' key limit.');
+		return false;
+	}
+	for (var k in obj) {
+		if (k.length > FEATURE_MAX_KEY_LENGTH) {
+			Ti.API.warn('Feature event data object key \'' + k + '\' exceeds ' + FEATURE_MAX_KEY_LENGTH + ' key length limit.');
+			return false;
+		}
+		if (typeof obj[k] == 'object' && !validateFeatureEvent(obj[k], level + 1)) {
+			return false;
+		}
+	}
+	return true;
 }
 
 /**
@@ -73,7 +111,7 @@ Analytics.prototype.createEvent = function createEvent(eventType, data) {
 	var event = {
 		id: Ti.Platform.createUUID() + ':' + Ti.Platform.id,
 		sid: this.sessionId,
-		ts: toAnalyticsDate(new Date().toISOString()),
+		ts: toSimpleDateFormat(new Date().toISOString()),
 		event: eventType,
 		seq: this.sequence++,
 		mid: Ti.Platform.id,
@@ -158,7 +196,13 @@ Analytics.prototype.createBackgroundEvent = function backgroundEvent() {
 Analytics.prototype.createFeatureEvent = function featureEvent(name, data) {
 	data = data || {};
 	data['eventName'] = name;
-	this.createEvent(EVENT_APP_FEATURE, data);
+	if (validateFeatureEvent(data, 0)) {
+		this.createEvent(EVENT_APP_FEATURE, data);
+	} else {
+	    Ti.API.error('Feature event \'' + name + '\' not conforming to recommended usage.');
+	    return -1;
+	}
+	return 0;
 };
 
 /**
@@ -254,8 +298,9 @@ Ti.App.addEventListener('pause', function pause(e) {
 // set exports
 this.exports = {
 	featureEvent: function (name, data) {
-		analytics.createFeatureEvent(name, data);
+		var r = analytics.createFeatureEvent(name, data);
 		analytics.postEvents();
+		return r;
 	},
 	navEvent: function (from, to, name, data) {
 		analytics.createNavEvent(from, to, name, data);

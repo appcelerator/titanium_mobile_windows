@@ -31,6 +31,7 @@ function compileApp(next) {
 		vcxproj = path.resolve(this.cmakeTargetDir, cmakeProjectName + '.vcxproj'),
 		nativeVcxProj = path.resolve(this.cmakeTargetDir, 'Native', 'TitaniumWindows_Native.vcxproj');
 
+	this.logger.info(__('Targeting Windows SDK: %s', this.targetPlatformSdkVersion.cyan || this.wpsdk.cyan));
 	this.logger.info(__('Running MSBuild on solution: %s', slnFile.cyan));
 
 	// Modify the vcxproj to inject some properties, so we always bundle

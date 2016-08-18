@@ -8,7 +8,7 @@
 # Author: Chris Williams
 # Created: 2014.12.02
 
-if (${CMAKE_SYSTEM_VERSION} STREQUAL "10.0")
+if (${CMAKE_SYSTEM_VERSION} MATCHES "^10.0")
   set(PLATFORM win10)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
   set(PLATFORM phone)

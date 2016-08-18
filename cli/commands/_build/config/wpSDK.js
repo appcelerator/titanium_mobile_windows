@@ -25,13 +25,24 @@ module.exports = function configOptionWPSDK(order) {
 		}
 	}
 
+	sdkTargets = sdkTargets.concat(this.windowsInfo.windowsphone[version].sdks);
+
+	function isWindows10(wpsdk) {
+		return (wpsdk && wpsdk.startsWith && wpsdk.startsWith('10.0'));
+	}
+
 	return {
 		abbr: 'S',
 		callback: function (value) {
+			// target various Windows 10.0.X SDKs
+			if (value.startsWith('10.0.')) {
+				this.targetPlatformSdkVersion = value;
+				this.cli.argv['wp-sdk'] = '10.0';
+			}
 			// We can use built-in temp key for local/emulator builds. For dist,
 			// insist on user/generated PFX when app requires one
 			if (this.conf.options['target'] == 'dist-winstore' ||
-				(value == '10.0' && this.conf.options['target'] == 'dist-phonestore')) {
+				(isWindows10(value) && this.conf.options['target'] == 'dist-phonestore')) {
 				this.conf.options['ws-cert'].required = true;
 			}
 		}.bind(this),

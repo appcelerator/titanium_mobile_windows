@@ -5,7 +5,7 @@
 # Please see the LICENSE included with this distribution for details.
 cmake_minimum_required(VERSION 3.0.0)
 
-if (${CMAKE_SYSTEM_VERSION} STREQUAL "10.0")
+if (${CMAKE_SYSTEM_VERSION} MATCHES "^10.0")
   set(PLATFORM win10)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
   set(PLATFORM wp)

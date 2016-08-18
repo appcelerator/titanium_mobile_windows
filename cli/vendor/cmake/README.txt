@@ -1,4 +1,4 @@
-This folder contains Microsoft's fork of CMake 3.3.2 built from https://github.com/Microsoft/CMake feature/Win10 branch.
+This folder contains CMake 3.6.1
 
 CMake is distributed under the OSI-approved BSD 3-clause License. Please refer to the
 LICENSE.txt for more information.
