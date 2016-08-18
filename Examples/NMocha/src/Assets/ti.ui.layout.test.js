@@ -13,14 +13,11 @@ function createWindow(_args, finish) {
 	_args = _args || {};
 	_args.backgroundColor = _args.backgroundColor || 'red';
 	var win = Ti.UI.createWindow(_args);
-	win.addEventListener('focus', function () {
-		Ti.API.info('Got focus event');
-		if (!didFocus) {
-			setTimeout(function () {
-				closeAndFinish(win, finish);
-			}, 3000);
-			didFocus = true;
-		}
+	win.addEventListener('open', function () {
+		Ti.API.info('Got open event');
+		setTimeout(function () {
+			closeAndFinish(win, finish);
+		}, 3000);
 	});
 	return win;
 }
