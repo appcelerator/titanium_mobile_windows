@@ -52,7 +52,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		finish();
 	});
 
-	(utilities.isWindows10Desktop() ? it.skip : it)('downloadLargeFile', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('downloadLargeFile', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();
@@ -121,7 +121,7 @@ describe('Titanium.Network.HTTPClient', function () {
 
 	// https://appcelerator.lighthouseapp.com/projects/32238/tickets/2156-android-invalid-redirect-alert-on-xhr-file-download
 	// https://appcelerator.lighthouseapp.com/projects/32238/tickets/1381-android-buffer-large-xhr-downloads
-	(utilities.isWindows10Desktop() ? it.skip : it)('largeFileWithRedirect', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('largeFileWithRedirect', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();

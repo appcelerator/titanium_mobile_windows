@@ -13,14 +13,11 @@ function createWindow(_args, finish) {
 	_args = _args || {};
 	_args.backgroundColor = _args.backgroundColor || 'red';
 	var win = Ti.UI.createWindow(_args);
-	win.addEventListener('focus', function () {
-		Ti.API.info('Got focus event');
-		if (!didFocus) {
-			setTimeout(function () {
-				closeAndFinish(win, finish);
-			}, 3000);
-			didFocus = true;
-		}
+	win.addEventListener('open', function () {
+		Ti.API.info('Got open event');
+		setTimeout(function () {
+			closeAndFinish(win, finish);
+		}, 3000);
 	});
 	return win;
 }
@@ -54,10 +51,11 @@ describe('Titanium.UI.Layout', function () {
 		});
 		win.add(view);
 		win.add(label);
-		win.addEventListener('postlayout', function (e) {
+		win.addEventListener('open', function (e) {
 			if (didPostlayout) return;
 			didPostlayout = true;
-			Ti.API.info('Got postlayout');
+			Ti.API.info('Got open');
+			setTimeout(function(){
 			should(view.size).not.be.undefined;
 			should(view.size.width).not.be.undefined;
 			should(view.size.height).not.be.undefined;
@@ -93,6 +91,7 @@ describe('Titanium.UI.Layout', function () {
 			should(view.rect.y).eql(0);
 			should(win.size.height / view.size.height).eql(1);
 			should(win.size.width / view.size.width).eql(1);
+			}, 1000);
 		});
 		win.open();
 	});
@@ -111,9 +110,10 @@ describe('Titanium.UI.Layout', function () {
 		});
 		win.add(view);
 		win.add(view2);
-		win.addEventListener('postlayout', function (e) {
+		win.addEventListener('open', function (e) {
 			if (didPostlayout) return;
 			didPostlayout = true;
+			setTimeout(function(){
 			should(view.left).eql(10);
 			should(view.rect.x).eql(10);
 			should(view.rect.width).eql(10);
@@ -122,6 +122,7 @@ describe('Titanium.UI.Layout', function () {
 			should(view2.rect.x).eql(win.size.width - 20);
 			should(view2.rect.width).eql(10);
 			should(view2.left).be.undefined;
+			}, 1000);
 		});
 		win.open();
 	});
@@ -180,7 +181,7 @@ describe('Titanium.UI.Layout', function () {
 
 	// functional test case #1022, #1024
 	// ViewWidth, ViewHeight
-	(((Ti.Platform.version.indexOf('10.0') == 0) && utilities.isWindowsDesktop()) ? it.skip : it)('viewWidth', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('viewWidth', function (finish) {
 		var win = createWindow({}, finish);
 		var view = Ti.UI.createView({
 			width: 10,
