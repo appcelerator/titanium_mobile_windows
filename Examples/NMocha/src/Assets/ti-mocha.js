@@ -4755,9 +4755,16 @@ Runner.prototype.parents = function(){
  * @api private
  */
 
-Runner.prototype.runTest = function(fn){
+Runner.prototype.runTest = function(fn_real){
   var test = this.test
     , self = this;
+
+  // wait for a while before executing next test
+  var fn = function (err) {
+      setTimeout(function () {
+          fn_real(err);
+      }, 2000);
+  };
 
   if (this.asyncOnly) test.asyncOnly = true;
 
