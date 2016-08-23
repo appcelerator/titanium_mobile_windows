@@ -58,9 +58,7 @@ describe('Titanium.UI.Button', function () {
 		});
 		var view = Ti.UI.createButton({ title: 'push button' });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			view.image = 'Logo.png';
 			should(view.image).be.eql('Logo.png');
 			setTimeout(function () {
@@ -79,9 +77,7 @@ describe('Titanium.UI.Button', function () {
 		});
 		var view = Ti.UI.createButton({ title: 'push button' });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			view.image = Ti.Filesystem.getFile('Logo.png').read();
 			should(view.image).be.an.Object;
 			setTimeout(function () {
@@ -99,9 +95,7 @@ describe('Titanium.UI.Button', function () {
 		});
 		var view = Ti.UI.createButton({ title: 'push button' });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundColor).be.a.String;
 			should(view.backgroundImage).be.a.String;
 			view.backgroundColor = 'white';
@@ -123,9 +117,7 @@ describe('Titanium.UI.Button', function () {
 		});
 		var view = Ti.UI.createButton({ title: 'push button' });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundFocusedColor).be.a.String;
 			should(view.backgroundFocusedImage).be.a.String;
 			view.backgroundFocusedColor = 'white';
@@ -147,9 +139,7 @@ describe('Titanium.UI.Button', function () {
 		});
 		var view = Ti.UI.createButton({ title: 'push button' });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundSelectedColor).be.a.String;
 			should(view.backgroundSelectedImage).be.a.String;
 			view.backgroundSelectedColor = 'white';
@@ -171,9 +161,7 @@ describe('Titanium.UI.Button', function () {
 		});
 		var view = Ti.UI.createButton({ title: 'push button' });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundDisabledColor).be.a.String;
 			should(view.backgroundDisabledImage).be.a.String;
 			view.backgroundDisabledColor = 'white';
@@ -201,9 +189,7 @@ describe('Titanium.UI.Button', function () {
 			colors: [{ color: 'red', offset: 0.0 }, { color: 'blue', offset: 0.25 }, { color: 'red', offset: 1.0 }],
 		};
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundGradient.type).be.eql('linear');
 			should(view.backgroundGradient.startPoint).be.an.Object;
 			should(view.backgroundGradient.endPoint).be.an.Object;
@@ -223,9 +209,7 @@ describe('Titanium.UI.Button', function () {
 		});
 		var view = Ti.UI.createButton({ title: 'push button' });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.borderColor).be.a.String;
 			should(view.borderWidth).be.a.Number;
 			view.borderColor = 'blue';
@@ -248,9 +232,7 @@ describe('Titanium.UI.Button', function () {
 		var view = Ti.UI.createButton({ title: 'push button' });
 		w.add(view);
 
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			setTimeout(function () {
 				w.close();
 				finish();

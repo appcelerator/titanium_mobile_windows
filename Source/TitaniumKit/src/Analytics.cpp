@@ -69,21 +69,30 @@ namespace Titanium
 
 	TITANIUM_PROPERTY_GETTER(Analytics, _receivedResponse)
 	{
-		auto func = ti_analytics__.GetProperty("getReceivedResponse");
-		return static_cast<JSObject>(func)(get_context().get_global_object());
+		if (ti_analytics__.HasProperty("getReceivedResponse")) {
+			auto func = ti_analytics__.GetProperty("getReceivedResponse");
+			return static_cast<JSObject>(func)(get_context().get_global_object());
+		}
+		return get_context().CreateUndefined();
 	}
 
 	TITANIUM_PROPERTY_SETTER(Analytics, _receivedResponse)
 	{
-		auto func = ti_analytics__.GetProperty("setReceivedResponse");
-		static_cast<JSObject>(func)({argument}, get_context().get_global_object());
-		return true;
+		if (ti_analytics__.HasProperty("setReceivedResponse")) {
+			auto func = ti_analytics__.GetProperty("setReceivedResponse");
+			static_cast<JSObject>(func)({argument}, get_context().get_global_object());
+			return true;
+		}
+		return false;
 	}
 
 	TITANIUM_PROPERTY_GETTER(Analytics, lastEvent)
 	{
-		auto func = ti_analytics__.GetProperty("lastEvent");
-		return static_cast<JSObject>(func)(get_context().get_global_object());
+		if (ti_analytics__.HasProperty("lastEvent")) {
+			auto func = ti_analytics__.GetProperty("lastEvent");
+			return static_cast<JSObject>(func)(get_context().get_global_object());
+		}
+		return get_context().CreateUndefined();
 	}
 
 	TITANIUM_FUNCTION(Analytics, _start)

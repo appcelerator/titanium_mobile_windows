@@ -129,6 +129,7 @@ add_executable(${EXE_NAME} WIN32
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
 set_target_properties(${EXE_NAME} PROPERTIES LINK_FLAGS "/INCREMENTAL:NO")
+set_target_properties(${EXE_NAME} PROPERTIES VS_GLOBAL_DefaultLanguage "<%= defaultLanguage %>")
 
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_Filesystem_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${TitaniumWindows_Global_LIBRARIES})

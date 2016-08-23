@@ -104,7 +104,7 @@ describe('Titanium.UI.TextField', function () {
 			backgroundColor: '#ddd'
 		});
 		win.add(textfield);
-		win.addEventListener('focus', function () {
+		win.addEventListener('open', function () {
 			should(win.width).be.greaterThan(100);
 			should(textfield.width).not.be.greaterThan(win.width);
 			setTimeout(function() {
@@ -133,9 +133,7 @@ describe('Titanium.UI.TextField', function () {
 		bgView.add(textfield);
 		win.add(bgView);
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		win.addEventListener('open', function () {
 			should(bgView.height).be.eql(100);
 			should(textfield.height).not.be.greaterThan(100);
 			setTimeout(function() {

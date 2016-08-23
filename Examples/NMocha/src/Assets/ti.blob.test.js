@@ -24,7 +24,7 @@ describe('Titanium.Blob', function () {
 		var window = Ti.UI.createWindow();
 		var label = Ti.UI.createLabel({ text: 'test' });
 		window.add(label);
-		window.addEventListener('focus', function () {
+		window.addEventListener('open', function () {
 			var blob = label.toImage(function (blob) {
 				should(blob).be.an.Object;
 				should(blob).be.an.instanceof(Ti.Blob);

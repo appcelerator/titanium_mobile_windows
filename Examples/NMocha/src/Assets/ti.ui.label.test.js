@@ -128,9 +128,7 @@ describe('Titanium.UI.Label', function () {
 			didPostLayout = true;
 			should(label.size.width).not.be.greaterThan(win.size.width);
 		});
-		win.addEventListener('focus', function() {
-			if (didFocus) return;
-			didFocus = true;
+		win.addEventListener('open', function() {
 			setTimeout(function() {
 				win.close();
 				finish();
@@ -138,7 +136,7 @@ describe('Titanium.UI.Label', function () {
 		});
 		win.open();
 	});
-	it('height', function (finish) {
+	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('height', function (finish) {
 		this.timeout(5000);
 		var label = Ti.UI.createLabel({
 			text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ullamcorper massa, eget tempor sapien. Phasellus nisi metus, tempus a magna nec, ultricies rutrum lacus. Aliquam sit amet augue suscipit, dignissim tellus eu, consectetur elit. Praesent ligula velit, blandit vel urna sit amet, suscipit euismod nunc.',
@@ -164,9 +162,7 @@ describe('Titanium.UI.Label', function () {
 			// parent view should be able to handle which areas should be shown in that case.
 			// should(label.size.height).not.be.greaterThan(100);
 		});
-		win.addEventListener('focus', function() {
-			if (didFocus) return;
-			didFocus = true;
+		win.addEventListener('open', function() {
 			setTimeout(function() {
 				win.close();
 				finish();
@@ -184,7 +180,7 @@ describe('Titanium.UI.Label', function () {
 				borderRadius: 5,
 				text: 'this is some text'
 			});
-		win.addEventListener('focus', function () {
+		win.addEventListener('open', function () {
 			setTimeout(function () {
 				should(label.size.width).be.greaterThan(0);
 				should(label.size.height).be.greaterThan(0);

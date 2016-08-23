@@ -109,10 +109,7 @@ describe('Titanium.UI.ListView', function () {
 		]);
 		listView.appendSection(usSection);
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(listView.sectionCount).be.eql(2);
 			should(listView.sections[0].items.length).be.eql(3);
 			should(listView.sections[0].items[0].properties.title).be.eql('Lift');
@@ -164,10 +161,7 @@ describe('Titanium.UI.ListView', function () {
 
 		listView.sections = sections;
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(listView.sectionCount).be.eql(2);
 			should(listView.sections[0].items.length).be.eql(2);
 			should(listView.sections[0].items[0].properties.title).be.eql('Apple');
@@ -253,10 +247,7 @@ describe('Titanium.UI.ListView', function () {
 
 		listView.setSections(sections);
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(listView.sectionCount).be.eql(3);
 			should(listView.sections[0].items.length).be.eql(2);
 			should(listView.sections[0].items[0].info.text).be.eql('Apple');
@@ -305,10 +296,7 @@ describe('Titanium.UI.ListView', function () {
 
 		listView.sections = [ fruitSection ];
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(listView.sectionCount).be.eql(1);
 			should(listView.sections[0].items.length).be.eql(2);
 			should(listView.sections[0].items[0].properties.title).be.eql('Apple');
@@ -365,10 +353,7 @@ describe('Titanium.UI.ListView', function () {
 
 		listView.sections = [ fruitSection, fishSection ];
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(listView.sectionCount).be.eql(2);
 			should(listView.sections[0].items.length).be.eql(2);
 			should(listView.sections[0].items[0].properties.title).be.eql('Apple');
@@ -421,10 +406,7 @@ describe('Titanium.UI.ListView', function () {
 
 		listView.sections = [ fruitSection, vegSection ];
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(listView.sectionCount).be.eql(2);
 			should(listView.sections[0].items.length).be.eql(2);
 			should(listView.sections[0].items[0].properties.title).be.eql('Apple');
@@ -480,10 +462,7 @@ describe('Titanium.UI.ListView', function () {
 
 		listView.sections = [ fruitSection, vegSection, fishSection ];
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(listView.sectionCount).be.eql(3);
 			should(listView.sections[0].items.length).be.eql(2);
 			should(listView.sections[0].items[0].properties.title).be.eql('Apple');

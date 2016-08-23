@@ -27,7 +27,6 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.generateCapabilityList = generateCapabilityList;
 	WindowsBuilder.prototype.generateAppxManifestForPlatform = generateAppxManifestForPlatform;
 	WindowsBuilder.prototype.generateAppxManifest = generateAppxManifest;
-	WindowsBuilder.prototype.addI18nVSResources = addI18nVSResources;
 }
 
 /**
@@ -49,6 +48,7 @@ function generateI18N(next) {
 	data.en.app.appname || (data.en.app.appname = this.tiapp.name);
 
 	this.i18nVSResources = [];
+	this.defaultLanguage = 'en'; // set as 'en' for now
 
 	Object.keys(data).forEach(function (locale) {
 		var destDir = path.join(this.buildTargetStringsDir, locale),
@@ -93,26 +93,6 @@ function generateI18N(next) {
 
 	next();
 };
-
-/**
- * Updates the Visual Studio project to add the generated Resources.resw file
- *
- * @param {Function} next - A function to call after resources have been generated.
- */
-function addI18nVSResources(next) {
-	var cmakeProjectName = this.sanitizeProjectName(this.cli.tiapp.name),
-		vcxproj = path.resolve(this.cmakeTargetDir, cmakeProjectName + '.vcxproj');
-
-	var modified = fs.readFileSync(vcxproj, 'utf8');
-	fs.existsSync(vcxproj) && fs.renameSync(vcxproj, vcxproj + '.bak');
-
-	// DefaultLanguage (forcing to "en" for now)
-	modified = modified.replace(/<DefaultLanguage>[a-zA-Z]{2}(-[a-zA-Z]{2})*<\/DefaultLanguage>/, '<DefaultLanguage>en</DefaultLanguage>');
-
-	fs.writeFileSync(vcxproj, modified);
-
-	next();
-}
 
 /**
  * Generates the native type wrappers and adds them to the Visual Studio project.
@@ -258,6 +238,7 @@ function generateCmakeList(next) {
 			phoneProductId: this.phoneProductId,
 			sourceGroups: sourceGroups,
 			i18nVSResources: this.i18nVSResources,
+			defaultLanguage: this.defaultLanguage,
 			native_modules: native_modules,
 			targetPlatformSdkMinVersion: this.targetPlatformSdkMinVersion
 		}

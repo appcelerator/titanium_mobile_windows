@@ -53,9 +53,7 @@ describe('Titanium.UI.Window', function () {
 			width: 100,
 			height: 100
 		});
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(w.size.width).not.be.eql(100);
 			should(w.size.height).not.be.eql(100);
 			setTimeout(function () {
@@ -73,9 +71,7 @@ describe('Titanium.UI.Window', function () {
 			left: 100,
 			right: 100
 		});
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(w.rect.left).not.be.eql(100);
 			should(w.rect.right).not.be.eql(100);
 			setTimeout(function () {
@@ -109,9 +105,7 @@ describe('Titanium.UI.Window', function () {
 			backgroundColor: 'gray'
 		});
 		var view = Ti.UI.createView();
-		win.addEventListener('focus', function() {
-			if (didFocus) return;
-			didFocus = true;
+		win.addEventListener('open', function() {
 			should(win.children.length).be.eql(1);
 			win.remove(win.children[0]);
 			should(win.children.length).be.eql(0);
@@ -177,10 +171,7 @@ describe('Titanium.UI.Window', function () {
 			win2 = Ti.UI.createWindow({backgroundColor:'blue' }),
 			win3 = Ti.UI.createWindow({backgroundColor:'gray' });
 
-		win1.addEventListener('focus', function(e) {
-			if (didFocus) return;
-			didFocus = true;
-
+		win1.addEventListener('open', function(e) {
 			win2.open();
 			setTimeout(function () {
 				win3.open();
@@ -206,10 +197,7 @@ describe('Titanium.UI.Window', function () {
 			win2 = Ti.UI.createWindow({backgroundColor:'blue' }),
 			win3 = Ti.UI.createWindow({backgroundColor:'gray' });
 
-		win1.addEventListener('focus', function(e) {
-			if (didFocus) return;
-			didFocus = true;
-
+		win1.addEventListener('open', function(e) {
 			win2.open();
 			setTimeout(function () {
 				win3.open();
@@ -234,10 +222,7 @@ describe('Titanium.UI.Window', function () {
 			win2 = Ti.UI.createWindow({backgroundColor:'blue' }),
 			win3 = Ti.UI.createWindow({backgroundColor:'gray' });
 
-		win1.addEventListener('focus', function(e) {
-			if (didFocus) return;
-			didFocus = true;
-
+		win1.addEventListener('open', function(e) {
 			win2.open();
 			setTimeout(function () {
 				win3.open();
@@ -269,9 +254,7 @@ describe('Titanium.UI.Window', function () {
 		var win = Ti.UI.createWindow({
 			backgroundColor: 'yellow'
 		});
-		win.addEventListener('focus', function (e) {
-			if (didFocus) return;
-			didFocus = true;
+		win.addEventListener('open', function (e) {
 			should(Ti.UI.currentWindow).be.eql(win);
 			setTimeout(function () {
 				win.close();

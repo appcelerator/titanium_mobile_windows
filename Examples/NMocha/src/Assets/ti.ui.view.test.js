@@ -25,9 +25,7 @@ describe('Titanium.UI.View', function () {
 		});
 		var view = Ti.UI.createView({ width:Ti.UI.FILL, height:Ti.UI.FILL });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundColor).be.a.String;
 			should(view.backgroundImage).be.a.String;
 			view.backgroundColor = 'white';
@@ -48,9 +46,7 @@ describe('Titanium.UI.View', function () {
 		});
 		var view = Ti.UI.createView({ width:Ti.UI.FILL, height:Ti.UI.FILL });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundFocusedColor).be.a.String;
 			should(view.backgroundFocusedImage).be.a.String;
 			view.backgroundFocusedColor = 'white';
@@ -71,9 +67,7 @@ describe('Titanium.UI.View', function () {
 		});
 		var view = Ti.UI.createView({ width:Ti.UI.FILL, height:Ti.UI.FILL });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundSelectedColor).be.a.String;
 			should(view.backgroundSelectedImage).be.a.String;
 			view.backgroundSelectedColor = 'white';
@@ -94,9 +88,7 @@ describe('Titanium.UI.View', function () {
 		});
 		var view = Ti.UI.createView({ width:Ti.UI.FILL, height:Ti.UI.FILL });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundDisabledColor).be.a.String;
 			should(view.backgroundDisabledImage).be.a.String;
 			view.backgroundDisabledColor = 'white';
@@ -123,9 +115,7 @@ describe('Titanium.UI.View', function () {
 			colors: [{ color: 'red', offset: 0.0 }, { color: 'blue', offset: 0.25 }, { color: 'red', offset: 1.0 }],
 		};
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.backgroundGradient.type).be.eql('linear');
 			should(view.backgroundGradient.startPoint).be.an.Object;
 			should(view.backgroundGradient.endPoint).be.an.Object;
@@ -145,9 +135,7 @@ describe('Titanium.UI.View', function () {
 		});
 		var view = Ti.UI.createView({ width:Ti.UI.FILL, height:Ti.UI.FILL });
 		w.add(view);
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			should(view.borderColor).be.a.String;
 			should(view.borderWidth).be.a.Number;
 			view.borderColor = 'blue';
@@ -169,9 +157,7 @@ describe('Titanium.UI.View', function () {
 		var view = Ti.UI.createView({ width:Ti.UI.FILL, height:Ti.UI.FILL });
 		w.add(view);
 
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			setTimeout(function () {
 				w.close();
 				finish();
@@ -200,10 +186,8 @@ describe('Titanium.UI.View', function () {
 			backgroundColor: 'blue'
 		});
 
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-			Ti.API.info('Got focus event');
+		w.addEventListener('open', function () {
+			Ti.API.info('Got open event');
 			should(w.visible).be.true;
 			w.hide();
 			should(w.visible).be.false;
@@ -422,9 +406,7 @@ describe('Titanium.UI.View', function () {
 		a.add(b);
 		w.add(a);
 
-		w.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
+		w.addEventListener('open', function () {
 			setTimeout(function () {
 				w.close();
 				finish();

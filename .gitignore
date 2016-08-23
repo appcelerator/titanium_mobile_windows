@@ -214,7 +214,7 @@ FakesAssemblies/
 !templates/build
 !cli/vendor/cmake/bin
 !cli/vendor/cmake/share
-!cli/vendor/cmake/share/cmake-3.4/Templates/Windows/Windows_TemporaryKey.pfx
+!cli/vendor/cmake/share/cmake-3.6/Templates/Windows/Windows_TemporaryKey.pfx
 
 # Scripts
 !Tools/Scripts/build

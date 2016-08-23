@@ -98,10 +98,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [ { title:'Red' } ]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(1);
@@ -141,10 +138,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(1);
@@ -181,10 +175,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [ { title:'Red' }, { title:'White' } ]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(2);
@@ -220,10 +211,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(2);
@@ -255,10 +243,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [ { title:'Red' } ]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(1);
@@ -294,10 +279,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [ { title:'Red' } ]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(1);
@@ -338,10 +320,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(1);
@@ -377,10 +356,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(1);
@@ -416,10 +392,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(3);
@@ -464,10 +437,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.an.Object;
 			should(tableView.sections[0].rowCount).be.eql(3);
@@ -504,10 +474,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sections[0].rowCount).be.eql(3);
 			tableView.updateRow(1, Ti.UI.createTableViewRow({ title: 'Green' }));
 			should(tableView.sections[0].rowCount).be.eql(3);
@@ -544,10 +511,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(1);
 			should(tableView.sections[0]).be.eql(section_0);
 			should(tableView.sections[0].rows[0].title).be.eql('Red');
@@ -593,10 +557,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0, section_1]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(2);
 			should(tableView.sections[0]).be.eql(section_0);
 			should(tableView.sections[1]).be.eql(section_1);
@@ -651,10 +612,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0, section_1]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			tableView.updateSection(1, section_2);
 
 			should(tableView.sectionCount).be.eql(2);
@@ -711,10 +669,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0, section_1]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(2);
 			should(tableView.sections[0]).be.eql(section_0);
 			should(tableView.sections[1]).be.eql(section_1);
@@ -772,10 +727,7 @@ describe('Titanium.UI.TableView', function () {
 		  data: [section_0, section_1]
 		});
 
-		win.addEventListener('focus', function () {
-			if (didFocus) return;
-			didFocus = true;
-
+		win.addEventListener('open', function () {
 			should(tableView.sectionCount).be.eql(2);
 			should(tableView.sections[0]).be.eql(section_0);
 			should(tableView.sections[1]).be.eql(section_1);
