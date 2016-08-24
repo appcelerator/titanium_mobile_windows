@@ -196,10 +196,17 @@ namespace TitaniumWindows
 	{
 #pragma warning(pop)
 	public:
-		Timer(Titanium::GlobalObject::Callback_t callback, const std::chrono::milliseconds& interval)
-		    : Titanium::GlobalObject::Timer(callback, interval), callback__(callback)
+		Timer(Titanium::GlobalObject::Callback_t callback, const std::chrono::milliseconds& _interval)
+			: Titanium::GlobalObject::Timer(callback, _interval), callback__(callback)
 		{
 			TITANIUM_LOG_DEBUG("Timer: ctor");
+
+			std::chrono::milliseconds interval;
+			if (_interval.count() == 0) {
+				interval = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(100));
+			} else {
+				interval = _interval;
+			}
 
 			// A Windows::Foundation::TimeSpan is a time period expressed in
 			// 100-nanosecond units.
@@ -238,6 +245,8 @@ namespace TitaniumWindows
 						auto strong_ptr = weakThis.lock();
 						if (strong_ptr) {
 							strong_ptr->callback__();
+						} else {
+							TITANIUM_LOG_WARN("Timer::Start: Unable to start Timer");
 						}
 					},
 					std::move(weakThis), _1, _2);
