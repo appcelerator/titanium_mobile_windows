@@ -156,7 +156,7 @@ describe('Titanium.Geolocation', function () {
 		finish();
 	});
 
-	it('forwardGeocoder', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('forwardGeocoder', function (finish) {
 		this.timeout(6e4);
 		should(Ti.Geolocation.forwardGeocoder).be.a.Function;
 		Ti.Geolocation.forwardGeocoder('440 N Bernardo Ave, Mountain View', function (data) {
@@ -174,7 +174,7 @@ describe('Titanium.Geolocation', function () {
 		});
 	});
 
-	it('reverseGeocoder', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('reverseGeocoder', function (finish) {
 		this.timeout(6e4);
 		should(Ti.Geolocation.reverseGeocoder).be.a.Function;
 		Ti.Geolocation.reverseGeocoder(37.3883645, -122.0512682, function (data) {
