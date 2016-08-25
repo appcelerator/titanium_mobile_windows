@@ -203,7 +203,7 @@ namespace TitaniumWindows
 
 			std::chrono::milliseconds interval;
 			if (_interval.count() == 0) {
-				interval = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(100));
+				interval = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(500));
 			} else {
 				interval = _interval;
 			}
