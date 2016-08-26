@@ -255,11 +255,7 @@ namespace Titanium
 
 			HTTPClient(const JSContext&) TITANIUM_NOEXCEPT;
 
-			virtual ~HTTPClient() 
-			{
-				unloaded__ = true;
-			}
-
+			virtual ~HTTPClient() = default;
 			HTTPClient(const HTTPClient&) = default;
 			HTTPClient& operator=(const HTTPClient&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
@@ -414,7 +410,6 @@ namespace Titanium
 			bool withCredentials__;
 			TLS_VERSION tlsVersion__;
 			bool cache__;
-			bool unloaded__;
 #pragma warning(pop)
 
 			void setHTTPStatusPhrase();
