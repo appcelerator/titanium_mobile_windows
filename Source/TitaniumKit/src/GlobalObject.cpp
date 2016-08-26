@@ -580,6 +580,8 @@ namespace Titanium
 		ENSURE_UINT_AT_INDEX(delay, 1);
 
 		TITANIUM_ASSERT(function.IsFunction());
+		TITANIUM_ASSERT(delay > 0);
+
 		const auto chrono_delay = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(delay));
 
 		const auto global_object = this_object.get_context().get_global_object();
