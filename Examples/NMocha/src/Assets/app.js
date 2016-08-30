@@ -45,10 +45,6 @@ require('./ti.platform.test');
 require('./ti.require.test');
 require('./ti.stream.test');
 require('./ti.test');
-// TODO FIXME TIMOB-23776 Skip tests on Windows Desktop
-if (utilities.isWindowsDesktop()) {
-    Ti.API.info('TIMOB-23776: Skipping UI tests on Windows Desktop');
-} else {
 require('./ti.ui.2dmatrix.test');
 require('./ti.ui.activityindicator.test');
 require('./ti.ui.alertdialog.test');
@@ -75,7 +71,6 @@ require('./ti.ui.window.test');
 require('./ti.ui.windows.commandbar.test');
 require('./ti.utils.test');
 require('./ti.xml.test');
-}
 // ============================================================================
 
 
