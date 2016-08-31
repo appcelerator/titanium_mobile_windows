@@ -312,8 +312,6 @@ namespace Titanium
 		void StartTimer(Callback_t&& callback, const unsigned& timerId, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT;
 		void StopTimer(const unsigned& timerId) TITANIUM_NOEXCEPT;
 
-		JSObject callback_map__;
-
 // Silence 4251 on Windows since private member variables do not
 // need to be exported from a DLL.
 #pragma warning(push)
@@ -322,6 +320,7 @@ namespace Titanium
 		std::unordered_map<std::string, JSValue> module_cache__;
 		std::string currentDir__;
 		std::unordered_map<unsigned, std::shared_ptr<Timer>> timer_map__;
+		std::unordered_map<unsigned, JSObject> timer_callback_map__;
 
 		static std::atomic<unsigned> timer_id_generator__;
 #pragma warning(pop)
