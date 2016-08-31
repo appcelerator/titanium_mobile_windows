@@ -528,7 +528,7 @@ describe('Titanium.UI.ListView', function () {
 
 		var items = section.getItems();
 		should(items.length).be.eql(6);
-		for (var i = 0; i < items.length; i++) {
+		for (var i in items) {
 		    var item = items[i].properties.title;
 		    should(item).be.eql(validation[i]);
 		}
@@ -572,7 +572,7 @@ describe('Titanium.UI.ListView', function () {
 
 		var items = section.getItems();
 		should(items.length).be.eql(6);
-		for (var i = 0; i < items.length; i++) {
+		for (var i in items) {
 		    var item = items[i].properties.title;
 		    should(item).be.eql(validation[i]);
 		}
