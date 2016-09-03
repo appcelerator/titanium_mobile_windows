@@ -45,7 +45,7 @@ namespace Titanium
 		};
 
 		AttributedString::AttributedString(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context)
+			: Module(js_context, "Ti.UI.AttributedString")
 		{
 		}
 

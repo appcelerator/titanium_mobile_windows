@@ -320,6 +320,15 @@ M removeEventListener
 M setBubbleParent
 M setLifecycleContainer
 
+C Titanium.UI.ListItem
+P backgroundColor
+P backgroundGradient
+P backgroundImage
+P color
+P itemId
+P subtitle
+P title
+
 C Titanium.UI.ListSection
 P footerTitle
 P headerTitle

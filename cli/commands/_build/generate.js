@@ -24,7 +24,7 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.generateNativeWrappers = generateNativeWrappers;
 	WindowsBuilder.prototype.generateModuleFinder = generateModuleFinder;
 	WindowsBuilder.prototype.generateCmakeList = generateCmakeList;
-	WindowsBuilder.prototype.generateCapabilityList = generateCapabilityList;
+	WindowsBuilder.prototype.generateCapabilities = generateCapabilities;
 	WindowsBuilder.prototype.generateAppxManifestForPlatform = generateAppxManifestForPlatform;
 	WindowsBuilder.prototype.generateAppxManifest = generateAppxManifest;
 }
@@ -249,9 +249,21 @@ function generateCmakeList(next) {
  * Generates capabilities based on API usage
  *
  * @param {String} target - Build target to determine platform specific capabilities
- * @param {Object} properties - Properties object to set generated API list
+ * @param {Object} capabilities - Capabilities array
+ * @param {Object} deviceCapabilities - Device capabilities array
  */
-function generateCapabilityList(target, properties) {
+function generateCapabilities(target, capabilities, deviceCapabilities) {
+	var uapCapabilities = [],
+		hasCapability = function (capabilities, capability) {
+			for (var i = 0; i < capabilities.length; i++) {
+				var name = /Name\=\"(.*)\"/.exec(capabilities[i])[1];
+				if (name == capability) {
+					return true;
+				}
+			}
+			return false;
+		}.bind(this);
+
 	Object.keys(this.jsFiles).forEach(function (id) {
 		var js = fs.readFileSync(this.jsFiles[id], {encoding: 'utf8'}),
 			apis = {
@@ -296,38 +308,39 @@ function generateCapabilityList(target, properties) {
 				'App.setProximityDetection': {
 					deviceCapability: ['proximity']
 				}
-			},
-			capabilities = [
-				'<Capability Name=\"internetClient\" />' // always include internetClient for analytics
-			],
-			uapCapabilities = [],
-			deviceCapabilities = [];
+			};
 
+		// always include internetClient for analytics
+		if (!hasCapability(capabilities, 'internetClient')) {
+			capabilities.push('<Capability Name=\"internetClient\" />');
+		}
 		for (api in apis) {
 			var reg = new RegExp('(Ti|Titanium)\\.(' + api.replace('.', '\\.') +')', 'g');
 			if (reg.test(js)) {
 				apis[api].capability && apis[api].capability.forEach(function(name) {
 					var entry = '<Capability Name="' + name + '" />';
-					if (capabilities.indexOf(entry) === -1) {
+					if (!hasCapability(capabilities, name)) {
 						capabilities.push(entry);
 					}
 				});
 				apis[api].uapCapability && apis[api].uapCapability.forEach(function(name) {
-					var entry = '<uap:Capability Name="' + name + '" />';
-					if (uapCapabilities.indexOf(entry) === -1) {
+					var tag = target == 'win10' ? 'uap:' : (name == 'contacts' ? 'm3:' : ''),
+						entry = '<' + tag + 'Capability Name="' + name + '" />';
+					if (!hasCapability(uapCapabilities, name) && !hasCapability(capabilities, name)) {
 						uapCapabilities.push(entry);
 					}
 				});
 				apis[api].deviceCapability && apis[api].deviceCapability.forEach(function(name) {
 					var entry = '<DeviceCapability Name="' + name + '" />';
-					if (deviceCapabilities.indexOf(entry) === -1) {
+					if (!hasCapability(deviceCapabilities, name)) {
 						deviceCapabilities.push(entry);
 					}
 				});
 			}
 		}
-		properties.Capabilities = capabilities.concat(uapCapabilities).concat(deviceCapabilities);
 	}.bind(this));
+
+	return capabilities.concat(uapCapabilities).concat(deviceCapabilities);
 };
 
 /**
@@ -423,10 +436,8 @@ function generateAppxManifestForPlatform(target, properties) {
 				}
 			}
 		});
-		properties.Capabilities = capabilities.concat(deviceCapabilities);
-	} else {
-		this.generateCapabilityList(target, properties);
 	}
+	properties.Capabilities = this.generateCapabilities(target, capabilities, deviceCapabilities);
 
 	properties.Prerequisites = properties.Prerequisites || [];
 	properties.Resources = properties.Resources || [];
