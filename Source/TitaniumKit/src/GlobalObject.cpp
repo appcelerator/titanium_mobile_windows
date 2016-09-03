@@ -26,7 +26,6 @@ namespace Titanium
 
 	GlobalObject::GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT
 	    : JSExportObject(js_context)
-	    , callback_map__(js_context.CreateObject())
 		, currentDir__(COMMONJS_SEPARATOR__)
 	{
 		TITANIUM_LOG_DEBUG("GlobalObject:: ctor ", this);
@@ -404,28 +403,23 @@ namespace Titanium
 
 	void GlobalObject::RegisterCallback(JSObject&& function, const unsigned& timerId) TITANIUM_NOEXCEPT
 	{
-		const std::string timerId_str = "callback_" + std::to_string(timerId);
 		TITANIUM_ASSERT(function.IsFunction());
-		TITANIUM_ASSERT(!callback_map__.HasProperty(timerId_str));
-		callback_map__.SetProperty(timerId_str, function);
+		TITANIUM_ASSERT(timer_callback_map__.find(timerId) == timer_callback_map__.end());
+		timer_callback_map__.emplace(timerId, function);
 	}
 
 	void GlobalObject::UnregisterCallback(const unsigned& timerId) TITANIUM_NOEXCEPT
 	{
-		const std::string timerId_str = "callback_" + std::to_string(timerId);
-		TITANIUM_ASSERT(callback_map__.HasProperty(timerId_str));
-		const bool callback_deleted = callback_map__.DeleteProperty(timerId_str);
-		TITANIUM_ASSERT(callback_deleted);
+		TITANIUM_ASSERT(timer_callback_map__.find(timerId) != timer_callback_map__.end());
+		timer_callback_map__.erase(timerId);
 	}
 
 	void GlobalObject::InvokeCallback(const unsigned& timerId) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_EXCEPTION_CATCH_START{
-			const std::string timerId_str = "callback_" + std::to_string(timerId);
-			TITANIUM_ASSERT(callback_map__.HasProperty(timerId_str));
-			JSValue callback_property = callback_map__.GetProperty(timerId_str);
-			TITANIUM_ASSERT(callback_property.IsObject());
-			JSObject callback = static_cast<JSObject>(callback_property);
+			const auto found = timer_callback_map__.find(timerId);
+			TITANIUM_ASSERT(found != timer_callback_map__.end());
+			auto callback = found->second;
 			TITANIUM_ASSERT(callback.IsFunction());
 			callback(get_context().get_global_object());
 		} TITANIUM_EXCEPTION_CATCH_END
@@ -452,10 +446,8 @@ namespace Titanium
 			const auto number_of_elements_removed = timer_map__.erase(timerId);
 			TITANIUM_ASSERT(number_of_elements_removed == 1);
 
-			const std::string timerId_str = "callback_" + std::to_string(timerId);
-			TITANIUM_ASSERT(callback_map__.HasProperty(timerId_str));
-			const bool callback_deleted = callback_map__.DeleteProperty(timerId_str);
-			TITANIUM_ASSERT(callback_deleted);
+			TITANIUM_ASSERT(timer_callback_map__.find(timerId) != timer_callback_map__.end());
+			timer_callback_map__.erase(timerId);
 		} else {
 			TITANIUM_LOG_WARN("GlobalObject::clearTimeout: timerId ", timerId, " is not registered");
 		}
