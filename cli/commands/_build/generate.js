@@ -245,6 +245,11 @@ function generateCmakeList(next) {
 	), next);
 };
 
+var win81M3Capabilities = [ // m3 namespace, phone 8.1 only Capabilities
+		'contacts',
+		'appointments'
+	];
+
 /**
  * Generates capabilities based on API usage
  *
@@ -324,7 +329,10 @@ function generateCapabilities(target, capabilities, deviceCapabilities) {
 					}
 				});
 				apis[api].uapCapability && apis[api].uapCapability.forEach(function(name) {
-					var tag = target == 'win10' ? 'uap:' : (target == 'phone' && name == 'contacts' ? 'm3:' : ''),
+					// Skip Windows Phone 8.1 only capabilities for Store App
+					var win81OnlyCapability = (win81M3Capabilities.indexOf(name) != -1);
+					if (target == 'store' && win81OnlyCapability) return;
+					var tag = target == 'win10' ? 'uap:' : (win81OnlyCapability ? 'm3:' : ''),
 						entry = '<' + tag + 'Capability Name="' + name + '" />';
 					if (!hasCapability(uapCapabilities, name) && !hasCapability(capabilities, name)) {
 						uapCapabilities.push(entry);
@@ -368,10 +376,6 @@ function generateAppxManifestForPlatform(target, properties) {
 			'removableStorage',
 			'sharedUserCertificates',
 			'videosLibrary'
-		],
-		win81M3Capabilities = [ // m3 namespace, phone 8.1 only
-			'contacts',
-			'appointments'
 		],
 		win10UAPCapabilities = [
 			'documentsLibrary',
