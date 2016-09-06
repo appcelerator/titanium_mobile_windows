@@ -324,7 +324,7 @@ function generateCapabilities(target, capabilities, deviceCapabilities) {
 					}
 				});
 				apis[api].uapCapability && apis[api].uapCapability.forEach(function(name) {
-					var tag = target == 'win10' ? 'uap:' : (name == 'contacts' ? 'm3:' : ''),
+					var tag = target == 'win10' ? 'uap:' : (target == 'phone' && name == 'contacts' ? 'm3:' : ''),
 						entry = '<' + tag + 'Capability Name="' + name + '" />';
 					if (!hasCapability(uapCapabilities, name) && !hasCapability(capabilities, name)) {
 						uapCapabilities.push(entry);
