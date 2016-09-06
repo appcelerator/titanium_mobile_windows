@@ -4197,7 +4197,7 @@ function Runnable(title, fn) {
   this.fn = fn;
   this.async = fn && fn.length;
   this.sync = ! this.async;
-  this._timeout = 2000;
+  this._timeout = 5000;
   this._slow = 75;
   this.timedOut = false;
 }
@@ -4755,9 +4755,16 @@ Runner.prototype.parents = function(){
  * @api private
  */
 
-Runner.prototype.runTest = function(fn){
+Runner.prototype.runTest = function(real_fn){
   var test = this.test
     , self = this;
+
+  // wait for 1 sec before running test
+  var fn = function (err) {
+      setTimeout(function () {
+          real_fn(err);
+      }, 1000);
+  };
 
   if (this.asyncOnly) test.asyncOnly = true;
 
@@ -5116,7 +5123,7 @@ function Suite(title, ctx) {
   this._afterEach = [];
   this._afterAll = [];
   this.root = !title;
-  this._timeout = 2000;
+  this._timeout = 5000;
   this._slow = 75;
   this._bail = false;
 }
