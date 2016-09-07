@@ -258,7 +258,53 @@ var win81M3Capabilities = [ // m3 namespace, phone 8.1 only Capabilities
  * @param {Object} deviceCapabilities - Device capabilities array
  */
 function generateCapabilities(target, capabilities, deviceCapabilities) {
-	var uapCapabilities = [],
+	var apis = {
+			// Titanium.Contacts
+			'Contacts': {
+				uapCapability: ['contacts']
+			},
+			// Titanium.Filesystem
+			'Filesystem.externalStorageDirectory': {
+				uapCapability: ['removableStorage']
+			},
+			// Titanium.Geolocation.*
+			'Geolocation': {
+				deviceCapability: ['location']
+			},
+			// Titanium.Media
+			'Media.openPhotoGallery': {
+				uapCapability: ['picturesLibrary']
+			},
+			'Media.startVideoCapture': {
+				uapCapability: ['videosLibrary']
+			},
+			'Media.takeScreenshotToFile': {
+				uapCapability: ['picturesLibrary']
+			},
+			'Media.showCamera': {
+				deviceCapability: ['microphone', 'webcam']
+			},
+			'Media.takePicture': {
+				uapCapability: ['videosLibrary']
+			},
+			// Titanium.Media.AudioRecorder.*
+			'Media.AudioRecorder': {
+				uapCapability: ['musicLibrary'],
+				deviceCapability: ['microphone', 'webcam']
+			},
+			// Titanium.Network.*
+			'Network': {
+				capability: ['internetClient']
+			},
+			// Titanium.App.proximityDetection
+			'App.proximityDetection': {
+				deviceCapability: ['proximity']
+			},
+			'App.setProximityDetection': {
+				deviceCapability: ['proximity']
+			}
+		},
+		uapCapabilities = [],
 		hasCapability = function (capabilities, capability) {
 			for (var i = 0; i < capabilities.length; i++) {
 				var name = /Name\=\"(.*)\"/.exec(capabilities[i])[1];
@@ -270,50 +316,7 @@ function generateCapabilities(target, capabilities, deviceCapabilities) {
 		}.bind(this);
 
 	Object.keys(this.jsFiles).forEach(function (id) {
-		var js = fs.readFileSync(this.jsFiles[id], {encoding: 'utf8'}),
-			apis = {
-				// Titanium.Contacts
-				'Contacts': {
-					uapCapability: ['contacts']
-				},
-				// Titanium.Filesystem
-				'Filesystem.externalStorageDirectory': {
-					uapCapability: ['removableStorage']
-				},
-				// Titanium.Geolocation.*
-				'Geolocation': {
-					deviceCapability: ['location']
-				},
-				// Titanium.Media
-				'Media.openPhotoGallery': {
-					uapCapability: ['picturesLibrary']
-				},
-				'Media.startVideoCapture': {
-					uapCapability: ['videosLibrary']
-				},
-				'Media.takeScreenshotToFile': {
-					uapCapability: ['picturesLibrary']
-				},
-				'Media.showCamera': {
-					deviceCapability: ['microphone', 'webcam']
-				},
-				// Titanium.Media.AudioRecorder.*
-				'Media.AudioRecorder': {
-					uapCapability: ['musicLibrary'],
-					deviceCapability: ['microphone', 'webcam']
-				},
-				// Titanium.Network.*
-				'Network': {
-					capability: ['internetClient']
-				},
-				// Titanium.App.proximityDetection
-				'App.proximityDetection': {
-					deviceCapability: ['proximity']
-				},
-				'App.setProximityDetection': {
-					deviceCapability: ['proximity']
-				}
-			};
+		var js = fs.readFileSync(this.jsFiles[id], {encoding: 'utf8'});
 
 		// always include internetClient for analytics
 		if (!hasCapability(capabilities, 'internetClient')) {
@@ -334,6 +337,11 @@ function generateCapabilities(target, capabilities, deviceCapabilities) {
 					if (target == 'store' && win81OnlyCapability) return;
 					var tag = target == 'win10' ? 'uap:' : (win81OnlyCapability ? 'm3:' : ''),
 						entry = '<' + tag + 'Capability Name="' + name + '" />';
+
+					// skip Windows 8.1 phone specific capabilities when targeting store
+					if (tag == 'm3:' && target == 'store') {
+						return;
+					}
 					if (!hasCapability(uapCapabilities, name) && !hasCapability(capabilities, name)) {
 						uapCapabilities.push(entry);
 					}
