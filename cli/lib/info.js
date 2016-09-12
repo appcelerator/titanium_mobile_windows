@@ -23,6 +23,10 @@ exports.name = 'windows';
 exports.title = 'Windows';
 
 exports.detect = function (types, config, next) {
+	// For backward compatibility reasons windowslib could return empty device
+	function isPlaceHolderDevice(d) {
+		return (d.name == 'Device' && d.udid == 0 && d.index == 0 && d.wpsdk == null);
+	}
 	windowslib.detect({
 		powershell:                       config.get('windows.executables.powershell'),
 		preferredWindowsPhoneSDK:         config.get('windows.wpsdk.selectedVersion'),
@@ -40,6 +44,11 @@ exports.detect = function (types, config, next) {
 		results.windowsphone && delete results.windowsphone['8.0'];
 		results.windows && delete results.windows['8.0'];
 		results.emulators && delete results.emulators['8.0'];
+
+		// TIMOB-23371: Remove placeholder device
+		if (results.devices && results.devices[0] && isPlaceHolderDevice(results.devices[0])) {
+			results.devices.shift();
+		}
 
 		results.tisdk = path.basename((function scan(dir) {
 			var file = path.join(dir, 'manifest.json');

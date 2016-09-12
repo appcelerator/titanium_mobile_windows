@@ -33,6 +33,10 @@ require('./ti.contacts.person.test');
 require('./ti.database.test');
 require('./ti.filestream.test');
 require('./ti.filesystem.test');
+// TODO FIXME TIMOB-23776 Skip tests on Windows Desktop due to intermittent crash
+if (utilities.isWindowsDesktop()) {
+    Ti.API.info('TIMOB-23776: Skipping UI tests on Windows Desktop');
+} else {
 require('./ti.geolocation.test');
 require('./ti.gesture.test');
 require('./ti.internal.test');

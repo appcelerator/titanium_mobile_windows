@@ -29,6 +29,11 @@ function getTargetDevices() {
 		return this.deviceCache;
 	}
 
+	// For backward compatibility reasons windowslib could return empty device
+	function isPlaceHolderDevice(d) {
+		return (d.name == 'Device' && d.udid == 0 && d.index == 0 && d.wpsdk == null);
+	}
+
 	var target = this.cli.argv.target,
 		wpsdk = this.cli.argv['wp-sdk'],
 		wpsdkDefault = this.cli.argv['$_'].indexOf('-S') === -1 && this.cli.argv['$_'].indexOf('--wp-sdk') === -1;
@@ -50,6 +55,9 @@ function getTargetDevices() {
 			var device = devices[d];
 			// only list local devices
 			if (device.ip && device.ip !== "127.0.0.1") {
+				devices.splice(d, 1);
+			// TIMOB-23371: Remove placeholder device
+			} else if (isPlaceHolderDevice(device)) {
 				devices.splice(d, 1);
 			}
 		}
