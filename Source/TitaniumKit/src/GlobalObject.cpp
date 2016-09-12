@@ -329,7 +329,7 @@ namespace Titanium
 					const std::string app_module_js = "try {" + module_js + "} catch (E) { E.fileName='app.js'; Titanium_RedScreenOfDeath(E);}";
 					result = js_context.JSEvaluateScript(app_module_js, js_context.get_global_object());
 				} else {
-					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__dirname='" + currentDir__ + "';__filename='/"
+					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__dirname='" + currentDir__ + "',__filename='/"
 						+ module_path + "';try {" + module_js + R"JS(
 						if(module.exports !== __OXP){
 							return module.exports;

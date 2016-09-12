@@ -59,51 +59,43 @@ function compileApp(next) {
 
 	// Use spawn directly so we can pipe output as we go
 	// FIXME Edit windowslib to allow realtime output
-	windowslib.detect(function (err, results) {
-		if (err) {
-			_t.logger.error(err.message || err.toString());
-			_t.logger.log();
-			process.exit(1);
+	var vsInfo = this.windowsInfo.selectedVisualStudio,
+		p;
+
+	if (!vsInfo) {
+		_t.logger.error(__('Unable to find a supported Visual Studio installation'));
+		_t.logger.log();
+		process.exit(1);
+	}
+
+	// Use spawn directly so we can pipe output as we go
+	p = spawn(vsInfo.vcvarsall, [
+		'&&', 'MSBuild', '/p:Platform=' + _t.cmakeArch, '/p:Configuration=' + _t.buildConfiguration, slnFile
+	]);
+	p.stdout.on('data', function (data) {
+		var line = data.toString().trim();
+		if (line.indexOf('error ') >= 0) {
+			_t.logger.error(line);
+		}
+		else if (line.indexOf('warning ') >= 0) {
+			_t.logger.warn(line);
+		}
+		else if (line.indexOf(':\\') === -1) {
+			_t.logger.debug(line);
+		}
+		else {
+			_t.logger.trace(line);
+		}
+	});
+	p.stderr.on('data', function (data) {
+		_t.logger.warn(data.toString().trim());
+	});
+	p.on('close', function (code) {
+
+		if (code != 0) {
+			process.exit(1); // Exit with code from msbuild?
 		}
 
-		var vsInfo = results.selectedVisualStudio,
-			p;
-
-		if (!vsInfo) {
-			_t.logger.error(__('Unable to find a supported Visual Studio installation'));
-			_t.logger.log();
-			process.exit(1);
-		}
-
-		// Use spawn directly so we can pipe output as we go
-		p = spawn(vsInfo.vcvarsall, [
-			'&&', 'MSBuild', '/p:Platform=' + _t.cmakeArch, '/p:Configuration=' + _t.buildConfiguration, slnFile
-		]);
-		p.stdout.on('data', function (data) {
-			var line = data.toString().trim();
-			if (line.indexOf('error ') >= 0) {
-				_t.logger.error(line);
-			}
-			else if (line.indexOf('warning ') >= 0) {
-				_t.logger.warn(line);
-			}
-			else if (line.indexOf(':\\') === -1) {
-				_t.logger.debug(line);
-			}
-			else {
-				_t.logger.trace(line);
-			}
-		});
-		p.stderr.on('data', function (data) {
-			_t.logger.warn(data.toString().trim());
-		});
-		p.on('close', function (code) {
-
-			if (code != 0) {
-				process.exit(1); // Exit with code from msbuild?
-			}
-
-			next();
-		});
+		next();
 	});
 }

@@ -42,7 +42,8 @@ function config(logger, config, cli) {
 		supportedMSBuildVersions: windowsPackageJson.vendorDependencies['msbuild'],
 		supportedVisualStudioVersions: windowsPackageJson.vendorDependencies['visual studio'],
 		supportedWindowsPhoneSDKVersions: windowsPackageJson.vendorDependencies['windows phone sdk'],
-		tasklist: config.get('windows.executables.tasklist')
+		tasklist: config.get('windows.executables.tasklist'),
+		skipWpTool: (cli.argv['target'] || cli.argv['T']) !== 'wp-device' || cli.argv['build-only']
 	};
 
 	this.ignoreDirs = new RegExp(config.get('cli.ignoreDirs'));
