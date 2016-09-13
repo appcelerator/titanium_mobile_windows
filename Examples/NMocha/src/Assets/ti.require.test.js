@@ -148,6 +148,8 @@ describe('requireJS', function () {
 		should(with_index_js.sub).be.eql('sub2.js');
 		// Was also failing if same file had multiple relative requires
 		should(with_index_js.sub3).be.eql('sub3.js');
+		// __filename should not be messed with nested require
+		should(with_index_js.filename).be.eql('/with_index_js/sub1.js');
 		finish();
 	});
 
