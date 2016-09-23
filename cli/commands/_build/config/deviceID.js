@@ -26,9 +26,9 @@ module.exports = function configOptionDeviceID(order) {
 		if (((cli.argv.target === 'wp-emulator' && value === 'xd') ||
 			 (cli.argv.target === 'wp-device' && value === 'de')) && devices[0]) {
 
-			// if wp-sdk is not specified, use wpsdk for device
-			if (devices[0].wpsdk && this.cli.argv.$_.indexOf('--wp-sdk') === -1 && this.cli.argv.$_.indexOf('-S') === -1) {
-				cli.argv['wp-sdk'] = devices[0].wpsdk;
+			// if win-sdk is not specified, use wpsdk for device
+			if (devices[0].wpsdk && !this.isWindowsSDKTargetSpecified()) {
+				cli.argv['win-sdk'] = devices[0].wpsdk;
 			}
 			return callback(null, devices[0].udid);
 		}
@@ -46,14 +46,14 @@ module.exports = function configOptionDeviceID(order) {
 			return callback(new Error(__('Invalid device id "%s"', value)));
 		}
 
-		// if wp-sdk is not specified, use wpsdk specified for device
-		if (dev.wpsdk && this.cli.argv.$_.indexOf('--wp-sdk') === -1 && this.cli.argv.$_.indexOf('-S') === -1) {
-			cli.argv['wp-sdk'] = dev.wpsdk;
+		// if win-sdk is not specified, use wpsdk specified for device
+		if (dev.wpsdk && !this.isWindowsSDKTargetSpecified()) {
+			cli.argv['win-sdk'] = dev.wpsdk;
 		}
 
 		// check the device
 		if (cli.argv.target === 'wp-device') {
-			this.windowslibOptions['wpsdk'] = cli.argv['wp-sdk'];
+			this.windowslibOptions['wpsdk'] = this.getWindowsSDKTarget();
 		}
 		callback(null, value);
 	}

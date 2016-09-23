@@ -34,6 +34,8 @@ function mixin(WindowsBuilder) {
 function config(logger, config, cli) {
 	Builder.prototype.config.apply(this, arguments);
 
+	var target = (cli.argv['target'] || cli.argv['T']);
+
 	this.windowslibOptions = {
 		powershell: config.get('windows.executables.powershell'),
 		pvk2pfx: config.get('windows.executables.pvk2pfx'),
@@ -44,7 +46,7 @@ function config(logger, config, cli) {
 		supportedVisualStudioVersions: windowsPackageJson.vendorDependencies['visual studio'],
 		supportedWindowsPhoneSDKVersions: windowsPackageJson.vendorDependencies['windows phone sdk'],
 		tasklist: config.get('windows.executables.tasklist'),
-		skipWpTool: (cli.argv['target'] || cli.argv['T']) !== 'wp-device' || cli.argv['build-only']
+		skipWpTool: cli.argv['build-only'] || (target !== 'wp-device' && target !== 'wp-emulator')
 	};
 
 	this.ignoreDirs = new RegExp(config.get('cli.ignoreDirs'));
@@ -117,9 +119,12 @@ function config(logger, config, cli) {
 						'vs-target': this.configOptionVisualStudioTarget(120),
 						'win-publisher-id': this.configOptionWindowsPublisherID(210),
 						'wp-publisher-guid': this.configOptionWPPublisherGUID(220),
-						'wp-product-guid': this.configOptionWPProductID(230),
-						'wp-sdk': this.configOptionWPSDK(200),
-						'ws-cert': this.configOptionWSCert(300)
+						'wp-product-guid': this.configOptionProductID(230),
+						'win-product-guid': this.configOptionProductID(240),
+						'win-sdk': this.configOptionSDK(300),
+						'wp-sdk': this.configOptionSDK(310),
+						'win-cert': this.configOptionCert(400),
+						'ws-cert': this.configOptionCert(410)
 					}
 				});
 			})(function (err, result) {

@@ -20,7 +20,9 @@ module.exports = function configOptionTarget(order) {
 			}
 
 			if (value === 'wp-emulator' || value === 'wp-device' || value === 'dist-phonestore') {
-				this.conf.options['wp-sdk'].required = true;
+				if (this.cli.argv['wp-sdk'] == undefined) {
+					this.conf.options['win-sdk'].required = true;
+				}
 			}
 
 			if (value === 'dist-phonestore' || value === 'dist-winstore') {
@@ -28,15 +30,25 @@ module.exports = function configOptionTarget(order) {
 			}
 
 			// targeting ws-local without SDK specified, select most appropriate for platform
-			if (value === 'ws-local' && this.cli.argv.$_.indexOf('--wp-sdk') === -1 && this.cli.argv.$_.indexOf('-S') === -1) {
-				var sdk = '10.0',
-					os = require('os').release();
+			if (!this.isWindowsSDKTargetSpecified()) {
+				if (value === 'ws-local') {
+					var sdk = '10.0',
+						os = require('os').release();
 
-				// not on Windows 10, default to 8.1 sdk
-				if (!os.startsWith('10.0')) {
-					sdk = '8.1';
+					// not on Windows 10, default to 8.1 sdk
+					if (!os.startsWith('10.0')) {
+						sdk = '8.1';
+					}
+					this.cli.argv['win-sdk'] = sdk;
+				} else if (this.windowsInfo) {
+					var defaultPlatformSdkTarget = '10.0';
+					for (var version in this.windowsInfo.windowsphone) {
+						if (this.windowsInfo.windowsphone[version].selected) {
+							defaultPlatformSdkTarget = version;
+						}
+					}
+					this.cli.argv['win-sdk'] = defaultPlatformSdkTarget;
 				}
-				this.cli.argv['wp-sdk'] = sdk;
 			}
 		}.bind(this),
 		default: this.defaultTarget,

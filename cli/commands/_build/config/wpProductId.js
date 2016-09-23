@@ -4,16 +4,16 @@ var appc = require('node-appc'),
 
 
 /**
- * Defines the --wp-product-id option.
+ * Defines the --win-product-guid option.
  *
  * @param {Number} order - The order to apply to this option.
  *
  * @returns {Object}
  */
-module.exports = function configOptionWPProductID(order) {
+module.exports = function configOptionProductID(order) {
 	function validate(value, callback) {
 		if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)) {
-			return callback(new Error(__('Invalid "%s" value "%s"', '--wp-product-id', value)));
+			return callback(new Error(__('Invalid "%s" value "%s"', '--win-product-guid', value)));
 		}
 		callback(null, value);
 	}
