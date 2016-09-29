@@ -149,15 +149,18 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 
 	function build(sln, config, arch, next) {
 		var nativeAssetsDir = path.dirname(sln),
+			platformTarget  = path.basename(nativeAssetsDir),
 			vcxproj = path.join(nativeAssetsDir, _t.manifest.moduleIdAsIdentifier+'.vcxproj'),
 			vcxContent,
 			buildPath;
 		// user may skip specific architecture by using CLI.
 		// at least we are skipping WindowsStore.ARM for now
 		if (!fs.existsSync(sln)) {
-			_t.logger.info('Skipping ' + sln);
+			_t.logger.info('Skipping ' + sln + ' for ' + platformTarget + ' ' + config);
 			next();
 			return;
+		} else {
+			_t.logger.info('Building ' + sln + ' for ' + platformTarget + ' ' + config);
 		}
 
 		vcxContent = fs.readFileSync(vcxproj, 'utf8');
@@ -216,6 +219,7 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 					appc.xml.forEachElement(item, function(node) {
 						if (node.tagName == 'uses-sdk') {
 							var sdk_version = appc.xml.getAttr(node, 'targetSdkVersion');
+							_t.logger.info('targetSdkVersion: ' + sdk_version);
 							// Remove Windows10 target only when it targets to 8.1 explicitly
 							if (sdk_version == '8.1') {
 								types = defaultTypes.slice(0, 2);
@@ -359,17 +363,18 @@ WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
 	});
 
 	// create zip
-	var zipName = _t.manifest.moduleid + '-windows-' + _t.manifest.version + '.zip';
-	var output = fs.createWriteStream(path.join(_t.projectDir, zipName)),
+	var zipName = _t.manifest.moduleid + '-windows-' + _t.manifest.version + '.zip',
+		destName = path.join(_t.projectDir, zipName),
+		output   = fs.createWriteStream(destName),
 		archive = archiver('zip');
 
-	_t.logger.info('Creating zip: '+zipName.cyan);
+	_t.logger.info('Creating module zip');
+	_t.logger.info('Writing module zip: '+ destName.cyan);
 
 	archive.on('error', function(err) {
 		throw err;
 	});
 	output.on('close', function() {
-		_t.logger.info('Done.');
 		next();
 	});
 
