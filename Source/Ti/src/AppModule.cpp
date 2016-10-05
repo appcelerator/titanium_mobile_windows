@@ -23,6 +23,7 @@ namespace TitaniumWindows
 		: Titanium::AppModule(js_context)
 	{
 		TITANIUM_LOG_DEBUG("AppModule::ctor Initialize");
+		initSessionId();
 	}
 
 	void AppModule::JSExportInitialize() 
@@ -30,6 +31,15 @@ namespace TitaniumWindows
 		JSExport<AppModule>::SetClassVersion(1);
 		JSExport<AppModule>::SetParent(JSExport<Titanium::AppModule>::Class());
 		TITANIUM_ADD_CONSTANT_PROPERTY(AppModule, Windows);
+	}
+
+	void AppModule::initSessionId()
+	{
+		GUID gdn;
+		CoCreateGuid(&gdn);
+		::Platform::Guid guid(gdn);
+		auto guid_str = guid.ToString();
+		sessionId__ = std::string((guid_str->Begin()) + 1, (guid_str->End()) - 1);
 	}
 
 	TITANIUM_PROPERTY_GETTER(AppModule, Windows)

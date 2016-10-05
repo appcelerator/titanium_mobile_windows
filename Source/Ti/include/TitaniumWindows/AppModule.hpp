@@ -59,6 +59,7 @@ namespace TitaniumWindows
 
 		static JSObject RectToJS(const JSContext& js_context, const Windows::Foundation::Rect& rect);
 		void initProximitySensor();
+		void initSessionId();
 
 		Windows::Foundation::EventRegistrationToken keyboardframe_showing_event__;
 		Windows::Foundation::EventRegistrationToken keyboardframe_hiding_event__;
