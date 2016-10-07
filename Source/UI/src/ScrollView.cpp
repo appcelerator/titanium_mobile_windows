@@ -9,6 +9,8 @@
 #include "TitaniumWindows/UI/ScrollView.hpp"
 #include "TitaniumWindows/UI/View.hpp"
 
+using namespace Windows::UI::Xaml;
+
 namespace TitaniumWindows
 {
 	namespace UI
@@ -82,10 +84,15 @@ namespace TitaniumWindows
 
 			contentView__.SetProperty("top", get_context().CreateNumber(0));
 			contentView__.SetProperty("left", get_context().CreateNumber(0));
-			contentView__.SetProperty("width", get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL)));
-			contentView__.SetProperty("height", get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL)));
+			contentView__.SetProperty("width", get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE)));
+			contentView__.SetProperty("height", get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE)));
 
 			auto content = contentView__.GetPrivate<TitaniumWindows::UI::View>();
+			scroll_viewer__->SizeChanged += ref new SizeChangedEventHandler([this, content](Platform::Object^ sender, SizeChangedEventArgs^ e) {
+				const auto component = content->getComponent();
+				component->MinHeight = e->NewSize.Height;
+				component->MinWidth  = e->NewSize.Width;
+			});
 			scroll_viewer__->Content = content->getComponent();
 
 			Titanium::UI::ScrollView::setLayoutDelegate<ScrollViewLayoutDelegate>(this, contentView__);
