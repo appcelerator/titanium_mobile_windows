@@ -72,11 +72,11 @@ namespace TitaniumWindows
 
 	void Geolocation::requestLocationPermissions(const Titanium::Geolocation::AUTHORIZATION& authorizationType, JSObject callback) TITANIUM_NOEXCEPT
 	{
-		const auto ctx = get_context();
-		JSObject response = ctx.CreateObject();
 #if defined(IS_WINDOWS_10)
-		TitaniumWindows::Utility::RunOnUIThread([this, &ctx, &response, callback]() {
-			concurrency::create_task(Geolocator::RequestAccessAsync()).then([this, &ctx, &response, callback](concurrency::task<GeolocationAccessStatus> task) {
+		TitaniumWindows::Utility::RunOnUIThread([this, callback]() {
+			concurrency::create_task(Geolocator::RequestAccessAsync()).then([this, callback](concurrency::task<GeolocationAccessStatus> task) {
+				const auto ctx = get_context();
+				JSObject response = ctx.CreateObject();
 				try {
 					const auto status = task.get();
 					if (status == GeolocationAccessStatus::Denied) {
@@ -95,9 +95,14 @@ namespace TitaniumWindows
 					response.SetProperty("error", ctx.CreateString(TitaniumWindows::Utility::ConvertString(e->Message)));
 					response.SetProperty("success", ctx.CreateBoolean(false));
 				}
+				auto cb = static_cast<JSObject>(callback);
+				TITANIUM_ASSERT(cb.IsFunction());
+				cb({ response }, get_object());
 			});
 		});
 #else
+		const auto ctx = get_context();
+		JSObject response = ctx.CreateObject();
 		locationServicesAuthorization__ = get_locationServicesEnabled() ? Titanium::Geolocation::AUTHORIZATION::AUTHORIZED : Titanium::Geolocation::AUTHORIZATION::DENIED;
 		if (locationServicesAuthorization__ == Titanium::Geolocation::AUTHORIZATION::AUTHORIZED) {
 			response.SetProperty("code", ctx.CreateNumber(0));
@@ -108,10 +113,10 @@ namespace TitaniumWindows
 			response.SetProperty("error", ctx.CreateString("location DeviceCapability not set in tiapp.xml"));
 			response.SetProperty("success", ctx.CreateBoolean(false));
 		}
-#endif
 		auto cb = static_cast<JSObject>(callback);
 		TITANIUM_ASSERT(cb.IsFunction());
 		cb({ response }, get_object());
+#endif
 	}
 
 	void Geolocation::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT

@@ -529,10 +529,10 @@ namespace TitaniumWindows
 	}
 #endif
 
-	void MediaModule::focus(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT
+	void MediaModule::focus(const Titanium::Media::CameraOptionsType& options, const bool& reportError) TITANIUM_NOEXCEPT
 	{
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-		concurrency::create_task(mediaCapture__->VideoDeviceController->FocusControl->UnlockAsync()).then([this, options](concurrency::task<void> task) {
+		concurrency::create_task(mediaCapture__->VideoDeviceController->FocusControl->UnlockAsync()).then([this, options, reportError](concurrency::task<void> task) {
 			try {
 				task.get();
 				const auto settings = ref new FocusSettings();
@@ -543,8 +543,10 @@ namespace TitaniumWindows
 				mediaCapture__->VideoDeviceController->FocusControl->Configure(settings);
 				mediaCapture__->VideoDeviceController->FocusControl->FocusAsync();
 			} catch (Platform::Exception^ e) {
-				GENERATE_TI_ERROR_RESPONSE(TitaniumWindows::Utility::ConvertString(e->Message), error);
-				options.callbacks.onerror(error);
+				if (reportError) {
+					GENERATE_TI_ERROR_RESPONSE(TitaniumWindows::Utility::ConvertString(e->Message), error);
+					options.callbacks.onerror(error);
+				}
 			}
 		});
 #endif
@@ -609,7 +611,8 @@ namespace TitaniumWindows
 
 		// For tap-to-focus
 		captureElement__->Tapped += ref new Input::TappedEventHandler([this, options](Platform::Object^ sender, Input::TappedRoutedEventArgs^ e) {
-			focus(options);
+			// Don't fire onerror callback on tap-to-focus
+			focus(options, false);
 		});
 
 		if (options.autorotate) {

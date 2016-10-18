@@ -169,6 +169,7 @@ describe('Titanium.App', function () {
 		should(Ti.App.sessionId).be.a.String;
 		should(Ti.App.getSessionId).be.a.Function;
 		should(Ti.App.getSessionId()).be.a.String;
+		should(Ti.App.getSessionId()).not.eql('__SESSION_ID__');
 		finish();
 	});
 });

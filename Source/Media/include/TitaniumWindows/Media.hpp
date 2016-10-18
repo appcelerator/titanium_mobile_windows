@@ -194,7 +194,7 @@ namespace TitaniumWindows
 		void clearScreenshotResources();
 		void takeScreenshotToFile(JSObject callback);
 
-		void focus(const Titanium::Media::CameraOptionsType&) TITANIUM_NOEXCEPT;
+		void focus(const Titanium::Media::CameraOptionsType&, const bool& reportError = true) TITANIUM_NOEXCEPT;
 
 #if !defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		void showDefaultCamera(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT;

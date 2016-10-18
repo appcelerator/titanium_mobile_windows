@@ -280,7 +280,7 @@ function generateCapabilities(target, capabilities, deviceCapabilities) {
 				deviceCapability: ['microphone', 'webcam']
 			},
 			'Media.takePicture': {
-				uapCapability: ['videosLibrary']
+				uapCapability: ['picturesLibrary', 'videosLibrary']
 			},
 			// Titanium.Media.AudioRecorder.*
 			'Media.AudioRecorder': {

@@ -30,6 +30,7 @@ exports.detect = function (types, config, next) {
 	windowslib.detect({
 		powershell:                       config.get('windows.executables.powershell'),
 		preferredWindowsPhoneSDK:         config.get('windows.wpsdk.selectedVersion'),
+		preferredWindowsSDK:              config.get('windows.sdk.selectedVersion'),
 		preferredVisualStudio:            config.get('windows.visualstudio.selectedVersion'),
 		supportedMSBuildVersions:         windowsPackageJson.vendorDependencies['msbuild'],
 		supportedVisualStudioVersions:    windowsPackageJson.vendorDependencies['visual studio'],

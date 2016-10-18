@@ -13,6 +13,22 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.getTargetDevices = getTargetDevices;
 	WindowsBuilder.prototype.sanitizeProjectName = sanitizeProjectName;
 	WindowsBuilder.prototype.computeHashes = computeHashes;
+	WindowsBuilder.prototype.getWindowsSDKTarget  = getWindowsSDKTarget;
+	WindowsBuilder.prototype.isWindowsSDKTargetSpecified  = isWindowsSDKTargetSpecified;
+}
+
+/**
+ * Returns Windows SDK argument
+ */
+function getWindowsSDKTarget() {
+	return this.cli.argv['win-sdk'] ? this.cli.argv['win-sdk'] : (this.cli.argv['wp-sdk'] ? this.cli.argv['wp-sdk'] : null);
+}
+
+/**
+ * Returns whether Windows SDK is specified
+ */
+function isWindowsSDKTargetSpecified() {
+	return this.cli.argv.$_.indexOf('--wp-sdk') !== -1 || this.cli.argv.$_.indexOf('--win-sdk') !== -1 || this.cli.argv.$_.indexOf('-S') !== -1;
 }
 
 /**
@@ -35,8 +51,8 @@ function getTargetDevices() {
 	}
 
 	var target = this.cli.argv.target,
-		wpsdk = this.cli.argv['wp-sdk'],
-		wpsdkDefault = this.cli.argv['$_'].indexOf('-S') === -1 && this.cli.argv['$_'].indexOf('--wp-sdk') === -1;
+		wpsdk  = this.getWindowsSDKTarget(),
+		wpsdkDefault = !this.isWindowsSDKTargetSpecified();
 
 	if (target === 'wp-emulator' && this.windowsInfo.emulators) {
 		Object.keys(this.windowsInfo.emulators).forEach(function (sdk) {

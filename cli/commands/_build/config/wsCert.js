@@ -6,13 +6,13 @@ var appc = require('node-appc'),
 	__ = appc.i18n(__dirname).__;
 
 /**
- * Defines the --ws-cert option.
+ * Defines the --win-cert option.
  *
  * @param {Number} order - The order to apply to this option.
  *
  * @returns {Object}
  */
-module.exports = function configOptionWSCert(order) {
+module.exports = function configOptionCert(order) {
 	var defaultCert = undefined,
 		certs = fs.readdirSync('./').filter(function (file) {
 			return file.slice(-4).toLowerCase() === '.pfx';
@@ -37,7 +37,7 @@ module.exports = function configOptionWSCert(order) {
 
 	return {
 		abbr: 'R',
-		desc: __('the location of the cert file; only applicable when target is %s or %s; or wpSDK is %s', 'ws-local'.cyan, 'dist-winstore'.cyan, '10.0'.cyan), // or ws-simulator or ws-remote
+		desc: __('the location of the cert file; only applicable when target is %s or %s; or win-sdk is %s', 'ws-local'.cyan, 'dist-winstore'.cyan, '10.0'.cyan), // or ws-simulator or ws-remote
 		hint: 'path',
 		order: order,
 		default: defaultCert,
@@ -68,10 +68,9 @@ module.exports = function configOptionWSCert(order) {
 			if (!value || value === '') {
 				// If dist-winstore or (dist-phonestore && 10.0), require
 				// password because they'll be generating a PFX!
-				if (this.conf.options['target'] == 'dist-winstore' ||
-					(this.conf.options['wp-sdk'] == '10.0' &&
-					this.conf.options['target'] == 'dist-phonestore')) {
-						this.conf.options['pfx-password'].required = true;
+				if (this.cli.argv['target']  == 'dist-winstore' ||
+					(this.getWindowsSDKTarget() == '10.0' && this.cli.argv['target'] == 'dist-phonestore')) {
+					this.conf.options['pfx-password'].required = true;
 				}
 				// otherwise we'll use the built-in temp key w/no password
 				return;

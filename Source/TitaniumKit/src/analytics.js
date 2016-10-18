@@ -76,8 +76,8 @@ function validateFeatureEvent(obj, level) {
 		Ti.API.warn('Feature event exceeds ' + FEATURE_MAX_LEVELS + ' level limit.');
 		return false;
 	}
-	if (!obj) {
-		Ti.API.warn('Feature event data object is undefined.');
+	if (!(obj instanceof Object)) {
+		Ti.API.warn('Feature event data object must be serializable as JSON.');
 		return false;
 	}
 	if (level == 0 && JSON.stringify(obj).length > FEATURE_MAX_SIZE) {
@@ -194,9 +194,8 @@ Analytics.prototype.createBackgroundEvent = function backgroundEvent() {
  * @private
  */
 Analytics.prototype.createFeatureEvent = function featureEvent(name, data) {
-	data = data || {};
-	data['eventName'] = name;
 	if (validateFeatureEvent(data, 0)) {
+		data['eventName'] = name;
 		this.createEvent(EVENT_APP_FEATURE, data);
 	} else {
 	    Ti.API.error('Feature event \'' + name + '\' not conforming to recommended usage.');
