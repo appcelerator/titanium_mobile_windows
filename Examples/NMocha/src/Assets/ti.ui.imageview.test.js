@@ -218,14 +218,14 @@ describe('Titanium.UI.ImageView', function () {
 			left: 0
 		});
 		view.add(innerView);
-		innerView.addEventListener('load', function (e) {
+		win.addEventListener('open', function (e) {
 			setTimeout(function () {
 				should(innerView.size.height).eql(100);
 				should(view.size.height).eql(innerView.size.height);
 				should(view.size.width).eql(innerView.size.width);
 				win.close();
 				finish();
-			}, 1000);
+			}, 2000);
 		});
 		innerView.image = 'ms-appx:///Logo.png';
 		win.add(view);
