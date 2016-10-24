@@ -76,10 +76,6 @@ function validateFeatureEvent(obj, level) {
 		Ti.API.warn('Feature event exceeds ' + FEATURE_MAX_LEVELS + ' level limit.');
 		return false;
 	}
-	if (!(obj instanceof Object)) {
-		Ti.API.warn('Feature event data object must be serializable as JSON.');
-		return false;
-	}
 	if (level == 0 && JSON.stringify(obj).length > FEATURE_MAX_SIZE) {
 		Ti.API.warn('Feature event data object exceeds ' + FEATURE_MAX_SIZE + ' size limit.');
 		return false;
@@ -194,6 +190,7 @@ Analytics.prototype.createBackgroundEvent = function backgroundEvent() {
  * @private
  */
 Analytics.prototype.createFeatureEvent = function featureEvent(name, data) {
+	data = data || {};
 	if (validateFeatureEvent(data, 0)) {
 		data['eventName'] = name;
 		this.createEvent(EVENT_APP_FEATURE, data);
