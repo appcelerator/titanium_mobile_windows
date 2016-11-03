@@ -127,6 +127,14 @@ namespace Titanium
 			return result;
 		}
 
+		void Properties::removeAllProperties() TITANIUM_NOEXCEPT
+		{
+			const auto names = listProperties();
+			for (size_t i = 0; i < names.size(); i++) {
+				removeProperty(names.at(i));
+			}
+		}
+
 		void Properties::removeProperty(const std::string& property) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("Properties::removeProperty: Unimplemented");
@@ -190,6 +198,7 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Properties, getString);
 			TITANIUM_ADD_FUNCTION(Properties, hasProperty);
 			TITANIUM_ADD_FUNCTION(Properties, listProperties);
+			TITANIUM_ADD_FUNCTION(Properties, removeAllProperties);
 			TITANIUM_ADD_FUNCTION(Properties, removeProperty);
 			TITANIUM_ADD_FUNCTION(Properties, setBool);
 			TITANIUM_ADD_FUNCTION(Properties, setDouble);
@@ -323,6 +332,16 @@ namespace Titanium
 				converted.push_back(js_context.CreateString(props.at(i)));
 			}
 			return js_context.CreateArray(converted);
+		}
+
+		TITANIUM_FUNCTION(Properties, removeAllProperties)
+		{
+			const auto js_context = this_object.get_context();
+			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
+
+			object_ptr->removeAllProperties();
+
+			return js_context.CreateUndefined();
 		}
 
 		TITANIUM_FUNCTION(Properties, removeProperty)

@@ -77,6 +77,12 @@ namespace Titanium
 			virtual std::vector<std::string> listProperties() TITANIUM_NOEXCEPT;
 			/*!
 			  @method
+			  @abstract removeAllProperties
+			  @discussion Removes all properties that have been set by the user on runtime, or does nothing otherwise.
+			*/
+			virtual void removeAllProperties() TITANIUM_NOEXCEPT;
+			/*!
+			  @method
 			  @abstract removeProperty
 			  @discussion Removes a property if it exists, or does nothing otherwise.
 			*/
@@ -144,6 +150,7 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getString);
 			TITANIUM_FUNCTION_DEF(hasProperty);
 			TITANIUM_FUNCTION_DEF(listProperties);
+			TITANIUM_FUNCTION_DEF(removeAllProperties);
 			TITANIUM_FUNCTION_DEF(removeProperty);
 			TITANIUM_FUNCTION_DEF(setBool);
 			TITANIUM_FUNCTION_DEF(setDouble);

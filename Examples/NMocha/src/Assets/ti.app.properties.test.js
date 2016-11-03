@@ -237,4 +237,12 @@ describe('Titanium.App.Properties', function () {
 		finish();
 	});
 
+	it('removeAllProperties should remove all properties', function (finish) {
+		Ti.App.Properties.setString('test_removeAllProperties1', 'test1');
+		Ti.App.Properties.setString('test_removeAllProperties2', 'test2');
+		Ti.App.Properties.removeAllProperties();
+		should(Ti.App.Properties.hasProperty("test_removeAllProperties1")).be.false;
+		should(Ti.App.Properties.hasProperty("test_removeAllProperties2")).be.false;
+		finish();
+	});
 });
