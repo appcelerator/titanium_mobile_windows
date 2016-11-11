@@ -50,6 +50,9 @@ function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, ms
 		function (next) {
 			runCMake(sourceDir, path.join(buildDir, platformAbbrev, arch), buildType, sdkVersion, msBuildVersion, platform, arch, quiet, next);
 		},
+		function(next) {
+			runNuGet(path.join(buildDir, platformAbbrev, arch, 'TitaniumWindows.sln'), quiet, next);
+		},
 		function (next) {
 			runMSBuild(msBuildVersion, path.join(buildDir, platformAbbrev, arch, 'TitaniumWindows.sln'), buildType, arch, parallel, quiet, next);
 		},
@@ -140,6 +143,15 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
 
 	var options = {cwd: buildDir};
 	spawnWithArgs('CMake', cmakeLocation, args, options, quiet, callback);
+}
+
+/**
+ * @param slnFile {String} The VS solution file to build.
+ * @param quiet {Boolean} log stdout of process?
+ * @param callback {Function} what to invoke when done/errored
+ */
+function runNuGet(slnFile, quiet, callback) {
+	spawnWithArgs('NuGet', path.join(__dirname,'..','..','..','cli','vendor','nuget','nuget.exe'), ['restore',slnFile], {}, quiet, callback);
 }
 
 /**

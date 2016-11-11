@@ -13,6 +13,9 @@
 #include "Titanium/UI/2DMatrix.hpp"
 #include "Titanium/UI/3DMatrix.hpp"
 
+#define CHECK_UI_DELEGATE_GETTER if (!layoutDelegate__) return get_context().CreateUndefined();
+#define CHECK_UI_DELEGATE_SETTER if (!layoutDelegate__) return false;
+
 namespace Titanium
 {
 	namespace UI
@@ -51,7 +54,10 @@ namespace Titanium
 
 		std::shared_ptr<Titanium::Blob> View::toImage(JSObject& callback, const bool& honorScaleFactor) TITANIUM_NOEXCEPT
 		{
-			return layoutDelegate__->toImage(callback, honorScaleFactor, get_object());
+			if (layoutDelegate__) {
+				return layoutDelegate__->toImage(callback, honorScaleFactor, get_object());
+			}
+			return nullptr;
 		}
 
 		Point View::convertPointToView(Point point, std::shared_ptr<View> destinationView) TITANIUM_NOEXCEPT
@@ -68,21 +74,30 @@ namespace Titanium
 
 		void View::animate(const std::shared_ptr<Animation>& animation, JSObject& callback) TITANIUM_NOEXCEPT
 		{
-			layoutDelegate__->animate(animation, callback, get_object());
+			if (layoutDelegate__) {
+				layoutDelegate__->animate(animation, callback, get_object());
+			}
 		}
 
 		void View::blur()
 		{
-			layoutDelegate__->blur();
+			if (layoutDelegate__) {
+				layoutDelegate__->blur();
+			}
 		}
 
 		void View::focus()
 		{
-			layoutDelegate__->focus();
+			if (layoutDelegate__) {
+				layoutDelegate__->focus();
+			}
 		}
 
 		void View::add(const JSObject& view) TITANIUM_NOEXCEPT
 		{
+			if (!layoutDelegate__) {
+				return;
+			}
 			auto view_ptr = view.GetPrivate<View>();
 
 			// For mixing Ti.Ui.View and native view.
@@ -281,11 +296,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, anchorPoint)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return Point_to_js(get_context(), layoutDelegate__->get_anchorPoint());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, anchorPoint)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsObject());
 			layoutDelegate__->set_anchorPoint(js_to_Point(static_cast<JSObject>(argument)));
 			return true;
@@ -293,16 +310,19 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, animatedCenter)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return Point_to_js(get_context(), layoutDelegate__->get_animatedCenter());
 		}
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundDisabledColor)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_backgroundDisabledColor());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundDisabledColor)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundDisabledColor(static_cast<std::string>(argument));
 			return true;
@@ -310,11 +330,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundDisabledImage)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_backgroundDisabledImage());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundDisabledImage)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundDisabledImage(static_cast<std::string>(argument));
 			return true;
@@ -322,11 +344,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundFocusedColor)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_backgroundFocusedColor());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundFocusedColor)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundFocusedColor(static_cast<std::string>(argument));
 			return true;
@@ -334,11 +358,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundFocusedImage)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_backgroundFocusedImage());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundFocusedImage)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundFocusedImage(static_cast<std::string>(argument));
 			return true;
@@ -346,11 +372,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundGradient)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return Gradient_to_js(get_context(), layoutDelegate__->get_backgroundGradient());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundGradient)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsObject());
 			layoutDelegate__->set_backgroundGradient(js_to_Gradient(static_cast<JSObject>(argument)));
 			return true;
@@ -358,11 +386,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundRepeat)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateBoolean(layoutDelegate__->get_backgroundRepeat());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundRepeat)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsBoolean());
 			layoutDelegate__->set_backgroundRepeat(static_cast<bool>(argument));
 			return true;
@@ -370,11 +400,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundLeftCap)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateNumber(layoutDelegate__->get_backgroundLeftCap());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundLeftCap)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsNumber());
 			layoutDelegate__->set_backgroundLeftCap(static_cast<std::uint32_t>(argument));
 			return true;
@@ -382,11 +414,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundSelectedColor)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_backgroundSelectedColor());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundSelectedColor)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundSelectedColor(static_cast<std::string>(argument));
 			return true;
@@ -394,11 +428,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundSelectedImage)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_backgroundSelectedImage());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundSelectedImage)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundSelectedImage(static_cast<std::string>(argument));
 			return true;
@@ -406,11 +442,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundTopCap)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateNumber(layoutDelegate__->get_backgroundTopCap());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundTopCap)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsNumber());
 			layoutDelegate__->set_backgroundTopCap(static_cast<std::uint32_t>(argument));
 			return true;
@@ -418,11 +456,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, overrideCurrentAnimation)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateBoolean(layoutDelegate__->get_overrideCurrentAnimation());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, overrideCurrentAnimation)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsBoolean());
 			layoutDelegate__->set_overrideCurrentAnimation(static_cast<bool>(argument));
 			return true;
@@ -430,11 +470,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, pullBackgroundColor)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_pullBackgroundColor());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, pullBackgroundColor)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_pullBackgroundColor(static_cast<std::string>(argument));
 			return true;
@@ -442,6 +484,8 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, transform)
 		{
+			CHECK_UI_DELEGATE_GETTER
+
 			const auto t2d = layoutDelegate__->get_transform2D();
 			if (t2d) {
 				return t2d->get_object();
@@ -455,6 +499,7 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_SETTER(View, transform)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsObject());
 			const auto object = static_cast<JSObject>(argument);
 			const auto matrix2d = object.GetPrivate<TwoDMatrix>();
@@ -469,11 +514,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, viewShadowRadius)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateNumber(layoutDelegate__->get_viewShadowRadius());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, viewShadowRadius)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsNumber());
 			layoutDelegate__->set_viewShadowRadius(static_cast<double>(argument));
 			return true;
@@ -481,11 +528,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, viewShadowColor)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_viewShadowColor());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, viewShadowColor)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_viewShadowColor(static_cast<std::string>(argument));
 			return true;
@@ -493,11 +542,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, viewShadowOffset)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return Point_to_js(get_context(), layoutDelegate__->get_viewShadowOffset());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, viewShadowOffset)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsObject());
 			layoutDelegate__->set_viewShadowOffset(js_to_Point(static_cast<JSObject>(argument)));
 			return true;
@@ -505,11 +556,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, horizontalWrap)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateBoolean(layoutDelegate__->get_horizontalWrap());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, horizontalWrap)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsBoolean());
 			layoutDelegate__->set_horizontalWrap(static_cast<bool>(argument));
 			return true;
@@ -517,6 +570,7 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(View, removeAllChildren)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			layoutDelegate__->removeAllChildren();
 			return get_context().CreateUndefined();
 		}
@@ -574,6 +628,7 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(View, hide)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			TITANIUM_ASSERT(arguments.size() == 0);
 			layoutDelegate__->hide();
 			return get_context().CreateUndefined();
@@ -581,6 +636,7 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(View, remove)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			ENSURE_OBJECT_AT_INDEX(view, 0);
 			layoutDelegate__->remove(view.GetPrivate<View>());
 			return get_context().CreateUndefined();
@@ -588,6 +644,7 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(View, show)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			TITANIUM_ASSERT(arguments.size() == 0);
 			layoutDelegate__->show();
 			return get_context().CreateUndefined();
@@ -595,6 +652,7 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(View, insertAt)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			ENSURE_OBJECT_AT_INDEX(params, 0);
 
 			layoutDelegate__->insertAt(js_to_ViewInsertOrReplaceParams(params));
@@ -603,6 +661,7 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(View, replaceAt)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			ENSURE_OBJECT_AT_INDEX(params, 0);
 
 			layoutDelegate__->replaceAt(js_to_ViewInsertOrReplaceParams(params));
@@ -611,11 +670,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundImage)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_backgroundImage());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundImage)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundImage(static_cast<std::string>(argument));
 			return true;
@@ -623,11 +684,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, backgroundColor)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_backgroundColor());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, backgroundColor)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_backgroundColor(static_cast<std::string>(argument));
 			return true;
@@ -635,11 +698,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, borderColor)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_borderColor());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, borderColor)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_borderColor(static_cast<std::string>(argument));
 			return true;
@@ -647,11 +712,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, borderRadius)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateNumber(layoutDelegate__->get_borderRadius());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, borderRadius)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsNumber());
 			layoutDelegate__->set_borderRadius(static_cast<double>(argument));
 			return true;
@@ -659,11 +726,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, borderWidth)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateNumber(layoutDelegate__->get_borderWidth());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, borderWidth)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsNumber());
 			layoutDelegate__->set_borderWidth(static_cast<uint32_t>(argument));
 			return true;
@@ -671,11 +740,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, bottom)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_bottom());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, bottom)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_bottom(static_cast<std::string>(argument));
 			return true;
@@ -683,6 +754,7 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_SETTER(View, center)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsObject());
 			layoutDelegate__->set_center(js_to_Point(static_cast<JSObject>(argument)));
 			return true;
@@ -690,11 +762,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, center)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return Point_to_js(get_context(), layoutDelegate__->get_center());
 		}
 
 		TITANIUM_PROPERTY_GETTER(View, children)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			std::vector<JSValue> js_children;
 			const auto children = layoutDelegate__->get_children();
 			for (auto child : children) {
@@ -705,11 +779,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, height)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_height());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, height)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_height(static_cast<std::string>(argument));
 			return true;
@@ -717,11 +793,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, layout)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_layout());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, layout)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_layout(static_cast<std::string>(argument));
 			return true;
@@ -729,11 +807,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, left)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_left());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, left)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_left(static_cast<std::string>(argument));
 			return true;
@@ -741,11 +821,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, opacity)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateNumber(layoutDelegate__->get_opacity());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, opacity)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			if (argument.IsNumber()) {
 				layoutDelegate__->set_opacity(static_cast<double>(argument));
 			}
@@ -754,16 +836,19 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, rect)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return Titanium::UI::Dimension_to_js(get_context(), layoutDelegate__->get_rect());
 		}
 
 		TITANIUM_PROPERTY_GETTER(View, right)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_right());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, right)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_right(static_cast<std::string>(argument));
 			return true;
@@ -771,16 +856,19 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, size)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return Titanium::UI::Dimension_to_js(get_context(), layoutDelegate__->get_size());
 		}
 
 		TITANIUM_PROPERTY_GETTER(View, tintColor)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_tintColor());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, tintColor)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString());
 			layoutDelegate__->set_tintColor(static_cast<std::string>(argument));
 			return true;
@@ -788,11 +876,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, top)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_top());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, top)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			// FIXME What does setting top to null mean? Because corporate directory does it...
 			if (argument.IsNull()) {
 				return false;
@@ -804,11 +894,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, touchEnabled)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateBoolean(layoutDelegate__->get_touchEnabled());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, touchEnabled)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsBoolean());
 			layoutDelegate__->set_touchEnabled(static_cast<bool>(argument));
 			return true;
@@ -816,11 +908,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, visible)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateBoolean(layoutDelegate__->get_visible());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, visible)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsBoolean());
 			layoutDelegate__->set_visible(static_cast<bool>(argument));
 			return true;
@@ -840,11 +934,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, width)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateString(layoutDelegate__->get_width());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, width)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
 			layoutDelegate__->set_width(static_cast<std::string>(argument));
 			return true;
@@ -852,11 +948,13 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(View, zIndex)
 		{
+			CHECK_UI_DELEGATE_GETTER
 			return get_context().CreateNumber(layoutDelegate__->get_zIndex());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, zIndex)
 		{
+			CHECK_UI_DELEGATE_SETTER;
 			TITANIUM_ASSERT(argument.IsNumber());
 			layoutDelegate__->set_zIndex(static_cast<std::int32_t>(argument));
 			return true;
@@ -864,12 +962,16 @@ namespace Titanium
 
 		void View::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
-			layoutDelegate__->disableEvent(event_name);
+			if (layoutDelegate__) {
+				layoutDelegate__->disableEvent(event_name);
+			}
 		}
 
 		void View::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
-			layoutDelegate__->enableEvent(event_name);
+			if (layoutDelegate__) {
+				layoutDelegate__->enableEvent(event_name);
+			}
 		}
 
 		TITANIUM_FUNCTION(View, toImage)

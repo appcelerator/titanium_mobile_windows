@@ -499,6 +499,7 @@ function copyResources(next) {
 				var from = jsFiles[id],
 					to = path.join(this.buildTargetAssetsDir, id),
 					t_ = this;
+				t_.native_types = t_.native_types || [];
 
 				// Look for native requires here
 				var fromContent = fs.readFileSync(from, {encoding: 'utf8'});
@@ -514,9 +515,10 @@ function copyResources(next) {
 					// FIXME What if it is a requires, but not a string? What if it is a dynamically built string?
 					if (node instanceof UglifyJS.AST_Call && node.expression.name == 'require' &&
 						node.args && node.args.length == 1 && node.args[0] instanceof UglifyJS.AST_String) {
-						if (node.args[0].getValue().indexOf('Windows.') === 0) {
-							t_.logger.info("Detected native API reference: " + node.args[0].getValue());
-							t_.seeds.unshift(node.args[0].getValue());
+						var node_value = node.args[0].getValue();
+						if (node_value.indexOf('Windows.') === 0 || node_value.indexOf('System.') === 0) {
+							t_.logger.info("Detected native API reference: " + node_value);
+							t_.native_types.unshift({name:node_value});
 						}
 					}
 				});

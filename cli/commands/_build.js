@@ -56,7 +56,6 @@ function WindowsBuilder() {
 	this.defaultTarget = 'wp-emulator';
 
 	this.tiSymbols = {};
-	this.seeds = [];
 }
 
 util.inherits(WindowsBuilder, Builder);

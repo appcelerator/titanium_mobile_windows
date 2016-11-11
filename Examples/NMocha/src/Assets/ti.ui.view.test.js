@@ -201,7 +201,7 @@ describe('Titanium.UI.View', function () {
 		w.open();
 	});
 
-	it('animate (top)', function (finish) {
+	(utilities.isWindows10Desktop() ? it.skip : it)('animate (top)', function (finish) {
 		this.timeout(1e4);
 		var win = Ti.UI.createWindow(),
 		    parent = Ti.UI.createView({backgroundColor: 'red', width: 100, height: 100}),
@@ -234,7 +234,7 @@ describe('Titanium.UI.View', function () {
 		win.open();
 	});
 
-	it('animate (left)', function (finish) {
+	(utilities.isWindows10Desktop() ? it.skip : it)('animate (left)', function (finish) {
 		this.timeout(1e4);
 		var win = Ti.UI.createWindow(),
 		    parent = Ti.UI.createView({backgroundColor: 'red', width: 100, height: 100}),
@@ -267,7 +267,7 @@ describe('Titanium.UI.View', function () {
 		win.open();
 	});
 
-	it('animate (right)', function (finish) {
+	(utilities.isWindows10Desktop() ? it.skip : it)('animate (right)', function (finish) {
 		this.timeout(1e4);
 		var win = Ti.UI.createWindow(),
 		    parent = Ti.UI.createView({backgroundColor: 'red', width: 100, height: 100}),
@@ -300,7 +300,7 @@ describe('Titanium.UI.View', function () {
 		win.open();
 	});
 
-	it('animate (bottom)', function (finish) {
+	(utilities.isWindows10Desktop() ? it.skip : it)('animate (bottom)', function (finish) {
 		this.timeout(1e4);
 		var win = Ti.UI.createWindow(),
 		    parent = Ti.UI.createView({backgroundColor: 'red', width: 100, height: 100}),
@@ -332,7 +332,7 @@ describe('Titanium.UI.View', function () {
 		win.open();
 	});
 
-	it('animate (opacity)', function (finish) {
+	(utilities.isWindows10Desktop() ? it.skip : it)('animate (opacity)', function (finish) {
 		this.timeout(1e4);
 		var win = Ti.UI.createWindow(),
 		    img = Ti.UI.createImageView({

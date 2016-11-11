@@ -196,10 +196,20 @@ namespace TitaniumWindows
 
 		// registerNativeModuleRequireHook will be called for "non-preloaded" modules
 		auto global = js_context__.get_global_object().GetPrivate<TitaniumWindows::GlobalObject>();
-		global->registerNativeModuleRequireHook(native_module_names, preloaded_modules, [js_context_ref, this](const std::string& moduleId) {
-			const auto js_value_ptr = TitaniumModuleRequire(js_context_ref, TitaniumWindows::Utility::ConvertString(moduleId));
-			auto result = JSValue(js_context__, reinterpret_cast<JSValueRef>(js_value_ptr));
-			return result;
+		global->registerNativeModuleRequireHook(native_module_names, preloaded_modules, [this](const JSContext& js_context, const std::string& moduleId) {
+			const auto js_hyperloop = js_context.JSEvaluateScript("try{require('hyperloop');}catch(E){null;}");
+			if (js_hyperloop.IsObject()) {
+				auto hyperloop = static_cast<JSObject>(js_hyperloop);
+				// Check if Hyperloop can handle this moduleId
+				const auto checkFunc = hyperloop.GetProperty("exists");
+				TITANIUM_ASSERT(checkFunc.IsObject());
+				const std::vector<JSValue> args = { js_context.CreateString(moduleId) };
+				if (static_cast<bool>(static_cast<JSObject>(checkFunc)(args, hyperloop))) {
+					const auto requireFunc = hyperloop.GetProperty("require");
+					return static_cast<JSObject>(requireFunc)(args, hyperloop);
+				}
+			}
+			return static_cast<JSValue>(js_context.CreateNull());
 		});
 
 		Suspending += ref new Windows::UI::Xaml::SuspendingEventHandler(this, &Application::OnSuspending);
@@ -217,15 +227,6 @@ namespace TitaniumWindows
 		JSValue View_property = UI.GetProperty("View");
 		TITANIUM_ASSERT(View_property.IsObject());  // precondition
 		JSObject View = static_cast<JSObject>(View_property);
-
-		auto win_view_static = View.GetPrivate<TitaniumWindows::UI::View>();
-		win_view_static->registerNativeUIWrapHook([js_context_ref, this](const JSContext& context, const JSObject& object) {
-			const auto js_object_ref = reinterpret_cast<std::intptr_t>(static_cast<JSObjectRef>(object));
-			const auto js_context_ref = reinterpret_cast<std::intptr_t>(static_cast<JSContextRef>(context));
-			const auto js_object_ptr = UnwrapNativeUIElement(js_context_ref, js_object_ref);
-			auto result = JSObject(context, reinterpret_cast<JSObjectRef>(js_object_ptr));
-			return result;
-		});
 
 		// #if _DEBUG
 		//  if (IsDebuggerPresent()) {

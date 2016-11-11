@@ -53,6 +53,10 @@ WindowsModuleBuilder.prototype.run = function run(logger, config, cli, finished)
 	this.logger = logger;
 
 	appc.async.series(this, [
+		function(next) {
+			cli.scanHooks(path.join(cli.argv['project-dir'], 'plugins', 'hooks'));
+			next();
+		},
 		function (next) {
 			cli.emit('build.module.pre.construct', this, next);
 		},
@@ -66,11 +70,22 @@ WindowsModuleBuilder.prototype.run = function run(logger, config, cli, finished)
 		},
 
 		'compileModule',
-		'packageZip',
 
 		function (next) {
 			cli.emit('build.module.post.compile', this, next);
-		}
+		},
+
+		'copyModule',
+
+		function (next) {
+			cli.emit('build.module.pre.package', this, next);
+		},
+
+		'packageZip',
+
+		function (next) {
+			cli.emit('build.module.post.package', this, next);
+		},
 	], function (err) {
 		cli.emit('build.module.finalize', this, function () {
 			finished(err);
@@ -291,7 +306,7 @@ function walkdir(dirpath, base, callback) {
   });
 }
 
-WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
+WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 
 	// Suppress warnings from Stream
 	EventEmitter.defaultMaxListeners = 100;
@@ -308,12 +323,22 @@ WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
 	wrench.mkdirSyncRecursive(moduleDir);
 
 	// copy necesary folders and files
-	wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'documentation'), path.join(moduleDir, 'documenation'));
-	wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'example'), path.join(moduleDir, 'example'));
-	wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'assets'), path.join(moduleDir, 'assets'));
+	var parent_folders = ['documentation', 'example', 'assets'],
+		parent_files   = ['LICENSE'];
+	parent_folders.forEach(function(folder) {
+		var from = path.join(_t.projectDir, '..', folder);
+		if (fs.existsSync(from)) {
+			wrench.copyDirSyncRecursive(from, path.join(moduleDir, folder));
+		}
+	});
+	parent_files.forEach(function(filename){
+		var from = path.join(_t.projectDir, '..', filename),
+			to   = path.join(moduleDir, filename);
+		if (fs.existsSync(from) && !fs.existsSync(to)) {
+			fs.createReadStream(from).pipe(fs.createWriteStream(to));
+		}
+	});
 	wrench.copyDirSyncRecursive(path.join(this.projectDir, 'include'), path.join(moduleDir, 'include'));
-
-	fs.createReadStream(path.join(this.projectDir, '..', 'LICENSE')).pipe(fs.createWriteStream(path.join(moduleDir, 'LICENSE')));
 	fs.createReadStream(path.join(this.projectDir, 'manifest')).pipe(fs.createWriteStream(path.join(moduleDir, 'manifest')));
 	fs.createReadStream(path.join(this.projectDir, 'timodule.xml')).pipe(fs.createWriteStream(path.join(moduleDir, 'timodule.xml')));
 
@@ -361,6 +386,13 @@ WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
 			}
 		});
 	});
+	next();
+};
+
+WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
+	var buildDir = path.join(this.projectDir, 'build'),
+		moduleDir = path.join(buildDir, this.manifest.moduleid, this.manifest.version),
+		_t = this;
 
 	// create zip
 	var zipName = _t.manifest.moduleid + '-windows-' + _t.manifest.version + '.zip',
