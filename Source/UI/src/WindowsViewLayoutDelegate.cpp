@@ -1241,7 +1241,7 @@ namespace TitaniumWindows
 					event_delegate->fireEvent("touchmove", eventArgs);
 				});
 			} else if (event_name == "touchstart") {
-				component->PointerPressed += ref new PointerEventHandler([this](Platform::Object^ sender, PointerRoutedEventArgs^ e) {
+				touchstart_event__ = component->PointerPressed += ref new PointerEventHandler([this](Platform::Object^ sender, PointerRoutedEventArgs^ e) {
 					const auto component = safe_cast<FrameworkElement^>(sender);
 					const auto point = Windows::UI::Input::PointerPoint::GetCurrentPoint(e->Pointer->PointerId);
 					fireSimplePositionEvent("touchstart", component, point->Position);
@@ -1255,10 +1255,10 @@ namespace TitaniumWindows
 					const auto point = Windows::UI::Input::PointerPoint::GetCurrentPoint(e->Pointer->PointerId);
 					fireSimplePositionEvent("touchcancel", component, point->Position);
 				});
-				component->PointerCanceled    += cancel_handler;
-				component->PointerCaptureLost += cancel_handler;
+				touchcancel_event__ = component->PointerCanceled    += cancel_handler;
+				touchcancel_lost_event__ = component->PointerCaptureLost += cancel_handler;
 			} else if (event_name == "touchend") {
-				component->PointerReleased += ref new PointerEventHandler([this](Platform::Object^ sender, PointerRoutedEventArgs^ e) {
+				touchend_event__ = component->PointerReleased += ref new PointerEventHandler([this](Platform::Object^ sender, PointerRoutedEventArgs^ e) {
 					const auto component = safe_cast<FrameworkElement^>(sender);
 					const auto point = Windows::UI::Input::PointerPoint::GetCurrentPoint(e->Pointer->PointerId);
 					fireSimplePositionEvent("touchend", component, point->Position);

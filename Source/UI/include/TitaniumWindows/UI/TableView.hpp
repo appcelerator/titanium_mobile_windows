@@ -85,6 +85,8 @@ namespace TitaniumWindows
 			void bindCollectionViewSource();
 			void unbindCollectionViewSource();
 
+			void fireTableViewRowEvent(const std::string&, const Titanium::UI::ListRowSearchResult&) TITANIUM_NOEXCEPT;
+
 			::Platform::Collections::Vector<Windows::UI::Xaml::UIElement^>^ createUIElementsForSection(const std::uint32_t& sectionIndex) TITANIUM_NOEXCEPT;
 			Windows::UI::Xaml::Controls::ListViewHeaderItem^ createDefaultHeader(const std::shared_ptr<Titanium::UI::TableViewSection>& seciton = nullptr);
 			Windows::UI::Xaml::Controls::ListViewHeaderItem^ createDefaultFooter(const std::shared_ptr<Titanium::UI::TableViewSection>& seciton = nullptr);
@@ -102,9 +104,9 @@ namespace TitaniumWindows
 			std::uint32_t getRowIndexInCollectionView(const std::shared_ptr<Titanium::UI::TableViewSection>& section, const std::uint32_t& rowIndex) TITANIUM_NOEXCEPT;
 			void setTableHeader();
 			void setTableFooter();
-
 			void registerScrollEvent();
 			void registerScrollendEvent();
+			Titanium::UI::ListRowSearchResult searchRowBySelectedRow(::Platform::Object^);
 
 			Windows::UI::Xaml::Controls::Grid^ parent__;
 			Windows::UI::Xaml::Controls::ListView^ tableview__;
@@ -117,7 +119,12 @@ namespace TitaniumWindows
 			Windows::Foundation::EventRegistrationToken loaded_event__;
 			Windows::Foundation::EventRegistrationToken scroll_event__;
 			Windows::Foundation::EventRegistrationToken scrollend_event__;
-			
+			Windows::Foundation::EventRegistrationToken touchstart_event__;
+			Windows::Foundation::EventRegistrationToken touchend_event__;
+			Windows::Foundation::EventRegistrationToken singletap_event__;
+			Windows::Foundation::EventRegistrationToken doubletap_event__;
+			Windows::Foundation::EventRegistrationToken longpress_event__;
+
 			double oldScrollPosX__ { -1 };
 			double oldScrollPosY__ { -1 };
 #pragma warning(push)

@@ -9,6 +9,7 @@
 #include "TitaniumWindows/UI/TableView.hpp"
 #include "TitaniumWindows/UI/TableViewRow.hpp"
 #include "Titanium/UI/TableViewSection.hpp"
+#include "Titanium/UI/SearchBar.hpp"
 #include <collection.h>
 #include <windows.h>
 #include "TitaniumWindows/UI/View.hpp"
@@ -25,6 +26,7 @@ namespace TitaniumWindows
 
 		using namespace Platform::Collections;
 		using namespace Windows::UI::Xaml;
+		using namespace Windows::UI::Xaml::Input;
 		using namespace Windows::Foundation;
 
 		TableView::TableView(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -427,9 +429,46 @@ namespace TitaniumWindows
 			}
 		}
 
+		void TableView::fireTableViewRowEvent(const std::string& event_name, const Titanium::UI::ListRowSearchResult& result) TITANIUM_NOEXCEPT
+		{
+			const auto ctx = get_context();
+			JSObject  eventArgs = ctx.CreateObject();
+			eventArgs.SetProperty("x", ctx.CreateNumber(result.x));
+			eventArgs.SetProperty("y", ctx.CreateNumber(result.y));
+
+			if (result.found) {
+				const auto section = model__->getSectionAtIndex(result.sectionIndex);
+				eventArgs.SetProperty("section", section->get_object());
+
+				const auto row = section->get_rows().at(result.rowIndex);
+				eventArgs.SetProperty("index", ctx.CreateNumber(result.rowIndex));
+				eventArgs.SetProperty("row", row->get_object());
+				eventArgs.SetProperty("rowData", row->get_data());
+				eventArgs.SetProperty("source", row->get_object());
+			}
+
+			// TODO: We have no support for detail yet
+			eventArgs.SetProperty("detail", ctx.CreateBoolean(false));
+
+			const auto searchMode = (search__ == nullptr) ? false : !search__->get_value().empty();
+			eventArgs.SetProperty("searchMode", ctx.CreateBoolean(searchMode));
+
+			fireEvent(event_name, eventArgs);
+		}
+
+		Titanium::UI::ListRowSearchResult TableView::searchRowBySelectedRow(::Platform::Object^ item)
+		{
+			uint32_t selectedIndex;
+			if (tableview__->Items->IndexOf(item, &selectedIndex)) {
+				return model__->searchRowBySelectedIndex(selectedIndex);
+			}
+			Titanium::UI::ListRowSearchResult result;
+			return result;
+		}
+
 		void TableView::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->filterEvents({ "click" });
+			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->filterEvents({ "click", "touchstart", "touchend", "singletap", "doubletap", "longpress" });
 
 			Titanium::UI::TableView::enableEvent(event_name);
 
@@ -438,32 +477,58 @@ namespace TitaniumWindows
 			if (event_name == "click") {
 				click_event__ = tableview__->ItemClick += ref new Controls::ItemClickEventHandler(
 					[this, ctx](Platform::Object^ sender, Controls::ItemClickEventArgs^ e) {
-
-					if (model__->empty()) {
-						TITANIUM_LOG_DEBUG("TableView is clicked but there's no data");
-						return;
-					}
-
-					const auto listview = safe_cast<Controls::ListView^>(sender);
-
-					uint32_t selectedIndex;
-					const auto found = listview->Items->IndexOf(e->ClickedItem, &selectedIndex);
-					if (!found) return;
-
-					const auto result = model__->searchRowBySelectedIndex(selectedIndex);
-
-					if (result.found) {
-						JSObject  eventArgs = ctx.CreateObject();
-						eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(result.sectionIndex));
-						eventArgs.SetProperty("index", ctx.CreateNumber(result.rowIndex));
-
-						const auto section = model__->getSectionAtIndex(result.sectionIndex);
-						const auto row = section->get_rows().at(result.rowIndex);
-						eventArgs.SetProperty("row", row->get_object());
-						eventArgs.SetProperty("rowData", row->get_data());
-						eventArgs.SetProperty("source", row->get_object());
-
-						fireEvent("click", eventArgs);
+					auto result = searchRowBySelectedRow(e->ClickedItem);
+					const auto component = safe_cast<FrameworkElement^>(e->ClickedItem);
+					result.x = Controls::Canvas::GetLeft(component);
+					result.y = Controls::Canvas::GetTop(component);
+					fireTableViewRowEvent("click", result);
+				});
+			} else if (event_name == "touchstart") {
+				tableview__->PointerPressed += ref new PointerEventHandler([this](Platform::Object^ sender, PointerRoutedEventArgs^ e) {
+					const auto component = safe_cast<Controls::ListView^>(sender);
+					const auto point = Windows::UI::Input::PointerPoint::GetCurrentPoint(e->Pointer->PointerId);
+					auto result = searchRowBySelectedRow(component->SelectedItem);
+					result.x = point->Position.X;
+					result.y = point->Position.Y;
+					fireTableViewRowEvent("touchstart", result);
+				});
+			} else if (event_name == "touchend") {
+				tableview__->PointerReleased += ref new PointerEventHandler([this](Platform::Object^ sender, PointerRoutedEventArgs^ e) {
+					const auto component = safe_cast<Controls::ListView^>(sender);
+					const auto point = Windows::UI::Input::PointerPoint::GetCurrentPoint(e->Pointer->PointerId);
+					auto result = searchRowBySelectedRow(component->SelectedItem);
+					result.x = point->Position.X;
+					result.y = point->Position.Y;
+					fireTableViewRowEvent("touchend", result);
+				});
+			} else if (event_name == "singletap") {
+				singletap_event__ = tableview__->ItemClick += ref new Controls::ItemClickEventHandler(
+					[this, ctx](Platform::Object^ sender, Controls::ItemClickEventArgs^ e) {
+					auto result = searchRowBySelectedRow(e->ClickedItem);
+					const auto component = safe_cast<FrameworkElement^>(e->ClickedItem);
+					result.x = Controls::Canvas::GetLeft(component);
+					result.y = Controls::Canvas::GetTop(component);
+					fireTableViewRowEvent("singletap", result);
+				});
+			} else if (event_name == "doubletap") {
+				doubletap_event__ = tableview__->DoubleTapped += ref new DoubleTappedEventHandler([this](Platform::Object^ sender, DoubleTappedRoutedEventArgs^ e) {
+					const auto selectedItem = safe_cast<FrameworkElement^>(e->OriginalSource);
+					const auto position = e->GetPosition(tableview__);
+					auto result = searchRowBySelectedRow(selectedItem);
+					result.x = position.X;
+					result.y = position.Y;
+					fireTableViewRowEvent("doubletap", result);
+				});
+			} else if (event_name == "longpress") {
+				longpress_event__ = tableview__->Holding += ref new HoldingEventHandler([this](Platform::Object^ sender, HoldingRoutedEventArgs^ e) {
+					// fires event only when it started
+					if (e->HoldingState == Windows::UI::Input::HoldingState::Started) {
+						const auto selectedItem = safe_cast<FrameworkElement^>(e->OriginalSource);
+						const auto position = e->GetPosition(tableview__);
+						auto result = searchRowBySelectedRow(selectedItem);
+						result.x = position.X;
+						result.y = position.Y;
+						fireTableViewRowEvent("longpress", result);
 					}
 				});
 			} else if (event_name == "scroll") {

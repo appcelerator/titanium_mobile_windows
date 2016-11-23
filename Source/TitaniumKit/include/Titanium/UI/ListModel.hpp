@@ -25,6 +25,8 @@ namespace Titanium
 			bool found { false };
 			std::uint32_t sectionIndex { 0 };
 			std::uint32_t rowIndex { 0 };
+			double x { 0 };
+			double y { 0 };
 		};
 
 		/*!
