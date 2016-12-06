@@ -531,8 +531,10 @@ function copyResources(next) {
 
 						if (node.expression.expression && 
 							node.expression.expression.thedef && 
+							node.expression.expression.thedef.init && 
 							node.expression.expression.thedef.init.expression && 
 							node.expression.expression.thedef.init.expression.thedef &&
+							node.expression.expression.thedef.init.expression.thedef.init &&
 							node.expression.expression.thedef.init.expression.thedef.init.expression &&
 							node.expression.expression.thedef.init.expression.thedef.init.expression.name == 'require' &&
 							node.expression.expression.thedef.init.expression.thedef.init.args.length > 0) {
