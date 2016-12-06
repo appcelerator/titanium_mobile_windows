@@ -492,6 +492,10 @@ function copyResources(next) {
 			copyFile.call(this, path.join(templateDir, 'appicon.png'), destIcon);
 		}
 
+		function hasWindowsAPI(node_value) {
+			return (node_value.indexOf('Windows.') === 0 || node_value.indexOf('System.') === 0);
+		}
+
 		// copy js files into assets directory and minify if needed
 		this.logger.info(__('Processing JavaScript files'));
 		appc.async.series(this, Object.keys(jsFiles).map(function (id) {
@@ -499,13 +503,15 @@ function copyResources(next) {
 				var from = jsFiles[id],
 					to = path.join(this.buildTargetAssetsDir, id),
 					t_ = this;
-				t_.native_types = t_.native_types || [];
+				t_.native_types  = t_.native_types  || [];
+				t_.native_events = t_.native_events || [];
 
 				// Look for native requires here
 				var fromContent = fs.readFileSync(from, {encoding: 'utf8'});
 				try {
 					// FIXME Avoid parsing the AST twice! We do it below using jsanalyze for non html referenced JS files!
 					var toplevel = UglifyJS.parse(fromContent);
+					toplevel.figure_out_scope();
 				} catch (E) {
 					t_.logger.error(reportJSErrors(from, fromContent, E));
 					return next('Failed to parse JavaScript files.');
@@ -516,14 +522,40 @@ function copyResources(next) {
 					if (node instanceof UglifyJS.AST_Call && node.expression.name == 'require' &&
 						node.args && node.args.length == 1 && node.args[0] instanceof UglifyJS.AST_String) {
 						var node_value = node.args[0].getValue();
-						if (node_value.indexOf('Windows.') === 0 || node_value.indexOf('System.') === 0) {
+						if (hasWindowsAPI(node_value)) {
 							t_.logger.info("Detected native API reference: " + node_value);
 							t_.native_types.unshift({name:node_value});
 						}
 					}
+					if (node instanceof UglifyJS.AST_Call && node.expression.property == 'addEventListener') {
+
+						if (node.expression.expression && 
+							node.expression.expression.thedef && 
+							node.expression.expression.thedef.init.expression && 
+							node.expression.expression.thedef.init.expression.thedef &&
+							node.expression.expression.thedef.init.expression.thedef.init.expression &&
+							node.expression.expression.thedef.init.expression.thedef.init.expression.name == 'require' &&
+							node.expression.expression.thedef.init.expression.thedef.init.args.length > 0) {
+							var detectedConstructorType = node.expression.expression.thedef.init.expression.thedef.init.args[0].value;
+							if (hasWindowsAPI(detectedConstructorType) &&
+								node.args &&
+								node.args.length > 0 &&
+								node.args[0] instanceof UglifyJS.AST_String) {
+
+								var event_name = node.args[0].getValue();
+
+								var native_event = {
+									name:event_name,
+									type:detectedConstructorType,
+									signature:event_name + '_' + detectedConstructorType.replace(/\./g, '_')
+								};
+								t_.native_events.push(native_event);
+								t_.logger.info('Detected native API event: ' + native_event.name + ' for ' + detectedConstructorType);
+							}
+						}
+					}
 				});
 				toplevel.walk(walker);
-
 
 				if (htmlJsFiles[id]) {
 					// this js file is referenced from an html file, so don't minify or encrypt

@@ -80,9 +80,10 @@ function getCppClassForModule(moduleId) {
  * Generates the code in TypeHelper.cs to handle building up the list of native types registered.
  * @param {String} dest - 
  * @param {Array[map]} native_types - 
+ * @param {Array[map]} native_events - 
  * @param {Function} next - 
  */
-function generateNativeTypeHelper(dest, native_types, next) {
+function generateNativeTypeHelper(dest, native_types, native_events, next) {
 	var helper_cs = path.join(dest, 'src', 'TypeHelper.cs'),
 		template = path.join(dest, 'src', 'TypeHelper.cs.ejs');
 	// Now we'll add all the types we know about as includes into our TypeHelper class
@@ -92,9 +93,9 @@ function generateNativeTypeHelper(dest, native_types, next) {
 		if (err) throw err;
 
 		data = ejs.render(data, { 
-			native_types:native_types
+			native_types:native_types,
+			native_events:native_events
 		}, {});
-
 
 		// if contents haven't changed, don't overwrite so we don't recompile the file
 		if (fs.existsSync(helper_cs) && fs.readFileSync(helper_cs, 'utf8').toString() == data) {
@@ -265,13 +266,15 @@ function runMSBuild(slnFile, buildConfiguration, callback) {
  * @param {String} dest - the location on disk where to place the generate types.
  * @param {Array[map]} modules - List of native modules
  * @param {Array[map]} native_types - List of native types
+ * @param {Array[map]} native_events - List of native events
  * @param {Function} finished - Callback when detection is finished
  */
-exports.generate = function generate(dest, modules, native_types, finished) {
+exports.generate = function generate(dest, modules, native_types, native_events, finished) {
 	var dest_Native    = path.join(dest, 'Native'),
 		dest_Hyperloop = path.join(dest, 'TitaniumWindows_Hyperloop');
 
-	native_types = native_types || [];
+	native_types  = native_types  || [];
+	native_events = native_events || [];
 
 	var platform = 'win10';
 	if (targetPlatformSdkVersion === '8.1') {
@@ -290,7 +293,7 @@ exports.generate = function generate(dest, modules, native_types, finished) {
 			}
 			async.series([
 				function(next) {
-					generateNativeTypeHelper(dest_Hyperloop, native_types, next);
+					generateNativeTypeHelper(dest_Hyperloop, native_types, native_events, next);
 				},
 				function(next) {
 					generateTargetVersion(dest_Hyperloop, 'win10', next);

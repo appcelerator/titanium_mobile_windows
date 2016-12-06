@@ -12,6 +12,7 @@
 #include "TitaniumWindows_UI_EXPORT.h"
 #include "Titanium/UI/ViewLayoutDelegate.hpp"
 #include "LayoutEngine/LayoutEngine.hpp"
+#include "Titanium/UI/View.hpp"
 
 namespace Titanium
 {
@@ -20,9 +21,64 @@ namespace Titanium
 
 namespace TitaniumWindows
 {
+	using namespace HAL;
+
+	class TITANIUMWINDOWS_UI_EXPORT Platform_Object : public Titanium::Module, public JSExport<Platform_Object>
+	{
+	public:
+		Platform_Object(const JSContext& ctx) TITANIUM_NOEXCEPT
+			: Titanium::Module(ctx, "Platform.Object")
+		{
+		}
+
+		virtual ~Platform_Object() = default;
+		Platform_Object(const Platform_Object&) = default;
+		Platform_Object& operator=(const Platform_Object&) = default;
+#ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
+		Platform_Object(Platform_Object&&) = default;
+		Platform_Object& operator=(Platform_Object&&) = default;
+#endif
+		::Platform::Object^ get_native_object() const TITANIUM_NOEXCEPT
+		{
+			return native_object__;
+		}
+
+		void set_native_object(::Platform::Object^ obj)
+		{
+			native_object__ = obj;
+		}
+
+	protected:
+		::Platform::Object^ native_object__{ nullptr };
+	};
+
 	namespace UI
 	{
 		using namespace HAL;
+
+		class TITANIUMWINDOWS_UI_EXPORT FrameworkElementWrapper : public Titanium::UI::View, public JSExport<FrameworkElementWrapper>
+		{
+		public:
+			FrameworkElementWrapper(const JSContext& ctx) TITANIUM_NOEXCEPT;
+			virtual ~FrameworkElementWrapper() = default;
+			FrameworkElementWrapper(const FrameworkElementWrapper&) = default;
+			FrameworkElementWrapper& operator=(const FrameworkElementWrapper&) = default;
+#ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
+			FrameworkElementWrapper(FrameworkElementWrapper&&) = default;
+			FrameworkElementWrapper& operator=(FrameworkElementWrapper&&) = default;
+#endif
+			Windows::UI::Xaml::FrameworkElement^ getComponent() TITANIUM_NOEXCEPT
+			{
+				return element__;
+			}
+
+			void setComponent(Windows::UI::Xaml::FrameworkElement^ element) TITANIUM_NOEXCEPT;
+
+			static void JSExportInitialize();
+
+		protected:
+			Windows::UI::Xaml::FrameworkElement^ element__{ nullptr };
+		};
 
 		class TITANIUMWINDOWS_UI_EXPORT WindowsViewLayoutDelegate : public Titanium::UI::ViewLayoutDelegate
 		{
@@ -472,7 +528,6 @@ namespace TitaniumWindows
 			Windows::UI::Xaml::Media::Brush^ getBackground();
 
 			virtual std::shared_ptr<Titanium::UI::View> rescueGetView(const JSObject& view) TITANIUM_NOEXCEPT override;
-			virtual void registerNativeUIWrapHook(const std::function<JSObject(const JSContext&, const JSObject&)>& requireCallback);
 			virtual void fireSimplePositionEvent(const std::string& event_name, Windows::UI::Xaml::FrameworkElement^ sender, Windows::Foundation::Point position);
 			virtual void firePostLayoutEvent();
 
@@ -482,7 +537,6 @@ namespace TitaniumWindows
 
 #pragma warning(push)
 #pragma warning(disable : 4251)
-			std::function<JSObject(const JSContext&, const JSObject&)> native_wrapper_hook__ { nullptr };
 			std::vector<std::string> filtered_events__;
 #pragma warning(pop)
 

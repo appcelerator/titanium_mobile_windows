@@ -409,8 +409,12 @@ namespace TitaniumWindows
 				if (ui_view == nullptr) {
 					ui_view = layoutDelegate__->rescueGetView(viewObj);
 				}
-				ui_view->set_parent(this->get_object().GetPrivate<View>());
-				layoutDelegate__->add(ui_view);
+				if (ui_view) {
+					ui_view->set_parent(this->get_object().GetPrivate<View>());
+					layoutDelegate__->add(ui_view);
+				} else {
+					HAL::detail::ThrowRuntimeError("Window::add", "Window.add: Unable to get native view from View");
+				}
 				return get_context().CreateUndefined();
 			}
 

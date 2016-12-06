@@ -3,6 +3,42 @@ using System.Collections.Generic;
 
 namespace TitaniumWindows_Hyperloop
 {
+    public delegate void HyperloopEventHandler(Event evt, object e);
+
+    public sealed class Event
+    {
+        public event HyperloopEventHandler GotEvent;
+
+        public object Target { get; set; }
+        public string Name   { get; set; }
+
+        public Event(string name, object target)
+        {
+            Target = target;
+            Name = name;
+        }
+
+        public void HandleEvent(object sender, object e)
+        {
+            GotEvent?.Invoke(this, e);
+        }
+    }
+
+    public sealed class EventHelper
+    {
+        public static Event add_Tapped_Windows_UI_Xaml_Controls_Button(object target)
+        {
+            Event evt = new Event("Tapped", target);
+            ((Windows.UI.Xaml.Controls.Button)target).Tapped += evt.HandleEvent;
+            return evt;
+        }
+
+        public static void remove_Tapped_Windows_UI_Xaml_Controls_Button(object evt, object target)
+        {
+            ((Windows.UI.Xaml.Controls.Button)target).Tapped -= ((Event)evt).HandleEvent;
+        }
+    }
+
     public sealed class TypeHelper
     {
         private static Dictionary<string, string> KnownTypes = new Dictionary<string, string>()

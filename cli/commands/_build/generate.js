@@ -108,7 +108,7 @@ function generateNativeTypes(next) {
 	this.targetPlatformSdkMinVersion = this.targetPlatformSdkMinVersion || this.tiapp.windows['TargetPlatformMinVersion'] || this.targetPlatformSdkVersion;
 
 	nativeModuleGenerator.init(this);
-	nativeModuleGenerator.generate(this.buildDir, this.modules, this.native_types, next);
+	nativeModuleGenerator.generate(this.buildDir, this.modules, this.native_types, this.native_events, next);
 };
 
 /**

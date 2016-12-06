@@ -215,19 +215,6 @@ namespace TitaniumWindows
 		Suspending += ref new Windows::UI::Xaml::SuspendingEventHandler(this, &Application::OnSuspending);
 		Resuming += ref new Windows::Foundation::EventHandler<::Platform::Object^>(this, &Application::OnResuming);
 
-		// TODO Hook the native ui unwrap stuff on the instance of Titanium::UI::View?
-		JSValue Titanium_property = js_context__.get_global_object().GetProperty("Titanium");
-		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = static_cast<JSObject>(Titanium_property);
-
-		JSValue UI_property = Titanium.GetProperty("UI");
-		TITANIUM_ASSERT(UI_property.IsObject());  // precondition
-		JSObject UI = static_cast<JSObject>(UI_property);
-
-		JSValue View_property = UI.GetProperty("View");
-		TITANIUM_ASSERT(View_property.IsObject());  // precondition
-		JSObject View = static_cast<JSObject>(View_property);
-
 		// #if _DEBUG
 		//  if (IsDebuggerPresent()) {
 		//    DebugSettings -> EnableFrameRateCounter = true;
