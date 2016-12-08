@@ -1,3 +1,3 @@
-[submodule "HAL"]
+[submodule "Source/HAL"]
 	path = Source/HAL
 	url = git@github.com:appcelerator/HAL.git
