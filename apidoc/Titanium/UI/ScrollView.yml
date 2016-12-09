@@ -48,4 +48,20 @@ methods:
     platforms: [windowsphone]
   - name: setShowVerticalScrollIndicator
     platforms: [windowsphone]
-
+events:
+  - name: scroll
+    platforms: [windowsphone]
+  - name: scrollend
+    platforms: [windowsphone]
+  - name: scrollEnd
+    platforms: [windowsphone]
+  - name: scale
+    platforms: [windowsphone]
+  - name: dragstart
+    platforms: [windowsphone]
+  - name: dragStart
+    platforms: [windowsphone]
+  - name: dragend
+    platforms: [windowsphone]
+  - name: dragEnd
+    platforms: [windowsphone]

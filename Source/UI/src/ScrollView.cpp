@@ -166,16 +166,19 @@ namespace TitaniumWindows
 			} else if (event_name == "scroll") {
 				scroll_event__ = scroll_viewer__->ViewChanging += ref new Windows::Foundation::EventHandler<Windows::UI::Xaml::Controls::ScrollViewerViewChangingEventArgs ^>(
 					[=](Platform::Object ^sender, Windows::UI::Xaml::Controls::ScrollViewerViewChangingEventArgs ^args) {
-						auto eventArgs = get_context().CreateObject();
-						auto dragging = args->FinalView->HorizontalOffset != 0 || args->FinalView->VerticalOffset != 0;
-						auto zoom = args->FinalView->ZoomFactor;
-						auto zooming = zoom != 1;
-						eventArgs.SetProperty("dragging", get_context().CreateBoolean(dragging)); // test this
-						eventArgs.SetProperty("zooming", get_context().CreateBoolean(zooming)); // test this
-						eventArgs.SetProperty("curZoomScale", get_context().CreateNumber(zoom));
-						fireEvent("scroll", eventArgs);
-					}
-				);
+					const auto ctx = get_context();
+					auto eventArgs = ctx.CreateObject();
+					auto dragging = args->FinalView->HorizontalOffset != 0 || args->FinalView->VerticalOffset != 0;
+					auto zoom = args->FinalView->ZoomFactor;
+					auto zooming = zoom != 1;
+
+					eventArgs.SetProperty("x", ctx.CreateNumber(args->FinalView->HorizontalOffset));
+					eventArgs.SetProperty("y", ctx.CreateNumber(args->FinalView->VerticalOffset));
+					eventArgs.SetProperty("dragging", ctx.CreateBoolean(dragging)); // test this
+					eventArgs.SetProperty("zooming", ctx.CreateBoolean(zooming)); // test this
+					eventArgs.SetProperty("curZoomScale", ctx.CreateNumber(zoom));
+					fireEvent("scroll", eventArgs);
+				});
 			} else if (event_name == "scrollend" || event_name == "scrollEnd") {
 				scrollend_event__ = scroll_viewer__->ViewChanged += ref new Windows::Foundation::EventHandler<Windows::UI::Xaml::Controls::ScrollViewerViewChangedEventArgs ^>(
 					[=](Platform::Object ^sender, Windows::UI::Xaml::Controls::ScrollViewerViewChangedEventArgs ^args) {
