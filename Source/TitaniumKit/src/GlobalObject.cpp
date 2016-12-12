@@ -326,7 +326,7 @@ namespace Titanium
 				// app entry point should not be treated as "CommonJS module". It should expose every variables to children.
 				//
 				if (moduleId == "/app") {
-					const std::string app_module_js = "try {" + module_js + "} catch (E) { E.fileName='app.js'; Titanium_RedScreenOfDeath(E);}";
+					const std::string app_module_js = "try {__dirname='/',__filename='app.js'; " + module_js + "} catch (E) { E.fileName='app.js'; Titanium_RedScreenOfDeath(E);}";
 					result = js_context.JSEvaluateScript(app_module_js, js_context.get_global_object());
 				} else {
 					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__dirname='" + currentDir__ + "',__filename='/"
