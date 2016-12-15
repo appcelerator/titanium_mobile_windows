@@ -183,7 +183,7 @@ describe('Titanium.UI.ListView', function () {
 	//
 	// Making sure custom template doesn't throw exception
 	//
-	(utilities.isWindows10() ? it.skip : it)('Custom template', function (finish) {
+	it('Custom template', function (finish) {
 		var win = Ti.UI.createWindow({ backgroundColor: 'green' });
 		var myTemplate = {
 			childTemplates: [

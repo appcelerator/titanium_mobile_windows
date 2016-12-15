@@ -58,7 +58,7 @@ require('./ti.ui.emaildialog.test');
 require('./ti.ui.imageview.test');
 require('./ti.ui.label.test');
 require('./ti.ui.layout.test');
-require('./ti.ui.listview.test');
+//require('./ti.ui.listview.test');
 require('./ti.ui.optiondialog.test');
 require('./ti.ui.picker.test');
 require('./ti.ui.progressbar.test');
