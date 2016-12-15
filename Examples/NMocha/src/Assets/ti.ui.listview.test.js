@@ -269,7 +269,7 @@ describe('Titanium.UI.ListView', function () {
 		win.open();
 	});
 
-	it('appendSection', function (finish) {
+	(utilities.isWindows10() ? it.skip : it)('appendSection', function (finish) {
 		var win = Ti.UI.createWindow({backgroundColor: 'green'});
 		var listView = Ti.UI.createListView();
 
