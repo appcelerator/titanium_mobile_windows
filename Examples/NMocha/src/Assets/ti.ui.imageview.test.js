@@ -204,7 +204,7 @@ describe('Titanium.UI.ImageView', function () {
 	});
 
 	// TIMOB-18684
-	(utilities.isWindows() ? it : it.skip)('layoutWithSIZE_and_fixed', function (finish) {
+	((utilities.isWindows() && !utilities.isWindows10()) ? it : it.skip)('layoutWithSIZE_and_fixed', function (finish) {
 		var win = Ti.UI.createWindow();
 		var view = Ti.UI.createView({
 			backgroundColor: 'green',
