@@ -27,6 +27,7 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.generateCmakeList = generateCmakeList;
 	WindowsBuilder.prototype.generateCapabilities = generateCapabilities;
 	WindowsBuilder.prototype.generateAppxManifestForPlatform = generateAppxManifestForPlatform;
+	WindowsBuilder.prototype.mergeAppxManifestForModule = mergeAppxManifestForModule;
 	WindowsBuilder.prototype.generateAppxManifest = generateAppxManifest;
 	WindowsBuilder.prototype.fixCSharpConfiguration = fixCSharpConfiguration;
 }
@@ -423,16 +424,28 @@ function generateAppxManifestForPlatform(target, properties) {
 				name = appc.xml.getAttr(node, "Name");
 				if (target == 'win10') { // Windows 10 universal
 					if (win10UAPCapabilities.indexOf(name) != -1) {
-						capabilities.push('<uap:Capability Name="' + name + '" />');
+						var cap = '<uap:Capability Name="' + name + '" />';
+						if (capabilities.indexOf(cap) == -1) {
+							capabilities.push(cap);
+						}
 					} else if (win10BaseCapabilities.indexOf(name) != -1) {
-						capabilities.push('<Capability Name="' + name + '" />');
+						var cap = '<Capability Name="' + name + '" />';
+						if (capabilities.indexOf(cap) == -1) {
+							capabilities.push(cap);
+						}
 					}
 				}
 				else {
 					if (win81BaseCapabilities.indexOf(name) != -1) {
-						capabilities.push('<Capability Name="' + name + '" />');
+						var cap = '<Capability Name="' + name + '" />';
+						if (capabilities.indexOf(cap) == -1) {
+							capabilities.push(cap);
+						}
 					} else if (target == 'phone' && win81M3Capabilities.indexOf(name) != -1) {
-						capabilities.push('<m3:Capability Name="' + name + '" />');
+						var cap = '<m3:Capability Name="' + name + '" />';
+						if (capabilities.indexOf(cap) == -1) {
+							capabilities.push(cap);
+						}
 					}
 				}
 			}
@@ -440,13 +453,20 @@ function generateAppxManifestForPlatform(target, properties) {
 				// Just write the XML out as is
 				// TODO Do some validation of DeviceCapability name?
 				if (node.tagName == 'DeviceCapability') {
-					deviceCapabilities.push(node.toString());
+					var cap = node.toString();
+					if (deviceCapabilities.indexOf(cap) == -1) {
+						deviceCapabilities.push(cap);
+					}
 				} else {
-					capabilities.push(node.toString());
+					var cap = node.toString();
+					if (capabilities.indexOf(cap) == -1) {
+						capabilities.push(cap);
+					}
 				}
 			}
 		});
 	}
+
 	properties.Capabilities = this.generateCapabilities(target, capabilities, deviceCapabilities);
 
 	properties.Prerequisites = properties.Prerequisites || [];
@@ -529,10 +549,35 @@ function generateAppxManifestForPlatform(target, properties) {
  *        </manifest>
  *    </windows>
  */
+function mergeAppxManifestForModule() {
+	var _t = this;
+	this.tiapp.windows.manifests = this.tiapp.windows.manifests || [];
+	var domParser = new DOMParser();
+	for (var i = 0; i < this.modules.length; i++) {
+		var timodule = path.join(this.modules[i].modulePath, 'timodule.xml');
+		if (fs.existsSync(timodule)) {
+			var content  = fs.readFileSync(timodule, 'utf8'),
+				dom = domParser.parseFromString(content, 'text/xml'),
+				root = dom.documentElement;
+			appc.xml.forEachElement(root, function (node) {
+				if (node.tagName == 'windows') {
+					appc.xml.forEachElement(node, function (node) {
+						if (node.tagName == 'manifest') {
+							_t.tiapp.windows.manifests.push(node.toString());
+						}
+					});
+				}
+			});
+		}
+	}
+}
+
 function generateAppxManifest(next) {
 
 	this.tiapp.windows = this.tiapp.windows || {};
 	this.readTiAppManifest();
+
+	this.mergeAppxManifestForModule();
 
 	var xprops = {
 			phone: { '8.1': {}, '10.0': {} },
@@ -541,6 +586,7 @@ function generateAppxManifest(next) {
 		domParser = new DOMParser();
 
 	if (this.tiapp.windows.manifests) {
+
 		// Construct manifest properties
 		for (var i = 0; i < this.tiapp.windows.manifests.length; i++) {
 			var manifest = this.tiapp.windows.manifests[i];
@@ -558,24 +604,24 @@ function generateAppxManifest(next) {
 					elements.push(elm);
 				});
 
-				xprops.phone['8.1'][key] = xprops.phone['8.1'][key] || [];
-				xprops.store['8.1'][key] = xprops.store['8.1'][key] || [];
+				xprops.phone['8.1'][key]  = xprops.phone['8.1'][key]  || [];
+				xprops.store['8.1'][key]  = xprops.store['8.1'][key]  || [];
 				xprops.store['10.0'][key] = xprops.store['10.0'][key] || [];
 
 				// If version is 10.0 or not specified, add it to store['10.0']
 				if (version == '10.0' || !version) {
-					xprops.store['10.0'][key] = xprops.store['10.0'][key].concat(elements);
+					xprops.store['10.0'][key] = xprops.store['10.0'][key].concat(xprops.store['10.0'][key].concat(elements));
 				}
 
 				// If version is 8.1 or not defined, check target to determine phone[8.1] and/or store[8.1]
 				if (version == '8.1' || !version) {
 					if (target == "phone") {
-						xprops.phone['8.1'][key] = xprops.phone['8.1'][key].concat(elements);
+						xprops.phone['8.1'][key] = xprops.phone['8.1'][key].concat(xprops.phone['8.1'][key].concat(elements));
 					} else if (target == "store") {
-						xprops.store['8.1'][key] = xprops.store['8.1'][key].concat(elements);
+						xprops.store['8.1'][key] = xprops.store['8.1'][key].concat(xprops.store['8.1'][key].concat(elements));
 					} else {
-						xprops.phone['8.1'][key] = xprops.phone['8.1'][key].concat(elements);
-						xprops.store['8.1'][key] = xprops.store['8.1'][key].concat(elements);
+						xprops.phone['8.1'][key] = xprops.phone['8.1'][key].concat(xprops.phone['8.1'][key].concat(elements));
+						xprops.store['8.1'][key] = xprops.store['8.1'][key].concat(xprops.store['8.1'][key].concat(elements));
 					}
 				}
 			});

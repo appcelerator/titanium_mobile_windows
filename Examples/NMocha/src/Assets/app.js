@@ -34,7 +34,7 @@ require('./ti.database.test');
 require('./ti.filestream.test');
 require('./ti.filesystem.test');
 // TODO FIXME TIMOB-23776 Skip tests on Windows 8.1 Desktop due to intermittent crash
-if (utilities.isWindows8_1() && utilities.isWindowsDesktop()) {
+if (utilities.isWindowsDesktop()) {
     Ti.API.info('TIMOB-23776: Skipping UI tests on Windows 8.1 Desktop');
 } else {
 require('./ti.geolocation.test');
@@ -43,7 +43,9 @@ require('./ti.internal.test');
 require('./ti.locale.test');
 require('./ti.map.test');
 require('./ti.network.test');
+if (!utilities.isWindows10()) {
 require('./ti.network.httpclient.test');
+}
 require('./ti.network.socket.tcp.test.js');
 require('./ti.platform.test');
 require('./ti.require.test');

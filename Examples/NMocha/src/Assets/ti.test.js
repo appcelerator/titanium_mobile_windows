@@ -15,7 +15,7 @@ describe('Titanium', function () {
 		finish();
 	});
 
-	it('version', function (finish) {
+	it.skip('version', function (finish) {
 		should(Ti.version).be.a.String;
 		should(Ti.getVersion).be.a.Function;
 		should(Ti.getVersion()).be.a.String;

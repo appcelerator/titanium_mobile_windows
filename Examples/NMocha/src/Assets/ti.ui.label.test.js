@@ -113,7 +113,7 @@ describe('Titanium.UI.Label', function () {
 		finish();
 	});
 
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('width', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('width', function (finish) {
 		this.timeout(5000);
 		var label = Ti.UI.createLabel({
 			text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ullamcorper massa, eget tempor sapien. Phasellus nisi metus, tempus a magna nec, ultricies rutrum lacus. Aliquam sit amet augue suscipit, dignissim tellus eu, consectetur elit. Praesent ligula velit, blandit vel urna sit amet, suscipit euismod nunc.',
@@ -136,7 +136,7 @@ describe('Titanium.UI.Label', function () {
 		});
 		win.open();
 	});
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('height', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('height', function (finish) {
 		this.timeout(5000);
 		var label = Ti.UI.createLabel({
 			text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec ullamcorper massa, eget tempor sapien. Phasellus nisi metus, tempus a magna nec, ultricies rutrum lacus. Aliquam sit amet augue suscipit, dignissim tellus eu, consectetur elit. Praesent ligula velit, blandit vel urna sit amet, suscipit euismod nunc.',
@@ -171,7 +171,7 @@ describe('Titanium.UI.Label', function () {
 		win.open();
 	});
 
-	it('border (without width/height)', function (finish) {
+	(utilities.isWindows10() ? it.skip : it)('border (without width/height)', function (finish) {
 		this.timeout(3000);
 		var win = Ti.UI.createWindow(),
 			label = Ti.UI.createLabel({
