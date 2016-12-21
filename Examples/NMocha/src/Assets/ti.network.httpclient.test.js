@@ -71,7 +71,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send();
 	});
 
-	it.skip('TIMOB-23127', function (finish) {
+	it('TIMOB-23127', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();
@@ -86,7 +86,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send('TIMOB-23127');
 	});
 
-	it.skip('TIMOB-23214', function (finish) {
+	it('TIMOB-23214', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();
@@ -101,7 +101,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send();
 	});
 
-	it.skip('TIMOB-19042', function (finish) {
+	it('TIMOB-19042', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();
