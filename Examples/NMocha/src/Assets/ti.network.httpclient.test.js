@@ -211,7 +211,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send();
 	});
 
-	it('sendData', function (finish) {
+	it.skip('sendData', function (finish) {
 		this.timeout(3e4);
 		var xhr = Ti.Network.createHTTPClient();
 		xhr.setTimeout(3e4);
@@ -372,7 +372,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		});
 	});
 
-	it('POST multipart/form-data containing Ti.Blob', function (finish) {
+	it.skip('POST multipart/form-data containing Ti.Blob', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient(),
