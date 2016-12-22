@@ -20,15 +20,41 @@ exports.mixin = mixin;
  */
 function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.processEncryption = processEncryption;
+	WindowsBuilder.prototype.processEncryptionByChunk = processEncryptionByChunk;
 }
 
 function processEncryption(next) {
+	var tasks = [],
+		max   = 5,
+		_t    = this;
+
+	this.logger.debug(__('Splitting: %s', (' "' + this.jsFilesToEncrypt.join('" "') + '"').cyan));
+
+	function capture(chunk) {
+		return function(done) {
+	    	_t.processEncryptionByChunk(done, chunk);
+		};
+	}
+
+	// TIMOB-23613: Try to avoid "spawn ENAMETOOLONG"
+	for (var i = 0; i < this.jsFilesToEncrypt.length; i += max) {
+	    var chunk = this.jsFilesToEncrypt.slice(i, i + max);
+		_t.logger.debug(__('Chunk files at %s: %s', i, (' "' + chunk.join('" "') + '"').cyan));
+	    tasks.push(capture(chunk));
+	}
+
+	async.series(tasks, function(err) {
+		next(err);
+	});	
+}
+
+function processEncryptionByChunk(next, jsfiles) {
 
 	// figure out which titanium prep to run
 	var titaniumPrep = 'titanium_prep.win32.exe';
 
 	// encrypt the javascript
-	var args = [this.tiapp.guid, this.tiapp.id, this.buildTargetAssetsDir].concat(this.jsFilesToEncrypt),
+	var args = [this.tiapp.guid, this.tiapp.id, this.buildTargetAssetsDir].concat(jsfiles),
 		opts = {
 			env: appc.util.mix({}, process.env, this.jdkInfo ? {
 				// we force the JAVA_HOME so that titanium_prep doesn't complain
