@@ -54,7 +54,7 @@ function processEncryptionByChunk(next, jsfiles) {
 	var titaniumPrep = 'titanium_prep.win32.exe';
 
 	// encrypt the javascript
-	var args = [this.tiapp.guid, this.tiapp.id, this.buildTargetAssetsDir].concat(jsfiles),
+	var args = [this.tiapp.guid, this.titanium_prep_seed, this.buildTargetAssetsDir].concat(jsfiles),
 		opts = {
 			env: appc.util.mix({}, process.env, this.jdkInfo ? {
 				// we force the JAVA_HOME so that titanium_prep doesn't complain
@@ -78,10 +78,13 @@ function processEncryptionByChunk(next, jsfiles) {
 					});
 				}
 
-				var mainCPPPath = path.join(this.buildDir, 'src', 'main.cpp'),
-					mainCPPContents = fs.readFileSync(mainCPPPath, 'utf-8')
-						.replace(/TitaniumWindows::Application\(\);/, 'TitaniumWindows::Application("' + out.trim() + '");');
-				fs.writeFileSync(mainCPPPath, mainCPPContents);
+				if (!this.titanium_prep_seed) {
+					this.titanium_prep_seed = '--Seed--' + out.trim();
+					var mainCPPPath = path.join(this.buildDir, 'src', 'main.cpp'),
+						mainCPPContents = fs.readFileSync(mainCPPPath, 'utf-8')
+							.replace(/TitaniumWindows::Application\(\);/, 'TitaniumWindows::Application("' + out.trim() + '");');
+					fs.writeFileSync(mainCPPPath, mainCPPContents);
+				}
 
 				done();
 			}.bind(this));
