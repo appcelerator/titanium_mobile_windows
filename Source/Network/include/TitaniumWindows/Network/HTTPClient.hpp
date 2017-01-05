@@ -37,7 +37,7 @@ namespace TitaniumWindows
 
 			HTTPClient(const JSContext&) TITANIUM_NOEXCEPT;
 
-			virtual ~HTTPClient();
+			virtual ~HTTPClient() = default;
 			HTTPClient(const HTTPClient&) = default;
 			HTTPClient& operator=(const HTTPClient&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE

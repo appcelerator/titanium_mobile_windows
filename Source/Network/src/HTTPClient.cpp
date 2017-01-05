@@ -26,16 +26,6 @@ namespace TitaniumWindows
 			TITANIUM_LOG_DEBUG("TitaniumWindows::Network::HTTPClient::ctor");
 		}
 
-		HTTPClient::~HTTPClient()
-		{
-			TITANIUM_LOG_DEBUG("TitaniumWindows::Network::HTTPClient::dtor");
-			abort();
-
-			filter__ = nullptr;
-			httpClient__ = nullptr;
-			dispatcherTimer__ = nullptr;
-		}
-
 		void HTTPClient::JSExportInitialize()
 		{
 			JSExport<HTTPClient>::SetClassVersion(1);
