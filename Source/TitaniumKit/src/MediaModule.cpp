@@ -336,6 +336,7 @@ namespace Titanium
 		TITANIUM_ADD_FUNCTION(MediaModule, takeScreenshot);
 		TITANIUM_ADD_FUNCTION(MediaModule, vibrate);
 		TITANIUM_ADD_FUNCTION(MediaModule, requestAuthorization);
+		TITANIUM_ADD_FUNCTION(MediaModule, requestRecorderPermission);
 		TITANIUM_ADD_FUNCTION(MediaModule, hasCameraPermissions);
 		TITANIUM_ADD_FUNCTION(MediaModule, requestCameraPermissions);
 		TITANIUM_ADD_FUNCTION(MediaModule, createAudioPlayer);
@@ -1253,6 +1254,13 @@ namespace Titanium
 	}
 
 	TITANIUM_FUNCTION(MediaModule, requestAuthorization)
+	{
+		ENSURE_OBJECT_AT_INDEX(callback, 0);
+		requestAuthorization(callback);
+		return get_context().CreateUndefined();
+	}
+
+	TITANIUM_FUNCTION(MediaModule, requestRecorderPermission)
 	{
 		ENSURE_OBJECT_AT_INDEX(callback, 0);
 		requestAuthorization(callback);
