@@ -30,7 +30,6 @@ namespace TitaniumWindows
 		HTTPClient::~HTTPClient()
 		{
 			TITANIUM_LOG_DEBUG("TitaniumWindows::Network::HTTPClient::dtor");
-			abort();
 
 			filter__ = nullptr;
 			httpClient__ = nullptr;
