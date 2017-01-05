@@ -22,19 +22,8 @@ namespace TitaniumWindows
 	{
 		HTTPClient::HTTPClient(const JSContext& js_context) TITANIUM_NOEXCEPT
 		    : Titanium::Network::HTTPClient(js_context)
-		    , cancellationTokenSource__(concurrency::cancellation_token_source())
 		{
 			TITANIUM_LOG_DEBUG("TitaniumWindows::Network::HTTPClient::ctor");
-		}
-
-		HTTPClient::~HTTPClient()
-		{
-			TITANIUM_LOG_DEBUG("TitaniumWindows::Network::HTTPClient::dtor");
-			abort();
-
-			filter__ = nullptr;
-			httpClient__ = nullptr;
-			dispatcherTimer__ = nullptr;
 		}
 
 		void HTTPClient::JSExportInitialize()
@@ -45,8 +34,6 @@ namespace TitaniumWindows
 
 		void HTTPClient::abort() TITANIUM_NOEXCEPT
 		{
-			cancellationTokenSource__.cancel();
-
 			if (dispatcherTimer__ != nullptr && dispatcherTimer__->IsEnabled) {
 				dispatcherTimer__->Stop();
 			}
@@ -96,7 +83,6 @@ namespace TitaniumWindows
 			location__ = location;
 			filter__ = ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter();
 			httpClient__ = ref new Windows::Web::Http::HttpClient(filter__);
-			cancellationTokenSource__ = concurrency::cancellation_token_source();
 			filter__->AllowAutoRedirect = true;
 			filter__->CacheControl->ReadBehavior = Windows::Web::Http::Filters::HttpCacheReadBehavior::MostRecent;
 
@@ -216,10 +202,10 @@ namespace TitaniumWindows
 			auto operation = httpClient__->SendRequestAsync(request);
 
 			// Startup a timer that will abort the request after the timeout period is reached.
-			startDispatcherTimer();
+			const concurrency::cancellation_token_source cancellationTokenSource;
+			startDispatcherTimer(cancellationTokenSource);
 
-			// clang-format off
-			const auto token = cancellationTokenSource__.get_token();
+			const auto token = cancellationTokenSource.get_token();
 			create_task(operation, token)
 				.then([this, token](Windows::Web::Http::HttpResponseMessage^ response) {
 				interruption_point();
@@ -392,16 +378,14 @@ namespace TitaniumWindows
 			// clang-format on
 		}
 
-		void HTTPClient::startDispatcherTimer()
+		void HTTPClient::startDispatcherTimer(concurrency::cancellation_token_source cancellationTokenSource)
 		{
 			if (dispatcherTimer__ == nullptr && timeoutSpan__.Duration > 0) {
 				dispatcherTimer__ = ref new Windows::UI::Xaml::DispatcherTimer();
 				dispatcherTimer__->Interval = timeoutSpan__;
-				auto timeoutRegistrationToken__ = dispatcherTimer__->Tick += ref new Windows::Foundation::EventHandler<Platform::Object^>([this](Platform::Object^ sender, Platform::Object^ e) {
-					cancellationTokenSource__.cancel();
+				auto timeoutRegistrationToken__ = dispatcherTimer__->Tick += ref new Windows::Foundation::EventHandler<Platform::Object^>([this, cancellationTokenSource](Platform::Object^ sender, Platform::Object^ e) {
+					cancellationTokenSource.cancel();
 					dispatcherTimer__->Stop();
-					// re-create the CancellationTokenSource.
-					cancellationTokenSource__ = cancellation_token_source();
 				});
 				dispatcherTimer__->Start();
 			}

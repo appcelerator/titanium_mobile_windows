@@ -37,7 +37,7 @@ namespace TitaniumWindows
 
 			HTTPClient(const JSContext&) TITANIUM_NOEXCEPT;
 
-			virtual ~HTTPClient();
+			virtual ~HTTPClient() = default;
 			HTTPClient(const HTTPClient&) = default;
 			HTTPClient& operator=(const HTTPClient&) = default;
 #ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
@@ -68,9 +68,6 @@ namespace TitaniumWindows
 			Windows::Web::Http::Filters::HttpBaseProtocolFilter^ filter__;
 			// httpClient__ - higher level HTTP client that provides WinRT API to HTTP sessions and communications
 			Windows::Web::Http::HttpClient^ httpClient__;
-			// cancellationTokenSource__ - HttpClient provides an asynchronous channel to handle HTTP reponses and
-			// errors. Cancellation tokens allow the current HTTP
-			concurrency::cancellation_token_source cancellationTokenSource__;
 			//  timeoutRegistrationToken__ - used to remove the timeout handler
 			Windows::Foundation::EventRegistrationToken timeoutRegistrationToken__;
 			// dispatcherTimer__ - WinRT timer used to cancel a HTTP connection if timeout specified
@@ -99,7 +96,7 @@ namespace TitaniumWindows
 			bool disposed__ { false };
 #pragma warning(pop)
 
-			void startDispatcherTimer();
+			void startDispatcherTimer(concurrency::cancellation_token_source cancellationTokenSource);
 			task<Windows::Storage::Streams::IBuffer^> HTTPClient::HTTPResultAsync(Windows::Storage::Streams::IInputStream^ stream, concurrency::cancellation_token token);
 			Windows::Storage::Streams::IBuffer^ charVecToBuffer(std::vector<std::uint8_t> char_vector);
 
