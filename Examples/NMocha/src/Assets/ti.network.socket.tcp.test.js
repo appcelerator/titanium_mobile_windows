@@ -11,7 +11,7 @@ describe('Titanium.Network.Socket.TCP', function () {
 
     it('connect', function (finish) {
 	    var socket = Ti.Network.Socket.createTCP({
-	        host: 'www.google.com', port: 80,
+	        host: 'www.appcelerator.com', port: 80,
 	        connected: function (e) {
 	            finish();
 	        }
@@ -44,11 +44,11 @@ describe('Titanium.Network.Socket.TCP', function () {
 
     it('send data', function (finish) {
 	    var socket = Ti.Network.Socket.createTCP({
-	        host: 'www.google.com', port: 80,
+	        host: 'www.appcelerator.com', port: 80,
 	        connected: function (e) {
 	            should(socket.write).not.be.null;
 	            should(socket.write).be.a.Function;
-	            socket.write(Ti.createBuffer({value: 'GET / HTTP/1.1\r\nHost: www.google.com\r\nConnection: close\r\n\r\n'}));
+	            socket.write(Ti.createBuffer({value: 'GET / HTTP/1.1\r\nHost: www.appcelerator.com\r\nConnection: close\r\n\r\n'}));
 	            finish();
 	        }
 	    });
