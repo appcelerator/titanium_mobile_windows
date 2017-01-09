@@ -110,6 +110,15 @@ namespace Titanium
 			layoutDelegate__->add(view_ptr);
 		}
 
+		std::vector<std::shared_ptr<Titanium::UI::View>> View::get_children() const TITANIUM_NOEXCEPT
+		{
+			if (layoutDelegate__) {
+				return layoutDelegate__->get_children();
+			}
+			return std::vector<std::shared_ptr<Titanium::UI::View>>();
+		}
+
+
 		void View::JSExportInitialize()
 		{
 			JSExport<View>::SetClassVersion(1);
@@ -241,6 +250,7 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(View, setViewShadowColor);
 			TITANIUM_ADD_FUNCTION(View, getViewShadowOffset);
 			TITANIUM_ADD_FUNCTION(View, setViewShadowOffset);
+			TITANIUM_ADD_FUNCTION(View, getViewById);
 			TITANIUM_ADD_FUNCTION(View, getVisible);
 			TITANIUM_ADD_FUNCTION(View, setVisible);
 			TITANIUM_ADD_FUNCTION(View, getHorizontalWrap);
@@ -770,7 +780,7 @@ namespace Titanium
 		{
 			CHECK_UI_DELEGATE_GETTER
 			std::vector<JSValue> js_children;
-			const auto children = layoutDelegate__->get_children();
+			const auto children = get_children();
 			for (auto child : children) {
 				js_children.push_back(child->get_object());
 			}
@@ -992,6 +1002,26 @@ namespace Titanium
 			ENSURE_OBJECT_AT_INDEX(point, 0);
 			ENSURE_OBJECT_AT_INDEX(destinationView, 1);
 			return Point_to_js(get_context(), convertPointToView(js_to_Point(point), destinationView.GetPrivate<View>()));
+		}
+
+		TITANIUM_FUNCTION(View, getViewById)
+		{
+			ENSURE_STRING_AT_INDEX(id, 0);
+			const auto children = get_children();
+			for (const auto child : children) {
+				if (child->get_children().size() > 0) {
+					const auto parentChild = child->js_getViewById(arguments, this_object);
+					if (!parentChild.IsNull()) {
+						return parentChild;
+					}
+				}
+				const auto js_child = child->get_object();
+				const auto childId  = js_child.GetProperty("id");
+				if (childId.IsString() && static_cast<std::string>(childId) == id) {
+					return js_child;
+				}
+			}
+			return get_context().CreateNull();
 		}
 
 		TITANIUM_PROPERTY_GETTER_BOOL(View, accessibilityHidden)

@@ -28,8 +28,12 @@ function processEncryption(next) {
 	var titaniumPrep = 'titanium_prep.win32.exe';
 
 	// encrypt the javascript
-	var args = [this.tiapp.guid, this.tiapp.id, this.buildTargetAssetsDir].concat(this.jsFilesToEncrypt),
-		opts = {
+	var fileListing = path.join(this.buildDir, 'titanium_prep_listing.txt'),
+		args = [this.tiapp.guid, this.tiapp.id, this.buildTargetAssetsDir, '--file-listing', fileListing];
+
+	fs.writeFileSync(fileListing, this.jsFilesToEncrypt.join('\n'));
+
+	var opts = {
 			env: appc.util.mix({}, process.env, this.jdkInfo ? {
 				// we force the JAVA_HOME so that titanium_prep doesn't complain
 				'JAVA_HOME': this.jdkInfo.home

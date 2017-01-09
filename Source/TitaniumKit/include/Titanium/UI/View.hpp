@@ -148,6 +148,13 @@ namespace Titanium
 			*/
 			virtual void add(const JSObject&) TITANIUM_NOEXCEPT;
 
+			/*!
+			  @method
+			  @abstract get_children
+			  @discussion Returns array of this view's child views
+			*/
+			virtual std::vector<std::shared_ptr<Titanium::UI::View>> get_children() const TITANIUM_NOEXCEPT;
+
 			View(const JSContext&, const std::string& apiName = "Titanium.UI.View") TITANIUM_NOEXCEPT;
 
 			virtual ~View() TITANIUM_NOEXCEPT;  //= default;
@@ -286,6 +293,7 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setViewShadowColor);
 			TITANIUM_FUNCTION_DEF(getViewShadowOffset);
 			TITANIUM_FUNCTION_DEF(setViewShadowOffset);
+			TITANIUM_FUNCTION_DEF(getViewById);
 			TITANIUM_FUNCTION_DEF(getVisible);
 			TITANIUM_FUNCTION_DEF(setVisible);
 			TITANIUM_FUNCTION_DEF(getHorizontalWrap);
