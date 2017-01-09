@@ -13,7 +13,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		finish();
 	});
 
-	(utilities.isWindowsDesktop() ? it.skip : it)('responseXML', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it.skip)('responseXML', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();
@@ -52,7 +52,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		finish();
 	});
 
-	(utilities.isWindowsDesktop() ? it.skip : it)('downloadLargeFile', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it.skip)('downloadLargeFile', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();
@@ -71,7 +71,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send();
 	});
 
-	it('TIMOB-23127', function (finish) {
+	it.skip('TIMOB-23127', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();
@@ -101,7 +101,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send();
 	});
 
-	it('TIMOB-19042', function (finish) {
+	it.skip('TIMOB-19042', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();
@@ -121,7 +121,7 @@ describe('Titanium.Network.HTTPClient', function () {
 
 	// https://appcelerator.lighthouseapp.com/projects/32238/tickets/2156-android-invalid-redirect-alert-on-xhr-file-download
 	// https://appcelerator.lighthouseapp.com/projects/32238/tickets/1381-android-buffer-large-xhr-downloads
-	(utilities.isWindowsDesktop() ? it.skip : it)('largeFileWithRedirect', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it.skip)('largeFileWithRedirect', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();
@@ -141,7 +141,7 @@ describe('Titanium.Network.HTTPClient', function () {
 	});
 
 	// https://appcelerator.lighthouseapp.com/projects/32238-titanium-mobile/tickets/1649-android-httpclientsend-with-no-argument-causes-npe
-	it('emptyPOSTSend', function (finish) {
+	it.skip('emptyPOSTSend', function (finish) {
 		this.timeout(3e4);
 		var xhr = Ti.Network.createHTTPClient();
 		xhr.setTimeout(3e4);
@@ -176,7 +176,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send();
 	});
 
-	it('requestHeaderMethods', function (finish) {
+	it.skip('requestHeaderMethods', function (finish) {
 		this.timeout(3e4);
 		var xhr = Ti.Network.createHTTPClient();
 		xhr.setTimeout(3e4);
@@ -211,7 +211,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send();
 	});
 
-	it('sendData', function (finish) {
+	it.skip('sendData', function (finish) {
 		this.timeout(3e4);
 		var xhr = Ti.Network.createHTTPClient();
 		xhr.setTimeout(3e4);
