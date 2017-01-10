@@ -233,14 +233,29 @@ namespace TitaniumWindows
 			return static_cast<std::string>(contentView__.GetProperty("height"));
 		}
 
-		void ScrollView::set_contentWidth(const std::string& width) TITANIUM_NOEXCEPT
+		void ScrollView::set_contentWidth(const std::string& width_) TITANIUM_NOEXCEPT
 		{
+			// "auto" is deprecated, we should use SIZE here
+			std::string width;
+			if (width_ == "auto") {
+				width = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
+			}
+			else {
+				width = width_;
+			}
 			Titanium::UI::ScrollView::set_contentWidth(width);
 			contentView__.SetProperty("width", get_context().CreateString(width));
 		}
 
-		void ScrollView::set_contentHeight(const std::string& height) TITANIUM_NOEXCEPT
+		void ScrollView::set_contentHeight(const std::string& height_) TITANIUM_NOEXCEPT
 		{
+			// "auto" is deprecated, we should use SIZE here
+			std::string height;
+			if (height_ == "auto") {
+				height = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
+			} else {
+				height = height_;
+			}
 			Titanium::UI::ScrollView::set_contentHeight(height);
 			contentView__.SetProperty("height", get_context().CreateString(height));
 		}
