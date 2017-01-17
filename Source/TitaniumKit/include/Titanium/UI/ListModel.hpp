@@ -36,6 +36,11 @@ namespace Titanium
 		{
 		public:
 
+			ListModel(const bool& hasHeader = true) TITANIUM_NOEXCEPT
+			{
+				hasHeader__ = hasHeader;
+			}
+
 			/*!
 			  @method
 			  @abstract searchRowBySelectedIndex
@@ -46,9 +51,9 @@ namespace Titanium
 				ListRowSearchResult result;
 
 				// If this model is filtered, we need to search for the "original" data.
-				// In this case there's only one section with one header
+				// In this case there's only one section
 				if (isSaved()) {
-					const auto filteredIndex = selectedIndex - 1;
+					const auto filteredIndex = selectedIndex - (hasHeader__ ? 1 : 0);
 					if (saved_positions__.size() > filteredIndex) {
 						// Search index from the saved position
 						const auto pos = saved_positions__.at(filteredIndex);
@@ -358,6 +363,7 @@ namespace Titanium
 			std::uint32_t offset__ { 0 };
 			std::vector<std::shared_ptr<T>> saved_sections__;
 			std::vector<std::shared_ptr<T>> sections__;
+			bool hasHeader__;
 
 			// For storing original position for filtered items
 			std::vector<std::tuple<size_t, size_t>> saved_positions__;

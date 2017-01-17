@@ -42,7 +42,7 @@ namespace Titanium
 			minRowHeight__(0),
 			rowHeight__(0),
 			separatorColor__(""),
-			model__(std::make_shared<ListModel<TableViewSection>>())
+			model__(std::make_shared<ListModel<TableViewSection>>(false))
 
 		{
 			TITANIUM_LOG_INFO("TableView ctor");
@@ -147,19 +147,26 @@ namespace Titanium
 			}
 
 			std::vector<std::shared_ptr<TableViewSection>> sections;
+			std::vector<std::tuple<size_t, size_t>> saved_position;
 
 			// Create new section to show the result
 			JSObject param = get_context().CreateObject();
 			CREATE_TITANIUM_UI_INSTANCE(js_section, param, TableViewSection);
 			auto section = js_section.GetPrivate<TableViewSection>();
-			for (const auto save_section : model__->get_saved_sections()) {
-				for (const auto row : save_section->get_rows()) {
+			const auto saved_sections = model__->get_saved_sections();
+			for (size_t sectionIndex = 0; sectionIndex < saved_sections.size(); sectionIndex++) {
+				const auto savedItems = saved_sections.at(sectionIndex)->get_rows();
+				for (size_t itemIndex = 0; itemIndex < savedItems.size(); itemIndex++) {
+					const auto row = savedItems.at(itemIndex);
 					if (row->contains(query)) {
+						// Save "original" position so we can search it easily later on
+						saved_position.push_back(std::make_tuple(sectionIndex, itemIndex));
 						section->add(row);
 					}
 				}
 			}
 
+			model__->save_positions(saved_position);
 			sections.push_back(section);
 			set_sections(sections);
 		}
