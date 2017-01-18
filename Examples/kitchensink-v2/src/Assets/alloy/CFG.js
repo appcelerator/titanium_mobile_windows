@@ -1,0 +1,1 @@
+module.exports={"dependencies":{},"styles":{"tintColor":"#c91326"}};
