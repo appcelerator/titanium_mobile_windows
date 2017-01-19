@@ -377,7 +377,7 @@ namespace TitaniumWindows
 		// wait for Ti.Analytics to receive a response
 		auto retry_count = 0;
 		while (static_cast<bool>(js_context__.JSEvaluateScript("!Ti.Analytics._receivedResponse"))) {
-			Sleep(200);
+			std::this_thread::sleep_for(std::chrono::milliseconds(200));
 			retry_count++;
 
 			// wait for a maximum of 3000ms
