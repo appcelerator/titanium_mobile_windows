@@ -19,7 +19,7 @@ var utilities = require('./utilities/utilities');
 // ============================================================================
 // Add the tests here using "require"
 require('./ti.accelerometer.test');
-require('./ti.analytics.test');
+//require('./ti.analytics.test');
 require('./ti.app.test');
 require('./ti.app.properties.test');
 require('./ti.app.windows.backgroundservice.test');
