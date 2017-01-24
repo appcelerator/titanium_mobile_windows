@@ -355,7 +355,7 @@ namespace TitaniumWindows
 						eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(result.sectionIndex));
 						eventArgs.SetProperty("index", ctx.CreateNumber(result.rowIndex));
 
-						const auto section = model__->getSectionAtIndex(result.sectionIndex);
+						const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
 						const auto row = section->get_rows().at(result.rowIndex);
 						eventArgs.SetProperty("row", row->get_object());
 						eventArgs.SetProperty("rowData", row->get_data());
