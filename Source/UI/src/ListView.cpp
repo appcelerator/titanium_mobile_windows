@@ -222,6 +222,27 @@ namespace TitaniumWindows
 			set_sections(model__->get_sections());
 		}
 
+		void ListView::scrollToItem(const uint32_t& sectionIndex, const uint32_t& itemIndex, const std::shared_ptr<Titanium::UI::ListViewAnimationProperties>& animation) TITANIUM_NOEXCEPT
+		{
+			const auto items = listview__->Items;
+			const auto sections = model__->get_sections();
+
+			std::size_t index = 0;
+			for (std::uint32_t i = 0; i < sections.size(); i++) {
+				const auto section = sections.at(i);
+				index += (section->hasHeader() ? 1 : 0);
+				if (i == sectionIndex) {
+					index += itemIndex;
+					break;
+				}
+				index += section->get_itemCount() + (section->hasFooter() ? 1 : 0);
+			}
+
+			if (index < items->Size) {
+				listview__->ScrollIntoView(items->GetAt(index));
+			}
+		}
+
 		void ListView::fireListSectionEvent(const std::string& name, const std::shared_ptr<Titanium::UI::ListSection>& section, const std::uint32_t& itemIndex, const std::uint32_t& itemCount, const std::uint32_t& affectedRows)
 		{
 			const auto sectionIndex = model__->getSectionIndex(section);
