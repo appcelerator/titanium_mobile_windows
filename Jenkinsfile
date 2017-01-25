@@ -5,20 +5,19 @@ stage('Docs') {
 	node('npm && node') {
 		// TODO Checkout just apidoc folder?
 		// checkout scm
-		//echo Arrays.toString(scm.userRemoteConfigs.toArray())
 		// Hack for JENKINS-37658 - see https://support.cloudbees.com/hc/en-us/articles/226122247-How-to-Customize-Checkout-for-Pipeline-Multibranch
 		checkout([
 			$class: 'GitSCM',
 			branches: scm.branches,
 			extensions: scm.extensions + [
 				[$class: 'CleanCheckout'],
-				[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: false, recursiveSubmodules: true, reference: '', trackingSubmodules: false],
+				[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false],
 				[$class: 'CloneOption', depth: 30, honorRefspec: true, noTags: true, reference: '', shallow: true]
 			],
 			userRemoteConfigs: scm.userRemoteConfigs
 		])
 		// Stash our source code/scripts so we don't need to checkout again?
-		stash name: 'sources', includes: '.', excludes: 'apidoc/,test/'
+		stash name: 'sources', includes: '**', excludes: 'apidoc/**,test/**'
 
 		if (isUnix()) {
 			sh 'mkdir -p dist/windows/doc'
