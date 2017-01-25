@@ -11,7 +11,7 @@ stage('Docs') {
 			branches: scm.branches,
 			extensions: scm.extensions + [
 				[$class: 'CleanCheckout'],
-				[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false],
+				[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: false, recursiveSubmodules: true, reference: '', trackingSubmodules: false],
 				[$class: 'CloneOption', depth: 30, honorRefspec: true, noTags: true, reference: '', shallow: true]
 			],
 			userRemoteConfigs: scm.userRemoteConfigs
