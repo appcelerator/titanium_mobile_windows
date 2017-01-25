@@ -88,7 +88,7 @@ function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
 
 				githash = stdout.trim(); // drop leading 'commit ', just take 7-character sha
 				return next();
-			}
+			});
 		},
 		function updateTiModule(next) {
 			fs.readFile(tiModuleCPP, function (err, data) {
