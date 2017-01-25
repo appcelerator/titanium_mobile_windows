@@ -443,7 +443,7 @@ function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 		function (next) {
 			// If this is already installed we don't re-install, thankfully
 			console.log("Installing SDK from " + branch + " branch");
-			installSDK(next);
+			installSDK(branch, next);
 		},
 		function (next) {
 			getSDKInstallDir(function (err, installPath) {
