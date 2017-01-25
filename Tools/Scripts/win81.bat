@@ -17,7 +17,7 @@ IF %BUILDLEVEL% NEQ 0 (
 )
 
 echo Running Tests on Windows 8.1 Phone Emulator
-call node test.js -p Windows8_1.Phone
+call node test.js -p Windows8_1.Phone -b %2
 SET TESTLEVEL=%ERRORLEVEL%
 
 echo Copying JUnit report
@@ -32,7 +32,7 @@ IF %TESTLEVEL% NEQ 0 (
 )
 
 echo Running Tests on Windows 8.1 Desktop
-call node test.js -s 8.1 -T ws-local -p Windows8_1.Store
+call node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b %2
 SET TESTLEVEL=%ERRORLEVEL%
 
 rmdir node_modules /Q /S

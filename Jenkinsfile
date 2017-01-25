@@ -49,12 +49,16 @@ stage('Docs') {
 }
 
 stage ('Build') {
+  def targetBranch = 'master'
+  if (!env.BRANCH_NAME.startsWith('PR-')) {
+    targetBranch = env.BRANCH_NAME
+  }
 	parallel(
 		'Windows 8.1': {
 			// Windows 8.1 SDK build
 			node('msbuild-12 && vs2013 && hyper-v && windows-sdk-8.1 && cmake && npm && node && jsc') {
 				unstash 'sources'
-				bat "Tools\\\\Scripts\\\\win81.bat ${gitCommit}"
+				bat "Tools\\\\Scripts\\\\win81.bat ${gitCommit} ${targetBranch}"
 				archiveArtifacts artifacts: 'dist/**/*'
 				junit 'dist/junit_report*.xml'
 			}
@@ -63,7 +67,7 @@ stage ('Build') {
 			// Windows 10 SDK build
 			node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
 				unstash 'sources'
-				bat "Tools\\\\Scripts\\\\win10.bat ${gitCommit}"
+				bat "Tools\\\\Scripts\\\\win10.bat ${gitCommit} ${targetBranch}"
 				archiveArtifacts artifacts: 'dist/**/*'
 				junit 'dist/junit_report*.xml'
 			}
