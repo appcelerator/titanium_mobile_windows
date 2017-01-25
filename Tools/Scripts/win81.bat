@@ -9,7 +9,7 @@ call node setup.js --no-color --no-progress-bars
 cd build
 call npm install .
 echo Building for Windows 8.1
-call node build.js -s 8.1 -m 12.0 -o WindowsStore-x86 -o WindowsPhone-x86 -o WindowsPhone-ARM
+call node build.js -s 8.1 -m 12.0 -o WindowsStore-x86 -o WindowsPhone-x86 -o WindowsPhone-ARM --sha %1
 SET BUILDLEVEL=%ERRORLEVEL%
 IF %BUILDLEVEL% NEQ 0 (
 	rmdir node_modules /Q /S

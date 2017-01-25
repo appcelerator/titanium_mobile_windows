@@ -1,5 +1,7 @@
 #!groovy​
 
+def gitCommit = ''
+
 // Generate docs on generic node
 stage('Docs') {
 	node('npm && node') {
@@ -16,6 +18,8 @@ stage('Docs') {
 			],
 			userRemoteConfigs: scm.userRemoteConfigs
 		])
+		// FIXME: Workaround for missing env.GIT_COMMIT: http://stackoverflow.com/questions/36304208/jenkins-workflow-checkout-accessing-branch-name-and-git-commit
+		gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 		// Stash our source code/scripts so we don't need to checkout again?
 		stash name: 'sources', includes: '**', excludes: 'apidoc/**,test/**'
 
@@ -50,7 +54,7 @@ stage ('Build') {
 			// Windows 8.1 SDK build
 			node('msbuild-12 && vs2013 && hyper-v && windows-sdk-8.1 && cmake && npm && node && jsc') {
 				unstash 'sources'
-				bat 'Tools\\\\Scripts\\\\win81.bat'
+				bat "Tools\\\\Scripts\\\\win81.bat ${gitCommit}"
 				archiveArtifacts artifacts: 'dist/**/*'
 				junit 'dist/junit_report*.xml'
 			}
@@ -59,10 +63,16 @@ stage ('Build') {
 			// Windows 10 SDK build
 			node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
 				unstash 'sources'
-				bat 'Tools\\\\Scripts\\\\win10.bat'
+				bat "Tools\\\\Scripts\\\\win10.bat ${gitCommit}"
 				archiveArtifacts artifacts: 'dist/**/*'
 				junit 'dist/junit_report*.xml'
 			}
 		}
 	)
+}
+
+// If not a PR, trigger titanium_mobile to build
+if (!env.BRANCH_NAME.startsWith('PR-')) {
+	// Trigger build of titaium_mobile in our pipeline multibranch group!
+	build job: "appcelerator/titanium_mobile/${env.BRANCH_NAME}", wait: false
 }
