@@ -165,7 +165,7 @@ describe('Titanium.App.Properties', function () {
 		finish();
 	});
 
-	it('change events', function (finish) {
+	it.skip('change events', function (finish) {
 		this.timeout(5000);
 		var eventCount = 0;
 		Ti.App.Properties.addEventListener('change', function (properties) {
