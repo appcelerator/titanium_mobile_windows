@@ -5,6 +5,7 @@ stage('Docs') {
 	node('npm && node') {
 		// TODO Checkout just apidoc folder?
 		// checkout scm
+		echo scm.userRemoteConfigs
 		// Hack for JENKINS-37658 - see https://support.cloudbees.com/hc/en-us/articles/226122247-How-to-Customize-Checkout-for-Pipeline-Multibranch
 		checkout([
 			$class: 'GitSCM',
