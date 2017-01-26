@@ -72,13 +72,15 @@ namespace TitaniumWindows
 									}
 								}
 							} catch(Platform::Exception^ e) {
-								HAL::detail::ThrowRuntimeError("TCP::connect", "Titanium::Network::Socket::TCP: Could not connect");
+								error("could not connect");
+								TITANIUM_LOG_ERROR("TCP::connect: Titanium::Network::Socket::TCP: Could not connect");
 							}
 						}
 					);
 				} else if (state__ == Titanium::Network::Socket::State::Connected ||
 						   state__ == Titanium::Network::Socket::State::Listening) {
-					HAL::detail::ThrowRuntimeError("TCP::accept", "Titanium::Network::Socket::TCP: Socket is already connected or listening");
+					error("socket is already listening or connected");
+					TITANIUM_LOG_ERROR("TCP::accept: Titanium::Network::Socket::TCP: Socket is already connected or listening");
 				}
 			}
 
@@ -87,20 +89,8 @@ namespace TitaniumWindows
 				if (state__  == Titanium::Network::Socket::State::Listening ||
 					state__ == Titanium::Network::Socket::State::Connected) {
 					state__ = Titanium::Network::Socket::State::Error;
-
-					if (error__.IsObject()) {
-						auto error_obj = static_cast<JSObject>(error__);
-						if (error_obj.IsFunction()) {
-							const auto ctx = get_context();
-							auto args = get_context().CreateObject();
-							args.SetProperty("code", ctx.CreateNumber(-1));
-							args.SetProperty("error", ctx.CreateString("socket is already listening or connected"));
-							args.SetProperty("socket", get_object());
-							args.SetProperty("success", ctx.CreateBoolean(false));
-							error_obj({ args }, get_object());
-						}
-					}
-					HAL::detail::ThrowRuntimeError("TCP::listen", "Titanium::Network::Socket::TCP: Socket is already listening or connected");
+					error("socket is already listening or connected");
+					TITANIUM_LOG_ERROR("TCP::listen: Titanium::Network::Socket::TCP: Socket is already connected or listening");
 
 				} else {
 					using Windows::Networking::Sockets::StreamSocketListenerConnectionReceivedEventArgs;
@@ -128,7 +118,8 @@ namespace TitaniumWindows
 								task.get();
 								state__ = Titanium::Network::Socket::State::Listening;
 							} catch (Platform::Exception^ exception) {
-								HAL::detail::ThrowRuntimeError("TCP::listen", "Titanium::Network::Socket::TCP: Could not bind to port " + std::to_string(port__));
+								error("could not bind to port");
+								TITANIUM_LOG_ERROR("TCP::listen: Titanium::Network::Socket::TCP: Could not bind to port " + std::to_string(port__));
 							}
 						}
 					);
@@ -138,7 +129,8 @@ namespace TitaniumWindows
 			void TCP::accept(const Titanium::Network::Socket::AcceptDict& options) TITANIUM_NOEXCEPT
 			{
 				if (state__ != Titanium::Network::Socket::State::Listening) {
-					HAL::detail::ThrowRuntimeError("TCP::accept", "Titanium::Network::Socket::TCP: Socket is not in listening state");
+					error("socket is not in listening state");
+					TITANIUM_LOG_ERROR("TCP::accept: Titanium::Network::Socket::TCP: Socket is not in listening state");
 					return;
 				}
 				if (!has_accept__) {
@@ -179,7 +171,8 @@ namespace TitaniumWindows
 					state__ == Titanium::Network::Socket::State::Listening) {
 					delete socket__;
 				} else {
-					HAL::detail::ThrowRuntimeError("TCP::close", "Titanium::Network::Socket::TCP: Socket is not in connected or listening state");
+					error("socket is not in connected or listening state");
+					TITANIUM_LOG_ERROR("TCP::close: Titanium::Network::Socket::TCP: Socket is not in connected or listening state");
 				}
 			}
 
@@ -194,7 +187,9 @@ namespace TitaniumWindows
 					[this, &evt, offset, length, &data, reader](unsigned int size) {
 						if (offset + length < size) {
 							concurrency::cancel_current_task();
-							HAL::detail::ThrowRuntimeError("TCP::read", "Titanium::Network::Socket::TCP: Read input greater than buffer");
+							error("read input greater than buffer");
+							TITANIUM_LOG_ERROR("TCP::read: Titanium::Network::Socket::TCP: Read input greater than buffer");
+							return;
 						}
 						if (offset > 0) {
 							reader->ReadBuffer(offset);
@@ -238,7 +233,8 @@ namespace TitaniumWindows
 						try {
 							count = task.get();
 						} catch (Platform::Exception^ e) {
-							HAL::detail::ThrowRuntimeError("TCP::write", "Titanium::Network::Socket::TCP: Could not send data");
+							error("could not send data");
+							TITANIUM_LOG_ERROR("TCP::write: Titanium::Network::Socket::TCP: Could not send data");
 						}
 						evt.set();
 					}, concurrency::task_continuation_context::use_arbitrary()
@@ -258,6 +254,22 @@ namespace TitaniumWindows
 						callback(error, count);
 					});
 				}, concurrency::task_continuation_context::use_arbitrary());
+			}
+
+			void TCP::error(const std::string& message)
+			{
+				if (error__.IsObject()) {
+					auto error_obj = static_cast<JSObject>(error__);
+					if (error_obj.IsFunction()) {
+						const auto ctx = get_context();
+						auto args = get_context().CreateObject();
+						args.SetProperty("code", ctx.CreateNumber(-1));
+						args.SetProperty("error", ctx.CreateString(message));
+						args.SetProperty("socket", get_object());
+						args.SetProperty("success", ctx.CreateBoolean(false));
+						error_obj({args}, get_object());
+					}
+				}
 			}
 		}
 	}
