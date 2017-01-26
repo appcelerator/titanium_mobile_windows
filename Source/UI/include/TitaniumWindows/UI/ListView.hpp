@@ -61,6 +61,7 @@ namespace TitaniumWindows
 
 			virtual void set_searchText(const std::string& searchText) TITANIUM_NOEXCEPT;
 			virtual void set_sections(const std::vector<std::shared_ptr <Titanium::UI::ListSection>>& sections) TITANIUM_NOEXCEPT override;
+			virtual void set_searchView(const std::shared_ptr<Titanium::UI::SearchBar>&) TITANIUM_NOEXCEPT override;
 
 			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
 			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
@@ -81,6 +82,7 @@ namespace TitaniumWindows
 			void bindCollectionViewSource();
 			void unbindCollectionViewSource();
 
+			Windows::UI::Xaml::Controls::Grid^ parent__;
 			Windows::UI::Xaml::Controls::ListView^ listview__;
 			Windows::UI::Xaml::Data::CollectionViewSource^ collectionViewSource__;
 

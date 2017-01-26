@@ -9,6 +9,8 @@
 #include "TitaniumWindows/UI/TableView.hpp"
 #include "TitaniumWindows/UI/TableViewRow.hpp"
 #include "Titanium/UI/TableViewSection.hpp"
+#include "Titanium/UI/SearchBar.hpp"
+#include "TitaniumWindows/UI/SearchBar.hpp"
 #include <collection.h>
 #include <windows.h>
 #include "TitaniumWindows/UI/View.hpp"
@@ -104,7 +106,7 @@ namespace TitaniumWindows
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::FILL);
 
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(parent__);
+			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(parent__, tableview__);
 		}
 
 		void TableView::JSExportInitialize() 
@@ -220,6 +222,40 @@ namespace TitaniumWindows
 				createTableSectionUIElements();
 			} else {
 				Titanium::UI::TableView::set_sections(sections);
+			}
+		}
+
+		void TableView::set_search(const std::shared_ptr<Titanium::UI::SearchBar>& search) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::TableView::set_search(search);
+
+			parent__->Children->Clear();
+			parent__->RowDefinitions->Clear();
+
+			if (search) {
+				const auto row1 = ref new Windows::UI::Xaml::Controls::RowDefinition();
+				const auto row2 = ref new Windows::UI::Xaml::Controls::RowDefinition();
+
+				row1->Height = GridLengthHelper::Auto;
+				row2->Height = GridLengthHelper::Auto;
+
+				parent__->RowDefinitions->Append(row1);
+				parent__->RowDefinitions->Append(row2);
+
+				const auto searchBar = std::dynamic_pointer_cast<TitaniumWindows::UI::SearchBar>(search);
+				const auto inputBox = searchBar->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
+
+				parent__->Children->Append(inputBox);
+				parent__->SetColumn(inputBox, 0);
+				parent__->SetRow(inputBox, 0);
+
+				parent__->Children->Append(tableview__);
+				parent__->SetColumn(tableview__, 0);
+				parent__->SetRow(tableview__, 1);
+			} else {
+				parent__->Children->Append(tableview__);
+				parent__->SetColumn(tableview__, 0);
+				parent__->SetRow(tableview__, 0);
 			}
 		}
 

@@ -12,6 +12,8 @@
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/UI/SearchBar.hpp"
+#include "TitaniumWindows/UI/SearchBar.hpp"
 
 namespace TitaniumWindows
 {
@@ -42,11 +44,16 @@ namespace TitaniumWindows
 
 			resetListViewDataBinding();
 
+			parent__ = ref new Controls::Grid();
+			parent__->Children->Append(listview__);
+			parent__->SetColumn(listview__, 0);
+			parent__->SetRow(listview__, 0);
+
 			Titanium::UI::ListView::setLayoutDelegate<WindowsViewLayoutDelegate>();
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::FILL);
 
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(listview__);
+			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(parent__, listview__);
 		}
 
 		void ListView::resetListViewDataBinding() 
@@ -160,6 +167,41 @@ namespace TitaniumWindows
 			}
 
 			querySubmitted(query);
+		}
+
+		void ListView::set_searchView(const std::shared_ptr<Titanium::UI::SearchBar>& search) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::ListView::set_searchView(search);
+
+			parent__->Children->Clear();
+			parent__->RowDefinitions->Clear();
+
+			if (search) {
+				const auto row1 = ref new Windows::UI::Xaml::Controls::RowDefinition();
+				const auto row2 = ref new Windows::UI::Xaml::Controls::RowDefinition();
+
+				row1->Height = GridLengthHelper::Auto;
+				row2->Height = GridLengthHelper::Auto;
+
+				parent__->RowDefinitions->Append(row1);
+				parent__->RowDefinitions->Append(row2);
+
+				const auto searchBar = std::dynamic_pointer_cast<TitaniumWindows::UI::SearchBar>(search);
+				const auto inputBox = searchBar->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
+
+				parent__->Children->Append(inputBox);
+				parent__->SetColumn(inputBox, 0);
+				parent__->SetRow(inputBox, 0);
+
+				parent__->Children->Append(listview__);
+				parent__->SetColumn(listview__, 0);
+				parent__->SetRow(listview__, 1);
+			} else {
+				parent__->Children->Append(listview__);
+				parent__->SetColumn(listview__, 0);
+				parent__->SetRow(listview__, 0);
+			}
+
 		}
 
 		void ListView::bindCollectionViewSource() 

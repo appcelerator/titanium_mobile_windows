@@ -82,12 +82,15 @@ namespace Titanium
 		void ListView::set_searchView(const std::shared_ptr<SearchBar>& searchView) TITANIUM_NOEXCEPT
 		{
 			searchView__ = searchView;
-			searchView__->set_querySubmitted([this](const std::string& query) {
-				querySubmitted(query);
-			});
-			searchView__->set_suggestionRequested([this](const std::string& query) {
-				return suggestionRequested(query);
-			});
+
+			if (searchView__) {
+				searchView__->set_querySubmitted([this](const std::string& query) {
+					querySubmitted(query);
+				});
+				searchView__->set_suggestionRequested([this](const std::string& query) {
+					return suggestionRequested(query);
+				});
+			}
 
 		}
 
@@ -352,8 +355,11 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_SETTER(ListView, searchView)
 		{
-			TITANIUM_ASSERT(argument.IsObject());
-			set_searchView(static_cast<JSObject>(argument).GetPrivate<SearchBar>());
+			if (argument.IsObject()) {
+				set_searchView(static_cast<JSObject>(argument).GetPrivate<SearchBar>());
+			} else {
+				set_searchView(nullptr);
+			}
 			return true;
 		}
 
