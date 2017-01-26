@@ -66,7 +66,7 @@ timestamps {
 		parallel(
 			'Windows 8.1': {
 				// Windows 8.1 SDK build
-				node('msbuild-12 && vs2013 && hyper-v && windows-sdk-8.1 && cmake && npm && node && jsc') {
+				node('msbuild-12 && vs2015 && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
 					try {
 						unstash 'sources'
 						bat "Tools\\\\Scripts\\\\win81.bat ${gitCommit} ${targetBranch}"
