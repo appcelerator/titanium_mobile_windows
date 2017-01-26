@@ -66,7 +66,8 @@ timestamps {
 		parallel(
 			'Windows 8.1': {
 				// Windows 8.1 SDK build
-				node('msbuild-12 && vs2015 && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
+				// FIXME Support vs2013 or vs2015 by separating the JSC 8.1/10 builds
+				node('msbuild-12 && vs2013 && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
 					try {
 						unstash 'sources'
 						bat "Tools\\\\Scripts\\\\win81.bat ${gitCommit} ${targetBranch}"
