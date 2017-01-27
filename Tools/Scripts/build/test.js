@@ -37,10 +37,11 @@ var path = require('path'),
  * Installs the latest SDK from master branch remotely, sets it as the default
  * SDK. We'll be hacking it to add our locally built Windows SDK into it.
  *
+ * @param barnch {String} branch name or URL of Titanium SDK to use
  * @param next {Function} callback function
  **/
-function installSDK(next) {
-	var prc = spawn('node', [titanium, 'sdk', 'install', '-b', 'master', '-d']);
+function installSDK(branch, next) {
+	var prc = spawn('node', [titanium, 'sdk', 'install', '-b', branch, '-d']);
 	prc.stdout.on('data', function (data) {
 	   console.log(data.toString().trim());
 	});
@@ -50,7 +51,7 @@ function installSDK(next) {
 
 	prc.on('close', function (code) {
 		if (code != 0) {
-			next("Failed to install master SDK. Exit code: " + code);
+			next("Failed to install SDK. Exit code: " + code);
 		} else {
 			next();
 		}
@@ -428,20 +429,21 @@ function cleanNonGaSDKs(sdkPath, next) {
  *
  * @param sdkVersion {String} '8.1'|'10.0'
  * @param msbuild {String} '12.0'|'14.0' (Visual Studio 2013 or 2015)
+ * @param branch {String} branch or filename/URL of Titanium SDK to use
  * @param target {String} 'wp-emulator'|'ws-local'
  * @param deviceId {String} id of the device to run tests on
  * @param prefix {String} prefix to use for test results to uniquely identify them
  * @param callback {Function} callback function
  */
-function test(sdkVersion, msbuild, target, deviceId, prefix, callback) {
+function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 	var sdkPath,
 		shortSdkVersion = sdkRegex.exec(sdkVersion)[1];
 
 	async.series([
 		function (next) {
 			// If this is already installed we don't re-install, thankfully
-			console.log("Installing SDK from master branch");
-			installSDK(next);
+			console.log("Installing SDK from " + branch + " branch");
+			installSDK(branch, next);
 		},
 		function (next) {
 			getSDKInstallDir(function (err, installPath) {
@@ -521,6 +523,7 @@ if (module.id === ".") {
 			.option('-s, --sdk-version [version]', 'Target a specific Windows SDK version [version]', sdkRegex, WIN_8_1)
 			.option('-T, --target [target]', 'Target a specific deploy target [target]', /^wp\-emulator|ws\-local|wp\-device$/, WP_EMULATOR)
 			.option('-C, --device-id [udid]', 'Target a specific device/emulator')
+			.option('-b, --branch [branch]', 'Specify the Titanium SDK build/branch to use for testing', 'master')
 			.option('-p, --prefix [prefix]', 'Set a prefix to put before testsuite names to uniquely identify them') // we run same suite for Windows 8.1/10 and phone/desktop. Use this to prefix tests so we can identify them uniquely?
 			.parse(process.argv);
 
@@ -530,7 +533,7 @@ if (module.id === ".") {
 			program.msbuild = MSBUILD_14;
 		}
 		// TODO Use default prefix based on SDK version and target?
-		test(program.sdkVersion, program.msbuild, program.target, program.deviceId, program.prefix, function (err, results) {
+		test(program.sdkVersion, program.msbuild, program.branch, program.target, program.deviceId, program.prefix, function (err, results) {
 			if (err) {
 				console.error(err.toString().red);
 				process.exit(1);

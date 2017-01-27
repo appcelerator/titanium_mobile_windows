@@ -80,7 +80,8 @@ namespace TitaniumWindows
 
 #pragma warning(push)
 #pragma warning(disable : 4251)
-			static std::unordered_map<std::string, std::string> CustomFonts__;
+			static std::unordered_map<std::string, std::string> fonts__;
+			static std::vector<std::string> View::fontFiles__;
 #pragma warning(pop)
 
 		};

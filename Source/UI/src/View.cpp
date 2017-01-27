@@ -9,7 +9,12 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/Filesystem.hpp"
+#include "TitaniumWindows/File.hpp"
 #include "Titanium/Blob.hpp"
+
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 
 namespace TitaniumWindows
 {
@@ -17,7 +22,8 @@ namespace TitaniumWindows
 	{
 		using namespace Windows::UI::Xaml;
 
-		std::unordered_map<std::string, std::string> View::CustomFonts__;
+		std::vector<std::string> View::fontFiles__;
+		std::unordered_map<std::string, std::string> View::fonts__;
 
 		View::View(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: Titanium::UI::View(js_context)
@@ -52,51 +58,53 @@ namespace TitaniumWindows
 			JSExport<View>::SetParent(JSExport<Titanium::UI::View>::Class());
 		}
 
-		// FIXME What file formats does windows support for fonts? We need to limit here! Most of what I read says only TTF, but I see some mentions of OpenType
-		static const std::string ti_label_js = R"JS(
-	this.exports = {};
-	this.exports.getFontFilePath = function(fontFamily) {
-		var iconsFolder = Ti.Filesystem.getFile(Ti.Filesystem.applicationDirectory, 'fonts');
-		var files = iconsFolder.getDirectoryListing();
-		for (var i = 0; i < files.length; i++) {
-			var name = files[i];
-			if (name.toLowerCase() == fontFamily.toLowerCase() || name.toLowerCase().indexOf(fontFamily.toLowerCase() + '.') == 0) {
-				return name;
-			}
-		}
-		return null;
-	};
-	)JS";
-
 		Windows::UI::Xaml::Media::FontFamily^ View::LookupFont(const JSContext& js_context, const std::string& family)
 		{
 			auto path = family;
+
 			// if we have a cached value, use it
-			if (CustomFonts__.count(family) > 0) {
-				path = CustomFonts__.at(family);
-			}
-			else {
-				// new font
-				// Look up to see if this is a custom font, or builtin
-				auto export_object = js_context.CreateObject();
-				js_context.JSEvaluateScript(ti_label_js, export_object);
-				TITANIUM_ASSERT(export_object.HasProperty("exports"));
-				auto exports = export_object.GetProperty("exports");
-				TITANIUM_ASSERT(exports.IsObject());
-				auto exports_object = static_cast<JSObject>(exports);
-				auto eval_result = exports_object.GetProperty("getFontFilePath");
-				TITANIUM_ASSERT(eval_result.IsObject());
-				auto func = static_cast<JSObject>(eval_result);
-				TITANIUM_ASSERT(func.IsFunction());
-				auto result = func(family, js_context.get_global_object());
-				if (result.IsNull()) { // we have no custom font by this name, assume it's a built-in font
-					path = family;
-				} else {
-					TITANIUM_ASSERT(result.IsString()); // custom font file
-					const auto file_name = static_cast<std::string>(result);
-					path = "/fonts/" + file_name + "#" + family;
+			if (fonts__.count(family) > 0) {
+				path = fonts__.at(family);
+			} else {
+
+				// load fonts
+				if (fontFiles__.size() == 0) {
+					const auto titanium_js = js_context.get_global_object().GetProperty("Titanium");
+					TITANIUM_ASSERT(titanium_js.IsObject());
+					const auto titanium_obj = static_cast<JSObject>(titanium_js);
+
+					const auto filesystem_js = titanium_obj.GetProperty("Filesystem");
+					TITANIUM_ASSERT(filesystem_js.IsObject());
+					const auto filesystem_obj = static_cast<JSObject>(filesystem_js);
+					const auto filesystem = filesystem_obj.GetPrivate<Titanium::FilesystemModule>();
+
+					const auto fontsDirectory = filesystem->getFile(js_context, filesystem->applicationDirectory() + "/fonts");
+					fontFiles__ = fontsDirectory->getDirectoryListing();
+
+					// filter fonts, currently only True Type Fonts
+					fontFiles__.erase(std::remove_if(fontFiles__.begin(), fontFiles__.end(), [](std::string file) {
+						return !boost::ends_with(file, ".ttf");
+					}), fontFiles__.end());
 				}
-				CustomFonts__.emplace(family, path);
+
+				// font file and family specified
+				if (boost::contains(family, "#")) {
+					path = "/fonts/" + family;
+
+				// font name same as font file
+				} else {
+					auto family_lower = family;
+					boost::to_lower(family_lower);
+					for (auto file : fontFiles__) {
+						boost::to_lower(file);
+						if (boost::starts_with(file, family_lower)) {
+							path = "/fonts/" + file + "#" + family;
+							break;
+						}
+					}
+				}
+
+				fonts__.emplace(family, path);
 			}
 			
 			return ref new Windows::UI::Xaml::Media::FontFamily(Utility::ConvertUTF8String(path));

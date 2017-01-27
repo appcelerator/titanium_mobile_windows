@@ -9,7 +9,7 @@ call node setup.js --no-color --no-progress-bars
 cd build
 call npm install .
 echo Building for Windows 8.1
-call node build.js -s 8.1 -m 12.0 -o WindowsStore-x86 -o WindowsPhone-x86 -o WindowsPhone-ARM
+call node build.js -s 8.1 -m 12.0 -o WindowsStore-x86 -o WindowsPhone-x86 -o WindowsPhone-ARM --sha %1
 SET BUILDLEVEL=%ERRORLEVEL%
 IF %BUILDLEVEL% NEQ 0 (
 	rmdir node_modules /Q /S
@@ -17,7 +17,7 @@ IF %BUILDLEVEL% NEQ 0 (
 )
 
 echo Running Tests on Windows 8.1 Phone Emulator
-call node test.js -p Windows8_1.Phone
+call node test.js -p Windows8_1.Phone -b %2
 SET TESTLEVEL=%ERRORLEVEL%
 
 echo Copying JUnit report
@@ -32,7 +32,7 @@ IF %TESTLEVEL% NEQ 0 (
 )
 
 echo Running Tests on Windows 8.1 Desktop
-call node test.js -s 8.1 -T ws-local -p Windows8_1.Store
+call node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b %2
 SET TESTLEVEL=%ERRORLEVEL%
 
 rmdir node_modules /Q /S

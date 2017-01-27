@@ -60,6 +60,8 @@ namespace TitaniumWindows
 				virtual void writeAsync(const std::shared_ptr<Titanium::Buffer>& buffer, const std::uint32_t& offset, const std::uint32_t& length, const std::function<void(const Titanium::ErrorResponse&, const std::int32_t&)>& callback) override;
 
 				void accepted(StreamSocket^ socket);
+
+				void error(const std::string& message);
 			private:
 #pragma warning(push)
 #pragma warning(disable : 4251)

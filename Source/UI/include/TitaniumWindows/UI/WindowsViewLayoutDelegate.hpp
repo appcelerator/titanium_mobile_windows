@@ -527,9 +527,11 @@ namespace TitaniumWindows
 			virtual void updateDisabledBackground();
 			Windows::UI::Xaml::Media::Brush^ getBackground();
 
+
 			virtual std::shared_ptr<Titanium::UI::View> rescueGetView(const JSObject& view) TITANIUM_NOEXCEPT override;
-			virtual void fireSimplePositionEvent(const std::string& event_name, Windows::UI::Xaml::FrameworkElement^ sender, Windows::Foundation::Point position);
+			virtual void fireSimplePositionEvent(const std::string& event_name, Windows::Foundation::Point position);
 			virtual void firePostLayoutEvent();
+			virtual std::shared_ptr<Titanium::UI::View> getHierarchyEventSource(Windows::Foundation::Point position) const TITANIUM_NOEXCEPT;
 
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromPath(const std::string& path);
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBitmapImage(Windows::UI::Xaml::Media::Imaging::BitmapImage^ image);

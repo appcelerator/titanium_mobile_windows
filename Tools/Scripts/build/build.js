@@ -71,33 +71,43 @@ function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, ms
 }
 
 /**
+ * @param githash SHA1 to use for Ti.buildHash, computed if not supplied
  * @param tiModuleCPP the file to update
  * @param callback what to invoke when done/errored
  */
-function updateBuildValuesInTitaniumModule(tiModuleCPP, callback) {
-	exec('git rev-parse --short --no-color HEAD', {cwd: path.dirname(tiModuleCPP)}, function (error, stdout, stderr) {
-		if (error) {
-			return callback('Failed to get Git HASH: ' + error);
-		}
-
-		var githash = stdout.trim(); // drop leading 'commit ', just take 7-character sha
-
-		fs.readFile(tiModuleCPP, function (err, data) {
-			var contents,
-				timestamp,
-				date;
-			if (err) {
-				return callback('Failed to get contents of TiModule.cpp to replace hard-coded values: ' + error);
+function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
+	async.series([
+		function getGitHash(next) {
+			if (githash) {
+				return next();
 			}
-			date = new Date();
-			timestamp = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+			exec('git rev-parse --short --no-color HEAD', {cwd: path.dirname(tiModuleCPP)}, function (error, stdout, stderr) {
+				if (error) {
+					return next('Failed to get Git HASH: ' + error);
+				}
 
-			contents = data.toString();
-			// FIXME How can we set the version? It doesn't get set until later _after_ we've built! We'll need to pull it in from some file!
-			contents = contents.replace(/__TITANIUM_BUILD_DATE__/, timestamp).replace(/__TITANIUM_BUILD_HASH__/, githash);
-			fs.writeFile(tiModuleCPP, contents, callback);
-		});
-	});
+				githash = stdout.trim(); // drop leading 'commit ', just take 7-character sha
+				return next();
+			});
+		},
+		function updateTiModule(next) {
+			fs.readFile(tiModuleCPP, function (err, data) {
+				var contents,
+					timestamp,
+					date;
+				if (err) {
+					return callback('Failed to get contents of TiModule.cpp to replace hard-coded values: ' + error);
+				}
+				date = new Date();
+				timestamp = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+
+				contents = data.toString();
+				// FIXME How can we set the version? It doesn't get set until later _after_ we've built! We'll need to pull it in from some file!
+				contents = contents.replace(/__TITANIUM_BUILD_DATE__/, timestamp).replace(/__TITANIUM_BUILD_HASH__/, githash);
+				fs.writeFile(tiModuleCPP, contents, callback);
+			});
+		}
+	], callback);
 }
 
 /**
@@ -306,6 +316,7 @@ function copyFile(from, to) {
 
 /**
  * @param sdkVersion {String} '8.1' || '10.0'
+ * @param sha {String} sha1 to use for Ti.buildHash, computed if not provided
  * @param msBuildVersion {String} '12.0' || '14.0'
  * @param buildType {String} 'Release' || 'Debug'
  * @param targets {Array[String]}
@@ -314,14 +325,14 @@ function copyFile(from, to) {
  * @param options.quiet {Boolean} Log stdout of processes?
  * @param finished {Function} callback
  **/
-function build(sdkVersion, msBuildVersion, buildType, targets, options, finished) {
+function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, finished) {
 	var overallTimer = process.hrtime(),
 		timer = process.hrtime(),
 		options = options || {};
 
 	async.series([
 		function updateBuildValues(next) {
-			updateBuildValuesInTitaniumModule(path.join(rootDir, 'Source', 'Ti', 'src', 'TiModule.cpp'), next);
+			updateBuildValuesInTitaniumModule(sha, path.join(rootDir, 'Source', 'Ti', 'src', 'TiModule.cpp'), next);
 		},
 		function buildAndPackageAll(next) {
 			(options.parallel ? async.each : async.eachSeries)(targets, function (configuration, next) {
@@ -405,6 +416,7 @@ if (module.id === ".") {
 			.option('-p, --parallel', 'Run builds in parallel')
 			.option('-m, --msbuild [version]', 'Use a specific version of MSBuild', /^(12\.0|14\.0)$/, MSBUILD_12)
 			.option('-s, --sdk-version [version]', 'Target a specific Windows SDK version [version]', /^(8\.1|10\.0)$/, WIN_8_1)
+			.option('--sha [sha1]', 'sha1 to use for Ti.buildHash, computed if not provided')
 			.parse(process.argv);
 
 		// When doing win 10, it has to use msbuild 14
@@ -413,7 +425,7 @@ if (module.id === ".") {
 			program.msbuild = MSBUILD_14;
 		}
 
-		build(program.sdkVersion, program.msbuild, program.configuration, (program.only && program.only.length > 0) ? program.only : arches,
+		build(program.sdkVersion, program.sha, program.msbuild, program.configuration, (program.only && program.only.length > 0) ? program.only : arches,
 			{
 				parallel: program.parallel,
 				quiet: program.quiet

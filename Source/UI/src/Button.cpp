@@ -43,7 +43,7 @@ namespace TitaniumWindows
 			border__ = ref new Controls::Border();
 			border__->Child = button__;
 
-			getViewLayoutDelegate<WindowsButtonLayoutDelegate>()->setComponent(border__, nullptr, border__);
+			getViewLayoutDelegate<WindowsButtonLayoutDelegate>()->setComponent(border__, button__, border__);
 		}
 
 		void Button::JSExportInitialize()

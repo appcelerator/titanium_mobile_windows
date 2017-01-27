@@ -11,6 +11,14 @@
 #include <unordered_map>
 #include <sstream>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/join.hpp>
+
+#define JOIN_ARGUMENT_STRINGS(OUT,START) \
+  std::stringstream OUT; \
+  for (std::size_t i = START; i < arguments.size(); i++) { \
+    OUT << static_cast<std::string>(arguments.at(i)); \
+    if (i < arguments.size() - 1) OUT << " "; \
+  }
 
 namespace Titanium
 {
@@ -147,46 +155,46 @@ namespace Titanium
 
 	TITANIUM_FUNCTION(API, info)
 	{
-		ENSURE_STRING_AT_INDEX(message, 0);
+		JOIN_ARGUMENT_STRINGS(message, 0);
 
 		const auto js_context = this_object.get_context();
-		GetStaticObject(js_context).GetPrivate<API>()->info(message);
+		GetStaticObject(js_context).GetPrivate<API>()->info(message.str());
 		return js_context.CreateUndefined();
 	}
 
 	TITANIUM_FUNCTION(API, warn)
 	{
-		ENSURE_STRING_AT_INDEX(message, 0);
+		JOIN_ARGUMENT_STRINGS(message, 0);
 
 		const auto js_context = this_object.get_context();
-		GetStaticObject(js_context).GetPrivate<API>()->warn(message);
+		GetStaticObject(js_context).GetPrivate<API>()->warn(message.str());
 		return js_context.CreateUndefined();
 	}
 
 	TITANIUM_FUNCTION(API, error)
 	{
-		ENSURE_STRING_AT_INDEX(message, 0);
+		JOIN_ARGUMENT_STRINGS(message, 0);
 
 		const auto js_context = this_object.get_context();
-		GetStaticObject(js_context).GetPrivate<API>()->error(message);
+		GetStaticObject(js_context).GetPrivate<API>()->error(message.str());
 		return js_context.CreateUndefined();
 	}
 
 	TITANIUM_FUNCTION(API, debug)
 	{
-		ENSURE_STRING_AT_INDEX(message, 0);
+		JOIN_ARGUMENT_STRINGS(message, 0);
 
 		const auto js_context = this_object.get_context();
-		GetStaticObject(js_context).GetPrivate<API>()->debug(message);
+		GetStaticObject(js_context).GetPrivate<API>()->debug(message.str());
 		return js_context.CreateUndefined();
 	}
 
 	TITANIUM_FUNCTION(API, trace)
 	{
-		ENSURE_STRING_AT_INDEX(message, 0);
+		JOIN_ARGUMENT_STRINGS(message, 0);
 
 		const auto js_context = this_object.get_context();
-		GetStaticObject(js_context).GetPrivate<API>()->trace(message);
+		GetStaticObject(js_context).GetPrivate<API>()->trace(message.str());
 		return js_context.CreateUndefined();
 	}
 
@@ -199,8 +207,8 @@ namespace Titanium
 		} else if (arguments.size() == 2) {
 			ENSURE_ARGUMENT_INDEX(1);
 			ENSURE_STRING_AT_INDEX(level, 0);
-			ENSURE_STRING_AT_INDEX(message, 1);
-			GetStaticObject(js_context).GetPrivate<API>()->log(level, message);
+			JOIN_ARGUMENT_STRINGS(message, 1);
+			GetStaticObject(js_context).GetPrivate<API>()->log(level, message.str());
 		}
 
 		return js_context.CreateUndefined();
