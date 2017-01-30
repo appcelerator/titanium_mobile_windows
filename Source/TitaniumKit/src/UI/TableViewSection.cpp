@@ -46,11 +46,7 @@ namespace Titanium
 			JSObject TableViewRow_obj = static_cast<JSObject>(TableViewRow_property);
 			auto js_row = TableViewRow_obj.CallAsConstructor();
 
-			const auto props = row->getCtorProperties().GetProperties();
-			for (const auto prop : props) {
-				const auto prop_name = prop.first;
-				js_row.SetProperty(prop.first, prop.second);
-			}
+			Module::applyProperties(row->getCtorProperties(), js_row);
 
 			return js_row.GetPrivate<TableViewRow>();
 		}
