@@ -104,6 +104,15 @@ namespace Titanium
 
 			bool contains(const std::string& query);
 
+			bool get_added()
+			{
+				return added__;
+			}
+
+			void set_added(const bool& added) 
+			{
+				added__ = added;
+			}
 			protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -113,6 +122,8 @@ namespace Titanium
 				bool hasChild__;
 				std::string title__;
 				JSObject data__;
+				// This indicates this row is already added to section.
+				bool added__;
 #pragma warning(pop)
 		};
 	} // namespace UI

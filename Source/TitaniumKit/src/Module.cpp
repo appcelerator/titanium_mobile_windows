@@ -17,6 +17,7 @@ namespace Titanium
 	Module::Module(const JSContext& js_context, const std::string& apiName) TITANIUM_NOEXCEPT
 	    : JSExportObject(js_context)
 	    , apiName__(apiName)
+	    , ctorProperties__(js_context.CreateObject())
 	{
 	}
 
@@ -125,6 +126,7 @@ namespace Titanium
 
 		const auto module = this_object.GetPrivate<Titanium::Module>();
 		if (module) {
+			module->ctorProperties__ = props;
 			module->propertiesSet__ = true;
 			module->afterPropertiesSet();
 		}

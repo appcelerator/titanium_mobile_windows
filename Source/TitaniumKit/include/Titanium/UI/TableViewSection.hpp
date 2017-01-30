@@ -130,6 +130,9 @@ namespace Titanium
 
 			static void JSExportInitialize();
 
+			// Check if given row is already added, create new row then.
+			static std::shared_ptr<TableViewRow> MakeSafeRowCopy(const JSContext&, const std::shared_ptr<TableViewRow>& row) TITANIUM_NOEXCEPT;
+
 			TITANIUM_PROPERTY_DEF(footerTitle);
 			TITANIUM_PROPERTY_DEF(footerView);
 			TITANIUM_PROPERTY_DEF(headerTitle);
