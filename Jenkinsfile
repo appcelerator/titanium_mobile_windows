@@ -70,7 +70,8 @@ timestamps {
 				// FIXME Support vs2013 or vs2015 by separating the JSC 8.1/10 builds
 				node('msbuild-12 && vs2013 && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
 					try {
-						unstash 'sources'
+						unstash 'sources' // for build
+						unstash 'NMocha' // for tests
 						bat 'mkdir dist\\windows'
 						dir('Tools/Scripts') {
 							bat 'npm install .'
@@ -92,7 +93,6 @@ timestamps {
 							archiveArtifacts artifacts: '../../../dist/**/*'
 
 							// TODO Parallelize the tests!
-							unstash 'NMocha'
 							timeout(10) {
 								echo 'Running Tests on Windows 8.1 Phone Emulator'
 								bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
@@ -119,7 +119,8 @@ timestamps {
 				// Windows 10 SDK build
 				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
 					try {
-						unstash 'sources'
+						unstash 'sources' // for build
+						unstash 'NMocha' // for tests
 						bat 'mkdir dist\\windows'
 
 						dir('Tools/Scripts') {
@@ -141,7 +142,6 @@ timestamps {
 							archiveArtifacts artifacts: '../../../dist/**/*'
 
 							// TODO Parallelize the tests!
-							unstash 'NMocha'
 							timeout(10) {
 								echo 'Running Tests on Windows 10 Phone Emulator'
 								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
