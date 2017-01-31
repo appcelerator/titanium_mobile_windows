@@ -10,7 +10,8 @@ var should = require('./should'),
 if (utilities.isWindows()) {
 	describe('Titanium.App.Windows.BackgroundService', function () {
 
-		it('API', function (finish) {
+		// Skip on Windows 8.1
+		(Ti.Platform.version.indexOf('8.1' == 0) ? it.skip : it)('API', function (finish) {
 			should(Ti.App.Windows).be.an.Object;
 			should(Ti.App.Windows.BackgroundService).be.an.Object;
 			should(Ti.App.Windows.BackgroundService.registerTimerTask).be.a.Function;
@@ -18,7 +19,8 @@ if (utilities.isWindows()) {
 			finish();
 		});
 
-		it('registerTimerTask', function (finish) {
+		// Skip on Windows 8.1
+		(Ti.Platform.version.indexOf('8.1' == 0) ? it.skip : it)('registerTimerTask', function (finish) {
 			var task = Ti.App.Windows.BackgroundService.registerTimerTask('TitaniumWindows_Ti.BackgroundServiceTask', 15, true);
 			should(task).be.an.Object;
 			should(task.unregister).be.a.Function;
@@ -27,7 +29,8 @@ if (utilities.isWindows()) {
 			finish();
 		});
 
-		it('registerPushNotificationTask', function (finish) {
+		// Skip on Windows 8.1
+		(Ti.Platform.version.indexOf('8.1' == 0) ? it.skip : it)('registerPushNotificationTask', function (finish) {
 			var task = Ti.App.Windows.BackgroundService.registerPushNotificationTask('TitaniumWindows_Ti.BackgroundServiceTask');
 			should(task).be.an.Object;
 			should(task.unregister).be.a.Function;
@@ -36,7 +39,8 @@ if (utilities.isWindows()) {
 			finish();
 		});
 
-		it('unregisterTask(task)', function (finish) {
+		// Skip on Windows 8.1
+		(Ti.Platform.version.indexOf('8.1' == 0) ? it.skip : it)('unregisterTask(task)', function (finish) {
 			var task = Ti.App.Windows.BackgroundService.registerTimerTask('TitaniumWindows_Ti.BackgroundServiceTask', 15, true);
 			should(task).be.an.Object;
 			should(task.unregister).be.a.Function;
@@ -45,7 +49,8 @@ if (utilities.isWindows()) {
 			finish();
 		});
 
-		it('unregisterTask(task id)', function (finish) {
+		// Skip on Windows 8.1
+		(Ti.Platform.version.indexOf('8.1' == 0) ? it.skip : it)('unregisterTask(task id)', function (finish) {
 			var task = Ti.App.Windows.BackgroundService.registerTimerTask('TitaniumWindows_Ti.BackgroundServiceTask', 15, true);
 			should(task).be.an.Object;
 			should(task.unregister).be.a.Function;
@@ -54,7 +59,8 @@ if (utilities.isWindows()) {
 			finish();
 		});
 
-		it('unregisterAllTasks', function (finish) {
+		// Skip on Windows 8.1
+		(Ti.Platform.version.indexOf('8.1' == 0) ? it.skip : it)('unregisterAllTasks', function (finish) {
 			var task = Ti.App.Windows.BackgroundService.registerTimerTask('TitaniumWindows_Ti.BackgroundServiceTask', 15, true);
 			should(task).be.an.Object;
 			should(task.unregister).be.a.Function;
