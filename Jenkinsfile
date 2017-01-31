@@ -25,7 +25,7 @@ timestamps {
 				gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 				// Stash our source code/scripts so we don't need to checkout again?
 				stash name: 'sources', includes: '**', excludes: 'apidoc/**,test/**,Examples/**'
-				//stash name: 'NMocha', includes: 'Examples/NMocha/**/*'
+				stash name: 'NMocha', includes: 'Examples/NMocha/**/*'
 
 				if (isUnix()) {
 					sh 'mkdir -p dist/windows/doc'
@@ -92,6 +92,7 @@ timestamps {
 							archiveArtifacts artifacts: '../../../dist/**/*'
 
 							// TODO Parallelize the tests!
+							unstash 'NMocha'
 							timeout(10) {
 								echo 'Running Tests on Windows 8.1 Phone Emulator'
 								bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
@@ -140,6 +141,7 @@ timestamps {
 							archiveArtifacts artifacts: '../../../dist/**/*'
 
 							// TODO Parallelize the tests!
+							unstash 'NMocha'
 							timeout(10) {
 								echo 'Running Tests on Windows 10 Phone Emulator'
 								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
