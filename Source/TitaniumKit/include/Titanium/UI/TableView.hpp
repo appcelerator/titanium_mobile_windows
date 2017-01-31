@@ -56,7 +56,7 @@ namespace Titanium
 			  @abstract data
 			  @discussion Rows of the table view.
 			*/
-  			TITANIUM_PROPERTY_IMPL_DEF(std::vector<JSObject>, data);
+			virtual void set_data(const std::vector<JSObject>& data) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
