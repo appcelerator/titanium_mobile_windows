@@ -125,12 +125,15 @@ namespace Titanium
 		void TableView::set_search(const std::shared_ptr<SearchBar>& search) TITANIUM_NOEXCEPT
 		{
 			search__ = search;
-			search__->set_querySubmitted([this](const std::string& query) {
-				querySubmitted(query);
-			});
-			search__->set_suggestionRequested([this](const std::string& query) {
-				return suggestionRequested(query);
-			});
+
+			if (search__) {
+				search__->set_querySubmitted([this](const std::string& query) {
+					querySubmitted(query);
+				});
+				search__->set_suggestionRequested([this](const std::string& query) {
+					return suggestionRequested(query);
+				});
+			}
 		}
 
 		void TableView::querySubmitted(const std::string& query)
@@ -480,8 +483,11 @@ namespace Titanium
 		}
 		TITANIUM_PROPERTY_SETTER(TableView, search)
 		{
-			TITANIUM_ASSERT(argument.IsObject());
-			set_search(static_cast<JSObject>(argument).GetPrivate<SearchBar>());
+			if (argument.IsObject()) {
+				set_search(static_cast<JSObject>(argument).GetPrivate<SearchBar>());
+			} else {
+				set_search(nullptr);
+			}
 			return true;
 		}
 
