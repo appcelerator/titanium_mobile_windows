@@ -17,6 +17,23 @@ namespace TitaniumWindows
 {
 	namespace UI
 	{
+		static void EnsureRowComponentWidth(Windows::UI::Xaml::FrameworkElement^ element) TITANIUM_NOEXCEPT
+		{
+			element->MaxWidth = Windows::UI::Xaml::Window::Current->Bounds.Width - 30;
+		}
+
+		void WindowsTableViewRowLayoutDelegate::add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
+		{
+			// TIMOB-24130: TableViewRow needs more margin for Label
+			const auto layout = view->getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+			const auto label = std::dynamic_pointer_cast<Titanium::UI::Label>(view);
+			if (layout && label) {
+				EnsureRowComponentWidth(layout->getComponent());
+			}
+			TitaniumWindows::UI::WindowsViewLayoutDelegate::add(view);
+		}
+
+
 		TableViewRow::TableViewRow(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: Titanium::UI::TableViewRow(js_context)
 		{
@@ -28,11 +45,12 @@ namespace TitaniumWindows
 			Titanium::UI::TableViewRow::postCallAsConstructor(js_context, arguments);
 			content__ = ref new Windows::UI::Xaml::Controls::Canvas();
 
-			Titanium::UI::TableViewRow::setLayoutDelegate<WindowsViewLayoutDelegate>();
+			Titanium::UI::TableViewRow::setLayoutDelegate<WindowsTableViewRowLayoutDelegate>();
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::SIZE);
 
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(content__);
+			getViewLayoutDelegate<WindowsTableViewRowLayoutDelegate>()->setComponent(content__);
+			getViewLayoutDelegate()->set_layout("horizontal");
 		}
 
 		void TableViewRow::JSExportInitialize() 
@@ -60,6 +78,8 @@ namespace TitaniumWindows
 				title__ = label.GetPrivate<TitaniumWindows::UI::Label>();
 				title__->set_text("");
 				title__->getViewLayoutDelegate()->set_left("0");
+
+				EnsureRowComponentWidth(title__->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent());
 
 				add(label);
 			}
