@@ -58,25 +58,6 @@ namespace Titanium
 			model__->set_sections(sections);
 		}
 
-		std::vector<JSObject> TableView::get_data() const TITANIUM_NOEXCEPT
-		{
-			std::vector<JSObject> data;
-			const auto sections = get_sections();
-			for (const auto section : sections) {
-				// this indicates data is constructed from array of rows without header
-				if (sections.size() == 1 && !section->hasHeader())
-				{
-					for (const auto row : section->get_rows())
-					{
-						data.push_back(row->get_data());
-					}
-				} else {
-					data.push_back(section->get_object());
-				}
-			}
-			return data;
-		}
-
 		void TableView::set_data(const std::vector<JSObject>& data) TITANIUM_NOEXCEPT
 		{
 			model__->clear();
@@ -421,12 +402,7 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(TableView, data)
 		{
-			std::vector<JSValue> data_array;
-			const auto rows = get_data();
-			for (auto row : rows) {
-				data_array.push_back(row);
-			}
-			return get_context().CreateArray(data_array);
+			return js_get_sections();
 		}
 
 		TITANIUM_PROPERTY_SETTER(TableView, data)

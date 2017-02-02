@@ -30,13 +30,38 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(TableViewSection, std::shared_ptr<View>, headerView)
 		TITANIUM_PROPERTY_READ(TableViewSection, std::vector<std::shared_ptr<TableViewRow>>, rows)
 
+		std::shared_ptr<TableViewRow> TableViewSection::MakeSafeRowCopy(const JSContext& ctx, const std::shared_ptr<TableViewRow>& row) TITANIUM_NOEXCEPT
+		{
+			if (!row->get_added()) {
+				return row;
+			}
+			JSValue Titanium_property = ctx.get_global_object().GetProperty("Titanium");
+			TITANIUM_ASSERT(Titanium_property.IsObject());
+			JSObject Titanium = static_cast<JSObject>(Titanium_property);
+			JSValue UI_property = Titanium.GetProperty("UI");
+			TITANIUM_ASSERT(UI_property.IsObject());
+			JSObject UI = static_cast<JSObject>(UI_property);
+			JSValue TableViewRow_property = UI.GetProperty("TableViewRow");
+			TITANIUM_ASSERT(TableViewRow_property.IsObject());
+			JSObject TableViewRow_obj = static_cast<JSObject>(TableViewRow_property);
+			auto js_row = TableViewRow_obj.CallAsConstructor();
+
+			Module::applyProperties(row->getCtorProperties(), js_row);
+
+			return js_row.GetPrivate<TableViewRow>();
+		}
+
 		std::uint32_t TableViewSection::get_rowCount() const TITANIUM_NOEXCEPT
 		{
 			return static_cast<std::uint32_t>(rows__.size());
 		}
 
-		void TableViewSection::add(const std::shared_ptr<TableViewRow>& row, const bool& fireEvent) TITANIUM_NOEXCEPT
+		void TableViewSection::add(const std::shared_ptr<TableViewRow>& row_, const bool& fireEvent) TITANIUM_NOEXCEPT
 		{
+			// Check if row is already added, make new row then.
+			std::shared_ptr<TableViewRow> row = MakeSafeRowCopy(get_context(), row_);
+
+			row->set_added(true);
 			rows__.push_back(row);
 			if (fireEvent) {
 				const auto index = static_cast<std::uint32_t>(rows__.size() - 1);
@@ -44,8 +69,11 @@ namespace Titanium
 			}
 		}
 
-		void TableViewSection::add(const std::shared_ptr<TableViewRow>& row, const std::uint32_t& index) TITANIUM_NOEXCEPT
+		void TableViewSection::add(const std::shared_ptr<TableViewRow>& row_, const std::uint32_t& index) TITANIUM_NOEXCEPT
 		{
+			std::shared_ptr<TableViewRow> row = MakeSafeRowCopy(get_context(), row_);
+
+			row->set_added(true);
 			rows__.insert(rows__.begin() + index, row);
 			fireTableViewSectionEvent("append", rows__.at(index), index);
 		}
@@ -55,6 +83,7 @@ namespace Titanium
 			const auto it = find(rows__.begin(), rows__.end(), row);
 			if (it != rows__.end()) {
 				const auto index = static_cast<std::uint32_t>(std::distance(rows__.begin(), it));
+				row->set_added(false);
 				rows__.erase(it);
 				fireTableViewSectionEvent("remove", row, index);
 				return true;
@@ -67,6 +96,7 @@ namespace Titanium
 		{
 			if (rows__.size() > index) {
 				const auto row = rows__.at(index);
+				row->set_added(false);
 				rows__.erase(rows__.begin() + index);
 				fireTableViewSectionEvent("remove", row, index);
 				return true;
