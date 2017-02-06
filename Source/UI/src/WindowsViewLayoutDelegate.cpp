@@ -1172,7 +1172,20 @@ namespace TitaniumWindows
 		void WindowsViewLayoutDelegate::set_zIndex(const int32_t& zIndex) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_zIndex(zIndex);
-			Controls::Canvas::SetZIndex(component__, zIndex);
+			if (is_grid__) {
+				if (dynamic_cast<Windows::UI::Xaml::Controls::ListView^>(underlying_control__)) {
+					// For Ti.UI.TableView and Ti.UI.ListView
+					Controls::Canvas::SetZIndex(border__, zIndex);
+				} else {
+					Controls::Canvas::SetZIndex(component__, zIndex);
+				}
+			} else if (border__) {
+				Controls::Canvas::SetZIndex(border__, zIndex);
+			} else if (underlying_control__) {
+				Controls::Canvas::SetZIndex(underlying_control__, zIndex);
+			} else {
+				Controls::Canvas::SetZIndex(component__, zIndex);
+			}
 		}
 
 		void WindowsViewLayoutDelegate::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
