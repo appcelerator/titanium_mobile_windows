@@ -96,13 +96,13 @@ timestamps {
 							timeout(10) {
 								echo 'Running Tests on Windows 8.1 Phone Emulator'
 								bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
-								junit '../../../dist/junit_report.xml'
+								junit '../../../dist/junit_report*.xml'
 							}
 
 							timeout(10) {
 								echo 'Running Tests on Windows 8.1 Desktop'
 								bat "node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b ${targetBranch}"
-								junit '../../../dist/junit_report.xml'
+								junit '../../../dist/junit_report*.xml'
 							}
 							bat 'rmdir node_modules /Q /S'
 						}
@@ -145,13 +145,13 @@ timestamps {
 							timeout(10) {
 								echo 'Running Tests on Windows 10 Phone Emulator'
 								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
-								junit '../../../dist/junit_report.xml'
+								junit '../../../dist/junit_report*.xml'
 							}
 
 							timeout(10) {
 								echo 'Running Tests on Windows 10 Desktop'
 								bat "node test.js -s 10.0 -T ws-local -p Windows10.Store -b ${targetBranch}"
-								junit '../../../dist/junit_report.xml'
+								junit '../../../dist/junit_report*.xml'
 							}
 							bat 'rmdir node_modules /Q /S'
 						}
