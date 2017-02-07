@@ -312,8 +312,8 @@ function setupJSC(sdkVersion, url, next) {
 	var jscHome = path.join(HOME, 'JavaScriptCore-' + sdkVersion);
 	// Set env specific to windows sdk version
 	downloadIfNecessary('JavaScriptCore_' + sdkVersion + '_HOME', jscHome, JSC_DIR, url, function (e) {
-		if (err) {
-			return next(err);
+		if (e) {
+			return next(e);
 		}
 		// Then set generic overall env var to the extracted JSC
 		setENV('JavaScriptCore_HOME', jscHome, function (err) {
