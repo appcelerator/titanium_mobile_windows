@@ -94,12 +94,11 @@ timestamps {
 							}
 							bat 'rmdir node_modules /Q /S'
 						}
+						step([$class: 'WsCleanup', notFailBuild: true])
 					} catch (e) {
 						// if any exception occurs, mark the build as failed
 						currentBuild.result = 'FAILURE'
 						throw e
-					} finally {
-						step([$class: 'WsCleanup', notFailBuild: true])
 					}
 				}
 			},
@@ -127,12 +126,11 @@ timestamps {
 
 							bat 'rmdir node_modules /Q /S'
 						}
+						step([$class: 'WsCleanup', notFailBuild: true])
 					} catch (e) {
 						// if any exception occurs, mark the build as failed
 						currentBuild.result = 'FAILURE'
 						throw e
-					} finally {
-						step([$class: 'WsCleanup', notFailBuild: true])
 					}
 				}
 			},
@@ -165,12 +163,11 @@ timestamps {
 							}
 							bat 'rmdir node_modules /Q /S'
 						}
+						step([$class: 'WsCleanup', notFailBuild: true])
 					} catch (e) {
 						// if any exception occurs, mark the build as failed
 						currentBuild.result = 'FAILURE'
 						throw e
-					} finally {
-						step([$class: 'WsCleanup', notFailBuild: true])
 					}
 				}
 			},
@@ -204,12 +201,11 @@ timestamps {
 							}
 							bat 'rmdir node_modules /Q /S'
 						}
+						step([$class: 'WsCleanup', notFailBuild: true])
 					} catch (e) {
 						// if any exception occurs, mark the build as failed
 						currentBuild.result = 'FAILURE'
 						throw e
-					} finally {
-						step([$class: 'WsCleanup', notFailBuild: true])
 					}
 				}
 			},
@@ -244,12 +240,11 @@ timestamps {
 
 							bat 'rmdir node_modules /Q /S'
 						}
+						step([$class: 'WsCleanup', notFailBuild: true])
 					} catch (e) {
 						// if any exception occurs, mark the build as failed
 						currentBuild.result = 'FAILURE'
 						throw e
-					} finally {
-						step([$class: 'WsCleanup', notFailBuild: true])
 					}
 				}
 			},
