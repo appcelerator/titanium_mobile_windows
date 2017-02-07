@@ -65,10 +65,8 @@ timestamps {
 			targetBranch = env.BRANCH_NAME
 		}
 		parallel(
-			'Windows 8.1': {
-				// Windows 8.1 SDK build
-				// FIXME Support vs2013 or vs2015 by separating the JSC 8.1/10 builds
-				node('msbuild-12 && vs2013 && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
+			'Windows 8.1 Store x86': {
+				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
 					try {
 						unstash 'sources' // for build
 						unstash 'NMocha' // for tests
@@ -83,21 +81,11 @@ timestamps {
 						dir('Tools/Scripts/build') {
 							bat 'npm install .'
 
-							// TODO Parallelize the builds for each platform/arch!
-							timeout(80) {
+							timeout(25) {
 								echo 'Building for Windows 8.1'
 								bat "node build.js -s 8.1 -m 12.0 -o WindowsStore-x86 --sha ${gitCommit}"
-								bat "node build.js -s 8.1 -m 12.0 -o WindowsPhone-x86 --sha ${gitCommit}"
-								bat "node build.js -s 8.1 -m 12.0 -o WindowsPhone-ARM --sha ${gitCommit}"
 							}
 							archiveArtifacts artifacts: '../../../dist/**/*'
-
-							// TODO Parallelize the tests!
-							timeout(10) {
-								echo 'Running Tests on Windows 8.1 Phone Emulator'
-								bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
-								junit '../../../dist/junit_report*.xml'
-							}
 
 							timeout(10) {
 								echo 'Running Tests on Windows 8.1 Desktop'
@@ -115,8 +103,78 @@ timestamps {
 					}
 				}
 			},
-			'Windows 10': {
-				// Windows 10 SDK build
+			'Windows 8.1 Phone x86': {
+				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
+					try {
+						unstash 'sources' // for build
+						unstash 'NMocha' // for tests
+						bat 'mkdir dist\\windows'
+						dir('Tools/Scripts') {
+							bat 'npm install .'
+							echo 'Installing JSC built for Windows 8.1'
+							bat 'node setup.js -s 8.1 --no-color --no-progress-bars'
+							bat 'rmdir node_modules /Q /S'
+						}
+
+						dir('Tools/Scripts/build') {
+							bat 'npm install .'
+
+							timeout(25) {
+								echo 'Building for Windows 8.1'
+								bat "node build.js -s 8.1 -m 12.0 -o WindowsPhone-x86 --sha ${gitCommit}"
+							}
+							archiveArtifacts artifacts: '../../../dist/**/*'
+
+							bat 'rmdir node_modules /Q /S'
+						}
+					} catch (e) {
+						// if any exception occurs, mark the build as failed
+						currentBuild.result = 'FAILURE'
+						throw e
+					} finally {
+						step([$class: 'WsCleanup', notFailBuild: true])
+					}
+				}
+			},
+			'Windows 8.1 Phone ARM': {
+				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
+					try {
+						unstash 'sources' // for build
+						unstash 'NMocha' // for tests
+						bat 'mkdir dist\\windows'
+						dir('Tools/Scripts') {
+							bat 'npm install .'
+							echo 'Installing JSC built for Windows 8.1'
+							bat 'node setup.js -s 8.1 --no-color --no-progress-bars'
+							bat 'rmdir node_modules /Q /S'
+						}
+
+						dir('Tools/Scripts/build') {
+							bat 'npm install .'
+
+							timeout(25) {
+								echo 'Building for Windows 8.1'
+								bat "node build.js -s 8.1 -m 12.0 -o WindowsPhone-ARM --sha ${gitCommit}"
+							}
+							archiveArtifacts artifacts: '../../../dist/**/*'
+
+							timeout(10) {
+								echo 'Running Tests on Windows 8.1 Phone Emulator'
+								bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
+								junit '../../../dist/junit_report*.xml'
+							}
+							bat 'rmdir node_modules /Q /S'
+						}
+					} catch (e) {
+						// if any exception occurs, mark the build as failed
+						currentBuild.result = 'FAILURE'
+						throw e
+					} finally {
+						step([$class: 'WsCleanup', notFailBuild: true])
+					}
+				}
+			},
+			'Windows 10 x86': {
 				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
 					try {
 						unstash 'sources' // for build
@@ -133,26 +191,57 @@ timestamps {
 						dir('Tools/Scripts/build') {
 							bat 'npm install .'
 
-							// TODO Parallelize the builds for each arch!
-							timeout(60) {
-								echo 'Building for Windows 10'
+							timeout(30) {
+								echo 'Building for Windows 10 x86'
 								bat "node build.js -s 10.0 -m 14.0 -o WindowsStore-x86 --sha ${gitCommit}"
-								bat "node build.js -s 10.0 -m 14.0 -o WindowsStore-ARM --sha ${gitCommit}"
 							}
 							archiveArtifacts artifacts: '../../../dist/**/*'
-
-							// TODO Parallelize the tests!
-							timeout(10) {
-								echo 'Running Tests on Windows 10 Phone Emulator'
-								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
-								junit '../../../dist/junit_report*.xml'
-							}
 
 							timeout(10) {
 								echo 'Running Tests on Windows 10 Desktop'
 								bat "node test.js -s 10.0 -T ws-local -p Windows10.Store -b ${targetBranch}"
 								junit '../../../dist/junit_report*.xml'
 							}
+							bat 'rmdir node_modules /Q /S'
+						}
+					} catch (e) {
+						// if any exception occurs, mark the build as failed
+						currentBuild.result = 'FAILURE'
+						throw e
+					} finally {
+						step([$class: 'WsCleanup', notFailBuild: true])
+					}
+				}
+			},
+			'Windows 10 ARM': {
+				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
+					try {
+						unstash 'sources' // for build
+						unstash 'NMocha' // for tests
+						bat 'mkdir dist\\windows'
+
+						dir('Tools/Scripts') {
+							bat 'npm install .'
+							echo 'Installing JSC built for Windows 10'
+							bat 'node setup.js -s 10.0 --no-color --no-progress-bars'
+							bat 'rmdir node_modules /Q /S'
+						}
+
+						dir('Tools/Scripts/build') {
+							bat 'npm install .'
+
+							timeout(30) {
+								echo 'Building for Windows 10 ARM'
+								bat "node build.js -s 10.0 -m 14.0 -o WindowsStore-ARM --sha ${gitCommit}"
+							}
+							archiveArtifacts artifacts: '../../../dist/**/*'
+
+							timeout(10) {
+								echo 'Running Tests on Windows 10 Phone Emulator'
+								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
+								junit '../../../dist/junit_report*.xml'
+							}
+
 							bat 'rmdir node_modules /Q /S'
 						}
 					} catch (e) {
