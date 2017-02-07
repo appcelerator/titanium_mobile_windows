@@ -89,6 +89,7 @@ function $Reporter(runner) {
 
     runner.on('suite', function (suite) {
         title = suite.title;
+        Ti.API.info('Started suite: ' + suite.title);
     });
 
     runner.on('test', function (test) {
