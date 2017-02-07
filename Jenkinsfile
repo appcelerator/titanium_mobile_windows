@@ -163,7 +163,8 @@ timestamps {
 						step([$class: 'WsCleanup', notFailBuild: true])
 					}
 				}
-			}
+			},
+			failFast: true
 		)
 	}
 
