@@ -19,7 +19,7 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit) {
 	dir('Tools/Scripts/build') {
 		bat 'npm install .'
 
-		timeout(30) {
+		timeout(40) {
 			echo "Building for ${architecture} ${sdkVersion}"
 			bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
 		}
@@ -111,7 +111,7 @@ timestamps {
 				}
 			},
 			'Windows 8.1 Phone x86': {
-				node('msbuild-12 && (vs2013 || vs2015) && windows-sdk-8.1 && npm && node && cmake && jsc') {
+				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
 					try {
 						build('8.1', '12.0', 'WindowsPhone-x86', gitCommit)
 
@@ -132,7 +132,7 @@ timestamps {
 				}
 			},
 			'Windows 8.1 Phone ARM': {
-				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
+				node('msbuild-12 && (vs2013 || vs2015) && windows-sdk-8.1 && npm && node && cmake && jsc') {
 					try {
 						build('8.1', '12.0', 'WindowsPhone-ARM', gitCommit)
 
