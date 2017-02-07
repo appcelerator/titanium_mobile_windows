@@ -5,6 +5,9 @@ def gitCommit = ''
 def build(sdkVersion, msBuildVersion, architecture, gitCommit) {
   unstash 'sources' // for build
   unstash 'NMocha' // for tests
+  if (fileExists('dist/windows')) {
+    bat 'rmdir dist\\windows /Q /S'
+  }
   bat 'mkdir dist\\windows'
 
   dir('Tools/Scripts') {
