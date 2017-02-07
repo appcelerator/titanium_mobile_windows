@@ -3,28 +3,28 @@
 def gitCommit = ''
 
 def build(sdkVersion, msBuildVersion, architecture, gitCommit) {
-  unstash 'sources' // for build
-  if (fileExists('dist/windows')) {
-    bat 'rmdir dist\\windows /Q /S'
-  }
-  bat 'mkdir dist\\windows'
+	unstash 'sources' // for build
+	if (fileExists('dist/windows')) {
+		bat 'rmdir dist\\windows /Q /S'
+	}
+	bat 'mkdir dist\\windows'
 
-  dir('Tools/Scripts') {
-    bat 'npm install .'
-    echo "Installing JSC built for Windows ${sdkVersion}"
-    bat "node setup.js -s ${sdkVersion} --no-color --no-progress-bars"
-    bat 'rmdir node_modules /Q /S'
-  }
+	dir('Tools/Scripts') {
+		bat 'npm install .'
+		echo "Installing JSC built for Windows ${sdkVersion}"
+		bat "node setup.js -s ${sdkVersion} --no-color --no-progress-bars"
+		bat 'rmdir node_modules /Q /S'
+	}
 
-  dir('Tools/Scripts/build') {
-    bat 'npm install .'
+	dir('Tools/Scripts/build') {
+		bat 'npm install .'
 
-    timeout(30) {
-      echo "Building for ${architecture} ${sdkVersion}"
-      bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
-    }
-  }
-  archiveArtifacts artifacts: 'dist/**/*'
+		timeout(30) {
+			echo "Building for ${architecture} ${sdkVersion}"
+			bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
+		}
+	}
+	archiveArtifacts artifacts: 'dist/**/*'
 }
 
 // wrap in timestamps
@@ -85,7 +85,6 @@ timestamps {
 
 	stage ('Build') {
 		def targetBranch = 'master'
-    def win81Phonex86Done = false
 		if (!env.BRANCH_NAME.startsWith('PR-')) {
 			targetBranch = env.BRANCH_NAME
 		}
@@ -115,7 +114,15 @@ timestamps {
 				node('msbuild-12 && (vs2013 || vs2015) && windows-sdk-8.1 && npm && node && cmake && jsc') {
 					try {
 						build('8.1', '12.0', 'WindowsPhone-x86', gitCommit)
-						win81Phonex86Done = true
+
+						unstash 'NMocha' // for tests
+						dir('Tools/Scripts/build') {
+							timeout(10) {
+								echo 'Running Tests on Windows 8.1 Phone Emulator'
+								bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
+							}
+						}
+						junit 'dist/junit_report.xml'
 						step([$class: 'WsCleanup', notFailBuild: true])
 					} catch (e) {
 						// if any exception occurs, mark the build as failed
@@ -129,20 +136,6 @@ timestamps {
 					try {
 						build('8.1', '12.0', 'WindowsPhone-ARM', gitCommit)
 
-						unstash 'NMocha' // for tests
-						waitUntil {
-							win81Phonex86Done
-						}
-						// Unarchive the phone 8.1 x86 libraries
-						unarchive mapping: ['dist/windows/lib/*/phone/x86/*.*' : '.']
-
-						dir('Tools/Scripts/build') {
-							timeout(10) {
-								echo 'Running Tests on Windows 8.1 Phone Emulator'
-								bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
-							}
-						}
-						junit 'dist/junit_report.xml'
 						step([$class: 'WsCleanup', notFailBuild: true])
 					} catch (e) {
 						// if any exception occurs, mark the build as failed
