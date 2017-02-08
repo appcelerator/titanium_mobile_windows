@@ -89,27 +89,27 @@ timestamps {
 			targetBranch = env.BRANCH_NAME
 		}
 		parallel(
-			'Windows 8.1 Store x86': {
-				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
-					try {
-						build('8.1', '12.0', 'WindowsStore-x86', gitCommit)
-
-						unstash 'NMocha' // for tests
-						dir('Tools/Scripts/build') {
-							timeout(10) {
-								echo 'Running Tests on Windows 8.1 Desktop'
-								bat "node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b ${targetBranch}"
-							}
-						}
-						junit 'dist/junit_report.xml'
-						step([$class: 'WsCleanup', notFailBuild: true])
-					} catch (e) {
-						// if any exception occurs, mark the build as failed
-						currentBuild.result = 'FAILURE'
-						throw e
-					}
-				}
-			},
+			// 'Windows 8.1 Store x86': {
+			// 	node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
+			// 		try {
+			// 			build('8.1', '12.0', 'WindowsStore-x86', gitCommit)
+      //
+			// 			unstash 'NMocha' // for tests
+			// 			dir('Tools/Scripts/build') {
+			// 				timeout(10) {
+			// 					echo 'Running Tests on Windows 8.1 Desktop'
+			// 					bat "node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b ${targetBranch}"
+			// 				}
+			// 			}
+			// 			junit 'dist/junit_report.xml'
+			// 			step([$class: 'WsCleanup', notFailBuild: true])
+			// 		} catch (e) {
+			// 			// if any exception occurs, mark the build as failed
+			// 			currentBuild.result = 'FAILURE'
+			// 			throw e
+			// 		}
+			// 	}
+			// },
 			'Windows 8.1 Phone x86': {
 				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
 					try {
@@ -144,48 +144,48 @@ timestamps {
 					}
 				}
 			},
-			'Windows 10 x86': {
-				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
-					try {
-						build('10.0', '14.0', 'WindowsStore-x86', gitCommit)
-
-						unstash 'NMocha' // for tests
-						dir('Tools/Scripts/build') {
-							timeout(10) {
-								echo 'Running Tests on Windows 10 Desktop'
-								bat "node test.js -s 10.0 -T ws-local -p Windows10.Store -b ${targetBranch}"
-							}
-						}
-						junit 'dist/junit_report.xml'
-						step([$class: 'WsCleanup', notFailBuild: true])
-					} catch (e) {
-						// if any exception occurs, mark the build as failed
-						currentBuild.result = 'FAILURE'
-						throw e
-					}
-				}
-			},
-			'Windows 10 ARM': {
-				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
-					try {
-						build('10.0', '14.0', 'WindowsStore-ARM', gitCommit)
-
-						unstash 'NMocha' // for tests
-						dir('Tools/Scripts/build') {
-							timeout(10) {
-								echo 'Running Tests on Windows 10 Phone Emulator'
-								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
-							}
-						}
-						junit 'dist/junit_report.xml'
-						step([$class: 'WsCleanup', notFailBuild: true])
-					} catch (e) {
-						// if any exception occurs, mark the build as failed
-						currentBuild.result = 'FAILURE'
-						throw e
-					}
-				}
-			},
+			// 'Windows 10 x86': {
+			// 	node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
+			// 		try {
+			// 			build('10.0', '14.0', 'WindowsStore-x86', gitCommit)
+      //
+			// 			unstash 'NMocha' // for tests
+			// 			dir('Tools/Scripts/build') {
+			// 				timeout(10) {
+			// 					echo 'Running Tests on Windows 10 Desktop'
+			// 					bat "node test.js -s 10.0 -T ws-local -p Windows10.Store -b ${targetBranch}"
+			// 				}
+			// 			}
+			// 			junit 'dist/junit_report.xml'
+			// 			step([$class: 'WsCleanup', notFailBuild: true])
+			// 		} catch (e) {
+			// 			// if any exception occurs, mark the build as failed
+			// 			currentBuild.result = 'FAILURE'
+			// 			throw e
+			// 		}
+			// 	}
+			// },
+			// 'Windows 10 ARM': {
+			// 	node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
+			// 		try {
+			// 			build('10.0', '14.0', 'WindowsStore-ARM', gitCommit)
+      //
+			// 			unstash 'NMocha' // for tests
+			// 			dir('Tools/Scripts/build') {
+			// 				timeout(10) {
+			// 					echo 'Running Tests on Windows 10 Phone Emulator'
+			// 					bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
+			// 				}
+			// 			}
+			// 			junit 'dist/junit_report.xml'
+			// 			step([$class: 'WsCleanup', notFailBuild: true])
+			// 		} catch (e) {
+			// 			// if any exception occurs, mark the build as failed
+			// 			currentBuild.result = 'FAILURE'
+			// 			throw e
+			// 		}
+			// 	}
+			// },
 			failFast: true
 		)
 	}
