@@ -21,7 +21,10 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit) {
 
 		timeout(45) {
 			echo "Building for ${architecture} ${sdkVersion}"
-			bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
+			def jscHome = bat(returnStdout: true, script: "echo %JavaScriptCore_${sdkVersion}_HOME%").trim()
+			withEnv(["JavaScriptCore_HOME=${jscHome}"]) {
+				bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
+			}
 		}
 	}
 	archiveArtifacts artifacts: 'dist/**/*'
@@ -121,6 +124,8 @@ timestamps {
 								echo 'Running Tests on Windows 8.1 Phone Emulator'
 								bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
 							}
+							// Kill the phone emulator, so workspace cleanup works...
+							bat 'taskkill /IM xde.exe'
 						}
 						junit 'dist/junit_report.xml'
 						step([$class: 'WsCleanup', notFailBuild: true])
@@ -163,6 +168,8 @@ timestamps {
 								echo 'Running Tests on Windows 10 Phone Emulator'
 								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
 							}
+							// Kill the phone emulator, so workspace cleanup works...
+							bat 'taskkill /IM xde.exe'
 						}
 						junit 'dist/junit_report.xml'
 						step([$class: 'WsCleanup', notFailBuild: true])
