@@ -18,8 +18,11 @@ var utilities = require('./utilities/utilities');
 
 // ============================================================================
 // Add the tests here using "require"
-// require('./ti.accelerometer.test');
-// require('./ti.analytics.test');
+require('./ti.accelerometer.test');
+// FIXME This test causes a crash on Win 8.1 x86 emulator!
+if (utilities.isWindows10() || utilities.isWindowsDesktop()) {
+  require('./ti.analytics.test');
+}
 require('./ti.app.test');
 require('./ti.app.properties.test');
 require('./ti.app.windows.backgroundservice.test');
