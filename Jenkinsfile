@@ -73,7 +73,7 @@ timestamps {
 				if (isUnix()) {
 					sh 'mv apidoc/Titanium dist/windows/doc/Titanium'
 				} else {
-					bat 'robocopy apidoc\\\\Titanium dist\\\\windows\\\\doc\\\\Titanium /e'
+					bat '(robocopy apidoc\\\\Titanium dist\\\\windows\\\\doc\\\\Titanium /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0'
 				}
 				archiveArtifacts artifacts: 'dist/**/*'
 			} catch (e) {
