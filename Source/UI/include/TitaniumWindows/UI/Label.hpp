@@ -55,7 +55,7 @@ namespace TitaniumWindows
 			static const std::uint32_t DefaultFontSize = 20;
 
 		private:
-			Windows::UI::Xaml::Controls::Grid^ parent__;
+			Windows::UI::Xaml::Controls::Border^ parent__;
 			Windows::UI::Xaml::Controls::TextBlock^ label__;
 			Windows::Foundation::EventRegistrationToken label_sizechanged_event__;
 			bool sizeChanged__{ false };

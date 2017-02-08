@@ -509,6 +509,7 @@ namespace TitaniumWindows
 			bool is_control__{false};
 			bool is_scrollview__ { false };
 			bool is_button__{ false };
+			bool is_border__{ false };
 			bool is_loaded__{false};
 
 			Titanium::LayoutEngine::Rect oldRect__;
