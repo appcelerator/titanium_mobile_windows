@@ -157,6 +157,14 @@ timestamps {
 							}
 						}
 						junit 'dist/junit_report.xml'
+
+						dir('Tools/Scripts/build') {
+							timeout(10) {
+								echo 'Running Tests on Windows 10 Phone Emulator'
+								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
+							}
+						}
+						junit 'dist/junit_report.xml'
 						step([$class: 'WsCleanup', notFailBuild: true])
 					} catch (e) {
 						// if any exception occurs, mark the build as failed
@@ -169,15 +177,6 @@ timestamps {
 				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
 					try {
 						build('10.0', '14.0', 'WindowsStore-ARM', gitCommit)
-
-						unstash 'NMocha' // for tests
-						dir('Tools/Scripts/build') {
-							timeout(10) {
-								echo 'Running Tests on Windows 10 Phone Emulator'
-								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
-							}
-						}
-						junit 'dist/junit_report.xml'
 						step([$class: 'WsCleanup', notFailBuild: true])
 					} catch (e) {
 						// if any exception occurs, mark the build as failed
