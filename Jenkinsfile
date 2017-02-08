@@ -21,11 +21,7 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit) {
 
 		timeout(45) {
 			echo "Building for ${architecture} ${sdkVersion}"
-			def jscHome = bat(returnStdout: true, script: "echo &%JavaScriptCore_${sdkVersion}_HOME%%").trim()
-			echo "Using JavaScriptCore_HOME: ${jscHome}"
-			withEnv(["JavaScriptCore_HOME=${jscHome}"]) {
-				bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
-			}
+			bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
 		}
 	}
 	archiveArtifacts artifacts: 'dist/**/*'
