@@ -9,9 +9,13 @@ var should = require('./utilities/assertions'),
 
 describe('Titanium.Blob', function () {
 	it('apiName', function () {
+    Ti.API.info('reading app.js as a blob...');
 		var blob = Ti.Filesystem.getFile('app.js').read();
+    Ti.API.info('read app.js as a blob');
 		should(blob).have.a.readOnlyProperty('apiName').which.is.a.String;
+    Ti.API.info('has read-only apiName property, checking value of it...');
 		should(blob.apiName).be.eql('Ti.Blob');
+    Ti.API.info('apiName checked out');
 	});
 
 	it.skip('constructed from File.read()', function () {
