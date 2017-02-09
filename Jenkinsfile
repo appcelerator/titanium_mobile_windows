@@ -168,6 +168,8 @@ timestamps {
 							bat 'taskkill /IM Mocha.exe /F'
 						}
 						junit 'dist/junit_report.xml'
+						// Delete the report from store, so if phone fails we don't pick this one up
+						bat 'del /f /q dist\\junit_report.xml'
 
 						dir('Tools/Scripts/build') {
 							timeout(10) {
