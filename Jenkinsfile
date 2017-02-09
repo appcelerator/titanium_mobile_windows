@@ -106,6 +106,8 @@ timestamps {
 								echo 'Running Tests on Windows 8.1 Desktop'
 								bat "node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b ${targetBranch}"
 							}
+							// Kill the desktop app, so workspace cleanup works...
+							bat 'taskkill /IM Mocha.exe /F'
 						}
 						junit 'dist/junit_report.xml'
 						step([$class: 'WsCleanup', notFailBuild: true])
@@ -163,6 +165,8 @@ timestamps {
 								echo 'Running Tests on Windows 10 Desktop'
 								bat "node test.js -s 10.0 -T ws-local -p Windows10.Store -b ${targetBranch}"
 							}
+							// Kill the desktop app, so workspace cleanup works...
+							bat 'taskkill /IM Mocha.exe /F'
 						}
 						junit 'dist/junit_report.xml'
 
