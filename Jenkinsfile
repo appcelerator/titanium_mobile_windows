@@ -21,7 +21,7 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit) {
 
 		timeout(45) {
 			echo "Building for ${architecture} ${sdkVersion}"
-			def jscHome = bat(returnStdout: true, script: "set JavaScriptCore_${sdkVersion}HOME").trim().split('\n')[-1]
+			def jscHome = bat(returnStdout: true, script: "set JavaScriptCore_${sdkVersion}_HOME").trim().split('\n')[-1]
 			echo "Setting JavaScriptCore_HOME to ${jscHome}"
 			withEnv(["JavaScriptCore_HOME=${jscHome}"]) {
 				bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
