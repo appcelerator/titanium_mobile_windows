@@ -23,16 +23,18 @@ should.Assertion.add('readOnlyProperty', function (propName) {
 	if (this.obj.apiName) {
 		this.params.obj = this.obj.apiName;
 	}
-
+  Ti.API.info('Looking for property: ' + propName + ' on target: ' + target);
 	// need to call hasOwnProperty in a funky way due to https://jira.appcelerator.org/browse/TIMOB-23504
 	while (!Object.prototype.hasOwnProperty.call(target, propName)) {
+    Ti.API.info('Not found. Sad! Getting prototype of the object to look up the chain.');
 		target = Object.getPrototypeOf(target); // go up the prototype chain
 		if (!target) {
 			return this.fail();
 		}
+    Ti.API.info('Looking for property: ' + propName + ' on target: ' + target);
 	}
 
-	if (!utilities.isIOS()) { // FIXME read-only properties should also be non-configurable on iOS!
+	if (!utilities.isIOS() && !utilities.isWindows()) { // FIXME read-only properties should also be non-configurable on iOS and Windows!
 		props.configurable = false;
 	}
 	should(target).have.propertyWithDescriptor(propName, props);
