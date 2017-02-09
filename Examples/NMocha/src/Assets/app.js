@@ -103,6 +103,7 @@ function $Reporter(runner) {
     runner.on('fail', function (test, err) {
         test.err = err;
         failed = true;
+        Ti.API.info('FAILED: ' + test.title);
     });
 
     runner.on('test end', function (test) {
@@ -114,6 +115,7 @@ function $Reporter(runner) {
             title: test.title,
             error: test.err
         });
+        Ti.API.info('Ended: ' + test.title);
     });
 };
 
