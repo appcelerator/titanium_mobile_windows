@@ -43,7 +43,7 @@ require('./ti.internal.test');
 require('./ti.locale.test');
 require('./ti.map.test');
 require('./ti.network.test');
-require('./ti.network.httpclient.test');
+//require('./ti.network.httpclient.test');
 require('./ti.platform.test');
 require('./ti.require.test');
 require('./ti.stream.test');
