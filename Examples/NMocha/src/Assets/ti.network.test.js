@@ -13,14 +13,14 @@ describe('Titanium.Network', function () {
 		should(Ti.Network.apiName).be.eql('Ti.Network');
 	});
 
-	it('encodeURIComponent', function () {
+	((utilities.isWindowsPhone() && utilities.isWindows8_1()) ? it.skip : it)('encodeURIComponent', function () {
 		should(Ti.Network.encodeURIComponent).not.be.null;
 		should(Ti.Network.encodeURIComponent).be.a.Function;
 		var text = Ti.Network.encodeURIComponent('Look what I found! I like this:');
 		text.should.eql('Look%20what%20I%20found!%20I%20like%20this%3A');
 	});
 
-	it('decodeURIComponent', function () {
+	((utilities.isWindowsPhone() && utilities.isWindows8_1()) ? it.skip : it)('decodeURIComponent', function () {
 		should(Ti.Network.decodeURIComponent).not.be.null;
 		should(Ti.Network.decodeURIComponent).be.a.Function;
 		var text = Ti.Network.decodeURIComponent('Look%20what%20I%20found!%20I%20like%20this%3A');
