@@ -169,6 +169,7 @@ namespace TitaniumWindows
 			{
 				if (state__ == Titanium::Network::Socket::State::Connected ||
 					state__ == Titanium::Network::Socket::State::Listening) {
+					state__ = Titanium::Network::Socket::State::Closed;
 					delete socket__;
 				} else {
 					error("socket is not in connected or listening state");
@@ -178,63 +179,105 @@ namespace TitaniumWindows
 
 			std::int32_t TCP::read(const std::shared_ptr<Titanium::Buffer>& buffer, const std::uint32_t& offset, const std::uint32_t& length)
 			{
+				if (state__ != Titanium::Network::Socket::State::Connected) {
+					return -1;
+				}
+
 				const auto reader = ref new DataReader(socket__->InputStream);
 				reader->InputStreamOptions = Windows::Storage::Streams::InputStreamOptions::Partial;
-				std::vector<uint8_t> data;
 
+				std::vector<uint8_t> data;
+				std::int32_t count = -1;
 				concurrency::event evt;
+				Platform::Exception^ exception = nullptr;
 				concurrency::create_task(reader->LoadAsync(offset+length)).then(
-					[this, &evt, offset, length, &data, reader](unsigned int size) {
-						if (offset + length < size) {
-							concurrency::cancel_current_task();
-							error("read input greater than buffer");
-							TITANIUM_LOG_ERROR("TCP::read: Titanium::Network::Socket::TCP: Read input greater than buffer");
-							return;
+					[this, &evt, offset, length, &data, &count, &exception, reader](concurrency::task<unsigned int> task) {
+						try {
+							count = task.get();
+							if (offset + length < count) {
+								concurrency::cancel_current_task();
+								error("read input greater than buffer");
+								TITANIUM_LOG_ERROR("TCP::read: Titanium::Network::Socket::TCP: Read input greater than buffer");
+								return;
+							}
+							if (offset > 0) {
+								reader->ReadBuffer(offset);
+							}
+							data.resize(count);
+							reader->ReadBytes(::Platform::ArrayReference<std::uint8_t>(data.data(), count));
+						} catch (Platform::Exception^ e) {
+							// socket has closed
+							if (e->HResult == 0x80072746) {
+								close();
+							}
+							count = -1;
+							exception = e;
 						}
-						if (offset > 0) {
-							reader->ReadBuffer(offset);
-						}
-						data.resize(size);
-						reader->ReadBytes(::Platform::ArrayReference<std::uint8_t>(data.data(), size));
 						evt.set();
 					}, concurrency::task_continuation_context::use_arbitrary()
 				);
 				evt.wait();
 				reader->DetachStream();
 
+				if (exception) {
+					throw exception;
+				}
 				buffer->construct(data);
-				return totalBytesProcessed__ = data.size();
+				return totalBytesProcessed__ = count;
 			}
 
 			void TCP::readAsync(const std::shared_ptr<Titanium::Buffer>& buffer, const std::uint32_t& offset, const std::uint32_t& length, const std::function<void(const Titanium::ErrorResponse&, const std::int32_t&)>& callback)
 			{
 				concurrency::create_task([=]() {
 					Titanium::ErrorResponse error;
-					const auto count = read(buffer, offset, length);
-					TitaniumWindows::Utility::RunOnUIThread([=] {
-						callback(error, count);
-					});
+					std::int32_t count = -1;
+						do {
+							try {
+								count = read(buffer, offset, length);
+								if (count == -1) {
+									error.success = false;
+									error.code = -1;
+									error.error = "end of stream";
+								}
+							} catch (::Platform::Exception^ e) {
+								count = -1;
+								error.code = e->HResult;
+								error.error = Utility::ConvertUTF8String(e->Message);
+								error.success = false;
+							}
+							TitaniumWindows::Utility::RunOnUIThread([=] {
+								callback(error, count);
+							});
+						} while (count >= 0);
 				}, concurrency::task_continuation_context::use_arbitrary());
 			}
 
 			std::uint32_t TCP::write(const std::shared_ptr<Titanium::Buffer>& buffer, const std::uint32_t& offset, const std::uint32_t& length)
 			{
-				const auto writer = ref new DataWriter(socket__->OutputStream);
-
+				if (state__ != Titanium::Network::Socket::State::Connected) {
+					return -1;
+				}
 				if (offset + length > buffer->get_length()) {
 					return 0;
 				}
+
+				const auto writer = ref new DataWriter(socket__->OutputStream);
 				writer->WriteBytes(::Platform::ArrayReference<std::uint8_t>(&buffer->get_data()[offset], length));
 
-				std::uint32_t count = 0;
+				std::int32_t count = -1;
 				concurrency::event evt;
+				Platform::Exception^ exception = nullptr;
 				concurrency::create_task(writer->StoreAsync()).then(
-					[this, &evt, &count](concurrency::task<unsigned int> task) {
+					[this, &evt, &count, &exception](concurrency::task<unsigned int> task) {
 						try {
 							count = task.get();
 						} catch (Platform::Exception^ e) {
-							error("could not send data");
-							TITANIUM_LOG_ERROR("TCP::write: Titanium::Network::Socket::TCP: Could not send data");
+							// socket has closed
+							if (e->HResult == 0x80072746) {
+								close();
+							}
+							count = -1;
+							exception = e;
 						}
 						evt.set();
 					}, concurrency::task_continuation_context::use_arbitrary()
@@ -242,6 +285,9 @@ namespace TitaniumWindows
 				evt.wait();
 				writer->DetachStream();
 
+				if (exception) {
+					throw exception;
+				}
 				return count;
 			}
 
@@ -249,7 +295,19 @@ namespace TitaniumWindows
 			{
 				concurrency::create_task([=]() {
 					Titanium::ErrorResponse error;
-					const auto count = write(buffer, offset, length);
+					std::int32_t count = -1;
+					try {
+						count = write(buffer, offset, length);
+						if (count == -1) {
+							error.success = false;
+							error.code = -1;
+							error.error = "end of stream";
+						}
+					} catch (Platform::Exception^ e) {
+						error.code = e->HResult;
+						error.error = Utility::ConvertUTF8String(e->Message);
+						error.success = false;
+					}
 					TitaniumWindows::Utility::RunOnUIThread([=] {
 						callback(error, count);
 					});
@@ -258,17 +316,21 @@ namespace TitaniumWindows
 
 			void TCP::error(const std::string& message)
 			{
-				if (error__.IsObject()) {
-					auto error_obj = static_cast<JSObject>(error__);
-					if (error_obj.IsFunction()) {
-						const auto ctx = get_context();
-						auto args = get_context().CreateObject();
-						args.SetProperty("code", ctx.CreateNumber(-1));
-						args.SetProperty("error", ctx.CreateString(message));
-						args.SetProperty("socket", get_object());
-						args.SetProperty("success", ctx.CreateBoolean(false));
-						error_obj({args}, get_object());
+				try {
+					if (error__.IsObject()) {
+						auto error_obj = static_cast<JSObject>(error__);
+						if (error_obj.IsFunction()) {
+							const auto ctx = get_context();
+							auto args = get_context().CreateObject();
+							args.SetProperty("code", ctx.CreateNumber(-1));
+							args.SetProperty("error", ctx.CreateString(message));
+							args.SetProperty("socket", get_object());
+							args.SetProperty("success", ctx.CreateBoolean(false));
+							error_obj({args}, get_object());
+						}
 					}
+				} catch (...) {
+					// do nothing...
 				}
 			}
 		}

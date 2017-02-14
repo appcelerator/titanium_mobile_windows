@@ -35,7 +35,10 @@ namespace Titanium
 
 		void ViewLayoutDelegate::add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
-			children__.push_back(view);
+			auto it = std::find(children__.begin(), children__.end(), view);
+			if (it == children__.end()) {
+				children__.push_back(view);
+			}
 		}
 
 		void ViewLayoutDelegate::remove(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT

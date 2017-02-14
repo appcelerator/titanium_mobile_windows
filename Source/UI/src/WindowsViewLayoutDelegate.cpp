@@ -164,14 +164,19 @@ namespace TitaniumWindows
 			TITANIUM_ASSERT(newView != nullptr);
 			auto nativeChildView = newView->getComponent();
 			if (nativeChildView != nullptr) {
-				Titanium::LayoutEngine::nodeAddChild(layout_node__, newView->getLayoutNode());
-				if (isLoaded()) {
-					requestLayout();
-				}
 				try {
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
+					uint32_t index = 0;
+					if (nativeView->Children->IndexOf(nativeChildView, &index)) {
+						TITANIUM_LOG_DEBUG("This UI element is already added");
+						return;
+					}
 					nativeView->Children->Append(nativeChildView);
 					newView->set_touchEnabled(get_touchEnabled() && newView->get_touchEnabled());
+					Titanium::LayoutEngine::nodeAddChild(layout_node__, newView->getLayoutNode());
+					if (isLoaded()) {
+						requestLayout();
+					}
 				} catch (Platform::Exception^ e) {
 					detail::ThrowRuntimeError("add", Utility::ConvertString(e->Message));
 				}
@@ -1104,13 +1109,50 @@ namespace TitaniumWindows
 		void WindowsViewLayoutDelegate::set_touchEnabled(const bool& enabled) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_touchEnabled(enabled);
-			if (is_control__ || underlying_control__) {
-				if (underlying_control__) {
-					underlying_control__->IsEnabled = enabled;
-				} else {
-					dynamic_cast<Control^>(component__)->IsEnabled = enabled;
+
+			component__->IsTapEnabled = enabled;
+			component__->IsDoubleTapEnabled = enabled;
+			component__->IsHoldingEnabled = enabled;
+			component__->IsRightTapEnabled = enabled;
+
+			if (is_control__) {
+				dynamic_cast<Control^>(component__)->IsEnabled = enabled;
+			}
+
+			if (is_panel__) {
+				for (const auto child : dynamic_cast<Panel^>(component__)->Children) {
+					child->IsTapEnabled = enabled;
+					child->IsDoubleTapEnabled = enabled;
+					child->IsHoldingEnabled = enabled;
+					child->IsRightTapEnabled = enabled;
 				}
 			}
+
+			if (underlying_control__) {
+				underlying_control__->IsEnabled = enabled;
+				underlying_control__->IsTapEnabled = enabled;
+				underlying_control__->IsDoubleTapEnabled = enabled;
+				underlying_control__->IsHoldingEnabled = enabled;
+				underlying_control__->IsRightTapEnabled = enabled;
+			}
+			
+			if (border__) {
+				border__->IsTapEnabled = enabled;
+				border__->IsDoubleTapEnabled = enabled;
+				border__->IsHoldingEnabled = enabled;
+				border__->IsRightTapEnabled = enabled;
+				if (border__->Child) {
+					border__->Child->IsTapEnabled = enabled;
+					border__->Child->IsDoubleTapEnabled = enabled;
+					border__->Child->IsHoldingEnabled = enabled;
+					border__->Child->IsRightTapEnabled = enabled;
+					const auto control = dynamic_cast<Control^>(border__->Child);
+					if (control) {
+						control->IsEnabled = enabled;
+					}
+				}
+			}
+
 			updateDisabledBackground();
 
 			for (auto child : get_children()) {

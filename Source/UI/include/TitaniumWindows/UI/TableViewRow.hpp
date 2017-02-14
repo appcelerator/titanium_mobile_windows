@@ -11,7 +11,7 @@
 
 #include "TitaniumWindows_UI_EXPORT.h"
 #include "Titanium/UI/TableViewRow.hpp"
-#include "Titanium/UI/Label.hpp"
+#include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 
 namespace TitaniumWindows
 {
@@ -20,6 +20,12 @@ namespace TitaniumWindows
 		using namespace HAL;
 
 		class Label;
+
+		class TITANIUMWINDOWS_UI_EXPORT WindowsTableViewRowLayoutDelegate : public WindowsViewLayoutDelegate
+		{
+		public:
+			virtual void add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT override;
+		};
 
 		/*!
 		  @class TableViewRow

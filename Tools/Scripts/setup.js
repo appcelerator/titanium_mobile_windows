@@ -297,18 +297,31 @@ function setupGTest(url, next) {
 
 /**
  * Downloads JavaScriptCore from JSC_URL if necessary, and sets JavaScriptCore_HOME env var to it.
+ * @param sdkVersion {String} '8.1' || '10'
  * @param [url] {String} override source URL to grab JSC from.
  * @param next {Function} callback function when finished
  */
-function setupJSC(url, next) {
+function setupJSC(sdkVersion, url, next) {
 	if (typeof url == 'function') {
 		next = url;
 		url = JSC_URL;
 	}
 
 	console.log('Setting up JavaScriptCore pre-built libraries...');
-	var jscHome = path.join(HOME, 'JavaScriptCore');
-	downloadIfNecessary('JavaScriptCore_HOME', jscHome, JSC_DIR, url, next);
+	// Download to directory pegged to sdk version
+	var jscHome = path.join(HOME, 'JavaScriptCore-' + sdkVersion);
+	// Set env specific to windows sdk version
+	downloadIfNecessary('JavaScriptCore_' + sdkVersion + '_HOME', jscHome, JSC_DIR, url, function (e) {
+		if (e) {
+			return next(e);
+		}
+		// Then set generic overall env var to the extracted JSC
+		setENV('JavaScriptCore_HOME', jscHome, function (err) {
+			if (err) {
+				return next(err);
+			}
+		});
+	});
 }
 
 /**
@@ -349,7 +362,7 @@ function setup(overrides, callback) {
 		},
 		function (next) {
 			if (os.platform() === 'win32') {
-				setupJSC(overrides.jsc, next);
+				setupJSC(overrides.sdkVersion, overrides.jsc, next);
 			} else {
 				next();
 			}
@@ -393,7 +406,8 @@ if (module.id === ".") {
 		setup({
 			boost: program.boost,
 			gtest: program.gtest,
-			jsc: program.javascriptcore
+			jsc: program.javascriptcore,
+			sdkVersion: program.sdkVersion
 		}, function (err, results) {
 			if (err) {
 				console.error((SYMBOLS.ERROR + ' ' + err.toString()).red);
