@@ -138,11 +138,14 @@ namespace Titanium
 			CREATE_TITANIUM_UI_INSTANCE(js_section, param, TableViewSection);
 			auto section = js_section.GetPrivate<TableViewSection>();
 			const auto saved_sections = model__->get_saved_sections();
+			const auto filterAnchored = get_filterAnchored();
+			const auto filterCaseInsensitive = get_filterCaseInsensitive();
+			const auto filterAttribute = get_filterAttribute();
 			for (size_t sectionIndex = 0; sectionIndex < saved_sections.size(); sectionIndex++) {
 				const auto savedItems = saved_sections.at(sectionIndex)->get_rows();
 				for (size_t itemIndex = 0; itemIndex < savedItems.size(); itemIndex++) {
 					const auto row = savedItems.at(itemIndex);
-					if (row->contains(query)) {
+					if (row->contains(query, filterAnchored, filterCaseInsensitive, filterAttribute)) {
 						// Save "original" position so we can search it easily later on
 						saved_position.push_back(std::make_tuple(sectionIndex, itemIndex));
 						section->add(row);
@@ -162,9 +165,12 @@ namespace Titanium
 			}
 
 			std::vector<std::string> suggestions;
+			const auto filterAnchored = get_filterAnchored();
+			const auto filterCaseInsensitive = get_filterCaseInsensitive();
+			const auto filterAttribute = get_filterAttribute();
 			for (const auto section : model__->get_saved_sections()) {
 				for (const auto row : section->get_rows()) {
-					if (row->contains(query)) {
+					if (row->contains(query, filterAnchored, filterCaseInsensitive, filterAttribute)) {
 						suggestions.push_back(row->get_title());
 					}
 				}

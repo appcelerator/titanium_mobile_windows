@@ -138,12 +138,17 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_GETTER(TableViewRow, getTitle, title)
 		TITANIUM_FUNCTION_AS_SETTER(TableViewRow, setTitle, title)
 
-		bool TableViewRow::contains(const std::string& query)
+		bool TableViewRow::contains(const std::string& query, const bool& filterAnchored, const bool& filterCaseInsensitive, const std::string& filterAttribute)
 		{
-			const auto title = boost::algorithm::to_lower_copy(get_title());
-			const auto pos = title.find(boost::algorithm::to_lower_copy(query));
+			const auto title = filterAttribute.empty() ? get_title() : static_cast<std::string>(get_data().GetProperty(filterAttribute));
+			const auto normalized_title = filterCaseInsensitive ? boost::algorithm::to_lower_copy(title) : title;
+			const auto normalized_query = filterCaseInsensitive ? boost::algorithm::to_lower_copy(query) : query;
 
-			return pos != std::string::npos;
+			if (filterAnchored) {
+				return boost::starts_with(normalized_title, normalized_query);
+			} else {
+				return normalized_title.find(normalized_query) != std::string::npos;
+			}
 		}
 	} // namespace UI
 } // namespace Titanium
