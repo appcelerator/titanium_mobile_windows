@@ -30,14 +30,15 @@ Utility.isWindows = function() {
 
 Utility.isWindows10 = function() {
 	return this.isWindows() && Ti.Platform.version.indexOf('10.0') == 0;
-};
+}
 
 Utility.isWindows10Desktop = function() {
 	return this.isWindowsDesktop() && this.isWindows10();
 };
 
 Utility.isWindows8_1 = function() {
-	return this.isWindows() && Ti.Platform.version.indexOf('6.3.9600') == 0;
-};
+	// We've seen 6.3.9600 and 6.3.9651.0 - so assume 6.3.x is Windows 8.1.x
+	return this.isWindows() && Ti.Platform.version.indexOf('6.3.') == 0;
+}
 
 module.exports = Utility;
