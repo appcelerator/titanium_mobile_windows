@@ -17,6 +17,7 @@ namespace Titanium
 	{
 		Label::Label(const JSContext& js_context) TITANIUM_NOEXCEPT
 		    : View(js_context, "Ti.UI.Label"),
+		      autoLink__({AUTOLINK::NONE}),
 		      color__(js_context.CreateString()),
 		      ellipsize__(false),
 		      text__(js_context.CreateString()),
@@ -26,6 +27,7 @@ namespace Titanium
 		{
 		}
 
+		TITANIUM_PROPERTY_READWRITE(Label, std::unordered_set<AUTOLINK>, autoLink)
 		TITANIUM_PROPERTY_READWRITE(Label, std::string, text)
 		TITANIUM_PROPERTY_READWRITE(Label, TEXT_ALIGNMENT, textAlign)
 		TITANIUM_PROPERTY_READWRITE(Label, TEXT_VERTICAL_ALIGNMENT, verticalAlign)
@@ -49,6 +51,7 @@ namespace Titanium
 		{
 			JSExport<Label>::SetClassVersion(1);
 			JSExport<Label>::SetParent(JSExport<View>::Class());
+			TITANIUM_ADD_PROPERTY(Label, autoLink);
 			TITANIUM_ADD_PROPERTY(Label, color);
 			TITANIUM_ADD_PROPERTY(Label, ellipsize);
 			TITANIUM_ADD_PROPERTY(Label, font);
@@ -59,6 +62,8 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Label, wordWrap);
 			TITANIUM_ADD_PROPERTY(Label, attributedString);
 
+			TITANIUM_ADD_FUNCTION(Label, getAutoLink);
+			TITANIUM_ADD_FUNCTION(Label, setAutoLink);
 			TITANIUM_ADD_FUNCTION(Label, getColor);
 			TITANIUM_ADD_FUNCTION(Label, setColor);
 			TITANIUM_ADD_FUNCTION(Label, getEllipsize);
@@ -78,6 +83,22 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Label, getAttributedString);
 			TITANIUM_ADD_FUNCTION(Label, setAttributedString);
 		}
+
+		TITANIUM_PROPERTY_GETTER(Label, autoLink)
+		{
+			return get_context().CreateNumber(Constants::to_underlying_type(get_autoLink()));
+		}
+
+		TITANIUM_PROPERTY_SETTER(Label, autoLink)
+		{
+			TITANIUM_ASSERT(argument.IsNumber());
+			autoLink__ = Constants::to_AUTOLINK(static_cast<std::underlying_type<AUTOLINK>::type>(argument));
+			set_autoLink(autoLink__);
+			return true;
+		}
+
+		TITANIUM_FUNCTION_AS_GETTER(Label, getAutoLink, autoLink)
+		TITANIUM_FUNCTION_AS_SETTER(Label, setAutoLink, autoLink)
 
 		TITANIUM_PROPERTY_GETTER_STRING(Label, color)
 		TITANIUM_PROPERTY_SETTER_STRING(Label, color)
