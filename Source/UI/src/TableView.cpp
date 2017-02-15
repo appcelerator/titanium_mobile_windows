@@ -465,7 +465,7 @@ namespace TitaniumWindows
 
 		void TableView::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->filterEvents({ "click" });
+			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->filterEvents({ "click", "touchmove" });
 
 			Titanium::UI::TableView::enableEvent(event_name);
 
@@ -512,6 +512,18 @@ namespace TitaniumWindows
 				if (scrollview__) {
 					registerScrollendEvent();
 				}
+			} else if (event_name == "touchmove") {
+				touchmove_event__ = tableview__->PointerMoved += ref new Input::PointerEventHandler([this](Platform::Object^, Input::PointerRoutedEventArgs^ e) {
+
+					const auto ctx = get_context();
+					JSObject  eventArgs = ctx.CreateObject();
+
+					const auto position = e->GetCurrentPoint(tableview__)->Position;
+					eventArgs.SetProperty("x", ctx.CreateNumber(position.X));
+					eventArgs.SetProperty("y", ctx.CreateNumber(position.Y));
+
+					fireEvent("touchmove", eventArgs);
+				});
 			}
 		}
 
@@ -529,6 +541,8 @@ namespace TitaniumWindows
 				if (scrollview__) {
 					scrollview__->ViewChanged -= scrollend_event__;
 				}
+			} else if (event_name == "touchmove") {
+				tableview__->PointerMoved -= touchmove_event__;
 			}
 		}
 
