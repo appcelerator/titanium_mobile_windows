@@ -115,6 +115,15 @@ namespace Titanium
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(std::shared_ptr<AttributedString>, attributedString);
 
+			/*!
+			  @property
+			  @abstract autoLink
+			  @discussion Automatically convert text to clickable links. Multiple autolink values can be combined
+			    with a bitwise OR. For example:
+			    textArea.autoLink = AUTOLINK_MAP_ADDRESSES|AUTOLINK_PHONE_NUMBERS;
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::unordered_set<AUTOLINK>, autoLink);
+
 			Label(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~Label() = default;
@@ -162,6 +171,11 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(attributedString);
 			TITANIUM_FUNCTION_DEF(getAttributedString);
 			TITANIUM_FUNCTION_DEF(setAttributedString);
+
+			TITANIUM_PROPERTY_DEF(autoLink);
+			TITANIUM_FUNCTION_DEF(getAutoLink);
+			TITANIUM_FUNCTION_DEF(setAutoLink);
+
 		private:
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -174,6 +188,7 @@ namespace Titanium
 			TEXT_VERTICAL_ALIGNMENT verticalAlign__;
 			bool wordWrap__;
 			std::shared_ptr<AttributedString> attributedString__;
+			std::unordered_set<AUTOLINK> autoLink__;
 #pragma warning(pop)
 		};
 	} // namespace UI
