@@ -238,6 +238,9 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 							// Remove Windows10 target only when it targets to 8.1 explicitly
 							if (sdk_version == '8.1') {
 								types = defaultTypes.slice(0, 2);
+							} else if (sdk_version == '10.0') {
+								types    = ['Windows10'];
+								typesMin = ['win10'];
 							}
 						}
 					});
