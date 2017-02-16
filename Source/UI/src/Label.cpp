@@ -16,6 +16,9 @@
 #include <unordered_map>
 #include <tuple>
 #include <cmath>
+#include <regex>
+#include <boost/algorithm/string.hpp>
+#include <boost/foreach.hpp>
 
 namespace TitaniumWindows
 {
@@ -52,11 +55,16 @@ namespace TitaniumWindows
 			label__->FontSize = DefaultFontSize;
 
 			// TIMOB-19048: max size is set to screen size by default
-			const auto current = Windows::UI::Xaml::Window::Current;
-			if (current) {
-				label__->MaxWidth = current->Bounds.Width;
-				label__->MaxHeight = current->Bounds.Height;
-			}
+			border__->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler([this](Platform::Object^, Windows::UI::Xaml::SizeChangedEventArgs^) {
+				const auto current = Windows::UI::Xaml::Window::Current;
+				if (current) {
+					label__->MaxWidth  = current->Bounds.Width;
+					label__->MaxHeight = current->Bounds.Height;
+					if (propertiesSet__) {
+						measureDesiredSize();
+					}
+				}
+			});
 
 			border__->Child = label__;
 
@@ -93,13 +101,58 @@ namespace TitaniumWindows
 		void Label::set_text(const std::string& text, const bool resize) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::Label::set_text(text);
-			const auto new_text = TitaniumWindows::Utility::ConvertUTF8String(text);
 
-			label__->Text = new_text;
+			if (get_attributedString()) {
+				set_attributedString(get_attributedString());
+			} else if (!get_autoLink().empty()) {
+				set_autoLink(get_autoLink());
+			} else {
+				label__->Text = TitaniumWindows::Utility::ConvertUTF8String(text);
+			}
 
 			if (propertiesSet__) {
 				measureDesiredSize();
 			}
+		}
+
+		void Label::set_autoLink(const std::unordered_set<Titanium::UI::AUTOLINK>& autoLink) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Label::set_autoLink(autoLink);
+			label__->Inlines->Clear();
+
+			const auto enableALL = autoLink.find(Titanium::UI::AUTOLINK::ALL)  != autoLink.end();
+			const auto enableURL = autoLink.find(Titanium::UI::AUTOLINK::URLS) != autoLink.end();
+
+			const auto root = ref new Span();
+
+			std::regex url_pattern(
+				R"(^(([^:\/?#]+):)?(//([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?)",
+				std::regex::extended
+			);
+			std::list<std::string> blocks;
+			boost::split(blocks, get_text(), boost::is_any_of(" "));
+
+			std::smatch url_matches;
+			BOOST_FOREACH(std::string text, blocks) {
+
+				const auto run = ref new Run();
+				run->Text = TitaniumWindows::Utility::ConvertUTF8String(text);
+
+				if ((enableALL || enableURL) && std::regex_search(text, url_matches, url_pattern) && !url_matches.str(1).empty()) {
+					auto hyperlink = ref new Hyperlink();
+					hyperlink->NavigateUri = ref new Windows::Foundation::Uri(TitaniumWindows::Utility::ConvertUTF8String(text));
+					hyperlink->Inlines->Append(run);
+					root->Inlines->Append(hyperlink);
+				} else {
+					root->Inlines->Append(run);
+				}
+
+				const auto space = ref new Run();
+				space->Text = " ";
+				root->Inlines->Append(space);
+			};
+
+			label__->Inlines->Append(root);
 		}
 
 		void Label::measureDesiredSize() TITANIUM_NOEXCEPT
@@ -160,6 +213,12 @@ namespace TitaniumWindows
 		{
 
 			Titanium::UI::Label::set_attributedString(attributedString);
+
+			label__->Inlines->Clear();
+
+			if (attributedString == nullptr) {
+				return;
+			}
 
 			//
 			// simple implementation for attributed string due to mismatch with Windows Style API
