@@ -337,7 +337,8 @@ namespace TitaniumWindows
 				}
 			} else if (event_name == "return") {
 				const auto keydown = ref new KeyEventHandler([this, ctx](Platform::Object^ sender, KeyRoutedEventArgs^ e) {
-					if (e->Key == Windows::System::VirtualKey::Enter) {
+					// TIMOB-24371: Enter event fired twice due to a bug in Xaml KeyDown event, here's a workaround
+					if (e->Key == Windows::System::VirtualKey::Enter && e->KeyStatus.RepeatCount == 0) {
 						JSObject eventArgs = ctx.CreateObject();
 						eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
 
