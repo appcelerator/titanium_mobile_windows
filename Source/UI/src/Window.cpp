@@ -54,6 +54,17 @@ namespace TitaniumWindows
 				// Update back button visibility. Note that back button is available on Store App too.
 				SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = AppViewBackButtonVisibility::Visible;
 			});
+			rootFrame->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler([this](Platform::Object^, Windows::UI::Xaml::SizeChangedEventArgs^) {
+				if (!IS_WINDOWS_MOBILE) {
+					const auto children = get_children();
+					for (const auto child : children) {
+						const auto layout = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+						if (layout) {
+							layout->requestLayout(true);
+						}
+					}
+				}
+			});
 #endif
 
 #if defined(IS_WINDOWS_10) || defined(IS_WINDOWS_PHONE)
