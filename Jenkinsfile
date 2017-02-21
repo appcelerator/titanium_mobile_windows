@@ -1,6 +1,7 @@
 #!groovy​
 
 def gitCommit = ''
+def testTimeout = 20
 
 def build(sdkVersion, msBuildVersion, architecture, gitCommit) {
 	unstash 'sources' // for build
@@ -101,7 +102,7 @@ timestamps {
 
 						unstash 'NMocha' // for tests
 						dir('Tools/Scripts/build') {
-							timeout(10) {
+							timeout(testTimeout) {
 								echo 'Running Tests on Windows 8.1 Desktop'
 								bat "node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b ${targetBranch}"
 							}
@@ -124,7 +125,7 @@ timestamps {
 
 						unstash 'NMocha' // for tests
 						dir('Tools/Scripts/build') {
-							timeout(10) {
+							timeout(testTimeout) {
 								echo 'Running Tests on Windows 8.1 Phone Emulator'
 								bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
 							}
@@ -160,7 +161,7 @@ timestamps {
 
 						unstash 'NMocha' // for tests
 						dir('Tools/Scripts/build') {
-							timeout(10) {
+							timeout(testTimeout) {
 								echo 'Running Tests on Windows 10 Desktop'
 								bat "node test.js -s 10.0 -T ws-local -p Windows10.Store -b ${targetBranch}"
 							}
@@ -172,7 +173,7 @@ timestamps {
 						bat 'del /f /q dist\\junit_report.xml'
 
 						dir('Tools/Scripts/build') {
-							timeout(10) {
+							timeout(testTimeout) {
 								echo 'Running Tests on Windows 10 Phone Emulator'
 								bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
 							}
