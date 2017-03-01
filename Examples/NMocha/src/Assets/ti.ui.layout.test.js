@@ -177,7 +177,7 @@ describe('Titanium.UI.Layout', function () {
 
 	// functional test case #1022, #1024
 	// ViewWidth, ViewHeight
-	(((Ti.Platform.version.indexOf('10.0') == 0) && utilities.isWindowsDesktop()) ? it.skip : it)('viewWidth', function (finish) {
+	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('viewWidth', function (finish) {
 		var win = createWindow({}, finish);
 		var view = Ti.UI.createView({
 			width: 10,
@@ -815,7 +815,7 @@ describe('Titanium.UI.Layout', function () {
 
 	// Functional Test #1001 #1002 #1003 #1004 #1005 #1006
 	// Skip on Windows 10 Desktop for now, it hangs
-	(((Ti.Platform.version.indexOf('10.0') == 0) && utilities.isWindowsDesktop()) ? it.skip : it)('unitMeasurements', function (finish) {
+	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('unitMeasurements', function (finish) {
 		var win = createWindow({}, finish);
 		var child = Ti.UI.createView({
 			height: '50mm',
@@ -1224,7 +1224,7 @@ describe('Titanium.UI.Layout', function () {
 	// left & right should just work for child view (vertical)
 	// when both left & right are specified to parent
 	//
-	it('TIMOB-23372 #2', function (finish) {
+	(utilities.isWindows10() ? it.skip : it)('TIMOB-23372 #2', function (finish) {
 		var view = Ti.UI.createView({
 			backgroundColor: 'orange',
 			layout: 'vertical',
