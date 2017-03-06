@@ -405,6 +405,15 @@ function copyResources(next) {
 			}, cb);
 		},
 
+		// Copy all external libraries into lib folder
+		function (cb) {
+			var src = path.join(this.projectDir, 'lib', 'windows');
+			copyDir.call(this, {
+				src: src,
+				dest: path.join(this.buildDir, 'lib')
+			}, cb);
+		},
+
 		// Copy TitaniumKit and HAL dlls over into src folder
 		function (cb) {
 			var src = path.join(this.platformPath, 'lib', 'TitaniumKit', this.cmakePlatformAbbrev, this.arch, 'TitaniumKit.dll');

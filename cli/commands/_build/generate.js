@@ -30,6 +30,7 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.mergeAppxManifestForModule = mergeAppxManifestForModule;
 	WindowsBuilder.prototype.generateAppxManifest = generateAppxManifest;
 	WindowsBuilder.prototype.fixCSharpConfiguration = fixCSharpConfiguration;
+	WindowsBuilder.prototype.copyModuleOverride = copyModuleOverride;
 }
 
 /**
@@ -682,4 +683,30 @@ function fixCSharpConfiguration(next) {
 		}
 		next();
 	});
+}
+
+/*
+ * Each modules have 'platform' folder that is meant to replace existing files under build folder just before the build
+ */
+function copyModuleOverride(next) {
+
+	var _t = this;
+	for (var i = 0; i < this.modules.length; i++) {
+		if (this.modules[i].manifest.platform == 'windows') {
+			var module = this.modules[i],
+				moduleSrc = path.join(module.modulePath, 'platform');
+			if (fs.existsSync(moduleSrc)) {
+				wrench.readdirSyncRecursive(moduleSrc).forEach(function(res) {
+					var from = path.join(moduleSrc, res), 
+						to   = path.join(_t.buildDir, res);
+					if (fs.statSync(from).isFile()) {
+						_t.logger.info('Module [' + module.manifest.moduleid + '] overrides ' + res);
+						fs.createReadStream(from).pipe(fs.createWriteStream(to));
+					}
+				});
+			}
+		}
+	}
+
+	next();
 }

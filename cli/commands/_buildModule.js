@@ -345,6 +345,16 @@ WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 	fs.createReadStream(path.join(this.projectDir, 'manifest')).pipe(fs.createWriteStream(path.join(moduleDir, 'manifest')));
 	fs.createReadStream(path.join(this.projectDir, 'timodule.xml')).pipe(fs.createWriteStream(path.join(moduleDir, 'timodule.xml')));
 
+	// Whatever files in platform directory will be copied into build/windows directory during app build
+	var platformOverrideDir = path.join(this.projectDir, 'platform');
+	if (fs.existsSync(platformOverrideDir)) {
+		wrench.copyDirSyncRecursive(platformOverrideDir, path.join(moduleDir, 'platform'));
+		var readme = path.join(moduleDir, 'platform', 'README.md');
+		if (fs.existsSync(readme)) {
+			fs.unlinkSync(readme); // We don't need README.md
+		}
+	}
+
 	// copy compiled libraries
 	types.forEach(function(type, index) {
 		_t.manifest.architectures.split(' ').forEach(function(arch) {
@@ -355,30 +365,29 @@ WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 				return;
 			}
 
-			var moduleSrc = path.join(moduleProjectDir, configuration, projectname),
-				moduleDst = path.join(moduleDir, typesMin[index], arch, projectname);
+			var moduleSrc = path.join(moduleProjectDir, configuration),
+				moduleDst = path.join(moduleDir, typesMin[index], arch);
 
 			// We may have built in temp because of long path issues!
 			// Check to see if the dll exists in normal spot, if not, fall back to trying temp location!
-			if (!fs.existsSync(moduleSrc + '.dll')) {
+			if (!fs.existsSync(path.join(moduleSrc, projectname) + '.dll')) {
 				var home = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA,
 				    ti_home = path.join(home, '.titanium'),
 				    tempBuildDir = path.join(ti_home, 'vsbuild');
 
-				moduleSrc = path.join(tempBuildDir, path.basename(path.dirname(_t.projectDir)), path.basename(moduleProjectDir), configuration, projectname);
+				moduleSrc = path.join(tempBuildDir, path.basename(path.dirname(_t.projectDir)), path.basename(moduleProjectDir), configuration);
 			}
 
 			// create module directory
 			wrench.mkdirSyncRecursive(path.join(moduleDir, typesMin[index], arch));
 
-			// Dynamic-Link Library
-			fs.createReadStream(moduleSrc+'.dll').pipe(fs.createWriteStream(moduleDst+'.dll'));
-
-			// Windows Metadata
-			fs.createReadStream(moduleSrc+'.winmd').pipe(fs.createWriteStream(moduleDst+'.winmd'));
-
-			// Library
-			fs.createReadStream(moduleSrc+'.lib').pipe(fs.createWriteStream(moduleDst+'.lib'));
+			// Copy all "known" files as we may have more dependencies
+			fs.readdirSync(moduleSrc).forEach(function(depfile) {
+				var depfileL = depfile.toLowerCase();
+				if (depfileL.endsWith('.dll') || depfileL.endsWith('.winmd') || depfileL.endsWith('.lib')) {
+					fs.createReadStream(path.join(moduleSrc, depfile)).pipe(fs.createWriteStream(path.join(moduleDst, depfile)));
+				}
+			});
 
 			// copy one of export.hpp
 			var export_file     = projectname+'_export.h',

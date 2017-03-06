@@ -3,7 +3,8 @@ var spawn = require('child_process').spawn,
     path = require('path'),
     fs   = require('fs'),
     ejs  = require('ejs'),
-    appc = require('node-appc');
+    appc = require('node-appc'),
+    wrench = require('wrench');
 
 exports.cliVersion = ">=3.2";
 exports.init = function(logger, config, cli, nodeappc) {
@@ -40,17 +41,33 @@ exports.init = function(logger, config, cli, nodeappc) {
     
 };
 
+function selectVisualStudio(data) {
+    if (data.windowsInfo && data.selectedVisualStudio) {
+        var version = data.selectedVisualStudio.version;
+        if (version == '12.0') {
+            return 'Visual Studio 12 2013';
+        } else if (version == '14.0') {
+            return 'Visual Studio 14 2015';
+        } else if (/^Visual Studio \w+ 2017/.test(version)) {
+            return 'Visual Studio 15 2017';
+        }
+    }
+    return 'Visual Studio 14 2015';
+}
+
 function runCmake(data, platform, arch, sdkVersion, next) {
     var logger = data.logger,
-        generatorName = 'Visual Studio 14 2015' + (arch==='ARM' ? ' ARM' : ''),
+        generatorName = selectVisualStudio(data) + (arch==='ARM' ? ' ARM' : ''),
         cmakeProjectName = (sdkVersion === '10.0' ? 'Windows10' : platform) + '.' + arch,
         cmakeWorkDir = path.resolve(__dirname,'..','..',cmakeProjectName);
 
     logger.debug('Run CMake on ' + cmakeWorkDir);
 
-    if (!fs.existsSync(cmakeWorkDir)) {
-        fs.mkdirSync(cmakeWorkDir);
+    if (fs.existsSync(cmakeWorkDir)) {
+        wrench.rmdirSyncRecursive(cmakeWorkDir);
     }
+
+    fs.mkdirSync(cmakeWorkDir);
 
     var p = spawn(path.join(data.titaniumSdkPath,'windows','cli','vendor','cmake','bin','cmake.exe'),
         [
