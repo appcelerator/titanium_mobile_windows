@@ -177,7 +177,7 @@ describe('Titanium.UI.Layout', function () {
 
 	// functional test case #1022, #1024
 	// ViewWidth, ViewHeight
-	(((Ti.Platform.version.indexOf('10.0') == 0) && utilities.isWindowsDesktop()) ? it.skip : it)('viewWidth', function (finish) {
+	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('viewWidth', function (finish) {
 		var win = createWindow({}, finish);
 		var view = Ti.UI.createView({
 			width: 10,
@@ -815,7 +815,7 @@ describe('Titanium.UI.Layout', function () {
 
 	// Functional Test #1001 #1002 #1003 #1004 #1005 #1006
 	// Skip on Windows 10 Desktop for now, it hangs
-	(((Ti.Platform.version.indexOf('10.0') == 0) && utilities.isWindowsDesktop()) ? it.skip : it)('unitMeasurements', function (finish) {
+	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('unitMeasurements', function (finish) {
 		var win = createWindow({}, finish);
 		var child = Ti.UI.createView({
 			height: '50mm',
@@ -1201,13 +1201,18 @@ describe('Titanium.UI.Layout', function () {
 			bottom: 10,
 		});
 		var win = createWindow({}, function() {
-			should(a.rect.x).eql(10);
-			should(a.rect.y).eql(10);
-			should(b.rect.x).eql(10);
-			should(b.rect.y).eql(10);
-			should(b.rect.width).eql(a.rect.width - 20);
-			should(b.rect.height).eql(a.rect.height - 20);
-			finish();
+			var err;
+			try {
+				should(a.rect.x).eql(10);
+				should(a.rect.y).eql(10);
+				should(b.rect.x).eql(10);
+				should(b.rect.y).eql(10);
+				should(b.rect.width).eql(a.rect.width - 20);
+				should(b.rect.height).eql(a.rect.height - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		a.add(b);
 		win.add(a);
@@ -1219,7 +1224,7 @@ describe('Titanium.UI.Layout', function () {
 	// left & right should just work for child view (vertical)
 	// when both left & right are specified to parent
 	//
-	it('TIMOB-23372 #2', function (finish) {
+	(utilities.isWindows10() ? it.skip : it)('TIMOB-23372 #2', function (finish) {
 		var view = Ti.UI.createView({
 			backgroundColor: 'orange',
 			layout: 'vertical',
@@ -1237,12 +1242,17 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = createWindow({}, function() {
-			should(view.rect.x).eql(10);
-			should(view.rect.y).eql(10);
-			should(label.rect.x).eql(10);
-			should(label.rect.y).eql(0);
-			should(label.rect.width).eql(view.rect.width - 20);
-			finish();
+			var err;
+			try {
+				should(view.rect.x).eql(10);
+				should(view.rect.y).eql(10);
+				should(label.rect.x).eql(10);
+				should(label.rect.y).eql(0);
+				should(label.rect.width).eql(view.rect.width - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		view.add(label);
 		win.add(view);
@@ -1272,12 +1282,17 @@ describe('Titanium.UI.Layout', function () {
 		});
 		view.add(label);
 		var win = createWindow({}, function () {
-			should(view.rect.x).eql(10);
-			should(view.rect.y).eql(10);
-			should(label.rect.x).eql(10);
-			should(label.rect.y).eql(0);
-			should(label.rect.width).eql(view.rect.width - 20);
-			finish();
+			var err;
+			try {
+				should(view.rect.x).eql(10);
+				should(view.rect.y).eql(10);
+				should(label.rect.x).eql(10);
+				should(label.rect.y).eql(0);
+				should(label.rect.width).eql(view.rect.width - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		win.add(view);
 		win.open();
@@ -1306,12 +1321,17 @@ describe('Titanium.UI.Layout', function () {
 		});
 		view.add(label);
 		var win = createWindow({}, function() {
-			should(view.rect.x).eql(10);
-			should(view.rect.y).eql(10);
-			should(label.rect.x).eql(10);
-			should(label.rect.y).eql(0);
-			should(label.rect.width).eql(view.rect.width - 20);
-			finish();
+			var err;
+			try {
+				should(view.rect.x).eql(10);
+				should(view.rect.y).eql(10);
+				should(label.rect.x).eql(10);
+				should(label.rect.y).eql(0);
+				should(label.rect.width).eql(view.rect.width - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		win.add(view);
 		win.open();
@@ -1340,13 +1360,18 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = createWindow({}, function() {
-			should(view.rect.x).eql(10);
-			should(view.rect.y).eql(10);
-			should(label.rect.x).eql(10);
-			should(label.rect.y).eql(0);
-			should(label.rect.width).eql(view.rect.width - 20);
-			should(view.rect.width).not.eql(win.rect.width - 20);
-			finish();
+			var err;
+			try {
+				should(view.rect.x).eql(10);
+				should(view.rect.y).eql(10);
+				should(label.rect.x).eql(10);
+				should(label.rect.y).eql(0);
+				should(label.rect.width).eql(view.rect.width - 20);
+				should(view.rect.width).not.eql(win.rect.width - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		view.add(label);
 		win.add(view);
@@ -1376,13 +1401,18 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = createWindow({}, function() {
-			should(view.rect.x).eql(10);
-			should(view.rect.y).eql(10);
-			should(label.rect.x).eql(10);
-			should(label.rect.y).eql(0);
-			should(label.rect.width).eql(view.rect.width - 20);
-			should(view.rect.width).not.eql(win.rect.width - 20);
-			finish();
+			var err;
+			try {
+				should(view.rect.x).eql(10);
+				should(view.rect.y).eql(10);
+				should(label.rect.x).eql(10);
+				should(label.rect.y).eql(0);
+				should(label.rect.width).eql(view.rect.width - 20);
+				should(view.rect.width).not.eql(win.rect.width - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		view.add(label);
 		win.add(view);
@@ -1412,13 +1442,18 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = createWindow({}, function() {
-			should(view.rect.x).eql(10);
-			should(view.rect.y).eql(10);
-			should(label.rect.x).eql(10);
-			should(label.rect.y).eql(0);
-			should(label.rect.width).eql(view.rect.width - 20);
-			should(view.rect.width).not.eql(win.rect.width - 20);
-			finish();
+			var err;
+			try {
+				should(view.rect.x).eql(10);
+				should(view.rect.y).eql(10);
+				should(label.rect.x).eql(10);
+				should(label.rect.y).eql(0);
+				should(label.rect.width).eql(view.rect.width - 20);
+				should(view.rect.width).not.eql(win.rect.width - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		view.add(label);
 		win.add(view);
@@ -1438,9 +1473,14 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = createWindow({layout:'composite'}, function() {
-			should(label.rect.x).eql(10);
-			should(label.rect.width).eql(win.rect.width - 20);
-			finish();
+			var err;
+			try {
+				should(label.rect.x).eql(10);
+				should(label.rect.width).eql(win.rect.width - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		win.add(label);
 		win.open();
@@ -1459,9 +1499,14 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = createWindow({layout:'horizontal'}, function() {
-			should(label.rect.x).eql(10);
-			should(label.rect.width).eql(win.rect.width - 20);
-			finish();
+			var err;
+			try {
+				should(label.rect.x).eql(10);
+				should(label.rect.width).eql(win.rect.width - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		win.add(label);
 		win.open();
@@ -1480,9 +1525,14 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = createWindow({layout:'vertical'}, function() {
-			should(label.rect.x).eql(10);
-			should(label.rect.width).eql(win.rect.width - 20);
-			finish();
+			var err;
+			try {
+				should(label.rect.x).eql(10);
+				should(label.rect.width).eql(win.rect.width - 20);
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		win.add(label);
 		win.open();
@@ -1497,61 +1547,75 @@ describe('Titanium.UI.Layout', function () {
 			backgroundColor: 'orange',
 		});
 		var savedRect = {};
+		var err;
 		var win = createWindow({}, function () {
+			try {
 				should(label.rect.width).not.eql(0);
 				should(label.rect.height).not.eql(0);
 				should(label.rect.width).greaterThan(savedRect.width);
 				if (utilities.isWindowsPhone()) {
 					should(label.rect.height).greaterThan(savedRect.height);
 				}
-				finish();
+			} catch (e) {
+				err = e;
+			}
+			finish(err);
 		});
 		label.addEventListener('postlayout', function () {
 			if (didPostlayout) return;
 			didPostlayout = true;
-			savedRect = label.rect;
-			should(label.rect.width).not.eql(0);
-			should(label.rect.height).not.eql(0);
-			label.text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mollis rutrum dignissim.';
+			try {
+				savedRect = label.rect;
+				should(label.rect.width).not.eql(0);
+				should(label.rect.height).not.eql(0);
+				label.text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mollis rutrum dignissim.';
+			} catch (e) {
+				err = e;
+			}
 		});
 		win.add(label);
 		win.open();
 	});
 
-    // TIMOB-23225
+		// TIMOB-23225
 	it('TIMOB-23225', function (finish) {
-	    var parent = Ti.UI.createView({
-	        height: Ti.UI.SIZE,
-	        width: Ti.UI.SIZE,
-	        backgroundColor: 'orange'
-	    });
+			var parent = Ti.UI.createView({
+					height: Ti.UI.SIZE,
+					width: Ti.UI.SIZE,
+					backgroundColor: 'orange'
+			});
 
-	    var v1 = Ti.UI.createView({
-	        height: 100, width: Ti.UI.FILL,
-	        backgroundColor: 'gray',
-	    });
-	    var v2 = Ti.UI.createImageView({
-	        height: 50, width: 50,
-	        top: 0, right: 0,
-	        backgroundColor: 'red',
-	    });
-	    var win = createWindow({}, finish);
-	    win.addEventListener('open', function () {
-	        setTimeout(function () {
-	            should(v1.rect.x).eql(0);
-	            should(v1.rect.y).eql(0);
-	            should(v1.rect.width).eql(parent.rect.width);
-	            should(v1.rect.height).eql(parent.rect.height);
-	            should(v2.rect.x).eql(parent.rect.width - v2.rect.width);
-	            should(v2.rect.y).eql(0);
-	            should(v2.rect.width).eql(50);
-	            should(v2.rect.width).eql(50);
-	            finish();
-	        }, 2000);
-	    });
-	    parent.add(v1);
-	    parent.add(v2);
-	    win.add(parent);
-	    win.open();
+			var v1 = Ti.UI.createView({
+					height: 100, width: Ti.UI.FILL,
+					backgroundColor: 'gray',
+			});
+			var v2 = Ti.UI.createImageView({
+					height: 50, width: 50,
+					top: 0, right: 0,
+					backgroundColor: 'red',
+			});
+			var win = createWindow({}, finish);
+			win.addEventListener('open', function () {
+					setTimeout(function () {
+						var err;
+						try {
+							should(v1.rect.x).eql(0);
+							should(v1.rect.y).eql(0);
+							should(v1.rect.width).eql(parent.rect.width);
+							should(v1.rect.height).eql(parent.rect.height);
+							should(v2.rect.x).eql(parent.rect.width - v2.rect.width);
+							should(v2.rect.y).eql(0);
+							should(v2.rect.width).eql(50);
+							should(v2.rect.width).eql(50);
+						} catch (e) {
+							err = e;
+						}
+						finish(err);
+					}, 2000);
+			});
+			parent.add(v1);
+			parent.add(v2);
+			win.add(parent);
+			win.open();
 	});
 });
