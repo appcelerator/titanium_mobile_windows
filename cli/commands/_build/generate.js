@@ -105,7 +105,7 @@ function generateI18N(next) {
 function generateNativeTypes(next) {
 	this.logger.info(__('Generating Native Types'));
 
-	this.targetPlatformSdkVersion    = this.targetPlatformSdkVersion || this.tiapp.windows['TargetPlatformVersion'] || this.wpsdk;
+	this.targetPlatformSdkVersion    = this.targetPlatformSdkVersion || this.tiapp.windows['TargetPlatformVersion'] || '10.0.10586.0';
 	this.targetPlatformSdkMinVersion = this.targetPlatformSdkMinVersion || this.tiapp.windows['TargetPlatformMinVersion'] || this.targetPlatformSdkVersion;
 
 	nativeModuleGenerator.init(this);
