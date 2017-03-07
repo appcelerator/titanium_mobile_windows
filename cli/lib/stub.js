@@ -287,10 +287,6 @@ exports.generate = function generate(dest, modules, native_types, native_events,
 
 	async.parallel([
 		function(callback) {
-			// generate native types only when hyperloop is used
-			if (Object.keys(native_types).length === 0) {
-				return callback();
-			}
 			async.series([
 				function(next) {
 					generateNativeTypeHelper(dest_Hyperloop, native_types, native_events, next);
