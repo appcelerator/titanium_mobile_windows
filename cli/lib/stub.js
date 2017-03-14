@@ -229,7 +229,7 @@ function runMSBuild(slnFile, buildConfiguration, callback) {
 	logger.debug('Running MSBuild on solution: ' + slnFile + ' for ' + buildConfiguration);
 
 	// Use spawn directly so we can pipe output as we go
-	var p = spawn(vsInfo.vcvarsall, [
+	var p = spawn(path.join(vsInfo.path, 'Common7', 'Tools', 'VsDevCmd.bat'), [
 		'&&', 'MSBuild', '/p:Platform=Any CPU', '/p:Configuration=' + buildConfiguration, slnFile
 	]);
 	p.stdout.on('data', function (data) {
