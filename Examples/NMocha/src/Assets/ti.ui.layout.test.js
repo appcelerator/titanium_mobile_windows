@@ -1490,7 +1490,7 @@ describe('Titanium.UI.Layout', function () {
 	//
 	// left & right should just work for child view when parent is Window (horizontal)
 	//
-	it('TIMOB-23372 #9', function (finish) {
+	(utilities.isWindows10() ? it.skip : it)('TIMOB-23372 #9', function (finish) {
 		var label = Ti.UI.createLabel({
 			left: 10,
 			right: 10,
