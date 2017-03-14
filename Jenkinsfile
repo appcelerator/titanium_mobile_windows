@@ -152,11 +152,11 @@ timestamps {
 					junit 'dist/junit_report.xml'
 				}
 			},
-			'Windows 10 ARM': {
-				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
-					build('10.0', '14.0', 'WindowsStore-ARM', gitCommit)
-				}
-			},
+			// 'Windows 10 ARM': {
+			// 	node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
+			// 		build('10.0', '14.0', 'WindowsStore-ARM', gitCommit)
+			// 	}
+			// },
 			failFast: true
 		)
 	}

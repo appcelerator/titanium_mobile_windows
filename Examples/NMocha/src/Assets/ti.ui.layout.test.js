@@ -1264,7 +1264,7 @@ describe('Titanium.UI.Layout', function () {
 	// left & right should just work for child view (composite)
 	// when both left & right are specified to parent
 	//
-	it('TIMOB-23372 #3', function (finish) {
+	(utilities.isWindows10() ? it.skip : it)('TIMOB-23372 #3', function (finish) {
 		var view = Ti.UI.createView({
 			backgroundColor: 'yellow',
 			layout: 'composite',
