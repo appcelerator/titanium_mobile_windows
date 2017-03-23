@@ -472,6 +472,7 @@ function generateAppxManifestForPlatform(target, properties) {
 	properties.Prerequisites = properties.Prerequisites || [];
 	properties.Resources = properties.Resources || [];
 	properties.Extensions = properties.Extensions || [];
+	properties.PackageExtensions = properties.PackageExtensions || [];
 
 	var applications = {};
 	if (properties.Applications) {
