@@ -455,7 +455,7 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(takeScreenshot);
 		TITANIUM_FUNCTION_DEF(vibrate);
 		TITANIUM_FUNCTION_DEF(requestAuthorization);
-		TITANIUM_FUNCTION_DEF(requestRecorderPermission);
+		TITANIUM_FUNCTION_DEF(requestAudioRecorderPermissions);
 		TITANIUM_FUNCTION_DEF(hasCameraPermissions);
 		TITANIUM_FUNCTION_DEF(requestCameraPermissions);
 		TITANIUM_FUNCTION_DEF(createAudioPlayer);
