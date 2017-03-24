@@ -61,6 +61,14 @@
     </Application>
   </Applications>
 
+<% if (manifest.PackageExtensions.length > 0) { -%>
+  <Extensions>
+<% for(var i = 0; i < manifest.PackageExtensions.length; i++) { -%>
+    <%- manifest.PackageExtensions[i] %>
+<% } -%>
+  </Extensions>
+<% } -%>
+
   <Capabilities>
 <% for(var i = 0; i < manifest.Capabilities.length; i++) { -%>
     <%- manifest.Capabilities[i].toString() %>
