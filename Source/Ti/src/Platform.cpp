@@ -16,6 +16,7 @@
 #include <collection.h>
 #include <regex>
 #include <concrt.h>
+#include <boost/algorithm/string.hpp>
 
 namespace TitaniumWindows
 {
@@ -365,21 +366,21 @@ namespace TitaniumWindows
 	bool Platform::openURL(const std::string& url) TITANIUM_NOEXCEPT
 	{
 		const auto uri = ref new Windows::Foundation::Uri(TitaniumWindows::Utility::ConvertString(url));
-		bool result = false;
-		concurrency::event event;
-		concurrency::task<bool>(Windows::System::Launcher::LaunchUriAsync(uri)).then([&result, &event](concurrency::task<bool> task) {
-				try {
-					result = task.get();
-				} catch (::Platform::Exception^ ce) {
-					TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(ce->Message));
-				}
-				catch (...) {}
-				event.set();
-			},
-			concurrency::task_continuation_context::use_arbitrary());
-		event.wait();
 
-		return result;
+		// If this url can be considered as application URI
+		if (boost::starts_with(url, "ms-")) {
+			using namespace Windows::Storage;
+			concurrency::task<StorageFile^>(StorageFile::GetFileFromApplicationUriAsync(uri)).then([](concurrency::task<StorageFile^> task) {
+				try {
+					Windows::System::Launcher::LaunchFileAsync(task.get());
+				} catch (...) { }
+			});
+		} else {
+			Windows::System::Launcher::LaunchUriAsync(uri);
+		}
+		// It turns out that use of arbitrary thread (task_continuation_context::use_arbitrary) makes launcher unstable.
+		// We just launch uri in async and always return true.
+		return true;
 	}
 
 	bool Platform::is24HourTimeFormat() TITANIUM_NOEXCEPT

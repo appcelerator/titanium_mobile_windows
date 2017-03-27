@@ -102,7 +102,7 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getColor);
 			TITANIUM_FUNCTION_DEF(setColor);
 
-			bool contains(const std::string& query);
+			bool contains(const std::string& query, const bool& filterAnchored, const bool& filterCaseInsensitive, const std::string& filterAttribute);
 
 			bool get_added()
 			{
