@@ -109,8 +109,7 @@ function generateNativeTypes(next) {
 	this.targetPlatformSdkVersion    = this.targetPlatformSdkVersion || this.tiapp.windows['TargetPlatformVersion'] || this.wpsdk;
 	this.targetPlatformSdkMinVersion = this.targetPlatformSdkMinVersion || this.tiapp.windows['TargetPlatformMinVersion'] || this.targetPlatformSdkVersion;
 
-	nativeModuleGenerator.init(this);
-	nativeModuleGenerator.generate(this.buildDir, this.modules, this.native_types, this.native_events, next);
+	nativeModuleGenerator.generate(this, next);
 };
 
 /**

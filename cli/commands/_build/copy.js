@@ -501,7 +501,13 @@ function copyResources(next) {
 			copyFile.call(this, path.join(templateDir, 'appicon.png'), destIcon);
 		}
 
+		var thirdpartyLibraries = this.hyperloopConfig.windows.thirdparty && Object.keys(this.hyperloopConfig.windows.thirdparty) || [];
 		function hasWindowsAPI(node_value) {
+			for (var i = 0; i < thirdpartyLibraries.length; i++) {
+				if (node_value.indexOf(thirdpartyLibraries[i] + '.') === 0) {
+					return true;
+				}
+			}
 			return (node_value.indexOf('Windows.') === 0 || node_value.indexOf('System.') === 0);
 		}
 
