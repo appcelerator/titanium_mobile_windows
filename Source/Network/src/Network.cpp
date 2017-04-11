@@ -6,6 +6,7 @@
 
 #include "TitaniumWindows/Network.hpp"
 #include "Titanium/detail/TiLogger.hpp"
+#include "TitaniumWindows/Utility.hpp"
 
 namespace TitaniumWindows
 {
@@ -85,12 +86,14 @@ namespace TitaniumWindows
 		Titanium::Module::enableEvent(event_name);
 		if (event_name == "change") {
 			change_event__ = NetworkInformation::NetworkStatusChanged += ref new NetworkStatusChangedEventHandler([this](Platform::Object^ sender) {
-				const auto ctx = get_context();
-				auto object = ctx.CreateObject();
-				object.SetProperty("networkType", js_get_networkType());
-				object.SetProperty("networkTypeName", js_get_networkTypeName());
-				object.SetProperty("online", js_get_online());
-				fireEvent("change", object);
+				TitaniumWindows::Utility::RunOnUIThread([this]() {
+					const auto ctx = get_context();
+					auto object = ctx.CreateObject();
+					object.SetProperty("networkType", js_get_networkType());
+					object.SetProperty("networkTypeName", js_get_networkTypeName());
+					object.SetProperty("online", js_get_online());
+					fireEvent("change", object);
+				});
 			});
 		}
 	}
