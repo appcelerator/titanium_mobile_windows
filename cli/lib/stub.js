@@ -170,7 +170,7 @@ function generateNativeProject(dest, platform, builder, options, callback) {
 	for (var i = 0; i < thirdpartyLibraries.length; i++) {
 		externalReferences.push({
 			Include: thirdpartyLibraries[i],
-			HintPath: '..\\..\\lib\\' + platform + '\\' + builder.arch + '\\' + thirdpartyLibraries[i] + '.winmd'
+			HintPath: path.join('..', '..', 'lib', platform, builder.arch, thirdpartyLibraries[i] + '.winmd')
 		});
 	}
 

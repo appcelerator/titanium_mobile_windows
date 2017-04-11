@@ -86,7 +86,7 @@ function initialize(next) {
 	this.cmakeFinderDir = path.join(this.buildDir, 'cmake');
 
 	// Hyperloop configuration
-	var hyperloopAppcJs = path.join(this.projectDir, 'appc.js');
+	var hyperloopAppcJs = path.join(this.projectDir, 'appc.windows.js');
 	this.hyperloopConfig = fs.existsSync(hyperloopAppcJs) && require(hyperloopAppcJs).hyperloop || {};
 	this.hyperloopConfig.windows || (this.hyperloopConfig.windows = {});
 
