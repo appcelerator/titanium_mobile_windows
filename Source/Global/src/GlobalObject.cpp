@@ -29,7 +29,7 @@ using concurrency::task_continuation_context;
 
 namespace TitaniumWindows
 {
-	void GlobalObject::registerNativeModuleRequireHook(const std::vector<std::string>& native_module_names, const std::unordered_map<std::string, JSValue>& preloaded_modules, std::function<JSValue(const std::string&)> requireHook)
+	void GlobalObject::registerNativeModuleRequireHook(const std::vector<std::string>& native_module_names, const std::unordered_map<std::string, JSValue>& preloaded_modules, std::function<JSValue(const JSContext&, const std::string&)> requireHook)
 	{
 		// store supported native module names
 		for (const auto v : native_module_names) {
@@ -59,11 +59,14 @@ namespace TitaniumWindows
 		if (native_module_cache__.find(moduleId) != native_module_cache__.end()) {
 			return native_module_cache__.at(moduleId);
 		}
+
+		TITANIUM_ASSERT(native_module_names__.find(moduleId) != native_module_names__.end());
+
 		// mark it as loaded
 		native_module_names__[moduleId] = true;
 
 		// otherwise try to load dynamically
-		return native_module_requireHook__(moduleId);
+		return native_module_requireHook__(js_context, moduleId);
 	}
 
 	static Platform::String^ resolve(const std::string& path) 

@@ -40,7 +40,7 @@ namespace TitaniumWindows
 		static void JSExportInitialize();
 		void setSeed(::Platform::String^ seed);
 		virtual std::string readRequiredModule(const JSObject& parent, const std::string& path) const override final;
-		virtual void registerNativeModuleRequireHook(const std::vector<std::string>& supported_module_names, const std::unordered_map<std::string, JSValue>& preloaded_modules, std::function<JSValue(const std::string&)> requireCallback);
+		virtual void registerNativeModuleRequireHook(const std::vector<std::string>& supported_module_names, const std::unordered_map<std::string, JSValue>& preloaded_modules, std::function<JSValue(const JSContext&, const std::string&)> requireCallback);
 
 	protected:
 #pragma warning(push)
@@ -50,7 +50,7 @@ namespace TitaniumWindows
 
 		// cache for native module
 		std::unordered_map<std::string, JSValue> native_module_cache__;
-		std::function<JSValue(const std::string&)> native_module_requireHook__;
+		std::function<JSValue(const JSContext& js_context, const std::string&)> native_module_requireHook__;
 #pragma warning(pop)
 
 		// native module

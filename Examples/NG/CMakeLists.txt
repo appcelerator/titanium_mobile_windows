@@ -39,6 +39,10 @@ get_filename_component(UI_SOURCE_DIR            ${PROJECT_SOURCE_DIR}/../../Sour
 get_filename_component(TitaniumKit_SOURCE_DIR   ${PROJECT_SOURCE_DIR}/../../Source/TitaniumKit   ABSOLUTE)
 get_filename_component(HAL_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/HAL           ABSOLUTE)
 
+include_external_msproject(
+    TitaniumWindows_Hyperloop ${PROJECT_SOURCE_DIR}/TitaniumWindows_Hyperloop/TitaniumWindows_Hyperloop.csproj
+    TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC)
+
 if(NOT TARGET TitaniumWindows)
   add_subdirectory(${Titanium_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Titanium EXCLUDE_FROM_ALL)
 endif()
