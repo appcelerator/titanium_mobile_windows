@@ -32,7 +32,9 @@ namespace TitaniumWindows
 		void OnResuming(Object ^sender, Object ^args);
 
 		event TitaniumModulePreloadHandler^ TitaniumModulePreload;
+		event TitaniumModuleRequireHandler^ TitaniumModuleRequire;
 		event TitaniumModuleNamesHandler^   TitaniumModuleNames;
+		event NativeUIElementUnwrapHandler^ UnwrapNativeUIElement;
 
 		// Used just for saving reference to TitaniumWindows_Native::RequireHook to prevent from GC
 		void SaveRequireHook(Object^ requireHook) {

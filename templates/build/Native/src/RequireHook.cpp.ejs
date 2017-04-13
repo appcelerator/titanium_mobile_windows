@@ -6,6 +6,7 @@
 * Please see the LICENSE included with this distribution for details.
 */
 #include "RequireHook.hpp"
+#include "WindowsNativeModuleLoader.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include <collection.h>
 
@@ -21,20 +22,25 @@ namespace TitaniumWindows_Native
 	using namespace HAL;
 
 	RequireHook::RequireHook()
+		: native_module_loader__(std::make_shared<TitaniumWindows::WindowsNativeModuleLoader>())
 	{
 	}
 
 	RequireHook::~RequireHook()
 	{
 		app__->TitaniumModulePreload -= preload__;
+		app__->TitaniumModuleRequire -= require__;
 		app__->TitaniumModuleNames   -= names__;
+		app__->UnwrapNativeUIElement -= ui_cast__;
 	}
 
 	void RequireHook::Register(TitaniumWindows::Application^ app)
 	{
 		app__ = app;
 		preload__ = app__->TitaniumModulePreload += ref new TitaniumWindows::TitaniumModulePreloadHandler(this, &TitaniumWindows_Native::RequireHook::OnTitaniumModulePreload);
+		require__ = app__->TitaniumModuleRequire += ref new TitaniumWindows::TitaniumModuleRequireHandler(this, &TitaniumWindows_Native::RequireHook::OnTitaniumModuleRequire);
 		names__   = app__->TitaniumModuleNames   += ref new TitaniumWindows::TitaniumModuleNamesHandler(this, &TitaniumWindows_Native::RequireHook::OnTitaniumModuleNames);
+		ui_cast__ = app__->UnwrapNativeUIElement += ref new TitaniumWindows::NativeUIElementUnwrapHandler(this, &TitaniumWindows_Native::RequireHook::OnNativeUIWrap);
 
 		app__->SaveRequireHook(this);
 	}
@@ -59,21 +65,44 @@ namespace TitaniumWindows_Native
 		return reinterpret_cast<std::intptr_t>(static_cast<JSValueRef>(js_preloaded_module_map));
 	}
 
+	// This will be called when native module with supported name is not loaded. Return pointer to JSValue as the result of require.
+	std::intptr_t RequireHook::OnTitaniumModuleRequire(std::intptr_t js_context_ref, Platform::String^ moduleId)
+	{
+		const auto js_context = JSContext(reinterpret_cast<JSContextRef>(js_context_ref));
+
+		auto value = native_module_loader__->registerNativeModule(js_context, TitaniumWindows::Utility::ConvertString(moduleId));
+
+		return reinterpret_cast<std::intptr_t>(static_cast<JSValueRef>(value));
+	}
+
 	// This should return collections of supported name module names such as Windows.Xaml.Controls.Button etc.
 	Windows::Foundation::Collections::IVector<Platform::String^>^ RequireHook::OnTitaniumModuleNames(int js_context_ref)
 	{
 		auto names = ref new ::Platform::Collections::Vector<::Platform::String^>();
 
+
+		//// TODO: Insert supported module names here
+		//// names->Append("com.example.test");
+		//// names->Append("Windows.UI.Xaml.Controls.Button");
+		//// names->Append("Windows.UI.Xaml.Controls.ListView");
+
 		//// INSERT SUPPORTED NATIVE MODULE NAMES START
 <% for(var i=0; i<native_modules.length; i++) { -%>
 		names->Append("<%= native_modules[i].name %>");
 <% } -%>
-<% for(var key in native_types) { -%>
-		names->Append("<%= native_types[key].name %>");
-<% } -%>
 		//// INSERT SUPPORTED NATIVE MODULE NAMES END
 
 		return names;
+	}
+
+	std::intptr_t RequireHook::OnNativeUIWrap(std::intptr_t js_context_ref, std::intptr_t js_object_ref)
+	{
+		const auto js_context = JSContext(reinterpret_cast<JSContextRef>(js_context_ref));
+		const auto js_object = JSObject(js_context, reinterpret_cast<JSObjectRef>(js_object_ref));
+
+		auto value = native_module_loader__->wrapNativeUI(js_context, js_object);
+
+		return reinterpret_cast<std::intptr_t>(static_cast<JSObjectRef>(value));
 	}
 
 } // namespace TitaniumWindows

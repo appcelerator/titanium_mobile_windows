@@ -1,0 +1,155 @@
+/**
+ * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License.
+ * Please see the LICENSE included with this distribution for details.
+ */
+
+#include "WindowsNativeModuleLoader.hpp"
+#include "Titanium/detail/TiImpl.hpp"
+#include "TitaniumWindows/UI/UIElement.hpp"
+
+// INSERT_INCLUDES
+<% for (var x = 0; x < unique_classes.length; x++) { -%>
+#include "<%= unique_classes[x] %>.hpp"
+<% } -%>
+// END_INCLUDES
+
+namespace TitaniumWindows
+{
+	using namespace HAL;
+
+	WindowsNativeModuleLoader::WindowsNativeModuleLoader()
+	{
+	}
+
+	WindowsNativeModuleLoader::~WindowsNativeModuleLoader()
+	{
+	}
+
+	void WindowsNativeModuleLoader::registerValue(const JSContext& context, const std::string& name, const JSValue& value) const
+	{
+		// FIXME If we've already hung a value at this name, we shouldn't do any of this!
+		auto global = context.get_global_object();
+		// Split type/path by '.', then build up the namespaces!
+		JSObject current_object = global;
+
+		std::stringstream stream(name);
+		std::string segment;
+		std::vector<std::string> parts;
+		while(std::getline(stream, segment, '.'))
+		{
+		   parts.push_back(segment);
+		}
+		for (size_t i = 0, len = parts.size(); i < len - 1; i++) {
+			auto part = parts.at(i);
+
+			if (!current_object.HasProperty(part)) {
+				auto child_object = context.CreateObject();
+				current_object.SetProperty(part, child_object);
+				current_object = child_object;
+			} else {
+				auto current_value = current_object.GetProperty(part);
+				TITANIUM_ASSERT(current_value.IsObject());
+				current_object = static_cast<JSObject>(current_value);
+			}
+		}
+		// hang the actual value at the end!
+		current_object.SetProperty(parts.at(parts.size() - 1), value);
+	}
+
+	void WindowsNativeModuleLoader::registerEnums(const JSContext& context, const std::string& type_name) const
+	{
+		// INSERT_ENUMS
+<%
+var current_enum,
+	current_class;
+for (class_name in classes) {
+	current_class = classes[class_name];
+	// If parent is undefined and enum dependencies are empty, we don't need to do anything
+	if (!current_class.parent && current_class.enums.length == 0) {
+		continue;
+	}
+-%>
+		if (type_name == "<%= class_name %>") {
+<%
+	// Register parent's enums first
+	if (current_class.parent) {
+-%>
+			registerEnums(context, "<%= current_class.parent %>");
+<%
+	}
+	// Go through list of enums
+	for (var j = 0; j < current_class.enums.length; j++) {
+		current_enum = current_class.enums[j];
+		if (store_only_enums.indexOf(current_enum) != -1) { -%>
+#if WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
+<%		}
+		// TODO make use of native_to_js.cpp ejs template for this?
+-%>
+			registerValue(context, "<%= current_enum %>", context.CreateNumber(static_cast<int32_t>(static_cast<int>(::<%= current_enum.replace(/\./g, '::') %>))));	
+<%
+		if (store_only_enums.indexOf(current_enum) != -1) { -%>
+#endif
+<%
+		}
+	}
+-%>
+			return;
+		}
+<%
+}
+-%>
+		// END_ENUMS
+	}
+
+	JSValue WindowsNativeModuleLoader::registerNativeModule(const JSContext& context, const std::string& path) const
+	{
+		JSObject instantiated = context.CreateObject();
+		// TODO Use a std::map that we populate once and just check for a key with that name?
+		// INSERT_SWITCH
+<%
+var prefix = "";
+for (class_name in classes) {
+-%>
+		<%= prefix%>if (path == "<%= class_name %>") {
+			instantiated = context.CreateObject(JSExport<::Titanium::<%= class_name.replace(/\./g, '::') %>>::Class());
+			registerEnums(context, path);
+		}
+<%
+	prefix = "else ";
+}
+-%>
+		else {
+			return context.CreateUndefined();
+		}
+		// END_SWITCH
+
+		registerValue(context, path, instantiated);
+
+		return static_cast<JSValue>(instantiated);
+	}
+
+	JSObject WindowsNativeModuleLoader::wrapNativeUI(const JSContext& context, const JSObject& object)
+	{
+<%
+if (classes['Windows.UI.Xaml.UIElement']) {
+-%>
+		auto ui_element_wrapper = object.GetPrivate<::Titanium::Windows::UI::Xaml::UIElement>();
+		auto element = ui_element_wrapper->unwrapWindows_UI_Xaml_UIElement();
+		auto wrapped = context.CreateObject(JSExport<::TitaniumWindows::UI::UIElement>::Class());
+		// ok we have a wrapper View subclass, but we need to instantiate an instance as constructor!
+		auto constructed = wrapped.CallAsConstructor();
+		auto blah = constructed.GetPrivate<::TitaniumWindows::UI::UIElement>();
+		blah->setComponent(dynamic_cast<Windows::UI::Xaml::FrameworkElement^>(element));
+		return constructed;
+<%
+} else {
+-%>
+		return context.CreateObject();
+<%
+}
+-%>
+	}
+
+}  // namespace TitaniumWindows
+

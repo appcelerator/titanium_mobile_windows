@@ -53,10 +53,6 @@ WindowsModuleBuilder.prototype.run = function run(logger, config, cli, finished)
 	this.logger = logger;
 
 	appc.async.series(this, [
-		function(next) {
-			cli.scanHooks(path.join(cli.argv['project-dir'], 'plugins', 'hooks'));
-			next();
-		},
 		function (next) {
 			cli.emit('build.module.pre.construct', this, next);
 		},
@@ -70,22 +66,11 @@ WindowsModuleBuilder.prototype.run = function run(logger, config, cli, finished)
 		},
 
 		'compileModule',
-
-		function (next) {
-			cli.emit('build.module.post.compile', this, next);
-		},
-
-		'copyModule',
-
-		function (next) {
-			cli.emit('build.module.pre.package', this, next);
-		},
-
 		'packageZip',
 
 		function (next) {
-			cli.emit('build.module.post.package', this, next);
-		},
+			cli.emit('build.module.post.compile', this, next);
+		}
 	], function (err) {
 		cli.emit('build.module.finalize', this, function () {
 			finished(err);
@@ -164,18 +149,15 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 
 	function build(sln, config, arch, next) {
 		var nativeAssetsDir = path.dirname(sln),
-			platformTarget  = path.basename(nativeAssetsDir),
 			vcxproj = path.join(nativeAssetsDir, _t.manifest.moduleIdAsIdentifier+'.vcxproj'),
 			vcxContent,
 			buildPath;
 		// user may skip specific architecture by using CLI.
 		// at least we are skipping WindowsStore.ARM for now
 		if (!fs.existsSync(sln)) {
-			_t.logger.info('Skipping ' + sln + ' for ' + platformTarget + ' ' + config);
+			_t.logger.info('Skipping ' + sln);
 			next();
 			return;
-		} else {
-			_t.logger.info('Building ' + sln + ' for ' + platformTarget + ' ' + config);
 		}
 
 		vcxContent = fs.readFileSync(vcxproj, 'utf8');
@@ -234,13 +216,9 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 					appc.xml.forEachElement(item, function(node) {
 						if (node.tagName == 'uses-sdk') {
 							var sdk_version = appc.xml.getAttr(node, 'targetSdkVersion');
-							_t.logger.info('targetSdkVersion: ' + sdk_version);
 							// Remove Windows10 target only when it targets to 8.1 explicitly
 							if (sdk_version == '8.1') {
 								types = defaultTypes.slice(0, 2);
-							} else if (sdk_version == '10.0') {
-								types    = ['Windows10'];
-								typesMin = ['win10'];
 							}
 						}
 					});
@@ -309,7 +287,7 @@ function walkdir(dirpath, base, callback) {
   });
 }
 
-WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
+WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
 
 	// Suppress warnings from Stream
 	EventEmitter.defaultMaxListeners = 100;
@@ -326,22 +304,12 @@ WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 	wrench.mkdirSyncRecursive(moduleDir);
 
 	// copy necesary folders and files
-	var parent_folders = ['documentation', 'example', 'assets'],
-		parent_files   = ['LICENSE'];
-	parent_folders.forEach(function(folder) {
-		var from = path.join(_t.projectDir, '..', folder);
-		if (fs.existsSync(from)) {
-			wrench.copyDirSyncRecursive(from, path.join(moduleDir, folder));
-		}
-	});
-	parent_files.forEach(function(filename){
-		var from = path.join(_t.projectDir, '..', filename),
-			to   = path.join(moduleDir, filename);
-		if (fs.existsSync(from) && !fs.existsSync(to)) {
-			fs.createReadStream(from).pipe(fs.createWriteStream(to));
-		}
-	});
+	wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'documentation'), path.join(moduleDir, 'documenation'));
+	wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'example'), path.join(moduleDir, 'example'));
+	wrench.copyDirSyncRecursive(path.join(this.projectDir, '..', 'assets'), path.join(moduleDir, 'assets'));
 	wrench.copyDirSyncRecursive(path.join(this.projectDir, 'include'), path.join(moduleDir, 'include'));
+
+	fs.createReadStream(path.join(this.projectDir, '..', 'LICENSE')).pipe(fs.createWriteStream(path.join(moduleDir, 'LICENSE')));
 	fs.createReadStream(path.join(this.projectDir, 'manifest')).pipe(fs.createWriteStream(path.join(moduleDir, 'manifest')));
 	fs.createReadStream(path.join(this.projectDir, 'timodule.xml')).pipe(fs.createWriteStream(path.join(moduleDir, 'timodule.xml')));
 
@@ -389,27 +357,19 @@ WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 			}
 		});
 	});
-	next();
-};
-
-WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
-	var buildDir = path.join(this.projectDir, 'build'),
-		moduleDir = path.join(buildDir, this.manifest.moduleid, this.manifest.version),
-		_t = this;
 
 	// create zip
-	var zipName = _t.manifest.moduleid + '-windows-' + _t.manifest.version + '.zip',
-		destName = path.join(_t.projectDir, zipName),
-		output   = fs.createWriteStream(destName),
+	var zipName = _t.manifest.moduleid + '-windows-' + _t.manifest.version + '.zip';
+	var output = fs.createWriteStream(path.join(_t.projectDir, zipName)),
 		archive = archiver('zip');
 
-	_t.logger.info('Creating module zip');
-	_t.logger.info('Writing module zip: '+ destName.cyan);
+	_t.logger.info('Creating zip: '+zipName.cyan);
 
 	archive.on('error', function(err) {
 		throw err;
 	});
 	output.on('close', function() {
+		_t.logger.info('Done.');
 		next();
 	});
 

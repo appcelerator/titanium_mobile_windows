@@ -1,5 +1,5 @@
 var appc = require('node-appc'),
-	nativeModuleGenerator = require('../../lib/stub'),
+	nativeTypeGenerator = require('../../lib/stub'),
 	DOMParser = require('xmldom').DOMParser,
 	fs = require('fs'),
 	i18n = require('titanium-sdk/lib/i18n'),
@@ -9,7 +9,6 @@ var appc = require('node-appc'),
 	ti = require('titanium-sdk'),
 	wrench = require('wrench'),
 	defaultsdeep = require('lodash.defaultsdeep'),
-	spawn = require('child_process').spawn,
 	__ = appc.i18n(__dirname).__;
 
 /*
@@ -22,13 +21,13 @@ exports.mixin = mixin;
  */
 function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.generateI18N = generateI18N;
-	WindowsBuilder.prototype.generateNativeTypes = generateNativeTypes;
+	WindowsBuilder.prototype.generateNativeWrappers = generateNativeWrappers;
 	WindowsBuilder.prototype.generateModuleFinder = generateModuleFinder;
 	WindowsBuilder.prototype.generateCmakeList = generateCmakeList;
 	WindowsBuilder.prototype.generateCapabilities = generateCapabilities;
 	WindowsBuilder.prototype.generateAppxManifestForPlatform = generateAppxManifestForPlatform;
 	WindowsBuilder.prototype.generateAppxManifest = generateAppxManifest;
-	WindowsBuilder.prototype.fixCSharpConfiguration = fixCSharpConfiguration;
+	WindowsBuilder.prototype.addI18nVSResources = addI18nVSResources;
 }
 
 /**
@@ -50,7 +49,6 @@ function generateI18N(next) {
 	data.en.app.appname || (data.en.app.appname = this.tiapp.name);
 
 	this.i18nVSResources = [];
-	this.defaultLanguage = 'en'; // set as 'en' for now
 
 	Object.keys(data).forEach(function (locale) {
 		var destDir = path.join(this.buildTargetStringsDir, locale),
@@ -97,18 +95,35 @@ function generateI18N(next) {
 };
 
 /**
+ * Updates the Visual Studio project to add the generated Resources.resw file
+ *
+ * @param {Function} next - A function to call after resources have been generated.
+ */
+function addI18nVSResources(next) {
+	var cmakeProjectName = this.sanitizeProjectName(this.cli.tiapp.name),
+		vcxproj = path.resolve(this.cmakeTargetDir, cmakeProjectName + '.vcxproj');
+
+	var modified = fs.readFileSync(vcxproj, 'utf8');
+	fs.existsSync(vcxproj) && fs.renameSync(vcxproj, vcxproj + '.bak');
+
+	// DefaultLanguage (forcing to "en" for now)
+	modified = modified.replace(/<DefaultLanguage>[a-zA-Z]{2}(-[a-zA-Z]{2})*<\/DefaultLanguage>/, '<DefaultLanguage>en</DefaultLanguage>');
+
+	fs.writeFileSync(vcxproj, modified);
+
+	next();
+}
+
+/**
  * Generates the native type wrappers and adds them to the Visual Studio project.
  *
  * @param {Function} next - A function to call after the native types have been generated.
  */
-function generateNativeTypes(next) {
-	this.logger.info(__('Generating Native Types'));
+function generateNativeWrappers(next) {
+	this.logger.info(__('Generating Native Type Wrappers'));
 
-	this.targetPlatformSdkVersion    = this.targetPlatformSdkVersion || this.tiapp.windows['TargetPlatformVersion'] || this.wpsdk;
-	this.targetPlatformSdkMinVersion = this.targetPlatformSdkMinVersion || this.tiapp.windows['TargetPlatformMinVersion'] || this.targetPlatformSdkVersion;
-
-	nativeModuleGenerator.init(this);
-	nativeModuleGenerator.generate(this.buildDir, this.modules, this.native_types, this.native_events, next);
+	nativeTypeGenerator.setLogger(this.logger);
+	nativeTypeGenerator.generate(path.join(this.buildDir, 'Native'), this.seeds, this.modules, next);
 };
 
 /**
@@ -583,49 +598,3 @@ function generateAppxManifest(next) {
 
 	next();
 };
-
-/**
- * Updates the Visual Studio project to fix configuration for C# project
- */
-function fixCSharpConfiguration(next) {
-	var cmakeProjectName = this.sanitizeProjectName(this.cli.tiapp.name),
-		sln = path.resolve(this.cmakeTargetDir, cmakeProjectName + '.sln'),
-		modified = fs.readFileSync(sln, 'utf8'),
-		_t = this;
-
-	modified = modified.replace('{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.Debug|Win32.ActiveCfg = Debug|Win32',     '{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.Debug|Win32.ActiveCfg = Debug|x86');
-	modified = modified.replace('{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.Debug|Win32.Build.0 = Debug|Win32',       '{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.Debug|Win32.Build.0 = Debug|x86');
-	modified = modified.replace('{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.Release|Win32.ActiveCfg = Release|Win32', '{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.Release|Win32.ActiveCfg = Release|x86');
-	modified = modified.replace('{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.Release|Win32.Build.0 = Release|Win32',   '{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.Release|Win32.Build.0 = Release|x86');
-	modified = modified.replace('{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32', '{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|x86');
-	modified = modified.replace('{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32',   '{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.MinSizeRel|Win32.Build.0 = MinSizeRel|x86');
-	modified = modified.replace('{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32', '{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|x86');
-	modified = modified.replace('{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32',   '{68D742FA-F1E6-487A-A9FA-158A6C8BBCBB}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|x86');
-
-	fs.writeFileSync(sln, modified);
-
-	// Make sure project dependencies are installed via NuGet
-	var nuget = path.resolve(__dirname, '..', '..', 'vendor', 'nuget', 'nuget.exe');
-	var p = spawn(nuget, ['restore', sln]);
-	p.stdout.on('data', function (data) {
-		var line = data.toString().trim();
-		if (line.indexOf('error ') >= 0) {
-			_t.logger.error(line);
-		} else if (line.indexOf('warning ') >= 0) {
-			_t.logger.warn(line);
-		} else if (line.indexOf(':\\') === -1) {
-			_t.logger.debug(line);
-		} else {
-			_t.logger.trace(line);
-		}
-	});
-	p.stderr.on('data', function (data) {
-		_t.logger.warn(data.toString().trim());
-	});
-	p.on('close', function (code) {
-		if (code != 0) {
-			process.exit(1); // Exit with code from nuget?
-		}
-		next();
-	});
-}

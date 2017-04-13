@@ -105,10 +105,6 @@ set_property(TARGET TitaniumWindows_Native
   "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Utility/${PLATFORM}/${Ti_ARCH}/TitaniumWindows_Utility.winmd"
 <% for(var i = 0; i < native_modules.length; i++) { -%>
   "<%= native_modules[i].path %>/${PLATFORM}/${Ti_ARCH}/<%= native_modules[i].projectname %>.winmd"
-  <% if (native_modules[i].projectname == 'Hyperloop') { -%>
-  "${PROJECT_SOURCE_DIR}/../TitaniumWindows_Hyperloop/bin/${PLATFORM}/Release/TitaniumWindows_Hyperloop.winmd"
-  "<%= native_modules[i].path %>/${PLATFORM}/${Ti_ARCH}/HyperloopInvocation.winmd"
-  <% } -%>
 <% } -%>
 )
 

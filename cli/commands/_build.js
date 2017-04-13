@@ -21,6 +21,10 @@ var Builder = require('titanium-sdk/lib/builder'),
  - tiapp.xml property?
  - always build for all architectures?
 
+ - figure out signing windows phone apps
+ - we have a --ws-cert option, but maybe that should become just --cert?
+ - signing the app is done in the hooks\[wp|ws]-run.js hooks
+
  - depending on how tiapp.xml values (desc, publisher, name, id, version, etc)
  are embedded the app, you may be able to reduce the number of checks that
  trigger a full rebuild
@@ -56,6 +60,7 @@ function WindowsBuilder() {
 	this.defaultTarget = 'wp-emulator';
 
 	this.tiSymbols = {};
+	this.seeds = [];
 }
 
 util.inherits(WindowsBuilder, Builder);

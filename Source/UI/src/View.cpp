@@ -102,6 +102,16 @@ namespace TitaniumWindows
 			return ref new Windows::UI::Xaml::Media::FontFamily(Utility::ConvertUTF8String(path));
 		}
 
+		void View::registerNativeUIWrapHook(const std::function<JSObject(const JSContext&, const JSObject&)>& requireHook)
+		{
+			//
+			// This is special case: Called from TitaniumWindows::Application,
+			// Set layout delegate on Ti.UI.View for registering native view wrapper hook
+			//
+			Titanium::UI::View::setLayoutDelegate<WindowsViewLayoutDelegate>();
+			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->registerNativeUIWrapHook(requireHook);
+		}
+
 		Windows::UI::Xaml::FrameworkElement^ View::getComponent() TITANIUM_NOEXCEPT
 		{
 			return getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
