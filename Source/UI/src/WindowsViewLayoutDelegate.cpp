@@ -88,11 +88,13 @@ namespace TitaniumWindows
 			const auto object_ptr = view.GetPrivate<TitaniumWindows::Platform_Object>();
 			if (object_ptr) {
 				auto elm_ctor  = ctx.CreateObject(JSExport<TitaniumWindows::UI::FrameworkElementWrapper>::Class());
-				const auto elm = elm_ctor.CallAsConstructor();
+				auto elm = elm_ctor.CallAsConstructor();
 				const auto elm_ptr = elm.GetPrivate<TitaniumWindows::UI::FrameworkElementWrapper>();
 				const auto element = safe_cast<FrameworkElement^>(object_ptr->get_native_object());
 				if (element) {
 					elm_ptr->setComponent(element);
+					elm.SetProperty("left", ctx.CreateNumber(Canvas::GetLeft(element)));
+					elm.SetProperty("top",  ctx.CreateNumber(Canvas::GetTop(element)));
 					return std::dynamic_pointer_cast<Titanium::UI::View>(elm_ptr);
 				}
 			}
