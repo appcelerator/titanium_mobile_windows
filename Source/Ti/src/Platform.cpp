@@ -318,9 +318,36 @@ namespace TitaniumWindows
 				if (users->Size > 0) {
 					// let's get the first one
 					const auto user = users->GetAt(0);
-					concurrency::create_task(user->GetPropertyAsync(KnownUserProperties::DisplayName)).then([&evt, &username](concurrency::task<::Platform::Object^> task) {
+
+					using namespace ::Platform;
+					using namespace ::Platform::Collections;
+
+					auto properties = ref new Vector<String^>();
+					properties->Append(KnownUserProperties::AccountName);
+					properties->Append(KnownUserProperties::DisplayName);
+					properties->Append(KnownUserProperties::FirstName);
+					properties->Append(KnownUserProperties::LastName);
+
+					concurrency::create_task(user->GetPropertiesAsync(properties->GetView())).then([properties, &evt, &username](concurrency::task<IPropertySet^> task) {
 						try {
-							username = task.get()->ToString();
+							auto results = task.get();
+
+							for (auto property : properties) {
+								auto value = results->Lookup(property)->ToString();
+
+								// property empty, skip to next property
+								if (value->IsEmpty()) {
+									continue;
+								}
+								username = value;
+
+								// fallback onto first and last name
+								// append last name to first name
+								if (property == KnownUserProperties::FirstName) {
+									username += " " + results->Lookup(KnownUserProperties::LastName)->ToString();
+								}
+								break;
+							}
 						} catch (::Platform::COMException^ e) {
 							TITANIUM_LOG_WARN("Failed to get username", TitaniumWindows::Utility::ConvertString(e->Message));
 						}
