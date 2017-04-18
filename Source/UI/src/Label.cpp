@@ -162,11 +162,13 @@ namespace TitaniumWindows
 			label__->Measure(desiredSize);
 
 			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
-
-			if (layout->get_width().empty() || layout->get_right().empty()) {
+			const auto width = layout->get_width();
+			const auto height = layout->get_height();
+			const auto TI_UI_SIZE = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
+			if (width.empty() || width == TI_UI_SIZE) {
 				border__->Width = label__->DesiredSize.Width;
 			}
-			if (layout->get_height().empty() || layout->get_bottom().empty()) {
+			if (height.empty() || height == TI_UI_SIZE) {
 				border__->Height = label__->DesiredSize.Height;
 			}
 		}
