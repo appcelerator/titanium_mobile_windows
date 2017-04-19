@@ -329,7 +329,7 @@ namespace TitaniumWindows
 		requestedProperties->Append("{A8B865DD-2E3D-4094-AD97-E593A70C75D6},3"); // version
 		requestedProperties->Append("{A45C254E-DF1C-4EFD-8020-67D146A850E0},10"); // device
 
-		std::string os_version = "6.3.9600"; // Win 8.1 base value
+		std::string os_version = "8.1"; // Win 8.1 base value
 		concurrency::event event;
 		concurrency::create_task(PnpObject::FindAllAsync(PnpObjectType::Device, requestedProperties)).then([&event, &os_version](concurrency::task<PnpObjectCollection^> t) {
 			try {
@@ -339,7 +339,10 @@ namespace TitaniumWindows
 					auto deviceClass = object->Properties->Lookup("{A45C254E-DF1C-4EFD-8020-67D146A850E0},10")->ToString();
 					if (deviceClass == "{4d36e966-e325-11ce-bfc1-08002be10318}") {
 						auto version = object->Properties->Lookup("{A8B865DD-2E3D-4094-AD97-E593A70C75D6},3")->ToString();
-						os_version = Utility::ConvertUTF8String(version);
+						const auto version_str = Utility::ConvertUTF8String(version);
+						if (!boost::starts_with(version_str, "6.3")) {
+							os_version = version_str;
+						}
 						found = true;
 						break;
 					}
