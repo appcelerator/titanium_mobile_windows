@@ -405,6 +405,15 @@ function copyResources(next) {
 			}, cb);
 		},
 
+		// Copy all external libraries into lib folder
+		function (cb) {
+			var src = path.join(this.projectDir, 'lib', 'windows');
+			copyDir.call(this, {
+				src: src,
+				dest: path.join(this.buildDir, 'lib')
+			}, cb);
+		},
+
 		// Copy TitaniumKit and HAL dlls over into src folder
 		function (cb) {
 			var src = path.join(this.platformPath, 'lib', 'TitaniumKit', this.cmakePlatformAbbrev, this.arch, 'TitaniumKit.dll');
@@ -492,7 +501,13 @@ function copyResources(next) {
 			copyFile.call(this, path.join(templateDir, 'appicon.png'), destIcon);
 		}
 
+		var thirdpartyLibraries = this.hyperloopConfig.windows.thirdparty && Object.keys(this.hyperloopConfig.windows.thirdparty) || [];
 		function hasWindowsAPI(node_value) {
+			for (var i = 0; i < thirdpartyLibraries.length; i++) {
+				if (node_value.indexOf(thirdpartyLibraries[i] + '.') === 0) {
+					return true;
+				}
+			}
 			return (node_value.indexOf('Windows.') === 0 || node_value.indexOf('System.') === 0);
 		}
 

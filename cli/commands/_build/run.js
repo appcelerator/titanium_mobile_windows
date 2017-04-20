@@ -54,6 +54,7 @@ function run(logger, config, cli, finished) {
 		'generateCmakeList',
 		'runCmake',
 		'fixCSharpConfiguration',
+		'copyModuleOverride',
 		'compileApp',
 		'writeBuildManifest',
 		'copyResultsToProject',

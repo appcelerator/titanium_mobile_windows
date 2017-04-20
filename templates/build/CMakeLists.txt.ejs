@@ -177,6 +177,12 @@ set_property(TARGET ${EXE_NAME}
   "<%= targetPlatformSdkMinVersion %>")
 <% } -%>
 
+<% for(var i = 0; i < native_modules.length; i++) { -%>
+file(GLOB MODULE_WINRT_REFERENCES_<%= i %> <%= native_modules[i].path %>/${PLATFORM}/${Ti_ARCH}/*.winmd)
+<% } -%>
+
+file(GLOB THIRD_WINRT_REFERENCES ${PROJECT_SOURCE_DIR}/lib/${PLATFORM}/${Ti_ARCH}/*.winmd)
+
 set_property(TARGET ${EXE_NAME}
   PROPERTY VS_WINRT_REFERENCES
   "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Filesystem/${PLATFORM}/${Ti_ARCH}/TitaniumWindows_Filesystem.winmd"
@@ -189,8 +195,9 @@ set_property(TARGET ${EXE_NAME}
   "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows/${PLATFORM}/${Ti_ARCH}/TitaniumWindows.winmd"
   "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_UI/${PLATFORM}/${Ti_ARCH}/TitaniumWindows_UI.winmd"
   "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Utility/${PLATFORM}/${Ti_ARCH}/TitaniumWindows_Utility.winmd"
+  ${THIRD_WINRT_REFERENCES}
 <% for(var i = 0; i < native_modules.length; i++) { -%>
-  "<%= native_modules[i].path %>/${PLATFORM}/${Ti_ARCH}/<%= native_modules[i].projectname %>.winmd"
+  ${MODULE_WINRT_REFERENCES_<%= i %>}
 <% if (native_modules[i].projectname == 'Hyperloop') { -%>
   "${PROJECT_SOURCE_DIR}/TitaniumWindows_Hyperloop/bin/${PLATFORM}/Release/TitaniumWindows_Hyperloop.winmd"
   "<%= native_modules[i].path %>/${PLATFORM}/${Ti_ARCH}/HyperloopInvocation.winmd"

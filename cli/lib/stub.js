@@ -15,17 +15,7 @@ var fs = require('fs'),
 	path = require('path'),
 	async = require('async'),
 	spawn = require('child_process').spawn,
-	logger, windowsInfo,
-	targetPlatformSdkVersion, targetPlatformSdkMinVersion,
-	cmakePlatform;
-
-exports.init = function(thiz) {
-	logger = thiz.logger;
-	windowsInfo = thiz.windowsInfo;
-	targetPlatformSdkVersion    = thiz.targetPlatformSdkVersion === '10.0' ? windowsInfo.windows['10.0'].sdks[0] : thiz.targetPlatformSdkVersion;
-	targetPlatformSdkMinVersion = thiz.targetPlatformSdkMinVersion === '10.0' ? targetPlatformSdkVersion : thiz.targetPlatformSdkMinVersion;
-	cmakePlatform = thiz.cmakePlatform;
-};
+	logger, windowsInfo;
 
 function generateCmakeList(dest, modules, next) {
 	var cmakelist_template = path.join(dest, 'CMakeLists.txt.ejs'),
@@ -171,17 +161,25 @@ function buildNativeTypeHelper(dest, platform, buildConfiguration, callback) {
 	});
 }
 
-function generateTargetVersion(dest, platform, callback) {
+function generateNativeProject(dest, platform, builder, options, callback) {
 	var template = path.join(dest, platform, 'TitaniumWindows_Hyperloop.csproj.ejs'),
-		csproj   = path.join(dest, platform, 'TitaniumWindows_Hyperloop.csproj');
+		csproj   = path.join(dest, platform, 'TitaniumWindows_Hyperloop.csproj'),
+		externalReferences = [];
+		thirdpartyLibraries = builder.hyperloopConfig.windows.thirdparty && Object.keys(builder.hyperloopConfig.windows.thirdparty) || [];
 
-	logger.trace("Updating target version for " + platform);
+	for (var i = 0; i < thirdpartyLibraries.length; i++) {
+		externalReferences.push({
+			Include: thirdpartyLibraries[i],
+			HintPath: path.join('..', '..', 'lib', platform, builder.arch, thirdpartyLibraries[i] + '.winmd')
+		});
+	}
 
 	fs.readFile(template, 'utf8', function (err, data) {
 		if (err) throw err;
 		data = ejs.render(data, { 
-			targetPlatformSdkVersion:    targetPlatformSdkVersion,
-			targetPlatformSdkMinVersion: targetPlatformSdkMinVersion
+			externalReferences:          externalReferences,
+			targetPlatformSdkVersion:    options.sdkVersion,
+			targetPlatformSdkMinVersion: options.sdkMinVersion
 		}, {});
 
 		fs.writeFile(csproj, data, function(err) {
@@ -263,24 +261,29 @@ function runMSBuild(slnFile, buildConfiguration, callback) {
 
 /**
  * Generates the set of native type wrappers.
- * @param {String} dest - the location on disk where to place the generate types.
- * @param {Array[map]} modules - List of native modules
- * @param {Array[map]} native_types - List of native types
- * @param {Array[map]} native_events - List of native events
+ * @param {Object} builder - Builder
  * @param {Function} finished - Callback when detection is finished
  */
-exports.generate = function generate(dest, modules, native_types, native_events, finished) {
-	var dest_Native    = path.join(dest, 'Native'),
+exports.generate = function generate(builder, finished) {
+
+	var dest = builder.buildDir,
+		modules = builder.modules,
+		native_types   = builder.native_types || {},
+		native_events  = builder.native_events || {},	
+		dest_Native    = path.join(dest, 'Native'),
 		dest_Hyperloop = path.join(dest, 'TitaniumWindows_Hyperloop');
 
-	native_types  = native_types  || {};
-	native_events = native_events || {};
+	logger = builder.logger;
+	windowsInfo = builder.windowsInfo;
+
+	var sdkVersion = builder.targetPlatformSdkVersion === '10.0' ? windowsInfo.windows['10.0'].sdks[0] : builder.targetPlatformSdkVersion,
+	 	sdkMinVersion = builder.targetPlatformSdkMinVersion === '10.0' ? sdkVersion : builder.targetPlatformSdkMinVersion;
 
 	var platform = 'win10';
-	if (targetPlatformSdkVersion === '8.1') {
-		if (cmakePlatform === 'WindowsStore') {
+	if (sdkVersion === '8.1') {
+		if (builder.cmakePlatform === 'WindowsStore') {
 			platform = 'store';
-		} else if (cmakePlatform === 'WindowsPhone') {
+		} else if (builder.cmakePlatform === 'WindowsPhone') {
 			platform = 'phone';
 		}
 	}
@@ -296,7 +299,11 @@ exports.generate = function generate(dest, modules, native_types, native_events,
 					generateNativeTypeHelper(dest_Hyperloop, native_types, native_events, next);
 				},
 				function(next) {
-					generateTargetVersion(dest_Hyperloop, 'win10', next);
+					generateNativeProject(dest_Hyperloop, platform, builder, 
+						{
+							sdkVersion: sdkVersion,
+							sdkMinVersion: sdkMinVersion
+						}, next);
 				},
 				function(next) {
 					buildNativeTypeHelper(dest_Hyperloop, platform, 'Debug', next);

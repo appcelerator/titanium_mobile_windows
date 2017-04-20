@@ -29,6 +29,11 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
+set(<%= moduleIdAsIdentifier %>_ARCH "x86")
+if(CMAKE_GENERATOR MATCHES "^Visual Studio .+ ARM$")
+  set(<%= moduleIdAsIdentifier %>_ARCH "ARM")
+endif()
+
 option(<%- moduleIdAsIdentifier %>_DISABLE_TESTS "Disable compiling the tests" OFF)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -67,10 +72,13 @@ target_include_directories(<%- moduleIdAsIdentifier %> PUBLIC
   $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
   )
 
+file(GLOB MODULE_TARGET_LIBS ${PROJECT_SOURCE_DIR}/lib/${PLATFORM}/${<%- moduleIdAsIdentifier %>_ARCH}/*.lib)
+
 target_link_libraries(<%- moduleIdAsIdentifier %>
   HAL
   TitaniumKit
   TitaniumWindows_Utility
+  ${MODULE_TARGET_LIBS}
   )
 
 set_target_properties(<%- moduleIdAsIdentifier %> PROPERTIES VS_WINRT_COMPONENT TRUE)
@@ -87,6 +95,13 @@ set_property(TARGET <%- moduleIdAsIdentifier %> PROPERTY INTERFACE_<%- moduleIdA
 set_property(TARGET <%- moduleIdAsIdentifier %> APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING <%- moduleIdAsIdentifier %>_MAJOR_VERSION
   )
+
+
+file(GLOB MODULE_WINRT_REFERENCES ${PROJECT_SOURCE_DIR}/lib/${PLATFORM}/${<%- moduleIdAsIdentifier %>_ARCH}/*.winmd)
+set_property(TARGET <%- moduleIdAsIdentifier %>
+  PROPERTY VS_WINRT_REFERENCES
+  ${MODULE_WINRT_REFERENCES}
+)
 
 install(TARGETS <%- moduleIdAsIdentifier %> EXPORT <%- moduleIdAsIdentifier %>_Targets
   LIBRARY DESTINATION lib

@@ -44,6 +44,15 @@
     <Compile Include="..\src\TypeHelper.cs" />
     <Compile Include="..\src\Properties\AssemblyInfo.cs" />
   </ItemGroup>
+<% if (externalReferences.length > 0) { -%>
+  <ItemGroup>
+<% for(var i = 0; i < externalReferences.length; i++) { -%>
+    <Reference Include="<%= externalReferences[i].Include %>">
+      <HintPath><%= externalReferences[i].HintPath %></HintPath>
+    </Reference>
+<% } -%>
+  </ItemGroup>
+<% } -%>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
