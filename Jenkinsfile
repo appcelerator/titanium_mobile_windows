@@ -163,7 +163,7 @@ timestamps {
 
 	// If not a PR, trigger titanium_mobile to build
 	if (!env.BRANCH_NAME.startsWith('PR-')) {
-		// Trigger build of titaium_mobile in our pipeline multibranch group!
-		build job: "appcelerator/titanium_mobile/${env.BRANCH_NAME}", wait: false
+		// Trigger build of titanium_mobile in our pipeline multibranch group!
+		build job: "../titanium_mobile/${env.BRANCH_NAME}", wait: false
 	}
 }
