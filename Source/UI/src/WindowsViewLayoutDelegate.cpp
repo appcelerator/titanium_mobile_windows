@@ -115,10 +115,23 @@ namespace TitaniumWindows
 			}
 		}
 
+		void WindowsViewLayoutDelegate::removeAllChildren() TITANIUM_NOEXCEPT
+		{
+			const auto children = get_children();
+			for (const auto child : children) {
+				removeView(child);
+			}
+			Titanium::UI::ViewLayoutDelegate::removeAllChildren();
+		}
+
 		void WindowsViewLayoutDelegate::remove(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::remove(view);
+			removeView(view);
+		}
 
+		void WindowsViewLayoutDelegate::removeView(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
+		{
 			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::remove ", view.get(), " for ", this);
 
 			if (!is_panel__) {
