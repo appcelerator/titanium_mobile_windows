@@ -28,6 +28,14 @@
 <% } -%>
   </Prerequisites>
 
+<% if (manifest.Dependencies.length > 0) { -%>
+    <Dependencies>
+<% for(var i = 0; i < manifest.Dependencies.length; i++) { -%>
+    <%- manifest.Dependencies[i].toString() %>
+<% } -%>
+  </Dependencies>
+<% } -%>
+
   <Resources>
     <Resource Language="x-generate" />
 <% for(var i = 0; i < manifest.Resources.length; i++) { -%>
