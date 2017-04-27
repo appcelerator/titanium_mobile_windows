@@ -31,6 +31,15 @@ namespace Titanium
 			setHTTPStatusPhrase();
 		}
 
+		HTTPClient::~HTTPClient()
+		{
+			onload__ = get_context().CreateNull();
+			onerror__ = get_context().CreateNull();
+			ondatastream__ = get_context().CreateNull();
+			onsendstream__ = get_context().CreateNull();
+			onreadystatechange__ = get_context().CreateNull();
+		}
+
 		TITANIUM_PROPERTY_READWRITE(HTTPClient, std::chrono::milliseconds, timeout)
 		TITANIUM_PROPERTY_READWRITE(HTTPClient, std::string, file)
 		TITANIUM_PROPERTY_READWRITE(HTTPClient, std::string, username)
