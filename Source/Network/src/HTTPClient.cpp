@@ -12,6 +12,15 @@
 #include <ppl.h>
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
+#include "TitaniumWindows/WindowsMacros.hpp"
+
+// FIXME: Workaround to select current thread on Windows 10 desktop. Need to revisit.
+#if defined(IS_WINDOWS_MOBILE)
+#define SELECT_CONTINUATION_CONTEXT \
+  IS_WINDOWS_MOBILE ? task_continuation_context::use_arbitrary() : task_continuation_context::use_current()
+#else
+#define SELECT_CONTINUATION_CONTEXT task_continuation_context::use_arbitrary()
+#endif
 
 using namespace concurrency;
 
@@ -229,7 +238,7 @@ namespace TitaniumWindows
 				SerializeHeaders(response);
 
 				return create_task(response->Content->ReadAsInputStreamAsync(), token);
-			}, task_continuation_context::use_current())
+			}, SELECT_CONTINUATION_CONTEXT)
 				.then([this, token](Windows::Storage::Streams::IInputStream^ stream) {
 				interruption_point();
 
@@ -238,7 +247,7 @@ namespace TitaniumWindows
 				// FIXME Fire ondatastream/onsendstream callbacks throughout!
 
 				return HTTPResultAsync(stream, token);
-			}, task_continuation_context::use_current())
+			}, SELECT_CONTINUATION_CONTEXT)
 				.then([this](task<Windows::Storage::Streams::IBuffer^> previousTask) {
 				try {
 					// Check if any previous task threw an exception.
@@ -251,9 +260,13 @@ namespace TitaniumWindows
 						// Fire onerror only if there's an onerror handler registered and status code is 400-599.
 						// Otherwise fire onload (so 400-599 fall back to onload if no onerror handler)
 						if (onerror__ && onerror__.IsObject() && static_cast<JSObject>(onerror__).IsFunction() && status__ >= 400 && status__ <= 599) {
-       						onerror(status__, "HTTP Error", false);
+							TitaniumWindows::Utility::RunOnUIThread([this] {
+								onerror(status__, "HTTP Error", false);
+							});
        					} else {
-       						onload(0, "Response has been loaded.", true);
+							TitaniumWindows::Utility::RunOnUIThread([this] {
+       							onload(0, "Response has been loaded.", true);
+							});
        					}
 
 						onsendstream(1.0);
@@ -277,7 +290,7 @@ namespace TitaniumWindows
 						onerror(-1, error, false);
 					}
 				}
-			});
+			}, SELECT_CONTINUATION_CONTEXT);
 			// clang-format on
 		}
 
@@ -361,7 +374,9 @@ namespace TitaniumWindows
 
 				// Stop the timeout timer
 				if (dispatcherTimer__ != nullptr && httpClient__ != nullptr) {
-					dispatcherTimer__->Stop();
+					TitaniumWindows::Utility::RunOnUIThread([=] {
+						dispatcherTimer__->Stop();
+					});
 				}
 
 				if (contentLength__ != -1 && contentLength__ != 0) {
@@ -381,7 +396,7 @@ namespace TitaniumWindows
 				
 				// FIXME How do we pass the token on in case of readTask?
 				return responseBuffer->Length ? HTTPResultAsync(stream, token) : readTask;
-			}, task_continuation_context::use_current());
+			}, SELECT_CONTINUATION_CONTEXT);
 			// clang-format on
 		}
 
