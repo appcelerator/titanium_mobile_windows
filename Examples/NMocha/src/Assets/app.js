@@ -80,7 +80,6 @@ require('./ti.ui.window.test');
 require('./ti.ui.windows.commandbar.test');
 require('./ti.utils.test');
 require('./ti.xml.test');
-}
 // ============================================================================
 
 
