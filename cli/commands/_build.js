@@ -11,7 +11,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var Builder = require('titanium-sdk/lib/builder'),
+var Builder = require('node-titanium-sdk/lib/builder'),
 	util = require('util');
 
 /*

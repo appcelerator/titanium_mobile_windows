@@ -14,7 +14,7 @@
 var archiver = require('archiver'),
 	async = require('async'),
 	appc = require('node-appc'),
-	Builder = require('titanium-sdk/lib/builder'),
+	Builder = require('node-titanium-sdk/lib/builder'),
 	DOMParser = require('xmldom').DOMParser,
 	fs = require('fs'),
 	os = require('os'),
