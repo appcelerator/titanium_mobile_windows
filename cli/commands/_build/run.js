@@ -2,7 +2,7 @@ var appc = require('node-appc'),
 	spawn = require('child_process').spawn,
 	fs = require('fs'),
 	wrench = require('wrench'),
-	Builder = require('titanium-sdk/lib/builder'),
+	Builder = require('node-titanium-sdk/lib/builder'),
 	__ = appc.i18n(__dirname).__;
 
 /*

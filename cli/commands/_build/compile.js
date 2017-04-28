@@ -3,7 +3,7 @@ var appc = require('node-appc'),
 	os = require('os'),
 	path = require('path'),
 	spawn = require('child_process').spawn,
-	ti = require('titanium-sdk'),
+	ti = require('node-titanium-sdk'),
 	windowslib = require('windowslib'),
 	__ = appc.i18n(__dirname).__;
 
