@@ -3,10 +3,10 @@ var appc = require('node-appc'),
 	cleanCSS = require('clean-css'),
 	fs = require('fs'),
 	crypto = require('crypto'),
-	jsanalyze = require('titanium-sdk/lib/jsanalyze'),
+	jsanalyze = require('node-titanium-sdk/lib/jsanalyze'),
 	os = require('os'),
 	path = require('path'),
-	ti = require('titanium-sdk'),
+	ti = require('node-titanium-sdk'),
 	wrench = require('wrench'),
 	UglifyJS = require('uglify-js'),
 	__ = appc.i18n(__dirname).__;
@@ -501,7 +501,13 @@ function copyResources(next) {
 			copyFile.call(this, path.join(templateDir, 'appicon.png'), destIcon);
 		}
 
+		var thirdpartyLibraries = this.hyperloopConfig.windows.thirdparty && Object.keys(this.hyperloopConfig.windows.thirdparty) || [];
 		function hasWindowsAPI(node_value) {
+			for (var i = 0; i < thirdpartyLibraries.length; i++) {
+				if (node_value.indexOf(thirdpartyLibraries[i] + '.') === 0) {
+					return true;
+				}
+			}
 			return (node_value.indexOf('Windows.') === 0 || node_value.indexOf('System.') === 0);
 		}
 

@@ -1,5 +1,5 @@
 var appc = require('node-appc'),
-	Builder = require('titanium-sdk/lib/builder'),
+	Builder = require('node-titanium-sdk/lib/builder'),
 	windowslib = require('windowslib'),
 	windowsPackageJson = appc.pkginfo.package(module);
 

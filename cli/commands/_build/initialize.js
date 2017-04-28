@@ -2,7 +2,7 @@ var appc = require('node-appc'),
 	fs = require('fs'),
 	os = require('os'),
 	path = require('path'),
-	ti = require('titanium-sdk'),
+	ti = require('node-titanium-sdk'),
 	__ = appc.i18n(__dirname).__;
 
 /*
@@ -84,6 +84,11 @@ function initialize(next) {
 	this.buildManifestFile = path.join(this.buildDir, 'build-manifest.json');
 	this.cmakeListFile = path.join(this.buildDir, 'CMakeLists.txt'); // lives above the buildSrcDir
 	this.cmakeFinderDir = path.join(this.buildDir, 'cmake');
+
+	// Hyperloop configuration
+	var hyperloopAppcJs = path.join(this.projectDir, 'appc.windows.js');
+	this.hyperloopConfig = fs.existsSync(hyperloopAppcJs) && require(hyperloopAppcJs).hyperloop || {};
+	this.hyperloopConfig.windows || (this.hyperloopConfig.windows = {});
 
 	next();
 }

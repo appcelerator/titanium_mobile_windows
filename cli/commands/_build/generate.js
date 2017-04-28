@@ -2,11 +2,11 @@ var appc = require('node-appc'),
 	nativeModuleGenerator = require('../../lib/stub'),
 	DOMParser = require('xmldom').DOMParser,
 	fs = require('fs'),
-	i18n = require('titanium-sdk/lib/i18n'),
+	i18n = require('node-titanium-sdk/lib/i18n'),
 	os = require('os'),
 	ejs = require('ejs'),
 	path = require('path'),
-	ti = require('titanium-sdk'),
+	ti = require('node-titanium-sdk'),
 	wrench = require('wrench'),
 	defaultsdeep = require('lodash.defaultsdeep'),
 	spawn = require('child_process').spawn,
@@ -109,8 +109,7 @@ function generateNativeTypes(next) {
 	this.targetPlatformSdkVersion    = this.targetPlatformSdkVersion || this.tiapp.windows['TargetPlatformVersion'] || this.wpsdk;
 	this.targetPlatformSdkMinVersion = this.targetPlatformSdkMinVersion || this.tiapp.windows['TargetPlatformMinVersion'] || this.targetPlatformSdkVersion;
 
-	nativeModuleGenerator.init(this);
-	nativeModuleGenerator.generate(this.buildDir, this.modules, this.native_types, this.native_events, next);
+	nativeModuleGenerator.generate(this, next);
 };
 
 /**
