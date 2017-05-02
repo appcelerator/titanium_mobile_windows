@@ -92,6 +92,9 @@ namespace TitaniumWindows
 				method__ = Titanium::Network::RequestMethod::Options;
 			}
 
+			responseData__.clear();
+			responseDataLen__ = 0;
+
 			location__ = location;
 			filter__ = ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter();
 			httpClient__ = ref new Windows::Web::Http::HttpClient(filter__);
