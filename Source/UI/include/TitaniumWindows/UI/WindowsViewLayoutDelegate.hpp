@@ -100,6 +100,8 @@ namespace TitaniumWindows
 			virtual void remove(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT override;
 			virtual void insertAt(const Titanium::UI::ViewInsertOrReplaceParams& params) TITANIUM_NOEXCEPT;
 			virtual void replaceAt(const Titanium::UI::ViewInsertOrReplaceParams& params) TITANIUM_NOEXCEPT;
+			virtual void removeAllChildren() TITANIUM_NOEXCEPT override;
+			virtual void removeView(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT;
 
 			virtual void animate(const std::shared_ptr<Titanium::UI::Animation>& animation, JSObject& callback, const JSObject& this_object) TITANIUM_NOEXCEPT override;
 
