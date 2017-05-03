@@ -11,7 +11,7 @@
 
 //// NATIVE_MODULE_INCLUDES START
 <% for(var i=0; i<native_module_includes.length; i++) { -%>
-#include "<%= native_module_includes[i] %>"
+#include "<%- native_module_includes[i] %>"
 <% } -%>
 //// NATIVE_MODULE_INCLUDES END
 
@@ -52,7 +52,7 @@ namespace TitaniumWindows_Native
 
 		//// INITIALLIZE PRELOADED NATIVE MODULE START
 <% for(var i=0; i<native_modules.length; i++) { if (native_modules[i].preload) { -%>
-		js_preloaded_module_map.SetProperty("<%= native_modules[i].name %>", js_context.CreateObject(JSExport<<%= native_modules[i].className %>>::Class()));
+		js_preloaded_module_map.SetProperty("<%- native_modules[i].name %>", js_context.CreateObject(JSExport<<%- native_modules[i].className %>>::Class()));
 <% }} -%>
 		//// INITIALLIZE PRELOADED NATIVE MODULE END
 
@@ -66,10 +66,10 @@ namespace TitaniumWindows_Native
 
 		//// INSERT SUPPORTED NATIVE MODULE NAMES START
 <% for(var i=0; i<native_modules.length; i++) { -%>
-		names->Append("<%= native_modules[i].name %>");
+		names->Append("<%- native_modules[i].name %>");
 <% } -%>
 <% for(var key in native_types) { -%>
-		names->Append("<%= native_types[key].name %>");
+		names->Append("<%- native_types[key].name %>");
 <% } -%>
 		//// INSERT SUPPORTED NATIVE MODULE NAMES END
 
