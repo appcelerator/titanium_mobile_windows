@@ -532,7 +532,56 @@ function copyResources(next) {
 					return next('Failed to parse JavaScript files.');
 				}
 
+				// Mapping variable and required class name
+				var native_requires = {};
+				//
+				// Search for constructor class from addEventListener node
+				//
+				function findConstructorClass(node) {
+					if (node.expression && 
+							node.expression.expression && 
+							node.expression.expression.thedef &&
+							node.expression.expression.thedef.name) {
+
+						var expression = node.expression.expression,
+								thedef     = expression.thedef,
+								name       = thedef.name,
+								type;
+
+						if (thedef.scope && thedef.scope.ctors) {
+							type = native_requires[thedef.scope.ctors[name]];
+						}
+
+						if (!type && expression.scope && expression.scope.ctors) {
+							type = native_requires[expression.scope.ctors[name]];
+						}
+
+						return { name: name, type: type };
+					}
+				}
+
+
 				var walker = new UglifyJS.TreeWalker(function (node) {
+					var parent = walker.parent();
+
+					if (node instanceof UglifyJS.AST_SymbolVar) {
+						if (parent.value && parent.value.expression && parent.value.expression.name == 'require' && parent.value.args.length > 0) {
+							native_requires[node.name] = parent.value.args[0].value;
+						}
+					}
+
+					if (node instanceof UglifyJS.AST_New) {
+						if (node.expression && node.expression.scope) {
+							var scope = node.expression.scope;
+							scope.ctors || (scope.ctors = {});
+							if (parent.name && parent.name.thedef) {
+								scope.ctors[parent.name.thedef.name] = node.expression.name;
+							} else if (parent.left) {
+								scope.ctors[parent.left.name] = node.expression.name;
+							}
+						}
+					}
+
 					// FIXME What if it is a requires, but not a string? What if it is a dynamically built string?
 					if (node instanceof UglifyJS.AST_Call && node.expression.name == 'require' &&
 						node.args && node.args.length == 1 && node.args[0] instanceof UglifyJS.AST_String) {
@@ -544,16 +593,9 @@ function copyResources(next) {
 					}
 					if (node instanceof UglifyJS.AST_Call && node.expression.property == 'addEventListener') {
 
-						if (node.expression.expression && 
-							node.expression.expression.thedef && 
-							node.expression.expression.thedef.init && 
-							node.expression.expression.thedef.init.expression && 
-							node.expression.expression.thedef.init.expression.thedef &&
-							node.expression.expression.thedef.init.expression.thedef.init &&
-							node.expression.expression.thedef.init.expression.thedef.init.expression &&
-							node.expression.expression.thedef.init.expression.thedef.init.expression.name == 'require' &&
-							node.expression.expression.thedef.init.expression.thedef.init.args.length > 0) {
-							var detectedConstructorType = node.expression.expression.thedef.init.expression.thedef.init.args[0].value;
+						var ctor = findConstructorClass(node);
+						if (ctor && ctor.type) {
+							var detectedConstructorType = ctor.type;
 							if (hasWindowsAPI(detectedConstructorType) &&
 								node.args &&
 								node.args.length > 0 &&
