@@ -82,10 +82,14 @@ timestamps {
 	} // stage('Docs')
 
 	stage ('Build') {
-		def targetBranch = 'master'
+		def targetBranch = env.CHANGE_TARGET // if it's a PR, use target merge branch as branch of SDK to install
 		if (!env.BRANCH_NAME.startsWith('PR-')) {
-			targetBranch = env.BRANCH_NAME
+			targetBranch = env.BRANCH_NAME // if it isn't a PR, try to match the current branch
 		}
+		if (!targetBranch) { // if all else fails, use master as SDK branch to test with
+			targetBranch = 'master'
+		}
+
 		parallel(
 			'Windows 8.1 Store x86': {
 				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
