@@ -46,6 +46,14 @@ namespace TitaniumWindows
 			});
 
 			grid__->Children->Append(pivot__);
+#elif defined(IS_WINDOWS_10)
+			splitView__ = ref new SplitView();
+			splitView__->DisplayMode = SplitViewDisplayMode::CompactInline;
+			grid__->Children->Append(splitView__);
+
+			splitPane__ = ref new StackPanel();
+			splitView__->Pane = splitPane__;
+			splitView__->IsPaneOpen = true;
 #else
 			sectionView__ = ref new ListView();
 			sectionView__->IsItemClickEnabled = true;
@@ -113,6 +121,8 @@ namespace TitaniumWindows
 			const auto brush = ref new Media::SolidColorBrush(WindowsViewLayoutDelegate::ColorForName(value));
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			pivot__->Background = brush;
+#elif defined(IS_WINDOWS_10)
+			splitPane__->Background = brush;
 #else
 			sectionView__->Background = brush;
 #endif
@@ -129,6 +139,9 @@ namespace TitaniumWindows
 				const auto tabview = activeTab->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 				pivot__->SelectedItem = tabview;
+#elif defined(IS_WINDOWS_10)
+				splitView__->Content = tabview;
+
 #else
 				if (grid__->Children->Size > 1) {
 					grid__->Children->RemoveAt(1);
@@ -159,6 +172,8 @@ namespace TitaniumWindows
 			Titanium::UI::TabGroup::set_tabs(tabs);
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			pivot__->Items->Clear();
+#elif defined(IS_WINDOWS_10)
+			splitPane__->Children->Clear();
 #else
 			sectionViewItems__->Clear();
 #endif
@@ -180,6 +195,16 @@ namespace TitaniumWindows
 			if (windows_tab) {
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 				pivot__->Items->Append(tabview);
+#elif defined(IS_WINDOWS_10)
+				auto tabItem = ref new Windows::UI::Xaml::Controls::Button();
+				tabItem->Content = Utility::ConvertUTF8String(windows_tab->get_title());
+
+				tabItem->Click += ref new RoutedEventHandler([this, tabview](Platform::Object^ sender, RoutedEventArgs^ e) {
+					splitView__->Content = tabview;
+				});
+
+				splitPane__->Children->Append(tabItem);
+				splitView__->OpenPaneLength = tabItem->Width;
 #else
 				sectionViewItems__->Append(Utility::ConvertUTF8String(windows_tab->get_title()));
 #endif

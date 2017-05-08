@@ -84,11 +84,13 @@ namespace TitaniumWindows
 
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			Windows::UI::Xaml::Controls::Pivot^ pivot__;
+#elif defined(IS_WINDOWS_10)
+			Windows::UI::Xaml::Controls::SplitView^ splitView__;
+			Windows::UI::Xaml::Controls::StackPanel^ splitPane__;
+
 #else
 			//
 			// We're going to use ListView for tab navigation because there's no Pivot for Windows Store app.
-			// On Windows 10 we might want to use SplitView instead.
-			// http://igrali.com/2015/04/12/getting-started-with-splitview-control-in-universal-apps/
 			//
 			Windows::UI::Xaml::Controls::ListView^ sectionView__;
 			Windows::UI::Xaml::Data::CollectionViewSource^ sectionViewSource__;
