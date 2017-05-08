@@ -28,16 +28,16 @@ namespace TitaniumWindows_Hyperloop
     {
 
 <% for(var key in native_events) { -%>
-        public static Event add_<%= native_events[key].signature %>(object target)
+        public static Event add_<%- native_events[key].signature %>(object target)
         {
-            Event evt = new Event("<%= native_events[key].name %>", target);
-            ((<%= native_events[key].type %>)target).<%= native_events[key].name %> += evt.HandleEvent;
+            Event evt = new Event("<%- native_events[key].name %>", target);
+            ((<%- native_events[key].type %>)target).<%- native_events[key].name %> += evt.HandleEvent;
             return evt;
         }
 
-        public static void remove_<%= native_events[key].signature %>(object evt, object target)
+        public static void remove_<%- native_events[key].signature %>(object evt, object target)
         {
-            ((<%= native_events[key].type %>)target).<%= native_events[key].name %> -= ((Event)evt).HandleEvent;
+            ((<%- native_events[key].type %>)target).<%- native_events[key].name %> -= ((Event)evt).HandleEvent;
         }
 <% } -%>
     }
@@ -69,7 +69,7 @@ namespace TitaniumWindows_Hyperloop
         private static Dictionary<string, string> AssemblyQualifiedName = new Dictionary<string, string>()
             {
 <% for(var key in native_types) { -%>
-                { "<%= native_types[key].name %>", typeof(<%= native_types[key].name %>).AssemblyQualifiedName },
+                { "<%- native_types[key].name %>", typeof(<%- native_types[key].name %>).AssemblyQualifiedName },
 <% } -%>
             };
 
