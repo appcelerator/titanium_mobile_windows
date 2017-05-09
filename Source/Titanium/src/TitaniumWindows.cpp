@@ -45,6 +45,7 @@
 #include "TitaniumWindows/Network.hpp"
 #include "TitaniumWindows/Network/HTTPClient.hpp"
 #include "TitaniumWindows/Network/Socket/TCP.hpp"
+#include "TitaniumWindows/Network/Socket/UDP.hpp"
 #include "TitaniumWindows/UI/WebView.hpp"
 #include "TitaniumWindows/Map/View.hpp"
 #include "TitaniumWindows/Map/Annotation.hpp"
@@ -148,6 +149,7 @@ namespace TitaniumWindows
 			.NetworkClass(JSExport<TitaniumWindows::NetworkModule>::Class())
 			.HTTPClientClass(JSExport<TitaniumWindows::Network::HTTPClient>::Class())
 			.TCPClass(JSExport<TitaniumWindows::Network::Socket::TCP>::Class())
+			.UDPClass(JSExport<TitaniumWindows::Network::Socket::UDP>::Class())
 			.WebViewClass(JSExport<TitaniumWindows::UI::WebView>::Class())
 			.MapViewClass(JSExport<TitaniumWindows::Map::View>::Class())
 			.MapAnnotationClass(JSExport<TitaniumWindows::Map::Annotation>::Class())

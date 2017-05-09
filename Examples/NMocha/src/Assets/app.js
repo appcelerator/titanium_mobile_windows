@@ -49,6 +49,7 @@ require('./ti.network.test');
 //if (!utilities.isWindows10()) {
 //require('./ti.network.httpclient.test');
 //require('./ti.network.socket.tcp.test.js');
+//require('./ti.network.socket.udp.test.js');
 //}
 require('./ti.platform.test');
 require('./ti.require.test');
