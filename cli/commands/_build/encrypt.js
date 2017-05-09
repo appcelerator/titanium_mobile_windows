@@ -7,7 +7,6 @@ var appc = require('node-appc'),
 	path = require('path'),
 	ti = require('node-titanium-sdk'),
 	wrench = require('wrench'),
-	UglifyJS = require('uglify-js'),
 	__ = appc.i18n(__dirname).__;
 
 /*
