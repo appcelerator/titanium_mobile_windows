@@ -268,28 +268,30 @@ exports.init = function (logger, config, cli) {
 						});
 				}
 
-				// Install dependencies
-				var possibleDependencies = fs.readdirSync(dependenciesDir);
-				possibleDependencies = possibleDependencies.filter(function(file) {
-					return appxExtensions.indexOf(path.extname(file)) !== -1;
-				});
-				possibleDependencies.forEach(function(file) {
-					installs.push(function (next) {
-						logger.info(__('Installing dependency: %s', file));
-						windowslib.install(builder.deviceId, path.resolve(dependenciesDir, file), installOnlyOpts)
-						.on('installed', function (handle) {
-							next();
-						})
-						.on('timeout', function (err) {
-							logRelay && logRelay.stop();
-							next(err.message);
-						})
-						.on('error', function (err) {
-							logRelay && logRelay.stop();
-							next(err.message);
+				if (!cli.argv.hasOwnProperty('skipInstallDependencies')) {
+					// Install dependencies
+					var possibleDependencies = fs.readdirSync(dependenciesDir);
+					possibleDependencies = possibleDependencies.filter(function(file) {
+						return appxExtensions.indexOf(path.extname(file)) !== -1;
+					});
+					possibleDependencies.forEach(function(file) {
+						installs.push(function (next) {
+							logger.info(__('Installing dependency: %s', file));
+							windowslib.install(builder.deviceId, path.resolve(dependenciesDir, file), installOnlyOpts)
+							.on('installed', function (handle) {
+								next();
+							})
+							.on('timeout', function (err) {
+								logRelay && logRelay.stop();
+								next(err.message);
+							})
+							.on('error', function (err) {
+								logRelay && logRelay.stop();
+								next(err.message);
+							});
 						});
 					});
-				});
+				}
 
 				// Install actual app(s)
 				var possibleApps = fs.readdirSync(appxDir);
