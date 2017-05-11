@@ -266,7 +266,7 @@ namespace Titanium
 
 		virtual std::string requestResolveModule(const JSObject& parent, const std::string& moduleId, const std::string& dirname = COMMONJS_SEPARATOR__) TITANIUM_NOEXCEPT;
 		virtual std::string resolvePath(const std::string& path, const std::string& dir = COMMONJS_SEPARATOR__) const TITANIUM_NOEXCEPT final;
-		virtual std::string resolvePathAsModule(const JSObject& parent, const std::string& resolvedPath, const std::string& dirname) const TITANIUM_NOEXCEPT final;
+		virtual std::string resolvePathAsModule(const JSObject& parent, const std::string& resolvedPath, const std::string& dirname, const std::string& moduleId) const TITANIUM_NOEXCEPT final;
 		virtual std::string resolvePathAsDirectory(const JSObject& parent, const std::string& resolvedPath) const TITANIUM_NOEXCEPT final;
 		virtual std::string resolvePathAsFile(const JSObject& parent, const std::string& resolvedPath) const TITANIUM_NOEXCEPT final;
 		virtual std::vector<std::string> resolveRequirePaths(const std::string& dirname) const TITANIUM_NOEXCEPT final;

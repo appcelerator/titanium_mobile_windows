@@ -49,24 +49,38 @@ namespace Titanium
 		return newlist;
 	}
 
+	std::string removeSlashes(const std::string& path)
+	{
+		// this assumes we already joined the arguments with separator
+		std::string name = static_cast<std::string>(path);
+		// remove duplicate separators!
+		boost::algorithm::replace_all(name, "//", "/");
+		return name;
+	}
+
 	std::vector<std::string> GlobalObject::resolveRequirePaths(const std::string& dirname) const TITANIUM_NOEXCEPT
 	{
+		std::string cleanDirname = removeSlashes(dirname);
 		std::vector<std::string> paths;
 		if (dirname == COMMONJS_SEPARATOR__) {
-			paths.push_back("node_modules");
+			paths.push_back("/node_modules");
+			return paths;
 		} else {
 #pragma warning(push)
 #pragma warning(disable:4996)
 			std::vector<std::string> parts;
-			boost::split(parts, dirname, boost::is_any_of(COMMONJS_SEPARATOR__));
+			boost::split(parts, cleanDirname, boost::is_any_of(COMMONJS_SEPARATOR__));
 #pragma warning(pop)
-			for (size_t i = 0, len = parts.size(); i < len; i++) {
-				auto p = slice(parts, 0, len-i);
+			for (size_t i = parts.size() - 1; i > 0; i--) {
+				if (parts[i] == "node_modules" || parts[i] == "") {
+					continue;
+				}
+				auto p = slice(parts, 0, i + 1);
 				auto path =  boost::algorithm::join(p, COMMONJS_SEPARATOR__) + "/node_modules";
-				std::vector<std::string>::iterator it = paths.begin();
-				paths.insert(it, path);
+				paths.push_back(path);
 			}
 		}
+		paths.push_back("/node_modules");
 		return paths;
 	}
 
@@ -159,7 +173,7 @@ namespace Titanium
 		return std::string();
 	}
 
-	std::string GlobalObject::resolvePathAsModule(const JSObject& parent, const std::string& path, const std::string& dirname) const TITANIUM_NOEXCEPT
+	std::string GlobalObject::resolvePathAsModule(const JSObject& parent, const std::string& path, const std::string& dirname, const std::string& moduleId) const TITANIUM_NOEXCEPT
 	{
 		std::string modulePath;
 		std::string resolvedPath = path;
@@ -175,7 +189,7 @@ namespace Titanium
 			resolvedPath = COMMONJS_SEPARATOR__ + resolvedPath;
 		}
 		for (size_t i = 0, len = reqPaths.size(); i < len; i++) {
-			auto newResolvedPath = reqPaths[i] + resolvedPath;
+			auto newResolvedPath = reqPaths[i] + COMMONJS_SEPARATOR__ + moduleId;
 			modulePath = resolvePathAsFile(parent,newResolvedPath);
 			if (!modulePath.empty()) {
 				return modulePath;
@@ -213,7 +227,7 @@ namespace Titanium
 		std::string modulePath;
 
 		if (isNodeModule) {
-			modulePath = resolvePathAsModule(parent,resolvedPath,dirname);
+			modulePath = resolvePathAsModule(parent,resolvedPath,dirname, moduleId);
 		} else {
 			// load as file or load as directory
 			modulePath = resolvePathAsFile(parent,resolvedPath);
