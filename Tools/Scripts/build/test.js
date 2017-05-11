@@ -41,19 +41,30 @@ var path = require('path'),
  * @param next {Function} callback function
  **/
 function installSDK(branch, next) {
-	var prc = spawn('node', [titanium, 'sdk', 'install', '-b', branch, '-d']);
+	var prc = spawn('node', [titanium, 'sdk', 'install', '-b', branch, '-d', '--no-colors']),
+		sdkVersion;
 	prc.stdout.on('data', function (data) {
-	   console.log(data.toString().trim());
+		var value = data.toString().trim(),
+			regexp = /You're up\-to\-date\. Version (\d+\.\d+\.\d+\.v\d+)/, // when SDK is already installed
+			regexp2 = /Titanium SDK (\d+\.\d+\.\d+\.v\d+) successfully installed/, // when we installed the SDK
+			matches = value.match(regexp);
+		if (!matches) { // first regexp didn't find anything (check if normal successful install)
+			matches = value.match(regexp2);
+		}
+		if (matches) { // did either regexp get the sdk version?
+			sdkVersion = matches[1];
+		}
+		console.log(value);
 	});
 	prc.stderr.on('data', function (data) {
-	   console.error(data.toString().trim());
+		console.error(data.toString().trim());
 	});
 
 	prc.on('close', function (code) {
 		if (code != 0) {
 			next("Failed to install SDK. Exit code: " + code);
 		} else {
-			next();
+			next(null, sdkVersion);
 		}
 	});
 }
@@ -62,9 +73,10 @@ function installSDK(branch, next) {
  * Look up the full path to the SDK we just installed (the SDK we'll be hacking
  * to add our locally built Windows SDK into).
  *
+ * @param tiSDKVersion {String} The versionw e installed (if we know it)
  * @param next {Function} callback function
  **/
-function getSDKInstallDir(next) {
+function getSDKInstallDir(tiSDKVersion, next) {
 	var prc = exec('node "' + titanium + '" info -o json -t titanium', function (error, stdout, stderr) {
 		var out,
 			selectedSDK;
@@ -73,7 +85,15 @@ function getSDKInstallDir(next) {
 		}
 
 		out = JSON.parse(stdout);
-		selectedSDK = out['titaniumCLI']['selectedSDK'];
+		if (tiSDKVersion) {
+			console.log("Looks like the SDK was already installed: " + tiSDKVersion);
+			selectedSDK = tiSDKVersion;
+		} else {
+			selectedSDK = out['titaniumCLI']['selectedSDK'];
+		}
+		if (!selectedSDK) {
+			console.error("There is no selected SDK for the titanium CLI and we didn't sniff the version on install!");
+		}
 
 		next(null, out['titanium'][selectedSDK]['path']);
 	});
@@ -437,16 +457,23 @@ function cleanNonGaSDKs(sdkPath, next) {
  */
 function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 	var sdkPath,
-		shortSdkVersion = sdkRegex.exec(sdkVersion)[1];
+		shortSdkVersion = sdkRegex.exec(sdkVersion)[1],
+		tiSDKVersion;
 
 	async.series([
 		function (next) {
 			// If this is already installed we don't re-install, thankfully
 			console.log("Installing SDK from " + branch + " branch");
-			installSDK(branch, next);
+			installSDK(branch, function (err, version) {
+				if (err) {
+					return next(err);
+				}
+				tiSDKVersion = version;
+				next();
+			});
 		},
 		function (next) {
-			getSDKInstallDir(function (err, installPath) {
+			getSDKInstallDir(tiSDKVersion, function (err, installPath) {
 				if (err) {
 					return next(err);
 				}
