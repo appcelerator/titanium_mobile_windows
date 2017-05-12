@@ -77,7 +77,12 @@ namespace TitaniumWindows
 			Windows::ApplicationModel::Package^ package = Windows::ApplicationModel::Package::Current;
 			Windows::Storage::StorageFolder^ installed_location = package->InstalledLocation;
 			Platform::String^ location = installed_location->Path;
-
+			// If we are given a path that starts with a slash then the the returned
+			// path will contain \\\\, on 8.1 this will throw an error when getting
+			// the file in readRequiredModule
+			if (path.find("/") == 0 || path.find("\\") == 0) {
+				return location + newpath;
+			}
 			return location + "\\" + newpath;
 		}
 		return newpath;
