@@ -49,18 +49,8 @@ namespace Titanium
 		return newlist;
 	}
 
-	std::string removeSlashes(const std::string& path)
-	{
-		// this assumes we already joined the arguments with separator
-		std::string name = static_cast<std::string>(path);
-		// remove duplicate separators!
-		boost::algorithm::replace_all(name, "//", "/");
-		return name;
-	}
-
 	std::vector<std::string> GlobalObject::resolveRequirePaths(const std::string& dirname) const TITANIUM_NOEXCEPT
 	{
-		std::string cleanDirname = removeSlashes(dirname);
 		std::vector<std::string> paths;
 		if (dirname == COMMONJS_SEPARATOR__) {
 			paths.push_back("/node_modules");
@@ -69,10 +59,10 @@ namespace Titanium
 #pragma warning(push)
 #pragma warning(disable:4996)
 			std::vector<std::string> parts;
-			boost::split(parts, cleanDirname, boost::is_any_of(COMMONJS_SEPARATOR__));
+			boost::split(parts, dirname, boost::is_any_of(COMMONJS_SEPARATOR__));
 #pragma warning(pop)
 			for (size_t i = parts.size() - 1; i > 0; i--) {
-				if (parts[i] == "node_modules" || parts[i] == "") {
+				if (parts[i] == "node_modules" || parts[i].empty()) {
 					continue;
 				}
 				auto p = slice(parts, 0, i + 1);
@@ -190,11 +180,11 @@ namespace Titanium
 		}
 		for (size_t i = 0, len = reqPaths.size(); i < len; i++) {
 			auto newResolvedPath = reqPaths[i] + COMMONJS_SEPARATOR__ + moduleId;
-			modulePath = resolvePathAsFile(parent,newResolvedPath);
+			modulePath = resolvePathAsFile(parent, newResolvedPath);
 			if (!modulePath.empty()) {
 				return modulePath;
 			}
-			modulePath = resolvePathAsDirectory(parent,newResolvedPath);
+			modulePath = resolvePathAsDirectory(parent, newResolvedPath);
 			if (!modulePath.empty()) {
 				return modulePath;
 			}
@@ -223,17 +213,23 @@ namespace Titanium
 			rawPath = moduleId;
 		}
 
-		const auto resolvedPath = resolvePath(rawPath,dirname);
+		const auto resolvedPath = resolvePath(rawPath, dirname);
 		std::string modulePath;
 
 		if (isNodeModule) {
-			modulePath = resolvePathAsModule(parent,resolvedPath,dirname, moduleId);
+			modulePath = resolvePathAsModule(parent, resolvedPath, dirname, moduleId);
 		} else {
 			// load as file or load as directory
-			modulePath = resolvePathAsFile(parent,resolvedPath);
+			modulePath = resolvePathAsFile(parent, resolvedPath);
 			if (modulePath.empty()) {
-				modulePath = resolvePathAsDirectory(parent,resolvedPath);
+				modulePath = resolvePathAsDirectory(parent, resolvedPath);
 			}
+		}
+		// Functions return different paths, some return 'path/to/file.js', some
+		// '/path/to/file.js', this converts them all to be '/path/to/file.js',
+		// as long as a value was returned
+		if (!modulePath.empty()) {
+			modulePath = boost::algorithm::replace_all_copy("/" + modulePath, "//", COMMONJS_SEPARATOR__);
 		}
 
 		module_path_cache__.emplace(modulePathCacheKey, modulePath);
@@ -295,7 +291,6 @@ namespace Titanium
 		// FIXME We should be able to ask for the parent module's filename property to determine the dirname!
 		// Parent here seems to _always_ be the global object.
 		std::string dirname = currentDir__;
-
 		auto module_path = requestResolveModule(parent, moduleId, dirname);
 		if (module_path.empty() && moduleId.find(".") != 0 && moduleId.find("/") != 0) {
 			// Fall back to assuming equivalent of "/" + moduleId (legacy behavior) if we don't already have a leading . or /
@@ -304,7 +299,6 @@ namespace Titanium
 		if (module_path.empty()) {
 			detail::ThrowRuntimeError("require", "Could not load module " + moduleId);
 		}
-
 		// check if we have already loaded the module
 		if (!reload && module_cache__.find(module_path) != module_cache__.end()) {
 			return module_cache__.at(module_path);
@@ -330,7 +324,7 @@ namespace Titanium
 		else {
 			currentDir__ = COMMONJS_SEPARATOR__;
 		}
-
+		boost::algorithm::replace_all(currentDir__, "//", COMMONJS_SEPARATOR__);
 		try {
 			JSValue result = js_context.CreateUndefined();
 			if (boost::ends_with(module_path, ".json")){
@@ -343,7 +337,7 @@ namespace Titanium
 					const std::string app_module_js = "try {__dirname='/',__filename='app.js'; " + module_js + "} catch (E) { E.fileName='app.js'; Titanium_RedScreenOfDeath(E);}";
 					result = js_context.JSEvaluateScript(app_module_js, js_context.get_global_object());
 				} else {
-					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__dirname='" + currentDir__ + "',__filename='/"
+					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__dirname='" + currentDir__ + "',__filename='"
 						+ module_path + "';try {" + module_js + R"JS(
 						if(module.exports !== __OXP){
 							return module.exports;
@@ -362,7 +356,7 @@ namespace Titanium
 				}
 			} else {
 				currentDir__ = dirname; // Should ensure this gets reset on _EVERY_ code branch possible here. Would be nice if C++/CX had finally blocks
-				detail::ThrowRuntimeError("require", "Could not load module "+moduleId);
+				detail::ThrowRuntimeError("require", "Could not load module " + moduleId);
 			}
 			currentDir__ = dirname; // Should ensure this gets reset on _EVERY_ code branch possible here. Would be nice if C++/CX had finally blocks
 			if (!result.IsObject()) {
@@ -373,10 +367,10 @@ namespace Titanium
 			return result;
 		} catch (const std::exception& exception) {
 			currentDir__ = dirname; // Should ensure this gets reset on _EVERY_ code branch possible here. Would be nice if C++/CX had finally blocks
-			detail::ThrowRuntimeError("require", "Error while require("+moduleId+") "+static_cast<std::string>(exception.what()));
+			detail::ThrowRuntimeError("require", "Error while require(" + moduleId + ") "+static_cast<std::string>(exception.what()));
 		} catch (...) {
 			currentDir__ = dirname; // Should ensure this gets reset on _EVERY_ code branch possible here. Would be nice if C++/CX had finally blocks
-			detail::ThrowRuntimeError("require", "Unknown error while require("+moduleId+")");
+			detail::ThrowRuntimeError("require", "Unknown error while require(" + moduleId + ")");
 		}
 		return js_context.CreateUndefined();
 	}

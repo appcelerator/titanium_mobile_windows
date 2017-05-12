@@ -195,17 +195,18 @@ describe('requireJS', function () {
 		finish();
 	});
 
-	it.only('require from node_modules should not break the app', function () {
+	it('require from node_modules should work', function (finish) {
 	    var object = require('bar');
 	    should(object).have.property('name');
 	    should(object.name).be.eql('bar');
 	    should(object).have.property('baz');
 	    var baz = object.baz;
 	    should(baz).have.property('foo');
-	    should(baz.foo.filename).be.eql('//node_modules/foo/index.js')
+	    should(baz.foo.filename).be.eql('/node_modules/foo/index.js');
+	    finish();
 	});
 
-	it('require should prefer closest node_modules', function () {
+	it('require should prefer closest node_modules', function (finish) {
 	    // require('bar') will require package baz under node_modules/bar/node_modules
 	    // require('bax') should not point to this version of baz but to node_modules/baz
 	    var object = require('bar');
@@ -220,14 +221,6 @@ describe('requireJS', function () {
 	    should(baz2.name).be.eql('baz');
 	    should(baz2.filename).be.eql('/node_modules/baz/index.js');
 	    should(baz2.dirname).be.eql('/node_modules/baz');
-	});
-
-    //FIXME: TIMOB-24673 - Android returns {} here rather than the expected error message
-	it('require(/foo) should load Resources/foo', function () {
-	    try {
-	        var foo = require('/foo');
-	    } catch (e) {
-	        should(e.indexOf('Couldn\'t find module: /foo for architecture')).not.eql(-1)
-	    }
+	    finish();
 	});
 });
