@@ -248,6 +248,27 @@ namespace TitaniumWindows
 			return content;
 		}
 
+		void WebView::getInnerHTML() TITANIUM_NOEXCEPT
+		{
+			try {
+				auto args = ref new Platform::Collections::Vector<Platform::String^>();
+				args->Append("window.document.documentElement.innerHTML");
+
+				concurrency::task<Platform::String^>(webview__->InvokeScriptAsync("eval", args)).then([this](concurrency::task<Platform::String^> task) {
+					try {
+						const auto result = task.get();
+						if (result) {
+							html__ = "<html>" + TitaniumWindows::Utility::ConvertUTF8String(result) + "</html>";
+						}
+					} catch (...) {
+						// do nothing
+					}
+				});
+			} catch (...) {
+				// this method should not throw any exceptions
+			}
+		}
+
 		void WebView::initWebViewListeners() TITANIUM_NOEXCEPT 
 		{
 			using namespace std::placeholders;
@@ -255,6 +276,8 @@ namespace TitaniumWindows
 			load_event__ = webview__->NavigationCompleted += ref new Windows::Foundation::TypedEventHandler
 				<Controls::WebView^, Controls::WebViewNavigationCompletedEventArgs^>([this](Platform::Object^ sender, Controls::WebViewNavigationCompletedEventArgs^ e) {				
 				try {
+					getInnerHTML();
+					
 					loading__ = false;
 					if (e->IsSuccess && load_event_enabled__) {
 						JSObject obj = get_context().CreateObject();
