@@ -63,39 +63,45 @@ namespace Titanium
 			
 			const auto success_property = object.GetProperty("success");
 			const auto onsuccess = [success_property](const CameraMediaItemType& item) {
-				if (success_property.IsObject()) {
-					auto func = static_cast<JSObject>(success_property);
-					if (func.IsFunction()) {
-						const std::vector<JSValue> args = {
-							CameraMediaItemType_to_js(func.get_context(), item)
-						};
-						func(args, func);
+				TITANIUM_EXCEPTION_CATCH_START {
+					if (success_property.IsObject()) {
+						auto func = static_cast<JSObject>(success_property);
+						if (func.IsFunction()) {
+							const std::vector<JSValue> args = {
+								CameraMediaItemType_to_js(func.get_context(), item)
+							};
+							func(args, func);
+						}
 					}
-				}
+				} TITANIUM_EXCEPTION_CATCH_END_CTX(success_property.get_context())
 			};
 			const auto cancel_property = object.GetProperty("cancel");
 			const auto oncancel = [cancel_property](const ErrorResponse& e) {
-				if (cancel_property.IsObject()) {
-					auto func = static_cast<JSObject>(cancel_property);
-					if (func.IsFunction()) {
-						const std::vector<JSValue> args = {
-							ErrorResponse_to_js(func.get_context(), e)
-						};
-						func(args, func);
+				TITANIUM_EXCEPTION_CATCH_START {
+					if (cancel_property.IsObject()) {
+						auto func = static_cast<JSObject>(cancel_property);
+						if (func.IsFunction()) {
+							const std::vector<JSValue> args = {
+								ErrorResponse_to_js(func.get_context(), e)
+							};
+							func(args, func);
+						}
 					}
-				}
+				} TITANIUM_EXCEPTION_CATCH_END_CTX(cancel_property.get_context())
 			};
 			const auto error_property = object.GetProperty("error");
 			const auto onerror = [error_property](const ErrorResponse& e) {
-				if (error_property.IsObject()) {
-					auto func = static_cast<JSObject>(error_property);
-					if (func.IsFunction()) {
-						const std::vector<JSValue> args = {
-							ErrorResponse_to_js(func.get_context(), e)
-						};
-						func(args, func);
+				TITANIUM_EXCEPTION_CATCH_START {
+					if (error_property.IsObject()) {
+						auto func = static_cast<JSObject>(error_property);
+						if (func.IsFunction()) {
+							const std::vector<JSValue> args = {
+								ErrorResponse_to_js(func.get_context(), e)
+							};
+							func(args, func);
+						}
 					}
-				}
+				} TITANIUM_EXCEPTION_CATCH_END_CTX(error_property.get_context())
 			};
 
 			CameraOptionsTypeCallbacks callbacks {

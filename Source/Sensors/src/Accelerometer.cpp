@@ -5,6 +5,7 @@
  */
 
 #include "TitaniumWindows/Accelerometer.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 #include "Titanium/detail/TiLogger.hpp"
 #include <iostream>
 #include <objbase.h>
@@ -46,23 +47,25 @@ namespace TitaniumWindows
 			const auto updateCallback = [current, self](Windows::Devices::Sensors::Accelerometer^ sender, Windows::Devices::Sensors::AccelerometerReadingChangedEventArgs^ e) {
 				const auto dispatchedCallback = [current, self]() {
 					const auto ctx = self->get_context();
-					auto obj = ctx.CreateObject();
-					const auto reading = self->accelerometer_->GetCurrentReading();
-					std::uint64_t timestamp = 0;
-					if (self->previous_acceleromter_time_.UniversalTime > 0) {
-						timestamp = (reading->Timestamp.UniversalTime - self->previous_acceleromter_time_.UniversalTime) / 10000;
-						// Suppress fireEvent so that it doesn't block UI thread (taken from Titanium Android)
-						if (timestamp < 100) {
-							return;
+					TITANIUM_EXCEPTION_CATCH_START {
+						auto obj = ctx.CreateObject();
+						const auto reading = self->accelerometer_->GetCurrentReading();
+						std::uint64_t timestamp = 0;
+						if (self->previous_acceleromter_time_.UniversalTime > 0) {
+							timestamp = (reading->Timestamp.UniversalTime - self->previous_acceleromter_time_.UniversalTime) / 10000;
+							// Suppress fireEvent so that it doesn't block UI thread (taken from Titanium Android)
+							if (timestamp < 100) {
+								return;
+							}
 						}
-					}
-					self->previous_acceleromter_time_ = reading->Timestamp;
-					obj.SetProperty("timestamp", ctx.CreateNumber(static_cast<double>(timestamp)));
-					obj.SetProperty("x", ctx.CreateNumber(reading->AccelerationX));
-					obj.SetProperty("y", ctx.CreateNumber(reading->AccelerationY));
-					obj.SetProperty("z", ctx.CreateNumber(reading->AccelerationZ));
+						self->previous_acceleromter_time_ = reading->Timestamp;
+						obj.SetProperty("timestamp", ctx.CreateNumber(static_cast<double>(timestamp)));
+						obj.SetProperty("x", ctx.CreateNumber(reading->AccelerationX));
+						obj.SetProperty("y", ctx.CreateNumber(reading->AccelerationY));
+						obj.SetProperty("z", ctx.CreateNumber(reading->AccelerationZ));
 
-					self->fireEvent("update", obj);
+						self->fireEvent("update", obj);
+					} TITANIUMWINDOWS_EXCEPTION_CATCH_END_CTX(ctx)
 				};
 
 				if (current) {

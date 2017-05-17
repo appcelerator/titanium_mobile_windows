@@ -13,14 +13,16 @@
 #include "TitaniumWindows/Utility.hpp"
 
 
-#define TITANIUMWINDOWS_EXCEPTION_SHOW_REDSCREEN(ex, this_object) \
+#define TITANIUMWINDOWS_EXCEPTION_SHOW_REDSCREEN(EX, CTX) \
     std::ostringstream os; \
-    os << "Runtime Error: " << TitaniumWindows::Utility::ConvertString(ex->Message); \
-    Titanium::Module::ShowRedScreenOfDeath(this_object.get_context(), os.str()); \
+    os << "Runtime Error: " << TitaniumWindows::Utility::ConvertString(EX->Message); \
+    Titanium::Module::ShowRedScreenOfDeath(CTX, os.str()); \
 
-#define TITANIUMWINDOWS_EXCEPTION_CATCH_END \
+#define TITANIUMWINDOWS_EXCEPTION_CATCH_END_CTX(CTX) \
 catch (::Platform::Exception^ ex) { \
-	TITANIUMWINDOWS_EXCEPTION_SHOW_REDSCREEN(ex, get_object()); \
-} TITANIUM_EXCEPTION_CATCH_END
+	TITANIUMWINDOWS_EXCEPTION_SHOW_REDSCREEN(ex, CTX); \
+} TITANIUM_EXCEPTION_CATCH_END_CTX(CTX)
+
+#define TITANIUMWINDOWS_EXCEPTION_CATCH_END TITANIUMWINDOWS_EXCEPTION_CATCH_END_CTX(get_context())
 
 #endif  // _TITANIUMWINDOWS_WINDOWSTIIMPL_HPP_

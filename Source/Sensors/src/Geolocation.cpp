@@ -75,29 +75,35 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 		TitaniumWindows::Utility::RunOnUIThread([this, callback]() {
 			concurrency::create_task(Geolocator::RequestAccessAsync()).then([this, callback](concurrency::task<GeolocationAccessStatus> task) {
-				const auto ctx = get_context();
-				JSObject response = ctx.CreateObject();
-				try {
-					const auto status = task.get();
-					if (status == GeolocationAccessStatus::Denied) {
-						locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::DENIED;
-						response.SetProperty("code", ctx.CreateNumber(-1));
-						response.SetProperty("error", ctx.CreateString("location DeviceCapability not set in tiapp.xml"));
+				TITANIUM_EXCEPTION_CATCH_START {
+					const auto ctx = get_context();
+					JSObject response = ctx.CreateObject();
+					try {
+						const auto status = task.get();
+						if (status == GeolocationAccessStatus::Denied) {
+							locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::DENIED;
+							response.SetProperty("code", ctx.CreateNumber(-1));
+							response.SetProperty("error", ctx.CreateString("location DeviceCapability not set in tiapp.xml"));
+							response.SetProperty("success", ctx.CreateBoolean(false));
+						} else if (status == GeolocationAccessStatus::Allowed) {
+							locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::AUTHORIZED;
+							response.SetProperty("code", ctx.CreateNumber(0));
+							response.SetProperty("error", ctx.CreateString());
+							response.SetProperty("success", ctx.CreateBoolean(true));
+						}
+					} catch (::Platform::Exception^ e) {
+						response.SetProperty("code", ctx.CreateNumber(e->HResult));
+						response.SetProperty("error", ctx.CreateString(TitaniumWindows::Utility::ConvertString(e->Message)));
 						response.SetProperty("success", ctx.CreateBoolean(false));
-					} else if (status == GeolocationAccessStatus::Allowed) {
-						locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::AUTHORIZED;
-						response.SetProperty("code", ctx.CreateNumber(0));
-						response.SetProperty("error", ctx.CreateString());
-						response.SetProperty("success", ctx.CreateBoolean(true));
+					} catch (...) {
+						response.SetProperty("code", ctx.CreateNumber(-1));
+						response.SetProperty("error", ctx.CreateString("Unknown error"));
+						response.SetProperty("success", ctx.CreateBoolean(false));
 					}
-				} catch (::Platform::Exception^ e) {
-					response.SetProperty("code", ctx.CreateNumber(e->HResult));
-					response.SetProperty("error", ctx.CreateString(TitaniumWindows::Utility::ConvertString(e->Message)));
-					response.SetProperty("success", ctx.CreateBoolean(false));
-				}
-				auto cb = static_cast<JSObject>(callback);
-				TITANIUM_ASSERT(cb.IsFunction());
-				cb({ response }, get_object());
+					auto cb = static_cast<JSObject>(callback);
+					TITANIUM_ASSERT(cb.IsFunction());
+					cb({ response }, get_object());
+				} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 			});
 		});
 #else
@@ -139,21 +145,22 @@ namespace TitaniumWindows
 				const auto speed = args->Position->Coordinate->Speed;
 
 				const auto func = [=](){
-					const auto ctx = get_context();
+					TITANIUM_EXCEPTION_CATCH_START {
+						const auto ctx = get_context();
+						auto coords = ctx.CreateObject();
+						coords.SetProperty("latitude", ctx.CreateNumber(latitude));
+						coords.SetProperty("longitude", ctx.CreateNumber(longitude));
+						coords.SetProperty("altitude", ctx.CreateNumber(altitude));
+						coords.SetProperty("altitudeAccuracy", altitudeAccuracy ? ctx.CreateNumber(altitudeAccuracy->Value) : ctx.CreateNumber(0));
+						coords.SetProperty("speed", speed ? ctx.CreateNumber(speed->Value) : ctx.CreateNumber(0));
 
-					auto coords = ctx.CreateObject();
-					coords.SetProperty("latitude", ctx.CreateNumber(latitude));
-					coords.SetProperty("longitude", ctx.CreateNumber(longitude));
-					coords.SetProperty("altitude", ctx.CreateNumber(altitude));
-					coords.SetProperty("altitudeAccuracy", altitudeAccuracy ? ctx.CreateNumber(altitudeAccuracy->Value) : ctx.CreateNumber(0));
-					coords.SetProperty("speed", speed ? ctx.CreateNumber(speed->Value) : ctx.CreateNumber(0));
+						lastGeolocation__.SetProperty("code", ctx.CreateNumber(0.0));
+						lastGeolocation__.SetProperty("error", ctx.CreateString(""));
+						lastGeolocation__.SetProperty("success", ctx.CreateBoolean(true));
+						lastGeolocation__.SetProperty("coords", coords);
 
-					lastGeolocation__.SetProperty("code", ctx.CreateNumber(0.0));
-					lastGeolocation__.SetProperty("error", ctx.CreateString(""));
-					lastGeolocation__.SetProperty("success", ctx.CreateBoolean(true));
-					lastGeolocation__.SetProperty("coords", coords);
-
-					this->fireEvent("location", lastGeolocation__);
+						this->fireEvent("location", lastGeolocation__);
+					} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 				};
 
 				// Check if we are in background, in that case we do not run it on UI thread.
@@ -170,12 +177,14 @@ namespace TitaniumWindows
 				const auto heading = args->Position->Coordinate->Heading->Value;
 
 				const auto func = [=](){
-					const auto old_heading = static_cast<double>(heading__.GetProperty("heading"));
-					if (abs(heading - old_heading) > headingFilter__) {
-						heading__.SetProperty("heading", get_context().CreateNumber(heading));
+					TITANIUM_EXCEPTION_CATCH_START {
+						const auto old_heading = static_cast<double>(heading__.GetProperty("heading"));
+						if (abs(heading - old_heading) > headingFilter__) {
+							heading__.SetProperty("heading", get_context().CreateNumber(heading));
 
-						this->fireEvent("heading", heading__);
-					}
+							this->fireEvent("heading", heading__);
+						}
+					} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 				};
 
 				// Check if we are in background, in that case we do not run it on UI thread.
@@ -334,7 +343,7 @@ namespace TitaniumWindows
 		ensureLoadGeolocator();
 
 		concurrency::create_task(geolocator_->GetGeopositionAsync()).then([this, callback](concurrency::task<Geoposition^> task) {
-			TITANIUM_EXCEPTION_CATCH_START{
+			TITANIUM_EXCEPTION_CATCH_START {
 				const auto position = task.get();
 				const auto ctx = get_context();
 				const auto data = position->Coordinate;

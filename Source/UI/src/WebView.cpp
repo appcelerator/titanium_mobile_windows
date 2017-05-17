@@ -55,54 +55,66 @@ namespace TitaniumWindows_UI
 			return concurrency::create_async([this, uri]()->IInputStream^ {
 				concurrency::task<StorageFile^> getFileTask(StorageFile::GetFileFromApplicationUriAsync(uri));
 				concurrency::task<IInputStream^> getInputStreamTask = getFileTask.then([](StorageFile^ file) {
-
-					// If this file points to HTML content, let's inject Titanium API.
-					if (file->ContentType == "text/html") {
-						IRandomAccessStream^ stream = ref new InMemoryRandomAccessStream();
-						const auto data = TitaniumWindows::Utility::GetContentFromFile(file);
-						const auto content = TitaniumWindows::Utility::ConvertUTF8String(TitaniumWindows::UI::WebView::InjectLocalScript(std::string(data.begin(), data.end())));
-						const auto writer = ref new Streams::DataWriter(stream);
-						writer->WriteString(content);
-						concurrency::event evt;
-						concurrency::create_task(writer->StoreAsync()).then([stream, writer, &evt](concurrency::task<std::uint32_t> task) {
-							try {
-								task.get();
-								concurrency::create_task(writer->FlushAsync()).then([&evt](concurrency::task<bool> task) {
-									try {
-										task.get();
-									} catch (Platform::Exception^ e) {
-										TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(e->Message));
-									}
+					try {
+						// If this file points to HTML content, let's inject Titanium API.
+						if (file->ContentType == "text/html") {
+							IRandomAccessStream^ stream = ref new InMemoryRandomAccessStream();
+							const auto data = ::TitaniumWindows::Utility::GetContentFromFile(file);
+							const auto content = ::TitaniumWindows::Utility::ConvertUTF8String(::TitaniumWindows::UI::WebView::InjectLocalScript(std::string(data.begin(), data.end())));
+							const auto writer = ref new Streams::DataWriter(stream);
+							writer->WriteString(content);
+							concurrency::event evt;
+							concurrency::create_task(writer->StoreAsync()).then([stream, writer, &evt](concurrency::task<std::uint32_t> task) {
+								try {
+									task.get();
+									concurrency::create_task(writer->FlushAsync()).then([&evt](concurrency::task<bool> task) {
+										try {
+											task.get();
+										} catch (Platform::Exception^ e) {
+											TITANIUM_LOG_WARN(::TitaniumWindows::Utility::ConvertString(e->Message));
+										} catch (...) {
+											TITANIUM_LOG_WARN("Unknown error at WebView FlushAsync");
+										}
+										evt.set();
+									});
+								} catch (Platform::Exception^ e) {
+									TITANIUM_LOG_WARN(::TitaniumWindows::Utility::ConvertString(e->Message));
 									evt.set();
-								});
+								} catch (...) {
+									TITANIUM_LOG_WARN("Unknown error at WebView StoreAsync");
+									evt.set();
+								}
+							}, concurrency::task_continuation_context::use_arbitrary());
+							evt.wait();
+							writer->DetachStream();
+							stream->Seek(0);
+							return static_cast<IInputStream^>(stream);
+						}
+						IRandomAccessStream^ stream;
+						concurrency::event evt;
+						concurrency::create_task(file->OpenAsync(FileAccessMode::Read)).then([&evt, &stream](concurrency::task<IRandomAccessStream^> task) {
+							try {
+								stream = task.get();
 							} catch (Platform::Exception^ e) {
-								TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(e->Message));
-								evt.set();
+								TITANIUM_LOG_WARN(::TitaniumWindows::Utility::ConvertString(e->Message));
+							} catch (...) {
+								TITANIUM_LOG_WARN("Unknown error at WebView OpenAsync");
 							}
+							evt.set();
 						}, concurrency::task_continuation_context::use_arbitrary());
 						evt.wait();
-						writer->DetachStream();
-						stream->Seek(0);
-						return static_cast<IInputStream^>(stream);
-					}
-					IRandomAccessStream^ stream;
-					concurrency::event evt;
-					concurrency::create_task(file->OpenAsync(FileAccessMode::Read)).then([&evt, &stream](concurrency::task<IRandomAccessStream^> task) {
-						try {
-							stream = task.get();
-						} catch (Platform::Exception^ e) {
-							TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(e->Message));
-						}
-						evt.set();
-					}, concurrency::task_continuation_context::use_arbitrary());
-					evt.wait();
 
-					return static_cast<IInputStream^>(stream);
+						return static_cast<IInputStream^>(stream);
+					} catch (Platform::Exception^ e) {
+						TITANIUM_LOG_WARN(::TitaniumWindows::Utility::ConvertString(e->Message));
+					} catch (...) {
+						TITANIUM_LOG_WARN("Unknown error at WebView GetFileFromApplicationUriAsync");
+					}
 				});
 
 				try {
 					return getInputStreamTask.get();
-				} catch (Platform::Exception^ e) {
+				} catch (...) {
 					HAL::detail::ThrowRuntimeError("TitaniumWindows::UI::WebView", "Ti.UI.WebView: Unable to read " + TitaniumWindows::Utility::ConvertString(uri->Path));
 				}
 
@@ -201,6 +213,8 @@ namespace TitaniumWindows
 					}
 				} catch (Platform::Exception^ e) {
 					TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(e->Message));
+				} catch (...) {
+					TITANIUM_LOG_WARN("Unknown error at WebView.evalJS");
 				}
 			});
 
@@ -240,76 +254,90 @@ namespace TitaniumWindows
 
 			load_event__ = webview__->NavigationCompleted += ref new Windows::Foundation::TypedEventHandler
 				<Controls::WebView^, Controls::WebViewNavigationCompletedEventArgs^>([this](Platform::Object^ sender, Controls::WebViewNavigationCompletedEventArgs^ e) {				
-				loading__ = false;
-				if (e->IsSuccess && load_event_enabled__) {
-					JSObject obj = get_context().CreateObject();
-					if (webview__->Source != nullptr) {
-						obj.SetProperty("url", get_context().CreateString(TitaniumWindows::Utility::ConvertString(webview__->Source->ToString())));
+				try {
+					loading__ = false;
+					if (e->IsSuccess && load_event_enabled__) {
+						JSObject obj = get_context().CreateObject();
+						if (webview__->Source != nullptr) {
+							obj.SetProperty("url", get_context().CreateString(TitaniumWindows::Utility::ConvertString(webview__->Source->ToString())));
+						}
+						fireEvent("load", obj);
+					} else if (!e->IsSuccess && error_event_enabled__) {
+						JSObject obj = get_context().CreateObject();
+						obj.SetProperty("success", get_context().CreateBoolean(false));
+						obj.SetProperty("url", get_context().CreateString(get_url()));
+						obj.SetProperty("code", get_context().CreateString(Titanium::UI::Constants::to_string(getUrlError(e->WebErrorStatus))));
+						fireEvent("error", obj);
 					}
-					fireEvent("load", obj);
-				} else if (!e->IsSuccess && error_event_enabled__) {
-					JSObject obj = get_context().CreateObject();
-					obj.SetProperty("success", get_context().CreateBoolean(false));
-					obj.SetProperty("url",  get_context().CreateString(get_url()));
-					obj.SetProperty("code", get_context().CreateString(Titanium::UI::Constants::to_string(getUrlError(e->WebErrorStatus))));
-					fireEvent("error", obj);
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Erorr at WebView.load");
 				}
 			});
 			beforeload_event__ = webview__->NavigationStarting += ref new Windows::Foundation::TypedEventHandler
 				<Controls::WebView^, Controls::WebViewNavigationStartingEventArgs^>([this](Controls::WebView^, Controls::WebViewNavigationStartingEventArgs^ e) {
-				loading__ = true;
-				if (beforeload_event_enabled__) {
-					JSObject obj = get_context().CreateObject();
-					obj.SetProperty("url",  get_context().CreateString(get_url()));
-					fireEvent("beforeload", obj);
+				try {
+					loading__ = true;
+					if (beforeload_event_enabled__) {
+						JSObject obj = get_context().CreateObject();
+						obj.SetProperty("url", get_context().CreateString(get_url()));
+						fireEvent("beforeload", obj);
+					}
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Erorr at WebView.beforeload");
 				}
 			});
 
 			script_event__ = webview__->ScriptNotify += ref new Controls::NotifyEventHandler([this](Platform::Object^ sender, Controls::NotifyEventArgs^ e) {
-				const auto value = TitaniumWindows::Utility::ConvertString(e->Value);
-				std::vector<std::string> args;
+				try {
+					const auto value = TitaniumWindows::Utility::ConvertString(e->Value);
+					std::vector<std::string> args;
 #pragma warning(push)
 #pragma warning(disable:4996)
-				boost::split(args, value, boost::is_any_of(","));
+					boost::split(args, value, boost::is_any_of(","));
 #pragma warning(pop)
 
-				// we need at least 3 arguments
-				if (args.size() < 3) {
-					return;
-				}
+					// we need at least 3 arguments
+					if (args.size() < 3) {
+						return;
+					}
 
-				// notify command
-				const auto command = args.at(0);
-				// first argument
-				const auto arg1 = args.at(1);
-				// rest of arguments
-				const auto arg2 = value.substr(command.length() + arg1.length() + 2);
+					// notify command
+					const auto command = args.at(0);
+					// first argument
+					const auto arg1 = args.at(1);
+					// rest of arguments
+					const auto arg2 = value.substr(command.length() + arg1.length() + 2);
 
-				const auto ctx = get_context();
+					const auto ctx = get_context();
 
-				// Invoke Titanium functions with explicit "this". 
-				// May be safer than building scripts by just concatinating strings.
-				if (command == "Ti.API.log") {
-					const auto api = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.API"));
-					auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.API.log"));
-					std::vector<JSValue> args = { ctx.CreateString(arg1), ctx.CreateString(arg2) };
-					func(args, api);
-				} else if (command == "Ti.App.fireEvent") {
-					const auto app = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App"));
-					auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App.fireEvent"));
-					std::vector<JSValue> args = { ctx.CreateString(arg1), ctx.CreateValueFromJSON(arg2) };
-					func(args, app);
-				} else if (command == "Ti.App.addEventListener" && app_event_names__.find(arg1) == app_event_names__.end()) {
-					const auto app = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App"));
-					auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App.addEventListener"));
-					std::vector<JSValue> args = { ctx.CreateString(arg1), get_object().GetProperty("_executeListener") };
-					func(args, app);
-					app_event_names__.emplace(arg1);
-				} else if (command == "Ti.App.removeEventListener") {
-					const auto app = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App"));
-					auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App.removeEventListener"));
-					std::vector<JSValue> args = { ctx.CreateString(arg1), get_object().GetProperty("_executeListener") };
-					func(args, app);
+					// Invoke Titanium functions with explicit "this". 
+					// May be safer than building scripts by just concatinating strings.
+					if (command == "Ti.API.log") {
+						const auto api = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.API"));
+						auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.API.log"));
+						std::vector<JSValue> args = { ctx.CreateString(arg1), ctx.CreateString(arg2) };
+						func(args, api);
+					} else if (command == "Ti.App.fireEvent") {
+						const auto app = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App"));
+						auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App.fireEvent"));
+						std::vector<JSValue> args = { ctx.CreateString(arg1), ctx.CreateValueFromJSON(arg2) };
+						func(args, app);
+					} else if (command == "Ti.App.addEventListener" && app_event_names__.find(arg1) == app_event_names__.end()) {
+						const auto app = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App"));
+						auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App.addEventListener"));
+						std::vector<JSValue> args = { ctx.CreateString(arg1), get_object().GetProperty("_executeListener") };
+						func(args, app);
+						app_event_names__.emplace(arg1);
+					} else if (command == "Ti.App.removeEventListener") {
+						const auto app = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App"));
+						auto func = static_cast<JSObject>(ctx.JSEvaluateScript("Ti.App.removeEventListener"));
+						std::vector<JSValue> args = { ctx.CreateString(arg1), get_object().GetProperty("_executeListener") };
+						func(args, app);
+					}
+				} catch (Platform::Exception^ ex) {
+					TITANIUM_LOG_WARN("Error at WebView script: ", TitaniumWindows::Utility::ConvertString(ex->Message));
+				} catch (...) {
+					TITANIUM_LOG_WARN("Error at WebView script");
 				}
 			});
 		}

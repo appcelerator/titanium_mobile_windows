@@ -266,22 +266,23 @@ namespace TitaniumWindows
 						onsendstream(1.0);
 						ondatastream(1.0);
 					}
-				}
-				catch (const task_canceled&) {
+				} catch (const task_canceled&) {
 					if (!disposed__ && httpClient__) {
 						onerror(-1, "Session Cancelled", false);
 					}
-				}
-				catch (Platform::Exception^ ex) {
+				} catch (Platform::Exception^ ex) {
 					if (!disposed__ && httpClient__) {
 						std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));
 						onerror(ex->HResult, error, false);
 					}
-				}
-				catch (const std::exception& e) {
+				} catch (const std::exception& e) {
 					if (!disposed__ && httpClient__) {
 						std::string error(e.what());
 						onerror(-1, error, false);
+					}
+				} catch (...) {
+					if (!disposed__ && httpClient__) {
+						onerror(-1, "Unknown error", false);
 					}
 				}
 			}, task_continuation_context::use_arbitrary());
@@ -396,17 +397,23 @@ namespace TitaniumWindows
 
 		void HTTPClient::startDispatcherTimer()
 		{
-			if (dispatcherTimer__ == nullptr && timeoutSpan__.Duration > 0) {
-				dispatcherTimer__ = ref new Windows::UI::Xaml::DispatcherTimer();
-				dispatcherTimer__->Interval = timeoutSpan__;
-				auto timeoutRegistrationToken__ = dispatcherTimer__->Tick += ref new Windows::Foundation::EventHandler<Platform::Object^>([this](Platform::Object^ sender, Platform::Object^ e) {
-					cancellationTokenSource__.cancel();
-					dispatcherTimer__->Stop();
-					// re-create the CancellationTokenSource.
-					cancellationTokenSource__ = cancellation_token_source();
-				});
-				dispatcherTimer__->Start();
-			}
+			TitaniumWindows::Utility::RunOnUIThread([=] {
+				if (dispatcherTimer__ == nullptr && timeoutSpan__.Duration > 0) {
+					dispatcherTimer__ = ref new Windows::UI::Xaml::DispatcherTimer();
+					dispatcherTimer__->Interval = timeoutSpan__;
+					auto timeoutRegistrationToken__ = dispatcherTimer__->Tick += ref new Windows::Foundation::EventHandler<Platform::Object^>([this](Platform::Object^ sender, Platform::Object^ e) {
+						try {
+							cancellationTokenSource__.cancel();
+							dispatcherTimer__->Stop();
+							// re-create the CancellationTokenSource.
+							cancellationTokenSource__ = cancellation_token_source();
+						} catch (...) {
+							TITANIUM_LOG_WARN("Error while HTTPClient::startDispatcherTimer");
+						}
+					});
+					dispatcherTimer__->Start();
+				}
+			});
 		}
 
 		Windows::Storage::Streams::IBuffer^ HTTPClient::charVecToBuffer(std::vector<std::uint8_t> char_vector)
@@ -475,6 +482,8 @@ namespace TitaniumWindows
 					} catch (Platform::Exception^ ex) {
 						std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));
 						onerror(ex->HResult, error, false);
+					} catch (...) {
+						onerror(-1, "Unknown error", false);
 					}
 				}
 			}

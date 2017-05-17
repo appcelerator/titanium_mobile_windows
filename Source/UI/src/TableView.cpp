@@ -19,6 +19,7 @@
 #include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 
 namespace TitaniumWindows
 {
@@ -88,13 +89,17 @@ namespace TitaniumWindows
 
 			// Since VisualTreeHelper is only available after Loaded event is fired, we need to register scroll/scrollend event after that.
 			loaded_event__ = tableview__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
-				scrollview__ = GetScrollView(Media::VisualTreeHelper::GetChild(tableview__, 0));
-				TITANIUM_ASSERT(scrollview__ != nullptr);
-				if (hasEventListener("scroll")) {
-					registerScrollEvent();
-				}
-				if (hasEventListener("scrollend")) {
-					registerScrollendEvent();
+				try {
+					scrollview__ = GetScrollView(Media::VisualTreeHelper::GetChild(tableview__, 0));
+					TITANIUM_ASSERT(scrollview__ != nullptr);
+					if (hasEventListener("scroll")) {
+						registerScrollEvent();
+					}
+					if (hasEventListener("scrollend")) {
+						registerScrollendEvent();
+					}
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at TableView::Loaded");
 				}
 			});
 
@@ -474,32 +479,35 @@ namespace TitaniumWindows
 			if (event_name == "click") {
 				click_event__ = tableview__->ItemClick += ref new Controls::ItemClickEventHandler(
 					[this, ctx](Platform::Object^ sender, Controls::ItemClickEventArgs^ e) {
+					try {
+						if (model__->empty()) {
+							TITANIUM_LOG_DEBUG("TableView is clicked but there's no data");
+							return;
+						}
 
-					if (model__->empty()) {
-						TITANIUM_LOG_DEBUG("TableView is clicked but there's no data");
-						return;
-					}
+						const auto listview = safe_cast<Controls::ListView^>(sender);
 
-					const auto listview = safe_cast<Controls::ListView^>(sender);
+						uint32_t selectedIndex;
+						const auto found = listview->Items->IndexOf(e->ClickedItem, &selectedIndex);
+						if (!found) return;
 
-					uint32_t selectedIndex;
-					const auto found = listview->Items->IndexOf(e->ClickedItem, &selectedIndex);
-					if (!found) return;
+						const auto result = model__->searchRowBySelectedIndex(selectedIndex);
 
-					const auto result = model__->searchRowBySelectedIndex(selectedIndex);
+						if (result.found) {
+							JSObject  eventArgs = ctx.CreateObject();
+							eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(result.sectionIndex));
+							eventArgs.SetProperty("index", ctx.CreateNumber(result.rowIndex));
 
-					if (result.found) {
-						JSObject  eventArgs = ctx.CreateObject();
-						eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(result.sectionIndex));
-						eventArgs.SetProperty("index", ctx.CreateNumber(result.rowIndex));
+							const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
+							const auto row = section->get_rows().at(result.rowIndex);
+							eventArgs.SetProperty("row", row->get_object());
+							eventArgs.SetProperty("rowData", row->get_data());
+							eventArgs.SetProperty("source", row->get_object());
 
-						const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
-						const auto row = section->get_rows().at(result.rowIndex);
-						eventArgs.SetProperty("row", row->get_object());
-						eventArgs.SetProperty("rowData", row->get_data());
-						eventArgs.SetProperty("source", row->get_object());
-
-						fireEvent("click", eventArgs);
+							fireEvent("click", eventArgs);
+						}
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error At TableView.click");
 					}
 				});
 			} else if (event_name == "scroll") {
@@ -514,15 +522,18 @@ namespace TitaniumWindows
 				}
 			} else if (event_name == "touchmove") {
 				touchmove_event__ = tableview__->PointerMoved += ref new Input::PointerEventHandler([this](Platform::Object^, Input::PointerRoutedEventArgs^ e) {
+					try {
+						const auto ctx = get_context();
+						JSObject  eventArgs = ctx.CreateObject();
 
-					const auto ctx = get_context();
-					JSObject  eventArgs = ctx.CreateObject();
+						const auto position = e->GetCurrentPoint(tableview__)->Position;
+						eventArgs.SetProperty("x", ctx.CreateNumber(position.X));
+						eventArgs.SetProperty("y", ctx.CreateNumber(position.Y));
 
-					const auto position = e->GetCurrentPoint(tableview__)->Position;
-					eventArgs.SetProperty("x", ctx.CreateNumber(position.X));
-					eventArgs.SetProperty("y", ctx.CreateNumber(position.Y));
-
-					fireEvent("touchmove", eventArgs);
+						fireEvent("touchmove", eventArgs);
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at TableView.touchmove");
+					}
 				});
 			}
 		}
@@ -549,25 +560,7 @@ namespace TitaniumWindows
 		void TableView::registerScrollEvent()
 		{
 			scroll_event__ = scrollview__->ViewChanging += ref new EventHandler<Controls::ScrollViewerViewChangingEventArgs ^>([this](Platform::Object^ sender, Controls::ScrollViewerViewChangingEventArgs^ e) {
-				const auto ctx = get_context();
-				auto eventArgs = ctx.CreateObject();
-
-				auto size = ctx.CreateObject();
-				size.SetProperty("width", ctx.CreateNumber(scrollview__->ViewportWidth));
-				size.SetProperty("height", ctx.CreateNumber(scrollview__->ViewportHeight));
-				eventArgs.SetProperty("size", size);
-
-				eventArgs.SetProperty("totalItemCount", ctx.CreateNumber(tableview__->Items->Size));
-
-				fireEvent("scroll", eventArgs);
-			});
-		}
-
-		void TableView::registerScrollendEvent()
-		{
-			scrollend_event__ = scrollview__->ViewChanged += ref new EventHandler<Controls::ScrollViewerViewChangedEventArgs ^>([this](Platform::Object^ sender, Controls::ScrollViewerViewChangedEventArgs^ e) {
-				// Stop firing event when ScrollView didn't actually move
-				if (oldScrollPosX__ != scrollview__->VerticalOffset || oldScrollPosY__ != scrollview__->HorizontalOffset) {
+				try {
 					const auto ctx = get_context();
 					auto eventArgs = ctx.CreateObject();
 
@@ -576,10 +569,36 @@ namespace TitaniumWindows
 					size.SetProperty("height", ctx.CreateNumber(scrollview__->ViewportHeight));
 					eventArgs.SetProperty("size", size);
 
-					fireEvent("scrollend", eventArgs);
+					eventArgs.SetProperty("totalItemCount", ctx.CreateNumber(tableview__->Items->Size));
 
-					oldScrollPosX__ = scrollview__->VerticalOffset;
-					oldScrollPosY__ = scrollview__->HorizontalOffset;
+					fireEvent("scroll", eventArgs);
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at TableView.scroll");
+				}
+			});
+		}
+
+		void TableView::registerScrollendEvent()
+		{
+			scrollend_event__ = scrollview__->ViewChanged += ref new EventHandler<Controls::ScrollViewerViewChangedEventArgs ^>([this](Platform::Object^ sender, Controls::ScrollViewerViewChangedEventArgs^ e) {
+				try {
+					// Stop firing event when ScrollView didn't actually move
+					if (oldScrollPosX__ != scrollview__->VerticalOffset || oldScrollPosY__ != scrollview__->HorizontalOffset) {
+						const auto ctx = get_context();
+						auto eventArgs = ctx.CreateObject();
+
+						auto size = ctx.CreateObject();
+						size.SetProperty("width", ctx.CreateNumber(scrollview__->ViewportWidth));
+						size.SetProperty("height", ctx.CreateNumber(scrollview__->ViewportHeight));
+						eventArgs.SetProperty("size", size);
+
+						fireEvent("scrollend", eventArgs);
+
+						oldScrollPosX__ = scrollview__->VerticalOffset;
+						oldScrollPosY__ = scrollview__->HorizontalOffset;
+					}
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at TableView.scrollend");
 				}
 			});
 		}

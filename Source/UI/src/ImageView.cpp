@@ -74,37 +74,45 @@ namespace TitaniumWindows
 			
 			image__ = ref new Windows::UI::Xaml::Controls::Image();
 			image__->SizeChanged += ref new SizeChangedEventHandler([this](Platform::Object^ sender, SizeChangedEventArgs^ e) {
-				if (!sizeChanged__) {
-					return;
-				}
-				const auto layout = getViewLayoutDelegate<WindowsImageViewLayoutDelegate>();
-				const auto rect = layout->computeRelativeSize(
-					Canvas::GetLeft(image__),
-					Canvas::GetTop(image__),
-					this->image__->ActualWidth,
-					this->image__->ActualHeight
+				try {
+					if (!sizeChanged__) {
+						return;
+					}
+					const auto layout = getViewLayoutDelegate<WindowsImageViewLayoutDelegate>();
+					const auto rect = layout->computeRelativeSize(
+						Canvas::GetLeft(image__),
+						Canvas::GetTop(image__),
+						this->image__->ActualWidth,
+						this->image__->ActualHeight
 					);
-				layout->onComponentSizeChange(rect);
-				sizeChanged__ = false;
+					layout->onComponentSizeChange(rect);
+					sizeChanged__ = false;
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Unknown error while ImageView::SizeChanged");
+				}
 			});
 
 			image__->ImageOpened += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
-				const auto layout = getViewLayoutDelegate<WindowsImageViewLayoutDelegate>();
-				const auto rect = layout->computeRelativeSize(
-					Canvas::GetLeft(image__),
-					Canvas::GetTop(image__),
-					this->image__->ActualWidth,
-					this->image__->ActualHeight
-					);
-				layout->onComponentSizeChange(rect);
+				try {
+					const auto layout = getViewLayoutDelegate<WindowsImageViewLayoutDelegate>();
+					const auto rect = layout->computeRelativeSize(
+						Canvas::GetLeft(image__),
+						Canvas::GetTop(image__),
+						this->image__->ActualWidth,
+						this->image__->ActualHeight
+						);
+					layout->onComponentSizeChange(rect);
 
-				// image loaded, empty toImage queue
-				if (!imageOpened__) {
-					imageOpened__ = true;
-					for (auto callback : to_image_queue__) {
-						toImage(callback, false);
+					// image loaded, empty toImage queue
+					if (!imageOpened__) {
+						imageOpened__ = true;
+						for (auto callback : to_image_queue__) {
+							toImage(callback, false);
+						}
+						to_image_queue__.clear();
 					}
-					to_image_queue__.clear();
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Unknown error while ImageView::ImageOpened");
 				}
 			});
 
@@ -258,16 +266,20 @@ namespace TitaniumWindows
 				bitmaps__->Append(nullptr);
 				const auto blob = blobs.at(i);
 				loadBitmap(blob->getData(), [this, blobs_count, i](BitmapImage^ bitmap){
-					bitmaps_loaded_count__++;
-					bitmaps__->SetAt(i, bitmap);
-					// do we load all images?
-					if (bitmaps_loaded_count__ >= blobs_count) {
-						bitmaps_loaded__ = true;
-						fireEvent("load");
-						// start animation when we held it off
-						if (bitmaps_waiting__) {
-							start();
+					try {
+						bitmaps_loaded_count__++;
+						bitmaps__->SetAt(i, bitmap);
+						// do we load all images?
+						if (bitmaps_loaded_count__ >= blobs_count) {
+							bitmaps_loaded__ = true;
+							fireEvent("load");
+							// start animation when we held it off
+							if (bitmaps_waiting__) {
+								start();
+							}
 						}
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Unknown error at ImageView::loadBitmaps");
 					}
 				});
 			}
@@ -281,16 +293,20 @@ namespace TitaniumWindows
 				bitmaps__->Append(nullptr);
 				const auto file = files.at(i);
 				loadBitmap(file->read()->getData(), [this, files_count, i](BitmapImage^ bitmap){
-					bitmaps_loaded_count__++;
-					bitmaps__->SetAt(i, bitmap);
-					// do we load all images?
-					if (bitmaps_loaded_count__ >= files_count) {
-						bitmaps_loaded__ = true;
-						fireEvent("load");
-						// start animation when we held it off
-						if (bitmaps_waiting__) {
-							start();
+					try {
+						bitmaps_loaded_count__++;
+						bitmaps__->SetAt(i, bitmap);
+						// do we load all images?
+						if (bitmaps_loaded_count__ >= files_count) {
+							bitmaps_loaded__ = true;
+							fireEvent("load");
+							// start animation when we held it off
+							if (bitmaps_waiting__) {
+								start();
+							}
 						}
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Unknown error at ImageView::loadBitmaps");
 					}
 				});
 			}

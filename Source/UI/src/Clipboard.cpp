@@ -71,6 +71,8 @@ namespace TitaniumWindows
 					buffer = text.get();
 				} catch (Platform::Exception^ e) {
 					TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(e->Message));
+				} catch (...) {
+					TITANIUM_LOG_WARN("Unknown error at Clipboard.text");
 				}
 				event.set();
 			}, concurrency::task_continuation_context::use_arbitrary());

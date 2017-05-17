@@ -8,6 +8,7 @@
 
 #include "TitaniumWindows/UI/OptionDialog.hpp"
 #include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 #include "Titanium/API.hpp"
 #include "Titanium/detail/TiLogger.hpp"
 #include <ppltasks.h>
@@ -60,26 +61,26 @@ namespace TitaniumWindows
 
 			try {
 				concurrency::create_task(dialog->ShowAsync()).then([this](IUICommand^ command) {
-					std::int32_t index = 0;
-					if (command != nullptr) {
-						auto casted = dynamic_cast<IPropertyValue^>(command->Id);
-						if (casted != nullptr) {
-							index = casted->GetInt32();
+					TITANIUM_EXCEPTION_CATCH_START {
+						std::int32_t index = 0;
+						if (command != nullptr) {
+							auto casted = dynamic_cast<IPropertyValue^>(command->Id);
+							if (casted != nullptr) {
+								index = casted->GetInt32();
+							}
 						}
-					}
-					const JSContext ctx = get_context();
-					JSObject eventArgs = ctx.CreateObject();
-					eventArgs.SetProperty("index", ctx.CreateNumber(index));
-					eventArgs.SetProperty("cancel", ctx.CreateBoolean(index == get_cancel()));
-					eventArgs.SetProperty("destructive", ctx.CreateNumber(get_destructive()));
-					fireEvent("click", eventArgs);
+						const JSContext ctx = get_context();
+						JSObject eventArgs = ctx.CreateObject();
+						eventArgs.SetProperty("index", ctx.CreateNumber(index));
+						eventArgs.SetProperty("cancel", ctx.CreateBoolean(index == get_cancel()));
+						eventArgs.SetProperty("destructive", ctx.CreateNumber(get_destructive()));
+						fireEvent("click", eventArgs);
+					} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 				});
-			}
-			catch (::Platform::Exception^ ce) {
+			} catch (::Platform::Exception^ ce) {
 				// Typically would have happened on phone if we supplied more than max buttons allowed
 				detail::ThrowRuntimeError("Ti.UI.OptionDialog", "Exception during show(): " + Utility::ConvertUTF8String(ce->Message));
-			}
-			catch (...) {
+			} catch (...) {
 				detail::ThrowRuntimeError("Ti.UI.OptionDialog", "Exception during show()");
 			}
 		}

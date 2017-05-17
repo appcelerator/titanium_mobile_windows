@@ -47,22 +47,30 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
 			rootFrame->Navigated += ref new Windows::UI::Xaml::Navigation::NavigatedEventHandler([this](Platform::Object^, Windows::UI::Xaml::Navigation::NavigationEventArgs^) {
-				// Resizing Window should be available only on Windows 10 Store App
-				if (!IS_WINDOWS_MOBILE) {
-					updateWindowSize();
+				try {
+					// Resizing Window should be available only on Windows 10 Store App
+					if (!IS_WINDOWS_MOBILE) {
+						updateWindowSize();
+					}
+					// Update back button visibility. Note that back button is available on Store App too.
+					SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = AppViewBackButtonVisibility::Visible;
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at root frame Navigated");
 				}
-				// Update back button visibility. Note that back button is available on Store App too.
-				SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = AppViewBackButtonVisibility::Visible;
 			});
 			rootFrame->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler([this](Platform::Object^, Windows::UI::Xaml::SizeChangedEventArgs^) {
-				if (!IS_WINDOWS_MOBILE) {
-					const auto children = get_children();
-					for (const auto child : children) {
-						const auto layout = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>();
-						if (layout) {
-							layout->requestLayout(true);
+				try {
+					if (!IS_WINDOWS_MOBILE) {
+						const auto children = get_children();
+						for (const auto child : children) {
+							const auto layout = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+							if (layout) {
+								layout->requestLayout(true);
+							}
 						}
 					}
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at root frame SizeChanged");
 				}
 			});
 #endif
@@ -77,17 +85,21 @@ namespace TitaniumWindows
 				using namespace Windows::Phone::UI::Input;
 				backpressed_event__ = HardwareButtons::BackPressed += ref new EventHandler<BackPressedEventArgs^>([](Platform::Object ^sender, BackPressedEventArgs ^e) {
 #endif
-					if (TitaniumWindows::UI::Window::window_stack__.size() > 0) {
-						// Issue back event on the top window
-						const auto top_window = TitaniumWindows::UI::Window::window_stack__.back();
+					try {
+						if (TitaniumWindows::UI::Window::window_stack__.size() > 0) {
+							// Issue back event on the top window
+							const auto top_window = TitaniumWindows::UI::Window::window_stack__.back();
 
-						// For backward complatibility, we fires "windows:back" as well as "back".
-						top_window->fireEvent("windows:back");
-						top_window->fireEvent("back");
+							// For backward complatibility, we fires "windows:back" as well as "back".
+							top_window->fireEvent("windows:back");
+							top_window->fireEvent("back");
 
-						top_window->close(nullptr);
+							top_window->close(nullptr);
+						}
+						e->Handled = true;
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at BackRequested");
 					}
-					e->Handled = true;
 				});
 			});	
 #endif

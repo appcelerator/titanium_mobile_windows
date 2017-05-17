@@ -11,6 +11,7 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UI/SearchBar.hpp"
 #include "TitaniumWindows/UI/SearchBar.hpp"
@@ -101,52 +102,54 @@ namespace TitaniumWindows
 			if (event_name == "itemclick") {
 				itemclick_event__ = listview__->ItemClick += ref new Controls::ItemClickEventHandler(
 					[this, ctx](Platform::Object^ sender, Controls::ItemClickEventArgs^ e) {
-					auto listview = safe_cast<Controls::ListView^>(sender);
+					TITANIUM_EXCEPTION_CATCH_START {
+						auto listview = safe_cast<Controls::ListView^>(sender);
 
-					uint32_t selectedIndex;
-					const bool found = listview->Items->IndexOf(e->ClickedItem, &selectedIndex);
-					if (!found) return;
+						uint32_t selectedIndex;
+						const bool found = listview->Items->IndexOf(e->ClickedItem, &selectedIndex);
+						if (!found) return;
 
-					const auto result  = model__->searchRowBySelectedIndex(selectedIndex);
-					if (result.found) {
-						const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
-						auto this_object = get_object();
+						const auto result = model__->searchRowBySelectedIndex(selectedIndex);
+						if (result.found) {
+							const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
+							auto this_object = get_object();
 
-						TITANIUM_ASSERT(section->get_items().size() > static_cast<std::uint32_t>(result.rowIndex));
-						const auto properties = section->getItemAt(result.rowIndex).properties;
-						if (properties.find("itemId") != properties.end()) {
-							this_object.SetProperty("_itemclick_itemId_", properties.at("itemId"));
+							TITANIUM_ASSERT(section->get_items().size() > static_cast<std::uint32_t>(result.rowIndex));
+							const auto properties = section->getItemAt(result.rowIndex).properties;
+							if (properties.find("itemId") != properties.end()) {
+								this_object.SetProperty("_itemclick_itemId_", properties.at("itemId"));
+							}
+							if (properties.find("bindId") != properties.end()) {
+								this_object.SetProperty("_itemclick_bindId_", properties.at("bindId"));
+							}
+							// we just forward event properties to underlying view so that it can process itemclick event
+							this_object.SetProperty("_itemclick_section_", section->get_object());
+							this_object.SetProperty("_itemclick_sectionIndex_", ctx.CreateNumber(result.sectionIndex));
+							this_object.SetProperty("_itemclick_itemIndex_", ctx.CreateNumber(result.rowIndex));
 						}
-						if (properties.find("bindId") != properties.end()) {
-							this_object.SetProperty("_itemclick_bindId_", properties.at("bindId"));
-						}
-						// we just forward event properties to underlying view so that it can process itemclick event
-						this_object.SetProperty("_itemclick_section_", section->get_object());
-						this_object.SetProperty("_itemclick_sectionIndex_", ctx.CreateNumber(result.sectionIndex));
-						this_object.SetProperty("_itemclick_itemIndex_", ctx.CreateNumber(result.rowIndex));
-					}
-					// hack: fallback when no view processes the event
-					TitaniumWindows::Utility::RunOnUIThread([this](){
-						auto this_object = get_object();
-						// this means no one catches the event
-						if (this_object.HasProperty("_itemclick_section_")) {
-							auto eventArgs = get_context().CreateObject();
-							
-							eventArgs.SetProperty("section", this_object.GetProperty("_itemclick_section_"));
-							eventArgs.SetProperty("sectionIndex", this_object.GetProperty("_itemclick_sectionIndex_"));
-							eventArgs.SetProperty("itemIndex", this_object.GetProperty("_itemclick_itemIndex_"));
-							eventArgs.SetProperty("itemId", this_object.GetProperty("_itemclick_itemId_"));
-							eventArgs.SetProperty("bindId", this_object.GetProperty("_itemclick_bindId_"));
+						// hack: fallback when no view processes the event
+						TitaniumWindows::Utility::RunOnUIThread([this]() {
+							auto this_object = get_object();
+							// this means no one catches the event
+							if (this_object.HasProperty("_itemclick_section_")) {
+								auto eventArgs = get_context().CreateObject();
 
-							fireEvent("itemclick", eventArgs);
+								eventArgs.SetProperty("section", this_object.GetProperty("_itemclick_section_"));
+								eventArgs.SetProperty("sectionIndex", this_object.GetProperty("_itemclick_sectionIndex_"));
+								eventArgs.SetProperty("itemIndex", this_object.GetProperty("_itemclick_itemIndex_"));
+								eventArgs.SetProperty("itemId", this_object.GetProperty("_itemclick_itemId_"));
+								eventArgs.SetProperty("bindId", this_object.GetProperty("_itemclick_bindId_"));
 
-							this_object.DeleteProperty("_itemclick_section_");
-							this_object.DeleteProperty("_itemclick_sectionIndex_");
-							this_object.DeleteProperty("_itemclick_itemIndex_");
-							this_object.DeleteProperty("_itemclick_itemId_");
-							this_object.DeleteProperty("_itemclick_bindId_");
-						}
-					});
+								fireEvent("itemclick", eventArgs);
+
+								this_object.DeleteProperty("_itemclick_section_");
+								this_object.DeleteProperty("_itemclick_sectionIndex_");
+								this_object.DeleteProperty("_itemclick_itemIndex_");
+								this_object.DeleteProperty("_itemclick_itemId_");
+								this_object.DeleteProperty("_itemclick_bindId_");
+							}
+						});
+					} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 				});
 			}
 		}

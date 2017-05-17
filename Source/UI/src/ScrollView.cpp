@@ -8,6 +8,7 @@
 
 #include "TitaniumWindows/UI/ScrollView.hpp"
 #include "TitaniumWindows/UI/View.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 
 using namespace Windows::UI::Xaml;
 
@@ -124,23 +125,27 @@ namespace TitaniumWindows
 			if (event_name == "click") {
 				click_event__ = scroll_viewer__->Tapped += ref new Windows::UI::Xaml::Input::TappedEventHandler(
 					[this](Platform::Object^ sender, Windows::UI::Xaml::Input::TappedRoutedEventArgs^ e) {
-					const auto ctx = get_context();
-					const auto scroll_viewer = safe_cast<Windows::UI::Xaml::Controls::ScrollViewer^>(sender);
-					auto eventArgs = ctx.CreateObject();
+					try {
+						const auto ctx = get_context();
+						const auto scroll_viewer = safe_cast<Windows::UI::Xaml::Controls::ScrollViewer^>(sender);
+						auto eventArgs = ctx.CreateObject();
 
-					// special property that saves latest click event source
-					const std::string source_property_name = "_ti_scrollview_click_event_source_";
-					const auto source = contentView__.GetProperty(source_property_name);
-					if (source.IsUndefined()) {
-						eventArgs.SetProperty("source", get_object());
-					} else {
-						eventArgs.SetProperty("source", source);
+						// special property that saves latest click event source
+						const std::string source_property_name = "_ti_scrollview_click_event_source_";
+						const auto source = contentView__.GetProperty(source_property_name);
+						if (source.IsUndefined()) {
+							eventArgs.SetProperty("source", get_object());
+						} else {
+							eventArgs.SetProperty("source", source);
+						}
+
+						fireEvent("click", eventArgs);
+
+						// reset latest click event source
+						contentView__.SetProperty(source_property_name, ctx.CreateUndefined());
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at ScrollView.click");
 					}
-
-					fireEvent("click", eventArgs);
-
-					// reset latest click event source
-					contentView__.SetProperty(source_property_name, ctx.CreateUndefined());
 				});
 			} else if (event_name == "dragend" || event_name == "dragEnd") {
 				dragend_event__ = scroll_viewer__->PointerReleased += ref new Windows::UI::Xaml::Input::PointerEventHandler(
@@ -157,27 +162,34 @@ namespace TitaniumWindows
 			} else if (event_name == "scale") {
 				scale_event__ = scroll_viewer__->ViewChanging += ref new Windows::Foundation::EventHandler<Windows::UI::Xaml::Controls::ScrollViewerViewChangingEventArgs ^>(
 					[=](Platform::Object ^sender, Windows::UI::Xaml::Controls::ScrollViewerViewChangingEventArgs ^args) {
+					try {
 						auto eventArgs = get_context().CreateObject();
 						auto scale = args->FinalView->ZoomFactor;
 						eventArgs.SetProperty("scale", get_context().CreateNumber(scale));
 						fireEvent("scale", eventArgs);
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at ScrollView.scale");
 					}
-				);
+				});
 			} else if (event_name == "scroll") {
 				scroll_event__ = scroll_viewer__->ViewChanging += ref new Windows::Foundation::EventHandler<Windows::UI::Xaml::Controls::ScrollViewerViewChangingEventArgs ^>(
 					[=](Platform::Object ^sender, Windows::UI::Xaml::Controls::ScrollViewerViewChangingEventArgs ^args) {
-					const auto ctx = get_context();
-					auto eventArgs = ctx.CreateObject();
-					auto dragging = args->FinalView->HorizontalOffset != 0 || args->FinalView->VerticalOffset != 0;
-					auto zoom = args->FinalView->ZoomFactor;
-					auto zooming = zoom != 1;
+					try {
+						const auto ctx = get_context();
+						auto eventArgs = ctx.CreateObject();
+						auto dragging = args->FinalView->HorizontalOffset != 0 || args->FinalView->VerticalOffset != 0;
+						auto zoom = args->FinalView->ZoomFactor;
+						auto zooming = zoom != 1;
 
-					eventArgs.SetProperty("x", ctx.CreateNumber(args->FinalView->HorizontalOffset));
-					eventArgs.SetProperty("y", ctx.CreateNumber(args->FinalView->VerticalOffset));
-					eventArgs.SetProperty("dragging", ctx.CreateBoolean(dragging)); // test this
-					eventArgs.SetProperty("zooming", ctx.CreateBoolean(zooming)); // test this
-					eventArgs.SetProperty("curZoomScale", ctx.CreateNumber(zoom));
-					fireEvent("scroll", eventArgs);
+						eventArgs.SetProperty("x", ctx.CreateNumber(args->FinalView->HorizontalOffset));
+						eventArgs.SetProperty("y", ctx.CreateNumber(args->FinalView->VerticalOffset));
+						eventArgs.SetProperty("dragging", ctx.CreateBoolean(dragging)); // test this
+						eventArgs.SetProperty("zooming", ctx.CreateBoolean(zooming)); // test this
+						eventArgs.SetProperty("curZoomScale", ctx.CreateNumber(zoom));
+						fireEvent("scroll", eventArgs);
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at ScrollView.scroll");
+					}
 				});
 			} else if (event_name == "scrollend" || event_name == "scrollEnd") {
 				scrollend_event__ = scroll_viewer__->ViewChanged += ref new Windows::Foundation::EventHandler<Windows::UI::Xaml::Controls::ScrollViewerViewChangedEventArgs ^>(

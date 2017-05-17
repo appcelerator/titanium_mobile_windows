@@ -6,6 +6,7 @@
 
 #include "TitaniumWindows/Gesture.hpp"
 #include "Titanium/detail/TiLogger.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 #include <iostream>
 #include <objbase.h>
 
@@ -22,10 +23,12 @@ namespace TitaniumWindows
 			const auto display = DisplayInformation::GetForCurrentView();
 			// Setup OrientationChanged event
 			const auto orientationchangeCallback = [this](DisplayInformation^ sender, ::Platform::Object^ args) {
-				const auto ctx = get_context();
-				auto obj = ctx.CreateObject();
-				obj.SetProperty("orientation", ctx.CreateNumber(Titanium::UI::Constants::to_underlying_type(updateOrientation())));
-				fireEvent("orientationchange", obj);
+				TITANIUM_EXCEPTION_CATCH_START {
+					const auto ctx = get_context();
+					auto obj = ctx.CreateObject();
+					obj.SetProperty("orientation", ctx.CreateNumber(Titanium::UI::Constants::to_underlying_type(updateOrientation())));
+					fireEvent("orientationchange", obj);
+				} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 			};
 
 			orientationchange_event_ = display->OrientationChanged += ref new Windows::Foundation::TypedEventHandler<Windows::Graphics::Display::DisplayInformation^, ::Platform::Object^>(orientationchangeCallback);
@@ -79,25 +82,27 @@ namespace TitaniumWindows
 			const auto updateCallback = [current, self](Windows::Devices::Sensors::Accelerometer^ sender, Windows::Devices::Sensors::AccelerometerReadingChangedEventArgs^ e) {
 				const auto dispatchedCallback = [current, self]() {
 					const auto ctx = self->get_context();
-					auto obj = ctx.CreateObject();
-					const auto reading = self->accelerometer_->GetCurrentReading();
-					unsigned timestamp = 0;
-					if (self->previous_acceleromter_time_.UniversalTime > 0) {
-						timestamp = static_cast<unsigned>((reading->Timestamp.UniversalTime - self->previous_acceleromter_time_.UniversalTime) / 10000.0);
-						// wait for 500 milliseconds until next shake event (taken from Titanium Android)
-						if (timestamp < 500) {
-							return;
+					TITANIUM_EXCEPTION_CATCH_START {
+						auto obj = ctx.CreateObject();
+						const auto reading = self->accelerometer_->GetCurrentReading();
+						unsigned timestamp = 0;
+						if (self->previous_acceleromter_time_.UniversalTime > 0) {
+							timestamp = static_cast<unsigned>((reading->Timestamp.UniversalTime - self->previous_acceleromter_time_.UniversalTime) / 10000.0);
+							// wait for 500 milliseconds until next shake event (taken from Titanium Android)
+							if (timestamp < 500) {
+								return;
+							}
 						}
-					}
 
-					if (self->shakeGestureHelper.isShaken(reading)) {
-						self->previous_acceleromter_time_ = reading->Timestamp;
-						obj.SetProperty("timestamp", ctx.CreateNumber(timestamp));
-						obj.SetProperty("x", ctx.CreateNumber(reading->AccelerationX));
-						obj.SetProperty("y", ctx.CreateNumber(reading->AccelerationY));
-						obj.SetProperty("z", ctx.CreateNumber(reading->AccelerationZ));
-						self->fireEvent("shake", obj);
-					}
+						if (self->shakeGestureHelper.isShaken(reading)) {
+							self->previous_acceleromter_time_ = reading->Timestamp;
+							obj.SetProperty("timestamp", ctx.CreateNumber(timestamp));
+							obj.SetProperty("x", ctx.CreateNumber(reading->AccelerationX));
+							obj.SetProperty("y", ctx.CreateNumber(reading->AccelerationY));
+							obj.SetProperty("z", ctx.CreateNumber(reading->AccelerationZ));
+							self->fireEvent("shake", obj);
+						}
+					} TITANIUMWINDOWS_EXCEPTION_CATCH_END_CTX(ctx)
 				};
 
 				if (current) {

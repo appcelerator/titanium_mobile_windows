@@ -182,6 +182,13 @@ namespace TitaniumWindows
 		TITANIUMWINDOWS_UTILITY_EXPORT Titanium::ErrorResponse GetTiErrorResponse(::Platform::COMException^ e);
 
 		//
+		// Create ErrorResponse from Exception
+		//
+		TITANIUMWINDOWS_UTILITY_EXPORT Titanium::ErrorResponse GetTiErrorResponse(::Platform::Exception^ e);
+
+		TITANIUMWINDOWS_UTILITY_EXPORT Titanium::ErrorResponse GetTiErrorResponse(const std::string& message);
+
+		//
 		// Check if Titanium is running on Windws Phone
 		//
 		TITANIUMWINDOWS_UTILITY_EXPORT bool IsWindowsPhoneOrMobile();
