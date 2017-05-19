@@ -399,11 +399,6 @@ namespace TitaniumWindows
 
 		Titanium::ErrorResponse GetTiErrorResponse(::Platform::Exception^ e)
 		{
-			return GetTiErrorResponse(TitaniumWindows::Utility::ConvertString(e->Message));
-		}
-
-		Titanium::ErrorResponse GetTiErrorResponse(::Platform::COMException^ e) 
-		{
 			Titanium::ErrorResponse response;
 			response.success = false;
 			response.code  = e->HResult;

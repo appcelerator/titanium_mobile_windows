@@ -23,12 +23,14 @@ namespace TitaniumWindows
 			const auto display = DisplayInformation::GetForCurrentView();
 			// Setup OrientationChanged event
 			const auto orientationchangeCallback = [this](DisplayInformation^ sender, ::Platform::Object^ args) {
-				TITANIUM_EXCEPTION_CATCH_START {
+				try {
 					const auto ctx = get_context();
 					auto obj = ctx.CreateObject();
 					obj.SetProperty("orientation", ctx.CreateNumber(Titanium::UI::Constants::to_underlying_type(updateOrientation())));
 					fireEvent("orientationchange", obj);
-				} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at Gesture.orientationchange");
+				}
 			};
 
 			orientationchange_event_ = display->OrientationChanged += ref new Windows::Foundation::TypedEventHandler<Windows::Graphics::Display::DisplayInformation^, ::Platform::Object^>(orientationchangeCallback);
@@ -82,7 +84,7 @@ namespace TitaniumWindows
 			const auto updateCallback = [current, self](Windows::Devices::Sensors::Accelerometer^ sender, Windows::Devices::Sensors::AccelerometerReadingChangedEventArgs^ e) {
 				const auto dispatchedCallback = [current, self]() {
 					const auto ctx = self->get_context();
-					TITANIUM_EXCEPTION_CATCH_START {
+					try {
 						auto obj = ctx.CreateObject();
 						const auto reading = self->accelerometer_->GetCurrentReading();
 						unsigned timestamp = 0;
@@ -102,7 +104,9 @@ namespace TitaniumWindows
 							obj.SetProperty("z", ctx.CreateNumber(reading->AccelerationZ));
 							self->fireEvent("shake", obj);
 						}
-					} TITANIUMWINDOWS_EXCEPTION_CATCH_END_CTX(ctx)
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at Gesture.shake");
+					}
 				};
 
 				if (current) {

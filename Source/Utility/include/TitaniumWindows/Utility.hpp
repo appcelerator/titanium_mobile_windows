@@ -177,11 +177,6 @@ namespace TitaniumWindows
 		TITANIUMWINDOWS_UTILITY_EXPORT HAL::JSValue GetTiBlobForFile(const HAL::JSContext& js_context, const std::string& path);
 
 		//
-		// Create ErrorResponse from COMException
-		//
-		TITANIUMWINDOWS_UTILITY_EXPORT Titanium::ErrorResponse GetTiErrorResponse(::Platform::COMException^ e);
-
-		//
 		// Create ErrorResponse from Exception
 		//
 		TITANIUMWINDOWS_UTILITY_EXPORT Titanium::ErrorResponse GetTiErrorResponse(::Platform::Exception^ e);

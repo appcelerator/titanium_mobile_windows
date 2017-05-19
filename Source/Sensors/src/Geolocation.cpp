@@ -46,14 +46,16 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 			TitaniumWindows::Utility::RunOnUIThread([this]() {
 				concurrency::create_task(Geolocator::RequestAccessAsync()).then([this](concurrency::task<GeolocationAccessStatus> task) {
-					TITANIUM_EXCEPTION_CATCH_START {
+					try {
 						const auto status = task.get();
 						if (status == GeolocationAccessStatus::Denied) {
 							locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::DENIED;
 						} else if (status == GeolocationAccessStatus::Allowed) {
 							locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::AUTHORIZED;
 						}
-					} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at Geolocator::RequestAccessAsync");
+					}
 				});
 			});
 #endif
@@ -75,7 +77,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 		TitaniumWindows::Utility::RunOnUIThread([this, callback]() {
 			concurrency::create_task(Geolocator::RequestAccessAsync()).then([this, callback](concurrency::task<GeolocationAccessStatus> task) {
-				TITANIUM_EXCEPTION_CATCH_START {
+				try {
 					const auto ctx = get_context();
 					JSObject response = ctx.CreateObject();
 					try {
@@ -103,7 +105,9 @@ namespace TitaniumWindows
 					auto cb = static_cast<JSObject>(callback);
 					TITANIUM_ASSERT(cb.IsFunction());
 					cb({ response }, get_object());
-				} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at Geolocator::RequestAccessAsync");
+				}
 			});
 		});
 #else
@@ -145,7 +149,7 @@ namespace TitaniumWindows
 				const auto speed = args->Position->Coordinate->Speed;
 
 				const auto func = [=](){
-					TITANIUM_EXCEPTION_CATCH_START {
+					try {
 						const auto ctx = get_context();
 						auto coords = ctx.CreateObject();
 						coords.SetProperty("latitude", ctx.CreateNumber(latitude));
@@ -160,7 +164,9 @@ namespace TitaniumWindows
 						lastGeolocation__.SetProperty("coords", coords);
 
 						this->fireEvent("location", lastGeolocation__);
-					} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at Geolocation.location");
+					}
 				};
 
 				// Check if we are in background, in that case we do not run it on UI thread.
@@ -177,14 +183,16 @@ namespace TitaniumWindows
 				const auto heading = args->Position->Coordinate->Heading->Value;
 
 				const auto func = [=](){
-					TITANIUM_EXCEPTION_CATCH_START {
+					try {
 						const auto old_heading = static_cast<double>(heading__.GetProperty("heading"));
 						if (abs(heading - old_heading) > headingFilter__) {
 							heading__.SetProperty("heading", get_context().CreateNumber(heading));
 
 							this->fireEvent("heading", heading__);
 						}
-					} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at Geolocation.heading");
+					}
 				};
 
 				// Check if we are in background, in that case we do not run it on UI thread.
@@ -302,7 +310,7 @@ namespace TitaniumWindows
 		ensureLoadGeolocator();
 
 		concurrency::create_task(geolocator_->GetGeopositionAsync()).then([this, callback](concurrency::task<Geoposition^> task) {
-			TITANIUM_EXCEPTION_CATCH_START {
+			try {
 				const auto position = task.get();
 				const auto ctx = get_context();
 				const auto data = position->Coordinate;
@@ -330,7 +338,9 @@ namespace TitaniumWindows
 				auto cb = static_cast<JSObject>(callback);
 				TITANIUM_ASSERT(cb.IsFunction());
 				cb({headingResponse}, get_object());
-			} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+			} catch (...) {
+				TITANIUM_LOG_DEBUG("Error at Geolocation.getCurrentHeading");
+			}
 		});
 	}
 
@@ -343,7 +353,7 @@ namespace TitaniumWindows
 		ensureLoadGeolocator();
 
 		concurrency::create_task(geolocator_->GetGeopositionAsync()).then([this, callback](concurrency::task<Geoposition^> task) {
-			TITANIUM_EXCEPTION_CATCH_START {
+			try {
 				const auto position = task.get();
 				const auto ctx = get_context();
 				const auto data = position->Coordinate;
@@ -376,7 +386,9 @@ namespace TitaniumWindows
 				// Cast callback as non-const JSObject
 				auto cb = static_cast<JSObject>(callback);
 				cb({ locationResult }, get_object());
-			} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+			} catch (...) {
+				TITANIUM_LOG_DEBUG("Error at Geolocation.getCurrentPosition");
+			}
 		});
 	}
 }  // namespace TitaniumWindows

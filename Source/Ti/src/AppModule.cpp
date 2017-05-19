@@ -92,22 +92,26 @@ namespace TitaniumWindows
 		Titanium::AppModule::enableEvent(event_name);
 		if (event_name == "keyboardframechanged") {
 			keyboardframe_showing_event__ = InputPane::GetForCurrentView()->Showing += ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>([this](InputPane^ sender, InputPaneVisibilityEventArgs^ e) {
-				TITANIUM_EXCEPTION_CATCH_START {
+				try {
 					keyboardVisible__ = true;
 					const auto ctx = this->get_context();
 					auto event_arg = ctx.CreateObject();
 					event_arg.SetProperty("keyboardFrame", RectToJS(ctx, e->OccludedRect));
 					this->fireEvent("keyboardframechanged", event_arg);
-				} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at App.keyboardframechanged");
+				}
 			});
 			keyboardframe_hiding_event__ = InputPane::GetForCurrentView()->Hiding += ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>([this](InputPane^ sender, InputPaneVisibilityEventArgs^ e) {
-				TITANIUM_EXCEPTION_CATCH_START {
+				try {
 					keyboardVisible__ = false;
 					const auto ctx = this->get_context();
 					auto event_arg = ctx.CreateObject();
 					event_arg.SetProperty("keyboardFrame", RectToJS(ctx, e->OccludedRect));
 					this->fireEvent("keyboardframechanged", event_arg);
-				} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at App.keyboardframechanged");
+				}
 			});
 		} else if (event_name == "proximity") {
 #if defined(IS_WINDOWS_10)
@@ -117,14 +121,16 @@ namespace TitaniumWindows
 			if (!no_proximitySensor__) {
 				proximity_event__ = proximitySensor__->ReadingChanged += ref new TypedEventHandler<ProximitySensor^, ProximitySensorReadingChangedEventArgs^>([this](ProximitySensor^ sender, ProximitySensorReadingChangedEventArgs^ e) {
 					if (proximityDetection__) {
-						TITANIUM_EXCEPTION_CATCH_START{
+						try {
 							const auto ctx = this->get_context();
 							auto event_arg = ctx.CreateObject();
 							event_arg.SetProperty("state", ctx.CreateBoolean(e->Reading->IsDetected));
 							TitaniumWindows::Utility::RunOnUIThread([this, event_arg]() {
 								this->fireEvent("proximity", event_arg);
 							});
-						} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+						} catch (...) {
+							TITANIUM_LOG_DEBUG("Error at App.proximity");
+						}
 					}
 				});
 			}
