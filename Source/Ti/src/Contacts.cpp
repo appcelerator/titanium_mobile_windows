@@ -13,6 +13,7 @@
 #include "TitaniumWindows/Contacts/Group.hpp"
 #include "TitaniumWindows/Contacts/Person.hpp"
 #include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 #include <ppltasks.h>
 #include <collection.h>
 #include <concrt.h>
@@ -167,7 +168,7 @@ namespace TitaniumWindows
 			}
 			catch (Platform::Exception^ ce) {
 				TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: ", ce->Message->Data());
-		}
+			}
 			catch (const std::exception& e) {
 				TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: ", e.what());
 			}
@@ -384,51 +385,50 @@ namespace TitaniumWindows
 
 	void ContactsModule::requestContactsPermissions(JSObject& callback) TITANIUM_NOEXCEPT
 	{
-		Titanium::ErrorResponse e;
-		e.code = 0;
-		e.error = "";
-#if defined(IS_WINDOWS_10)
-		if (Titanium::Contacts::AUTHORIZATION::UNKNOWN == contactsAuthorization__) {
-			concurrency::event event;
-			concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
-			.then([&callback, &event, &e, this](concurrency::task<ContactStore^> task) {
-				try {
-					task.get(); // TODO Set a field to hold the store for re-use in the other methods?
-					contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::AUTHORIZED;
-				}
-				catch (Platform::AccessDeniedException^ ade) {
-					e.code = ade->HResult;
-					e.error = TitaniumWindows::Utility::ConvertUTF8String(ade->Message);
-					contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::DENIED;
-					TITANIUM_LOG_ERROR("Access denied to contacts");
-				}
-				catch (const std::exception& ex) {
-					e.error = ex.what();
-					contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::DENIED;
-					TITANIUM_LOG_ERROR("Access denied to contacts");
-				}
-				catch (...) {
-					contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::DENIED;
-					TITANIUM_LOG_ERROR("Unable to get contact store");
-				}
-				event.set();
-			}, concurrency::task_continuation_context::use_arbitrary());
-			event.wait();
-		}
-#else
-		contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::RESTRICTED;
-		e.error = "Access denied to contacts: Contact query/lookup not allowed on Windows 8.1 Store/Desktop apps. You can still call showContacts() to pick a contact.";
-#endif
+		TITANIUM_EXCEPTION_CATCH_START{
+			Titanium::ErrorResponse e;
+			e.code = 0;
+			e.error = "";
+	#if defined(IS_WINDOWS_10)
+			if (Titanium::Contacts::AUTHORIZATION::UNKNOWN == contactsAuthorization__) {
+				concurrency::event event;
+				concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
+				.then([&callback, &event, &e, this](concurrency::task<ContactStore^> task) {
+					try {
+						task.get(); // TODO Set a field to hold the store for re-use in the other methods?
+						contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::AUTHORIZED;
+					} catch (Platform::AccessDeniedException^ ade) {
+						e.code = ade->HResult;
+						e.error = TitaniumWindows::Utility::ConvertUTF8String(ade->Message);
+						contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::DENIED;
+						TITANIUM_LOG_ERROR("Access denied to contacts");
+					} catch (const std::exception& ex) {
+						e.error = ex.what();
+						contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::DENIED;
+						TITANIUM_LOG_ERROR("Access denied to contacts");
+					} catch (...) {
+						contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::DENIED;
+						TITANIUM_LOG_ERROR("Unable to get contact store");
+					}
+					event.set();
+				}, concurrency::task_continuation_context::use_arbitrary());
+				event.wait();
+			}
+	#else
+			contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::RESTRICTED;
+			e.error = "Access denied to contacts: Contact query/lookup not allowed on Windows 8.1 Store/Desktop apps. You can still call showContacts() to pick a contact.";
+	#endif
 
-		if (Titanium::Contacts::AUTHORIZATION::DENIED == contactsAuthorization__) {
-			e.success = false;
-		}
+			if (Titanium::Contacts::AUTHORIZATION::DENIED == contactsAuthorization__) {
+				e.success = false;
+			}
 
-		// fire the callback in main thread
-		const std::vector<JSValue> args = {
-			ErrorResponse_to_js(callback.get_context(), e)
-		};
-		callback(args, get_object());
+			// fire the callback in main thread
+			const std::vector<JSValue> args = {
+				ErrorResponse_to_js(callback.get_context(), e)
+			};
+			callback(args, get_object());
+		} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 	}
 
 }  // namespace TitaniumWindows

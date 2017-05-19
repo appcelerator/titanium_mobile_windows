@@ -27,7 +27,10 @@ namespace TitaniumWindows
 					const auto ctx = get_context();
 					auto obj = ctx.CreateObject();
 					obj.SetProperty("orientation", ctx.CreateNumber(Titanium::UI::Constants::to_underlying_type(updateOrientation())));
-					fireEvent("orientationchange", obj);
+
+					TitaniumWindows::Utility::RunOnUIThread([this, obj]() {
+						fireEvent("orientationchange", obj);
+					});
 				} catch (...) {
 					TITANIUM_LOG_DEBUG("Error at Gesture.orientationchange");
 				}

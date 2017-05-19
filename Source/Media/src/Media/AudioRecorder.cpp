@@ -77,15 +77,22 @@ namespace TitaniumWindows
 						mediaCapture->RecordLimitationExceeded += ref new RecordLimitationExceededEventHandler(
 							[=](MediaCapture^ sender) {
 								TITANIUM_MODULE_LOG_WARN("AudioRecorder: Stopping, exceeding max record duration");
-								stop();
+								try {
+									stop();
+								} catch (...) {
+									TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop");
+								}
 							}
 						);
 						mediaCapture->Failed += ref new MediaCaptureFailedEventHandler(
 							[=](MediaCapture^ sender, MediaCaptureFailedEventArgs^ e) {
 							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to capture audio: ", TitaniumWindows::Utility::ConvertString(e->Message));
-								stop();
-							}
-						);
+								try {
+									stop();
+								} catch (...) {
+									TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop");
+								}
+							});
 					} catch (Platform::Exception ^ e) {
 						TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to initialize audio capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
 					} catch (...) {

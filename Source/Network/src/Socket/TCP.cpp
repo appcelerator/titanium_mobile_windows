@@ -58,19 +58,21 @@ namespace TitaniumWindows
 								modes__.emplace(Titanium::Filesystem::MODE::READ);
 								modes__.emplace(Titanium::Filesystem::MODE::WRITE);
 
-								// call connected callback
-								if (connected__.IsObject()) {
-									auto connected_obj = static_cast<JSObject>(connected__);
-									if (connected_obj.IsFunction()) {
-										auto args = get_context().CreateObject();
-										args.SetProperty("socket", get_object());
-										try {
-											connected_obj({args}, get_object());
-										} catch (std::exception e) {
-											HAL::detail::ThrowRuntimeError("TCP::connected", std::string(e.what()));
+								TitaniumWindows::Utility::RunOnUIThread([this]() {
+									// call connected callback
+									if (connected__.IsObject()) {
+										auto connected_obj = static_cast<JSObject>(connected__);
+										if (connected_obj.IsFunction()) {
+											auto args = get_context().CreateObject();
+											args.SetProperty("socket", get_object());
+											try {
+												connected_obj({ args }, get_object());
+											} catch (std::exception e) {
+												HAL::detail::ThrowRuntimeError("TCP::connected", std::string(e.what()));
+											}
 										}
 									}
-								}
+								});
 							} catch(Platform::Exception^ e) {
 								TITANIUM_LOG_ERROR("TCP::connect: Titanium::Network::Socket::TCP: Could not connect: ", TitaniumWindows::Utility::ConvertString(e->Message));
 								error("could not connect");
@@ -161,13 +163,15 @@ namespace TitaniumWindows
 						tcp->construct(socket);
 
 						// call accepted callback
-						auto accepted_obj = static_cast<JSObject>(accepted__);
-						if (accepted_obj.IsFunction()) {
-							auto args = get_context().CreateObject();
-							args.SetProperty("inbound", tcp_obj);
-							args.SetProperty("socket", get_object());
-							accepted_obj({ args }, get_object());
-						}
+						TitaniumWindows::Utility::RunOnUIThread([this, tcp_obj]() {
+							auto accepted_obj = static_cast<JSObject>(accepted__);
+							if (accepted_obj.IsFunction()) {
+								auto args = get_context().CreateObject();
+								args.SetProperty("inbound", tcp_obj);
+								args.SetProperty("socket", get_object());
+								static_cast<JSObject>(accepted_obj)({ args }, get_object());
+							}
+						});
 					}
 				} catch (Platform::Exception^ e) {
 					TITANIUM_LOG_WARN("Unknown error while TCP::accepted: ", TitaniumWindows::Utility::ConvertString(e->Message));
@@ -205,7 +209,7 @@ namespace TitaniumWindows
 					[this, &evt, offset, length, &data, &count, &exception, reader](concurrency::task<unsigned int> task) {
 						try {
 							count = task.get();
-							if (offset + length < count) {
+							if (offset + length < (std::uint32_t)count) {
 								concurrency::cancel_current_task();
 								error("read input greater than buffer");
 								TITANIUM_LOG_ERROR("TCP::read: Titanium::Network::Socket::TCP: Read input greater than buffer");
@@ -340,22 +344,24 @@ namespace TitaniumWindows
 
 			void TCP::error(const std::string& message)
 			{
-				try {
-					if (error__.IsObject()) {
-						auto error_obj = static_cast<JSObject>(error__);
-						if (error_obj.IsFunction()) {
-							const auto ctx = get_context();
-							auto args = get_context().CreateObject();
-							args.SetProperty("code", ctx.CreateNumber(-1));
-							args.SetProperty("error", ctx.CreateString(message));
-							args.SetProperty("socket", get_object());
-							args.SetProperty("success", ctx.CreateBoolean(false));
-							error_obj({args}, get_object());
+				TitaniumWindows::Utility::RunOnUIThread([this, message]() {
+					try {
+						if (error__.IsObject()) {
+							auto error_obj = static_cast<JSObject>(error__);
+							if (error_obj.IsFunction()) {
+								const auto ctx = get_context();
+								auto args = get_context().CreateObject();
+								args.SetProperty("code", ctx.CreateNumber(-1));
+								args.SetProperty("error", ctx.CreateString(message));
+								args.SetProperty("socket", get_object());
+								args.SetProperty("success", ctx.CreateBoolean(false));
+								error_obj({ args }, get_object());
+							}
 						}
+					} catch (...) {
+						// do nothing...
 					}
-				} catch (...) {
-					// do nothing...
-				}
+				});
 			}
 		}
 	}

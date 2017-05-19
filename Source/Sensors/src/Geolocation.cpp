@@ -87,25 +87,31 @@ namespace TitaniumWindows
 							response.SetProperty("code", ctx.CreateNumber(-1));
 							response.SetProperty("error", ctx.CreateString("location DeviceCapability not set in tiapp.xml"));
 							response.SetProperty("success", ctx.CreateBoolean(false));
-						} else if (status == GeolocationAccessStatus::Allowed) {
+						}
+						else if (status == GeolocationAccessStatus::Allowed) {
 							locationServicesAuthorization__ = Titanium::Geolocation::AUTHORIZATION::AUTHORIZED;
 							response.SetProperty("code", ctx.CreateNumber(0));
 							response.SetProperty("error", ctx.CreateString());
 							response.SetProperty("success", ctx.CreateBoolean(true));
 						}
-					} catch (::Platform::Exception^ e) {
+					}
+					catch (::Platform::Exception^ e) {
 						response.SetProperty("code", ctx.CreateNumber(e->HResult));
 						response.SetProperty("error", ctx.CreateString(TitaniumWindows::Utility::ConvertString(e->Message)));
 						response.SetProperty("success", ctx.CreateBoolean(false));
-					} catch (...) {
+					}
+					catch (...) {
 						response.SetProperty("code", ctx.CreateNumber(-1));
 						response.SetProperty("error", ctx.CreateString("Unknown error"));
 						response.SetProperty("success", ctx.CreateBoolean(false));
 					}
-					auto cb = static_cast<JSObject>(callback);
-					TITANIUM_ASSERT(cb.IsFunction());
-					cb({ response }, get_object());
-				} catch (...) {
+					TitaniumWindows::Utility::RunOnUIThread([this, response, callback]() {
+						auto cb = static_cast<JSObject>(callback);
+						TITANIUM_ASSERT(cb.IsFunction());
+						cb({ response }, get_object());
+					});
+				}
+				catch (...) {
 					TITANIUM_LOG_DEBUG("Error at Geolocator::RequestAccessAsync");
 				}
 			});
@@ -118,14 +124,17 @@ namespace TitaniumWindows
 			response.SetProperty("code", ctx.CreateNumber(0));
 			response.SetProperty("error", ctx.CreateString());
 			response.SetProperty("success", ctx.CreateBoolean(true));
-		} else {
+		}
+		else {
 			response.SetProperty("code", ctx.CreateNumber(-1));
 			response.SetProperty("error", ctx.CreateString("location DeviceCapability not set in tiapp.xml"));
 			response.SetProperty("success", ctx.CreateBoolean(false));
 		}
-		auto cb = static_cast<JSObject>(callback);
-		TITANIUM_ASSERT(cb.IsFunction());
-		cb({ response }, get_object());
+		TitaniumWindows::Utility::RunOnUIThread([this, response, callback]() {
+			auto cb = static_cast<JSObject>(callback);
+			TITANIUM_ASSERT(cb.IsFunction());
+			cb({ response }, get_object());
+		});
 #endif
 	}
 
@@ -334,10 +343,12 @@ namespace TitaniumWindows
 				headingResponse.SetProperty("heading", headingData);
 				headingResponse.SetProperty("success", ctx.CreateBoolean(true));
 
-				// Cast callback as non-const JSObject
-				auto cb = static_cast<JSObject>(callback);
-				TITANIUM_ASSERT(cb.IsFunction());
-				cb({headingResponse}, get_object());
+				TitaniumWindows::Utility::RunOnUIThread([this, headingResponse, callback]() {
+					// Cast callback as non-const JSObject
+					auto cb = static_cast<JSObject>(callback);
+					TITANIUM_ASSERT(cb.IsFunction());
+					cb({ headingResponse }, get_object());
+				});
 			} catch (...) {
 				TITANIUM_LOG_DEBUG("Error at Geolocation.getCurrentHeading");
 			}
@@ -383,9 +394,12 @@ namespace TitaniumWindows
 				lastGeolocation__.SetProperty("latitude", ctx.CreateNumber(data->Point->Position.Latitude));
 
 				locationResult.SetProperty("success", ctx.CreateBoolean(true));
-				// Cast callback as non-const JSObject
-				auto cb = static_cast<JSObject>(callback);
-				cb({ locationResult }, get_object());
+
+				TitaniumWindows::Utility::RunOnUIThread([this, locationResult, callback]() {
+					// Cast callback as non-const JSObject
+					auto cb = static_cast<JSObject>(callback);
+					cb({ locationResult }, get_object());
+				});
 			} catch (...) {
 				TITANIUM_LOG_DEBUG("Error at Geolocation.getCurrentPosition");
 			}
