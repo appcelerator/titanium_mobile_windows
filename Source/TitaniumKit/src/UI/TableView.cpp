@@ -121,6 +121,7 @@ namespace Titanium
 					} catch (...) {
 						TITANIUM_LOG_DEBUG("Error at TableView::suggestionRequested");
 					}
+					return std::vector<std::string>();
 				});
 			}
 		}

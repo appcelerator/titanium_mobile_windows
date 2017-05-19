@@ -97,6 +97,7 @@ namespace Titanium
 					} catch (...) {
 						TITANIUM_LOG_DEBUG("Error at ListView::suggestionRequested");
 					}
+					return std::vector<std::string>();
 				});
 			}
 
