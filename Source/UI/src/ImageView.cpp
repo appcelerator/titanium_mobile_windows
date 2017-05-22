@@ -354,7 +354,7 @@ namespace TitaniumWindows
 			return true;
 		}
 
-		void ImageView::set_imageAsBlob(const std::shared_ptr<Titanium::Blob>& blob)
+		void ImageView::set_imageAsBlob(const std::shared_ptr<Titanium::Blob>& blob) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ImageView::set_imageAsBlob(blob);
 
@@ -367,7 +367,7 @@ namespace TitaniumWindows
 			});
 		}
 
-		void ImageView::set_imageAsFile(const std::shared_ptr<Titanium::Filesystem::File>& file)
+		void ImageView::set_imageAsFile(const std::shared_ptr<Titanium::Filesystem::File>& file) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ImageView::set_imageAsFile(file);
 

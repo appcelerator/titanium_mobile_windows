@@ -594,7 +594,7 @@ namespace TitaniumWindows
 			collectionViewSource__->Source = ref new Vector<Platform::Object^>();
 		}
 
-		std::uint32_t TableView::getRowIndexInCollectionView(const std::shared_ptr<Titanium::UI::TableViewSection>& section, const std::uint32_t& rowIndex)
+		std::uint32_t TableView::getRowIndexInCollectionView(const std::shared_ptr<Titanium::UI::TableViewSection>& section, const std::uint32_t& rowIndex) TITANIUM_NOEXCEPT
 		{
 			return rowIndex + /* +1 to skip section header */ (section->hasHeader() ? 1 : 0);
 		}
