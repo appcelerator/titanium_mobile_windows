@@ -113,7 +113,7 @@ Group.prototype.memberIdentifiers = function () {
  * @return {Array[Ti.Contacts.Person]}
  **/
 Group.prototype.members = function () {
-	var identifiers = memberIdentifiers(),
+	var identifiers = this.memberIdentifiers(),
 			result = [];
 	// TODO Any way we can grab them async/in parallel?
 	for (var i = 0; i < identifiers.length; i++) {

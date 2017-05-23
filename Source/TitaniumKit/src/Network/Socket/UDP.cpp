@@ -27,7 +27,7 @@ namespace Titanium
 
 			TITANIUM_PROPERTY_READWRITE(UDP, std::uint32_t, port)
 
-			void UDP::start(const std::uint32_t& port) TITANIUM_NOEXCEPT
+			void UDP::start(const std::uint32_t& port, const std::string& host) TITANIUM_NOEXCEPT
 			{
 				TITANIUM_LOG_WARN("UDP::start: Unimplemented");
 			}
@@ -110,7 +110,8 @@ namespace Titanium
 			TITANIUM_FUNCTION(UDP, start)
 			{
 				ENSURE_OPTIONAL_UINT_AT_INDEX(port, 0, 0);
-				start(port);
+				ENSURE_OPTIONAL_STRING_AT_INDEX(host, 1, "");
+				start(port, host);
 				return get_context().CreateUndefined();
 			}
 

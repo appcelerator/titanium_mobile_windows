@@ -42,7 +42,7 @@ namespace Titanium
 				  @abstract start
 				  @discussion Will start up the local UDP socket.
 				*/
-				virtual void start(const std::uint32_t& port) TITANIUM_NOEXCEPT;
+				virtual void start(const std::uint32_t& port, const std::string& host) TITANIUM_NOEXCEPT;
 
 				/*!
 				  @method
@@ -99,6 +99,7 @@ namespace Titanium
 	#pragma warning(push)
 	#pragma warning(disable : 4251)
 				std::uint32_t port__;
+				std::string host__;
 				JSValue started__;
 				JSValue data__;
 				JSValue error__;
