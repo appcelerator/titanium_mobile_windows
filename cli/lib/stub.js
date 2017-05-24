@@ -288,36 +288,62 @@ exports.generate = function generate(builder, finished) {
 		}
 	}
 
-	async.parallel([
-		function(callback) {
-			// generate native types only when hyperloop is used
-			if (Object.keys(native_types).length === 0) {
-				return callback();
-			}
-			async.series([
-				function(next) {
-					generateNativeTypeHelper(dest_Hyperloop, native_types, native_events, next);
+	if (builder.useHyperloopBuilder) {
+		//
+		// Let Hyperloop module generate code (>= Hyperloop 2.2.0)
+		//
+		builder.cli.createHook('build.windows.stub.generate', builder, function (builder, done) {
+			async.parallel([
+				function(cb) {
+					builder.cli.createHook('build.windows.stub.generateCmakeList', builder, function (builder, cb) {
+						generateCmakeList(dest_Native, builder.modules, cb);
+					})(builder, cb);
 				},
-				function(next) {
-					generateNativeProject(dest_Hyperloop, platform, builder, 
-						{
-							sdkVersion: sdkVersion,
-							sdkMinVersion: sdkMinVersion
-						}, next);
-				},
-				function(next) {
-					buildNativeTypeHelper(dest_Hyperloop, platform, 'Debug', next);
-				},
-				function(next) {
-					buildNativeTypeHelper(dest_Hyperloop, platform, 'Release', next);
+				function(cb) {
+					builder.cli.createHook('build.windows.stub.generateRequireHook', builder, function (builder, cb) {
+						generateRequireHook(dest_Native, builder.modules, builder.native_types, cb);
+					})(builder, cb);
 				}
-			], callback);
-		},
-		function(callback) {
-			generateCmakeList(dest_Native, modules, callback);
-		},
-		function(callback) {
-			generateRequireHook(dest_Native, modules, native_types, callback);
-		}
-	], finished);
+			], function() {
+				done();
+			});
+		})(builder, finished);
+	} else {
+		//
+		// Compatibility Mode
+		// Use 'built-in' code generation for older version of Hyperloop module (< Hyperloop 2.2.0)
+		//
+		async.parallel([
+			function(callback) {
+				// generate native types only when hyperloop is used
+				if (Object.keys(native_types).length === 0) {
+					return callback();
+				}
+				async.series([
+					function(next) {
+						generateNativeTypeHelper(dest_Hyperloop, native_types, native_events, next);
+					},
+					function(next) {
+						generateNativeProject(dest_Hyperloop, platform, builder, 
+							{
+								sdkVersion: sdkVersion,
+								sdkMinVersion: sdkMinVersion
+							}, next);
+					},
+					function(next) {
+						buildNativeTypeHelper(dest_Hyperloop, platform, 'Debug', next);
+					},
+					function(next) {
+						buildNativeTypeHelper(dest_Hyperloop, platform, 'Release', next);
+					}
+				], callback);
+			},
+			function(callback) {
+				generateCmakeList(dest_Native, modules, callback);
+			},
+			function(callback) {
+				generateRequireHook(dest_Native, modules, native_types, callback);
+			}
+		], finished);
+	}
 };

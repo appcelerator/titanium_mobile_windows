@@ -47,7 +47,7 @@ namespace TitaniumWindows
 			static std::string InjectLocalScript(const std::string& content);
 
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
-			virtual std::string evalJS(const std::string& code, JSObject& callback) override TITANIUM_NOEXCEPT;
+			virtual std::string evalJS(const std::string& code, JSObject& callback) TITANIUM_NOEXCEPT override;
 
 			virtual void _executeListener(const std::string& name, const std::string& data) TITANIUM_NOEXCEPT override;
 

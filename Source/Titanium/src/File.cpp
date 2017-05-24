@@ -97,8 +97,10 @@ namespace TitaniumWindows
 						try {
 							task.get();
 							result = true;
-						} catch (Platform::Exception^ ex) {
+						} catch (Platform::COMException^ ex) {
 							TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+						} catch (...) {
+							// do nothing
 						}
 						event.set();
 					},
@@ -124,9 +126,10 @@ namespace TitaniumWindows
 				task<FileProperties::BasicProperties^>(file->GetBasicPropertiesAsync()).then([&properties, &event](task<FileProperties::BasicProperties^> task) {
 						try {
 							properties = task.get();
-						}
-						catch (Platform::Exception^ ex) {
+						} catch (Platform::COMException^ ex) {
 							TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+						} catch (...) {
+							// do nothing
 						}
 						event.set();
 					},
@@ -134,8 +137,10 @@ namespace TitaniumWindows
 				event.wait();
 
 				return properties;
-			} catch (Platform::Exception^ ex) {
+			} catch (Platform::COMException^ ex) {
 				TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+				return nullptr;
+			} catch (...) {
 				return nullptr;
 			}
 		}
@@ -148,12 +153,10 @@ namespace TitaniumWindows
 			task<StorageFolder^>(Windows::Storage::StorageFolder::GetFolderFromPathAsync(filename)).then([&storageFolder, &denied, &event](task<StorageFolder^> task) {
 					try {
 						storageFolder = task.get();
-					}
-					catch (Platform::AccessDeniedException^ e) {
+					} catch (Platform::AccessDeniedException^ e) {
 						storageFolder = nullptr;
 						denied = true;
-					}
-					catch (Platform::Exception^ ex) {
+					} catch (...) {
 						storageFolder = nullptr;
 					}
 					event.set();
@@ -174,8 +177,7 @@ namespace TitaniumWindows
 			task<StorageFile^>(Windows::Storage::StorageFile::GetFileFromPathAsync(filename)).then([&storageFile, &event](task<StorageFile^> task) {
 					try {
 						storageFile = task.get();
-					}
-					catch (Platform::Exception^ ex) {
+					} catch (...) {
 						storageFile = nullptr;
 					}
 					event.set();
@@ -297,9 +299,10 @@ namespace TitaniumWindows
 					try {
 						task.get();
 						result = true;
-					}
-					catch (Platform::Exception^ ex) {
+					} catch (Platform::COMException^ ex) {
 						TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+					} catch (...) {
+						// do nothing
 					}
 					event.set();
 				},
@@ -363,9 +366,10 @@ namespace TitaniumWindows
 				try {
 					task.get();
 					result = true;
-				}
-				catch (Platform::Exception^ ex) {
+				} catch (Platform::COMException^ ex) {
 					TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+				} catch (...) {
+					// do nothing
 				}
 				event.set();
 			}, concurrency::task_continuation_context::use_arbitrary());
@@ -404,9 +408,10 @@ namespace TitaniumWindows
 						std::for_each(begin(folders), end(folders), [&filenames](StorageFolder^ folder) {
 							filenames.push_back(TitaniumWindows::Utility::ConvertString(folder->Name));
 						});
-					}
-					catch (Platform::Exception^ ex) {
+					} catch (Platform::COMException^ ex) {
 						TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+					} catch (...) {
+						// do nothing
 					}
 					folderEvent.set();
 				},
@@ -421,9 +426,10 @@ namespace TitaniumWindows
 						std::for_each(begin(files), end(files), [&filenames](StorageFile^ file) {
 							filenames.push_back(TitaniumWindows::Utility::ConvertString(file->Name));
 						});
-					}
-					catch (Platform::Exception^ ex) {
+					} catch (Platform::COMException^ ex) {
 						TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+					} catch (...) {
+						// do nothing
 					}
 					fileEvent.set();
 				},
@@ -494,9 +500,10 @@ namespace TitaniumWindows
 					try {
 						task.get();
 						result = true;
-					}
-					catch (Platform::Exception^ ex) {
+					} catch (Platform::COMException^ ex) {
 						TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+					} catch (...) {
+						// do nothing
 					}
 					event.set();
 				},
@@ -536,9 +543,10 @@ namespace TitaniumWindows
 					try {
 						task.get();
 						result = true;
-					}
-					catch (Platform::Exception^ ex) {
+					} catch (Platform::COMException^ ex) {
 						TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+					} catch (...) {
+						// do nothing
 					}
 					event.set();
 				},
@@ -564,9 +572,10 @@ namespace TitaniumWindows
 					try {
 						const auto extraProperties = task.get();
 						freeSpace = (std::uint64_t)extraProperties->Lookup("System.FreeSpace");
-					}
-					catch (Platform::Exception^ ex) {
+					} catch (Platform::COMException^ ex) {
 						TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+					} catch (...) {
+						// do nothing
 					}
 					event.set();
 				},
@@ -647,8 +656,10 @@ namespace TitaniumWindows
 					try {
 						task.get();
 						result = true;
-					} catch (Platform::Exception^ ex) {
+					} catch (Platform::COMException^ ex) {
 						TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+					} catch (...) {
+						// do nothing
 					}
 					event.set();
 				},
@@ -680,19 +691,25 @@ namespace TitaniumWindows
 							try {
 								const auto buffer = task.get();
 								data = TitaniumWindows::Utility::GetContentFromBuffer(buffer);
-							} catch (Platform::Exception^ ex) {
+							} catch (Platform::COMException^ ex) {
 								TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
+							} catch (...) {
+								// do nothing
 							}
 							evt.set();
 						}, concurrency::task_continuation_context::use_arbitrary());
-					} catch (Platform::Exception^ ex) {
+					} catch (Platform::COMException^ ex) {
 						TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
 						evt.set();
+					} catch (...) {
+						// do nothing
 					}
 				}, concurrency::task_continuation_context::use_arbitrary());
 				evt.wait();
-			} catch (Platform::Exception^ ex) {
+			} catch (Platform::COMException^ ex) {
 				TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
+			} catch (...) {
+				// do nothing
 			}
 
 			return data;
@@ -715,14 +732,22 @@ namespace TitaniumWindows
 								callback(errorResponse, TitaniumWindows::Utility::GetContentFromBuffer(buffer));
 							} catch (Platform::COMException^ ex) {
 								callback(TitaniumWindows::Utility::GetTiErrorResponse(ex), std::vector<std::uint8_t>());
+							} catch (...) {
+								// do nothing
 							}
 						});
 					} catch (Platform::COMException^ ex) {
 						callback(TitaniumWindows::Utility::GetTiErrorResponse(ex), std::vector<std::uint8_t>());
+					} catch (...) {
+						// do nothing
 					}
 				});
 			} catch (Platform::COMException^ ex) {
 				callback(TitaniumWindows::Utility::GetTiErrorResponse(ex), std::vector<std::uint8_t>());
+			} catch (...) {
+				Titanium::ErrorResponse err;
+				err.error = "Unknown Error";
+				callback(err, std::vector<std::uint8_t>());
 			}
 		}
 
@@ -737,6 +762,10 @@ namespace TitaniumWindows
 					callback(errorResponse, TitaniumWindows::Utility::GetContentFromBuffer(buffer));
 				} catch (::Platform::COMException^ ex) {
 					callback(TitaniumWindows::Utility::GetTiErrorResponse(ex), std::vector<std::uint8_t>());
+				} catch (...) {
+					Titanium::ErrorResponse err;
+					err.error = "Unknown Error";
+					callback(err, std::vector<std::uint8_t>());
 				}
 			});
 		}
@@ -769,6 +798,10 @@ namespace TitaniumWindows
 					callback(error, length);
 				} catch (Platform::COMException^ ex) {
 					callback(TitaniumWindows::Utility::GetTiErrorResponse(ex), 0);
+				} catch (...) {
+					Titanium::ErrorResponse err;
+					err.error = "Unknown Error";
+					callback(err, 0);
 				}
 			});
 
