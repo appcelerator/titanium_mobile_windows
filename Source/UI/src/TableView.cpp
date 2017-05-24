@@ -242,7 +242,7 @@ namespace TitaniumWindows
 				const auto row2 = ref new Windows::UI::Xaml::Controls::RowDefinition();
 
 				row1->Height = GridLengthHelper::Auto;
-				row2->Height = GridLengthHelper::Auto;
+				row2->Height = GridLengthHelper::FromValueAndType(1.0, GridUnitType::Star); // <RowDefinition Height="*"/>
 
 				parent__->RowDefinitions->Append(row1);
 				parent__->RowDefinitions->Append(row2);
