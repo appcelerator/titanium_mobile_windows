@@ -94,7 +94,7 @@ namespace TitaniumWindows
 			try {
 				task.get();
 				exists = true;
-			} catch (Platform::Exception^ ex) {
+			} catch (...) {
 				exists = false;
 			}
 			event.set();
@@ -127,7 +127,7 @@ namespace TitaniumWindows
 								content = task.get();
 								event.set();
 							}, concurrency::task_continuation_context::use_arbitrary());
-					} catch (Platform::Exception^ ex) {
+					} catch (...) {
 						hasError = true;
 						event.set();
 					}
@@ -161,7 +161,7 @@ namespace TitaniumWindows
 				.then([&iv_buffer, &encrypted, &file_buffer, &hasError, &event](concurrency::task<IBuffer^> task) {
 					try {
 						iv_buffer = task.get();
-					} catch (Platform::Exception^ ex) {
+					} catch (...) {
 						if (encrypted && !file_buffer) {
 							hasError = true;
 						}
@@ -180,6 +180,9 @@ namespace TitaniumWindows
 					content = CryptographicBuffer::ConvertBinaryToString(BinaryStringEncoding::Utf8, decrypted_buffer);
 				} catch (Platform::Exception^ ex) {
 					detail::ThrowRuntimeError("require", "Could not load module: module_path = " + TitaniumWindows::Utility::ConvertUTF8String(module_path) + ", message = " + TitaniumWindows::Utility::ConvertUTF8String(ex->Message));
+					hasError = true;
+				} catch (...) {
+					detail::ThrowRuntimeError("require", "Could not load module: module_path = " + TitaniumWindows::Utility::ConvertUTF8String(module_path));
 					hasError = true;
 				}
 			// not encrypted, return contents

@@ -15,6 +15,7 @@
 #include <windows.h>
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 
 namespace TitaniumWindows
 {
@@ -218,41 +219,47 @@ namespace TitaniumWindows
 						const auto picker = column->getComponent();
 						const std::uint32_t columnIndex = columns__.size() + i;
 						change_events__.push_back(picker->SelectionChanged += ref new SelectionChangedEventHandler([column, columnIndex, this](Platform::Object^ sender, SelectionChangedEventArgs^ e) {
-							const auto picker = static_cast<ComboBox^>(sender);
-							const auto rowIndex = picker->SelectedIndex;
-							const auto ctx = get_context();
-							JSObject  eventArgs = ctx.CreateObject();
-							if (rowIndex >= 0 && column->get_rowCount() > static_cast<std::uint32_t>(rowIndex)) {
-								eventArgs.SetProperty("rowIndex", ctx.CreateNumber(rowIndex));
-								eventArgs.SetProperty("row", column->get_rows().at(rowIndex)->get_object());
-							}
-							eventArgs.SetProperty("columnIndex", ctx.CreateNumber(columnIndex));
-							eventArgs.SetProperty("column", column->get_object());
-							eventArgs.SetProperty("selectedValue", ctx.CreateArray(getSelectedJSValues()));
-							fireEvent("change", eventArgs);
+							TITANIUM_EXCEPTION_CATCH_START {
+								const auto picker = static_cast<ComboBox^>(sender);
+								const auto rowIndex = picker->SelectedIndex;
+								const auto ctx = get_context();
+								JSObject  eventArgs = ctx.CreateObject();
+								if (rowIndex >= 0 && column->get_rowCount() > static_cast<std::uint32_t>(rowIndex)) {
+									eventArgs.SetProperty("rowIndex", ctx.CreateNumber(rowIndex));
+									eventArgs.SetProperty("row", column->get_rows().at(rowIndex)->get_object());
+								}
+								eventArgs.SetProperty("columnIndex", ctx.CreateNumber(columnIndex));
+								eventArgs.SetProperty("column", column->get_object());
+								eventArgs.SetProperty("selectedValue", ctx.CreateArray(getSelectedJSValues()));
+								fireEvent("change", eventArgs);
+							} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 						}));
 					}
 				} else if (datePicker__) {
 					change_event__ = datePicker__->DateChanged += ref new EventHandler<DatePickerValueChangedEventArgs^>([this](Platform::Object^ sender, DatePickerValueChangedEventArgs^ e) {
-						value__ = TitaniumWindows::Utility::GetDateTime(datePicker__->Date);
-						const auto ctx = get_context();
-						JSObject  eventArgs = ctx.CreateObject();
-						eventArgs.SetProperty("value", js_get_value());
-						fireEvent("change", eventArgs);
+						TITANIUM_EXCEPTION_CATCH_START {
+							value__ = TitaniumWindows::Utility::GetDateTime(datePicker__->Date);
+							const auto ctx = get_context();
+							JSObject  eventArgs = ctx.CreateObject();
+							eventArgs.SetProperty("value", js_get_value());
+							fireEvent("change", eventArgs);
+						} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 					});
 				} else if (timePicker__) {
 					change_event__ = timePicker__->TimeChanged += ref new EventHandler<TimePickerValueChangedEventArgs^>([this](Platform::Object^ sender, TimePickerValueChangedEventArgs^ e) {
-						if (value__) {
-							// extract time based on value__ when value__ is available
-							value__ = TitaniumWindows::Utility::ExtractTime(*value__, timePicker__->Time);
-						} else {
-							// extract time based on beginning of epoch date
-							value__ = TitaniumWindows::Utility::ExtractTime(std::chrono::time_point<std::chrono::system_clock>(std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(0))), timePicker__->Time);
-						}
-						const auto ctx = get_context();
-						JSObject  eventArgs = ctx.CreateObject();
-						eventArgs.SetProperty("value", js_get_value());
-						fireEvent("change", eventArgs);
+						TITANIUM_EXCEPTION_CATCH_START {
+							if (value__) {
+								// extract time based on value__ when value__ is available
+								value__ = TitaniumWindows::Utility::ExtractTime(*value__, timePicker__->Time);
+							} else {
+								// extract time based on beginning of epoch date
+								value__ = TitaniumWindows::Utility::ExtractTime(std::chrono::time_point<std::chrono::system_clock>(std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(0))), timePicker__->Time);
+							}
+							const auto ctx = get_context();
+							JSObject  eventArgs = ctx.CreateObject();
+							eventArgs.SetProperty("value", js_get_value());
+							fireEvent("change", eventArgs);
+						} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 					});
 				}
 			}

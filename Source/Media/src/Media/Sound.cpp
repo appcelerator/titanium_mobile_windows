@@ -11,6 +11,7 @@
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Media;
+using TitaniumWindows::Utility::RunOnUIThread;
 
 namespace TitaniumWindows
 {
@@ -69,7 +70,9 @@ namespace TitaniumWindows
 					break;
 				}
 
-				fireEvent("change", event_arg);
+				RunOnUIThread([this, event_arg]() {
+					fireEvent("change", event_arg);
+				});
 			});
 
 			// Add "hidden" MediaElement UI onto current Window, because it doesn't work when it is not on the UI.
@@ -135,20 +138,24 @@ namespace TitaniumWindows
 
 			if (event_name == "complete") {
 				complete_event__ = player__->MediaEnded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
-					const auto ctx = get_context();
-					auto event_arg = ctx.CreateObject();
-					event_arg.SetProperty("success", ctx.CreateBoolean(true));
-					event_arg.SetProperty("code", ctx.CreateNumber(0));
-					fireEvent("complete", event_arg);
+					RunOnUIThread([this]() {
+						const auto ctx = get_context();
+						auto event_arg = ctx.CreateObject();
+						event_arg.SetProperty("success", ctx.CreateBoolean(true));
+						event_arg.SetProperty("code", ctx.CreateNumber(0));
+						fireEvent("complete", event_arg);
+					});
 				});
 			} else if (event_name == "error") {
 				failed_event__ = player__->MediaFailed += ref new ExceptionRoutedEventHandler([this](Platform::Object^ sender, ExceptionRoutedEventArgs^ e) {
-					const auto ctx = get_context();
-					auto event_arg = ctx.CreateObject();
-					event_arg.SetProperty("message", ctx.CreateString(TitaniumWindows::Utility::ConvertString(e->ErrorMessage)));
-					event_arg.SetProperty("success", ctx.CreateBoolean(false));
-					event_arg.SetProperty("code", ctx.CreateNumber(TitaniumWindows::Utility::GetHResultErrorCode(e->ErrorMessage, -1)));
-					fireEvent("error", event_arg);
+					RunOnUIThread([this, e]() {
+						const auto ctx = get_context();
+						auto event_arg = ctx.CreateObject();
+						event_arg.SetProperty("message", ctx.CreateString(TitaniumWindows::Utility::ConvertString(e->ErrorMessage)));
+						event_arg.SetProperty("success", ctx.CreateBoolean(false));
+						event_arg.SetProperty("code", ctx.CreateNumber(TitaniumWindows::Utility::GetHResultErrorCode(e->ErrorMessage, -1)));
+						fireEvent("error", event_arg);
+					});
 				});
 			}
 		}

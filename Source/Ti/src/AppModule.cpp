@@ -10,6 +10,7 @@
 #include "TitaniumWindows/App/WindowsModule.hpp"
 #include "Titanium/detail/TiLogger.hpp"
 #include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 #include <concrt.h>
 
 using namespace Windows::Foundation;
@@ -64,10 +65,14 @@ namespace TitaniumWindows
 			concurrency::event evt;
 			const auto watcher = DeviceInformation::CreateWatcher(ProximitySensor::GetDeviceSelector());
 			const auto watcher_event = watcher->Added += ref new TypedEventHandler<DeviceWatcher^, DeviceInformation^>([&](DeviceWatcher^ sender, DeviceInformation^ device) {
-				if (proximitySensor__ == nullptr) {
-					proximitySensor__ = ProximitySensor::FromId(device->Id);
+				try {
+					if (proximitySensor__ == nullptr) {
+						proximitySensor__ = ProximitySensor::FromId(device->Id);
+					}
+					sender->Stop();
+				} catch (...) {
+					TITANIUM_LOG_WARN("Unable to stop proximity sensor");
 				}
-				sender->Stop();
 				evt.set();
 			});
 			watcher->Start();
@@ -87,18 +92,26 @@ namespace TitaniumWindows
 		Titanium::AppModule::enableEvent(event_name);
 		if (event_name == "keyboardframechanged") {
 			keyboardframe_showing_event__ = InputPane::GetForCurrentView()->Showing += ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>([this](InputPane^ sender, InputPaneVisibilityEventArgs^ e) {
-				keyboardVisible__ = true;
-				const auto ctx = this->get_context();
-				auto event_arg = ctx.CreateObject();
-				event_arg.SetProperty("keyboardFrame", RectToJS(ctx, e->OccludedRect));
-				this->fireEvent("keyboardframechanged", event_arg);
+				try {
+					keyboardVisible__ = true;
+					const auto ctx = this->get_context();
+					auto event_arg = ctx.CreateObject();
+					event_arg.SetProperty("keyboardFrame", RectToJS(ctx, e->OccludedRect));
+					this->fireEvent("keyboardframechanged", event_arg);
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at App.keyboardframechanged");
+				}
 			});
 			keyboardframe_hiding_event__ = InputPane::GetForCurrentView()->Hiding += ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>([this](InputPane^ sender, InputPaneVisibilityEventArgs^ e) {
-				keyboardVisible__ = false;
-				const auto ctx = this->get_context();
-				auto event_arg = ctx.CreateObject();
-				event_arg.SetProperty("keyboardFrame", RectToJS(ctx, e->OccludedRect));
-				this->fireEvent("keyboardframechanged", event_arg);
+				try {
+					keyboardVisible__ = false;
+					const auto ctx = this->get_context();
+					auto event_arg = ctx.CreateObject();
+					event_arg.SetProperty("keyboardFrame", RectToJS(ctx, e->OccludedRect));
+					this->fireEvent("keyboardframechanged", event_arg);
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at App.keyboardframechanged");
+				}
 			});
 		} else if (event_name == "proximity") {
 #if defined(IS_WINDOWS_10)
@@ -108,12 +121,16 @@ namespace TitaniumWindows
 			if (!no_proximitySensor__) {
 				proximity_event__ = proximitySensor__->ReadingChanged += ref new TypedEventHandler<ProximitySensor^, ProximitySensorReadingChangedEventArgs^>([this](ProximitySensor^ sender, ProximitySensorReadingChangedEventArgs^ e) {
 					if (proximityDetection__) {
-						const auto ctx = this->get_context();
-						auto event_arg = ctx.CreateObject();
-						event_arg.SetProperty("state", ctx.CreateBoolean(e->Reading->IsDetected));
-						TitaniumWindows::Utility::RunOnUIThread([this, event_arg]() {
-							this->fireEvent("proximity", event_arg);
-						});
+						try {
+							const auto ctx = this->get_context();
+							auto event_arg = ctx.CreateObject();
+							event_arg.SetProperty("state", ctx.CreateBoolean(e->Reading->IsDetected));
+							TitaniumWindows::Utility::RunOnUIThread([this, event_arg]() {
+								this->fireEvent("proximity", event_arg);
+							});
+						} catch (...) {
+							TITANIUM_LOG_DEBUG("Error at App.proximity");
+						}
 					}
 				});
 			}

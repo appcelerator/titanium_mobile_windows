@@ -322,27 +322,39 @@ namespace TitaniumWindows
 			if (event_name == "change") {
 				if (text_box__) {
 					change_event__ = text_box__->TextChanged += ref new Controls::TextChangedEventHandler([this, ctx](Platform::Object^ sender, Controls::TextChangedEventArgs^ e) {
-						JSObject eventArgs = ctx.CreateObject();
-						eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
+						try {
+							JSObject eventArgs = ctx.CreateObject();
+							eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
 
-						this->fireEvent("change", eventArgs);
+							this->fireEvent("change", eventArgs);
+						} catch (...) {
+							TITANIUM_LOG_DEBUG("Error at TextField.change");
+						}
 					});
 				} else if (password_box__) {
 					change_event__ = password_box__->PasswordChanged += ref new RoutedEventHandler([this, ctx](Platform::Object^ sender, RoutedEventArgs^ e){
-						JSObject eventArgs = ctx.CreateObject();
-						eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
+						try {
+							JSObject eventArgs = ctx.CreateObject();
+							eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
 
-						this->fireEvent("change", eventArgs);
+							this->fireEvent("change", eventArgs);
+						} catch (...) {
+							TITANIUM_LOG_DEBUG("Error at TextField.change");
+						}
 					});
 				}
 			} else if (event_name == "return") {
 				const auto keydown = ref new KeyEventHandler([this, ctx](Platform::Object^ sender, KeyRoutedEventArgs^ e) {
-					// TIMOB-24371: Enter event fired twice due to a bug in Xaml KeyDown event, here's a workaround
-					if (e->Key == Windows::System::VirtualKey::Enter && e->KeyStatus.RepeatCount == 0) {
-						JSObject eventArgs = ctx.CreateObject();
-						eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
+					try {
+						// TIMOB-24371: Enter event fired twice due to a bug in Xaml KeyDown event, here's a workaround
+						if (e->Key == Windows::System::VirtualKey::Enter && e->KeyStatus.RepeatCount == 0) {
+							JSObject eventArgs = ctx.CreateObject();
+							eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
 
-						this->fireEvent("return", eventArgs);
+							this->fireEvent("return", eventArgs);
+						}
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at TextField.change");
 					}
 				});
 				if (text_box__) {

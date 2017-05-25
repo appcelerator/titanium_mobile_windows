@@ -77,17 +77,26 @@ namespace TitaniumWindows
 						mediaCapture->RecordLimitationExceeded += ref new RecordLimitationExceededEventHandler(
 							[=](MediaCapture^ sender) {
 								TITANIUM_MODULE_LOG_WARN("AudioRecorder: Stopping, exceeding max record duration");
-								stop();
+								try {
+									stop();
+								} catch (...) {
+									TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop");
+								}
 							}
 						);
 						mediaCapture->Failed += ref new MediaCaptureFailedEventHandler(
 							[=](MediaCapture^ sender, MediaCaptureFailedEventArgs^ e) {
 							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to capture audio: ", TitaniumWindows::Utility::ConvertString(e->Message));
-								stop();
-							}
-						);
+								try {
+									stop();
+								} catch (...) {
+									TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop");
+								}
+							});
 					} catch (Platform::Exception ^ e) {
 						TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to initialize audio capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
+					} catch (...) {
+						TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to initialize audio capture device");
 					}
 
 					std::string fileName = "AudioRecording";
@@ -115,11 +124,15 @@ namespace TitaniumWindows
 									state__ = Titanium::Media::RecordingState::Recording;
 								} catch (Platform::Exception^ e) {
 									TITANIUM_LOG_ERROR("AudioRecorder: Recording failed: ", TitaniumWindows::Utility::ConvertString(e->Message));
+								} catch (...) {
+									TITANIUM_LOG_ERROR("AudioRecorder: Recording failed");
 								}
 							}
 						);
 					} catch (Platform::Exception^ e) {
 						TITANIUM_LOG_ERROR("AudioRecorder: Recording failed: ", TitaniumWindows::Utility::ConvertString(e->Message));
+					} catch (...) {
+						TITANIUM_LOG_ERROR("AudioRecorder: Recording failed");
 					}
 				}
 			);
@@ -137,6 +150,8 @@ namespace TitaniumWindows
 							delete(mediaCapture__.Get());
 						} catch (Platform::Exception ^e) {
 							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop recording: ", TitaniumWindows::Utility::ConvertString(e->Message));
+						} catch (...) {
+							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop recording");
 						}
 					}
 				);
@@ -147,6 +162,8 @@ namespace TitaniumWindows
 					}
 				} catch (Platform::Exception ^e) {
 					TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop audio capture device: ", TitaniumWindows::Utility::ConvertString(e->Message));
+				} catch (...) {
+					TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to stop audio capture device");
 				}
 			}
 
@@ -184,6 +201,8 @@ namespace TitaniumWindows
 							state__ = Titanium::Media::RecordingState::Paused;
 						} catch (Platform::Exception ^e) {
 							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to pause recording: ", TitaniumWindows::Utility::ConvertString(e->Message));
+						} catch (...) {
+							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to pause recording");
 						}
 					}
 				);
@@ -204,6 +223,8 @@ namespace TitaniumWindows
 							state__ = Titanium::Media::RecordingState::Recording;
 						} catch (Platform::Exception ^e) {
 							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to resume recording: ", TitaniumWindows::Utility::ConvertString(e->Message));
+						} catch (...) {
+							TITANIUM_MODULE_LOG_WARN("AudioRecorder: Failed to resume recording");
 						}
 					}
 				);

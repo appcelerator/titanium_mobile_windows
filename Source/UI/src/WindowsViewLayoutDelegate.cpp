@@ -294,11 +294,15 @@ namespace TitaniumWindows
 										cb(args, this_object);
 									});
 								} catch (Platform::Exception^ e) {
-									TITANIUMWINDOWS_EXCEPTION_SHOW_REDSCREEN(e, this_object);
+									TITANIUMWINDOWS_EXCEPTION_SHOW_REDSCREEN(e, this_object.get_context());
+								} catch (...) {
+									Titanium::Module::ShowRedScreenOfDeath(this_object.get_context(), "Unknown error while toImage");
 								}
 						});
 					} catch (Platform::Exception^ e) {
-						TITANIUMWINDOWS_EXCEPTION_SHOW_REDSCREEN(e, this_object);
+						TITANIUMWINDOWS_EXCEPTION_SHOW_REDSCREEN(e, this_object.get_context());
+					} catch (...) {
+						Titanium::Module::ShowRedScreenOfDeath(this_object.get_context(), "Unknown error while toImage");
 					}
 				});
 			});
@@ -896,6 +900,8 @@ namespace TitaniumWindows
 					task.get();
 				} catch (Platform::Exception^ e) {
 					TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(e->Message));
+				} catch (...) {
+					TITANIUM_LOG_WARN("Unknown exception while creating image from blob");
 				}
 				event.set();
 			}, concurrency::task_continuation_context::use_arbitrary());

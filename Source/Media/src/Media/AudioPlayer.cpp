@@ -17,6 +17,7 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::Media::Playback;
 #endif
 using namespace Windows::Foundation;
+using TitaniumWindows::Utility::RunOnUIThread;
 
 namespace TitaniumWindows
 {
@@ -44,15 +45,17 @@ namespace TitaniumWindows
 
 		void AudioPlayer::stateChanged() TITANIUM_NOEXCEPT
 		{
-			playing__ = isPlaying();
-			paused__ = isPaused();
-			volume__ = player__->Volume;
-			waiting__ = (get_state() == Titanium::Media::AudioState::Buffering);
+			RunOnUIThread([this]() {
+				playing__ = isPlaying();
+				paused__ = isPaused();
+				volume__ = player__->Volume;
+				waiting__ = (get_state() == Titanium::Media::AudioState::Buffering);
 
-			const auto ctx = get_context();
-			auto event_arg = ctx.CreateObject();
-			event_arg.SetProperty("state", js_get_state());
-			fireEvent("change", event_arg);
+				const auto ctx = get_context();
+				auto event_arg = ctx.CreateObject();
+				event_arg.SetProperty("state", js_get_state());
+				fireEvent("change", event_arg);
+			});
 		}
 
 		void AudioPlayer::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
@@ -238,11 +241,13 @@ namespace TitaniumWindows
 			Titanium::Media::AudioPlayer::enableEvent(event_name);
 			if (event_name == "complete") {
 				const auto mediaEnded = [=] {
-					const auto ctx = get_context();
-					auto event_arg = ctx.CreateObject();
-					event_arg.SetProperty("success", ctx.CreateBoolean(true));
-					event_arg.SetProperty("code", ctx.CreateNumber(0));
-					fireEvent("complete", event_arg);
+					RunOnUIThread([this]() {
+						const auto ctx = get_context();
+						auto event_arg = ctx.CreateObject();
+						event_arg.SetProperty("success", ctx.CreateBoolean(true));
+						event_arg.SetProperty("code", ctx.CreateNumber(0));
+						fireEvent("complete", event_arg);
+					});
 				};
 				complete_event__ = player__->MediaEnded += ref new RoutedEventHandler(
 					[=](Platform::Object^ sender, RoutedEventArgs^ e) {
@@ -258,11 +263,13 @@ namespace TitaniumWindows
 #endif
 			} else if (event_name == "error") {
 				const auto mediaFailed = [=] {
-					const auto ctx = get_context();
-					auto event_arg = ctx.CreateObject();
-					event_arg.SetProperty("success", ctx.CreateBoolean(true));
-					event_arg.SetProperty("code", ctx.CreateNumber(0));
-					fireEvent("complete", event_arg);
+					RunOnUIThread([this]() {
+						const auto ctx = get_context();
+						auto event_arg = ctx.CreateObject();
+						event_arg.SetProperty("success", ctx.CreateBoolean(true));
+						event_arg.SetProperty("code", ctx.CreateNumber(0));
+						fireEvent("complete", event_arg);
+					});
 				};
 				failed_event__ = player__->MediaFailed += ref new ExceptionRoutedEventHandler(
 					[=](Platform::Object^ sender, ExceptionRoutedEventArgs^ e) {

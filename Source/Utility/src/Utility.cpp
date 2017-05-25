@@ -133,9 +133,10 @@ namespace TitaniumWindows
 			concurrency::task<Windows::Storage::Streams::IBuffer^>(Windows::Storage::FileIO::ReadBufferAsync(file)).then([&content, &event](concurrency::task<Windows::Storage::Streams::IBuffer ^ > task) {
 				try {
 					content = std::move(GetContentFromBuffer(task.get()));
-				}
-				catch (::Platform::Exception^ ex) {
-					// TODO throw JavaScript Exception
+				} catch (::Platform::Exception^ ex) {
+					TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Unknown error while GetContentFromFile");
 				}
 				event.set();
 			},
@@ -387,11 +388,20 @@ namespace TitaniumWindows
 			return blob_read_func({ js_context.CreateString(path) }, blob_read_func);
 		}
 
-		Titanium::ErrorResponse GetTiErrorResponse(::Platform::COMException^ e) 
+		Titanium::ErrorResponse GetTiErrorResponse(const std::string& message)
 		{
 			Titanium::ErrorResponse response;
 			response.success = false;
-			response.code  = -1; // default failure code
+			response.code = -1; // default error code
+			response.error = message;
+			return response;
+		}
+
+		Titanium::ErrorResponse GetTiErrorResponse(::Platform::Exception^ e)
+		{
+			Titanium::ErrorResponse response;
+			response.success = false;
+			response.code  = e->HResult;
 			response.error = TitaniumWindows::Utility::ConvertString(e->Message);
 			return response;
 		}

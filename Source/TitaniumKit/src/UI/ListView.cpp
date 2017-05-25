@@ -85,10 +85,19 @@ namespace Titanium
 
 			if (searchView__) {
 				searchView__->set_querySubmitted([this](const std::string& query) {
-					querySubmitted(query);
+					try {
+						querySubmitted(query);
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at ListView::querySubmitted");
+					}
 				});
 				searchView__->set_suggestionRequested([this](const std::string& query) {
-					return suggestionRequested(query);
+					try {
+						return suggestionRequested(query);
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at ListView::suggestionRequested");
+					}
+					return std::vector<std::string>();
 				});
 			}
 

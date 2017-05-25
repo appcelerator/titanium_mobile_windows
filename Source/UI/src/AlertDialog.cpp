@@ -10,6 +10,7 @@
 #include "Titanium/API.hpp"
 #include <windows.h>
 #include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
 
 namespace TitaniumWindows
@@ -38,25 +39,27 @@ namespace TitaniumWindows
 			dialog__ = ref new Windows::UI::Popups::MessageDialog("");
 
 			on_click__ = [this](IUICommand^ command) {
-				std::int32_t index = 0;
-				if (command != nullptr) {
-					const auto casted = dynamic_cast<IPropertyValue^>(command->Id);
-					if (casted != nullptr) {
-						index = casted->GetInt32();
+				TITANIUM_EXCEPTION_CATCH_START {
+					std::int32_t index = 0;
+					if (command != nullptr) {
+						const auto casted = dynamic_cast<IPropertyValue^>(command->Id);
+						if (casted != nullptr) {
+							index = casted->GetInt32();
+						}
 					}
-				}
-				const JSContext ctx = get_context();
-				JSObject eventArgs = ctx.CreateObject();
-				eventArgs.SetProperty("index", ctx.CreateNumber(index));
-				eventArgs.SetProperty("cancel", ctx.CreateBoolean(index == get_cancel()));
-				fireEvent("click", eventArgs);
+					const JSContext ctx = get_context();
+					JSObject eventArgs = ctx.CreateObject();
+					eventArgs.SetProperty("index", ctx.CreateNumber(index));
+					eventArgs.SetProperty("cancel", ctx.CreateBoolean(index == get_cancel()));
+					fireEvent("click", eventArgs);
 
-				dialog_queue__.erase(dialog_queue__.begin());
+					dialog_queue__.erase(dialog_queue__.begin());
 
-				if (dialog_queue__.size() > 0) {
-					const auto next = dialog_queue__.at(0);
-					concurrency::create_task(next->dialog__->ShowAsync()).then(next->on_click__);
-				}
+					if (dialog_queue__.size() > 0) {
+						const auto next = dialog_queue__.at(0);
+						concurrency::create_task(next->dialog__->ShowAsync()).then(next->on_click__);
+					}
+				} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 			};
 		}
 

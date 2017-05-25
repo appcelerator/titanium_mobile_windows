@@ -56,13 +56,17 @@ namespace TitaniumWindows
 
 			// TIMOB-19048: max size is set to screen size by default
 			border__->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler([this](Platform::Object^, Windows::UI::Xaml::SizeChangedEventArgs^) {
-				const auto current = Windows::UI::Xaml::Window::Current;
-				if (current) {
-					label__->MaxWidth  = current->Bounds.Width;
-					label__->MaxHeight = current->Bounds.Height;
-					if (propertiesSet__) {
-						measureDesiredSize();
+				try {
+					const auto current = Windows::UI::Xaml::Window::Current;
+					if (current) {
+						label__->MaxWidth = current->Bounds.Width;
+						label__->MaxHeight = current->Bounds.Height;
+						if (propertiesSet__) {
+							measureDesiredSize();
+						}
 					}
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Unknown error at Label::SizeChanged");
 				}
 			});
 

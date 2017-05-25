@@ -15,6 +15,7 @@
 #include "TitaniumWindows/WindowsMacros.hpp"
 
 using namespace concurrency;
+using TitaniumWindows::Utility::RunOnUIThread;
 
 namespace TitaniumWindows
 {
@@ -227,7 +228,9 @@ namespace TitaniumWindows
 				interruption_point();
 
 				readyState__ = Titanium::Network::RequestState::Opened;
-				onreadystatechange(readyState__);
+				RunOnUIThread([this]() {
+					onreadystatechange(readyState__);
+				});
 
 				SerializeHeaders(response);
 
@@ -237,7 +240,9 @@ namespace TitaniumWindows
 				interruption_point();
 
 				readyState__ = Titanium::Network::RequestState::Loading;
-				onreadystatechange(readyState__);
+				RunOnUIThread([this]() {
+					onreadystatechange(readyState__);
+				});
 				// FIXME Fire ondatastream/onsendstream callbacks throughout!
 
 				return HTTPResultAsync(stream, token);
@@ -249,39 +254,52 @@ namespace TitaniumWindows
 
 					readyState__ = Titanium::Network::RequestState::Done;
 					if (!disposed__ && httpClient__) {
-						onreadystatechange(readyState__);
+						RunOnUIThread([this]() {
+							onreadystatechange(readyState__);
+						});
 
 						// Fire onerror only if there's an onerror handler registered and status code is 400-599.
 						// Otherwise fire onload (so 400-599 fall back to onload if no onerror handler)
 						if (onerror__ && onerror__.IsObject() && static_cast<JSObject>(onerror__).IsFunction() && status__ >= 400 && status__ <= 599) {
-							TitaniumWindows::Utility::RunOnUIThread([this] {
+							RunOnUIThread([this] {
 								onerror(status__, "HTTP Error", false);
 							});
        					} else {
-							TitaniumWindows::Utility::RunOnUIThread([this] {
+							RunOnUIThread([this] {
        							onload(0, "Response has been loaded.", true);
 							});
        					}
 
-						onsendstream(1.0);
-						ondatastream(1.0);
+						RunOnUIThread([this]() {
+							onsendstream(1.0);
+							ondatastream(1.0);
+						});
 					}
-				}
-				catch (const task_canceled&) {
+				} catch (const task_canceled&) {
 					if (!disposed__ && httpClient__) {
-						onerror(-1, "Session Cancelled", false);
+						RunOnUIThread([this] {
+							onerror(-1, "Session Cancelled", false);
+						});
 					}
-				}
-				catch (Platform::Exception^ ex) {
+				} catch (Platform::Exception^ ex) {
 					if (!disposed__ && httpClient__) {
-						std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));
-						onerror(ex->HResult, error, false);
+						RunOnUIThread([this, ex] {
+							std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));
+							onerror(ex->HResult, error, false);
+						});
 					}
-				}
-				catch (const std::exception& e) {
+				} catch (const std::exception& e) {
 					if (!disposed__ && httpClient__) {
-						std::string error(e.what());
-						onerror(-1, error, false);
+						RunOnUIThread([this, e] {
+							std::string error(e.what());
+							onerror(-1, error, false);
+						});
+					}
+				} catch (...) {
+					if (!disposed__ && httpClient__) {
+						RunOnUIThread([this] {
+							onerror(-1, "Unknown error", false);
+						});
 					}
 				}
 			}, task_continuation_context::use_arbitrary());
@@ -368,15 +386,19 @@ namespace TitaniumWindows
 
 				// Stop the timeout timer
 				if (dispatcherTimer__ != nullptr && httpClient__ != nullptr) {
-					TitaniumWindows::Utility::RunOnUIThread([=] {
+					RunOnUIThread([=] {
 						dispatcherTimer__->Stop();
 					});
 				}
 
 				if (contentLength__ != -1 && contentLength__ != 0) {
-					ondatastream(responseBuffer->Length / contentLength__);
+					RunOnUIThread([this, responseBuffer] {
+						ondatastream(responseBuffer->Length / contentLength__);
+					});
 				} else {
-					ondatastream(-1.0); // chunked encoding was used
+					RunOnUIThread([this] {
+						ondatastream(-1.0); // chunked encoding was used
+					});
 				}
 
 				if (responseBuffer->Length) {
@@ -396,17 +418,23 @@ namespace TitaniumWindows
 
 		void HTTPClient::startDispatcherTimer()
 		{
-			if (dispatcherTimer__ == nullptr && timeoutSpan__.Duration > 0) {
-				dispatcherTimer__ = ref new Windows::UI::Xaml::DispatcherTimer();
-				dispatcherTimer__->Interval = timeoutSpan__;
-				auto timeoutRegistrationToken__ = dispatcherTimer__->Tick += ref new Windows::Foundation::EventHandler<Platform::Object^>([this](Platform::Object^ sender, Platform::Object^ e) {
-					cancellationTokenSource__.cancel();
-					dispatcherTimer__->Stop();
-					// re-create the CancellationTokenSource.
-					cancellationTokenSource__ = cancellation_token_source();
-				});
-				dispatcherTimer__->Start();
-			}
+			RunOnUIThread([=] {
+				if (dispatcherTimer__ == nullptr && timeoutSpan__.Duration > 0) {
+					dispatcherTimer__ = ref new Windows::UI::Xaml::DispatcherTimer();
+					dispatcherTimer__->Interval = timeoutSpan__;
+					auto timeoutRegistrationToken__ = dispatcherTimer__->Tick += ref new Windows::Foundation::EventHandler<Platform::Object^>([this](Platform::Object^ sender, Platform::Object^ e) {
+						try {
+							cancellationTokenSource__.cancel();
+							dispatcherTimer__->Stop();
+							// re-create the CancellationTokenSource.
+							cancellationTokenSource__ = cancellation_token_source();
+						} catch (...) {
+							TITANIUM_LOG_WARN("Error while HTTPClient::startDispatcherTimer");
+						}
+					});
+					dispatcherTimer__->Start();
+				}
+			});
 		}
 
 		Windows::Storage::Streams::IBuffer^ HTTPClient::charVecToBuffer(std::vector<std::uint8_t> char_vector)
@@ -434,7 +462,9 @@ namespace TitaniumWindows
 			}
 
 			readyState__ = Titanium::Network::RequestState::Headers_Received;
-			onreadystatechange(Titanium::Network::RequestState::Headers_Received);
+			RunOnUIThread([this]() {
+				onreadystatechange(Titanium::Network::RequestState::Headers_Received);
+			});
 		}
 
 		void HTTPClient::SerializeHeaderCollection(Windows::Foundation::Collections::IIterable<Windows::Foundation::Collections::IKeyValuePair<Platform::String^, Platform::String^>^>^ headers)
@@ -470,11 +500,19 @@ namespace TitaniumWindows
 							filter__->CookieManager->SetCookie(cookie, false);
 						}
 					} catch (Platform::InvalidArgumentException^ ex) {
-						std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));
-						onerror(ex->HResult, error, false);
+						RunOnUIThread([this, ex]() {
+							std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));					
+							onerror(ex->HResult, error, false);
+						});
 					} catch (Platform::Exception^ ex) {
-						std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));
-						onerror(ex->HResult, error, false);
+						RunOnUIThread([this, ex]() {
+							std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));
+							onerror(ex->HResult, error, false);
+						});
+					} catch (...) {
+						RunOnUIThread([this]() {
+							onerror(-1, "Unknown error", false);
+						});
 					}
 				}
 			}

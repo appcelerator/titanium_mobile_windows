@@ -179,29 +179,41 @@ namespace TitaniumWindows
 			const JSContext ctx = this->get_context();
 			if (event_name == "change") {
 				change_event__ = text_box__->TextChanged += ref new Controls::TextChangedEventHandler([this, ctx](Platform::Object^ sender, Controls::TextChangedEventArgs^ e) {
-					JSObject eventArgs = ctx.CreateObject();
-					eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
-					this->fireEvent("change", eventArgs);
+					try {
+						JSObject eventArgs = ctx.CreateObject();
+						eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
+						this->fireEvent("change", eventArgs);
+					} catch (...) {
+						TITANIUM_LOG_DEBUG("Error at TextArea.change");
+					}
 				});
 
 			} else if (event_name == "return") {
 				return_event__ = text_box__->KeyDown += ref new KeyEventHandler([this, ctx](Platform::Object^ sender, KeyRoutedEventArgs^ e) {
 					if (e->Key == Windows::System::VirtualKey::Enter) {
-						JSObject eventArgs = ctx.CreateObject();
-						eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
-						this->fireEvent("return", eventArgs);
+						try {
+							JSObject eventArgs = ctx.CreateObject();
+							eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
+							this->fireEvent("return", eventArgs);
+						} catch (...) {
+							TITANIUM_LOG_DEBUG("Error at TextArea.return");
+						}
 					}
 				});
 
 			} else if (event_name == "selected") {
 				select_event__ = text_box__->SelectionChanged += ref new RoutedEventHandler([this, ctx](Platform::Object^ sender, RoutedEventArgs^ e){
 					if (text_box__->SelectionLength > 0) {
-						Titanium::UI::TextAreaSelectedParams params;
-						params.location = text_box__->SelectionStart;
-						params.length = text_box__->SelectionLength;
-						JSObject eventArgs = ctx.CreateObject();
-						eventArgs.SetProperty("range", TextAreaSelectedParams_to_js(ctx, params));
-						this->fireEvent("selected", eventArgs);
+						try {
+							Titanium::UI::TextAreaSelectedParams params;
+							params.location = text_box__->SelectionStart;
+							params.length = text_box__->SelectionLength;
+							JSObject eventArgs = ctx.CreateObject();
+							eventArgs.SetProperty("range", TextAreaSelectedParams_to_js(ctx, params));
+							this->fireEvent("selected", eventArgs);
+						} catch (...) {
+							TITANIUM_LOG_DEBUG("Error at TextArea.selected");
+						}
 					}
 				});
 			}

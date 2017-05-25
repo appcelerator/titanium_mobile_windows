@@ -13,6 +13,7 @@
 #include "TitaniumWindows/Utility.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 
 namespace TitaniumWindows
 {
@@ -41,8 +42,12 @@ namespace TitaniumWindows
 			pivot__ = ref new Pivot();
 
 			pivot__->SelectionChanged += ref new SelectionChangedEventHandler([this](Platform::Object^ sender, SelectionChangedEventArgs^ e) {
-				TITANIUM_ASSERT(tabs__.size() > static_cast<std::size_t>(pivot__->SelectedIndex));
-				set_activeTab(tabs__.at(pivot__->SelectedIndex), false);
+				try {
+					TITANIUM_ASSERT(tabs__.size() > static_cast<std::size_t>(pivot__->SelectedIndex));
+					set_activeTab(tabs__.at(pivot__->SelectedIndex), false);
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at TabGroup::SelectionChanged");
+				}
 			});
 
 			grid__->Children->Append(pivot__);
@@ -65,6 +70,7 @@ namespace TitaniumWindows
 
 			sectionView__->ItemClick += ref new Controls::ItemClickEventHandler(
 				[this](Platform::Object^ sender, Controls::ItemClickEventArgs^ e) {
+				TITANIUM_EXCEPTION_CATCH_START {
 				const auto listview = safe_cast<Controls::ListView^>(sender);
 
 				uint32_t selectedIndex;
@@ -73,6 +79,7 @@ namespace TitaniumWindows
 
 				TITANIUM_ASSERT(tabs__.size() > selectedIndex);
 				set_activeTab(tabs__.at(selectedIndex));
+				} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 			});
 
 			sectionViewSource__ = ref new Data::CollectionViewSource();
