@@ -192,7 +192,7 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 			sln = path.join(buildPath, _t.manifest.moduleIdAsIdentifier+'.vcxproj');
 		}
 
-		var p = spawn(_t.windowsInfo.selectedVisualStudio.vcvarsall, [
+		var p = spawn(path.join(_t.windowsInfo.selectedVisualStudio.path, 'Common7', 'Tools', 'VsDevCmd.bat'), [
 			'&&', 'MSBuild', '/p:Platform=' + arch, '/p:Configuration=' + config, sln
 		]);
 		p.stdout.on('data', function (data) {

@@ -69,7 +69,7 @@ function compileApp(next) {
 	}
 
 	// Use spawn directly so we can pipe output as we go
-	p = spawn(vsInfo.vcvarsall, [
+	p = spawn(path.join(vsInfo.path, 'Common7', 'Tools', 'VsDevCmd.bat'), [
 		'&&', 'MSBuild', '/p:Platform=' + _t.cmakeArch, '/p:Configuration=' + _t.buildConfiguration, slnFile
 	]);
 	p.stdout.on('data', function (data) {
