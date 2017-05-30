@@ -69,6 +69,8 @@ namespace TitaniumWindows
 			virtual void reload() TITANIUM_NOEXCEPT override;
 			virtual void stopLoading(const bool& hardStop) TITANIUM_NOEXCEPT override;
 
+			void getInnerHTML() TITANIUM_NOEXCEPT;
+
 			bool error_event_enabled__ { false };
 			bool load_event_enabled__  { false };
 			bool beforeload_event_enabled__  { false };
