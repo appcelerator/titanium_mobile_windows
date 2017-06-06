@@ -100,7 +100,7 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send();
 	});
 
-	it('TIMOB-19042', function (finish) {
+	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('TIMOB-19042', function (finish) {
 		this.timeout(6e4);
 
 		var xhr = Ti.Network.createHTTPClient();

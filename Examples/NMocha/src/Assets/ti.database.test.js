@@ -65,7 +65,7 @@ describe('Titanium.Database', function () {
 	});
 
 	// Check if install exists and make sure it does not throw exception
-	it('install', function (finish) {
+	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('install', function (finish) {
 		should(Ti.Database.install).not.be.undefined;
 		should(Ti.Database.install).be.a.Function;
 
@@ -181,7 +181,7 @@ describe('Titanium.Database', function () {
 	});
 
 	// Check if open exists and make sure it does not throw exception
-	it('open', function (finish) {
+	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('open', function (finish) {
 		should(Ti.Database.install).not.be.undefined;
 		should(Ti.Database.install).be.a.Function;
 
@@ -291,7 +291,7 @@ describe('Titanium.Database', function () {
 	});
 
 	// Check if it guards against "closed" results
-	it('closed_guard', function (finish) {
+	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('closed_guard', function (finish) {
 		// Database name
 		var dbName = "testDbOpen";
 

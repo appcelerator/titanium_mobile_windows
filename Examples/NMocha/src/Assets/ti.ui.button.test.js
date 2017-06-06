@@ -176,7 +176,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('backgroundGradient', function (finish) {
+	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundGradient', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
