@@ -75,6 +75,8 @@ namespace TitaniumWindows
 			void clearListViewData();
 
 		private:
+			static Windows::UI::Xaml::Controls::ScrollViewer^ GetScrollView(Windows::UI::Xaml::DependencyObject^ obj);
+
 			void unregisterSectionLayoutNode(const std::shared_ptr<Titanium::UI::ListSection>& section);
 			void registerListViewItemAsLayoutNode(const std::shared_ptr<Titanium::UI::View>& view);
 			void unregisterListViewItemAsLayoutNode(const std::shared_ptr<Titanium::UI::View>& view);
@@ -83,16 +85,30 @@ namespace TitaniumWindows
 			void bindCollectionViewSource();
 			void unbindCollectionViewSource();
 
+			void updateScrollParams(const JSContext& ctx, JSObject params);
+			void registerScrollstartEvent();
+			void registerScrollingEvent();
+			void registerScrollendEvent();
+
 			Windows::UI::Xaml::Controls::Grid^ parent__;
 			Windows::UI::Xaml::Controls::ListView^ listview__;
 			Windows::UI::Xaml::Data::CollectionViewSource^ collectionViewSource__;
+			Windows::UI::Xaml::Controls::ScrollViewer^ scrollview__;
 
 			// This is the "view" of the underlying list view items that is shown in the UI. It may be filtered from set_searchText
 			Windows::Foundation::Collections::IObservableVector<::Platform::Object^>^ collectionViewItems__;
 
+			double oldScrollPosX__{ -1 };
+			double oldScrollPosY__{ -1 };
+			bool scrollstop__ { true };
+
 #pragma warning(push)
 #pragma warning(disable : 4251)
 			Windows::Foundation::EventRegistrationToken itemclick_event__;
+			Windows::Foundation::EventRegistrationToken loaded_event__;
+			Windows::Foundation::EventRegistrationToken scrollstart_event__;
+			Windows::Foundation::EventRegistrationToken scrolling_event__;
+			Windows::Foundation::EventRegistrationToken scrollend_event__;
 #pragma warning(pop)
 
 		};
