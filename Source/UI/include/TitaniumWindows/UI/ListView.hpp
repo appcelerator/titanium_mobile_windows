@@ -35,7 +35,6 @@ namespace TitaniumWindows
 
 			TITANIUM_PROPERTY_UNIMPLEMENTED(showVerticalScrollIndicator);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(separatorColor);
-			TITANIUM_FUNCTION_UNIMPLEMENTED(setMarker);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(borderColor);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(borderWidth);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(borderRadius);
@@ -89,6 +88,8 @@ namespace TitaniumWindows
 			void registerScrollstartEvent();
 			void registerScrollingEvent();
 			void registerScrollendEvent();
+			void registerMarkerEvent();
+			void checkMarkers();
 
 			Windows::UI::Xaml::Controls::Grid^ parent__;
 			Windows::UI::Xaml::Controls::ListView^ listview__;
@@ -109,6 +110,8 @@ namespace TitaniumWindows
 			Windows::Foundation::EventRegistrationToken scrollstart_event__;
 			Windows::Foundation::EventRegistrationToken scrolling_event__;
 			Windows::Foundation::EventRegistrationToken scrollend_event__;
+			Windows::Foundation::EventRegistrationToken marker_event__;
+
 #pragma warning(pop)
 
 		};

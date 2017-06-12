@@ -56,6 +56,11 @@ namespace TitaniumWindows
 				if (hasEventListener("scrollend")) {
 					registerScrollendEvent();
 				}
+				if (hasEventListener("marker")) {
+					registerMarkerEvent();
+				}
+
+				checkMarkers();
 			});
 
 			resetListViewDataBinding();
@@ -143,6 +148,38 @@ namespace TitaniumWindows
 					params.SetProperty("firstVisibleItem", ListDataItem_to_js(ctx, section->getItemAt(rowInfo.rowIndex)));
 				}
 			}
+		}
+
+		void ListView::checkMarkers()
+		{
+			const auto itemsSize = listview__->Items->Size;
+			const auto itemHeight = scrollview__->ExtentHeight / itemsSize;
+			const auto visibleItemIndex = static_cast<std::size_t>(scrollview__->VerticalOffset / itemHeight);
+			const auto visibleItemCount = static_cast<std::size_t>(scrollview__->ViewportHeight / itemHeight);
+
+			// First item
+			for (std::size_t i = visibleItemIndex; i < visibleItemIndex + visibleItemCount; i++) {
+				const auto row = model__->searchRowBySelectedIndex(i);
+				for (std::size_t m = 0; m < markers__.size(); m++) {
+					auto marker = markers__.at(m);
+					if (!marker.fired && marker.sectionIndex == row.sectionIndex && marker.itemIndex == row.rowIndex) {
+						const auto ctx = get_context();
+						auto eventArgs = ctx.CreateObject();
+						eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(marker.sectionIndex));
+						eventArgs.SetProperty("itemIndex", ctx.CreateNumber(marker.itemIndex));
+						fireEvent("marker", eventArgs);
+						marker.fired = true;
+						markers__[m] = marker;
+					}
+				}
+			}
+		}
+
+		void ListView::registerMarkerEvent()
+		{
+			marker_event__ = scrollview__->ViewChanged += ref new Windows::Foundation::EventHandler<Controls::ScrollViewerViewChangedEventArgs ^>([this](Platform::Object^ sender, Controls::ScrollViewerViewChangedEventArgs^ e) {
+				checkMarkers();
+			});
 		}
 
 		void ListView::registerScrollstartEvent()
@@ -273,6 +310,11 @@ namespace TitaniumWindows
 				if (scrollview__) {
 					scrollview__->ViewChanged -= scrollend_event__;
 				}
+			} else if (event_name == "marker") {
+				if (scrollview__) {
+					scrollview__->ViewChanged -= marker_event__;
+				}
+
 			}
 		}
 

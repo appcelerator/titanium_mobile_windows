@@ -26,6 +26,10 @@ namespace Titanium
 		{
 			int32_t itemIndex {0};
 			int32_t sectionIndex {0};
+			//
+			// This indicates marker event is fired for this marker
+			//
+			bool fired { false };
 		};
 		
 		TITANIUMKIT_EXPORT ListViewMarkerProps js_to_ListViewMarkerProps(const JSObject& object);
