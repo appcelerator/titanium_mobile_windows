@@ -198,6 +198,13 @@ namespace Titanium
 			*/
 			virtual void setMarker(const ListViewMarkerProps& marker) TITANIUM_NOEXCEPT;
 
+			/*!
+			  @method
+			  @abstract addMarker
+			  @discussion Adds a reference item in the list view.
+			*/
+			virtual void addMarker(const ListViewMarkerProps& marker) TITANIUM_NOEXCEPT;
+
 			ListView(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~ListView() = default;
@@ -228,6 +235,7 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(deleteSectionAt);
 			TITANIUM_FUNCTION_DEF(insertSectionAt);
 			TITANIUM_FUNCTION_DEF(replaceSectionAt);
+			TITANIUM_FUNCTION_DEF(addMarker);
 			TITANIUM_FUNCTION_DEF(setMarker);
 			TITANIUM_FUNCTION_DEF(getTemplates);
 			TITANIUM_FUNCTION_DEF(setTemplates);
@@ -289,7 +297,7 @@ namespace Titanium
 			bool showVerticalScrollIndicator__;
 			std::string separatorColor__;
 			std::string defaultItemTemplate__;
-			ListViewMarkerProps marker__;
+			std::vector<ListViewMarkerProps> markers__;
 
 			JSObject ti_listview_exports__;
 			JSObject sectionViewCreateFunction__;
