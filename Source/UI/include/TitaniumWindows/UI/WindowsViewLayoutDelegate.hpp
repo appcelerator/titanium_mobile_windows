@@ -157,7 +157,7 @@ namespace TitaniumWindows
 
 			  Default: 0
 			*/
-			virtual void set_borderWidth(const uint32_t& borderWidth) TITANIUM_NOEXCEPT override;
+			virtual void set_borderWidth(const std::string& borderWidth) TITANIUM_NOEXCEPT override;
 
 			/*!
 			@method
@@ -170,7 +170,7 @@ namespace TitaniumWindows
 
 			Default: 0
 			*/
-			virtual void set_borderRadius(const double& borderRadius) TITANIUM_NOEXCEPT override;
+			virtual void set_borderRadius(const std::string& borderRadius) TITANIUM_NOEXCEPT override;
 
 			/*!
 			  @method

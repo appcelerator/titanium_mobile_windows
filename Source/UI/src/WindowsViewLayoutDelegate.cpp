@@ -1035,7 +1035,7 @@ namespace TitaniumWindows
 			backgroundSelectedImageBrush__ = CreateImageBrushFromPath(backgroundSelectedImage);
 		}
 
-		void WindowsViewLayoutDelegate::set_borderRadius(const double& borderRadius) TITANIUM_NOEXCEPT
+		void WindowsViewLayoutDelegate::set_borderRadius(const std::string& borderRadius) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_borderRadius(borderRadius);
 			set_borderWidth(get_borderWidth()); // update brush
@@ -1047,7 +1047,7 @@ namespace TitaniumWindows
 			set_borderWidth(get_borderWidth()); // update brush
 		}
 
-		void WindowsViewLayoutDelegate::set_borderWidth(const uint32_t& borderWidth) TITANIUM_NOEXCEPT
+		void WindowsViewLayoutDelegate::set_borderWidth(const std::string& borderWidth) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_borderWidth(borderWidth);
 
@@ -1062,11 +1062,11 @@ namespace TitaniumWindows
 				// Use it then, it usually works better than Xaml::Border. Note that it doesn't support border radius though...
 				const auto control = underlying_control__ ? underlying_control__ : dynamic_cast<Control^>(component__);
 				control->BorderBrush = borderColorBrush__;
-				control->BorderThickness = borderWidth;
+				control->BorderThickness = std::stod(borderWidth);
 			} else if (border__) {
 				border__->BorderBrush = borderColorBrush__;
-				border__->BorderThickness = borderWidth;
-				border__->CornerRadius = CornerRadiusHelper::FromUniformRadius(get_borderRadius());
+				border__->BorderThickness = std::stod(borderWidth);
+				border__->CornerRadius = CornerRadiusHelper::FromUniformRadius(std::stod(get_borderRadius()));
 			}
 		}
 

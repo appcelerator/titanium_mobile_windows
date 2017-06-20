@@ -137,11 +137,13 @@ describe('Titanium.UI.View', function () {
 		w.add(view);
 		w.addEventListener('open', function () {
 			should(view.borderColor).be.a.String;
-			should(view.borderWidth).be.a.Number;
+			should(view.borderWidth).be.a.String;
 			view.borderColor = 'blue';
 			view.borderWidth = 2;
 			should(view.borderColor).be.eql('blue');
 			should(view.borderWidth).be.eql(2);
+			view.borderWidth = '2dp'; // this should not throw exception
+			should(view.borderWidth).be.eql('2dp');
 			setTimeout(function () {
 				w.close();
 				finish();
@@ -149,6 +151,26 @@ describe('Titanium.UI.View', function () {
 		});
 		w.open();
 	});
+
+    ((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('borderRadius', function (finish) {
+        this.timeout(3000);
+        var w = Ti.UI.createWindow({
+            backgroundColor: 'blue'
+        });
+        var view = Ti.UI.createView({ width: Ti.UI.FILL, height: Ti.UI.FILL });
+        w.add(view);
+        w.addEventListener('open', function () {
+            view.borderColor  = 'blue';
+            view.borderWidth  = 2;
+            view.borderRadius = '2dp'; // this should not throw exception
+            should(view.borderRadius).be.eql('2dp');
+            setTimeout(function () {
+                w.close();
+                finish();
+            }, 1000);
+        });
+        w.open();
+    });
 
 	((utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('rect and size', function (finish) {
 		var w = Ti.UI.createWindow({
