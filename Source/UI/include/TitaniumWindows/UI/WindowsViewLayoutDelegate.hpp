@@ -538,6 +538,7 @@ namespace TitaniumWindows
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromPath(const std::string& path);
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBitmapImage(Windows::UI::Xaml::Media::Imaging::BitmapImage^ image);
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBlob(const std::shared_ptr<Titanium::Blob>& blob);
+			static double ComputePPI(const Titanium::LayoutEngine::ValueName& name);
 
 #pragma warning(push)
 #pragma warning(disable : 4251)

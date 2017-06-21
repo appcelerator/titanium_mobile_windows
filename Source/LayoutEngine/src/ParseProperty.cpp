@@ -75,6 +75,11 @@ namespace Titanium
 			return 0;
 		}
 
+		double parseUnitValue(const std::string& value, enum ValueType valueType, double ppi, const std::string& defaultUnits)
+		{
+			return _computeValue(value, valueType, ppi, defaultUnits);
+		}
+
 		void populateLayoutProperties(struct InputProperty inputProperty, struct LayoutProperties* layoutProperties, double ppi, const std::string& defaultUnits)
 		{
 			switch (inputProperty.name) {
