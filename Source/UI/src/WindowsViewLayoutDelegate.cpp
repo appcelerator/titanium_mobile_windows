@@ -1123,8 +1123,10 @@ namespace TitaniumWindows
 		void WindowsViewLayoutDelegate::set_center(const Titanium::UI::Point& center) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_center(center);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::CenterX, std::to_string(center.x));
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::CenterY, std::to_string(center.y));
+			const auto x = center.x_percent.empty() ? std::to_string(center.x) : center.x_percent;
+			const auto y = center.y_percent.empty() ? std::to_string(center.y) : center.y_percent;
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::CenterX, x);
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::CenterY, y);
 		}
 
 		void WindowsViewLayoutDelegate::set_touchEnabled(const bool& enabled) TITANIUM_NOEXCEPT
