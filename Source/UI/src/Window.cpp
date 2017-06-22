@@ -461,7 +461,16 @@ namespace TitaniumWindows
 			fullscreen ? statusBar->HideAsync() : statusBar->ShowAsync();
 #elif defined(IS_WINDOWS_10)
 			auto view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
-			fullscreen ? view->TryEnterFullScreenMode() : view->ExitFullScreenMode();
+			if (fullscreen) {
+				if (view->TryEnterFullScreenMode()) {
+					Windows::UI::ViewManagement::ApplicationView::PreferredLaunchWindowingMode = Windows::UI::ViewManagement::ApplicationViewWindowingMode::FullScreen;
+				} else {
+					TITANIUM_LOG_WARN("Unable to enter fullscreen mode");
+				}
+			} else {
+				view->ExitFullScreenMode();
+				Windows::UI::ViewManagement::ApplicationView::PreferredLaunchWindowingMode = Windows::UI::ViewManagement::ApplicationViewWindowingMode::Auto;
+			}
 #endif
 		}
 
