@@ -194,4 +194,31 @@ describe('requireJS', function () {
 		should(object.name).be.eql('commonjs.legacy.package/main.js');
 		finish();
 	});
+
+	it('require from node_modules should work', function () {
+	    var object = require('bar');
+	    should(object).have.property('name');
+	    should(object.name).be.eql('bar');
+	    should(object).have.property('baz');
+	    var baz = object.baz;
+	    should(baz).have.property('foo');
+	    should(baz.foo.filename).be.eql('/node_modules/foo/index.js')
+	});
+
+	it('require should prefer closest node_modules', function () {
+	    // require('bar') will require package baz under node_modules/bar/node_modules
+	    // require('baz') should not point to this version of baz but to node_modules/baz
+	    var object = require('bar');
+	    should(object).have.property('name');
+	    should(object.name).be.eql('bar');
+	    should(object).have.property('baz');
+	    var baz = object.baz;
+	    should(baz.name).be.eql('baz');
+	    should(baz.filename).be.eql('/node_modules/bar/node_modules/baz/index.js')
+	    should(baz.dirname).be.eql('/node_modules/bar/node_modules/baz')
+	    var baz2 = require('baz');
+	    should(baz2.name).be.eql('baz');
+	    should(baz2.filename).be.eql('/node_modules/baz/index.js');
+	    should(baz2.dirname).be.eql('/node_modules/baz');
+	});
 });

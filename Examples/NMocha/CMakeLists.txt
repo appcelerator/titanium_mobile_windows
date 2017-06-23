@@ -162,6 +162,30 @@ source_group("node_modules/commonjs.package" FILES ${COMMONJS_PACKAGE_DIRECTORY}
 set_property(SOURCE ${SOURCE_commonjs_package} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.package")
 set_property(SOURCE ${SOURCE_commonjs_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
+file(GLOB_RECURSE NODE_MODULES_FOO "src/Assets/node_modules/foo/*.*")
+set(SOURCE_node_modules_foo ${NODE_MODULES_FOO})
+source_group("node_modules/foo" FILES ${NODE_MODULES_FOO})
+set_property(SOURCE ${SOURCE_node_modules_foo} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\foo")
+set_property(SOURCE ${SOURCE_node_modules_foo} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE NODE_MODULES_BAR "src/Assets/node_modules/bar/*.*")
+set(SOURCE_node_modules_bar ${NODE_MODULES_BAR})
+source_group("node_modules/bar" FILES ${NODE_MODULES_BAR})
+set_property(SOURCE ${SOURCE_node_modules_bar} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\bar")
+set_property(SOURCE ${SOURCE_node_modules_bar} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE NODE_MODULES_BAR_BAZ "src/Assets/node_modules/bar/node_modules/baz/*.*")
+set(SOURCE_node_modules_bar_baz ${NODE_MODULES_BAR_BAZ})
+source_group("node_modules/bar/node_modules/baz" FILES ${NODE_MODULES_BAR_BAZ})
+set_property(SOURCE ${SOURCE_node_modules_bar_baz} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\bar\\node_modules\\baz")
+set_property(SOURCE ${SOURCE_node_modules_bar_baz} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+file(GLOB_RECURSE NODE_MODULES_BAZ "src/Assets/node_modules/baz/*.*")
+set(SOURCE_node_modules_baz ${NODE_MODULES_BAZ})
+source_group("node_modules/baz" FILES ${NODE_MODULES_BAZ})
+set_property(SOURCE ${SOURCE_node_modules_baz} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\baz")
+set_property(SOURCE ${SOURCE_node_modules_baz} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
 file(GLOB_RECURSE WITH_INDEX_JS_DIRECTORY "src/Assets/with_index_js/*.*")
 set(SOURCE_with_index_js ${WITH_INDEX_JS_DIRECTORY})
 source_group("with_index_js" FILES ${WITH_INDEX_JS_DIRECTORY})
@@ -209,6 +233,10 @@ add_executable(${EXE_NAME} WIN32
   ${SOURCE_with_index_js}
   ${SOURCE_with_index_json}
   ${SOURCE_with_package}
+  ${SOURCE_node_modules_foo}
+  ${SOURCE_node_modules_bar}
+  ${SOURCE_node_modules_bar_baz}
+  ${SOURCE_node_modules_baz}
   ${SOURCE_utilities}
   ${SOURCE_Strings_en}
   ${SOURCE_Strings_en_GB}
