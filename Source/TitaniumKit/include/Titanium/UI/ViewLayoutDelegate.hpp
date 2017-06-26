@@ -616,8 +616,8 @@ namespace Titanium
 			std::string backgroundImage__;
 			std::string backgroundColor__;
 			std::string borderColor__;
-			std::string borderRadius__{ "0" };
-			std::string borderWidth__{ "0" };
+			std::string borderRadius__;
+			std::string borderWidth__;
 			double opacity__;
 			std::string top__;
 			std::string left__;

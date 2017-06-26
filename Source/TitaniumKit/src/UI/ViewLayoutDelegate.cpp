@@ -16,6 +16,8 @@ namespace Titanium
 	{
 		ViewLayoutDelegate::ViewLayoutDelegate() TITANIUM_NOEXCEPT :
 			opacity__(1.0),
+			borderWidth__("0"),
+			borderRadius__("0"),
 			touchEnabled__(true),
 			visible__(true),
 			defaultWidth__(Titanium::UI::LAYOUT::SIZE),
