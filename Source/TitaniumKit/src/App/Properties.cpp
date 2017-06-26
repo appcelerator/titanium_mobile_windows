@@ -76,26 +76,26 @@ namespace Titanium
 			return defaultValue;
 		}
 
-		std::vector<JSValue> Properties::getList(const std::string& property, std::vector<JSValue> defaultValue) TITANIUM_NOEXCEPT
+		JSValue Properties::getList(const std::string& property, JSValue defaultValue) TITANIUM_NOEXCEPT
 		{
 			if (hasProperty(property)) {
-				auto object = getObject(property, get_context().CreateObject());
-				if (object.IsArray()) {
-					return static_cast<JSArray>(object);
+				const auto value = getObject(property, get_context().CreateObject());
+				if (value.IsObject()) {
+					const auto object = static_cast<JSObject>(value);
+					if (object.IsArray()) {
+						return static_cast<JSArray>(object);
+					}
 				}
 			}
 			return defaultValue;
 		}
 
-		JSObject Properties::getObject(const std::string& property, JSObject defaultValue) TITANIUM_NOEXCEPT
+		JSValue Properties::getObject(const std::string& property, JSValue defaultValue) TITANIUM_NOEXCEPT
 		{
 			if (hasProperty(property)) {
 				const auto string = getString(property, boost::none);
 				if (string) {
-					auto value = get_context().CreateValueFromJSON(*string);
-					if (value.IsObject()) {
-						return static_cast<JSObject>(value);
-					}
+					return get_context().CreateValueFromJSON(*string);
 				}
 			}
 			return defaultValue;
@@ -164,14 +164,17 @@ namespace Titanium
 			}
 		}
 
-		void Properties::setList(const std::string& property, std::vector<JSValue> value) TITANIUM_NOEXCEPT
+		void Properties::setList(const std::string& property, JSValue value) TITANIUM_NOEXCEPT
 		{
-			std::vector<JSValue> arguments;
-			arguments.push_back(get_context().CreateArray(value));
-			setString(property, static_cast<std::string>(stringify_function__(arguments, get_context().get_global_object())));
+			if (value.IsObject() && static_cast<JSObject>(value).IsArray()) {
+				std::vector<JSValue> arguments = { value };
+				setString(property, static_cast<std::string>(stringify_function__(arguments, get_context().get_global_object())));
+			} else {
+				setObject(property, value);
+			}
 		}
 
-		void Properties::setObject(const std::string& property, JSObject value) TITANIUM_NOEXCEPT
+		void Properties::setObject(const std::string& property, JSValue value) TITANIUM_NOEXCEPT
 		{
 			setString(property, static_cast<std::string>(stringify_function__({ value }, get_context().get_global_object())));
 		}
@@ -269,19 +272,18 @@ namespace Titanium
 		TITANIUM_FUNCTION(Properties, getList)
 		{
 			ENSURE_STRING_AT_INDEX(property, 0);
-			ENSURE_OPTIONAL_ARRAY_AT_INDEX(defaultValue, 1);
+			ENSURE_OPTIONAL_VALUE_AT_INDEX(defaultValue, 1);
 
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-			const auto list = object_ptr->getList(property, static_cast<std::vector<JSValue>>(defaultValue));
-			return js_context.CreateArray(list);
+			return object_ptr->getList(property, defaultValue);
 		}
 
 		TITANIUM_FUNCTION(Properties, getObject)
 		{
 			ENSURE_STRING_AT_INDEX(property, 0);
-			ENSURE_OPTIONAL_OBJECT_AT_INDEX(defaultValue, 1);
+			ENSURE_OPTIONAL_VALUE_AT_INDEX(defaultValue, 1);
 
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();

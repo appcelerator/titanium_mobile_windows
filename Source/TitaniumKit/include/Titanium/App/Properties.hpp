@@ -50,13 +50,13 @@ namespace Titanium
 			  @abstract getList
 			  @discussion Returns the value of a property as an array data type.
 			*/
-			virtual std::vector<JSValue> getList(const std::string& property, std::vector<JSValue> defaultValue) TITANIUM_NOEXCEPT final;
+			virtual JSValue getList(const std::string& property, JSValue defaultValue) TITANIUM_NOEXCEPT final;
 			/*!
 			  @method
 			  @abstract getObject
 			  @discussion Returns the value of a property as an object.
 			*/
-			virtual JSObject getObject(const std::string& property, JSObject defaultValue) TITANIUM_NOEXCEPT final;
+			virtual JSValue getObject(const std::string& property, JSValue defaultValue) TITANIUM_NOEXCEPT final;
 			/*!
 			  @method
 			  @abstract getString
@@ -110,13 +110,13 @@ namespace Titanium
 			  @abstract setList
 			  @discussion Sets the value of a property as an array data type. The property will be created if it does not exist.
 			*/
-			virtual void setList(const std::string& property, std::vector<JSValue> value) TITANIUM_NOEXCEPT final;
+			virtual void setList(const std::string& property, JSValue value) TITANIUM_NOEXCEPT final;
 			/*!
 			  @method
 			  @abstract setObject
 			  @discussion Sets the value of a property as an object data type. The property will be created if it does not exist.
 			*/
-			virtual void setObject(const std::string& property, JSObject value) TITANIUM_NOEXCEPT final;
+			virtual void setObject(const std::string& property, JSValue value) TITANIUM_NOEXCEPT final;
 			/*!
 			  @method
 			  @abstract setString

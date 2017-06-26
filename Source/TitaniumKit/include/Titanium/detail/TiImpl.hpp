@@ -87,6 +87,12 @@ IN.HasProperty(#NAME) ? static_cast<TYPE>(IN.GetProperty(#NAME)) : DEFAULT_VALUE
     HAL::detail::ThrowRuntimeError("Invalid argument supplied", ss.str()); \
   }
 
+#define ENSURE_OPTIONAL_VALUE_AT_INDEX(OUT,INDEX) \
+  JSValue OUT = this_object.get_context().CreateNull(); \
+  if (arguments.size() >= INDEX + 1) { \
+    OUT = arguments.at(INDEX); \
+  }
+
 #define ENSURE_OPTIONAL_OBJECT_AT_INDEX(OUT,INDEX) \
   auto OUT = this_object.get_context().CreateObject(); \
   if (arguments.size() >= INDEX + 1) { \
