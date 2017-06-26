@@ -82,6 +82,14 @@ describe('Titanium.App.Properties', function () {
 		should(Ti.App.Properties.getObject('test_object')).be.eql(test_object);
 	});
 
+    it('List default to null', function () {
+        should(Ti.App.Properties.getList('test_list_null', null)).be.eql(null);
+    });
+
+    it('Object default to null', function () {
+        should(Ti.App.Properties.getObject('test_object_null')).be.eql(null);
+    });
+
 	it('getString default', function () {
 		Ti.App.Properties.removeProperty('test_string');
 		should(Ti.App.Properties.getString('test_string')).be.eql(null);
