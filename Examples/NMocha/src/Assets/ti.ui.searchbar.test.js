@@ -42,6 +42,8 @@ describe('Ti.UI.SearchBar', function () {
 			top: 75,
 			left: 0
 		});
+		var fruitSection = Ti.UI.createListSection({ headerTitle: 'Fruits ' });
+		listview.sections = [fruitSection];
 		win.addEventListener('open', function () {
 			listview.searchView = sb;
 			setTimeout(function () {

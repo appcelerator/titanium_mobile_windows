@@ -25,6 +25,8 @@ namespace Titanium
 			bool found { false };
 			std::uint32_t sectionIndex { 0 };
 			std::uint32_t rowIndex { 0 };
+			bool header { false };
+			bool footer { false };
 		};
 
 		/*!
@@ -71,26 +73,36 @@ namespace Titanium
 					const auto section = sections__.at(sectionIndex);
 					const auto itemCount = section->get_itemCount();
 					const auto rowCountIncludingHeader = itemCount + (section->hasHeader() ? 1 : 0) + (section->hasFooter() ? 1 : 0);
+					const int32_t rowIndex = selectedIndex - totalItemCount - (section->hasHeader() ? 1 : 0);
 					totalItemCount += rowCountIncludingHeader;
 					if (totalItemCount <= selectedIndex) {
 						// we just count the total item
 						continue;
 					} else if (section->hasHeader() && selectedIndex == 0) {
 						// that's a first header
+						result.header = true;
 						break;
 					} else if (section->hasHeader() && totalItemCount == selectedIndex) {
 						// this indicates header is selected
+						result.header = true;
 						sectionIndex++;
 						break;
 					} else {
 						// this indicates selected index is in this section
-						result.rowIndex = selectedIndex - (totalItemCount - rowCountIncludingHeader) - (section->hasHeader() ? 1 : 0);
-						if (result.rowIndex >= itemCount) {
+						if (rowIndex < 0) {
+							// this indicates header is selected
+							result.header = true;
+							break;
+						} else if (rowIndex >= static_cast<std::int32_t>(itemCount)) {
 							if (section->hasFooter()) {
 								// this indicates footer is selected
+								result.footer = true;
+								result.rowIndex = itemCount - 1; // Last item in this section
 								break;
 							}
 						} else {
+							// we finally found the index
+							result.rowIndex = rowIndex;
 							result.found = true;
 							break;
 						}
