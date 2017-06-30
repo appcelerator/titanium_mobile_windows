@@ -7,7 +7,7 @@
 var should = require('./should'),
 	utilities = require('./utilities/utilities');
 
-describe('Titanium.UI.ImageView', function () {
+(!utilities.isWindowsPhone() ? describe : describe.skip)('Titanium.UI.ImageView', function () {
 	this.timeout(10000);
 
 	it('apiName', function (finish) {
@@ -102,7 +102,7 @@ describe('Titanium.UI.ImageView', function () {
 		imageView.image = 'ms-appdata:///local/TIMOB-20609.png';
 	});
 
-	(utilities.isWindows() && !utilities.isWindowsPhone() ? it : it.skip)('image (File)', function (finish) {
+	(utilities.isWindows() ? it : it.skip)('image (File)', function (finish) {
 		var fromFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'Logo.png');
 
 		var imageView = Ti.UI.createImageView();
