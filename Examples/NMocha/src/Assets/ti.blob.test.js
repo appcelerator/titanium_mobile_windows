@@ -66,10 +66,10 @@ describe('Titanium.Blob', function () {
 	});
 
 	it('mimeType', function () {
-		var blob = Ti.Filesystem.getFile('app.js').read();
+		var blob = Ti.Filesystem.getFile('Logo.png').read();
 		should(blob.mimeType).be.a.String;
 		should(blob.mimeType.length).be.above(0);
-		should(blob.mimeType).be.eql('text/javascript');
+		should(blob.mimeType).be.eql('image/png');
 	});
 
 	it('length', function () {
