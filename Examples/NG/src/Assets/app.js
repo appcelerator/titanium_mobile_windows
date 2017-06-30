@@ -1,24 +1,46 @@
-var win = Ti.UI.createWindow({ backgroundColor: 'green' }),
-    label = Ti.UI.createLabel({
-        width: Ti.UI.FILL,
-        height: '50%',
-        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-        backgroundColor: 'white'
-    });
-win.add(label);
-win.addEventListener('open', function () {
-    /*
-    var System_Object = require('System.Object');
-    var object = new System_Object();
-    alert(object.GetHashCode());
-    var System_Math = require('System.Math');
-    alert(System_Math.Abs(-1.23));
-    */
-    var MemoryManager = require('Windows.System.MemoryManager');
-    var appMemoryUsageLimit = MemoryManager.AppMemoryUsageLimit / 1024 / 1024;
-    var appMemoryUsage      = MemoryManager.AppMemoryUsage / 1024 / 1024;
+/**
+ * Create a new `Ti.UI.TabGroup`.
+ */
+var tabGroup = Ti.UI.createTabGroup();
 
-    label.text = 'MemoryManager.AppMemoryUsageLimit = ' + parseInt(appMemoryUsageLimit)
-        + " MB\nMemoryManager.AppMemoryUsage = " + parseInt(appMemoryUsage) + " MB";
-});
-win.open();
+/**
+ * Add the two created tabs to the tabGroup object.
+ */
+tabGroup.addTab(createTab("Tab 1", "I am Window 1"));
+tabGroup.addTab(createTab("Tab 2", "I am Window 2"));
+
+/**
+ * Open the tabGroup
+ */
+tabGroup.open();
+
+/**
+ * Creates a new Tab and configures it.
+ *
+ * @param  {String} title The title used in the `Ti.UI.Tab` and it's included `Ti.UI.Window`
+ * @param  {String} message The title displayed in the `Ti.UI.Label`
+ * @return {String} icon The icon used in the `Ti.UI.Tab`
+ */
+function createTab(title, message, icon) {
+    var win = Ti.UI.createWindow({
+        title: title,
+        backgroundColor: '#fff'
+    });
+
+    var label = Ti.UI.createLabel({
+        text: message,
+        color: "#333",
+        font: {
+            fontSize: 20
+        }
+    });
+
+    win.add(label);
+
+    var tab = Ti.UI.createTab({
+        title: title,
+        window: win
+    });
+
+    return tab;
+}
