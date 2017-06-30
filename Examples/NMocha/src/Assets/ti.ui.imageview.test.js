@@ -102,7 +102,7 @@ describe('Titanium.UI.ImageView', function () {
 		imageView.image = 'ms-appdata:///local/TIMOB-20609.png';
 	});
 
-	(utilities.isWindows() && !utilities.isWindows8_1() ? it : it.skip)('image (File)', function (finish) {
+	(utilities.isWindows() && !utilities.isWindowsPhone() ? it : it.skip)('image (File)', function (finish) {
 		var fromFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'Logo.png');
 
 		var imageView = Ti.UI.createImageView();
