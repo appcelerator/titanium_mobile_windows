@@ -16,7 +16,7 @@ describe('Titanium.UI.ImageView', function () {
 	});
 
 
-	it.skip('image (URL)', function (finish) {
+	it('image (URL)', function (finish) {
 		var imageView = Ti.UI.createImageView({
 			image: 'https://www.google.com/images/srpr/logo11w.png'
 		});
@@ -102,7 +102,7 @@ describe('Titanium.UI.ImageView', function () {
 		imageView.image = 'ms-appdata:///local/TIMOB-20609.png';
 	});
 
-	(utilities.isWindows() ? it : it.skip)('image (File)', function (finish) {
+	(utilities.isWindows() && !utilities.isWindows8_1() ? it : it.skip)('image (File)', function (finish) {
 		var fromFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'Logo.png');
 
 		var imageView = Ti.UI.createImageView();
