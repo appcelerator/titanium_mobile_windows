@@ -16,7 +16,7 @@ describe('Titanium.UI.ImageView', function () {
 	});
 
 
-	it('image (URL)', function (finish) {
+	it.skip('image (URL)', function (finish) {
 		var imageView = Ti.UI.createImageView({
 			image: 'https://www.google.com/images/srpr/logo11w.png'
 		});
