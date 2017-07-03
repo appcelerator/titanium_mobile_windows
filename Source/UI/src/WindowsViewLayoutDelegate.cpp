@@ -20,6 +20,7 @@
 #include <ppltasks.h>
 #include <concrt.h>
 #include <collection.h>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/Utility.hpp"
@@ -605,9 +606,9 @@ namespace TitaniumWindows
 				const auto center = animation->get_center();
 				if (center) {
 					// x-axis
-					auto x_value = center->x;
-					if (!center->x_percent.empty()) {
-						setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, center->x_percent, properties);
+					auto x_value = Titanium::UI::get_Point_value(center->x);
+					if (boost::ends_with(center->x, "%")) {
+						setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, center->x, properties);
 						x_value = properties->left.value;
 						const auto x_type = properties->left.valueType;
 						if (x_type == Titanium::LayoutEngine::ValueType::Percent) {
@@ -625,9 +626,9 @@ namespace TitaniumWindows
 					storyboard->Children->Append(x_anim);
 
 					//y-axis
-					auto y_value = center->y;
-					if (!center->y_percent.empty()) {
-						setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, center->y_percent, properties);
+					auto y_value = Titanium::UI::get_Point_value(center->y);
+					if (boost::ends_with(center->y, "%")) {
+						setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, center->y, properties);
 						y_value = properties->right.value;
 						const auto y_type = properties->right.valueType;
 						if (y_type == Titanium::LayoutEngine::ValueType::Percent) {
@@ -794,10 +795,8 @@ namespace TitaniumWindows
 
 				const auto center = animation->get_center();
 				if (center) {
-					std::string x = center->x_percent.empty() ? std::to_string(center->x) : center->x_percent;
-					std::string y = center->y_percent.empty() ? std::to_string(center->y) : center->y_percent;
-					setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, x);
-					setLayoutProperty(Titanium::LayoutEngine::ValueName::Top, y);
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, center->x);
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Top,  center->y);
 				}
 
 				const auto opacity = animation->get_opacity();
@@ -823,20 +822,20 @@ namespace TitaniumWindows
 		{
 			if (backgroundLinearGradientBrush__ != nullptr) {
 				// if gradient has '%', let's update associated values
-				if (!backgroundGradient__.startPoint.x_percent.empty()) {
-					backgroundGradient__.startPoint.x = (std::strtod(backgroundGradient__.startPoint.x_percent.c_str(), nullptr) / 100.0);
+				if (boost::ends_with(backgroundGradient__.startPoint.x, "%")) {
+					backgroundGradient__.startPoint.x = std::to_string(Titanium::UI::get_Point_value(backgroundGradient__.startPoint.x));
 				}
-				if (!backgroundGradient__.startPoint.y_percent.empty()) {
-					backgroundGradient__.startPoint.y = (std::strtod(backgroundGradient__.startPoint.y_percent.c_str(), nullptr) / 100.0);
+				if (boost::ends_with(backgroundGradient__.startPoint.y, "%")) {
+					backgroundGradient__.startPoint.y = std::to_string(Titanium::UI::get_Point_value(backgroundGradient__.startPoint.y));
 				}
-				if (!backgroundGradient__.endPoint.x_percent.empty()) {
-					backgroundGradient__.endPoint.x = (std::strtod(backgroundGradient__.endPoint.x_percent.c_str(), nullptr) / 100.0);
+				if (boost::ends_with(backgroundGradient__.endPoint.x, "%")) {
+					backgroundGradient__.endPoint.x = std::to_string(Titanium::UI::get_Point_value(backgroundGradient__.endPoint.x));
 				}
-				if (!backgroundGradient__.endPoint.y_percent.empty()) {
-					backgroundGradient__.endPoint.y = (std::strtod(backgroundGradient__.endPoint.y_percent.c_str(), nullptr) / 100.0);
+				if (boost::ends_with(backgroundGradient__.endPoint.y,  "%")) {
+					backgroundGradient__.endPoint.y = std::to_string(Titanium::UI::get_Point_value(backgroundGradient__.endPoint.y));
 				}
-				const auto startPoint = Windows::Foundation::Point(static_cast<float>(backgroundGradient__.startPoint.x), static_cast<float>(backgroundGradient__.startPoint.y));
-				const auto endPoint = Windows::Foundation::Point(static_cast<float>(backgroundGradient__.endPoint.x), static_cast<float>(backgroundGradient__.endPoint.y));
+				const auto startPoint = Windows::Foundation::Point(std::stof(backgroundGradient__.startPoint.x), std::stof(backgroundGradient__.startPoint.y));
+				const auto endPoint = Windows::Foundation::Point(std::stof(backgroundGradient__.endPoint.x), std::stof(backgroundGradient__.endPoint.y));
 				backgroundLinearGradientBrush__->StartPoint = startPoint;
 				backgroundLinearGradientBrush__->EndPoint = endPoint;
 			}
@@ -846,8 +845,8 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ViewLayoutDelegate::set_backgroundGradient(backgroundGradient);
 			if (backgroundGradient__.type == Titanium::UI::GRADIENT_TYPE::LINEAR) {
-				const auto startPoint = Windows::Foundation::Point(static_cast<float>(backgroundGradient__.startPoint.x), static_cast<float>(backgroundGradient__.startPoint.y));
-				const auto endPoint = Windows::Foundation::Point(static_cast<float>(backgroundGradient__.endPoint.x), static_cast<float>(backgroundGradient__.endPoint.y));
+				const auto startPoint = Windows::Foundation::Point(std::stof(backgroundGradient__.startPoint.x), std::stof(backgroundGradient__.startPoint.y));
+				const auto endPoint = Windows::Foundation::Point(std::stof(backgroundGradient__.endPoint.x), std::stof(backgroundGradient__.endPoint.y));
 				backgroundLinearGradientBrush__ = ref new LinearGradientBrush();
 				backgroundLinearGradientBrush__->StartPoint = startPoint;
 				backgroundLinearGradientBrush__->EndPoint = endPoint;
@@ -1123,10 +1122,8 @@ namespace TitaniumWindows
 		void WindowsViewLayoutDelegate::set_center(const Titanium::UI::Point& center) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_center(center);
-			const auto x = center.x_percent.empty() ? std::to_string(center.x) : center.x_percent;
-			const auto y = center.y_percent.empty() ? std::to_string(center.y) : center.y_percent;
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::CenterX, x);
-			setLayoutProperty(Titanium::LayoutEngine::ValueName::CenterY, y);
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::CenterX, center.x);
+			setLayoutProperty(Titanium::LayoutEngine::ValueName::CenterY, center.y);
 		}
 
 		void WindowsViewLayoutDelegate::set_touchEnabled(const bool& enabled) TITANIUM_NOEXCEPT

@@ -25,15 +25,11 @@ namespace Titanium
 		*/
 		struct Point
 		{
-			double x {0};
-			double y {0};
-
-			// Point actually accepts '%'.
-			// Point owner should be responsible for updating x and y.
-			std::string x_percent;
-			std::string y_percent;
+			std::string x;
+			std::string y;
 		};
 		
+		TITANIUMKIT_EXPORT double get_Point_value(const std::string& value);
 		TITANIUMKIT_EXPORT Point js_to_Point(const JSObject& object);
 		TITANIUMKIT_EXPORT JSObject Point_to_js(const JSContext& js_context, const Point& point);
 	} // namespace UI
