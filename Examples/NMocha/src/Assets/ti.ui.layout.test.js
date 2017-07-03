@@ -1620,6 +1620,12 @@ describe('Titanium.UI.Layout', function () {
 	});
 
 	it('TIMOB-24825', function (finish) {
+	    var main = Ti.UI.createView({
+	        top: 0,
+	        left: 0,
+	        width: 200,
+	        height: 200
+	    });
 	    var view = Ti.UI.createView({
 	        width: 20, height: 20
 	    });
@@ -1629,14 +1635,15 @@ describe('Titanium.UI.Layout', function () {
 	    var win = createWindow({}, function () {
 	        var err;
 	        try {
-	            should(view.rect.x).eql((win.rect.width / 2.0)  - (view.rect.width / 2.0));
-	            should(view.rect.y).eql((win.rect.height / 2.0) - (view.rect.height / 2.0));
+	            should(view.rect.x).eql((main.rect.width / 2.0)  - (view.rect.width / 2.0));
+	            should(view.rect.y).eql((main.rect.height / 2.0) - (view.rect.height / 2.0));
             } catch (e) {
 	            err = e;
 	        }
 	        finish(err);
 	    });
-	    win.add(view);
+	    main.add(view);
+	    win.add(main);
 	    win.open();
 	});
 
