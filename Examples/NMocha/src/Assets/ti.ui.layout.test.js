@@ -1618,4 +1618,27 @@ describe('Titanium.UI.Layout', function () {
 			win.add(parent);
 			win.open();
 	});
+
+	it('TIMOB-24825', function (finish) {
+	    var view = Ti.UI.createView({
+	        width: 20, height: 20
+	    });
+
+	    view.center = { x:'50%', y:'50%' };
+
+	    var win = createWindow({}, function () {
+	        var err;
+	        try {
+	            should(view.rect.x).eql((win.rect.width / 2.0)  - (view.rect.width / 2.0));
+	            should(view.rect.y).eql((win.rect.height / 2.0) - (view.rect.height / 2.0));
+            } catch (e) {
+	            err = e;
+	        }
+	        finish(err);
+	    });
+	    win.add(view);
+	    win.open();
+	});
+
+
 });
