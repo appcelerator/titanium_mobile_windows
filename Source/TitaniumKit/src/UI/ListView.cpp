@@ -196,9 +196,15 @@ namespace Titanium
 			model__->replaceSectionAt(index, sections);
 		}
 
+		void ListView::addMarker(const ListViewMarkerProps& marker) TITANIUM_NOEXCEPT
+		{
+			markers__.push_back(marker);
+		}
+
 		void ListView::setMarker(const ListViewMarkerProps& marker) TITANIUM_NOEXCEPT
 		{
-			marker__ = marker;
+			markers__.clear();
+			markers__.push_back(marker);
 		}
 
 		void ListView::fireListSectionEvent(const std::string& name, const std::shared_ptr<ListSection>& section, const std::uint32_t& itemIndex, const std::uint32_t& itemCount, const std::uint32_t& affectedRows)
@@ -238,6 +244,7 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(ListView, deleteSectionAt);
 			TITANIUM_ADD_FUNCTION(ListView, insertSectionAt);
 			TITANIUM_ADD_FUNCTION(ListView, replaceSectionAt);
+			TITANIUM_ADD_FUNCTION(ListView, addMarker);
 			TITANIUM_ADD_FUNCTION(ListView, setMarker);
 			TITANIUM_ADD_FUNCTION(ListView, getTemplates);
 			TITANIUM_ADD_FUNCTION(ListView, setTemplates);
@@ -571,6 +578,16 @@ namespace Titanium
 				}
 
 				replaceSectionAt(sectionIndex, sections, animation.GetPrivate<ListViewAnimationProperties>());
+			}
+			return this_object.get_context().CreateUndefined();
+		}
+
+		TITANIUM_FUNCTION(ListView, addMarker)
+		{
+			if (arguments.size() >= 1) {
+				const auto _0 = arguments.at(0);
+				TITANIUM_ASSERT(_0.IsObject());
+				addMarker(js_to_ListViewMarkerProps(static_cast<JSObject>(_0)));
 			}
 			return this_object.get_context().CreateUndefined();
 		}

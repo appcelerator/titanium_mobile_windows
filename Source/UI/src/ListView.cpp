@@ -43,6 +43,26 @@ namespace TitaniumWindows
 			listview__->IsItemClickEnabled = true;
 			listview__->SelectionMode = Controls::ListViewSelectionMode::None;
 
+			// Since VisualTreeHelper is only available after Loaded event is fired, we need to register scroll/scrollend event after that.
+			loaded_event__ = listview__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
+				scrollview__ = GetScrollView(Media::VisualTreeHelper::GetChild(listview__, 0));
+				TITANIUM_ASSERT(scrollview__ != nullptr);
+				if (hasEventListener("scrollstart")) {
+					registerScrollstartEvent();
+				}
+				if (hasEventListener("scrolling")) {
+					registerScrollingEvent();
+				}
+				if (hasEventListener("scrollend")) {
+					registerScrollendEvent();
+				}
+				if (hasEventListener("marker")) {
+					registerMarkerEvent();
+				}
+
+				checkMarkers();
+			});
+
 			resetListViewDataBinding();
 
 			parent__ = ref new Controls::Grid();
@@ -55,6 +75,21 @@ namespace TitaniumWindows
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::FILL);
 
 			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(parent__, listview__);
+		}
+
+		Controls::ScrollViewer^ ListView::GetScrollView(DependencyObject^ root)
+		{
+			const auto count = Media::VisualTreeHelper::GetChildrenCount(root);
+			for (int i = 0; i < count; i++) {
+				const auto child = Media::VisualTreeHelper::GetChild(root, i);
+				const auto scrollview = dynamic_cast<Controls::ScrollViewer^>(child);
+				if (scrollview) {
+					return scrollview;
+				} else {
+					return ListView::GetScrollView(child);
+				}
+			}
+			return nullptr;
 		}
 
 		void ListView::resetListViewDataBinding() 
@@ -91,6 +126,108 @@ namespace TitaniumWindows
 		{
 			JSExport<ListView>::SetClassVersion(1);
 			JSExport<ListView>::SetParent(JSExport<Titanium::UI::ListView>::Class());
+		}
+
+		void ListView::updateScrollParams(const JSContext& ctx, JSObject params)
+		{
+			const auto itemsSize = listview__->Items->Size;
+			const auto itemHeight = scrollview__->ExtentHeight / itemsSize;
+			const auto visibleItemIndex = static_cast<std::size_t>(scrollview__->VerticalOffset / itemHeight);
+			const auto visibleItemCount = static_cast<std::size_t>(scrollview__->ViewportHeight / itemHeight);
+
+			const auto rowInfo = model__->searchRowBySelectedIndex(visibleItemIndex);
+
+			params.SetProperty("visibleItemCount", ctx.CreateNumber(visibleItemCount));
+			params.SetProperty("firstVisibleItemIndex", ctx.CreateNumber(rowInfo.rowIndex));
+			params.SetProperty("firstVisibleSectionIndex", ctx.CreateNumber(rowInfo.sectionIndex));
+
+			if (get_sectionCount() > rowInfo.sectionIndex) {
+				const auto section = get_sections().at(rowInfo.sectionIndex);
+				params.SetProperty("firstVisibleSection", section->get_object());
+				if (section->get_itemCount() > rowInfo.rowIndex) {
+					params.SetProperty("firstVisibleItem", ListDataItem_to_js(ctx, section->getItemAt(rowInfo.rowIndex)));
+				}
+			}
+		}
+
+		void ListView::checkMarkers()
+		{
+			const auto itemsSize = listview__->Items->Size;
+			const auto itemHeight = scrollview__->ExtentHeight / itemsSize;
+			const auto visibleItemIndex = static_cast<std::size_t>(scrollview__->VerticalOffset / itemHeight);
+			const auto visibleItemCount = static_cast<std::size_t>(scrollview__->ViewportHeight / itemHeight);
+
+			for (std::size_t i = visibleItemIndex; i < visibleItemIndex + visibleItemCount; i++) {
+				const auto row = model__->searchRowBySelectedIndex(i);
+				for (std::size_t m = 0; m < markers__.size(); m++) {
+					auto marker = markers__.at(m);
+					if (!marker.fired && marker.sectionIndex == row.sectionIndex && marker.itemIndex == row.rowIndex) {
+						const auto ctx = get_context();
+						auto eventArgs = ctx.CreateObject();
+						eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(marker.sectionIndex));
+						eventArgs.SetProperty("itemIndex", ctx.CreateNumber(marker.itemIndex));
+						fireEvent("marker", eventArgs);
+						marker.fired = true;
+						markers__[m] = marker;
+					}
+				}
+			}
+		}
+
+		void ListView::registerMarkerEvent()
+		{
+			marker_event__ = scrollview__->ViewChanged += ref new Windows::Foundation::EventHandler<Controls::ScrollViewerViewChangedEventArgs ^>([this](Platform::Object^ sender, Controls::ScrollViewerViewChangedEventArgs^ e) {
+				checkMarkers();
+			});
+		}
+
+		void ListView::registerScrollstartEvent()
+		{
+			scrollstart_event__ = scrollview__->ViewChanging += ref new Windows::Foundation::EventHandler<Controls::ScrollViewerViewChangingEventArgs ^>([this](Platform::Object^ sender, Controls::ScrollViewerViewChangingEventArgs^ e) {
+				if (scrollstop__) {
+					scrollstop__ = false;
+
+					const auto ctx = get_context();
+					auto eventArgs = ctx.CreateObject();
+
+					updateScrollParams(ctx, eventArgs);
+
+					fireEvent("scrollstart", eventArgs);
+				}
+			});
+		}
+
+		void ListView::registerScrollingEvent()
+		{
+			scrolling_event__ = scrollview__->ViewChanging += ref new Windows::Foundation::EventHandler<Controls::ScrollViewerViewChangingEventArgs ^>([this](Platform::Object^ sender, Controls::ScrollViewerViewChangingEventArgs^ e) {
+
+				const auto ctx = get_context();
+				auto eventArgs = ctx.CreateObject();
+
+				updateScrollParams(ctx, eventArgs);
+
+				fireEvent("scrolling", eventArgs);
+			});
+		}
+
+		void ListView::registerScrollendEvent()
+		{
+			scrollend_event__ = scrollview__->ViewChanged += ref new Windows::Foundation::EventHandler<Controls::ScrollViewerViewChangedEventArgs ^>([this](Platform::Object^ sender, Controls::ScrollViewerViewChangedEventArgs^ e) {
+				// Stop firing event when ScrollView didn't actually move
+				if (!e->IsIntermediate && oldScrollPosX__ != scrollview__->VerticalOffset || oldScrollPosY__ != scrollview__->HorizontalOffset) {
+					scrollstop__ = true;
+
+					const auto ctx = get_context();
+					auto eventArgs = ctx.CreateObject();
+
+					updateScrollParams(ctx, eventArgs);
+
+					fireEvent("scrollend", eventArgs);
+
+					oldScrollPosX__ = scrollview__->VerticalOffset;
+					oldScrollPosY__ = scrollview__->HorizontalOffset;
+				}
+			});
 		}
 
 		void ListView::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
@@ -160,6 +297,23 @@ namespace TitaniumWindows
 
 			if (event_name == "itemclick") {
 				listview__->ItemClick -= itemclick_event__;
+			} else if (event_name == "scrollstart") {
+				if (scrollview__) {
+					scrollview__->ViewChanging -= scrollstart_event__;
+				}
+			} else if (event_name == "scrolling") {
+				if (scrollview__) {
+					scrollview__->ViewChanged -= scrolling_event__;
+				}
+			} else if (event_name == "scrollend") {
+				if (scrollview__) {
+					scrollview__->ViewChanged -= scrollend_event__;
+				}
+			} else if (event_name == "marker") {
+				if (scrollview__) {
+					scrollview__->ViewChanged -= marker_event__;
+				}
+
 			}
 		}
 
