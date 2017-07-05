@@ -74,9 +74,9 @@ namespace Titanium
 #pragma warning(push)
 #pragma warning(disable : 4251)
 			bool animated__     {true};
-			bool fullscreen__   {true};
-			bool modal__        {true};
-			bool navBarHidden__ {true};
+			bool fullscreen__   {false};
+			bool modal__        {false};
+			bool navBarHidden__ {false};
 
 			std::string top__;
 			std::string left__;
