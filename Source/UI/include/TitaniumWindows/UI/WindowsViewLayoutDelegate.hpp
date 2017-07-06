@@ -157,7 +157,7 @@ namespace TitaniumWindows
 
 			  Default: 0
 			*/
-			virtual void set_borderWidth(const uint32_t& borderWidth) TITANIUM_NOEXCEPT override;
+			virtual void set_borderWidth(const std::string& borderWidth) TITANIUM_NOEXCEPT override;
 
 			/*!
 			@method
@@ -170,7 +170,7 @@ namespace TitaniumWindows
 
 			Default: 0
 			*/
-			virtual void set_borderRadius(const double& borderRadius) TITANIUM_NOEXCEPT override;
+			virtual void set_borderRadius(const std::string& borderRadius) TITANIUM_NOEXCEPT override;
 
 			/*!
 			  @method
@@ -538,6 +538,7 @@ namespace TitaniumWindows
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromPath(const std::string& path);
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBitmapImage(Windows::UI::Xaml::Media::Imaging::BitmapImage^ image);
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBlob(const std::shared_ptr<Titanium::Blob>& blob);
+			static double ComputePPI(const Titanium::LayoutEngine::ValueName& name);
 
 #pragma warning(push)
 #pragma warning(disable : 4251)

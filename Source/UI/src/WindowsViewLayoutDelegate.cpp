@@ -1035,7 +1035,7 @@ namespace TitaniumWindows
 			backgroundSelectedImageBrush__ = CreateImageBrushFromPath(backgroundSelectedImage);
 		}
 
-		void WindowsViewLayoutDelegate::set_borderRadius(const double& borderRadius) TITANIUM_NOEXCEPT
+		void WindowsViewLayoutDelegate::set_borderRadius(const std::string& borderRadius) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_borderRadius(borderRadius);
 			set_borderWidth(get_borderWidth()); // update brush
@@ -1047,7 +1047,7 @@ namespace TitaniumWindows
 			set_borderWidth(get_borderWidth()); // update brush
 		}
 
-		void WindowsViewLayoutDelegate::set_borderWidth(const uint32_t& borderWidth) TITANIUM_NOEXCEPT
+		void WindowsViewLayoutDelegate::set_borderWidth(const std::string& borderWidth) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_borderWidth(borderWidth);
 
@@ -1057,16 +1057,18 @@ namespace TitaniumWindows
 			}
 			borderColorBrush__ = ref new SolidColorBrush(ColorForName(color));
 
+			const auto ppi = ComputePPI(Titanium::LayoutEngine::ValueName::Width);
+
 			if ((is_control__ || underlying_control__) && !is_border__) {
 				// Xaml::Control descendant has its own border property.
 				// Use it then, it usually works better than Xaml::Border. Note that it doesn't support border radius though...
 				const auto control = underlying_control__ ? underlying_control__ : dynamic_cast<Control^>(component__);
 				control->BorderBrush = borderColorBrush__;
-				control->BorderThickness = borderWidth;
+				control->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
 			} else if (border__) {
 				border__->BorderBrush = borderColorBrush__;
-				border__->BorderThickness = borderWidth;
-				border__->CornerRadius = CornerRadiusHelper::FromUniformRadius(get_borderRadius());
+				border__->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+				border__->CornerRadius = CornerRadiusHelper::FromUniformRadius(Titanium::LayoutEngine::parseUnitValue(get_borderRadius(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px"));
 			}
 		}
 
@@ -1816,20 +1818,8 @@ namespace TitaniumWindows
 
 		}
 
-
-		void WindowsViewLayoutDelegate::setLayoutProperty(const Titanium::LayoutEngine::ValueName& name, const std::string& value, const std::shared_ptr<Titanium::LayoutEngine::LayoutProperties> properties)
+		double WindowsViewLayoutDelegate::ComputePPI(const Titanium::LayoutEngine::ValueName& name)
 		{
-			Titanium::LayoutEngine::InputProperty prop;
-			prop.name = name;
-			prop.value = value;
-
-			if (prop.value == Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE)) {
-				prop.value = "UI.SIZE";
-			}
-			else if (prop.value == Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL)) {
-				prop.value = "UI.FILL";
-			}
-
 			auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 			double ppi = info->LogicalDpi;
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
@@ -1850,6 +1840,24 @@ namespace TitaniumWindows
 				break;
 			}
 #endif
+			return ppi;
+		}
+
+		void WindowsViewLayoutDelegate::setLayoutProperty(const Titanium::LayoutEngine::ValueName& name, const std::string& value, const std::shared_ptr<Titanium::LayoutEngine::LayoutProperties> properties)
+		{
+			Titanium::LayoutEngine::InputProperty prop;
+			prop.name = name;
+			prop.value = value;
+
+			if (prop.value == Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE)) {
+				prop.value = "UI.SIZE";
+			}
+			else if (prop.value == Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL)) {
+				prop.value = "UI.FILL";
+			}
+
+			auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+			double ppi = ComputePPI(name);
 
 			// Get the defaultUnits from ti.ui.defaultUnit!
 			std::string defaultUnits = "px";

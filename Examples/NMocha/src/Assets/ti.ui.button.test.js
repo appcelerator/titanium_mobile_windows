@@ -211,7 +211,7 @@ describe('Titanium.UI.Button', function () {
 		w.add(view);
 		w.addEventListener('open', function () {
 			should(view.borderColor).be.a.String;
-			should(view.borderWidth).be.a.Number;
+			should(view.borderWidth).be.a.String;
 			view.borderColor = 'blue';
 			view.borderWidth = 2;
 			should(view.borderColor).be.eql('blue');

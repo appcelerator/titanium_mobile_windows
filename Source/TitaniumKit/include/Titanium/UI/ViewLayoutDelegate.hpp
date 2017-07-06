@@ -168,8 +168,8 @@ namespace Titanium
 
 			  Default: 0
 			*/
-			virtual double get_borderRadius() const TITANIUM_NOEXCEPT;
-			virtual void set_borderRadius(const double& borderRadius) TITANIUM_NOEXCEPT;
+			virtual std::string get_borderRadius() const TITANIUM_NOEXCEPT;
+			virtual void set_borderRadius(const std::string& borderRadius) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
@@ -180,8 +180,8 @@ namespace Titanium
 
 			  Default: 0
 			*/
-			virtual uint32_t get_borderWidth() const TITANIUM_NOEXCEPT;
-			virtual void set_borderWidth(const uint32_t& borderWidth) TITANIUM_NOEXCEPT;
+			virtual std::string get_borderWidth() const TITANIUM_NOEXCEPT;
+			virtual void set_borderWidth(const std::string& borderWidth) TITANIUM_NOEXCEPT;
 
 			/*!
 			  @method
@@ -616,8 +616,8 @@ namespace Titanium
 			std::string backgroundImage__;
 			std::string backgroundColor__;
 			std::string borderColor__;
-			double borderRadius__;
-			uint32_t borderWidth__;
+			std::string borderRadius__;
+			std::string borderWidth__;
 			double opacity__;
 			std::string top__;
 			std::string left__;

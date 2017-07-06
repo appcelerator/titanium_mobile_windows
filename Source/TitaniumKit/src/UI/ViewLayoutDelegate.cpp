@@ -16,8 +16,8 @@ namespace Titanium
 	{
 		ViewLayoutDelegate::ViewLayoutDelegate() TITANIUM_NOEXCEPT :
 			opacity__(1.0),
-			borderRadius__(0),
-			borderWidth__(0),
+			borderWidth__("0"),
+			borderRadius__("0"),
 			touchEnabled__(true),
 			visible__(true),
 			defaultWidth__(Titanium::UI::LAYOUT::SIZE),
@@ -255,22 +255,22 @@ namespace Titanium
 			borderColor__ = borderColor;
 		}
 
-		double ViewLayoutDelegate::get_borderRadius() const TITANIUM_NOEXCEPT
+		std::string ViewLayoutDelegate::get_borderRadius() const TITANIUM_NOEXCEPT
 		{
 			return borderRadius__;
 		}
 
-		void ViewLayoutDelegate::set_borderRadius(const double& borderRadius) TITANIUM_NOEXCEPT
+		void ViewLayoutDelegate::set_borderRadius(const std::string& borderRadius) TITANIUM_NOEXCEPT
 		{
 			borderRadius__ = borderRadius;
 		}
 
-		uint32_t ViewLayoutDelegate::get_borderWidth() const TITANIUM_NOEXCEPT
+		std::string ViewLayoutDelegate::get_borderWidth() const TITANIUM_NOEXCEPT
 		{
 			return borderWidth__;
 		}
 
-		void ViewLayoutDelegate::set_borderWidth(const uint32_t& borderWidth) TITANIUM_NOEXCEPT
+		void ViewLayoutDelegate::set_borderWidth(const std::string& borderWidth) TITANIUM_NOEXCEPT
 		{
 			borderWidth__ = borderWidth;
 		}
