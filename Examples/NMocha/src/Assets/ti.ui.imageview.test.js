@@ -7,7 +7,7 @@
 var should = require('./should'),
 	utilities = require('./utilities/utilities');
 
-describe('Titanium.UI.ImageView', function () {
+(!utilities.isWindowsPhone() ? describe : describe.skip)('Titanium.UI.ImageView', function () {
 	this.timeout(10000);
 
 	it('apiName', function (finish) {

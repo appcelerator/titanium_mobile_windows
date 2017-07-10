@@ -31,7 +31,7 @@ namespace TitaniumWindows
 			// Shows progress Bar and starts the animation.
 			virtual void show() TITANIUM_NOEXCEPT override;
 
-			virtual void set_borderWidth(const uint32_t& borderWidth) TITANIUM_NOEXCEPT override;
+			virtual void set_borderWidth(const std::string& borderWidth) TITANIUM_NOEXCEPT override;
 		protected:
 			Windows::UI::Xaml::Controls::ProgressBar^ bar__;
 			bool isIndeterminate__ { false };

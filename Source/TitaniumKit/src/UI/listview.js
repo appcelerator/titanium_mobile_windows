@@ -123,6 +123,11 @@ function createSectionItemView(listview, item, template, parent) {
 		view.bindId = template.bindId;
 	}
 
+	// add event listeners
+	for (var event in template.events) {
+		view.addEventListener(event, template.events[event]);
+	}
+
 	// hook click and fire listview event with bindId
 	view.addEventListener('click', function() {
 		// check if other view already processes the event

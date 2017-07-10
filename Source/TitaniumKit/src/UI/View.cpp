@@ -723,28 +723,28 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER(View, borderRadius)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			return get_context().CreateNumber(layoutDelegate__->get_borderRadius());
+			return get_context().CreateString(layoutDelegate__->get_borderRadius());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, borderRadius)
 		{
 			CHECK_UI_DELEGATE_SETTER;
-			TITANIUM_ASSERT(argument.IsNumber());
-			layoutDelegate__->set_borderRadius(static_cast<double>(argument));
+			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
+			layoutDelegate__->set_borderRadius(static_cast<std::string>(argument));
 			return true;
 		}
 
 		TITANIUM_PROPERTY_GETTER(View, borderWidth)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			return get_context().CreateNumber(layoutDelegate__->get_borderWidth());
+			return get_context().CreateString(layoutDelegate__->get_borderWidth());
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, borderWidth)
 		{
 			CHECK_UI_DELEGATE_SETTER;
-			TITANIUM_ASSERT(argument.IsNumber());
-			layoutDelegate__->set_borderWidth(static_cast<uint32_t>(argument));
+			TITANIUM_ASSERT(argument.IsString() || argument.IsNumber());
+			layoutDelegate__->set_borderWidth(static_cast<std::string>(argument));
 			return true;
 		}
 

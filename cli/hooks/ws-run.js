@@ -154,7 +154,7 @@ exports.init = function (logger, config, cli) {
 				}
 
 				var tiapp = builder.tiapp,
-					appId = tiapp.id,
+					appId = tiapp.windows.id || tiapp.id,
 					projectDir = path.resolve(builder.cmakeTargetDir, 'AppPackages'),
 					// Options for installing and launching app
 					opts = appc.util.mix({

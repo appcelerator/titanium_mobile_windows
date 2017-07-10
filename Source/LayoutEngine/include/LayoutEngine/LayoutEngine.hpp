@@ -167,6 +167,7 @@ namespace Titanium
 		void populateLayoutProperties(struct InputProperty, struct LayoutProperties*, double, const std::string&);
 		struct ComputedSize doVerticalLayout(std::vector<struct Element*>, double, double, bool, bool);
 		void measureNodeForVerticalLayout(struct LayoutProperties, struct Element*);
+		double parseUnitValue(const std::string& value, enum ValueType valueType, double ppi, const std::string& defaultUnits);
 
 		struct Node
 		{

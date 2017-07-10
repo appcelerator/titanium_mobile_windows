@@ -38,13 +38,13 @@ namespace TitaniumWindows
 			bar__->IsIndeterminate = false;
 		}
 
-		void ProgressBarLayoutDelegate::set_borderWidth(const uint32_t& borderWidth) TITANIUM_NOEXCEPT
+		void ProgressBarLayoutDelegate::set_borderWidth(const std::string& borderWidth) TITANIUM_NOEXCEPT
 		{
 			WindowsViewLayoutDelegate::set_borderWidth(borderWidth);
 
 			// set margin to the progress bar to make both border and bar shown.
 			auto margin = bar__->Margin;
-			margin.Bottom = borderWidth * 2;
+			margin.Bottom = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width), "px") * 2;
 			bar__->Margin = margin;
 		}
 
