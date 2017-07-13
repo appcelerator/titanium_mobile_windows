@@ -606,14 +606,11 @@ namespace TitaniumWindows
 				const auto center = animation->get_center();
 				if (center) {
 					// x-axis
-					auto x_value = Titanium::UI::get_Point_value(center->x);
-					if (boost::ends_with(center->x, "%")) {
-						setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, center->x, properties);
-						x_value = properties->left.value;
-						const auto x_type = properties->left.valueType;
-						if (x_type == Titanium::LayoutEngine::ValueType::Percent) {
-							x_value *= layout_node__->parent->element.measuredWidth;
-						}
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, center->x, properties);
+					auto x_value = properties->left.value;
+					const auto x_type = properties->left.valueType;
+					if (x_type == Titanium::LayoutEngine::ValueType::Percent) {
+						x_value *= layout_node__->parent->element.measuredWidth - layout_node__->element.measuredWidth;
 					}
 					const auto current_left = Controls::Canvas::GetLeft(component);
 					const auto x_diff = x_value - current_left;
@@ -626,14 +623,11 @@ namespace TitaniumWindows
 					storyboard->Children->Append(x_anim);
 
 					//y-axis
-					auto y_value = Titanium::UI::get_Point_value(center->y);
-					if (boost::ends_with(center->y, "%")) {
-						setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, center->y, properties);
-						y_value = properties->right.value;
-						const auto y_type = properties->right.valueType;
-						if (y_type == Titanium::LayoutEngine::ValueType::Percent) {
-							y_value *= layout_node__->parent->element.measuredHeight;
-						}
+					setLayoutProperty(Titanium::LayoutEngine::ValueName::Right, center->y, properties);
+					auto y_value = properties->right.value;
+					const auto y_type = properties->right.valueType;
+					if (y_type == Titanium::LayoutEngine::ValueType::Percent) {
+						y_value *= layout_node__->parent->element.measuredHeight - layout_node__->element.measuredHeight;
 					}
 					const auto current_top = Controls::Canvas::GetTop(component);
 					const auto y_diff = y_value - current_top;
@@ -770,7 +764,6 @@ namespace TitaniumWindows
 
 			storyboard->Completed += ref new Windows::Foundation::EventHandler<Platform::Object ^>([callback, animation, this_object, this](Platform::Object^ sender, Platform::Object ^ e) mutable {
 				const auto storyboard = dynamic_cast<Media::Animation::Storyboard^>(sender);
-				const auto component = getComponent();
 
 				//
 				// Make sure to update the position of the view because StoryBoard doesn't change actual position of it.
@@ -795,8 +788,7 @@ namespace TitaniumWindows
 
 				const auto center = animation->get_center();
 				if (center) {
-					setLayoutProperty(Titanium::LayoutEngine::ValueName::Left, center->x);
-					setLayoutProperty(Titanium::LayoutEngine::ValueName::Top,  center->y);
+					set_center(*center);
 				}
 
 				const auto opacity = animation->get_opacity();
