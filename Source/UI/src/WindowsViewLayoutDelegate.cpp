@@ -826,8 +826,8 @@ namespace TitaniumWindows
 				if (boost::ends_with(backgroundGradient__.endPoint.y,  "%")) {
 					backgroundGradient__.endPoint.y = std::to_string(Titanium::UI::get_Point_value(backgroundGradient__.endPoint.y));
 				}
-				const auto startPoint = Windows::Foundation::Point(Titanium::UI::get_Point_value(backgroundGradient__.startPoint.x), Titanium::UI::get_Point_value(backgroundGradient__.startPoint.y));
-				const auto endPoint = Windows::Foundation::Point(Titanium::UI::get_Point_value(backgroundGradient__.endPoint.x), Titanium::UI::get_Point_value(backgroundGradient__.endPoint.y));
+				const auto startPoint = Windows::Foundation::Point(static_cast<float>(Titanium::UI::get_Point_value(backgroundGradient__.startPoint.x)), static_cast<float>(Titanium::UI::get_Point_value(backgroundGradient__.startPoint.y)));
+				const auto endPoint = Windows::Foundation::Point(static_cast<float>(Titanium::UI::get_Point_value(backgroundGradient__.endPoint.x)), static_cast<float>(Titanium::UI::get_Point_value(backgroundGradient__.endPoint.y)));
 				backgroundLinearGradientBrush__->StartPoint = startPoint;
 				backgroundLinearGradientBrush__->EndPoint = endPoint;
 			}
@@ -837,8 +837,8 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ViewLayoutDelegate::set_backgroundGradient(backgroundGradient);
 			if (backgroundGradient__.type == Titanium::UI::GRADIENT_TYPE::LINEAR) {
-				const auto startPoint = Windows::Foundation::Point(Titanium::UI::get_Point_value(backgroundGradient__.startPoint.x), Titanium::UI::get_Point_value(backgroundGradient__.startPoint.y));
-				const auto endPoint = Windows::Foundation::Point(Titanium::UI::get_Point_value(backgroundGradient__.endPoint.x), Titanium::UI::get_Point_value(backgroundGradient__.endPoint.y));
+				const auto startPoint = Windows::Foundation::Point(static_cast<float>(Titanium::UI::get_Point_value(backgroundGradient__.startPoint.x)), static_cast<float>(Titanium::UI::get_Point_value(backgroundGradient__.startPoint.y)));
+				const auto endPoint = Windows::Foundation::Point(static_cast<float>(Titanium::UI::get_Point_value(backgroundGradient__.endPoint.x)), static_cast<float>(Titanium::UI::get_Point_value(backgroundGradient__.endPoint.y)));
 				backgroundLinearGradientBrush__ = ref new LinearGradientBrush();
 				backgroundLinearGradientBrush__->StartPoint = startPoint;
 				backgroundLinearGradientBrush__->EndPoint = endPoint;
