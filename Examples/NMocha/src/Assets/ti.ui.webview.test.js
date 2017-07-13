@@ -10,8 +10,8 @@ var should = require('should'),
 
 describe('Titanium.UI.WebView', function () {
 
-	// Skip this on desktop Windows 10 apps because it crashes the app now.
-	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('url', function (finish) {
+	// Skip this on Windows 10 apps because internal network is unstable.
+	(utilities.isWindows10() ? it.skip : it)('url', function (finish) {
 		this.timeout(10000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
