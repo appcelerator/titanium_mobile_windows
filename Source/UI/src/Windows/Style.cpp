@@ -55,7 +55,7 @@ namespace TitaniumWindows
 
 			TITANIUM_FUNCTION(Style, apply)
 			{
-				ENSURE_ARGUMENT_INDEX(1);
+				ENSURE_ARGUMENT_INDEX(0);
 				ENSURE_OBJECT_AT_INDEX(target, 0);
 				ENSURE_OPTIONAL_STRING_AT_INDEX(styleKey, 1, "");
 
