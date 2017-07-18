@@ -15,6 +15,7 @@
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UI/SearchBar.hpp"
 #include "TitaniumWindows/UI/SearchBar.hpp"
+#include "TitaniumWindows/UI/Windows/ListViewScrollPosition.hpp"
 
 namespace TitaniumWindows
 {
@@ -440,7 +441,15 @@ namespace TitaniumWindows
 			}
 
 			if (index < items->Size) {
-				listview__->ScrollIntoView(items->GetAt(index));
+				auto position = Controls::ScrollIntoViewAlignment::Default;
+				if (animation) {
+					switch (animation->get_position()) {
+					case TitaniumWindows::UI::WindowsXaml::ListViewScrollPosition::Top:
+						position = Controls::ScrollIntoViewAlignment::Leading;
+						break;
+					}
+				}
+				listview__->ScrollIntoView(items->GetAt(index), position);
 			}
 		}
 
