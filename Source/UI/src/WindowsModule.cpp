@@ -11,6 +11,7 @@
 #include "TitaniumWindows/UI/Windows/AppBarToggleButton.hpp"
 #include "TitaniumWindows/UI/Windows/AppBarSeparator.hpp"
 #include "TitaniumWindows/UI/Windows/SystemIcon.hpp"
+#include "TitaniumWindows/UI/Windows/Style.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 
 #define CREATE_TITANIUM_UI_WINDOWS(NAME) \
@@ -51,10 +52,12 @@ namespace TitaniumWindows
 			TITANIUM_ADD_CONSTANT_PROPERTY(WindowsModule, AppBarSeparator);
 			TITANIUM_ADD_CONSTANT_PROPERTY(WindowsModule, AppBarToggleButton);
 			TITANIUM_ADD_CONSTANT_PROPERTY(WindowsModule, SystemIcon);
+			TITANIUM_ADD_CONSTANT_PROPERTY(WindowsModule, Style);
 			TITANIUM_ADD_FUNCTION(WindowsModule, createCommandBar);
 			TITANIUM_ADD_FUNCTION(WindowsModule, createAppBarButton);
 			TITANIUM_ADD_FUNCTION(WindowsModule, createAppBarToggleButton);
 			TITANIUM_ADD_FUNCTION(WindowsModule, createAppBarSeparator);
+			TITANIUM_ADD_FUNCTION(WindowsModule, createStyle);
 		}
 
 		TITANIUM_PROPERTY_GETTER(WindowsModule, CommandBar)
@@ -82,6 +85,11 @@ namespace TitaniumWindows
 			return get_context().CreateObject(JSExport<TitaniumWindows::UI::WindowsXaml::SystemIcon>::Class());
 		}
 
+		TITANIUM_PROPERTY_GETTER(WindowsModule, Style)
+		{
+			return get_context().CreateObject(JSExport<TitaniumWindows::UI::WindowsXaml::Style>::Class());
+		}
+
 		TITANIUM_FUNCTION(WindowsModule, createCommandBar) 
 		{
 			ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
@@ -104,6 +112,12 @@ namespace TitaniumWindows
 		{
 			ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
 			CREATE_TITANIUM_UI_WINDOWS(AppBarSeparator);
+		}
+
+		TITANIUM_FUNCTION(WindowsModule, createStyle)
+		{
+			ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
+			CREATE_TITANIUM_UI_WINDOWS(Style);
 		}
 
 	}  // namespace UI

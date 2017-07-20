@@ -25,6 +25,8 @@ namespace TitaniumWindows
 			template <typename T>
 			void SetFont(const JSContext& js_context, T component, const Titanium::UI::Font& font);
 
+			Windows::UI::Xaml::ResourceDictionary^ LookupXamlResource(Platform::String^ source = "ms-appx:///Styles.xaml");
+
 		} // namespace ViewHelper
 	}  // namespace UI
 }  // namespace TitaniumWindows

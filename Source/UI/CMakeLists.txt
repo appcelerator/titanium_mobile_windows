@@ -130,6 +130,8 @@ set(SOURCE_UI_Windows
   src/Windows/SystemIcon.cpp
   include/TitaniumWindows/UI/Windows/ViewHelper.hpp
   src/Windows/ViewHelper.cpp
+  include/TitaniumWindows/UI/Windows/Style.hpp
+  src/Windows/Style.cpp
   )
 
 source_group(Titanium\\UI\\Windows FILES ${SOURCE_UI_Windows})

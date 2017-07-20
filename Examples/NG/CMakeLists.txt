@@ -134,6 +134,7 @@ set(SOURCE_Assets
   src/Assets/WebViewNextPage.htm
   src/Assets/sample.jpg
   src/Assets/require_test.js
+  src/Assets/Styles.xaml
   )
 
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
@@ -170,6 +171,7 @@ set_property(SOURCE ${SOURCE_with_index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   include/OutputDebugStringBuf.hpp
+  include/pch.h
   ${SOURCE_Assets}
   ${SOURCE_fonts}
   ${SOURCE_Strings_en}

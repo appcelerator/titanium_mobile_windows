@@ -439,6 +439,14 @@ namespace TitaniumWindows
 			*/
 			virtual void set_backgroundGradient(const Titanium::UI::Gradient& backgroundGradient) TITANIUM_NOEXCEPT override;
 
+			/*!
+			  @property
+			  @abstract style
+			  @discussion Windows-specific property to deal with XAML Style templates
+			  @see https://docs.microsoft.com/en-us/windows/uwp/controls-and-patterns/xaml-styles
+			*/
+			virtual void set_style(Windows::UI::Xaml::Style^ style) TITANIUM_NOEXCEPT;
+
 			WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT;
 			virtual ~WindowsViewLayoutDelegate();
 
@@ -466,6 +474,14 @@ namespace TitaniumWindows
 
 			virtual void setComponent(Windows::UI::Xaml::FrameworkElement^ component, Windows::UI::Xaml::Controls::Control^ underlying_control = nullptr, const bool& enableBorder = true);
 			virtual void setComponent(Windows::UI::Xaml::FrameworkElement^ component, Windows::UI::Xaml::Controls::Control^ underlying_control, Windows::UI::Xaml::Controls::Border^ border);
+
+			virtual Windows::UI::Xaml::FrameworkElement^ getStyleComponent() const TITANIUM_NOEXCEPT
+			{
+				if (underlying_control__) {
+					return underlying_control__;
+				}
+				return component__;
+			}
 
 			virtual Windows::UI::Xaml::FrameworkElement^ getEventComponent() const TITANIUM_NOEXCEPT
 			{

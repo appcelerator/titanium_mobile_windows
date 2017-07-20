@@ -65,10 +65,14 @@ namespace TitaniumWindows
 			static const std::uint32_t DefaultFontSize = 20;
 
 			virtual void enableEvent(const std::string& event_name)  TITANIUM_NOEXCEPT override final;
-
 		private:
 			Windows::UI::Xaml::Controls::Border^ border__;
 			Windows::UI::Xaml::Controls::Button^ button__;
+#pragma warning(push)
+#pragma warning(disable : 4251)
+			Windows::Foundation::EventRegistrationToken loaded_event__;
+#pragma warning(pop)
+
 		};
 	} // namespace UI
 } // namespace TitaniumWindows
