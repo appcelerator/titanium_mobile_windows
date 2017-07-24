@@ -4,9 +4,7 @@
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
-            <SolidColorBrush x:Key="ButtonBackground" Color="Red"/>
-            <SolidColorBrush x:Key="ButtonForeground" Color="MediumSlateBlue"/>
-            <SolidColorBrush x:Key="ButtonBorderBrush" Color="MediumSlateBlue"/>
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="Blue"/>
             <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Pink"/>
             <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Yellow"/>
         </ResourceDictionary>
