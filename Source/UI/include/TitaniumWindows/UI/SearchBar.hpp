@@ -55,15 +55,24 @@ namespace TitaniumWindows
 			virtual void set_hintText(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual std::string get_hintText() const TITANIUM_NOEXCEPT override;
 
+#if defined(IS_WINDOWS_10)
+			// showCancel is only supported on Windows 10
+			virtual void set_showCancel(const bool&) TITANIUM_NOEXCEPT override;
+#endif
 
 		private:
 			Windows::UI::Xaml::Controls::Border^ border__;
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			Windows::UI::Xaml::Controls::AutoSuggestBox^ suggest_box__;
 			Windows::Foundation::Collections::IObservableVector<::Platform::String^>^ suggestItems__;
+
 #else
 			// For Windows 8.1 Store
 			Windows::UI::Xaml::Controls::SearchBox^ suggest_box__;
+#endif
+
+#if defined(IS_WINDOWS_10)
+			Windows::UI::Xaml::Controls::Button^ delete_button__;
 #endif
 		};
 	}  // namespace UI
