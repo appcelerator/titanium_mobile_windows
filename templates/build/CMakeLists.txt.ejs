@@ -117,6 +117,7 @@ source_group("Strings\\<%=i18n.locale %>" FILES "<%= i18n.file %>")
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   include/OutputDebugStringBuf.hpp
+  include/pch.h
   ${SOURCE_Assets}
 <% for(var key in sourceGroups) { -%>
   <% if (key == '.') { continue; } -%>
@@ -198,6 +199,7 @@ set_property(TARGET ${EXE_NAME}
   "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Ti/${PLATFORM}/${Ti_ARCH}/TitaniumWindows_Ti.winmd"
   "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows/${PLATFORM}/${Ti_ARCH}/TitaniumWindows.winmd"
   "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_UI/${PLATFORM}/${Ti_ARCH}/TitaniumWindows_UI.winmd"
+  "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_UI/${PLATFORM}/${Ti_ARCH}/ListViewModel.winmd"
   "${WINDOWS_SOURCE_DIR}/lib/TitaniumWindows_Utility/${PLATFORM}/${Ti_ARCH}/TitaniumWindows_Utility.winmd"
   ${THIRD_WINRT_REFERENCES}
 <% for(var i = 0; i < native_modules.length; i++) { -%>

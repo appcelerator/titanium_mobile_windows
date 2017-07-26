@@ -130,6 +130,8 @@ set(SOURCE_UI_Windows
   src/Windows/SystemIcon.cpp
   include/TitaniumWindows/UI/Windows/ViewHelper.hpp
   src/Windows/ViewHelper.cpp
+  include/TitaniumWindows/UI/Windows/ListView.hpp
+  src/Windows/ListView.cpp
   )
 
 source_group(Titanium\\UI\\Windows FILES ${SOURCE_UI_Windows})
@@ -211,6 +213,10 @@ set_property(TARGET TitaniumWindows_UI PROPERTY SOVERSION 0)
 set_property(TARGET TitaniumWindows_UI PROPERTY INTERFACE_TitaniumWindows_UI_MAJOR_VERSION 0)
 set_property(TARGET TitaniumWindows_UI APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING TitaniumWindows_UI_MAJOR_VERSION
+  )
+
+set_property(TARGET TitaniumWindows_UI PROPERTY VS_WINRT_REFERENCES 
+  ${PROJECT_SOURCE_DIR}/lib/ListViewModel.winmd
   )
 
 install(TARGETS TitaniumWindows_UI EXPORT TitaniumWindows_UI_Targets
