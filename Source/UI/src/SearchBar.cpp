@@ -12,6 +12,7 @@
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 
+using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::Foundation;
@@ -32,6 +33,33 @@ namespace TitaniumWindows
 			TITANIUM_LOG_DEBUG("SearchBar::dtor");
 		}
 
+#if defined(IS_WINDOWS_10)
+		static TextBox^ GetTextBox(DependencyObject^ root)
+		{
+			const auto count = Media::VisualTreeHelper::GetChildrenCount(root);
+			for (int i = 0; i < count; i++) {
+				const auto child = Media::VisualTreeHelper::GetChild(root, i);
+				const auto textbox = dynamic_cast<TextBox^>(child);
+				if (textbox) {
+					return textbox;
+				} else {
+					return GetTextBox(child);
+				}
+			}
+			return nullptr;
+		}
+
+		void SearchBar::set_showCancel(const bool& show) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::SearchBar::set_showCancel(show);
+			if (delete_button__) {
+				delete_button__->MaxHeight  = show ? HUGE_VAL : 0;
+				delete_button__->MaxWidth   = show ? HUGE_VAL : 0;
+				delete_button__->Visibility = show ? Visibility::Visible : Visibility::Collapsed;
+			}
+		}
+#endif
+
 		void SearchBar::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
 		{
 			Titanium::UI::SearchBar::postCallAsConstructor(js_context, arguments);
@@ -42,6 +70,35 @@ namespace TitaniumWindows
 			suggest_box__->ItemsSource = suggestItems__;
 #if defined(IS_WINDOWS_10)
 			suggest_box__->QueryIcon = ref new SymbolIcon(Symbol::Find);
+
+			// Since VisualTreeHelper is only available after Loaded event is fired, we need to update the visual state then.
+			suggest_box__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
+				const auto textbox = GetTextBox(suggest_box__);
+				if (textbox && Media::VisualTreeHelper::GetChildrenCount(textbox) > 0) {
+					//
+					// assuming the first component appeared in the TextBox is Grid that includes the button
+					//
+					const auto grid = dynamic_cast<Grid^>(Media::VisualTreeHelper::GetChild(textbox, 0));
+					if (grid) {
+						const auto count = Media::VisualTreeHelper::GetChildrenCount(grid);
+						for (auto i = 0; i < count; i++) {
+							//
+							// assuming the first button appeared in the Grid is the "DeleteButton"
+							//
+							const auto button = dynamic_cast<Button^>(Media::VisualTreeHelper::GetChild(grid, i));
+							if (button) {
+								delete_button__ = button;
+								return;
+							}
+						}
+					}
+				}
+			});
+
+			// Each time text has changed, you need to update the visibility of the DeleteButton
+			suggest_box__->KeyDown += ref new Windows::UI::Xaml::Input::KeyEventHandler([this](Platform::Object^, KeyRoutedEventArgs^) {
+				set_showCancel(get_showCancel());
+			});
 #endif
 			suggest_box__->KeyUp += ref new KeyEventHandler([this](Platform::Object^ sender, KeyRoutedEventArgs^ e) {
 				if (e->Key == Windows::System::VirtualKey::Enter && querySubmitted__) {
