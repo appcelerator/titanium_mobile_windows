@@ -70,6 +70,7 @@ namespace TitaniumWindows
 #endif
 
 #if defined(IS_WINDOWS_10)
+			bool delete_button_dirty__ { false };
 			Windows::UI::Xaml::Controls::Button^ delete_button__;
 #endif
 		};
