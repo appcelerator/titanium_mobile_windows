@@ -33,9 +33,6 @@ namespace TitaniumWindows
 
 	public:
 
-		TITANIUM_PROPERTY_UNIMPLEMENTED(contactsAuthorization);
-		TITANIUM_FUNCTION_UNIMPLEMENTED(requestContactsPermissions);
-
 		ContactsModule(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 		virtual ~ContactsModule()                        = default;
 		ContactsModule(const ContactsModule&)            = default;

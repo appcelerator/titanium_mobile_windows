@@ -24,7 +24,6 @@ namespace TitaniumWindows
 	TITANIUM_MODULE_UNIMPLEMENTED(Titanium.UI.DashboardView);
 	TITANIUM_MODULE_UNIMPLEMENTED(Titanium.UI.MaskedImage);
 	TITANIUM_MODULE_UNIMPLEMENTED(Titanium.UI.RefreshControl);
-	TITANIUM_MODULE_UNIMPLEMENTED(Titanium.UI.SearchBar);
 
 	/*!
 	  @class UIModule

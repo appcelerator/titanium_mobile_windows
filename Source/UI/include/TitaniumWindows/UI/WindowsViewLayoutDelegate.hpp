@@ -515,6 +515,19 @@ namespace TitaniumWindows
 				use_own_size__ = true;
 			}
 
+			virtual bool canUseSizeWidth() const TITANIUM_NOEXCEPT
+			{
+				return is_default_width_size__ && (get_left().empty() || get_right().empty());
+			}
+
+			virtual bool canUseSizeHeight() const TITANIUM_NOEXCEPT
+			{
+				return is_default_height_size__ && (get_top().empty() || get_bottom().empty());
+			}
+
+			virtual void fixWidth(const double& width) TITANIUM_NOEXCEPT;
+			virtual void fixHeight(const double& height) TITANIUM_NOEXCEPT;
+
 			virtual void requestLayout(const bool& fire_event = false);
 
 			// compute its fixed size when either width or height (not both) is Ti.UI.SIZE
@@ -578,8 +591,8 @@ namespace TitaniumWindows
 			Windows::Foundation::EventRegistrationToken longpress_event__;
 			Windows::Foundation::EventRegistrationToken keypressed_event__;
 
-			bool is_width_size__{false};
-			bool is_height_size__{false};
+			bool is_default_width_size__{false};
+			bool is_default_height_size__{false};
 			bool is_panel__{false};
 			bool is_grid__{false};
 			bool is_border__{false};

@@ -1,36 +1,37 @@
-name: Titanium.App.Properties
+name: Titanium.Network.Socket.UDP
 platforms: [windowsphone]
+properties:
+  - name: port
+    platforms: [windowsphone]
+  - name: started
+    platforms: [windowsphone]
+  - name: data
+    platforms: [windowsphone]
+  - name: error
+    platforms: [windowsphone]
 methods:
-  - name: getBool
+  - name: start
     platforms: [windowsphone]
-  - name: getDouble
+  - name: stop
     platforms: [windowsphone]
-  - name: getInt
+  - name: sendString
     platforms: [windowsphone]
-  - name: getList
+  - name: sendBytes
     platforms: [windowsphone]
-  - name: getObject
+  - name: getPort
     platforms: [windowsphone]
-  - name: getString
+  - name: setPort
     platforms: [windowsphone]
-  - name: hasProperty
+  - name: getStarted
     platforms: [windowsphone]
-  - name: listProperties
+  - name: setStarted
     platforms: [windowsphone]
-  - name: removeAllProperties
+  - name: getData
     platforms: [windowsphone]
-  - name: removeProperty
+  - name: setData
     platforms: [windowsphone]
-  - name: setBool
+  - name: getError
     platforms: [windowsphone]
-  - name: setDouble
-    platforms: [windowsphone]
-  - name: setInt
-    platforms: [windowsphone]
-  - name: setList
-    platforms: [windowsphone]
-  - name: setObject
-    platforms: [windowsphone]
-  - name: setString
+  - name: setError
     platforms: [windowsphone]
 

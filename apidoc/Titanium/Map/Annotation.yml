@@ -1,93 +1,103 @@
-name: Titanium.UI.Tab
+name: Titanium.Map.Annotation
 platforms: [windowsphone]
 properties:
-  - name: backgroundDisabledColor
+  - name: canShowCallout
     platforms: [windowsphone]
-  - name: backgroundDisabledImage
+  - name: centerOffset
     platforms: [windowsphone]
-  - name: backgroundFocusedColor
+  - name: customView
     platforms: [windowsphone]
-  - name: backgroundFocusedImage
+  - name: draggable
     platforms: [windowsphone]
-  - name: backgroundImage
+  - name: image
     platforms: [windowsphone]
-  - name: backgroundSelectedColor
+  - name: latitude
     platforms: [windowsphone]
-  - name: backgroundSelectedImage
+  - name: leftButton
     platforms: [windowsphone]
-  - name: backgroundColor
+  - name: leftView
     platforms: [windowsphone]
-  - name: active
+  - name: longitude
     platforms: [windowsphone]
-  - name: activeTitleColor
+  - name: pincolor
+    platforms: [windowsphone]
+  - name: rightButton
+    platforms: [windowsphone]
+  - name: rightView
+    platforms: [windowsphone]
+  - name: showInfoWindow
+    platforms: [windowsphone]
+  - name: subtitle
+    platforms: [windowsphone]
+  - name: subtitleid
     platforms: [windowsphone]
   - name: title
     platforms: [windowsphone]
-  - name: titleColor
-    platforms: [windowsphone]
   - name: titleid
     platforms: [windowsphone]
-  - name: window
-    platforms: [windowsphone]
 methods:
-  - name: open
+  - name: getCanShowCallout
     platforms: [windowsphone]
-  - name: close
+  - name: setCanShowCallout
     platforms: [windowsphone]
-  - name: getBackgroundDisabledColor
+  - name: getCenterOffset
     platforms: [windowsphone]
-  - name: setBackgroundDisabledColor
+  - name: setCenterOffset
     platforms: [windowsphone]
-  - name: getBackgroundDisabledImage
+  - name: getCustomView
     platforms: [windowsphone]
-  - name: setBackgroundDisabledImage
+  - name: setCustomView
     platforms: [windowsphone]
-  - name: getBackgroundFocusedColor
+  - name: getDraggable
     platforms: [windowsphone]
-  - name: setBackgroundFocusedColor
+  - name: setDraggable
     platforms: [windowsphone]
-  - name: getBackgroundFocusedImage
+  - name: getImage
     platforms: [windowsphone]
-  - name: setBackgroundFocusedImage
+  - name: setImage
     platforms: [windowsphone]
-  - name: getBackgroundImage
+  - name: getLatitude
     platforms: [windowsphone]
-  - name: setBackgroundImage
+  - name: setLatitude
     platforms: [windowsphone]
-  - name: getBackgroundSelectedColor
+  - name: getLeftButton
     platforms: [windowsphone]
-  - name: setBackgroundSelectedColor
+  - name: setLeftButton
     platforms: [windowsphone]
-  - name: getBackgroundSelectedImage
+  - name: getLeftView
     platforms: [windowsphone]
-  - name: setBackgroundSelectedImage
+  - name: setLeftView
     platforms: [windowsphone]
-  - name: getBackgroundColor
+  - name: getLongitude
     platforms: [windowsphone]
-  - name: setBackgroundColor
+  - name: setLongitude
     platforms: [windowsphone]
-  - name: getActive
+  - name: getPincolor
     platforms: [windowsphone]
-  - name: setActive
+  - name: setPincolor
     platforms: [windowsphone]
-  - name: getActiveTitleColor
+  - name: getRightButton
     platforms: [windowsphone]
-  - name: setActiveTitleColor
+  - name: setRightButton
+    platforms: [windowsphone]
+  - name: getRightView
+    platforms: [windowsphone]
+  - name: setRightView
+    platforms: [windowsphone]
+  - name: getSubtitle
+    platforms: [windowsphone]
+  - name: setSubtitle
+    platforms: [windowsphone]
+  - name: getSubtitleid
+    platforms: [windowsphone]
+  - name: setSubtitleid
     platforms: [windowsphone]
   - name: getTitle
     platforms: [windowsphone]
   - name: setTitle
     platforms: [windowsphone]
-  - name: getTitleColor
-    platforms: [windowsphone]
-  - name: setTitleColor
-    platforms: [windowsphone]
   - name: getTitleid
     platforms: [windowsphone]
   - name: setTitleid
-    platforms: [windowsphone]
-  - name: getWindow
-    platforms: [windowsphone]
-  - name: setWindow
     platforms: [windowsphone]
 

@@ -1,71 +1,63 @@
-name: Titanium.App
+name: Titanium.Map
 platforms: [windowsphone]
 properties:
-  - name: EVENT_ACCESSIBILITY_ANNOUNCEMENT
+  - name: HYBRID_TYPE
     platforms: [windowsphone]
-  - name: EVENT_ACCESSIBILITY_CHANGED
+  - name: SATELLITE_TYPE
     platforms: [windowsphone]
-  - name: analytics
+  - name: NORMAL_TYPE
     platforms: [windowsphone]
-  - name: copyright
+  - name: TERRAIN_TYPE
     platforms: [windowsphone]
-  - name: deployType
+  - name: ANNOTATION_DRAG_STATE_END
     platforms: [windowsphone]
-  - name: description
+  - name: ANNOTATION_DRAG_STATE_START
     platforms: [windowsphone]
-  - name: guid
+  - name: ANNOTATION_AZURE
     platforms: [windowsphone]
-  - name: id
+  - name: ANNOTATION_BLUE
     platforms: [windowsphone]
-  - name: installId
+  - name: ANNOTATION_CYAN
     platforms: [windowsphone]
-  - name: keyboardVisible
+  - name: ANNOTATION_GREEN
     platforms: [windowsphone]
-  - name: name
+  - name: ANNOTATION_MAGENTA
     platforms: [windowsphone]
-  - name: proximityDetection
+  - name: ANNOTATION_ORANGE
     platforms: [windowsphone]
-  - name: proximityState
+  - name: ANNOTATION_PURPLE
     platforms: [windowsphone]
-  - name: publisher
+  - name: ANNOTATION_RED
     platforms: [windowsphone]
-  - name: sessionId
+  - name: ANNOTATION_ROSE
     platforms: [windowsphone]
-  - name: url
+  - name: ANNOTATION_VIOLET
     platforms: [windowsphone]
-  - name: version
+  - name: ANNOTATION_YELLOW
+    platforms: [windowsphone]
+  - name: OVERLAY_LEVEL_ABOVE_LABELS
+    platforms: [windowsphone]
+  - name: OVERLAY_LEVEL_ABOVE_ROADS
+    platforms: [windowsphone]
+  - name: SERVICE_DISABLED
+    platforms: [windowsphone]
+  - name: SERVICE_INVALID
+    platforms: [windowsphone]
+  - name: SERVICE_MISSING
+    platforms: [windowsphone]
+  - name: SERVICE_VERSION_UPDATE_REQUIRED
+    platforms: [windowsphone]
+  - name: SUCCESS
     platforms: [windowsphone]
 methods:
-  - name: getAnalytics
+  - name: createView
     platforms: [windowsphone]
-  - name: getCopyright
+  - name: createAnnotation
     platforms: [windowsphone]
-  - name: getDeployType
+  - name: createRoute
     platforms: [windowsphone]
-  - name: getDescription
+  - name: createCamera
     platforms: [windowsphone]
-  - name: getGuid
-    platforms: [windowsphone]
-  - name: getId
-    platforms: [windowsphone]
-  - name: getInstallId
-    platforms: [windowsphone]
-  - name: getKeyboardVisible
-    platforms: [windowsphone]
-  - name: getName
-    platforms: [windowsphone]
-  - name: getProximityDetection
-    platforms: [windowsphone]
-  - name: setProximityDetection
-    platforms: [windowsphone]
-  - name: getProximityState
-    platforms: [windowsphone]
-  - name: getPublisher
-    platforms: [windowsphone]
-  - name: getSessionId
-    platforms: [windowsphone]
-  - name: getUrl
-    platforms: [windowsphone]
-  - name: getVersion
+  - name: isGooglePlayServicesAvailable
     platforms: [windowsphone]
 

@@ -5,6 +5,10 @@ properties:
     platforms: [windowsphone]
   - name: fullscreen
     platforms: [windowsphone]
+  - name: title
+    platforms: [windowsphone]
+  - name: titleid
+    platforms: [windowsphone]
 methods:
   - name: close
     platforms: [windowsphone]
@@ -17,5 +21,13 @@ methods:
   - name: getFullscreen
     platforms: [windowsphone]
   - name: setFullscreen
+    platforms: [windowsphone]
+  - name: getTitle
+    platforms: [windowsphone]
+  - name: setTitle
+    platforms: [windowsphone]
+  - name: getTitleid
+    platforms: [windowsphone]
+  - name: setTitleid
     platforms: [windowsphone]
 
