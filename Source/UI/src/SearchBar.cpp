@@ -121,7 +121,9 @@ namespace TitaniumWindows
 			});
 #endif
 			suggest_box__->KeyUp += ref new KeyEventHandler([this](Platform::Object^ sender, KeyRoutedEventArgs^ e) {
+#if defined(IS_WINDOWS_10)
 				updateCancelButtonVisibility(get_showCancel());
+#endif
 				if (e->Key == Windows::System::VirtualKey::Enter && querySubmitted__) {
 					querySubmitted__(TitaniumWindows::Utility::ConvertString(suggest_box__->Text));
 				}
