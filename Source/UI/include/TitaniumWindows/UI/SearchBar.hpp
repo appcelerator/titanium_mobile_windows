@@ -55,6 +55,7 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_10)
 			// showCancel is only supported on Windows 10
 			virtual void set_showCancel(const bool&) TITANIUM_NOEXCEPT override;
+			virtual void updateCancelButtonVisibility(const bool&) TITANIUM_NOEXCEPT;
 #endif
 
 		private:
