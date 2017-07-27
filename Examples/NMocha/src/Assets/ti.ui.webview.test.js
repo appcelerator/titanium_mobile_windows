@@ -9,10 +9,10 @@ var should = require('should'),
 	utilities = require('./utilities/utilities');
 
 describe('Titanium.UI.WebView', function () {
+	this.timeout(6e4);
 
-	// Skip this on desktop Windows 10 apps because it crashes the app now.
-	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('url', function (finish) {
-		this.timeout(10000);
+	// Skip this on Windows 10 apps because internal network is unstable.
+	(utilities.isWindows10() ? it.skip : it)('url', function (finish) {
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
 		});
@@ -33,7 +33,6 @@ describe('Titanium.UI.WebView', function () {
 	});
 
 	it('url(local)', function (finish) {
-		this.timeout(10000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
 		});
@@ -53,7 +52,6 @@ describe('Titanium.UI.WebView', function () {
 	});
 
 	(utilities.isWindows() ? it : it.skip)('url (ms-appx)', function (finish) {
-	    this.timeout(10000);
 	    var w = Ti.UI.createWindow({
 	        backgroundColor: 'blue'
 	    });
@@ -74,7 +72,6 @@ describe('Titanium.UI.WebView', function () {
 	});
 
 	(utilities.isWindows() ? it : it.skip)('url (ms-appx-web)', function (finish) {
-	    this.timeout(10000);
 	    var w = Ti.UI.createWindow({
 	        backgroundColor: 'blue'
 	    });
@@ -95,7 +92,6 @@ describe('Titanium.UI.WebView', function () {
 	});
 
 	(utilities.isWindows() ? it : it.skip)('url (ms-appx-data)', function (finish) {
-	    this.timeout(10000);
 	    function prepare(files) {
 	        var webroot = Ti.Filesystem.applicationDataDirectory + 'webroot';
 	        var webroot_file = Ti.Filesystem.getFile(webroot);
@@ -130,7 +126,6 @@ describe('Titanium.UI.WebView', function () {
 
 	// Skip this on desktop Windows apps because it crashes the app now.
 	((utilities.isWindows10() && utilities.isWindowsDesktop()) ? it.skip : it)('evalJS', function (finish) {
-		this.timeout(10000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
 		});
