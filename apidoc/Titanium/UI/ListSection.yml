@@ -1,27 +1,27 @@
-name: Titanium.Locale
+name: Titanium.UI.ListSection
 platforms: [windowsphone]
 properties:
-  - name: currentCountry
+  - name: footerTitle
     platforms: [windowsphone]
-  - name: currentLanguage
+  - name: headerTitle
     platforms: [windowsphone]
-  - name: currentLocale
+  - name: footerView
+    platforms: [windowsphone]
+  - name: items
+    platforms: [windowsphone]
+  - name: headerView
     platforms: [windowsphone]
 methods:
-  - name: getCurrencyCode
+  - name: appendItems
     platforms: [windowsphone]
-  - name: getCurrencySymbol
+  - name: insertItemsAt
     platforms: [windowsphone]
-  - name: getLocaleCurrencySymbol
+  - name: replaceItemsAt
     platforms: [windowsphone]
-  - name: getCurrentCountry
+  - name: deleteItemsAt
     platforms: [windowsphone]
-  - name: getCurrentLanguage
+  - name: getItemAt
     platforms: [windowsphone]
-  - name: getCurrentLocale
-    platforms: [windowsphone]
-  - name: getString
-    platforms: [windowsphone]
-  - name: setLanguage
+  - name: updateItemAt
     platforms: [windowsphone]
 

@@ -334,6 +334,8 @@ methods:
     platforms: [windowsphone]
   - name: createScrollView
     platforms: [windowsphone]
+  - name: createSearchBar
+    platforms: [windowsphone]
   - name: createSlider
     platforms: [windowsphone]
   - name: createSwitch

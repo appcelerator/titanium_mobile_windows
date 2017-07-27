@@ -1,59 +1,59 @@
-name: Titanium.UI.Label
+name: Titanium.Network.Socket.TCP
 platforms: [windowsphone]
 properties:
-  - name: autoLink
+  - name: host
     platforms: [windowsphone]
-  - name: color
+  - name: port
     platforms: [windowsphone]
-  - name: font
+  - name: listenQueueSize
     platforms: [windowsphone]
-  - name: textid
+  - name: timeout
     platforms: [windowsphone]
-  - name: text
+  - name: connected
     platforms: [windowsphone]
-  - name: textAlign
+  - name: error
     platforms: [windowsphone]
-  - name: verticalAlign
+  - name: accepted
     platforms: [windowsphone]
-  - name: wordWrap
-    platforms: [windowsphone]
-  - name: attributedString
+  - name: state
     platforms: [windowsphone]
 methods:
-  - name: getAutoLink
+  - name: close
     platforms: [windowsphone]
-  - name: setAutoLink
+  - name: connect
     platforms: [windowsphone]
-  - name: getColor
+  - name: listen
     platforms: [windowsphone]
-  - name: setColor
+  - name: accept
     platforms: [windowsphone]
-  - name: getFont
+  - name: getHost
     platforms: [windowsphone]
-  - name: setFont
+  - name: setHost
     platforms: [windowsphone]
-  - name: getTextid
+  - name: getPort
     platforms: [windowsphone]
-  - name: setTextid
+  - name: setPort
     platforms: [windowsphone]
-  - name: getText
+  - name: getListenQueueSize
     platforms: [windowsphone]
-  - name: setText
+  - name: setListenQueueSize
     platforms: [windowsphone]
-  - name: getTextAlign
+  - name: getTimeout
     platforms: [windowsphone]
-  - name: setTextAlign
+  - name: setTimeout
     platforms: [windowsphone]
-  - name: getVerticalAlign
+  - name: getConnected
     platforms: [windowsphone]
-  - name: setVerticalAlign
+  - name: setConnected
     platforms: [windowsphone]
-  - name: getWordWrap
+  - name: getError
     platforms: [windowsphone]
-  - name: setWordWrap
+  - name: setError
     platforms: [windowsphone]
-  - name: getAttributedString
+  - name: getAccepted
     platforms: [windowsphone]
-  - name: setAttributedString
+  - name: setAccepted
+    platforms: [windowsphone]
+  - name: getState
     platforms: [windowsphone]
 

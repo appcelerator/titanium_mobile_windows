@@ -1,0 +1,23 @@
+name: Titanium.UI.SearchBar
+platforms: [windowsphone]
+properties:
+  - name: hintText
+    platforms: [windowsphone]
+  - name: hinttextid
+    platforms: [windowsphone]
+  - name: value
+    platforms: [windowsphone]
+methods:
+  - name: getHintText
+    platforms: [windowsphone]
+  - name: setHintText
+    platforms: [windowsphone]
+  - name: getHinttextid
+    platforms: [windowsphone]
+  - name: setHinttextid
+    platforms: [windowsphone]
+  - name: getValue
+    platforms: [windowsphone]
+  - name: setValue
+    platforms: [windowsphone]
+

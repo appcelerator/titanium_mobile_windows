@@ -1,90 +1,81 @@
-name: Titanium.UI.TableView
+name: Titanium.Map.View
 platforms: [windowsphone]
 properties:
-  - name: data
+  - name: animate
     platforms: [windowsphone]
-  - name: footerTitle
+  - name: camera
     platforms: [windowsphone]
-  - name: footerView
+  - name: annotations
     platforms: [windowsphone]
-  - name: headerTitle
+  - name: compassEnabled
     platforms: [windowsphone]
-  - name: headerView
+  - name: enableZoomControls
     platforms: [windowsphone]
-  - name: search
+  - name: mapType
     platforms: [windowsphone]
-  - name: sectionCount
+  - name: maxZoomLevel
     platforms: [windowsphone]
-  - name: sections
+  - name: minZoomLevel
     platforms: [windowsphone]
-  - name: separatorColor
+  - name: pitchEnabled
+    platforms: [windowsphone]
+  - name: region
+    platforms: [windowsphone]
+  - name: rotateEnabled
+    platforms: [windowsphone]
+  - name: showsBuildings
+    platforms: [windowsphone]
+  - name: showsPointsOfInterest
+    platforms: [windowsphone]
+  - name: traffic
+    platforms: [windowsphone]
+  - name: userLocation
+    platforms: [windowsphone]
+  - name: userLocationButton
+    platforms: [windowsphone]
+  - name: zOrderOnTop
     platforms: [windowsphone]
 methods:
-  - name: getData
+  - name: addAnnotation
     platforms: [windowsphone]
-  - name: setData
+  - name: addAnnotations
     platforms: [windowsphone]
-  - name: appendRow
+  - name: removeAllAnnotations
     platforms: [windowsphone]
-  - name: appendSection
+  - name: removeAnnotation
     platforms: [windowsphone]
-  - name: deleteRow
+  - name: removeAnnotations
     platforms: [windowsphone]
-  - name: deleteSection
+  - name: zoom
     platforms: [windowsphone]
-  - name: insertRowAfter
+  - name: setCamera
     platforms: [windowsphone]
-  - name: insertSectionAfter
+  - name: setAnnotations
     platforms: [windowsphone]
-  - name: insertRowBefore
+  - name: setAnimate
     platforms: [windowsphone]
-  - name: insertSectionBefore
+  - name: setCompassEnabled
     platforms: [windowsphone]
-  - name: scrollToIndex
+  - name: setEnableZoomControls
     platforms: [windowsphone]
-  - name: scrollToTop
+  - name: setMapType
     platforms: [windowsphone]
-  - name: selectRow
+  - name: setPitchEnabled
     platforms: [windowsphone]
-  - name: deselectRow
+  - name: setRegion
     platforms: [windowsphone]
-  - name: updateRow
+  - name: setRotateEnabled
     platforms: [windowsphone]
-  - name: updateSection
+  - name: setShowsBuildings
     platforms: [windowsphone]
-  - name: getFooterTitle
+  - name: setShowsPointsOfInterest
     platforms: [windowsphone]
-  - name: setFooterTitle
+  - name: setTraffic
     platforms: [windowsphone]
-  - name: getFooterView
+  - name: setUserLocation
     platforms: [windowsphone]
-  - name: setFooterView
+  - name: setUserLocationButton
     platforms: [windowsphone]
-  - name: getHeaderTitle
-    platforms: [windowsphone]
-  - name: setHeaderTitle
-    platforms: [windowsphone]
-  - name: getHeaderView
-    platforms: [windowsphone]
-  - name: setHeaderView
-    platforms: [windowsphone]
-  - name: getSearch
-    platforms: [windowsphone]
-  - name: setSearch
-    platforms: [windowsphone]
-  - name: getSectionCount
-    platforms: [windowsphone]
-  - name: getSections
-    platforms: [windowsphone]
-  - name: setSections
-    platforms: [windowsphone]
-  - name: getSeparatorColor
-    platforms: [windowsphone]
-  - name: setSeparatorColor
-    platforms: [windowsphone]
-events:
-  - name: scroll
-    platforms: [windowsphone]
-  - name: scrollend
+  - name: setZOrderOnTop
     platforms: [windowsphone]
 

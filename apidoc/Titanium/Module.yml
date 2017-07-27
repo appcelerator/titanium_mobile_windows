@@ -1,27 +1,29 @@
-name: Titanium.Locale
+name: Titanium.Module
 platforms: [windowsphone]
 properties:
-  - name: currentCountry
+  - name: apiName
     platforms: [windowsphone]
-  - name: currentLanguage
+  - name: bubbleParent
     platforms: [windowsphone]
-  - name: currentLocale
+  - name: lifecycleContainer
     platforms: [windowsphone]
 methods:
-  - name: getCurrencyCode
+  - name: addEventListener
     platforms: [windowsphone]
-  - name: getCurrencySymbol
+  - name: applyProperties
     platforms: [windowsphone]
-  - name: getLocaleCurrencySymbol
+  - name: fireEvent
     platforms: [windowsphone]
-  - name: getCurrentCountry
+  - name: getApiName
     platforms: [windowsphone]
-  - name: getCurrentLanguage
+  - name: getBubbleParent
     platforms: [windowsphone]
-  - name: getCurrentLocale
+  - name: getLifecycleContainer
     platforms: [windowsphone]
-  - name: getString
+  - name: removeEventListener
     platforms: [windowsphone]
-  - name: setLanguage
+  - name: setBubbleParent
+    platforms: [windowsphone]
+  - name: setLifecycleContainer
     platforms: [windowsphone]
 

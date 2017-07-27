@@ -23,6 +23,9 @@ namespace TitaniumWindows
 	class TITANIUMWINDOWS_EXPORT Blob final : public Titanium::Blob, public JSExport<Blob>
 	{
 	public:
+		TITANIUM_FUNCTION_UNIMPLEMENTED(imageWithAlpha);
+		TITANIUM_FUNCTION_UNIMPLEMENTED(imageWithRoundedCorner);
+		TITANIUM_FUNCTION_UNIMPLEMENTED(imageWithTransparentBorder);
 		::Platform::Guid getImageEncoder();
 
 		virtual void construct(const std::vector<std::uint8_t>& data, const std::string& mimetype) TITANIUM_NOEXCEPT;

@@ -161,4 +161,40 @@ describe('Titanium.UI.TextField', function () {
 		win.open();
 	});
 
+	it('TIMOB-24828', function (finish) {
+	    this.timeout(5000);
+	    var text0 = Ti.UI.createTextField({
+	        value: 'text 0',
+	        top: 50,
+            left: 10, right: 10
+	    });
+	    var text1 = Ti.UI.createTextField({
+	        value: 'text 1',
+	        top: 150,
+	        left: 10, right: 10
+	    });
+	    var text2 = Ti.UI.createTextField({
+	        value: 'text 2',
+	        top: 250,
+	        left: 10, right: 10
+	    });
+	    var win = Ti.UI.createWindow({
+	        backgroundColor: '#eee'
+	    });
+	    win.add(text0);
+	    win.add(text1);
+	    win.add(text2);
+
+	    win.addEventListener('open', function () {
+	        setTimeout(function () {
+	            should(text0.rect.width).eql(win.rect.width - 20);
+	            should(text1.rect.width).eql(win.rect.width - 20);
+	            should(text2.rect.width).eql(win.rect.width - 20);
+	            win.close();
+	            finish();
+	        }, 3000);
+	    });
+	    win.open();
+	});
+
 });

@@ -1,90 +1,79 @@
-name: Titanium.UI.TableView
+name: Titanium.XML.EntityReference
 platforms: [windowsphone]
 properties:
-  - name: data
+  - name: ATTRIBUTE_NODE
     platforms: [windowsphone]
-  - name: footerTitle
+  - name: CDATA_SECTION_NODE
     platforms: [windowsphone]
-  - name: footerView
+  - name: COMMENT_NODE
     platforms: [windowsphone]
-  - name: headerTitle
+  - name: DOCUMENT_FRAGMENT_NODE
     platforms: [windowsphone]
-  - name: headerView
+  - name: DOCUMENT_NODE
     platforms: [windowsphone]
-  - name: search
+  - name: DOCUMENT_TYPE_NODE
     platforms: [windowsphone]
-  - name: sectionCount
+  - name: ELEMENT_NODE
     platforms: [windowsphone]
-  - name: sections
+  - name: ENTITY_NODE
     platforms: [windowsphone]
-  - name: separatorColor
+  - name: ENTITY_REFERENCE_NODE
+    platforms: [windowsphone]
+  - name: NOTATION_NODE
+    platforms: [windowsphone]
+  - name: PROCESSING_INSTRUCTION_NODE
+    platforms: [windowsphone]
+  - name: TEXT_NODE
+    platforms: [windowsphone]
+  - name: attributes
+    platforms: [windowsphone]
+  - name: childNodes
+    platforms: [windowsphone]
+  - name: firstChild
+    platforms: [windowsphone]
+  - name: lastChild
+    platforms: [windowsphone]
+  - name: localName
+    platforms: [windowsphone]
+  - name: namespaceURI
+    platforms: [windowsphone]
+  - name: nextSibling
+    platforms: [windowsphone]
+  - name: nodeName
+    platforms: [windowsphone]
+  - name: nodeType
+    platforms: [windowsphone]
+  - name: nodeValue
+    platforms: [windowsphone]
+  - name: ownerDocument
+    platforms: [windowsphone]
+  - name: parentNode
+    platforms: [windowsphone]
+  - name: prefix
+    platforms: [windowsphone]
+  - name: previousSibling
+    platforms: [windowsphone]
+  - name: text
+    platforms: [windowsphone]
+  - name: textContent
     platforms: [windowsphone]
 methods:
-  - name: getData
+  - name: appendChild
     platforms: [windowsphone]
-  - name: setData
+  - name: cloneNode
     platforms: [windowsphone]
-  - name: appendRow
+  - name: hasAttributes
     platforms: [windowsphone]
-  - name: appendSection
+  - name: hasChildNodes
     platforms: [windowsphone]
-  - name: deleteRow
+  - name: insertBefore
     platforms: [windowsphone]
-  - name: deleteSection
+  - name: isSupported
     platforms: [windowsphone]
-  - name: insertRowAfter
+  - name: normalize
     platforms: [windowsphone]
-  - name: insertSectionAfter
+  - name: removeChild
     platforms: [windowsphone]
-  - name: insertRowBefore
-    platforms: [windowsphone]
-  - name: insertSectionBefore
-    platforms: [windowsphone]
-  - name: scrollToIndex
-    platforms: [windowsphone]
-  - name: scrollToTop
-    platforms: [windowsphone]
-  - name: selectRow
-    platforms: [windowsphone]
-  - name: deselectRow
-    platforms: [windowsphone]
-  - name: updateRow
-    platforms: [windowsphone]
-  - name: updateSection
-    platforms: [windowsphone]
-  - name: getFooterTitle
-    platforms: [windowsphone]
-  - name: setFooterTitle
-    platforms: [windowsphone]
-  - name: getFooterView
-    platforms: [windowsphone]
-  - name: setFooterView
-    platforms: [windowsphone]
-  - name: getHeaderTitle
-    platforms: [windowsphone]
-  - name: setHeaderTitle
-    platforms: [windowsphone]
-  - name: getHeaderView
-    platforms: [windowsphone]
-  - name: setHeaderView
-    platforms: [windowsphone]
-  - name: getSearch
-    platforms: [windowsphone]
-  - name: setSearch
-    platforms: [windowsphone]
-  - name: getSectionCount
-    platforms: [windowsphone]
-  - name: getSections
-    platforms: [windowsphone]
-  - name: setSections
-    platforms: [windowsphone]
-  - name: getSeparatorColor
-    platforms: [windowsphone]
-  - name: setSeparatorColor
-    platforms: [windowsphone]
-events:
-  - name: scroll
-    platforms: [windowsphone]
-  - name: scrollend
+  - name: replaceChild
     platforms: [windowsphone]
 

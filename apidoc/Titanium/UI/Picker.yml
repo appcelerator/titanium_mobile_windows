@@ -1,43 +1,49 @@
-name: Titanium.UI.WebView
+name: Titanium.UI.Picker
 platforms: [windowsphone]
 properties:
-  - name: data
+  - name: columns
     platforms: [windowsphone]
-  - name: html
+  - name: maxDate
     platforms: [windowsphone]
-  - name: loading
+  - name: minDate
     platforms: [windowsphone]
-  - name: url
+  - name: value
+    platforms: [windowsphone]
+  - name: visibleItems
+    platforms: [windowsphone]
+  - name: type
     platforms: [windowsphone]
 methods:
-  - name: canGoBack
+  - name: add
     platforms: [windowsphone]
-  - name: canGoForward
+  - name: reloadColumn
     platforms: [windowsphone]
-  - name: evalJS
+  - name: getSelectedRow
     platforms: [windowsphone]
-  - name: goBack
+  - name: setSelectedRow
     platforms: [windowsphone]
-  - name: goForward
+  - name: getColumns
     platforms: [windowsphone]
-  - name: reload
+  - name: setColumns
     platforms: [windowsphone]
-  - name: stopLoading
+  - name: getMaxDate
     platforms: [windowsphone]
-  - name: getData
+  - name: setMaxDate
     platforms: [windowsphone]
-  - name: setData
+  - name: getMinDate
     platforms: [windowsphone]
-  - name: getHtml
+  - name: setMinDate
     platforms: [windowsphone]
-  - name: setHtml
+  - name: getValue
     platforms: [windowsphone]
-  - name: getLoading
+  - name: setValue
     platforms: [windowsphone]
-  - name: setLoading
+  - name: getVisibleItems
     platforms: [windowsphone]
-  - name: getUrl
+  - name: setVisibleItems
     platforms: [windowsphone]
-  - name: setUrl
+  - name: getType
+    platforms: [windowsphone]
+  - name: setType
     platforms: [windowsphone]
 
