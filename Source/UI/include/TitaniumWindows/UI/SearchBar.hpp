@@ -35,6 +35,11 @@ namespace TitaniumWindows
 			TITANIUM_FUNCTION_UNIMPLEMENTED(remove);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(font);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(style);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(keyboardType);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(keyboardAppearance);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(prompt);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(promptid);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(showBookmark);
 
 			SearchBar(const JSContext&) TITANIUM_NOEXCEPT;
 
@@ -73,6 +78,7 @@ namespace TitaniumWindows
 #endif
 
 #if defined(IS_WINDOWS_10)
+			bool delete_button_dirty__ { false };
 			Windows::UI::Xaml::Controls::Button^ delete_button__;
 #endif
 		};
