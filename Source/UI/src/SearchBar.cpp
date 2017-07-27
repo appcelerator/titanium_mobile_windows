@@ -49,14 +49,20 @@ namespace TitaniumWindows
 			return nullptr;
 		}
 
+		void SearchBar::updateCancelButtonVisibility(const bool& show) TITANIUM_NOEXCEPT
+		{
+			const auto visible = suggest_box__->Text->IsEmpty() ? false : show;
+			if (delete_button__) {
+				delete_button__->MaxHeight  = visible ? HUGE_VAL : 0;
+				delete_button__->MaxWidth   = visible ? HUGE_VAL : 0;
+				delete_button__->Visibility = visible ? Visibility::Visible : Visibility::Collapsed;
+			}
+		}
+
 		void SearchBar::set_showCancel(const bool& show) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::SearchBar::set_showCancel(show);
-			if (delete_button__) {
-				delete_button__->MaxHeight  = show ? HUGE_VAL : 0;
-				delete_button__->MaxWidth   = show ? HUGE_VAL : 0;
-				delete_button__->Visibility = show ? Visibility::Visible : Visibility::Collapsed;
-			}
+			updateCancelButtonVisibility(show);
 		}
 #endif
 
@@ -97,7 +103,15 @@ namespace TitaniumWindows
 
 			// Each time text has changed, you need to update the visibility of the DeleteButton
 			suggest_box__->KeyDown += ref new Windows::UI::Xaml::Input::KeyEventHandler([this](Platform::Object^, KeyRoutedEventArgs^) {
-				set_showCancel(get_showCancel());
+				updateCancelButtonVisibility(get_showCancel());
+			});
+			// Hide the DeleteButton whenever SearchBar lost focus, 
+			suggest_box__->LostFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+				updateCancelButtonVisibility(false);
+			});
+			// Resture DeleteButton status when we got focus
+			suggest_box__->GotFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+				updateCancelButtonVisibility(get_showCancel());
 			});
 #endif
 			suggest_box__->KeyUp += ref new KeyEventHandler([this](Platform::Object^ sender, KeyRoutedEventArgs^ e) {
