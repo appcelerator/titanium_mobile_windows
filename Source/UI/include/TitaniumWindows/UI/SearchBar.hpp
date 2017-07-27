@@ -43,8 +43,6 @@ namespace TitaniumWindows
 			TITANIUM_PROPERTY_UNIMPLEMENTED(prompt);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(promptid);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(showBookmark);
-			TITANIUM_PROPERTY_UNIMPLEMENTED(showCancel);
-
 
 			SearchBar(const JSContext&) TITANIUM_NOEXCEPT;
 
@@ -83,6 +81,7 @@ namespace TitaniumWindows
 #endif
 
 #if defined(IS_WINDOWS_10)
+			bool delete_button_dirty__ { false };
 			Windows::UI::Xaml::Controls::Button^ delete_button__;
 #endif
 		};

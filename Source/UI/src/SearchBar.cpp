@@ -26,6 +26,7 @@ namespace TitaniumWindows
 			: Titanium::UI::SearchBar(js_context)
 		{
 			TITANIUM_LOG_DEBUG("SearchBar::ctor Initialize");
+			showCancel__ = true; // native default
 		}
 
 		SearchBar::~SearchBar()
@@ -51,6 +52,10 @@ namespace TitaniumWindows
 
 		void SearchBar::updateCancelButtonVisibility(const bool& show) TITANIUM_NOEXCEPT
 		{
+			// if no one touches showCancel property, we don't want to use our hack
+			// because native implementation should be faster and safer.
+			if (!delete_button_dirty__) return;
+
 			const auto visible = suggest_box__->Text->IsEmpty() ? false : show;
 			if (delete_button__) {
 				delete_button__->MaxHeight  = visible ? HUGE_VAL : 0;
@@ -62,6 +67,7 @@ namespace TitaniumWindows
 		void SearchBar::set_showCancel(const bool& show) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::SearchBar::set_showCancel(show);
+			delete_button_dirty__ = true; // indicate we need to use our hack
 			updateCancelButtonVisibility(show);
 		}
 #endif
@@ -115,6 +121,7 @@ namespace TitaniumWindows
 			});
 #endif
 			suggest_box__->KeyUp += ref new KeyEventHandler([this](Platform::Object^ sender, KeyRoutedEventArgs^ e) {
+				updateCancelButtonVisibility(get_showCancel());
 				if (e->Key == Windows::System::VirtualKey::Enter && querySubmitted__) {
 					querySubmitted__(TitaniumWindows::Utility::ConvertString(suggest_box__->Text));
 				}
