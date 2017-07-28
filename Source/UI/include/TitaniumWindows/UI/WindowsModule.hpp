@@ -43,11 +43,13 @@ namespace TitaniumWindows
 			TITANIUM_PROPERTY_READONLY_DEF(AppBarToggleButton);
 			TITANIUM_PROPERTY_READONLY_DEF(AppBarSeparator);
 			TITANIUM_PROPERTY_READONLY_DEF(SystemIcon);
+			TITANIUM_PROPERTY_READONLY_DEF(ListView);
 
 			TITANIUM_FUNCTION_DEF(createCommandBar);
 			TITANIUM_FUNCTION_DEF(createAppBarButton);
 			TITANIUM_FUNCTION_DEF(createAppBarToggleButton);
 			TITANIUM_FUNCTION_DEF(createAppBarSeparator);
+			TITANIUM_FUNCTION_DEF(createListView);
 		};
 	}  // namespace UI
 }  // namespace TitaniumWindows

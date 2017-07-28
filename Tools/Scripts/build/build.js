@@ -244,6 +244,16 @@ function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch,
 		header = lib.toLowerCase() + '_export.h';
 		wrench.mkdirSyncRecursive(path.join(destDir, lib, 'include'));
 		fs.writeFileSync(path.join(destDir, lib, 'include', header), fs.readFileSync(path.join(sourceDir, platformAbbrev, arch, suffix, header)));
+
+		// TitaniumWindows_UI has extra library
+		if (lib == 'TitaniumWindows_UI') {
+			var src_extra  = path.join(libSrcDir,  'ListViewModel.winmd'),
+				dest_extra = path.join(libDestDir, 'ListViewModel.winmd');
+			if (fs.existsSync(src_extra)) {
+				fs.writeFileSync(dest_extra, fs.readFileSync(src_extra));
+			}
+		}
+
 	}
 	callback();
 }

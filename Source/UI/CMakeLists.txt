@@ -5,13 +5,20 @@
 # Please see the LICENSE included with this distribution for details.
 cmake_minimum_required(VERSION 3.0.0)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
-  set(PLATFORM wp)
+if (${CMAKE_SYSTEM_VERSION} MATCHES "^10.0")
+  set(PLATFORM win10)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
+  set(PLATFORM phone)
   add_definitions("-DPHONE")
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
   set(PLATFORM store)
 else()
   message(FATAL_ERROR "This app supports Store / Phone only.")
+endif()
+
+set(Ti_ARCH "x86")
+if(CMAKE_GENERATOR MATCHES "^Visual Studio .+ ARM$")
+  set(Ti_ARCH "arm")
 endif()
 
 project(TitaniumWindows_UI)
@@ -130,6 +137,8 @@ set(SOURCE_UI_Windows
   src/Windows/SystemIcon.cpp
   include/TitaniumWindows/UI/Windows/ViewHelper.hpp
   src/Windows/ViewHelper.cpp
+  include/TitaniumWindows/UI/Windows/ListView.hpp
+  src/Windows/ListView.cpp
   )
 
 source_group(Titanium\\UI\\Windows FILES ${SOURCE_UI_Windows})
@@ -211,6 +220,10 @@ set_property(TARGET TitaniumWindows_UI PROPERTY SOVERSION 0)
 set_property(TARGET TitaniumWindows_UI PROPERTY INTERFACE_TitaniumWindows_UI_MAJOR_VERSION 0)
 set_property(TARGET TitaniumWindows_UI APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING TitaniumWindows_UI_MAJOR_VERSION
+  )
+
+set_property(TARGET TitaniumWindows_UI PROPERTY VS_WINRT_REFERENCES 
+  ${PROJECT_SOURCE_DIR}/lib/${PLATFORM}/${Ti_ARCH}/ListViewModel.winmd
   )
 
 install(TARGETS TitaniumWindows_UI EXPORT TitaniumWindows_UI_Targets
