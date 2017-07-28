@@ -588,6 +588,16 @@ namespace Titanium
 				event_delegate__ = event_delegate;
 			}
 
+			virtual void set_parent(const std::shared_ptr<View>& parent)
+			{
+				parent__ = parent;
+			}
+
+			virtual std::shared_ptr<View> get_parent()
+			{
+				return parent__;
+			}
+
 			virtual void blur()
 			{
 				TITANIUM_LOG_DEBUG("ViewLayoutDelegate::blur() ", this);
@@ -612,7 +622,8 @@ namespace Titanium
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
-			std::vector<std::shared_ptr<Titanium::UI::View>> children__;
+			std::shared_ptr<View> parent__;
+			std::vector<std::shared_ptr<View>> children__;
 			std::string backgroundImage__;
 			std::string backgroundColor__;
 			std::string borderColor__;

@@ -1,0 +1,12 @@
+name: Titanium.Filesystem.FileStream
+platforms: [windowsphone]
+methods:
+  - name: read
+    platforms: [windowsphone]
+  - name: write
+    platforms: [windowsphone]
+  - name: close
+    platforms: [windowsphone]
+  - name: construct
+    platforms: [windowsphone]
+

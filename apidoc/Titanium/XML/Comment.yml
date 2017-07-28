@@ -1,0 +1,14 @@
+name: Titanium.XML.Comment
+platforms: [windowsphone]
+methods:
+  - name: substringData
+    platforms: [windowsphone]
+  - name: appendData
+    platforms: [windowsphone]
+  - name: insertData
+    platforms: [windowsphone]
+  - name: deleteData
+    platforms: [windowsphone]
+  - name: replaceData
+    platforms: [windowsphone]
+

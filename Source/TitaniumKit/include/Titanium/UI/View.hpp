@@ -364,8 +364,6 @@ namespace Titanium
 
 #pragma warning(push)
 #pragma warning(disable : 4251)
-			std::shared_ptr<View> parent__;
-
 			std::shared_ptr<ViewLayoutEventDelegate> layoutEventDelegate__;
 			std::shared_ptr<ViewLayoutDelegate> layoutDelegate__;
 

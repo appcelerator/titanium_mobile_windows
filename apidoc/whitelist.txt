@@ -355,3 +355,18 @@ M getLifecycleContainer
 M removeEventListener
 M setBubbleParent
 M setLifecycleContainer
+
+C Titanium.UI.ScrollView
+E scroll
+E scrollend
+E scrollEnd
+E scale
+E dragstart
+E dragStart
+E dragend
+E dragEnd
+
+
+C Titanium.UI.TableView
+E scroll
+E scrollend

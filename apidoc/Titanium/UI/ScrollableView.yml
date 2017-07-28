@@ -3,6 +3,8 @@ platforms: [windowsphone]
 properties:
   - name: currentPage
     platforms: [windowsphone]
+  - name: scrollingEnabled
+    platforms: [windowsphone]
   - name: views
     platforms: [windowsphone]
 methods:
@@ -19,6 +21,10 @@ methods:
   - name: getCurrentPage
     platforms: [windowsphone]
   - name: setCurrentPage
+    platforms: [windowsphone]
+  - name: getScrollingEnabled
+    platforms: [windowsphone]
+  - name: setScrollingEnabled
     platforms: [windowsphone]
   - name: getViews
     platforms: [windowsphone]

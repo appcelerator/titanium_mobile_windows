@@ -19,7 +19,7 @@
 // list of Visual C++ "Predefined Macros". Visual Studio 2013 Update 3
 // RTM ships with MSVC 18.0.30723.0
 
-#if defined(_MSC_VER) && _MSC_VER <= 1900
+#if defined(_MSC_VER)
 // According to Microsoft's "Visual C++ Team Blog":
 //
 // VS 2013 supported rvalue references, except for automatically
@@ -38,7 +38,7 @@
 #undef TITANIUM_NOEXCEPT_ENABLE
 #undef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
 
-#endif  // #defined(_MSC_VER) && _MSC_VER <= 1900
+#endif  // #defined(_MSC_VER)
 
 #ifdef TITANIUM_NOEXCEPT_ENABLE
 #define TITANIUM_NOEXCEPT noexcept

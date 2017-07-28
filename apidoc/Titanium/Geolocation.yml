@@ -67,6 +67,8 @@ properties:
     platforms: [windowsphone]
   - name: hasCompass
     platforms: [windowsphone]
+  - name: locationServicesAuthorization
+    platforms: [windowsphone]
   - name: locationServicesEnabled
     platforms: [windowsphone]
   - name: lastGeolocation
@@ -97,5 +99,9 @@ methods:
   - name: getLocationServicesEnabled
     platforms: [windowsphone]
   - name: getLastGeolocation
+    platforms: [windowsphone]
+  - name: hasLocationPermissions
+    platforms: [windowsphone]
+  - name: requestLocationPermissions
     platforms: [windowsphone]
 

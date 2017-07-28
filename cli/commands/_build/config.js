@@ -45,6 +45,7 @@ function config(logger, config, cli) {
 		supportedMSBuildVersions: windowsPackageJson.vendorDependencies['msbuild'],
 		supportedVisualStudioVersions: windowsPackageJson.vendorDependencies['visual studio'],
 		supportedWindowsPhoneSDKVersions: windowsPackageJson.vendorDependencies['windows phone sdk'],
+		supportedWindows10SDKVersions: windowsPackageJson.vendorDependencies['windows 10 sdk'],
 		tasklist: config.get('windows.executables.tasklist'),
 		skipWpTool: cli.argv['build-only'] || (target !== 'wp-device' && target !== 'wp-emulator' && target !== undefined && this.targets.indexOf(target) !== -1)
 	};

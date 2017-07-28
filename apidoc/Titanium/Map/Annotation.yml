@@ -1,0 +1,103 @@
+name: Titanium.Map.Annotation
+platforms: [windowsphone]
+properties:
+  - name: canShowCallout
+    platforms: [windowsphone]
+  - name: centerOffset
+    platforms: [windowsphone]
+  - name: customView
+    platforms: [windowsphone]
+  - name: draggable
+    platforms: [windowsphone]
+  - name: image
+    platforms: [windowsphone]
+  - name: latitude
+    platforms: [windowsphone]
+  - name: leftButton
+    platforms: [windowsphone]
+  - name: leftView
+    platforms: [windowsphone]
+  - name: longitude
+    platforms: [windowsphone]
+  - name: pincolor
+    platforms: [windowsphone]
+  - name: rightButton
+    platforms: [windowsphone]
+  - name: rightView
+    platforms: [windowsphone]
+  - name: showInfoWindow
+    platforms: [windowsphone]
+  - name: subtitle
+    platforms: [windowsphone]
+  - name: subtitleid
+    platforms: [windowsphone]
+  - name: title
+    platforms: [windowsphone]
+  - name: titleid
+    platforms: [windowsphone]
+methods:
+  - name: getCanShowCallout
+    platforms: [windowsphone]
+  - name: setCanShowCallout
+    platforms: [windowsphone]
+  - name: getCenterOffset
+    platforms: [windowsphone]
+  - name: setCenterOffset
+    platforms: [windowsphone]
+  - name: getCustomView
+    platforms: [windowsphone]
+  - name: setCustomView
+    platforms: [windowsphone]
+  - name: getDraggable
+    platforms: [windowsphone]
+  - name: setDraggable
+    platforms: [windowsphone]
+  - name: getImage
+    platforms: [windowsphone]
+  - name: setImage
+    platforms: [windowsphone]
+  - name: getLatitude
+    platforms: [windowsphone]
+  - name: setLatitude
+    platforms: [windowsphone]
+  - name: getLeftButton
+    platforms: [windowsphone]
+  - name: setLeftButton
+    platforms: [windowsphone]
+  - name: getLeftView
+    platforms: [windowsphone]
+  - name: setLeftView
+    platforms: [windowsphone]
+  - name: getLongitude
+    platforms: [windowsphone]
+  - name: setLongitude
+    platforms: [windowsphone]
+  - name: getPincolor
+    platforms: [windowsphone]
+  - name: setPincolor
+    platforms: [windowsphone]
+  - name: getRightButton
+    platforms: [windowsphone]
+  - name: setRightButton
+    platforms: [windowsphone]
+  - name: getRightView
+    platforms: [windowsphone]
+  - name: setRightView
+    platforms: [windowsphone]
+  - name: getSubtitle
+    platforms: [windowsphone]
+  - name: setSubtitle
+    platforms: [windowsphone]
+  - name: getSubtitleid
+    platforms: [windowsphone]
+  - name: setSubtitleid
+    platforms: [windowsphone]
+  - name: getTitle
+    platforms: [windowsphone]
+  - name: setTitle
+    platforms: [windowsphone]
+  - name: getTitleid
+    platforms: [windowsphone]
+  - name: setTitleid
+    platforms: [windowsphone]
+
