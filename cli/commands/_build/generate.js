@@ -106,8 +106,44 @@ function generateI18N(next) {
 function generateNativeTypes(next) {
 	this.logger.info(__('Generating Native Types'));
 
-	this.targetPlatformSdkVersion    = this.targetPlatformSdkVersion || this.tiapp.windows['TargetPlatformVersion'] || this.wpsdk;
-	this.targetPlatformSdkMinVersion = this.targetPlatformSdkMinVersion || this.tiapp.windows['TargetPlatformMinVersion'] || this.targetPlatformSdkVersion;
+	var defaultTargetPlatformVersion,
+		defaultTargetPlatformMinVersion;
+
+	if (this.wpsdk.startsWith('10.0') &&
+		this.windowsInfo.windowsphone['10.0'] &&
+		this.windowsInfo.windowsphone['10.0'].sdks &&
+		this.windowsInfo.windowsphone['10.0'].sdks.length > 0) {
+		
+		var supportedSdkVersions = this.windowslibOptions.supportedWindows10SDKVersions.replace(/(\d+\.\d+\.\d+)\.\d+/g, '$1'),
+			sdks = this.windowsInfo.windowsphone['10.0'].sdks;
+
+		// TIMOB-24908: Visual studio 2015 cannout build with newer SDKs
+		if (this.windowsInfo.selectedVisualStudio.version === '14.0') {
+			supportedSdkVersions = '>=10.0.10240 <=10.0.14393';
+		}
+
+		// obtain highest compatible target version
+		for (var i = sdks.length - 1; i >= 0; i--) {
+			var sdk = sdks[i];
+			if (appc.version.satisfies(sdk, supportedSdkVersions, false)) {
+				defaultTargetPlatformVersion = sdk;
+				break;
+			}
+		}
+		// obtain lowest compatible target version
+		for (var i = 0; i < sdks.length; i++) {
+			var sdk = sdks[i];
+			if (appc.version.satisfies(sdk, supportedSdkVersions, false)) {
+				defaultTargetPlatformMinVersion = sdk;
+				break;
+			}
+		}
+	}
+	this.targetPlatformSdkVersion = this.targetPlatformSdkVersion || this.tiapp.windows['TargetPlatformVersion'] || defaultTargetPlatformVersion || this.wpsdk;
+	this.targetPlatformSdkMinVersion = this.targetPlatformSdkMinVersion || this.tiapp.windows['TargetPlatformMinVersion'] || defaultTargetPlatformMinVersion || this.targetPlatformSdkVersion;
+
+	this.logger.debug(__('targetPlatformSdkVersion: %s', this.targetPlatformSdkVersion));
+	this.logger.debug(__('targetPlatformSdkMinVersion: %s', this.targetPlatformSdkMinVersion));
 
 	nativeModuleGenerator.generate(this, next);
 };
