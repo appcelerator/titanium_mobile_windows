@@ -51,6 +51,14 @@ namespace TitaniumWindows
 			});
 
 			suggest_box__->TextChanged += ref new TypedEventHandler<AutoSuggestBox^, AutoSuggestBoxTextChangedEventArgs^>([this](AutoSuggestBox^ sender, AutoSuggestBoxTextChangedEventArgs^ e) {
+
+				if (e->Reason == AutoSuggestionBoxTextChangeReason::UserInput && sender->Text->IsEmpty()) {
+					const auto ctx = get_context();
+					auto eventObj = ctx.CreateObject();
+					eventObj.SetProperty("value", ctx.CreateString(""));
+					fireEvent("cancel", eventObj);
+				}
+
 				if (suggestionRequested__) {
 					if (e->Reason == AutoSuggestionBoxTextChangeReason::SuggestionChosen) {
 						return;
