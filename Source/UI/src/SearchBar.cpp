@@ -48,6 +48,13 @@ namespace TitaniumWindows
 				if (e->Key == Windows::System::VirtualKey::Enter && querySubmitted__) {
 					querySubmitted__(TitaniumWindows::Utility::ConvertString(suggest_box__->Text));
 				}
+				if (e->Key == Windows::System::VirtualKey::Enter) {
+					const auto ctx = get_context();
+					JSObject eventArgs = ctx.CreateObject();
+					eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
+
+					this->fireEvent("return", eventArgs);
+				}
 			});
 
 			suggest_box__->TextChanged += ref new TypedEventHandler<AutoSuggestBox^, AutoSuggestBoxTextChangedEventArgs^>([this](AutoSuggestBox^ sender, AutoSuggestBoxTextChangedEventArgs^ e) {
