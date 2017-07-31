@@ -40,6 +40,7 @@ namespace TitaniumWindows
 			suggest_box__  = ref new AutoSuggestBox();
 			suggestItems__ = ref new Platform::Collections::Vector<Platform::String^>();
 			suggest_box__->ItemsSource = suggestItems__;
+			suggest_box__->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
 #if defined(IS_WINDOWS_10)
 			suggest_box__->QueryIcon = ref new SymbolIcon(Symbol::Find);
 #endif
@@ -127,6 +128,12 @@ namespace TitaniumWindows
 		std::string SearchBar::get_hintText() const TITANIUM_NOEXCEPT
 		{
 			return TitaniumWindows::Utility::ConvertUTF8String(suggest_box__->PlaceholderText);
+		}
+
+		void SearchBar::set_barColor(const std::string& color) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::SearchBar::set_barColor(color);
+			getViewLayoutDelegate()->set_backgroundColor(color);
 		}
 	}  // namespace UI
 }  // namespace TitaniumWindows
