@@ -117,6 +117,7 @@ source_group("Strings\\<%=i18n.locale %>" FILES "<%= i18n.file %>")
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   include/OutputDebugStringBuf.hpp
+  include/pch.h
   ${SOURCE_Assets}
 <% for(var key in sourceGroups) { -%>
   <% if (key == '.') { continue; } -%>
