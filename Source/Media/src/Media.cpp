@@ -120,7 +120,10 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_PHONE)
 		// Start listening to "windows.fileOpenFromPicker" event
 		GET_TITANIUM_APP(App);
-		App->addEventListener("windows.fileOpenFromPicker", fileOpenForMusicLibraryCallback__, fileOpenForMusicLibraryCallback__);
+		auto callback = get_context().CreateObject();
+		callback.SetProperty("callback", fileOpenForMusicLibraryCallback__);
+		callback.SetProperty("this_object", fileOpenForMusicLibraryCallback__);
+		App->addEventListener("windows.fileOpenFromPicker", callback);
 		if (options.allowMultipleSelections) {
 			picker->PickMultipleFilesAndContinue();
 		} else {
@@ -267,7 +270,10 @@ namespace TitaniumWindows
 #if defined(IS_WINDOWS_PHONE)
 		// Start listening to "windows.fileOpenFromPicker" event
 		GET_TITANIUM_APP(App);
-		App->addEventListener("windows.fileOpenFromPicker", fileOpenForPhotoGalleryCallback__, fileOpenForPhotoGalleryCallback__);
+		auto callback = get_context().CreateObject();
+		callback.SetProperty("callback", fileOpenForPhotoGalleryCallback__);
+		callback.SetProperty("this_object", fileOpenForPhotoGalleryCallback__);
+		App->addEventListener("windows.fileOpenFromPicker", callback);
 		picker->PickSingleFileAndContinue();
 #else
 		task<StorageFile^>(picker->PickSingleFileAsync()).then([this](task<StorageFile^> task) {

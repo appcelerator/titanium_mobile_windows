@@ -46,7 +46,10 @@ namespace TitaniumWindows
 			Titanium::UI::ViewLayoutDelegate::add(view);
 			contentView__.GetPrivate<View>()->getViewLayoutDelegate()->add(view);
 
-			view->addEventListener("click", clickCallback__, contentView__);
+			auto callback_obj = contentView__.get_context().CreateObject();
+			callback_obj.SetProperty("callback", clickCallback__);
+			callback_obj.SetProperty("this_object", contentView__);
+			view->addEventListener("click", callback_obj);
 		}
 
 		void ScrollViewLayoutDelegate::set_layout(const std::string& layout) TITANIUM_NOEXCEPT

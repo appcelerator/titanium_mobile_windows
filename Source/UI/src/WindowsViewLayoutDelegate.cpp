@@ -1391,30 +1391,40 @@ namespace TitaniumWindows
 				} else {
 					click_event__ = component->Tapped += ref new TappedEventHandler([this](Platform::Object^ sender, TappedRoutedEventArgs^ e) {
 						const auto component = safe_cast<FrameworkElement^>(sender);
-						fireSimplePositionEvent("click", e->GetPosition(component));
+						if (!isEventOnChild<TappedRoutedEventArgs>(e)) {
+							fireSimplePositionEvent("click", e->GetPosition(component));
+						}
 					});
 				}
 			} else if (event_name == "dblclick") {
 				dblclick_event__ = component->DoubleTapped += ref new DoubleTappedEventHandler([this](Platform::Object^ sender, DoubleTappedRoutedEventArgs^ e) {
 					const auto component = safe_cast<FrameworkElement^>(sender);
-					fireSimplePositionEvent("dblclick", e->GetPosition(component));
+					if (!isEventOnChild<DoubleTappedRoutedEventArgs>(e)) {
+						fireSimplePositionEvent("dblclick", e->GetPosition(component));
+					}
 				});
 			} else if (event_name == "singletap") {
 				singletap_event__ = component->Tapped += ref new TappedEventHandler([this](Platform::Object^ sender, TappedRoutedEventArgs^ e) {
 					const auto component = safe_cast<FrameworkElement^>(sender);
-					fireSimplePositionEvent("singletap", e->GetPosition(component));
+					if (!isEventOnChild<TappedRoutedEventArgs>(e)) {
+						fireSimplePositionEvent("singletap", e->GetPosition(component));
+					}
 				});
 			} else if (event_name == "doubletap") {
 				doubletap_event__ = component->DoubleTapped += ref new DoubleTappedEventHandler([this](Platform::Object^ sender, DoubleTappedRoutedEventArgs^ e) {
 					const auto component = safe_cast<FrameworkElement^>(sender);
-					fireSimplePositionEvent("doubletap", e->GetPosition(component));
+					if (!isEventOnChild<DoubleTappedRoutedEventArgs>(e)) {
+						fireSimplePositionEvent("doubletap", e->GetPosition(component));
+					}
 				});
 			} else if (event_name == "longpress") {
 				longpress_event__ = component->Holding += ref new HoldingEventHandler([this](Platform::Object^ sender, HoldingRoutedEventArgs^ e) {
 					// fires event only when it started
 					if (e->HoldingState == Windows::UI::Input::HoldingState::Started) {
 						const auto component = safe_cast<FrameworkElement^>(sender);
-						fireSimplePositionEvent("longpress", e->GetPosition(component));
+						if (!isEventOnChild<HoldingRoutedEventArgs>(e)) {
+							fireSimplePositionEvent("longpress", e->GetPosition(component));
+						}
 					}
 				});
 			} else if (event_name == "focus") {
@@ -1455,6 +1465,19 @@ namespace TitaniumWindows
 					}
 				});
 			}
+		}
+
+		template<typename EventArgs> bool WindowsViewLayoutDelegate::isEventOnChild(EventArgs^ e) TITANIUM_NOEXCEPT
+		{
+			FrameworkElement^ component = getComponent();
+			for (auto child : get_children()) {
+				auto childComponent = child.get()->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
+				auto position = e->GetPosition(childComponent);
+				if (position.X > 0 && position.Y > 0 && position.X < childComponent->Width && position.Y < childComponent->Height) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		static void onLayoutCallback(Titanium::LayoutEngine::Node* node)

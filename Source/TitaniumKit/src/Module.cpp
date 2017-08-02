@@ -11,6 +11,7 @@
 #include <cstdint>
 #include "Titanium/UI/Window.hpp"
 #include "Titanium/UI/TabGroup.hpp"
+#include "Titanium/UI/View.hpp"
 
 namespace Titanium
 {
@@ -38,8 +39,9 @@ namespace Titanium
 	TITANIUM_PROPERTY_READWRITE(Module, bool, bubbleParent)
 	TITANIUM_PROPERTY_READWRITE(Module, std::string, apiName)
 
-	void Module::addEventListener(const std::string& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT
+	void Module::addEventListener(const std::string& name, JSObject& callback_payload, bool bubble) TITANIUM_NOEXCEPT
 	{
+		auto callback = static_cast<JSObject>(callback_payload.GetProperty("callback"));
 		if (!callback.IsFunction()) {
 			TITANIUM_LOG_WARN(apiName__, " addEventListener: Listener is not a function for event '", name, "'");
 			return;
@@ -50,13 +52,8 @@ namespace Titanium
 			event_listener_list = event_listener_map__.at(name);
 		}
 
-		JSObject callback_payload = get_context().CreateObject();
-		callback_payload.SetProperty("callback", callback);
-		callback_payload.SetProperty("this_object", this_object);
-
-		// Precondition
-		const auto event_listener_index = eventListenerIndex(event_listener_list, name, callback_payload);
-		if (event_listener_index > 0) {
+		const auto event_listener_index = eventListenerIndex(event_listener_list, name, callback);
+		if (event_listener_index >= 0) {
 			TITANIUM_LOG_WARN(apiName__, " addEventListener: event listener already added at index ", event_listener_index, " for event '", name, "'");
 		} else {
 			const auto callback_list_index = event_listener_list.size();
@@ -66,13 +63,21 @@ namespace Titanium
 				enableEvent(name);
 			}
 			TITANIUM_LOG_DEBUG(apiName__, " addEventListener: add listener at index ", callback_list_index, " for event '", name, "' for ", this);
-			event_listener_list.push_back(callback_payload);
+			event_listener_map__[name].push_back(callback_payload);
+			if (bubble) {
+				event_bubble_map__[name].push_back(callback_payload);
+			} else {
+				auto view_ptr = dynamic_cast<Titanium::UI::View*>(this);
+				if (view_ptr != nullptr) {
+					view_ptr->addBubbleEvents(*view_ptr);
+				}
+			}
 		}
-		event_listener_map__[name] = event_listener_list;
 	}
 
-	void Module::removeEventListener(const std::string& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT
+	void Module::removeEventListener(const std::string& name, JSObject& callback_payload, bool bubble) TITANIUM_NOEXCEPT
 	{
+		auto callback = static_cast<JSObject>(callback_payload.GetProperty("callback"));
 		if (!callback.IsFunction()) {
 			TITANIUM_LOG_WARN(apiName__, " removeEventListener: callback is not a function for event '", name, "'");
 			return;
@@ -84,31 +89,31 @@ namespace Titanium
 		}
 
 		std::vector<JSObject> event_listener_list = event_listener_map__.at(name);
-
-		JSObject callback_payload = get_context().CreateObject();
-		callback_payload.SetProperty("callback", callback);
-		callback_payload.SetProperty("this_object", this_object);
-
 		const auto event_listener_count = event_listener_list.size();
-		if (event_listener_count > 0) {
+		const auto event_listener_index = eventListenerIndex(event_listener_list, name, callback);
+		if (event_listener_index  >= 0) {
 			const auto event_listener_index = eventListenerIndex(event_listener_list, name, callback_payload);
-
 			if (event_listener_count == 1) {
 				// This is the last event listener for this event name, and it is about
 				// to be removed, so signal module subclasses that there are no more
 				// callbacks registered for this event.
 				disableEvent(name);
 			}
-
 			TITANIUM_LOG_DEBUG(apiName__, " removeEventListener: remove listener at index ", event_listener_index, " for event '", name, "' for ", this);
-
-			// postcondition
-			event_listener_list.erase(event_listener_list.begin() +  event_listener_index);
-			//if (!deleted) {
-				// This is a TitaniumKit logic error.
-				//TITANIUM_LOG_ERROR(apiName__, " removeEventListener: event listener at index ", event_listener_index, " for event '", name, "' was not removed");
-				//TITANIUM_ASSERT(deleted);
-			//}
+			event_listener_list.erase(event_listener_list.begin() + event_listener_index);
+			if (bubble) {
+				const auto event_bubble_list = event_listener_map__.at(name);
+				const auto event_bubble_index = eventListenerIndex(event_bubble_list, name, callback_payload);
+				if (event_bubble_index >= 0) {
+					event_bubble_map__[name].erase(event_bubble_list.begin() + event_bubble_index);
+				}
+			} else {
+				auto view_ptr = dynamic_cast<Titanium::UI::View*>(this);
+				if (view_ptr != nullptr) {
+					view_ptr->removeBubbleEvents(*view_ptr);
+				}
+			}
+			event_listener_map__[name] = event_listener_list;
 		} else {
 			TITANIUM_LOG_WARN(apiName__, " removeEventListener: listener does not exist for event '", name, "'");
 		}
@@ -189,6 +194,14 @@ namespace Titanium
 			for (size_t i = 0; i < event_listener_count; ++i) {
 				JSObject callback_payload = event_listener_list.at(i);
 
+				// bubbleParent disabled, do not fire bubbleEvents
+				if (!get_bubbleParent()) {
+					std::vector<JSObject> event_bubble_list = event_bubble_map__.at(name);
+					if (std::find(event_bubble_list.begin(), event_bubble_list.end(), callback_payload) != event_bubble_list.end()) {
+						continue;
+					}
+				}
+
 				JSValue callback_property = callback_payload.GetProperty("callback");
 
 				// Precondition
@@ -225,9 +238,9 @@ namespace Titanium
 		TITANIUM_LOG_WARN(apiName__, " disableEvent: Unimplemented (event name '", event_name, "' for ", this);
 	}
 
-	unsigned Module::eventListenerIndex(const std::vector<JSObject>& event_listener_list, const std::string& name, JSObject& callback) TITANIUM_NOEXCEPT
+	int Module::eventListenerIndex(const std::vector<JSObject>& event_listener_list, const std::string& name, JSObject& callback) TITANIUM_NOEXCEPT
 	{
-		unsigned index = 0;
+		int index = -1;
 		bool found = false;
 		const auto event_listener_count = event_listener_list.size();
 		for (unsigned i = 0; i < event_listener_count; ++i) {
@@ -304,7 +317,10 @@ namespace Titanium
 		ENSURE_OBJECT_AT_INDEX(callback, 1);
 
 		TITANIUM_ASSERT(callback.IsFunction());
-		addEventListener(name, callback, this_object);
+		auto callback_obj = get_context().CreateObject();
+		callback_obj.SetProperty("callback", callback);
+		callback_obj.SetProperty("this_object", this_object);
+		addEventListener(name, callback_obj);
 		return get_context().CreateUndefined();
 	}
 
@@ -315,7 +331,10 @@ namespace Titanium
 		ENSURE_OBJECT_AT_INDEX(callback, 1);
 
 		TITANIUM_ASSERT(callback.IsFunction());
-		removeEventListener(name, callback, this_object);
+		auto callback_obj = get_context().CreateObject();
+		callback_obj.SetProperty("callback", callback);
+		callback_obj.SetProperty("this_object", this_object);
+		removeEventListener(name, callback_obj);
 		return get_context().CreateUndefined();
 	}
 

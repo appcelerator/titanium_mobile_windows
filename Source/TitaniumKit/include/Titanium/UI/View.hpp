@@ -148,6 +148,9 @@ namespace Titanium
 			*/
 			virtual void add(const JSObject&) TITANIUM_NOEXCEPT;
 
+			virtual void remove(const JSObject&) TITANIUM_NOEXCEPT;
+			virtual void removeAllChildren() TITANIUM_NOEXCEPT;
+
 			/*!
 			  @method
 			  @abstract get_children
@@ -342,6 +345,9 @@ namespace Titanium
 			{
 				return getViewLayoutDelegate<ViewLayoutDelegate>();
 			}
+
+			virtual void View::addBubbleEvents(View& bubbleParent) TITANIUM_NOEXCEPT;
+			virtual void View::removeBubbleEvents(View& bubbleParent) TITANIUM_NOEXCEPT;
 
 		protected:
 			template<typename T, typename U, typename... Us>

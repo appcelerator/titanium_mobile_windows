@@ -547,6 +547,7 @@ namespace TitaniumWindows
 			virtual void fireSimplePositionEvent(const std::string& event_name, Windows::Foundation::Point position);
 			virtual void firePostLayoutEvent();
 			virtual std::shared_ptr<Titanium::UI::View> getHierarchyEventSource(Windows::Foundation::Point position, const std::shared_ptr<Titanium::UI::View>& root = nullptr) const TITANIUM_NOEXCEPT;
+			template<typename EventArgs> bool isEventOnChild(EventArgs^ e);
 
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromPath(const std::string& path);
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBitmapImage(Windows::UI::Xaml::Media::Imaging::BitmapImage^ image);

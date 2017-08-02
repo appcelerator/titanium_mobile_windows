@@ -113,16 +113,72 @@ namespace Titanium
 				return;
 			}
 			auto view_ptr = view.GetPrivate<View>();
-
-			// For mixing Ti.Ui.View and native view.
 			if (view_ptr == nullptr) {
 				view_ptr = layoutDelegate__->rescueGetView(view);
 			}
-
 			view_ptr->set_parent(this->get_object().GetPrivate<View>());
-
 			layoutDelegate__->add(view_ptr);
+			view_ptr->addBubbleEvents(*this);
 		}
+
+		void View::remove(const JSObject& view) TITANIUM_NOEXCEPT
+		{
+			if (!layoutDelegate__) {
+				return;
+			}
+
+			auto view_ptr = view.GetPrivate<View>();
+			if (view_ptr == nullptr) {
+				view_ptr = layoutDelegate__->rescueGetView(view);
+			}
+			view_ptr->removeBubbleEvents(*this);
+			view_ptr->set_parent(nullptr);
+			layoutDelegate__->remove(view_ptr);
+		}
+
+		void View::removeAllChildren() TITANIUM_NOEXCEPT
+		{
+			if (!layoutDelegate__) {
+				return;
+			}
+			for (auto child : get_children()) {
+				child->removeBubbleEvents(*this);
+				child->set_parent(nullptr);
+			}
+			layoutDelegate__->removeAllChildren();
+		}
+
+		void View::addBubbleEvents(View& bubbleParent)
+		{
+			for (auto event : bubbleParent.event_listener_map__) {
+				const auto name = event.first;
+				const auto callbacks = event.second;
+				for (auto callback_obj : callbacks) {
+					addEventListener(name, callback_obj, true);
+				}
+			}
+			if (get_children().size()) {
+				for (auto child : get_children()) {
+					child->addBubbleEvents(bubbleParent);
+				}
+			}
+		}
+
+		void View::removeBubbleEvents(View& bubbleParent)
+		{
+			if (get_children().size()) {
+				for (auto child : get_children()) {
+					child->removeBubbleEvents(bubbleParent);
+				}
+			}
+			for (auto event : bubbleParent.event_listener_map__) {
+				const auto name = event.first;
+				const auto callbacks = event.second;
+				for (auto callback_obj : callbacks) {
+					removeEventListener(name, callback_obj, true);
+				}
+			}
+ 		}
 
 		std::vector<std::shared_ptr<Titanium::UI::View>> View::get_children() const TITANIUM_NOEXCEPT
 		{
@@ -596,7 +652,7 @@ namespace Titanium
 		TITANIUM_FUNCTION(View, removeAllChildren)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			layoutDelegate__->removeAllChildren();
+			removeAllChildren();
 			return get_context().CreateUndefined();
 		}
 
@@ -663,7 +719,7 @@ namespace Titanium
 		{
 			CHECK_UI_DELEGATE_GETTER
 			ENSURE_OBJECT_AT_INDEX(view, 0);
-			layoutDelegate__->remove(view.GetPrivate<View>());
+			remove(view);
 			return get_context().CreateUndefined();
 		}
 

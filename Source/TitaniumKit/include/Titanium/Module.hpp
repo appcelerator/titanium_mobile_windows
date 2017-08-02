@@ -63,7 +63,7 @@ namespace Titanium
 
 		  @result void
 		*/
-		virtual void addEventListener(const std::string& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT final;
+		virtual void addEventListener(const std::string& name, JSObject& callback, bool bubble = false) TITANIUM_NOEXCEPT final;
 
 		/*!
 		  @method
@@ -86,7 +86,7 @@ namespace Titanium
 
 		  @result void
 		*/
-		virtual void removeEventListener(const std::string& name, JSObject& callback, JSObject& this_object) TITANIUM_NOEXCEPT final;
+		virtual void removeEventListener(const std::string& name, JSObject& callback, bool bubble = false) TITANIUM_NOEXCEPT final;
 
 		/*!
 		  @method
@@ -234,13 +234,14 @@ namespace Titanium
 		std::shared_ptr<Titanium::UI::TabGroup> lifecycleContainerTabGroup__;
 
 		std::unordered_map<std::string, std::vector<JSObject>> event_listener_map__;
+		std::unordered_map<std::string, std::vector<JSObject>> event_bubble_map__;
 		bool enableEvents__ { true };
 
 		// Save constructor arguments so module can make copy of itself later on
 		JSObject ctorProperties__;
 #pragma warning(pop)
 	private:
-		static unsigned eventListenerIndex(const std::vector<JSObject>& event_listener_list, const std::string& name, JSObject& callback) TITANIUM_NOEXCEPT;
+		static int eventListenerIndex(const std::vector<JSObject>& event_listener_list, const std::string& name, JSObject& callback) TITANIUM_NOEXCEPT;
 	};
 }  // namespace Titanium
 
