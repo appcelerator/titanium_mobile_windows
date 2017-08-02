@@ -955,6 +955,8 @@ namespace TitaniumWindows
 					updateBackground(backgroundDisabledImageBrush__);
 				} else if (backgroundDisabledColorBrush__ != nullptr) {
 					updateBackground(backgroundDisabledColorBrush__);
+				} else {
+					updateBackground(previousBackgroundBrush__);
 				}
 			}
 		}
@@ -975,6 +977,8 @@ namespace TitaniumWindows
 			backgroundImageBrush__ = CreateImageBrushFromPath(backgroundImage);
 			if (get_touchEnabled()) {
 				updateBackground(backgroundImageBrush__);
+			} else {
+				updateDisabledBackground();
 			}
 		}
 
@@ -984,6 +988,8 @@ namespace TitaniumWindows
 			backgroundImageBrush__ = CreateImageBrushFromBlob(backgroundImage);
 			if (get_touchEnabled()) {
 				updateBackground(backgroundImageBrush__);
+			} else {
+				updateDisabledBackground();
 			}
 		}
 
@@ -994,6 +1000,8 @@ namespace TitaniumWindows
 			backgroundColorBrush__ = ref new Media::SolidColorBrush(ColorForName(backgroundColor));
 			if (get_touchEnabled()) {
 				updateBackground(backgroundColorBrush__);
+			} else {
+				updateDisabledBackground();
 			}
 		}
 
@@ -1479,6 +1487,8 @@ namespace TitaniumWindows
 				} else {
 					updateBackground(nullptr); // delete background
 				}
+			} else {
+				updateDisabledBackground();
 			}
 		}
 
