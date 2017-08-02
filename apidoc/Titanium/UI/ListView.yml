@@ -9,6 +9,12 @@ properties:
     platforms: [windowsphone]
   - name: searchText
     platforms: [windowsphone]
+  - name: footerView
+    platforms: [windowsphone]
+  - name: headerView
+    platforms: [windowsphone]
+  - name: searchView
+    platforms: [windowsphone]
   - name: caseInsensitiveSearch
     platforms: [windowsphone]
   - name: sectionCount
@@ -16,6 +22,8 @@ properties:
   - name: defaultItemTemplate
     platforms: [windowsphone]
 methods:
+  - name: scrollToItem
+    platforms: [windowsphone]
   - name: appendSection
     platforms: [windowsphone]
   - name: deleteSectionAt
@@ -36,9 +44,21 @@ methods:
     platforms: [windowsphone]
   - name: setFooterTitle
     platforms: [windowsphone]
+  - name: getFooterView
+    platforms: [windowsphone]
+  - name: setFooterView
+    platforms: [windowsphone]
   - name: getHeaderTitle
     platforms: [windowsphone]
   - name: setHeaderTitle
+    platforms: [windowsphone]
+  - name: getHeaderView
+    platforms: [windowsphone]
+  - name: setHeaderView
+    platforms: [windowsphone]
+  - name: getSearchView
+    platforms: [windowsphone]
+  - name: setSearchView
     platforms: [windowsphone]
   - name: getSearchText
     platforms: [windowsphone]

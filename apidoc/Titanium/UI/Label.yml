@@ -1,9 +1,13 @@
 name: Titanium.UI.Label
 platforms: [windowsphone]
 properties:
+  - name: autoLink
+    platforms: [windowsphone]
   - name: color
     platforms: [windowsphone]
   - name: font
+    platforms: [windowsphone]
+  - name: textid
     platforms: [windowsphone]
   - name: text
     platforms: [windowsphone]
@@ -16,6 +20,10 @@ properties:
   - name: attributedString
     platforms: [windowsphone]
 methods:
+  - name: getAutoLink
+    platforms: [windowsphone]
+  - name: setAutoLink
+    platforms: [windowsphone]
   - name: getColor
     platforms: [windowsphone]
   - name: setColor
@@ -23,6 +31,10 @@ methods:
   - name: getFont
     platforms: [windowsphone]
   - name: setFont
+    platforms: [windowsphone]
+  - name: getTextid
+    platforms: [windowsphone]
+  - name: setTextid
     platforms: [windowsphone]
   - name: getText
     platforms: [windowsphone]

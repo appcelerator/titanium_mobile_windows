@@ -1,6 +1,30 @@
 name: Titanium.XML.Node
 platforms: [windowsphone]
 properties:
+  - name: ATTRIBUTE_NODE
+    platforms: [windowsphone]
+  - name: CDATA_SECTION_NODE
+    platforms: [windowsphone]
+  - name: COMMENT_NODE
+    platforms: [windowsphone]
+  - name: DOCUMENT_FRAGMENT_NODE
+    platforms: [windowsphone]
+  - name: DOCUMENT_NODE
+    platforms: [windowsphone]
+  - name: DOCUMENT_TYPE_NODE
+    platforms: [windowsphone]
+  - name: ELEMENT_NODE
+    platforms: [windowsphone]
+  - name: ENTITY_NODE
+    platforms: [windowsphone]
+  - name: ENTITY_REFERENCE_NODE
+    platforms: [windowsphone]
+  - name: NOTATION_NODE
+    platforms: [windowsphone]
+  - name: PROCESSING_INSTRUCTION_NODE
+    platforms: [windowsphone]
+  - name: TEXT_NODE
+    platforms: [windowsphone]
   - name: nodeValue
     platforms: [windowsphone]
   - name: prefix
@@ -28,6 +52,10 @@ properties:
   - name: namespaceURI
     platforms: [windowsphone]
   - name: localName
+    platforms: [windowsphone]
+  - name: text
+    platforms: [windowsphone]
+  - name: textContent
     platforms: [windowsphone]
 methods:
   - name: insertBefore

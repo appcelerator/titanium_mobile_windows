@@ -1,0 +1,27 @@
+name: Titanium.UI.ListSection
+platforms: [windowsphone]
+properties:
+  - name: footerTitle
+    platforms: [windowsphone]
+  - name: headerTitle
+    platforms: [windowsphone]
+  - name: footerView
+    platforms: [windowsphone]
+  - name: items
+    platforms: [windowsphone]
+  - name: headerView
+    platforms: [windowsphone]
+methods:
+  - name: appendItems
+    platforms: [windowsphone]
+  - name: insertItemsAt
+    platforms: [windowsphone]
+  - name: replaceItemsAt
+    platforms: [windowsphone]
+  - name: deleteItemsAt
+    platforms: [windowsphone]
+  - name: getItemAt
+    platforms: [windowsphone]
+  - name: updateItemAt
+    platforms: [windowsphone]
+

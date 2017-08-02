@@ -1,11 +1,25 @@
 name: Titanium.UI.ActivityIndicator
 platforms: [windowsphone]
 properties:
+  - name: color
+    platforms: [windowsphone]
+  - name: font
+    platforms: [windowsphone]
   - name: message
     platforms: [windowsphone]
   - name: messageid
     platforms: [windowsphone]
+  - name: indicatorColor
+    platforms: [windowsphone]
 methods:
+  - name: getColor
+    platforms: [windowsphone]
+  - name: setColor
+    platforms: [windowsphone]
+  - name: getFont
+    platforms: [windowsphone]
+  - name: setFont
+    platforms: [windowsphone]
   - name: getMessage
     platforms: [windowsphone]
   - name: setMessage
@@ -13,5 +27,9 @@ methods:
   - name: getMessageid
     platforms: [windowsphone]
   - name: setMessageid
+    platforms: [windowsphone]
+  - name: getIndicatorColor
+    platforms: [windowsphone]
+  - name: setIndicatorColor
     platforms: [windowsphone]
 

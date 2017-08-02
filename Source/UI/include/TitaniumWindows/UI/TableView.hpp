@@ -32,6 +32,8 @@ namespace TitaniumWindows
 #pragma warning(pop)
 		public:
 
+			TITANIUM_PROPERTY_UNIMPLEMENTED(allowsSelection);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(allowsSelectionDuringEditing);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(filterAttribute);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(filterAnchored);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(filterCaseInsensitive);

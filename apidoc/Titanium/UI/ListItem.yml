@@ -1,0 +1,18 @@
+name: Titanium.UI.ListItem
+platforms: [windowsphone]
+properties:
+  - name: backgroundColor
+    platforms: [windowsphone]
+  - name: backgroundGradient
+    platforms: [windowsphone]
+  - name: backgroundImage
+    platforms: [windowsphone]
+  - name: color
+    platforms: [windowsphone]
+  - name: itemId
+    platforms: [windowsphone]
+  - name: subtitle
+    platforms: [windowsphone]
+  - name: title
+    platforms: [windowsphone]
+

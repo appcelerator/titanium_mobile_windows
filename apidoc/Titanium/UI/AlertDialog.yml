@@ -9,6 +9,8 @@ properties:
     platforms: [windowsphone]
   - name: title
     platforms: [windowsphone]
+  - name: titleid
+    platforms: [windowsphone]
 methods:
   - name: show
     platforms: [windowsphone]
@@ -27,5 +29,9 @@ methods:
   - name: getTitle
     platforms: [windowsphone]
   - name: setTitle
+    platforms: [windowsphone]
+  - name: getTitleid
+    platforms: [windowsphone]
+  - name: setTitleid
     platforms: [windowsphone]
 

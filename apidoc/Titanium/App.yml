@@ -23,6 +23,10 @@ properties:
     platforms: [windowsphone]
   - name: name
     platforms: [windowsphone]
+  - name: proximityDetection
+    platforms: [windowsphone]
+  - name: proximityState
+    platforms: [windowsphone]
   - name: publisher
     platforms: [windowsphone]
   - name: sessionId
@@ -49,6 +53,12 @@ methods:
   - name: getKeyboardVisible
     platforms: [windowsphone]
   - name: getName
+    platforms: [windowsphone]
+  - name: getProximityDetection
+    platforms: [windowsphone]
+  - name: setProximityDetection
+    platforms: [windowsphone]
+  - name: getProximityState
     platforms: [windowsphone]
   - name: getPublisher
     platforms: [windowsphone]
