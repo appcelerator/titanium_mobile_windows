@@ -1303,7 +1303,8 @@ namespace TitaniumWindows
 			const auto children = root == nullptr ? get_children() : root->get_children();
 			// Let's find correct source
 			for (const auto child : children) {
-				const auto childView = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getEventComponent();
+				const auto childLayout = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+				const auto childView   = childLayout->getComponent();
 				const auto elements = Windows::UI::Xaml::Media::VisualTreeHelper::FindElementsInHostCoordinates(position, childView);
 				for (const auto e : elements) {
 					// Let's check its descendents so we can support nested views
@@ -1313,7 +1314,9 @@ namespace TitaniumWindows
 							return found;
 						}
 					}
-					return child;
+					if (childLayout->get_touchEnabled()) {
+						return child;
+					}
 				}
 			}
 			return nullptr;
