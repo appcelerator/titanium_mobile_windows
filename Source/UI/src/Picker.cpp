@@ -25,6 +25,39 @@ namespace TitaniumWindows
 		using namespace Windows::UI::Xaml;
 		using namespace Windows::Foundation;
 
+		void WindowsPickerLayoutDelegate::onComponentSizeChange(const Titanium::LayoutEngine::Rect& rect)
+		{
+			WindowsViewLayoutDelegate::onComponentSizeChange(rect);
+			const auto parent = dynamic_cast<Grid^>(component__);
+
+			// This should not happen but just in case
+			if (parent == nullptr || parent->Children->Size == 0) {
+				return;
+			}
+
+			const auto picker = parent->Children->GetAt(0);
+			if (picker) {
+				const auto plain = dynamic_cast<Grid^>(picker);
+				const auto date  = dynamic_cast<DatePicker^>(picker);
+				const auto time  = dynamic_cast<TimePicker^>(picker);
+
+				if (plain) {
+					const auto children = plain->Children;
+					for (std::size_t i = 0; i < children->Size; i++) {
+						const auto child = dynamic_cast<ComboBox^>(children->GetAt(i));
+						if (child) {
+							// each child should have same width if picker has multiple columns
+							child->MinWidth = rect.width / children->Size;
+						}
+					}
+				} else if (date) {
+					date->MinWidth = rect.width;
+				} else if (time) {
+					time->MinWidth = rect.width;
+				}
+			}
+		}
+
 		Picker::Picker(const JSContext& js_context) TITANIUM_NOEXCEPT
 			  : Titanium::UI::Picker(js_context)
 		{
@@ -39,7 +72,7 @@ namespace TitaniumWindows
 		void Picker::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 		{
 			Titanium::UI::Picker::postCallAsConstructor(js_context, arguments);
-			Titanium::UI::Picker::setLayoutDelegate<WindowsViewLayoutDelegate>();
+			Titanium::UI::Picker::setLayoutDelegate<WindowsPickerLayoutDelegate>();
 
 			parent__ = ref new Windows::UI::Xaml::Controls::Grid();
 
@@ -47,7 +80,7 @@ namespace TitaniumWindows
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
 			layoutDelegate__->set_autoLayoutForWidth(Titanium::UI::LAYOUT::FILL);
 
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(parent__, nullptr, false);
+			getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->setComponent(parent__, nullptr, false);
 		}
 
 		void Picker::afterPropertiesSet() TITANIUM_NOEXCEPT
