@@ -29,6 +29,8 @@ namespace Titanium
 		public:
 			virtual bool get_animated() const TITANIUM_NOEXCEPT;
 			virtual void set_animated(const bool& animated) TITANIUM_NOEXCEPT;
+			virtual std::uint32_t get_position() const TITANIUM_NOEXCEPT;
+			virtual void set_position(const std::uint32_t& position) TITANIUM_NOEXCEPT;
 
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments);
 
@@ -45,6 +47,7 @@ namespace Titanium
 			static void JSExportInitialize();
 		protected:
 			bool animated__ {true};
+			std::uint32_t position__ { 0 };
 		};
 		
 	} // namespace UI

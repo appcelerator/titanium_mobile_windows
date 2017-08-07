@@ -11,6 +11,7 @@
 #include "TitaniumWindows/UI/Windows/AppBarToggleButton.hpp"
 #include "TitaniumWindows/UI/Windows/AppBarSeparator.hpp"
 #include "TitaniumWindows/UI/Windows/SystemIcon.hpp"
+#include "TitaniumWindows/UI/Windows/ListViewScrollPosition.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 
 #define CREATE_TITANIUM_UI_WINDOWS(NAME) \
@@ -51,6 +52,7 @@ namespace TitaniumWindows
 			TITANIUM_ADD_CONSTANT_PROPERTY(WindowsModule, AppBarSeparator);
 			TITANIUM_ADD_CONSTANT_PROPERTY(WindowsModule, AppBarToggleButton);
 			TITANIUM_ADD_CONSTANT_PROPERTY(WindowsModule, SystemIcon);
+			TITANIUM_ADD_CONSTANT_PROPERTY(WindowsModule, ListViewScrollPosition);
 			TITANIUM_ADD_FUNCTION(WindowsModule, createCommandBar);
 			TITANIUM_ADD_FUNCTION(WindowsModule, createAppBarButton);
 			TITANIUM_ADD_FUNCTION(WindowsModule, createAppBarToggleButton);
@@ -80,6 +82,11 @@ namespace TitaniumWindows
 		TITANIUM_PROPERTY_GETTER(WindowsModule, SystemIcon) 
 		{
 			return get_context().CreateObject(JSExport<TitaniumWindows::UI::WindowsXaml::SystemIcon>::Class());
+		}
+
+		TITANIUM_PROPERTY_GETTER(WindowsModule, ListViewScrollPosition)
+		{
+			return get_context().CreateObject(JSExport<TitaniumWindows::UI::WindowsXaml::ListViewScrollPosition>::Class());
 		}
 
 		TITANIUM_FUNCTION(WindowsModule, createCommandBar) 
