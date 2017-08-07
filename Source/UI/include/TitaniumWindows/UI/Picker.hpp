@@ -19,6 +19,14 @@ namespace TitaniumWindows
 	{
 		using namespace HAL;
 
+		class TITANIUMWINDOWS_UI_EXPORT WindowsPickerLayoutDelegate : public WindowsViewLayoutDelegate {
+		public:
+			WindowsPickerLayoutDelegate() TITANIUM_NOEXCEPT : WindowsViewLayoutDelegate() { };
+			virtual ~WindowsPickerLayoutDelegate() = default;
+
+			virtual void onComponentSizeChange(const Titanium::LayoutEngine::Rect&) override;
+		};
+
 		/*!
 		  @class Picker
 		  @ingroup Titanium.UI.Picker
