@@ -129,6 +129,8 @@ namespace TitaniumWindows
 				label__->Text = TitaniumWindows::Utility::ConvertUTF8String(text);
 			}
 
+			need_measure__ = true;
+
 			if (propertiesSet__) {
 				measureDesiredSize();
 			}
@@ -176,6 +178,8 @@ namespace TitaniumWindows
 
 		void Label::measureDesiredSize() TITANIUM_NOEXCEPT
 		{
+			if (!need_measure__) return;
+
 			// TIMOB-23305: Measure desired size for this text and resize parent container accordingly.
 			Windows::Foundation::Size desiredSize{ static_cast<float>(label__->MaxWidth), static_cast<float>(label__->MaxHeight) };
 			label__->Measure(desiredSize);
@@ -184,12 +188,15 @@ namespace TitaniumWindows
 			const auto width = layout->get_width();
 			const auto height = layout->get_height();
 			const auto TI_UI_SIZE = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
-			if (width.empty() || width == TI_UI_SIZE) {
-				border__->Width = label__->DesiredSize.Width + 1; // Border needs this margin
+			if ((width.empty() || width == TI_UI_SIZE || width == "auto") && layout->canUseSizeWidth()) {
+				layout->fixWidth(label__->DesiredSize.Width + border__->BorderThickness.Left + border__->BorderThickness.Right + 1 /* Border needs this margin */ );
 			}
-			if (height.empty() || height == TI_UI_SIZE) {
-				border__->Height = label__->DesiredSize.Height + 1; // Border needs this margin
+			if ((height.empty() || height == TI_UI_SIZE || height == "auto") && layout->canUseSizeHeight()) {
+				layout->fixHeight(label__->DesiredSize.Height + border__->BorderThickness.Top + border__->BorderThickness.Bottom + 1 /* Border needs this margin */ );
 			}
+
+			layout->requestLayout();
+			need_measure__ = false;
 		}
 
 		void Label::set_textAlign(const Titanium::UI::TEXT_ALIGNMENT& textAlign) TITANIUM_NOEXCEPT

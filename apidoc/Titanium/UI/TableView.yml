@@ -3,13 +3,21 @@ platforms: [windowsphone]
 properties:
   - name: data
     platforms: [windowsphone]
+  - name: footerTitle
+    platforms: [windowsphone]
+  - name: footerView
+    platforms: [windowsphone]
   - name: headerTitle
     platforms: [windowsphone]
   - name: headerView
     platforms: [windowsphone]
+  - name: search
+    platforms: [windowsphone]
   - name: sectionCount
     platforms: [windowsphone]
   - name: sections
+    platforms: [windowsphone]
+  - name: separatorColor
     platforms: [windowsphone]
 methods:
   - name: getData
@@ -20,7 +28,37 @@ methods:
     platforms: [windowsphone]
   - name: appendSection
     platforms: [windowsphone]
+  - name: deleteRow
+    platforms: [windowsphone]
+  - name: deleteSection
+    platforms: [windowsphone]
+  - name: insertRowAfter
+    platforms: [windowsphone]
+  - name: insertSectionAfter
+    platforms: [windowsphone]
+  - name: insertRowBefore
+    platforms: [windowsphone]
+  - name: insertSectionBefore
+    platforms: [windowsphone]
+  - name: scrollToIndex
+    platforms: [windowsphone]
+  - name: scrollToTop
+    platforms: [windowsphone]
+  - name: selectRow
+    platforms: [windowsphone]
+  - name: deselectRow
+    platforms: [windowsphone]
+  - name: updateRow
+    platforms: [windowsphone]
   - name: updateSection
+    platforms: [windowsphone]
+  - name: getFooterTitle
+    platforms: [windowsphone]
+  - name: setFooterTitle
+    platforms: [windowsphone]
+  - name: getFooterView
+    platforms: [windowsphone]
+  - name: setFooterView
     platforms: [windowsphone]
   - name: getHeaderTitle
     platforms: [windowsphone]
@@ -30,14 +68,23 @@ methods:
     platforms: [windowsphone]
   - name: setHeaderView
     platforms: [windowsphone]
+  - name: getSearch
+    platforms: [windowsphone]
+  - name: setSearch
+    platforms: [windowsphone]
   - name: getSectionCount
     platforms: [windowsphone]
   - name: getSections
     platforms: [windowsphone]
   - name: setSections
     platforms: [windowsphone]
+  - name: getSeparatorColor
+    platforms: [windowsphone]
+  - name: setSeparatorColor
+    platforms: [windowsphone]
 events:
   - name: scroll
     platforms: [windowsphone]
   - name: scrollend
     platforms: [windowsphone]
+

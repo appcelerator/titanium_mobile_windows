@@ -132,6 +132,8 @@ set(SOURCE_UI_Windows
   src/Windows/ViewHelper.cpp
   include/TitaniumWindows/UI/Windows/Style.hpp
   src/Windows/Style.cpp
+  include/TitaniumWindows/UI/Windows/ListViewScrollPosition.hpp
+  src/Windows/ListViewScrollPosition.cpp
   )
 
 source_group(Titanium\\UI\\Windows FILES ${SOURCE_UI_Windows})

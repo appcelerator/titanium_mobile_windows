@@ -1,0 +1,6 @@
+name: Titanium.XML.Text
+platforms: [windowsphone]
+methods:
+  - name: splitText
+    platforms: [windowsphone]
+

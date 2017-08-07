@@ -13,6 +13,14 @@ properties:
     platforms: [windowsphone]
   - name: tabsBackgroundImage
     platforms: [windowsphone]
+  - name: tabsBackgroundDisabledColor
+    platforms: [windowsphone]
+  - name: tabsBackgroundDisabledImage
+    platforms: [windowsphone]
+  - name: tabsBackgroundFocusedColor
+    platforms: [windowsphone]
+  - name: tabsBackgroundFocusedImage
+    platforms: [windowsphone]
   - name: tabsBackgroundSelectedColor
     platforms: [windowsphone]
   - name: tabsBackgroundSelectedImage
@@ -20,6 +28,14 @@ properties:
   - name: activeTabBackgroundColor
     platforms: [windowsphone]
   - name: activeTabBackgroundImage
+    platforms: [windowsphone]
+  - name: activeTabBackgroundDisabledColor
+    platforms: [windowsphone]
+  - name: activeTabBackgroundDisabledImage
+    platforms: [windowsphone]
+  - name: activeTabBackgroundFocusedColor
+    platforms: [windowsphone]
+  - name: activeTabBackgroundFocusedImage
     platforms: [windowsphone]
   - name: activeTabBackgroundSelectedColor
     platforms: [windowsphone]
@@ -58,6 +74,22 @@ methods:
     platforms: [windowsphone]
   - name: setTabsBackgroundImage
     platforms: [windowsphone]
+  - name: getTabsBackgroundDisabledColor
+    platforms: [windowsphone]
+  - name: setTabsBackgroundDisabledColor
+    platforms: [windowsphone]
+  - name: getTabsBackgroundDisabledImage
+    platforms: [windowsphone]
+  - name: setTabsBackgroundDisabledImage
+    platforms: [windowsphone]
+  - name: getTabsBackgroundFocusedColor
+    platforms: [windowsphone]
+  - name: setTabsBackgroundFocusedColor
+    platforms: [windowsphone]
+  - name: getTabsBackgroundFocusedImage
+    platforms: [windowsphone]
+  - name: setTabsBackgroundFocusedImage
+    platforms: [windowsphone]
   - name: getTabsBackgroundSelectedColor
     platforms: [windowsphone]
   - name: setTabsBackgroundSelectedColor
@@ -73,6 +105,22 @@ methods:
   - name: getActiveTabBackgroundImage
     platforms: [windowsphone]
   - name: setActiveTabBackgroundImage
+    platforms: [windowsphone]
+  - name: getActiveTabBackgroundDisabledColor
+    platforms: [windowsphone]
+  - name: setActiveTabBackgroundDisabledColor
+    platforms: [windowsphone]
+  - name: getActiveTabBackgroundDisabledImage
+    platforms: [windowsphone]
+  - name: setActiveTabBackgroundDisabledImage
+    platforms: [windowsphone]
+  - name: getActiveTabBackgroundFocusedColor
+    platforms: [windowsphone]
+  - name: setActiveTabBackgroundFocusedColor
+    platforms: [windowsphone]
+  - name: getActiveTabBackgroundFocusedImage
+    platforms: [windowsphone]
+  - name: setActiveTabBackgroundFocusedImage
     platforms: [windowsphone]
   - name: getActiveTabBackgroundSelectedColor
     platforms: [windowsphone]

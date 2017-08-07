@@ -1,0 +1,79 @@
+name: Titanium.XML.EntityReference
+platforms: [windowsphone]
+properties:
+  - name: ATTRIBUTE_NODE
+    platforms: [windowsphone]
+  - name: CDATA_SECTION_NODE
+    platforms: [windowsphone]
+  - name: COMMENT_NODE
+    platforms: [windowsphone]
+  - name: DOCUMENT_FRAGMENT_NODE
+    platforms: [windowsphone]
+  - name: DOCUMENT_NODE
+    platforms: [windowsphone]
+  - name: DOCUMENT_TYPE_NODE
+    platforms: [windowsphone]
+  - name: ELEMENT_NODE
+    platforms: [windowsphone]
+  - name: ENTITY_NODE
+    platforms: [windowsphone]
+  - name: ENTITY_REFERENCE_NODE
+    platforms: [windowsphone]
+  - name: NOTATION_NODE
+    platforms: [windowsphone]
+  - name: PROCESSING_INSTRUCTION_NODE
+    platforms: [windowsphone]
+  - name: TEXT_NODE
+    platforms: [windowsphone]
+  - name: attributes
+    platforms: [windowsphone]
+  - name: childNodes
+    platforms: [windowsphone]
+  - name: firstChild
+    platforms: [windowsphone]
+  - name: lastChild
+    platforms: [windowsphone]
+  - name: localName
+    platforms: [windowsphone]
+  - name: namespaceURI
+    platforms: [windowsphone]
+  - name: nextSibling
+    platforms: [windowsphone]
+  - name: nodeName
+    platforms: [windowsphone]
+  - name: nodeType
+    platforms: [windowsphone]
+  - name: nodeValue
+    platforms: [windowsphone]
+  - name: ownerDocument
+    platforms: [windowsphone]
+  - name: parentNode
+    platforms: [windowsphone]
+  - name: prefix
+    platforms: [windowsphone]
+  - name: previousSibling
+    platforms: [windowsphone]
+  - name: text
+    platforms: [windowsphone]
+  - name: textContent
+    platforms: [windowsphone]
+methods:
+  - name: appendChild
+    platforms: [windowsphone]
+  - name: cloneNode
+    platforms: [windowsphone]
+  - name: hasAttributes
+    platforms: [windowsphone]
+  - name: hasChildNodes
+    platforms: [windowsphone]
+  - name: insertBefore
+    platforms: [windowsphone]
+  - name: isSupported
+    platforms: [windowsphone]
+  - name: normalize
+    platforms: [windowsphone]
+  - name: removeChild
+    platforms: [windowsphone]
+  - name: replaceChild
+    platforms: [windowsphone]
+

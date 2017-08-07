@@ -1,0 +1,81 @@
+name: Titanium.Map.View
+platforms: [windowsphone]
+properties:
+  - name: animate
+    platforms: [windowsphone]
+  - name: camera
+    platforms: [windowsphone]
+  - name: annotations
+    platforms: [windowsphone]
+  - name: compassEnabled
+    platforms: [windowsphone]
+  - name: enableZoomControls
+    platforms: [windowsphone]
+  - name: mapType
+    platforms: [windowsphone]
+  - name: maxZoomLevel
+    platforms: [windowsphone]
+  - name: minZoomLevel
+    platforms: [windowsphone]
+  - name: pitchEnabled
+    platforms: [windowsphone]
+  - name: region
+    platforms: [windowsphone]
+  - name: rotateEnabled
+    platforms: [windowsphone]
+  - name: showsBuildings
+    platforms: [windowsphone]
+  - name: showsPointsOfInterest
+    platforms: [windowsphone]
+  - name: traffic
+    platforms: [windowsphone]
+  - name: userLocation
+    platforms: [windowsphone]
+  - name: userLocationButton
+    platforms: [windowsphone]
+  - name: zOrderOnTop
+    platforms: [windowsphone]
+methods:
+  - name: addAnnotation
+    platforms: [windowsphone]
+  - name: addAnnotations
+    platforms: [windowsphone]
+  - name: removeAllAnnotations
+    platforms: [windowsphone]
+  - name: removeAnnotation
+    platforms: [windowsphone]
+  - name: removeAnnotations
+    platforms: [windowsphone]
+  - name: zoom
+    platforms: [windowsphone]
+  - name: setCamera
+    platforms: [windowsphone]
+  - name: setAnnotations
+    platforms: [windowsphone]
+  - name: setAnimate
+    platforms: [windowsphone]
+  - name: setCompassEnabled
+    platforms: [windowsphone]
+  - name: setEnableZoomControls
+    platforms: [windowsphone]
+  - name: setMapType
+    platforms: [windowsphone]
+  - name: setPitchEnabled
+    platforms: [windowsphone]
+  - name: setRegion
+    platforms: [windowsphone]
+  - name: setRotateEnabled
+    platforms: [windowsphone]
+  - name: setShowsBuildings
+    platforms: [windowsphone]
+  - name: setShowsPointsOfInterest
+    platforms: [windowsphone]
+  - name: setTraffic
+    platforms: [windowsphone]
+  - name: setUserLocation
+    platforms: [windowsphone]
+  - name: setUserLocationButton
+    platforms: [windowsphone]
+  - name: setZOrderOnTop
+    platforms: [windowsphone]
+

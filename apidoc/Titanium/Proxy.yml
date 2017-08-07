@@ -1,0 +1,29 @@
+name: Titanium.Proxy
+platforms: [windowsphone]
+properties:
+  - name: apiName
+    platforms: [windowsphone]
+  - name: bubbleParent
+    platforms: [windowsphone]
+  - name: lifecycleContainer
+    platforms: [windowsphone]
+methods:
+  - name: addEventListener
+    platforms: [windowsphone]
+  - name: applyProperties
+    platforms: [windowsphone]
+  - name: fireEvent
+    platforms: [windowsphone]
+  - name: getApiName
+    platforms: [windowsphone]
+  - name: getBubbleParent
+    platforms: [windowsphone]
+  - name: getLifecycleContainer
+    platforms: [windowsphone]
+  - name: removeEventListener
+    platforms: [windowsphone]
+  - name: setBubbleParent
+    platforms: [windowsphone]
+  - name: setLifecycleContainer
+    platforms: [windowsphone]
+

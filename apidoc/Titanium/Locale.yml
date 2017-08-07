@@ -1,15 +1,27 @@
 name: Titanium.Locale
 platforms: [windowsphone]
 properties:
+  - name: currentCountry
+    platforms: [windowsphone]
+  - name: currentLanguage
+    platforms: [windowsphone]
   - name: currentLocale
     platforms: [windowsphone]
 methods:
-  - name: formatTelephoneNumber
-    platforms: [windowsphone]
   - name: getCurrencyCode
+    platforms: [windowsphone]
+  - name: getCurrencySymbol
+    platforms: [windowsphone]
+  - name: getLocaleCurrencySymbol
+    platforms: [windowsphone]
+  - name: getCurrentCountry
+    platforms: [windowsphone]
+  - name: getCurrentLanguage
     platforms: [windowsphone]
   - name: getCurrentLocale
     platforms: [windowsphone]
   - name: getString
+    platforms: [windowsphone]
+  - name: setLanguage
     platforms: [windowsphone]
 

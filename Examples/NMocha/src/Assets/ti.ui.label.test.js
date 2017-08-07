@@ -113,6 +113,27 @@ describe('Titanium.UI.Label', function () {
 		finish();
 	});
 
+	it('TIMOB-24831', function (finish) {
+	    this.timeout(5000);
+	    var label = Ti.UI.createLabel({
+	        text: 'this is some text',
+            top: 10, left: 10, right: 10, bottom: 10
+	    });
+	    var win = Ti.UI.createWindow({
+	        backgroundColor: '#ddd'
+	    });
+	    win.add(label);
+	    win.addEventListener('open', function () {
+	        setTimeout(function () {
+	            should(label.rect.width).eql(win.rect.width - 20);
+	            should(label.rect.height).eql(win.rect.height - 20);
+	            win.close();
+	            finish();
+	        }, 3000);
+	    });
+	    win.open();
+	});
+
 	(utilities.isWindowsDesktop() ? it.skip : it)('width', function (finish) {
 		this.timeout(5000);
 		var label = Ti.UI.createLabel({
