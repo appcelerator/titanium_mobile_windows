@@ -955,6 +955,8 @@ namespace TitaniumWindows
 					updateBackground(backgroundDisabledImageBrush__);
 				} else if (backgroundDisabledColorBrush__ != nullptr) {
 					updateBackground(backgroundDisabledColorBrush__);
+				} else {
+					updateBackground(previousBackgroundBrush__);
 				}
 			}
 		}
@@ -975,6 +977,8 @@ namespace TitaniumWindows
 			backgroundImageBrush__ = CreateImageBrushFromPath(backgroundImage);
 			if (get_touchEnabled()) {
 				updateBackground(backgroundImageBrush__);
+			} else {
+				updateDisabledBackground();
 			}
 		}
 
@@ -984,6 +988,8 @@ namespace TitaniumWindows
 			backgroundImageBrush__ = CreateImageBrushFromBlob(backgroundImage);
 			if (get_touchEnabled()) {
 				updateBackground(backgroundImageBrush__);
+			} else {
+				updateDisabledBackground();
 			}
 		}
 
@@ -994,6 +1000,8 @@ namespace TitaniumWindows
 			backgroundColorBrush__ = ref new Media::SolidColorBrush(ColorForName(backgroundColor));
 			if (get_touchEnabled()) {
 				updateBackground(backgroundColorBrush__);
+			} else {
+				updateDisabledBackground();
 			}
 		}
 
@@ -1295,7 +1303,8 @@ namespace TitaniumWindows
 			const auto children = root == nullptr ? get_children() : root->get_children();
 			// Let's find correct source
 			for (const auto child : children) {
-				const auto childView = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getEventComponent();
+				const auto childLayout = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+				const auto childView   = childLayout->getComponent();
 				const auto elements = Windows::UI::Xaml::Media::VisualTreeHelper::FindElementsInHostCoordinates(position, childView);
 				for (const auto e : elements) {
 					// Let's check its descendents so we can support nested views
@@ -1305,7 +1314,9 @@ namespace TitaniumWindows
 							return found;
 						}
 					}
-					return child;
+					if (childLayout->get_touchEnabled()) {
+						return child;
+					}
 				}
 			}
 			return nullptr;
@@ -1479,6 +1490,8 @@ namespace TitaniumWindows
 				} else {
 					updateBackground(nullptr); // delete background
 				}
+			} else {
+				updateDisabledBackground();
 			}
 		}
 
