@@ -1,6 +1,8 @@
 name: Titanium.Media.AudioRecorder
 platforms: [windowsphone]
 properties:
+  - name: format
+    platforms: [windowsphone]
   - name: paused
     platforms: [windowsphone]
   - name: recording
@@ -8,9 +10,17 @@ properties:
   - name: stopped
     platforms: [windowsphone]
 methods:
+  - name: pause
+    platforms: [windowsphone]
+  - name: resume
+    platforms: [windowsphone]
   - name: start
     platforms: [windowsphone]
   - name: stop
+    platforms: [windowsphone]
+  - name: getFormat
+    platforms: [windowsphone]
+  - name: setFormat
     platforms: [windowsphone]
   - name: getPaused
     platforms: [windowsphone]

@@ -17,6 +17,8 @@ properties:
     platforms: [windowsphone]
   - name: AUTHORIZATION_UNKNOWN
     platforms: [windowsphone]
+  - name: contactsAuthorization
+    platforms: [windowsphone]
 methods:
   - name: createGroup
     platforms: [windowsphone]
@@ -47,5 +49,7 @@ methods:
   - name: save
     platforms: [windowsphone]
   - name: showContacts
+    platforms: [windowsphone]
+  - name: getContactsAuthorization
     platforms: [windowsphone]
 

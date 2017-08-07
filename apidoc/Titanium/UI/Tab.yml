@@ -1,6 +1,14 @@
 name: Titanium.UI.Tab
 platforms: [windowsphone]
 properties:
+  - name: backgroundDisabledColor
+    platforms: [windowsphone]
+  - name: backgroundDisabledImage
+    platforms: [windowsphone]
+  - name: backgroundFocusedColor
+    platforms: [windowsphone]
+  - name: backgroundFocusedImage
+    platforms: [windowsphone]
   - name: backgroundImage
     platforms: [windowsphone]
   - name: backgroundSelectedColor
@@ -11,7 +19,11 @@ properties:
     platforms: [windowsphone]
   - name: active
     platforms: [windowsphone]
+  - name: activeTitleColor
+    platforms: [windowsphone]
   - name: title
+    platforms: [windowsphone]
+  - name: titleColor
     platforms: [windowsphone]
   - name: titleid
     platforms: [windowsphone]
@@ -21,6 +33,22 @@ methods:
   - name: open
     platforms: [windowsphone]
   - name: close
+    platforms: [windowsphone]
+  - name: getBackgroundDisabledColor
+    platforms: [windowsphone]
+  - name: setBackgroundDisabledColor
+    platforms: [windowsphone]
+  - name: getBackgroundDisabledImage
+    platforms: [windowsphone]
+  - name: setBackgroundDisabledImage
+    platforms: [windowsphone]
+  - name: getBackgroundFocusedColor
+    platforms: [windowsphone]
+  - name: setBackgroundFocusedColor
+    platforms: [windowsphone]
+  - name: getBackgroundFocusedImage
+    platforms: [windowsphone]
+  - name: setBackgroundFocusedImage
     platforms: [windowsphone]
   - name: getBackgroundImage
     platforms: [windowsphone]
@@ -42,9 +70,17 @@ methods:
     platforms: [windowsphone]
   - name: setActive
     platforms: [windowsphone]
+  - name: getActiveTitleColor
+    platforms: [windowsphone]
+  - name: setActiveTitleColor
+    platforms: [windowsphone]
   - name: getTitle
     platforms: [windowsphone]
   - name: setTitle
+    platforms: [windowsphone]
+  - name: getTitleColor
+    platforms: [windowsphone]
+  - name: setTitleColor
     platforms: [windowsphone]
   - name: getTitleid
     platforms: [windowsphone]

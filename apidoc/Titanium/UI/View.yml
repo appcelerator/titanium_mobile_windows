@@ -17,7 +17,11 @@ properties:
     platforms: [windowsphone]
   - name: backgroundSelectedImage
     platforms: [windowsphone]
+  - name: borderRadius
+    platforms: [windowsphone]
   - name: borderWidth
+    platforms: [windowsphone]
+  - name: enabled
     platforms: [windowsphone]
   - name: opacity
     platforms: [windowsphone]
@@ -25,11 +29,11 @@ properties:
     platforms: [windowsphone]
   - name: size
     platforms: [windowsphone]
+  - name: touchEnabled
+    platforms: [windowsphone]
   - name: visible
     platforms: [windowsphone]
   - name: zIndex
-    platforms: [windowsphone]
-  - name: children
     platforms: [windowsphone]
   - name: backgroundColor
     platforms: [windowsphone]
@@ -49,6 +53,10 @@ properties:
     platforms: [windowsphone]
   - name: layout
     platforms: [windowsphone]
+  - name: children
+    platforms: [windowsphone]
+  - name: parent
+    platforms: [windowsphone]
 methods:
   - name: animate
     platforms: [windowsphone]
@@ -57,6 +65,8 @@ methods:
   - name: removeAllChildren
     platforms: [windowsphone]
   - name: toImage
+    platforms: [windowsphone]
+  - name: convertPointToView
     platforms: [windowsphone]
   - name: add
     platforms: [windowsphone]
@@ -96,9 +106,17 @@ methods:
     platforms: [windowsphone]
   - name: setBackgroundSelectedImage
     platforms: [windowsphone]
+  - name: getBorderRadius
+    platforms: [windowsphone]
+  - name: setBorderRadius
+    platforms: [windowsphone]
   - name: getBorderWidth
     platforms: [windowsphone]
   - name: setBorderWidth
+    platforms: [windowsphone]
+  - name: getEnabled
+    platforms: [windowsphone]
+  - name: setEnabled
     platforms: [windowsphone]
   - name: getOpacity
     platforms: [windowsphone]
@@ -107,6 +125,12 @@ methods:
   - name: getRect
     platforms: [windowsphone]
   - name: getSize
+    platforms: [windowsphone]
+  - name: getTouchEnabled
+    platforms: [windowsphone]
+  - name: setTouchEnabled
+    platforms: [windowsphone]
+  - name: getViewById
     platforms: [windowsphone]
   - name: getVisible
     platforms: [windowsphone]
@@ -153,6 +177,10 @@ methods:
   - name: getLayout
     platforms: [windowsphone]
   - name: setLayout
+    platforms: [windowsphone]
+  - name: getParent
+    platforms: [windowsphone]
+  - name: setParent
     platforms: [windowsphone]
   - name: insertAt
     platforms: [windowsphone]

@@ -1,0 +1,49 @@
+name: Titanium.UI.Picker
+platforms: [windowsphone]
+properties:
+  - name: columns
+    platforms: [windowsphone]
+  - name: maxDate
+    platforms: [windowsphone]
+  - name: minDate
+    platforms: [windowsphone]
+  - name: value
+    platforms: [windowsphone]
+  - name: visibleItems
+    platforms: [windowsphone]
+  - name: type
+    platforms: [windowsphone]
+methods:
+  - name: add
+    platforms: [windowsphone]
+  - name: reloadColumn
+    platforms: [windowsphone]
+  - name: getSelectedRow
+    platforms: [windowsphone]
+  - name: setSelectedRow
+    platforms: [windowsphone]
+  - name: getColumns
+    platforms: [windowsphone]
+  - name: setColumns
+    platforms: [windowsphone]
+  - name: getMaxDate
+    platforms: [windowsphone]
+  - name: setMaxDate
+    platforms: [windowsphone]
+  - name: getMinDate
+    platforms: [windowsphone]
+  - name: setMinDate
+    platforms: [windowsphone]
+  - name: getValue
+    platforms: [windowsphone]
+  - name: setValue
+    platforms: [windowsphone]
+  - name: getVisibleItems
+    platforms: [windowsphone]
+  - name: setVisibleItems
+    platforms: [windowsphone]
+  - name: getType
+    platforms: [windowsphone]
+  - name: setType
+    platforms: [windowsphone]
+

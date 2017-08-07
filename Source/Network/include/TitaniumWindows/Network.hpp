@@ -17,8 +17,6 @@ namespace TitaniumWindows
 	// declare what's unimplemented regarding this modules.
 	// Make sure to remove once it's implemented
 	TITANIUM_MODULE_UNIMPLEMENTED(Titanium.Network.Cookie);
-	TITANIUM_MODULE_UNIMPLEMENTED(Titanium.Network.Socket.TCP);
-	TITANIUM_MODULE_UNIMPLEMENTED(Titanium.Network.Socket.UDP);
 
 	/*!
       @class NetworkModule
@@ -72,6 +70,6 @@ namespace TitaniumWindows
 		Windows::Foundation::EventRegistrationToken change_event__;
 	};
 
-}  
+}
 
 #endif  // _TITANIUMWINDOWS_NETWORKMODULE_HPP_

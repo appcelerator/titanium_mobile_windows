@@ -17,6 +17,8 @@ methods:
     platforms: [windowsphone]
   - name: listProperties
     platforms: [windowsphone]
+  - name: removeAllProperties
+    platforms: [windowsphone]
   - name: removeProperty
     platforms: [windowsphone]
   - name: setBool

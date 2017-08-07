@@ -9,6 +9,10 @@ properties:
     platforms: [windowsphone]
   - name: min
     platforms: [windowsphone]
+  - name: tintColor
+    platforms: [windowsphone]
+  - name: trackTintColor
+    platforms: [windowsphone]
   - name: value
     platforms: [windowsphone]
 methods:
@@ -27,6 +31,14 @@ methods:
   - name: getMin
     platforms: [windowsphone]
   - name: setMin
+    platforms: [windowsphone]
+  - name: getTintColor
+    platforms: [windowsphone]
+  - name: setTintColor
+    platforms: [windowsphone]
+  - name: getTrackTintColor
+    platforms: [windowsphone]
+  - name: setTrackTintColor
     platforms: [windowsphone]
   - name: getValue
     platforms: [windowsphone]

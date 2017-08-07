@@ -1,0 +1,59 @@
+name: Titanium.Network.Socket.TCP
+platforms: [windowsphone]
+properties:
+  - name: host
+    platforms: [windowsphone]
+  - name: port
+    platforms: [windowsphone]
+  - name: listenQueueSize
+    platforms: [windowsphone]
+  - name: timeout
+    platforms: [windowsphone]
+  - name: connected
+    platforms: [windowsphone]
+  - name: error
+    platforms: [windowsphone]
+  - name: accepted
+    platforms: [windowsphone]
+  - name: state
+    platforms: [windowsphone]
+methods:
+  - name: close
+    platforms: [windowsphone]
+  - name: connect
+    platforms: [windowsphone]
+  - name: listen
+    platforms: [windowsphone]
+  - name: accept
+    platforms: [windowsphone]
+  - name: getHost
+    platforms: [windowsphone]
+  - name: setHost
+    platforms: [windowsphone]
+  - name: getPort
+    platforms: [windowsphone]
+  - name: setPort
+    platforms: [windowsphone]
+  - name: getListenQueueSize
+    platforms: [windowsphone]
+  - name: setListenQueueSize
+    platforms: [windowsphone]
+  - name: getTimeout
+    platforms: [windowsphone]
+  - name: setTimeout
+    platforms: [windowsphone]
+  - name: getConnected
+    platforms: [windowsphone]
+  - name: setConnected
+    platforms: [windowsphone]
+  - name: getError
+    platforms: [windowsphone]
+  - name: setError
+    platforms: [windowsphone]
+  - name: getAccepted
+    platforms: [windowsphone]
+  - name: setAccepted
+    platforms: [windowsphone]
+  - name: getState
+    platforms: [windowsphone]
+

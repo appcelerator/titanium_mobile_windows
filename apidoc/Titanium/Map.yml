@@ -1,0 +1,63 @@
+name: Titanium.Map
+platforms: [windowsphone]
+properties:
+  - name: HYBRID_TYPE
+    platforms: [windowsphone]
+  - name: SATELLITE_TYPE
+    platforms: [windowsphone]
+  - name: NORMAL_TYPE
+    platforms: [windowsphone]
+  - name: TERRAIN_TYPE
+    platforms: [windowsphone]
+  - name: ANNOTATION_DRAG_STATE_END
+    platforms: [windowsphone]
+  - name: ANNOTATION_DRAG_STATE_START
+    platforms: [windowsphone]
+  - name: ANNOTATION_AZURE
+    platforms: [windowsphone]
+  - name: ANNOTATION_BLUE
+    platforms: [windowsphone]
+  - name: ANNOTATION_CYAN
+    platforms: [windowsphone]
+  - name: ANNOTATION_GREEN
+    platforms: [windowsphone]
+  - name: ANNOTATION_MAGENTA
+    platforms: [windowsphone]
+  - name: ANNOTATION_ORANGE
+    platforms: [windowsphone]
+  - name: ANNOTATION_PURPLE
+    platforms: [windowsphone]
+  - name: ANNOTATION_RED
+    platforms: [windowsphone]
+  - name: ANNOTATION_ROSE
+    platforms: [windowsphone]
+  - name: ANNOTATION_VIOLET
+    platforms: [windowsphone]
+  - name: ANNOTATION_YELLOW
+    platforms: [windowsphone]
+  - name: OVERLAY_LEVEL_ABOVE_LABELS
+    platforms: [windowsphone]
+  - name: OVERLAY_LEVEL_ABOVE_ROADS
+    platforms: [windowsphone]
+  - name: SERVICE_DISABLED
+    platforms: [windowsphone]
+  - name: SERVICE_INVALID
+    platforms: [windowsphone]
+  - name: SERVICE_MISSING
+    platforms: [windowsphone]
+  - name: SERVICE_VERSION_UPDATE_REQUIRED
+    platforms: [windowsphone]
+  - name: SUCCESS
+    platforms: [windowsphone]
+methods:
+  - name: createView
+    platforms: [windowsphone]
+  - name: createAnnotation
+    platforms: [windowsphone]
+  - name: createRoute
+    platforms: [windowsphone]
+  - name: createCamera
+    platforms: [windowsphone]
+  - name: isGooglePlayServicesAvailable
+    platforms: [windowsphone]
+

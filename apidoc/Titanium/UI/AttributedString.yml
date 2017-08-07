@@ -1,0 +1,19 @@
+name: Titanium.UI.AttributedString
+platforms: [windowsphone]
+properties:
+  - name: text
+    platforms: [windowsphone]
+  - name: attributes
+    platforms: [windowsphone]
+methods:
+  - name: addAttribute
+    platforms: [windowsphone]
+  - name: getText
+    platforms: [windowsphone]
+  - name: setText
+    platforms: [windowsphone]
+  - name: getAttributes
+    platforms: [windowsphone]
+  - name: setAttributes
+    platforms: [windowsphone]
+

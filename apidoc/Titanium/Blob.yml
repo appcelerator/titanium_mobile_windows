@@ -38,4 +38,10 @@ methods:
     platforms: [windowsphone]
   - name: toString
     platforms: [windowsphone]
+  - name: imageAsCropped
+    platforms: [windowsphone]
+  - name: imageAsResized
+    platforms: [windowsphone]
+  - name: imageAsThumbnail
+    platforms: [windowsphone]
 
