@@ -50,6 +50,13 @@ namespace TitaniumWindows
 			});
 
 			suggest_box__->TextChanged += ref new TypedEventHandler<AutoSuggestBox^, AutoSuggestBoxTextChangedEventArgs^>([this](AutoSuggestBox^ sender, AutoSuggestBoxTextChangedEventArgs^ e) {
+
+				const auto ctx = get_context();
+				const auto value = TitaniumWindows::Utility::ConvertUTF8String(sender->Text);
+				auto eventArgs = ctx.CreateObject();
+				eventArgs.SetProperty("value", ctx.CreateString(value));
+				fireEvent("change", eventArgs);
+
 				if (suggestionRequested__) {
 					if (e->Reason == AutoSuggestionBoxTextChangeReason::SuggestionChosen) {
 						return;
