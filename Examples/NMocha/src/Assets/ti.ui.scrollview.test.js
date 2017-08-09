@@ -17,8 +17,8 @@ describe('Titanium.UI.ScrollView', function () {
 		var bar = Ti.UI.createScrollView({});
 		should(bar.canCancelEvents).be.a.Boolean;
 		should(bar.contentOffset).be.an.Object;
-		should(bar.contentOffset.x).be.a.Number;
-		should(bar.contentOffset.y).be.a.Number;
+		should(bar.contentOffset.x).be.a.String;
+		should(bar.contentOffset.y).be.a.String;
 		should(bar.disableBounce).be.a.Boolean;
 		should(bar.horizontalBounce).be.a.Boolean;
 		should(bar.maxZoomScale).be.a.Number;
