@@ -1578,7 +1578,7 @@ describe('Titanium.UI.Layout', function () {
 	});
 
 		// TIMOB-23225
-	it('TIMOB-23225', function (finish) {
+	(utilities.isWindows10() ? it.skip : it)('TIMOB-23225', function (finish) {
 			var parent = Ti.UI.createView({
 					height: Ti.UI.SIZE,
 					width: Ti.UI.SIZE,
