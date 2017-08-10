@@ -320,7 +320,7 @@ namespace TitaniumWindows
 		void ScrollView::set_contentOffset(const Titanium::UI::Point& offset) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ScrollView::set_contentOffset(offset);
-			scrollTo(offset.x, offset.y);
+			scrollTo(Titanium::UI::get_Point_value(offset.x), Titanium::UI::get_Point_value(offset.y));
 		}
 	} // namespace UI
 } // namespace TitaniumWindows

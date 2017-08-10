@@ -23,8 +23,8 @@ namespace Titanium
 				TITANIUM_ASSERT(p.IsObject());
 				dict.anchorPoint = js_to_Point(static_cast<JSObject>(p));
 			} else {
-				dict.anchorPoint.x = 0.5;
-				dict.anchorPoint.y = 0.5;
+				dict.anchorPoint.x = std::to_string(0.5);
+				dict.anchorPoint.y = std::to_string(0.5);
 			}
 			if (object.HasProperty("rotate")) {
 				dict.rotate = static_cast<int32_t>(object.GetProperty("rotate"));

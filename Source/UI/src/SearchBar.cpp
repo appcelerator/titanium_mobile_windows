@@ -12,6 +12,7 @@
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 
+using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::Foundation;
@@ -25,12 +26,51 @@ namespace TitaniumWindows
 			: Titanium::UI::SearchBar(js_context)
 		{
 			TITANIUM_LOG_DEBUG("SearchBar::ctor Initialize");
+			showCancel__ = true; // native default
 		}
 
 		SearchBar::~SearchBar()
 		{
 			TITANIUM_LOG_DEBUG("SearchBar::dtor");
 		}
+
+#if defined(IS_WINDOWS_10)
+		static TextBox^ GetTextBox(DependencyObject^ root)
+		{
+			const auto count = Media::VisualTreeHelper::GetChildrenCount(root);
+			for (int i = 0; i < count; i++) {
+				const auto child = Media::VisualTreeHelper::GetChild(root, i);
+				const auto textbox = dynamic_cast<TextBox^>(child);
+				if (textbox) {
+					return textbox;
+				} else {
+					return GetTextBox(child);
+				}
+			}
+			return nullptr;
+		}
+
+		void SearchBar::updateCancelButtonVisibility(const bool& show) TITANIUM_NOEXCEPT
+		{
+			// if no one touches showCancel property, we don't want to use our hack
+			// because native implementation should be faster and safer.
+			if (!delete_button_dirty__) return;
+
+			const auto visible = suggest_box__->Text->IsEmpty() ? false : show;
+			if (delete_button__) {
+				delete_button__->MaxHeight  = visible ? HUGE_VAL : 0;
+				delete_button__->MaxWidth   = visible ? HUGE_VAL : 0;
+				delete_button__->Visibility = visible ? Visibility::Visible : Visibility::Collapsed;
+			}
+		}
+
+		void SearchBar::set_showCancel(const bool& show) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::SearchBar::set_showCancel(show);
+			delete_button_dirty__ = true; // indicate we need to use our hack
+			updateCancelButtonVisibility(show);
+		}
+#endif
 
 		void SearchBar::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) 
 		{
@@ -42,8 +82,48 @@ namespace TitaniumWindows
 			suggest_box__->ItemsSource = suggestItems__;
 #if defined(IS_WINDOWS_10)
 			suggest_box__->QueryIcon = ref new SymbolIcon(Symbol::Find);
+
+			// Since VisualTreeHelper is only available after Loaded event is fired, we need to update the visual state then.
+			suggest_box__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
+				const auto textbox = GetTextBox(suggest_box__);
+				if (textbox && Media::VisualTreeHelper::GetChildrenCount(textbox) > 0) {
+					//
+					// assuming the first component appeared in the TextBox is Grid that includes the button
+					//
+					const auto grid = dynamic_cast<Grid^>(Media::VisualTreeHelper::GetChild(textbox, 0));
+					if (grid) {
+						const auto count = Media::VisualTreeHelper::GetChildrenCount(grid);
+						for (auto i = 0; i < count; i++) {
+							//
+							// assuming the first button appeared in the Grid is the "DeleteButton"
+							//
+							const auto button = dynamic_cast<Button^>(Media::VisualTreeHelper::GetChild(grid, i));
+							if (button) {
+								delete_button__ = button;
+								return;
+							}
+						}
+					}
+				}
+			});
+
+			// Each time text has changed, you need to update the visibility of the DeleteButton
+			suggest_box__->KeyDown += ref new Windows::UI::Xaml::Input::KeyEventHandler([this](Platform::Object^, KeyRoutedEventArgs^) {
+				updateCancelButtonVisibility(get_showCancel());
+			});
+			// Hide the DeleteButton whenever SearchBar lost focus, 
+			suggest_box__->LostFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+				updateCancelButtonVisibility(false);
+			});
+			// Resture DeleteButton status when we got focus
+			suggest_box__->GotFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+				updateCancelButtonVisibility(get_showCancel());
+			});
 #endif
 			suggest_box__->KeyUp += ref new KeyEventHandler([this](Platform::Object^ sender, KeyRoutedEventArgs^ e) {
+#if defined(IS_WINDOWS_10)
+				updateCancelButtonVisibility(get_showCancel());
+#endif
 				if (e->Key == Windows::System::VirtualKey::Enter && querySubmitted__) {
 					querySubmitted__(TitaniumWindows::Utility::ConvertString(suggest_box__->Text));
 				}
