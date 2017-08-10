@@ -80,6 +80,7 @@ namespace TitaniumWindows
 			suggest_box__  = ref new AutoSuggestBox();
 			suggestItems__ = ref new Platform::Collections::Vector<Platform::String^>();
 			suggest_box__->ItemsSource = suggestItems__;
+			suggest_box__->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
 #if defined(IS_WINDOWS_10)
 			suggest_box__->QueryIcon = ref new SymbolIcon(Symbol::Find);
 
@@ -127,9 +128,24 @@ namespace TitaniumWindows
 				if (e->Key == Windows::System::VirtualKey::Enter && querySubmitted__) {
 					querySubmitted__(TitaniumWindows::Utility::ConvertString(suggest_box__->Text));
 				}
+				if (e->Key == Windows::System::VirtualKey::Enter) {
+					const auto ctx = get_context();
+					JSObject eventArgs = ctx.CreateObject();
+					eventArgs.SetProperty("value", ctx.CreateString(this->get_value()));
+
+					this->fireEvent("return", eventArgs);
+				}
 			});
 
 			suggest_box__->TextChanged += ref new TypedEventHandler<AutoSuggestBox^, AutoSuggestBoxTextChangedEventArgs^>([this](AutoSuggestBox^ sender, AutoSuggestBoxTextChangedEventArgs^ e) {
+
+				if (e->Reason == AutoSuggestionBoxTextChangeReason::UserInput && sender->Text->IsEmpty()) {
+					const auto ctx = get_context();
+					auto eventObj = ctx.CreateObject();
+					eventObj.SetProperty("value", ctx.CreateString(""));
+					fireEvent("cancel", eventObj);
+				}
+
 				if (suggestionRequested__) {
 					if (e->Reason == AutoSuggestionBoxTextChangeReason::SuggestionChosen) {
 						return;
@@ -209,6 +225,12 @@ namespace TitaniumWindows
 		std::string SearchBar::get_hintText() const TITANIUM_NOEXCEPT
 		{
 			return TitaniumWindows::Utility::ConvertUTF8String(suggest_box__->PlaceholderText);
+		}
+
+		void SearchBar::set_barColor(const std::string& color) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::SearchBar::set_barColor(color);
+			getViewLayoutDelegate()->set_backgroundColor(color);
 		}
 	}  // namespace UI
 }  // namespace TitaniumWindows
