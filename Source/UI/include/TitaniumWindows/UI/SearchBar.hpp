@@ -35,7 +35,6 @@ namespace TitaniumWindows
 			TITANIUM_FUNCTION_UNIMPLEMENTED(remove);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(autocapitalization);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(autocorrect);
-			TITANIUM_PROPERTY_UNIMPLEMENTED(barColor);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(font);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(style);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(keyboardType);
@@ -63,6 +62,7 @@ namespace TitaniumWindows
 			virtual void set_hintText(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual std::string get_hintText() const TITANIUM_NOEXCEPT override;
 
+			virtual void set_barColor(const std::string&) TITANIUM_NOEXCEPT override;
 #if defined(IS_WINDOWS_10)
 			// showCancel is only supported on Windows 10
 			virtual void set_showCancel(const bool&) TITANIUM_NOEXCEPT override;
