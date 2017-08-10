@@ -14,38 +14,27 @@ namespace Titanium
 	{
 		using namespace HAL;
 
+		double get_Point_value(const std::string& value)
+		{
+			if (value.empty()) {
+				return 0;
+			}
+			if (boost::ends_with(value, "%")) {
+				return std::stod(value) / 100.0;
+			}
+			return std::stod(value);
+		}
+
 		Point js_to_Point(const JSObject& object)
 		{
 			Point point;
 			if (object.HasProperty("x")) {
-				const auto xobj = object.GetProperty("x");
-				if (xobj.IsString()) {
-					const auto xstr = static_cast<std::string>(xobj);
-					if (boost::ends_with(xstr, "%")) {
-						// Point accepts '%'. 
-						point.x_percent = xstr;
-					} else {
-						// not a percent? Force double anyway
-						point.x = static_cast<double>(xobj);
-					}
-				} else {
-					point.x = static_cast<double>(xobj);
-				}
+				const auto x = static_cast<std::string>(object.GetProperty("x"));
+				point.x = x.empty() ? "0" : x;
 			}
 			if (object.HasProperty("y")) {
-				const auto yobj = object.GetProperty("y");
-				if (yobj.IsString()) {
-					const auto ystr = static_cast<std::string>(yobj);
-					if (boost::ends_with(ystr, "%")) {
-						// Point accepts '%'
-						point.y_percent = ystr;
-					} else {
-						// not a percent? Force double anyway
-						point.y = static_cast<double>(yobj);
-					}
-				} else {
-					point.y = static_cast<double>(yobj);
-				}
+				const auto y = static_cast<std::string>(object.GetProperty("y"));
+				point.y = y.empty() ? "0" : y;
 			}
 			return point;
 		};
@@ -53,8 +42,8 @@ namespace Titanium
 		JSObject Point_to_js(const JSContext& js_context, const Point& point)
 		{
 			auto object = js_context.CreateObject();
-			object.SetProperty("x", js_context.CreateNumber(point.x));
-			object.SetProperty("y", js_context.CreateNumber(point.y));
+			object.SetProperty("x", js_context.CreateString(point.x));
+			object.SetProperty("y", js_context.CreateString(point.y));
 			return object;
 		};
 	} // namespace UI

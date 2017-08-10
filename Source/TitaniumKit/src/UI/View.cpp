@@ -80,8 +80,8 @@ namespace Titanium
 			if (destinationView != nullptr) {
 				const auto viewRect = getViewLayoutDelegate()->get_rect();
 				const auto destRect = destinationView->getViewLayoutDelegate()->get_rect();
-				viewPoint.x = viewRect.x + point.x - destRect.x;
-				viewPoint.y = viewRect.y + point.y - destRect.y;
+				viewPoint.x = std::to_string(viewRect.x + get_Point_value(point.x) - destRect.x);
+				viewPoint.y = std::to_string(viewRect.y + get_Point_value(point.y) - destRect.y);
 			}
 			return viewPoint;
 		}

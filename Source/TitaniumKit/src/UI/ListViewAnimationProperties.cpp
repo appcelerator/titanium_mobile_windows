@@ -33,9 +33,18 @@ namespace Titanium
 				TITANIUM_ASSERT(animated.IsBoolean());
 				set_animated(static_cast<bool>(animated));
 			}
+
+			// position property
+			if (js_animations.HasProperty("position")) {
+				const auto position = js_animations.GetProperty("position");
+				TITANIUM_ASSERT(position.IsNumber());
+				set_position(static_cast<std::uint32_t>(position));
+			}
+
 		}
 
-		void ListViewAnimationProperties::JSExportInitialize() {
+		void ListViewAnimationProperties::JSExportInitialize() 
+		{
 			JSExport<Module>::SetClassVersion(1);
 			JSExport<Module>::SetParent(JSExport<Module>::Class());
 		}
@@ -48,6 +57,16 @@ namespace Titanium
 		void ListViewAnimationProperties::set_animated(const bool& animated) TITANIUM_NOEXCEPT
 		{
 			animated__ = animated;
+		}
+
+		std::uint32_t ListViewAnimationProperties::get_position() const TITANIUM_NOEXCEPT
+		{
+			return position__;
+		}
+
+		void ListViewAnimationProperties::set_position(const std::uint32_t& position) TITANIUM_NOEXCEPT
+		{
+			position__ = position;
 		}
 	} // namespace UI
 } // namespace Titanium
