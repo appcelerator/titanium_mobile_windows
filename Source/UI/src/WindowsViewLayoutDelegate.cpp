@@ -188,7 +188,6 @@ namespace TitaniumWindows
 						return;
 					}
 					nativeView->Children->Append(nativeChildView);
-					newView->set_touchEnabled(get_touchEnabled() && newView->get_touchEnabled());
 					Titanium::LayoutEngine::nodeAddChild(layout_node__, newView->getLayoutNode());
 					if (isLoaded()) {
 						requestLayout();
