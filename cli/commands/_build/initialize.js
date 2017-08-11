@@ -58,8 +58,17 @@ function initialize(next) {
 	var supportedCMakeGenerators = {
 		'12.0': 'Visual Studio 12 2013',
 		'14.0': 'Visual Studio 14 2015',
+		'15.0': 'Visual Studio 15 2017',
 	};
-	this.cmakeGeneratorName = supportedCMakeGenerators[argv['vs-target']];
+
+	var vstarget = argv['vs-target'];
+
+	// As of Visual Studio 2017, multiple editions can coexist.
+	if (/^Visual Studio \w+ 2017/.test(vstarget)) {
+		vstarget = '15.0';
+	}
+
+	this.cmakeGeneratorName = supportedCMakeGenerators[vstarget];
 
 	// directories
 	this.outputDir = argv['output-dir'] ? appc.fs.resolvePath(argv['output-dir']) : null;
