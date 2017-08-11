@@ -192,9 +192,10 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 			sln = path.join(buildPath, _t.manifest.moduleIdAsIdentifier+'.vcxproj');
 		}
 
-		var p = spawn(_t.windowsInfo.selectedVisualStudio.vcvarsall, [
-			'&&', 'MSBuild', '/p:Platform=' + arch, '/p:Configuration=' + config, sln
-		]);
+		var p = spawn((process.env.comspec || 'cmd.exe'), ['/S', '/C', '"', _t.windowsInfo.selectedVisualStudio.vsDevCmd.replace(/[ \(\)\&]/g, '^$&') +
+			' &&' + ' MSBuild' + ' /p:Platform=' + arch + ' /p:Configuration=' + config + ' ' + sln, '"'
+		], {windowsVerbatimArguments: true});
+
 		p.stdout.on('data', function (data) {
 			var line = data.toString().trim();
 			if (line.indexOf('error ') >= 0) {
