@@ -42,9 +42,9 @@ namespace TitaniumWindows
 
 			static void JSExportInitialize();
 
-			virtual bool getBool(const std::string& property, bool default) TITANIUM_NOEXCEPT override;
-			virtual double getDouble(const std::string& property, double default) TITANIUM_NOEXCEPT override;
-			virtual double getInt(const std::string& property, double default) TITANIUM_NOEXCEPT override;
+			virtual boost::optional<bool> getBool(const std::string& property, boost::optional<bool> default) TITANIUM_NOEXCEPT override;
+			virtual boost::optional<double> getDouble(const std::string& property, boost::optional<double> default) TITANIUM_NOEXCEPT override;
+			virtual boost::optional<double> getInt(const std::string& property, boost::optional<double> default) TITANIUM_NOEXCEPT override;
 			virtual boost::optional<std::string> getString(const std::string& property, const boost::optional<std::string>& default = boost::none) TITANIUM_NOEXCEPT override;
 			virtual bool hasProperty(const std::string& property) TITANIUM_NOEXCEPT override;
 			virtual std::vector<std::string> listProperties() TITANIUM_NOEXCEPT override;

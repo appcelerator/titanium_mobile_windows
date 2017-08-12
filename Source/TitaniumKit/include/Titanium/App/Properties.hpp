@@ -32,19 +32,19 @@ namespace Titanium
 			  @abstract getBool
 			  @discussion Returns the value of a property as a boolean data type.
 			*/
-			virtual bool getBool(const std::string& property, bool defaultValue) TITANIUM_NOEXCEPT;
+			virtual boost::optional<bool> getBool(const std::string& property, boost::optional<bool> defaultValue) TITANIUM_NOEXCEPT;
 			/*!
 			  @method
 			  @abstract getDouble
 			  @discussion Returns the value of a property as a double (double-precision, floating point) data type.
 			*/
-			virtual double getDouble(const std::string& property, double defaultValue) TITANIUM_NOEXCEPT;
+			virtual boost::optional<double> getDouble(const std::string& property, boost::optional<double> defaultValue) TITANIUM_NOEXCEPT;
 			/*!
 			  @method
 			  @abstract getInt
 			  @discussion Returns the value of a property as an integer data type.
 			*/
-			virtual double getInt(const std::string& property, double defaultValue) TITANIUM_NOEXCEPT;
+			virtual boost::optional<double> getInt(const std::string& property, boost::optional<double> defaultValue) TITANIUM_NOEXCEPT;
 			/*!
 			  @method
 			  @abstract getList
