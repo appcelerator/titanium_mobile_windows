@@ -27,7 +27,7 @@ namespace TitaniumWindows
 			JSExport<Properties>::SetParent(JSExport<Titanium::App::Properties>::Class());
 		}
 
-		bool Properties::getBool(const std::string& property, bool default) TITANIUM_NOEXCEPT
+		boost::optional<bool> Properties::getBool(const std::string& property, boost::optional<bool> default) TITANIUM_NOEXCEPT
 		{
 			if (Titanium::App::Properties::hasProperty(property)) {
 				return Titanium::App::Properties::getBool(property, default);
@@ -41,7 +41,7 @@ namespace TitaniumWindows
 			return default;
 		}
 
-		double Properties::getDouble(const std::string& property, double default) TITANIUM_NOEXCEPT
+		boost::optional<double> Properties::getDouble(const std::string& property, boost::optional<double> default) TITANIUM_NOEXCEPT
 		{
 			if (Titanium::App::Properties::hasProperty(property)) {
 				return Titanium::App::Properties::getDouble(property, default);
@@ -55,7 +55,7 @@ namespace TitaniumWindows
 			return default;
 		}
 
-		double Properties::getInt(const std::string& property, double default) TITANIUM_NOEXCEPT
+		boost::optional<double> Properties::getInt(const std::string& property, boost::optional<double> default) TITANIUM_NOEXCEPT
 		{
 			if (Titanium::App::Properties::hasProperty(property)) {
 				return Titanium::App::Properties::getInt(property, default);

@@ -34,14 +34,15 @@ function mixin(WindowsBuilder) {
 function config(logger, config, cli) {
 	Builder.prototype.config.apply(this, arguments);
 
-	var target = (cli.argv['target'] || cli.argv['T']);
+	var target = (cli.argv['target'] || cli.argv['T']),
+		vstarget = (cli.argv['vs-target'] || cli.argv['V']);
 
 	this.windowslibOptions = {
 		powershell: config.get('windows.executables.powershell'),
 		pvk2pfx: config.get('windows.executables.pvk2pfx'),
 		preferredWindowsPhoneSDK: config.get('windows.wpsdk.selectedVersion'),
 		preferredWindowsSDK: config.get('windows.sdk.selectedVersion'),
-		preferredVisualStudio: config.get('windows.visualstudio.selectedVersion'),
+		preferredVisualStudio: vstarget || config.get('windows.visualstudio.selectedVersion'),
 		supportedMSBuildVersions: windowsPackageJson.vendorDependencies['msbuild'],
 		supportedVisualStudioVersions: windowsPackageJson.vendorDependencies['visual studio'],
 		supportedWindowsPhoneSDKVersions: windowsPackageJson.vendorDependencies['windows phone sdk'],
