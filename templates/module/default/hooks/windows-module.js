@@ -29,7 +29,8 @@ exports.cliVersion = '>=3.2';
 function chooseCMakeVSgenerator(logger, callback) {
 	var generators = {
 	    '12.0':'Visual Studio 12 2013',
-	    '14.0':'Visual Studio 14 2015'
+	    '14.0':'Visual Studio 14 2015',
+	    '15.0':'Visual Studio 15 2017'
 	};
 
 	windowslib.detect(function (err, results) {
@@ -42,7 +43,11 @@ function chooseCMakeVSgenerator(logger, callback) {
 				windowsphone: results.windowsphone
 			};
 		if (results.selectedVisualStudio) {
-			generator = generators[results.selectedVisualStudio.version];
+			if (/^Visual Studio \w+ 2017/.test(results.selectedVisualStudio.version)) {
+				generator = generators['15.0'];
+			} else {
+				generator = generators[results.selectedVisualStudio.version];
+			}
 		}
 		callback(generator, sdks);
 	});

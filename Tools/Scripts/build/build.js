@@ -16,8 +16,10 @@ var path = require('path'),
 	WIN_10 = '10.0',
 	MSBUILD_12 = '12.0',
 	MSBUILD_14 = '14.0',
+	MSBUILD_15 = '15.0',
 	VS_2013_GENERATOR = 'Visual Studio 12 2013',
 	VS_2015_GENERATOR = 'Visual Studio 14 2015',
+	VS_2017_GENERATOR = 'Visual Studio 15 2017',
 	// paths
 	rootDir = path.join(__dirname, '..', '..', '..'),
 	cmakeLocation = path.join(rootDir, 'cli', 'vendor', 'cmake', 'bin', 'cmake.exe'),
@@ -32,7 +34,7 @@ var path = require('path'),
  * @param destDir {String} The top-level destination directory where we copy the built libraries
  * @param buildType {String} 'Release' || 'Debug'
  * @param sdkVersion {String} '8.1' || '10.0'
- * @param msBuildVersion {String} '12.0' || '14.0'
+ * @param msBuildVersion {String} '12.0' || '14.0' || '15.0'
  * @param platform {String} 'WindowsPhone' || 'WindowsStore'
  * @param arch {String} 'x86' || 'ARM'
  * @param parallel {Boolean} should we run MSBuild in parallel?
@@ -120,7 +122,13 @@ function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
  * @param callback {Function} what to invoke when done/errored
  */
 function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, platform, arch, quiet, callback) {
-	var generator = msBuildVersion == MSBUILD_14 ? VS_2015_GENERATOR : VS_2013_GENERATOR;
+	var generator = VS_2013_GENERATOR;
+
+	if (msBuildVersion == MSBUILD_14) {
+		generator = VS_2015_GENERATOR;
+	} else if (msBuildVersion == MSBUILD_15) {
+		generator = VS_2017_GENERATOR;
+	}
 
 	// If the buildDir already exists, wipe it
 	if (fs.existsSync(buildDir)) {
@@ -414,13 +422,13 @@ if (module.id === ".") {
 			.option('-c, --configuration [config]', 'Specify configuration to build (i.e. Release or Debug)', /^(Release|Debug)$/, 'Release')
 			.option('-q, --quiet', 'Be quiet')
 			.option('-p, --parallel', 'Run builds in parallel')
-			.option('-m, --msbuild [version]', 'Use a specific version of MSBuild', /^(12\.0|14\.0)$/, MSBUILD_12)
+			.option('-m, --msbuild [version]', 'Use a specific version of MSBuild', /^(12\.0|14\.0|15\.0)$/, MSBUILD_12)
 			.option('-s, --sdk-version [version]', 'Target a specific Windows SDK version [version]', /^(8\.1|10\.0)$/, WIN_8_1)
 			.option('--sha [sha1]', 'sha1 to use for Ti.buildHash, computed if not provided')
 			.parse(process.argv);
 
 		// When doing win 10, it has to use msbuild 14
-		if (program.sdkVersion == WIN_10) {
+		if (program.sdkVersion == WIN_10 && program.msbuild == MSBUILD_12) {
 			// TODO Log warning if they used msbuild 12!
 			program.msbuild = MSBUILD_14;
 		}

@@ -15,17 +15,21 @@ exports.init = function(logger, config, cli, nodeappc) {
                 },
                 function(next) {
                     runCmake(data, 'WindowsStore', 'ARM', '10.0', next);
-                },
-                function(next) {
-                    runCmake(data, 'WindowsPhone', 'Win32', '8.1', next);
-                },
-                function(next) {
-                    runCmake(data, 'WindowsPhone', 'ARM', '8.1', next);
-                },
-                function(next) {
-                    runCmake(data, 'WindowsStore', 'Win32', '8.1', next);
                 }
             ];
+
+            // Visual Studio 2017 doesn't support Windows/Phone 8.1 project anymore
+            if (selectVisualStudio(data) != 'Visual Studio 15 2017') {
+                tasks.push(function(next) {
+                    runCmake(data, 'WindowsPhone', 'Win32', '8.1', next);
+                });
+                tasks.push(function(next) {
+                    runCmake(data, 'WindowsPhone', 'ARM', '8.1', next);
+                });
+                tasks.push(function(next) {
+                    runCmake(data, 'WindowsStore', 'Win32', '8.1', next);
+                });
+            }
 
             nodeappc.async.series(this, tasks, function(err) {
                 callback(err, data);
@@ -38,8 +42,8 @@ exports.init = function(logger, config, cli, nodeappc) {
 };
 
 function selectVisualStudio(data) {
-    if (data.windowsInfo && data.selectedVisualStudio) {
-        var version = data.selectedVisualStudio.version;
+    if (data.windowsInfo && data.windowsInfo.selectedVisualStudio) {
+        var version = data.windowsInfo.selectedVisualStudio.version;
         if (version == '12.0') {
             return 'Visual Studio 12 2013';
         } else if (version == '14.0') {
