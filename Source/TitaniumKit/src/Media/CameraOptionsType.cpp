@@ -16,7 +16,30 @@ namespace Titanium
 	namespace Media
 	{
 		using namespace HAL;
-		
+
+		CameraOptionsType create_empty_CameraOptionsType(const JSContext& js_context)
+		{
+			CameraOptionsType options {
+				false,
+				true,
+				0,
+				true,
+				true,
+				false,
+				std::vector<MediaType>(),
+				nullptr,
+				nullptr,
+				false,
+				true,
+				nullptr,
+				std::chrono::milliseconds::min(),
+				Quality::High,
+				CameraOption::NotDetermined,
+				create_empty_CameraOptionsTypeCallbacks(js_context)
+			};
+			return options;
+		}
+
 		CameraOptionsTypeCallbacks create_empty_CameraOptionsTypeCallbacks(const JSContext& js_context)
 		{
 			auto empty = js_context.CreateNull();

@@ -220,11 +220,9 @@ namespace TitaniumWindows
 		JSFunction js_beep__;
 		Windows::Devices::Enumeration::DeviceInformationCollection^ cameraDevices__{ nullptr };
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-		Titanium::Media::CameraOptionsTypeCallbacks cameraCallbacks__;
-		std::shared_ptr<Titanium::UI::View> cameraOverlay__;
+		Titanium::Media::CameraOptionsType cameraOptionsState__;
 		bool screenCaptureStarted__{ false };
 		bool cameraPreviewStarted__ { false };
-		bool shouldHideAfterTakingShot__{ false };
 		bool shouldRemoveRotationEvent__{ false };
 		JSFunction fileOpenForMusicLibraryCallback__;
 		JSFunction fileOpenForPhotoGalleryCallback__;
