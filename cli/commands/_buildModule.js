@@ -133,6 +133,34 @@ WindowsModuleBuilder.prototype.initialize = function initialize(next) {
 	this.manifest = this.cli.manifest;
 	this.buildDir = path.join(this.projectDir, 'build');
 
+	// TIMOB-23557
+	// read timodule.xml and get configuration
+	var timodule = path.join(this.projectDir, 'timodule.xml');
+	if (fs.existsSync(timodule)) {
+		var ti_dom  = new DOMParser().parseFromString(fs.readFileSync(timodule, 'utf8').toString()),
+			ti_root = ti_dom.getElementsByTagName('windows');
+		if (ti_root.length > 0) {
+			var win_items = ti_root.item(0);
+			appc.xml.forEachElement(win_items, function (item) {
+				if (item.tagName == 'manifest') {
+					appc.xml.forEachElement(item, function(node) {
+						if (node.tagName == 'uses-sdk') {
+							var sdk_version = appc.xml.getAttr(node, 'targetSdkVersion');
+							if (sdk_version) {
+								_t.targetPlatformSdkVersion = sdk_version;
+								_t.logger.debug('targetSdkVersion: ' + sdk_version);
+								// Remove Windows10 target only when it targets to 8.1 explicitly
+								if (sdk_version == '8.1') {
+									types = defaultTypes.slice(0, 2);
+								}
+							}
+						}
+					});
+				}
+			});
+		}
+	}
+
 	windowslib.detect(function (err, windowsInfo) {
 		assertIssue(windowsInfo.issues, 'WINDOWS_VISUAL_STUDIO_NOT_INSTALLED');
 		assertIssue(windowsInfo.issues, 'WINDOWS_MSBUILD_ERROR');
@@ -141,6 +169,12 @@ WindowsModuleBuilder.prototype.initialize = function initialize(next) {
 		if (!windowsInfo.selectedVisualStudio) {
 			logger.error('Unable to find a supported Visual Studio installation');
 			process.exit(1);
+		}
+
+        // Visual Studio 2017 doesn't support Windows/Phone 8.1 project anymore
+		if (/^Visual Studio \w+ 2017/.test(windowsInfo.selectedVisualStudio.version)) {
+			types    = ['Windows10'];
+			typesMin = ['win10'];
 		}
 
 		_t.windowsInfo = windowsInfo;
@@ -220,34 +254,6 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 			}
 			next();
 		});
-	}
-
-	// TIMOB-23557
-	// read timodule.xml and get configuration
-	var timodule = path.join(_t.projectDir, 'timodule.xml');
-	if (fs.existsSync(timodule)) {
-		var ti_dom  = new DOMParser().parseFromString(fs.readFileSync(timodule, 'utf8').toString()),
-			ti_root = ti_dom.getElementsByTagName('windows');
-		if (ti_root.length > 0) {
-			var win_items = ti_root.item(0);
-			appc.xml.forEachElement(win_items, function (item) {
-				if (item.tagName == 'manifest') {
-					appc.xml.forEachElement(item, function(node) {
-						if (node.tagName == 'uses-sdk') {
-							var sdk_version = appc.xml.getAttr(node, 'targetSdkVersion');
-							_t.logger.info('targetSdkVersion: ' + sdk_version);
-							// Remove Windows10 target only when it targets to 8.1 explicitly
-							if (sdk_version == '8.1') {
-								types = defaultTypes.slice(0, 2);
-							} else if (sdk_version == '10.0') {
-								types    = ['Windows10'];
-								typesMin = ['win10'];
-							}
-						}
-					});
-				}
-			});
-		}
 	}
 
 	// compile module projects

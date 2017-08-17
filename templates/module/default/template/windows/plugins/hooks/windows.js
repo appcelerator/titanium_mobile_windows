@@ -42,17 +42,22 @@ exports.init = function(logger, config, cli, nodeappc) {
 };
 
 function selectVisualStudio(data) {
-    if (data.windowsInfo && data.windowsInfo.selectedVisualStudio) {
-        var version = data.windowsInfo.selectedVisualStudio.version;
-        if (version == '12.0') {
-            return 'Visual Studio 12 2013';
-        } else if (version == '14.0') {
-            return 'Visual Studio 14 2015';
-        } else if (/^Visual Studio \w+ 2017/.test(version)) {
-            return 'Visual Studio 15 2017';
-        }
+    var version;
+    if (data.cli.argv.hasOwnProperty('vs-target')) {
+        version = data.cli.argv['vs-target'];
+    } else if (data.windowsInfo && data.windowsInfo.selectedVisualStudio) {
+        version = data.windowsInfo.selectedVisualStudio.version;
     }
-    return 'Visual Studio 14 2015';
+
+    if (version == '12.0') {
+        return 'Visual Studio 12 2013';
+    } else if (version == '14.0') {
+        return 'Visual Studio 14 2015';
+    } else if (/^Visual Studio \w+ 2017/.test(version)) {
+        return 'Visual Studio 15 2017';
+    } else {
+        return 'Visual Studio 14 2015';
+    }
 }
 
 function rmdir(dirPath, fs, path, logger, removeSelf) {
@@ -91,11 +96,16 @@ function runCmake(data, platform, arch, sdkVersion, next) {
 
     fs.mkdirSync(cmakeWorkDir);
 
+    var targetSdkVersion = sdkVersion;
+    if (sdkVersion === '10.0' && data.targetPlatformSdkVersion) {
+        targetSdkVersion = data.targetPlatformSdkVersion;
+    }
+
     var p = spawn(path.join(data.titaniumSdkPath,'windows','cli','vendor','cmake','bin','cmake.exe'),
         [
             '-G', generatorName,
             '-DCMAKE_SYSTEM_NAME=' + platform,
-            '-DCMAKE_SYSTEM_VERSION=' + sdkVersion,
+            '-DCMAKE_SYSTEM_VERSION=' + targetSdkVersion,
             '-DCMAKE_BUILD_TYPE=Debug',
             path.resolve(__dirname,'..','..')
         ],
