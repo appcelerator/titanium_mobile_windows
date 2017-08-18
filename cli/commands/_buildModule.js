@@ -63,6 +63,7 @@ WindowsModuleBuilder.prototype.run = function run(logger, config, cli, finished)
 
 		'doAnalytics',
 		'initialize',
+		'checkOldPlugin',
 		'loginfo',
 		'generateModuleProject',
 
@@ -182,6 +183,17 @@ WindowsModuleBuilder.prototype.initialize = function initialize(next) {
 
 		next();
 	});
+};
+
+WindowsModuleBuilder.prototype.checkOldPlugin = function checkOldPlugin(next) {
+	var old_plugin = path.join(this.projectDir, 'plugins', 'hooks', 'windows.js');
+	if (fs.existsSync(old_plugin)) {
+		this.logger.error('Old plugin detected: ' + old_plugin);
+		this.logger.error('plugins/hooks/windows.js is no longer valid, it should be removed.');
+		this.logger.error('Please remove plugins/hooks/windows.js in order to continue module build.');
+		process.exit(1);
+	}
+	next();
 };
 
 WindowsModuleBuilder.prototype.loginfo = function loginfo(next) {
