@@ -65,6 +65,7 @@ namespace Titanium
 			CameraOptionsTypeCallbacks callbacks;
 		};
 		
+		TITANIUMKIT_EXPORT CameraOptionsType create_empty_CameraOptionsType(const JSContext& js_context);
 		TITANIUMKIT_EXPORT CameraOptionsTypeCallbacks create_empty_CameraOptionsTypeCallbacks(const JSContext& js_context);
 		TITANIUMKIT_EXPORT CameraOptionsType js_to_CameraOptionsType(const JSObject& object);
 		TITANIUMKIT_EXPORT JSObject CameraOptionsType_to_js(const JSContext& js_context, const CameraOptionsType& config);

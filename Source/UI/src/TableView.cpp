@@ -160,6 +160,10 @@ namespace TitaniumWindows
 					if (view_delegate->get_height().empty()) {
 						view_delegate->set_height(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE));
 					}
+
+					// Header width should be always FILL regardless of value
+					view_delegate->set_width(Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL));
+
 					tableview__->Header = view_delegate->getComponent();
 					// Add as child view to make layout engine work
 					registerTableViewRowAsLayoutNode(headerView);
@@ -363,6 +367,9 @@ namespace TitaniumWindows
 			unbindCollectionViewSource();
 			for (size_t g = 0; g < collectionViewItems__->Size; g++) {
 				const auto group = reinterpret_cast<Vector<UIElement^>^>(collectionViewItems__->GetAt(g));
+				if (group->Size == 0) {
+					continue;
+				}
 				const auto section = model__->getSectionAtIndex(g);
 				const auto startIndex = section->hasHeader() ? 1 : 0;
 				for (size_t i = startIndex; i < group->Size - 1; i++) {
@@ -647,14 +654,22 @@ namespace TitaniumWindows
 				bindCollectionViewSource();
 			} else if (name == "update") {
 				TITANIUM_ASSERT(old_row != nullptr);
-				unbindCollectionViewSource();
-				unregisterTableViewRowAsLayoutNode(old_row);
+				// copy existing properties when given row is already added to section
+				if (row->get_added()) {
+					auto ctor   = get_context().CreateObject(JSExport<TitaniumWindows::UI::TableViewRow>::Class());
+					auto new_row = ctor.CallAsConstructor().GetPrivate<TitaniumWindows::UI::TableViewRow>();
+					new_row->applyProperties(row->get_data(), new_row->get_object());
+					updateRow(rowIndex, new_row, nullptr);
+				} else {
+					unbindCollectionViewSource();
+					unregisterTableViewRowAsLayoutNode(old_row);
 
-				const auto views = static_cast<Vector<UIElement^>^>(collectionViewItems__->GetAt(sectionIndex));
-				const auto rowContent = row->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
-				views->SetAt(getRowIndexInCollectionView(section, rowIndex), rowContent);
-				registerTableViewRowAsLayoutNode(row);
-				bindCollectionViewSource();
+					const auto views = static_cast<Vector<UIElement^>^>(collectionViewItems__->GetAt(sectionIndex));
+					const auto rowContent = row->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
+					views->SetAt(getRowIndexInCollectionView(section, rowIndex), rowContent);
+					registerTableViewRowAsLayoutNode(row);
+					bindCollectionViewSource();
+				}
 			} else {
 				TITANIUM_LOG_WARN("TableView: Unknown TableViewSectionEvent: ", name);
 			}
