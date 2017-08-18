@@ -64,6 +64,7 @@ WindowsModuleBuilder.prototype.run = function run(logger, config, cli, finished)
 		'doAnalytics',
 		'initialize',
 		'loginfo',
+		'generateModuleProject',
 
 		function (next) {
 			cli.emit('build.module.pre.compile', this, next);
@@ -191,6 +192,39 @@ WindowsModuleBuilder.prototype.loginfo = function loginfo(next) {
 	this.logger.info('Project directory: ' + this.projectDir.cyan);
 
 	next();
+};
+
+WindowsModuleBuilder.prototype.generateModuleProject = function generateModuleProject(next) {
+       	var data  = this;
+        if (this.cli.argv.hasOwnProperty('run-cmake')) {
+            var tasks = [
+                function(done) {
+                    runCmake(data, 'WindowsStore', 'Win32', '10.0', done);
+                },
+                function(done) {
+                    runCmake(data, 'WindowsStore', 'ARM', '10.0', done);
+                }
+            ];
+
+            // Visual Studio 2017 doesn't support Windows/Phone 8.1 project anymore
+            if (selectVisualStudio(data) != 'Visual Studio 15 2017') {
+                tasks.push(function(done) {
+                    runCmake(data, 'WindowsPhone', 'Win32', '8.1', done);
+                });
+                tasks.push(function(done) {
+                    runCmake(data, 'WindowsPhone', 'ARM', '8.1', done);
+                });
+                tasks.push(function(done) {
+                    runCmake(data, 'WindowsStore', 'Win32', '8.1', done);
+                });
+            }
+
+            appc.async.series(this, tasks, function(err) {
+                next(err);
+            });
+        } else {
+            next();
+        }
 };
 
 WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
@@ -447,6 +481,95 @@ WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
 	});
 
 };
+
+function selectVisualStudio(data) {
+    var version;
+    if (data.cli.argv.hasOwnProperty('vs-target')) {
+        version = data.cli.argv['vs-target'];
+    } else if (data.windowsInfo && data.windowsInfo.selectedVisualStudio) {
+        version = data.windowsInfo.selectedVisualStudio.version;
+    }
+
+    if (version == '12.0') {
+        return 'Visual Studio 12 2013';
+    } else if (version == '14.0') {
+        return 'Visual Studio 14 2015';
+    } else if (/^Visual Studio \w+ 2017/.test(version)) {
+        return 'Visual Studio 15 2017';
+    } else {
+        return 'Visual Studio 14 2015';
+    }
+}
+
+function rmdir(dirPath, fs, path, logger, removeSelf) {
+	var files;
+	try {
+		files = fs.readdirSync(dirPath);
+	} catch (e) {
+		return;
+	}
+	if (files.length > 0) {
+		for (var i = 0; i < files.length; i++) {
+			var filePath = path.join(dirPath, files[i]);
+			if (fs.statSync(filePath).isFile()) {
+				fs.unlinkSync(filePath);
+			} else {
+				rmdir(filePath, fs, path, logger, true);
+			}
+		}
+	}
+	if (removeSelf) {
+		fs.rmdirSync(dirPath);
+	}
+}
+
+function runCmake(data, platform, arch, sdkVersion, next) {
+    var logger = data.logger,
+        generatorName = selectVisualStudio(data) + (arch==='ARM' ? ' ARM' : ''),
+        cmakeProjectName = (sdkVersion === '10.0' ? 'Windows10' : platform) + '.' + arch,
+        cmakeWorkDir = path.resolve(data.projectDir,cmakeProjectName);
+
+    logger.debug('Run CMake on ' + cmakeWorkDir);
+
+    if (fs.existsSync(cmakeWorkDir)) {
+        rmdir(cmakeWorkDir, fs, path, logger, true);
+    }
+
+    fs.mkdirSync(cmakeWorkDir);
+
+    var targetSdkVersion = sdkVersion;
+    if (sdkVersion === '10.0' && data.targetPlatformSdkVersion) {
+        targetSdkVersion = data.targetPlatformSdkVersion;
+    }
+
+    var p = spawn(path.join(data.titaniumSdkPath,'windows','cli','vendor','cmake','bin','cmake.exe'),
+        [
+            '-G', generatorName,
+            '-DCMAKE_SYSTEM_NAME=' + platform,
+            '-DCMAKE_SYSTEM_VERSION=' + targetSdkVersion,
+            '-DCMAKE_BUILD_TYPE=Debug',
+            path.resolve(data.projectDir)
+        ],
+        {
+            cwd: cmakeWorkDir
+        });
+    p.on('error', function(err) {
+        logger.error(cmake);
+        logger.error(err);
+    });
+    p.stdout.on('data', function (data) {
+        logger.info(data.toString().trim());
+    });
+    p.stderr.on('data', function (data) {
+        logger.warn(data.toString().trim());
+    });
+    p.on('close', function (code) {
+        if (code != 0) {
+            process.exit(1); // Exit with code from cmake?
+        }
+        next();
+    });
+}
 
 (function (windowsModuleBuilder) {
 	exports.config   = windowsModuleBuilder.config.bind(windowsModuleBuilder);
