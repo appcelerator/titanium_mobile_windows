@@ -54,16 +54,10 @@ namespace TitaniumWindows
 				TITANIUM_PROPERTY_DEF(source);
 				TITANIUM_FUNCTION_DEF(apply);
 
-				Windows::UI::Xaml::ResourceDictionary^ get_resource()
-				{
-					return resource__;
-				}
-
 				virtual void afterPropertiesSet() TITANIUM_NOEXCEPT override;
 
 			private:
 
-				Windows::UI::Xaml::ResourceDictionary^ resource__;
 				Platform::String^ source__;
 
 			};

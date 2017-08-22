@@ -60,7 +60,11 @@ namespace TitaniumWindows
 					return nullptr;
 				}
 				const auto rd = ref new ResourceDictionary();
-				rd->Source = ref new Windows::Foundation::Uri(source);
+				try {
+					rd->Source = ref new Windows::Foundation::Uri(source);
+				} catch (Platform::FailureException^ e) {
+					return nullptr;
+				}
 				return rd;
 			}
 		} // namespace ViewHelper

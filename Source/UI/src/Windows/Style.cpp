@@ -49,7 +49,6 @@ namespace TitaniumWindows
 			TITANIUM_PROPERTY_SETTER(Style, source)
 			{
 				source__   = TitaniumWindows::Utility::ConvertUTF8String(static_cast<std::string>(argument));
-				resource__ = TitaniumWindows::UI::ViewHelper::LookupXamlResource(source__);
 				return true;
 			}
 
@@ -69,13 +68,18 @@ namespace TitaniumWindows
 				const auto layout = view->getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 				if (layout) {
 					const auto component = layout->getStyleComponent();
+					const auto resources = TitaniumWindows::UI::ViewHelper::LookupXamlResource(source__);
 
-					component->Resources = resource__;
+					if (resources == nullptr) {
+						detail::ThrowRuntimeError("Style::apply", "Unable to locate " + TitaniumWindows::Utility::ConvertUTF8String(source__));
+					}
 
-					if (resource__ && !styleKey.empty()) {
+					component->Resources = resources;
+
+					if (resources && !styleKey.empty()) {
 						const auto key = TitaniumWindows::Utility::ConvertUTF8String(styleKey);
-						if (resource__->HasKey(key)) {
-							const auto style = dynamic_cast<Windows::UI::Xaml::Style^>(resource__->Lookup(key));
+						if (resources->HasKey(key)) {
+							const auto style = dynamic_cast<Windows::UI::Xaml::Style^>(resources->Lookup(key));
 							if (style) {
 								component->Style = style;
 							} else {
