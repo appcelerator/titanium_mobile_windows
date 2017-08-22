@@ -271,6 +271,7 @@ namespace TitaniumWindows
 					// start accepting events for the new Window
 					next_window->enableEvents();
 					next_window->focus();
+					next_window->set_fullscreen(next_window->get_fullscreen());
 				}
 
 				Titanium::UI::Window::close(params);
@@ -358,6 +359,8 @@ namespace TitaniumWindows
 
 			if (params) {
 				set_fullscreen(params->get_fullscreen());
+			} else {
+				set_fullscreen(get_fullscreen());
 			}
 
 			if (window_stack__.size() > 0) {
@@ -461,22 +464,26 @@ namespace TitaniumWindows
 		void Window::set_fullscreen(const bool& fullscreen) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::Window::set_fullscreen(fullscreen);
+
+			// fullscreen works for active Window only
+			if (is_opened__) {
 #if defined(IS_WINDOWS_PHONE)
-			auto statusBar = Windows::UI::ViewManagement::StatusBar::GetForCurrentView();
-			fullscreen ? statusBar->HideAsync() : statusBar->ShowAsync();
+				auto statusBar = Windows::UI::ViewManagement::StatusBar::GetForCurrentView();
+				fullscreen ? statusBar->HideAsync() : statusBar->ShowAsync();
 #elif defined(IS_WINDOWS_10)
-			auto view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
-			if (fullscreen) {
-				if (view->TryEnterFullScreenMode()) {
-					Windows::UI::ViewManagement::ApplicationView::PreferredLaunchWindowingMode = Windows::UI::ViewManagement::ApplicationViewWindowingMode::FullScreen;
+				auto view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
+				if (fullscreen) {
+					if (view->TryEnterFullScreenMode()) {
+						Windows::UI::ViewManagement::ApplicationView::PreferredLaunchWindowingMode = Windows::UI::ViewManagement::ApplicationViewWindowingMode::FullScreen;
+					} else {
+						TITANIUM_LOG_WARN("Unable to enter fullscreen mode");
+					}
 				} else {
-					TITANIUM_LOG_WARN("Unable to enter fullscreen mode");
+					view->ExitFullScreenMode();
+					Windows::UI::ViewManagement::ApplicationView::PreferredLaunchWindowingMode = Windows::UI::ViewManagement::ApplicationViewWindowingMode::Auto;
 				}
-			} else {
-				view->ExitFullScreenMode();
-				Windows::UI::ViewManagement::ApplicationView::PreferredLaunchWindowingMode = Windows::UI::ViewManagement::ApplicationViewWindowingMode::Auto;
-			}
 #endif
+			}
 		}
 
 		WindowLayoutDelegate::WindowLayoutDelegate() TITANIUM_NOEXCEPT

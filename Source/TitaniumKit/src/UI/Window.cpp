@@ -71,6 +71,7 @@ namespace Titanium
 		void Window::close(const std::shared_ptr<CloseWindowParams>& params) TITANIUM_NOEXCEPT
 		{
 			tab__ = nullptr;
+			is_opened__ = false;
 		}
 
 		void Window::open(const std::shared_ptr<OpenWindowParams>& params) TITANIUM_NOEXCEPT
@@ -78,6 +79,7 @@ namespace Titanium
 			GET_UI();
 			const auto ui_ptr = UI.GetPrivate<Titanium::UIModule>();
 			ui_ptr->set_currentWindow(this->get_object().GetPrivate<Titanium::UI::Window>());
+			is_opened__ = true;
 		}
 
 		TITANIUM_PROPERTY_READWRITE(Window, bool, exitOnClose)

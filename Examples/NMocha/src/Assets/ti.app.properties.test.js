@@ -21,8 +21,13 @@ describe('Titanium.App.Properties', function () {
 
 	it('getBool default', function () {
 		Ti.App.Properties.removeProperty('test_bool');
-		should(Ti.App.Properties.getBool('test_bool')).be.eql(false); // iOS returns null, Android returns false
+		should(Ti.App.Properties.getBool('test_bool')).be.null; // iOS returns null, Android returns false
 		should(Ti.App.Properties.getBool('test_bool', true)).be.eql(true);
+	});
+
+	it('getBool default to null', function () {
+	    Ti.App.Properties.removeProperty('test_bool');
+	    should(Ti.App.Properties.getBool('test_bool', null)).be.null;
 	});
 
 	it('set and getBool', function () {
@@ -38,8 +43,13 @@ describe('Titanium.App.Properties', function () {
 
 	it('getDouble default', function () {
 		Ti.App.Properties.removeProperty('test_double');
-		should(Ti.App.Properties.getDouble('test_double')).be.eql(0); // iOS returns null, Android returns 0D
+		should(Ti.App.Properties.getDouble('test_double')).be.null; // iOS returns null, Android returns 0D
 		should(Ti.App.Properties.getDouble('test_double', 3.14)).be.eql(3.14);
+	});
+
+	it('getDouble default to null', function () {
+	    Ti.App.Properties.removeProperty('test_double');
+	    should(Ti.App.Properties.getDouble('test_double', null)).be.null;
 	});
 
 	it('set and getDouble', function () {
@@ -55,8 +65,13 @@ describe('Titanium.App.Properties', function () {
 
 	it('getInt default', function () {
 		Ti.App.Properties.removeProperty('test_int');
-		should(Ti.App.Properties.getInt('test_int')).be.eql(0); // iOS returns null, Android returns 0
+		should(Ti.App.Properties.getInt('test_int')).be.null; // iOS returns null, Android returns 0
 		should(Ti.App.Properties.getInt('test_int', 3)).be.eql(3);
+	});
+
+	it('getInt default to null', function () {
+	    Ti.App.Properties.removeProperty('test_int');
+	    should(Ti.App.Properties.getInt('test_int', null)).be.null;
 	});
 
 	it('set and getInt', function () {

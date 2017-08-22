@@ -64,7 +64,21 @@ function installSDK(branch, next) {
 		if (code != 0) {
 			next("Failed to install SDK. Exit code: " + code);
 		} else {
-			next(null, sdkVersion);
+			console.log("Making sure " + sdkVersion + " is selected");
+			var selectPrc = spawn('node', [titanium, 'sdk', 'select', sdkVersion]);
+			selectPrc.stdout.on('data', function (data) {
+				console.log(data.toString());
+			});
+			selectPrc.stderr.on('data', function (data) {
+				console.error(data.toString().trim());
+			});
+			selectPrc.on('close', function (code) {
+				if (code != 0) {
+					next("Failed to select SDK. Exit code: " + code);
+				} else {
+					next(null, sdkVersion);
+				}
+			});
 		}
 	});
 }

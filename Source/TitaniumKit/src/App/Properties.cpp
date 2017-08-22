@@ -52,28 +52,37 @@ namespace Titanium
 			}
 		}
 
-		bool Properties::getBool(const std::string& property, bool defaultValue) TITANIUM_NOEXCEPT
+		boost::optional<bool> Properties::getBool(const std::string& property, boost::optional<bool> defaultValue) TITANIUM_NOEXCEPT
 		{
 			if (hasProperty(property)) {
 				return static_cast<bool>(app_properties__.GetProperty(property));
 			}
-			return defaultValue;
+			if (defaultValue) {
+				return *defaultValue;
+			}
+			return boost::none;
 		}
 
-		double Properties::getDouble(const std::string& property, double defaultValue) TITANIUM_NOEXCEPT
+		boost::optional<double> Properties::getDouble(const std::string& property, boost::optional<double> defaultValue) TITANIUM_NOEXCEPT
 		{
 			if (hasProperty(property)) {
 				return static_cast<double>(app_properties__.GetProperty(property));
 			}
-			return defaultValue;
+			if (defaultValue) {
+				return *defaultValue;
+			}
+			return boost::none;
 		}
 
-		double Properties::getInt(const std::string& property, double defaultValue) TITANIUM_NOEXCEPT
+		boost::optional<double> Properties::getInt(const std::string& property, boost::optional<double> defaultValue) TITANIUM_NOEXCEPT
 		{
 			if (hasProperty(property)) {
 				return static_cast<int32_t>(app_properties__.GetProperty(property));
 			}
-			return defaultValue;
+			if (defaultValue) {
+				return *defaultValue;
+			}
+			return boost::none;
 		}
 
 		JSValue Properties::getList(const std::string& property, JSValue defaultValue) TITANIUM_NOEXCEPT
@@ -239,34 +248,66 @@ namespace Titanium
 		TITANIUM_FUNCTION(Properties, getBool)
 		{
 			ENSURE_STRING_AT_INDEX(property, 0);
-			ENSURE_OPTIONAL_BOOL_AT_INDEX(defaultValue, 1, false);
+			boost::optional<bool> defaultValue;
+			if (arguments.size() > 1) {
+				const auto _1 = arguments.at(1);
+				if (_1.IsBoolean()) {
+					defaultValue = static_cast<bool>(_1);
+				}
+			}
 
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-			return js_context.CreateBoolean(object_ptr->getBool(property, defaultValue));
+			const auto result = object_ptr->getBool(property, defaultValue);
+			if (result) {
+				return js_context.CreateBoolean(*result);
+			}
+			return js_context.CreateNull();
+
 		}
 
 		TITANIUM_FUNCTION(Properties, getDouble)
 		{
 			ENSURE_STRING_AT_INDEX(property, 0);
-			ENSURE_OPTIONAL_DOUBLE_AT_INDEX(defaultValue, 1, 0);
+			boost::optional<double> defaultValue;
+			if (arguments.size() > 1) {
+				const auto _1 = arguments.at(1);
+				if (_1.IsNumber()) {
+					defaultValue = static_cast<double>(_1);
+				}
+			}
 
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-			return js_context.CreateNumber(object_ptr->getDouble(property, defaultValue));
+			const auto result = object_ptr->getDouble(property, defaultValue);
+			if (result) {
+				return js_context.CreateNumber(*result);
+			}
+			return js_context.CreateNull();
 		}
 
 		TITANIUM_FUNCTION(Properties, getInt)
 		{
 			ENSURE_STRING_AT_INDEX(property, 0);
-			ENSURE_OPTIONAL_DOUBLE_AT_INDEX(defaultValue, 1, 0);
+			boost::optional<double> defaultValue;
+			if (arguments.size() > 1) {
+				const auto _1 = arguments.at(1);
+				if (_1.IsNumber()) {
+					defaultValue = static_cast<double>(_1);
+				}
+			}
 
 			const auto js_context = this_object.get_context();
 			const auto object_ptr = GetStaticObject(js_context).GetPrivate<Properties>();
 
-			return js_context.CreateNumber(object_ptr->getInt(property, defaultValue));
+			const auto result = object_ptr->getInt(property, defaultValue);
+			if (result) {
+				return js_context.CreateNumber(*result);
+			}
+			return js_context.CreateNull();
+
 		}
 
 		TITANIUM_FUNCTION(Properties, getList)

@@ -350,6 +350,7 @@ namespace Titanium
 			JSObject closeWindowParams_ctor__;
 
 			std::shared_ptr<Tab> tab__;
+			bool is_opened__ { false }; // Indicates this window is already opened
 #pragma warning(pop)
 		};
 	} // namespace UI
