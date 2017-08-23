@@ -34,8 +34,16 @@ namespace TitaniumWindows
 			button__ = ref new Controls::Button();
 			button__->VerticalAlignment = VerticalAlignment::Stretch;
 			button__->HorizontalAlignment = HorizontalAlignment::Stretch;
-			button__->FontSize = DefaultFontSize;
-			button__->BorderThickness = 0;
+
+			loaded_event__ = button__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
+				//
+				// Apply default style if there's no style set
+				//
+				if (button__->Resources == nullptr && button__->Style == nullptr) {
+					button__->FontSize = DefaultFontSize;
+					button__->BorderThickness = 0;
+				}
+			});
 
 			// TIMOB-19143: reset MinWidth to fix size issues
 			button__->MinWidth = 0;

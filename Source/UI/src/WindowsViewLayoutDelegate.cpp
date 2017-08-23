@@ -1251,6 +1251,15 @@ namespace TitaniumWindows
 			}
 		}
 
+		void WindowsViewLayoutDelegate::set_style(Windows::UI::Xaml::Style^ style) TITANIUM_NOEXCEPT
+		{
+			if (underlying_control__) {
+				underlying_control__->Style = style;
+			} else {
+				component__->Style = style;
+			}
+		}
+
 		void WindowsViewLayoutDelegate::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
 			const auto component = getEventComponent();

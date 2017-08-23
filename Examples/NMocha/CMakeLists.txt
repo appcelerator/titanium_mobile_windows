@@ -221,7 +221,8 @@ source_group("Strings\\ja" FILES "src/Assets/Strings/ja/Resources.resw")
 
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
-  src/OutputDebugStringBuf.hpp
+  include/OutputDebugStringBuf.hpp
+  include/pch.h
   ${SOURCE_Assets}
   ${SOURCE_commonjs_index_js}
   ${SOURCE_commonjs_index_json}
@@ -247,5 +248,6 @@ set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
 target_link_libraries(${EXE_NAME} TitaniumWindows)
 
 target_include_directories(${EXE_NAME} PUBLIC
+  ${PROJECT_SOURCE_DIR}/include
   $<TARGET_PROPERTY:TitaniumWindows,INTERFACE_INCLUDE_DIRECTORIES>
   )

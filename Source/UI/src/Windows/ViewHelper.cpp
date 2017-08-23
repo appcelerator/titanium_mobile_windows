@@ -14,6 +14,7 @@ namespace TitaniumWindows
 		namespace ViewHelper
 		{
 
+			using namespace Windows::UI::Xaml;
 			using namespace Windows::UI::Xaml::Controls;
 			using namespace Windows::UI::Xaml::Documents;
 
@@ -53,6 +54,19 @@ namespace TitaniumWindows
 				// TODO Windows supports a large number of other weights: http://msdn.microsoft.com/en-us/library/windows/apps/windows.ui.text.fontweights
 			}
 
+			ResourceDictionary^ LookupXamlResource(Platform::String^ source)
+			{
+				if (source->IsEmpty()) {
+					return nullptr;
+				}
+				const auto rd = ref new ResourceDictionary();
+				try {
+					rd->Source = ref new Windows::Foundation::Uri(source);
+				} catch (Platform::FailureException^ e) {
+					return nullptr;
+				}
+				return rd;
+			}
 		} // namespace ViewHelper
 	}  // namespace UI
 }  // namespace TitaniumWindows

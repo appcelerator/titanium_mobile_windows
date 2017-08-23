@@ -105,6 +105,7 @@ namespace TitaniumWindows
 			border__->Child = scroll_viewer__;
 
 			auto layoutDelegate = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+			layoutDelegate->setStyleComponent(scroll_viewer__);
 			layoutDelegate->setComponent(border__, nullptr, border__);
 
 			auto contentLayoutDelegate = getContentViewLayoutDelegate();

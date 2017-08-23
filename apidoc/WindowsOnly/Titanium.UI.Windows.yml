@@ -44,3 +44,15 @@ methods:
         type: Dictionary<Titanium.UI.Windows.CommandBar>
     returns:
       - type: Titanium.UI.Windows.CommandBar
+
+  - name: createStyle
+    summary: Creates and returns an instance of a <Titanium.UI.Windows.Style>.
+    parameters:
+      - name: params
+        summary: |
+            Properties to set on a new object, including any defined by <Titanium.UI.Windows.Style>
+            except those marked not-creation or read-only.
+
+        type: Dictionary<Titanium.UI.Windows.Style>
+    returns:
+      - type: Titanium.UI.Windows.Style

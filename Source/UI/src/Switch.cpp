@@ -35,7 +35,9 @@ namespace TitaniumWindows
 			border__->Child = switch__;
 
 			Titanium::UI::Switch::setLayoutDelegate<WindowsViewLayoutDelegate>();
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(border__, nullptr, border__);
+			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+			layout->setStyleComponent(switch__);
+			layout->setComponent(border__, nullptr, border__);
 		}
 
 		void Switch::JSExportInitialize() {

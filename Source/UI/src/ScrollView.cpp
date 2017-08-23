@@ -93,6 +93,7 @@ namespace TitaniumWindows
 			getViewLayoutDelegate<ScrollViewLayoutDelegate>()->setComponent(border__, nullptr, border__);
 
 			auto layoutDelegate = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+			layoutDelegate->setStyleComponent(scroll_viewer__);
 			auto nativeChildView = content->getComponent();
 			if (nativeChildView != nullptr) {
 				Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), content->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getLayoutNode());

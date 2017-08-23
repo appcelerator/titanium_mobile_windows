@@ -79,6 +79,7 @@ require('./ti.ui.view.test');
 require('./ti.ui.webview.test');
 require('./ti.ui.window.test');
 require('./ti.ui.windows.commandbar.test');
+require('./ti.ui.windows.style.test');
 require('./ti.utils.test');
 require('./ti.xml.test');
 }
