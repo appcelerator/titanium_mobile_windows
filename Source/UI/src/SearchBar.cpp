@@ -194,7 +194,9 @@ namespace TitaniumWindows
 #endif
 			border__->Child = suggest_box__;
 			Titanium::UI::SearchBar::setLayoutDelegate<WindowsViewLayoutDelegate>();
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(border__, nullptr, border__);
+			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+			layout->setStyleComponent(suggest_box__);
+			layout->setComponent(border__, nullptr, border__);
 		}
 
 		void SearchBar::JSExportInitialize() 

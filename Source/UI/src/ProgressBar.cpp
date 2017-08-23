@@ -64,12 +64,13 @@ namespace TitaniumWindows
 					const auto fill = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL);
 					const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 
+					layout->setStyleComponent(bar__);
+
 					if (layout->get_height() != fill) {
 						// relative position from container should start from top & left
 						panel__->VerticalAlignment = VerticalAlignment::Top;
 						layout->set_height(std::to_string(e->NewSize.Height));
-					}
-					else {
+					} else {
 						panel__->VerticalAlignment = VerticalAlignment::Stretch;
 					}
 
@@ -77,8 +78,7 @@ namespace TitaniumWindows
 						// relative position from container should start from top & left
 						panel__->HorizontalAlignment = HorizontalAlignment::Left;
 						layout->set_width(std::to_string(e->NewSize.Width));
-					}
-					else {
+					} else {
 						panel__->HorizontalAlignment = HorizontalAlignment::Stretch;
 					}
 				} catch (...) {

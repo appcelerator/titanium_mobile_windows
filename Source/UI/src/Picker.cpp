@@ -93,16 +93,19 @@ namespace TitaniumWindows
 				parent__->Children->Append(plainPicker__);
 				parent__->SetColumn(plainPicker__, 0);
 				parent__->SetRow(plainPicker__, 0);
+				getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->setStyleComponent(plainPicker__);
 			} else if (type__ == Titanium::UI::PICKER_TYPE::DATE) {
 				datePicker__  = ref new Windows::UI::Xaml::Controls::DatePicker();
 				parent__->Children->Append(datePicker__);
 				parent__->SetColumn(datePicker__, 0);
 				parent__->SetRow(datePicker__, 0);
+				getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->setStyleComponent(datePicker__);
 			} else if (type__ == Titanium::UI::PICKER_TYPE::TIME) {
 				timePicker__  = ref new Windows::UI::Xaml::Controls::TimePicker();
 				parent__->Children->Append(timePicker__);
 				parent__->SetColumn(timePicker__, 0);
 				parent__->SetRow(timePicker__, 0);
+				getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->setStyleComponent(timePicker__);
 			}
 
 			// update UI

@@ -96,6 +96,7 @@ namespace TitaniumWindows
 
 			// Label handles its size
 			layout->useOwnSize();
+			layout->setStyleComponent(label__);
 			layout->setComponent(border__, nullptr, border__);
 		}
 

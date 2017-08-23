@@ -36,7 +36,9 @@ namespace TitaniumWindows
 			border__->Child = text_box__;
 
 			Titanium::UI::TextArea::setLayoutDelegate<WindowsViewLayoutDelegate>();
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(border__, nullptr, border__);
+			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+			layout->setStyleComponent(text_box__);
+			layout->setComponent(border__, nullptr, border__);
 		}
 
 		void TextArea::JSExportInitialize() {

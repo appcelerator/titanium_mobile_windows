@@ -28,7 +28,9 @@ namespace TitaniumWindows
 
 			Titanium::UI::Slider::setLayoutDelegate<WindowsViewLayoutDelegate>();
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(border__, nullptr, border__);
+			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+			layout->setStyleComponent(slider__);
+			layout->setComponent(border__, nullptr, border__);
 		}
 
 		void Slider::JSExportInitialize()

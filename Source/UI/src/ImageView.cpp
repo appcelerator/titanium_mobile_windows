@@ -133,7 +133,9 @@ namespace TitaniumWindows
 			layoutDelegate__->set_autoLayoutForHeight(Titanium::UI::LAYOUT::SIZE);
 			layoutDelegate__->set_autoLayoutForWidth(Titanium::UI::LAYOUT::SIZE);
 
-			getViewLayoutDelegate<WindowsImageViewLayoutDelegate>()->setComponent(parent, nullptr, border__);
+			const auto layout = getViewLayoutDelegate<WindowsImageViewLayoutDelegate>();
+			layout->setStyleComponent(image__);
+			layout->setComponent(parent, nullptr, border__);
 		}
 
 		void ImageView::JSExportInitialize()

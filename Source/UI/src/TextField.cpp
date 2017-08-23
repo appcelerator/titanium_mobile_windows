@@ -45,7 +45,7 @@ namespace TitaniumWindows
 
 			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 			layout->setComponent(border__, nullptr, border__);
-
+			layout->setStyleComponent(text_box__);
 			initTextComponent();
 		}
 
