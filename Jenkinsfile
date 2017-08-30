@@ -93,43 +93,6 @@ timestamps {
 		}
 
 		parallel(
-			'Windows 8.1 Store x86': {
-				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
-					build('8.1', '12.0', 'WindowsStore-x86', gitCommit)
-
-					unstash 'NMocha' // for tests
-					dir('Tools/Scripts/build') {
-						timeout(testTimeout) {
-							echo 'Running Tests on Windows 8.1 Desktop'
-							bat "node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b ${targetBranch}"
-						}
-						// Kill the desktop app, so workspace cleanup works...
-						bat 'taskkill /IM Mocha.exe /F 2> nul'
-					}
-					junit 'dist/junit_report.xml'
-				}
-			},
-			'Windows 8.1 Phone x86': {
-				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
-					build('8.1', '12.0', 'WindowsPhone-x86', gitCommit)
-
-					unstash 'NMocha' // for tests
-					dir('Tools/Scripts/build') {
-						timeout(testTimeout) {
-							echo 'Running Tests on Windows 8.1 Phone Emulator'
-							bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
-						}
-						// Kill the phone emulator, so workspace cleanup works...
-						bat 'taskkill /IM xde.exe 2> nul'
-					}
-					junit 'dist/junit_report.xml'
-				}
-			},
-			'Windows 8.1 Phone ARM': {
-				node('msbuild-12 && (vs2013 || vs2015) && windows-sdk-8.1 && npm && node && cmake && jsc') {
-					build('8.1', '12.0', 'WindowsPhone-ARM', gitCommit)
-				}
-			},
 			'Windows 10 x86': {
 				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
 					build('10.0', '14.0', 'WindowsStore-x86', gitCommit)
