@@ -11,7 +11,7 @@ var appc = require('node-appc'),
  */
 module.exports = function configOptionSDK(order) {
 	var sdkTargets = [],
-		unsupportedTargets = ['8.0'];
+		unsupportedTargets = ['8.0', '8.1'];
 
 	if (this.windowsInfo) {
 		for (var version in this.windowsInfo.windowsphone) {
