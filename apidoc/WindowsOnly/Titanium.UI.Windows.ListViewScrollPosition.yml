@@ -1,0 +1,25 @@
+name: Titanium.UI.Windows.ListViewScrollPosition
+summary: |
+    A set of constants for the position value that can be used for the `position` property of 
+    <ListViewAnimationProperties> when invoking the ListView's `scrollToItem`, `appendSection`,
+    `deleteSectionAt`, `insertSectionAt` and `replaceSectionAt` methods.
+extends: Titanium.Proxy
+since: '6.2.0'
+platforms: [windowsphone]
+
+excludes:
+    properties: [bubbleParent]
+    methods: [addEventListener, applyProperties, fireEvent, removeEventListener]
+createable: false
+
+properties:
+  - name: NONE
+    summary: |
+        The list view scrolls to the nearest edge of the row.
+    type: Number
+    permission: read-only
+    
+  - name: TOP
+    summary: The list view scrolls to the leading edge of the row.
+    type: Number
+    permission: read-only
