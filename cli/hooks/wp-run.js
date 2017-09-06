@@ -286,8 +286,14 @@ exports.init = function (logger, config, cli) {
 								next(err.message);
 							})
 							.on('error', function (err) {
-								logRelay && logRelay.stop();
-								next(err.message);
+								// We should skip installing dependency when it is aready there
+								if (err.message && err.message.indexOf('A debug application is already installed') != -1) {
+									logger.info(__('Skipping installing dependency: %s', file));
+									next();
+								} else {
+									logRelay && logRelay.stop();
+									next(err.message);
+								}
 							});
 						});
 					});
