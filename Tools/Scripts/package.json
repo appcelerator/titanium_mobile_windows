@@ -34,7 +34,7 @@
 		"commander": "~2.9.0",
 		"moment": "~2.8.3",
 		"node-appc": "0.2.21",
-		"request": "~2.27.0",
+		"request": "~2.81.0",
 		"temp": "~0.6.0",
 		"wrench": "~1.5.8"
 	},
