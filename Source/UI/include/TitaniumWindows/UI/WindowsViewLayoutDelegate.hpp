@@ -541,12 +541,12 @@ namespace TitaniumWindows
 
 			virtual bool canUseSizeWidth() const TITANIUM_NOEXCEPT
 			{
-				return is_default_width_size__ && (get_left().empty() || get_right().empty());
+				return is_default_width_size__;
 			}
 
 			virtual bool canUseSizeHeight() const TITANIUM_NOEXCEPT
 			{
-				return is_default_height_size__ && (get_top().empty() || get_bottom().empty());
+				return is_default_height_size__;
 			}
 
 			virtual void fixWidth(const double& width) TITANIUM_NOEXCEPT;

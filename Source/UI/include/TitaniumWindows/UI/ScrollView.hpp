@@ -28,8 +28,9 @@ namespace TitaniumWindows
 			virtual ~ScrollViewLayoutDelegate() = default;
 
 			virtual void add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT override;
+			virtual void remove(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT override;
+			virtual void removeAllChildren() TITANIUM_NOEXCEPT override;
 			virtual void set_layout(const std::string& layout) TITANIUM_NOEXCEPT override;
-
 			virtual void requestLayout(const bool& fire_event = false) override;
 
 		protected:

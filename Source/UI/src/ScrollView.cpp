@@ -49,6 +49,18 @@ namespace TitaniumWindows
 			view->addEventListener("click", clickCallback__, contentView__);
 		}
 
+		void ScrollViewLayoutDelegate::removeAllChildren() TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::ViewLayoutDelegate::removeAllChildren();
+			contentView__.GetPrivate<View>()->getViewLayoutDelegate()->removeAllChildren();
+		}
+
+		void ScrollViewLayoutDelegate::remove(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::ViewLayoutDelegate::remove(view);
+			contentView__.GetPrivate<View>()->getViewLayoutDelegate()->remove(view);
+		}
+
 		void ScrollViewLayoutDelegate::set_layout(const std::string& layout) TITANIUM_NOEXCEPT
 		{
 			contentView__.GetPrivate<View>()->getViewLayoutDelegate()->set_layout(layout);

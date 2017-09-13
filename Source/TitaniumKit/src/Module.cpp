@@ -125,7 +125,7 @@ namespace Titanium
 		}
 
 		const auto module = this_object.GetPrivate<Titanium::Module>();
-		if (module) {
+		if (module && module->propertiesSet__ == false) {
 			module->ctorProperties__ = props;
 			module->propertiesSet__ = true;
 			module->afterPropertiesSet();
