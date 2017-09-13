@@ -1207,7 +1207,7 @@ describe('Titanium.UI.Layout', function () {
 			bottom: 10,
 		});
 		var win = cleanerCreateWindow();
-		win.addEventListener('postlayout', function () {
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(a.rect.x).eql(10);
@@ -1250,7 +1250,7 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = cleanerCreateWindow();
-		win.addEventListener('postlayout', function () {
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1292,7 +1292,7 @@ describe('Titanium.UI.Layout', function () {
 		});
 		view.add(label);
 		var win = cleanerCreateWindow();
-		win.addEventListener('postlayout', function () {
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1333,7 +1333,7 @@ describe('Titanium.UI.Layout', function () {
 		});
 		view.add(label);
 		var win = cleanerCreateWindow();
-		win.addEventListener('postlayout', function () {
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1375,7 +1375,7 @@ describe('Titanium.UI.Layout', function () {
 		});
 		var win = cleanerCreateWindow();
 
-        win.addEventListener('postlayout', function() {
+        win.addEventListener('open', function() {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1418,7 +1418,7 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = cleanerCreateWindow();
-		win.addEventListener('postlayout', function() {
+		win.addEventListener('open', function() {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1461,7 +1461,7 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		var win = cleanerCreateWindow();
-		win.addEventListener('postlayout', function () {
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
