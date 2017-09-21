@@ -33,6 +33,51 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit) {
 	archiveArtifacts artifacts: 'dist/**/*'
 }
 
+def unitTests(target, branch, testSuiteBranch) {
+	node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc && Win-Gin10') {
+		def defaultEmulatorID = '10-0-1'
+		// unarchive mapping: ['dist/' : '.']
+		dir('Tools/Scripts/build') {
+			echo 'Setting up SDK'
+			bat "node setupSDK.js --branch ${branch}"
+		}
+
+
+		// if our test suite already exists, delete it
+		bat 'if exist titanium-mobile-mocha-suite rmdir titanium-mobile-mocha-suite /Q /S'
+		// clone the tests suite fresh
+		// FIXME Clone once on initial node and use stash/unstash to ensure all OSes use exact same checkout revision
+		dir('titanium-mobile-mocha-suite') {
+			// TODO Do a shallow clone, using same credentials as from scm object
+			git changelog: false, poll: false, credentialsId: 'd05dad3c-d7f9-4c65-9cb6-19fef98fc440', url: 'https://github.com/ewanharris/titanium-mobile-mocha-suite.git', branch: testSuiteBranch
+		}
+
+		dir('titanium-mobile-mocha-suite/scripts') {
+			bat 'npm install .'
+			echo "${target}"
+			try {
+				if ('ws-local'.equals(target)){
+					echo "Running tests on ws-local"
+					bat "node test.js -p windows -T ${target} --skip-sdk-install --cleanup"
+				} else if ('wp-emulator'.equals(target)) {
+					echo "Running tests on wp-emulator"
+					bat "node test.js -p windows -T ${target} -C ${defaultEmulatorID} --skip-sdk-install --cleanup"
+				}
+			} catch (e) {
+				echo "${e}"
+				throw e
+			} finally {
+				if ('ws-local'.equals(target)){
+					bat 'taskkill /IM mocha.exe /F 2> nul'
+				} else if ('wp-emulator'.equals(target)) {
+					bat 'taskkill /IM xde.exe /F 2> nul'
+				}
+			}
+			junit 'junit.*.xml'
+		} // dir 'titanium-mobile-mocha-suite/scripts
+	}
+}
+
 // wrap in timestamps
 timestamps {
 	// Generate docs on generic node
@@ -54,7 +99,6 @@ timestamps {
 			gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 			// Stash our source code/scripts so we don't need to checkout again?
 			stash name: 'sources', includes: '**', excludes: 'apidoc/**,test/**,Examples/**'
-			stash name: 'NMocha', includes: 'Examples/NMocha/**/*'
 
 			if (isUnix()) {
 				sh 'mkdir -p dist/windows/doc'
@@ -81,86 +125,34 @@ timestamps {
 		} // node
 	} // stage('Docs')
 
-	stage ('Build') {
-		def targetBranch = env.CHANGE_TARGET // if it's a PR, use target merge branch as branch of SDK to install
-		if (!env.BRANCH_NAME.startsWith('PR-')) {
-			targetBranch = env.BRANCH_NAME // if it isn't a PR, try to match the current branch
-		}
-		if (!targetBranch) { // if all else fails, use master as SDK branch to test with
-			targetBranch = 'master'
-		}
+	def targetBranch = env.CHANGE_TARGET // if it's a PR, use target merge branch as branch of SDK to install
+	if (!env.BRANCH_NAME.startsWith('PR-')) {
+		targetBranch = env.BRANCH_NAME // if it isn't a PR, try to match the current branch
+	}
+	if (!targetBranch) { // if all else fails, use master as SDK branch to test with
+		targetBranch = 'master'
+	}
 
+	// stage ('Build') {
+	// 	parallel(
+	// 		'Windows 10 x86': {
+	// 			node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
+	// 				build('10.0', '14.0', 'WindowsStore-x86', gitCommit)
+	// 			}
+	// 		},
+	// 		// 'Windows 10 ARM': {
+	// 		// 	node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
+	// 		// 		build('10.0', '14.0', 'WindowsStore-ARM', gitCommit)
+	// 		// 	}
+	// 		// },
+	// 		failFast: true
+	// 	)
+	// } // Stage build
+
+	stage('test') {
 		parallel(
-			'Windows 8.1 Store x86': {
-				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
-					build('8.1', '12.0', 'WindowsStore-x86', gitCommit)
-
-					unstash 'NMocha' // for tests
-					dir('Tools/Scripts/build') {
-						timeout(testTimeout) {
-							echo 'Running Tests on Windows 8.1 Desktop'
-							bat "node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b ${targetBranch}"
-						}
-						// Kill the desktop app, so workspace cleanup works...
-						bat 'taskkill /IM Mocha.exe /F'
-					}
-					junit 'dist/junit_report.xml'
-				}
-			},
-			'Windows 8.1 Phone x86': {
-				node('msbuild-12 && (vs2013 || vs2015) && hyper-v && windows-sdk-8.1 && npm && node && cmake && jsc') {
-					build('8.1', '12.0', 'WindowsPhone-x86', gitCommit)
-
-					unstash 'NMocha' // for tests
-					dir('Tools/Scripts/build') {
-						timeout(testTimeout) {
-							echo 'Running Tests on Windows 8.1 Phone Emulator'
-							bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
-						}
-						// Kill the phone emulator, so workspace cleanup works...
-						bat 'taskkill /IM xde.exe'
-					}
-					junit 'dist/junit_report.xml'
-				}
-			},
-			'Windows 8.1 Phone ARM': {
-				node('msbuild-12 && (vs2013 || vs2015) && windows-sdk-8.1 && npm && node && cmake && jsc') {
-					build('8.1', '12.0', 'WindowsPhone-ARM', gitCommit)
-				}
-			},
-			'Windows 10 x86': {
-				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
-					build('10.0', '14.0', 'WindowsStore-x86', gitCommit)
-
-					unstash 'NMocha' // for tests
-					dir('Tools/Scripts/build') {
-						timeout(testTimeout) {
-							echo 'Running Tests on Windows 10 Desktop'
-							bat "node test.js -s 10.0 -T ws-local -p Windows10.Store -b ${targetBranch}"
-						}
-						// Kill the desktop app, so workspace cleanup works...
-						bat 'taskkill /IM Mocha.exe /F'
-					}
-					junit 'dist/junit_report.xml'
-					// Delete the report from store, so if phone fails we don't pick this one up
-					bat 'del /f /q dist\\junit_report.xml'
-
-					dir('Tools/Scripts/build') {
-						timeout(testTimeout) {
-							echo 'Running Tests on Windows 10 Phone Emulator'
-							bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
-						}
-						// Kill the phone emulator, so workspace cleanup works...
-						bat 'taskkill /IM xde.exe'
-					}
-					junit 'dist/junit_report.xml'
-				}
-			},
-			'Windows 10 ARM': {
-				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && npm && node && cmake && jsc') {
-					build('10.0', '14.0', 'WindowsStore-ARM', gitCommit)
-				}
-			},
+			'ws-local unit tests': unitTests('ws-local', targetBranch, 'TIMOB-24816'),
+			'wp-emulator unit tests': unitTests('wp-emulator', targetBranch, 'TIMOB-24816'),
 			failFast: true
 		)
 	}
