@@ -66,13 +66,34 @@ namespace TitaniumWindows
 					if (border__->Parent) {
 						const auto panel = dynamic_cast<FrameworkElement^>(border__->Parent);
 						if (panel) {
+							const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 							const auto width  = panel->ActualWidth;
 							const auto height = panel->ActualHeight;
 							if (width > 0) {
 								label__->MaxWidth = width;
+								if (!layout->get_right().empty()) {
+									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
+									const auto rightPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_right(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+									if (width > rightPadding) {
+										label__->MaxWidth -= rightPadding;
+									}
+								}
 							}
 							if (height > 0) {
 								label__->MaxHeight = height;
+								if (!layout->get_bottom().empty()) {
+									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Height);
+									const auto bottomPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_height(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+									if (height > bottomPadding) {
+										label__->MaxHeight -= bottomPadding;
+									}
+								}
+							}
+							
+							if (previousSize__.width != width || previousSize__.height != height) {
+								need_measure__ = true;
+								previousSize__.width = width;
+								previousSize__.height = height;
 							}
 						}
 					}
@@ -191,12 +212,13 @@ namespace TitaniumWindows
 			const auto TI_UI_SIZE = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
 			if ((width.empty() || width == TI_UI_SIZE || width == "auto") && layout->canUseSizeWidth()) {
 				layout->fixWidth(label__->DesiredSize.Width + border__->BorderThickness.Left + border__->BorderThickness.Right + 1 /* Border needs this margin */ );
+				layout->requestLayout();
 			}
 			if ((height.empty() || height == TI_UI_SIZE || height == "auto") && layout->canUseSizeHeight()) {
 				layout->fixHeight(label__->DesiredSize.Height + border__->BorderThickness.Top + border__->BorderThickness.Bottom + 1 /* Border needs this margin */ );
+				layout->requestLayout();
 			}
 
-			layout->requestLayout();
 			need_measure__ = false;
 		}
 

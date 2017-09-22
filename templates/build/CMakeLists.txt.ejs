@@ -85,6 +85,11 @@ set(SOURCE_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
   lib/TitaniumKit.dll
   lib/HAL.dll
+<% for(var i = 0; i < thirdPartyReferences.length; i++) { -%>
+<% if (thirdPartyReferences[i].ContentPath) { -%>
+  "<%= thirdPartyReferences[i].ContentPath.replace(/\\/g, '/') %>"
+<% } -%>
+<% } -%>
   # Include the "." assets here!
 <% for(var i = 0; i < sourceGroups['.'].length; i++) { -%>
   "<%= sourceGroups['.'][i] %>"

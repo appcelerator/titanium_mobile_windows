@@ -280,6 +280,7 @@ function generateCmakeList(next) {
 			defaultLanguage: this.defaultLanguage,
 			native_modules: native_modules,
 			targetPlatformSdkMinVersion: this.targetPlatformSdkMinVersion,
+			thirdPartyReferences: this.hyperloopConfig.windows.thirdPartyReferences || [],
 			vsSdkReferences: this.vsSdkReferences || []
 		}
 	), next);

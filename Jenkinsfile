@@ -1,4 +1,6 @@
 #!groovy​
+// Keep history of up to 30 builds, but only keep artifacts for the last 5
+properties([buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '5'))])
 
 def gitCommit = ''
 def testTimeout = 25
@@ -102,7 +104,7 @@ timestamps {
 							bat "node test.js -s 8.1 -T ws-local -p Windows8_1.Store -b ${targetBranch}"
 						}
 						// Kill the desktop app, so workspace cleanup works...
-						bat 'taskkill /IM Mocha.exe /F'
+						bat 'taskkill /IM Mocha.exe /F 2> nul'
 					}
 					junit 'dist/junit_report.xml'
 				}
@@ -118,7 +120,7 @@ timestamps {
 							bat "node test.js -s 8.1 -T wp-emulator -p Windows8_1.Phone -b ${targetBranch}"
 						}
 						// Kill the phone emulator, so workspace cleanup works...
-						bat 'taskkill /IM xde.exe'
+						bat 'taskkill /IM xde.exe 2> nul'
 					}
 					junit 'dist/junit_report.xml'
 				}
@@ -139,7 +141,7 @@ timestamps {
 							bat "node test.js -s 10.0 -T ws-local -p Windows10.Store -b ${targetBranch}"
 						}
 						// Kill the desktop app, so workspace cleanup works...
-						bat 'taskkill /IM Mocha.exe /F'
+						bat 'taskkill /IM Mocha.exe /F 2> nul'
 					}
 					junit 'dist/junit_report.xml'
 					// Delete the report from store, so if phone fails we don't pick this one up
@@ -151,7 +153,7 @@ timestamps {
 							bat "node test.js -s 10.0.10586 -T wp-emulator -p Windows10.Phone -b ${targetBranch}"
 						}
 						// Kill the phone emulator, so workspace cleanup works...
-						bat 'taskkill /IM xde.exe'
+						bat 'taskkill /IM xde.exe 2> nul'
 					}
 					junit 'dist/junit_report.xml'
 				}

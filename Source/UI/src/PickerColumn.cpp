@@ -46,6 +46,13 @@ namespace TitaniumWindows
 			}
 		}
 
+		void PickerColumn::set_selectedRow(const std::shared_ptr<Titanium::UI::PickerRow>& selectedRow) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::PickerColumn::set_selectedRow(selectedRow);
+			const auto row = std::dynamic_pointer_cast<TitaniumWindows::UI::PickerRow>(selectedRow);
+			picker__->SelectedItem = row->getComboBoxItem();
+		}
+
 		void PickerColumn::addRow(const std::shared_ptr<Titanium::UI::PickerRow>& r) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::PickerColumn::addRow(r);
