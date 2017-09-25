@@ -9,7 +9,6 @@
 #include "Titanium/GlobalObject.hpp"
 #include "Titanium/detail/TiUtil.hpp"
 #include "Titanium/detail/TiImpl.hpp"
-#include "Titanium/Module.hpp"
 #include <sstream>
 #include <functional>
 #include <boost/algorithm/string/predicate.hpp>
@@ -21,7 +20,6 @@ namespace Titanium
 	using namespace Titanium::detail;
 
 	const std::string GlobalObject::COMMONJS_SEPARATOR__{"/"};
-	std::atomic<std::uint32_t> GlobalObject::timer_id_generator__;
 	std::uint32_t GlobalObject::require_nested_count__ = 0;
 
 	GlobalObject::GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -373,97 +371,26 @@ namespace Titanium
 		return js_context.CreateUndefined();
 	}
 
-	unsigned GlobalObject::setTimeout(JSObject&& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT
+	unsigned GlobalObject::setTimeout(JSObject& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT
 	{
-		const auto timerId = timer_id_generator__++;
-
-		RegisterCallback(std::move(function), timerId);
-
-		Callback_t callback = [this, timerId]() mutable {
-			InvokeCallback(timerId);
-			clearTimeout(timerId);
-		};
-
-		StartTimer(std::move(callback), timerId, delay);
-
-		return timerId;
+		TITANIUM_LOG_ERROR("GlobalObject::setTimeout: Unimplemented");
+		return 0;
 	}
 
 	void GlobalObject::clearTimeout(const unsigned& timerId) TITANIUM_NOEXCEPT
 	{
-		StopTimer(timerId);
+		TITANIUM_LOG_ERROR("GlobalObject::clearTimeout: Unimplemented");
 	}
 
-	unsigned GlobalObject::setInterval(JSObject&& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT
+	unsigned GlobalObject::setInterval(JSObject& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT
 	{
-		const auto timerId = timer_id_generator__++;
-
-		RegisterCallback(std::move(function), timerId);
-
-		Callback_t callback = [this, timerId]() mutable {
-			InvokeCallback(timerId);
-		};
-
-		StartTimer(std::move(callback), timerId, delay);
-
-		return timerId;
+		TITANIUM_LOG_ERROR("GlobalObject::setInterval: Unimplemented");
+		return 0;
 	}
 
 	void GlobalObject::clearInterval(const unsigned& timerId) TITANIUM_NOEXCEPT
 	{
-		StopTimer(timerId);
-	}
-
-	void GlobalObject::RegisterCallback(JSObject&& function, const unsigned& timerId) TITANIUM_NOEXCEPT
-	{
-		TITANIUM_ASSERT(function.IsFunction());
-		TITANIUM_ASSERT(timer_callback_map__.find(timerId) == timer_callback_map__.end());
-		timer_callback_map__.emplace(timerId, function);
-	}
-
-	void GlobalObject::UnregisterCallback(const unsigned& timerId) TITANIUM_NOEXCEPT
-	{
-		TITANIUM_ASSERT(timer_callback_map__.find(timerId) != timer_callback_map__.end());
-		timer_callback_map__.erase(timerId);
-	}
-
-	void GlobalObject::InvokeCallback(const unsigned& timerId) TITANIUM_NOEXCEPT
-	{
-		TITANIUM_EXCEPTION_CATCH_START{
-			const auto found = timer_callback_map__.find(timerId);
-			TITANIUM_ASSERT(found != timer_callback_map__.end());
-			auto callback = found->second;
-			TITANIUM_ASSERT(callback.IsFunction());
-			callback(get_context().get_global_object());
-		} TITANIUM_EXCEPTION_CATCH_END
-	}
-
-	void GlobalObject::StartTimer(Callback_t&& callback, const unsigned& timerId, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT
-	{
-		auto timer = CreateTimer(callback, delay);
-		const auto timer_insert_result = timer_map__.emplace(timerId, timer);
-		const bool timer_inserted = timer_insert_result.second;
-		TITANIUM_ASSERT(timer_inserted);
-		TITANIUM_LOG_DEBUG("GlobalObject::setInterval: starting timer for timerId ", timerId);
-		timer->Start();
-	}
-
-	void GlobalObject::StopTimer(const unsigned& timerId) TITANIUM_NOEXCEPT
-	{
-		const auto timer_position = timer_map__.find(timerId);
-		const bool timer_found = timer_position != timer_map__.end();
-		if (timer_found) {
-			TITANIUM_LOG_DEBUG("GlobalObject::clearInterval: timerId ", timerId, " cleared");
-			auto timer_ptr = timer_position->second;
-			timer_ptr->Stop();
-			const auto number_of_elements_removed = timer_map__.erase(timerId);
-			TITANIUM_ASSERT(number_of_elements_removed == 1);
-
-			TITANIUM_ASSERT(timer_callback_map__.find(timerId) != timer_callback_map__.end());
-			timer_callback_map__.erase(timerId);
-		} else {
-			TITANIUM_LOG_WARN("GlobalObject::clearTimeout: timerId ", timerId, " is not registered");
-		}
+		TITANIUM_LOG_ERROR("GlobalObject::clearInterval: Unimplemented");
 	}
 
 	bool GlobalObject::requiredModuleExists(const std::string& path) const TITANIUM_NOEXCEPT
@@ -476,47 +403,6 @@ namespace Titanium
 	{
 		TITANIUM_LOG_ERROR("GlobalObject::readRequiredModule: Unimplemented");
 		return "";
-	}
-
-	GlobalObject::Timer::Timer(Callback_t callback, const std::chrono::milliseconds& interval)
-	    : interval__(interval)
-	{
-		TITANIUM_LOG_DEBUG("GlobalObject::Timer: interval = ", interval.count(), "ms");
-	}
-
-	std::chrono::milliseconds GlobalObject::Timer::get_interval() const TITANIUM_NOEXCEPT
-	{
-		return interval__;
-	}
-
-	class UnimplementedTimer final : public GlobalObject::Timer
-	{
-	public:
-		UnimplementedTimer(GlobalObject::Callback_t callback, const std::chrono::milliseconds& interval)
-		    : Timer(callback, interval)
-		{
-			TITANIUM_LOG_ERROR("GlobalObject::Timer: Unimplemented");
-		}
-
-		virtual ~UnimplementedTimer()
-		{
-		}
-
-		virtual void Start() TITANIUM_NOEXCEPT override final
-		{
-			TITANIUM_LOG_ERROR("GlobalObject::Timer::Start: Unimplemented");
-		}
-
-		virtual void Stop() TITANIUM_NOEXCEPT override final
-		{
-			TITANIUM_LOG_ERROR("GlobalObject::Timer::Stop: Unimplemented");
-		}
-	};
-
-	std::shared_ptr<GlobalObject::Timer> GlobalObject::CreateTimer(Callback_t callback, const std::chrono::milliseconds& interval) const TITANIUM_NOEXCEPT
-	{
-		TITANIUM_LOG_ERROR("GlobalObject::CreateTimer: Unimplemented");
-		return std::make_shared<UnimplementedTimer>(callback, interval);
 	}
 
 	void GlobalObject::JSExportInitialize()
@@ -563,7 +449,7 @@ namespace Titanium
 		const auto global_ptr = global_object.GetPrivate<GlobalObject>();
 		TITANIUM_ASSERT(global_ptr);
 
-		return this_object.get_context().CreateNumber(global_ptr->setTimeout(std::move(function), chrono_delay));
+		return this_object.get_context().CreateNumber(global_ptr->setTimeout(function, chrono_delay));
 	}
 
 	TITANIUM_FUNCTION(GlobalObject, clearTimeout)
@@ -592,7 +478,7 @@ namespace Titanium
 		const auto global_ptr = global_object.GetPrivate<GlobalObject>();
 		TITANIUM_ASSERT(global_ptr);
 
-		return this_object.get_context().CreateNumber(global_ptr->setInterval(std::move(function), chrono_delay));
+		return this_object.get_context().CreateNumber(global_ptr->setInterval(function, chrono_delay));
 	}
 
 	TITANIUM_FUNCTION(GlobalObject, clearInterval)

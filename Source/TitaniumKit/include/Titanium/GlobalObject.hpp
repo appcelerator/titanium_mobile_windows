@@ -106,7 +106,7 @@ namespace Titanium
 
 		  @result Unique timer identifier (Number).
 		*/
-		virtual unsigned setTimeout(JSObject&& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT final;
+		virtual unsigned setTimeout(JSObject& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT;
 
 		/*!
 		  @method
@@ -120,7 +120,7 @@ namespace Titanium
 
 		  @result void
 		*/
-		virtual void clearTimeout(const unsigned& timerId) TITANIUM_NOEXCEPT final;
+		virtual void clearTimeout(const unsigned& timerId) TITANIUM_NOEXCEPT;
 
 		/*!
 		  @method
@@ -142,7 +142,7 @@ namespace Titanium
 
 		  @result Unique timer identifier (Number).
 		*/
-		virtual unsigned setInterval(JSObject&& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT final;
+		virtual unsigned setInterval(JSObject& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT;
 
 		/*!
 		  @method
@@ -156,7 +156,7 @@ namespace Titanium
 
 		  @result void
 		*/
-		virtual void clearInterval(const unsigned& timerId) TITANIUM_NOEXCEPT final;
+		virtual void clearInterval(const unsigned& timerId) TITANIUM_NOEXCEPT;
 
 		GlobalObject(const JSContext&) TITANIUM_NOEXCEPT;
 		virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
@@ -179,81 +179,6 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(clearTimeout);
 		TITANIUM_FUNCTION_DEF(setInterval);
 		TITANIUM_FUNCTION_DEF(clearInterval);
-
-		using Callback_t = std::function<void()>;
-
-		/*!
-		  @class
-
-		  @discussion This is an abstract base class used in the
-		  implemenations of setTimeout, clearTimeout, setInterval and
-		  clearInterval that native platforms must provide implementations
-		  for.
-		*/
-		class TITANIUMKIT_EXPORT Timer
-		{
-		public:
-			/*!
-			  @method
-
-			  @abstract Create a Timer instance that repeatedly calls the
-			  given callback at the given interval after the Start method is
-			  called.
-
-			  @param callback The function to call repeatedly at the given
-			  interval after the Start method is called.
-
-			  @param interval The interval to repeatedly call the given
-			  function after the Start method is called.
-			*/
-			Timer(Callback_t callback, const std::chrono::milliseconds& interval);
-
-			virtual ~Timer() = default;
-			Timer(const Timer&) = default;
-			Timer& operator=(const Timer&) = default;
-#ifdef TITANIUM_MOVE_CTOR_AND_ASSIGN_DEFAULT_ENABLE
-			Timer(Timer&&) = default;
-			Timer& operator=(Timer&&) = default;
-#endif
-
-			/*!
-			  @method
-
-			  @abstract Start calling the callback repeatedly at the given
-			  interval.
-
-			  @result void
-			*/
-			virtual void Start() TITANIUM_NOEXCEPT = 0;
-
-			/*!
-			  @method
-
-			  @abstract Stop calling the callback repeatedly at the given
-			  interval.
-
-			  @result void
-			*/
-			virtual void Stop() TITANIUM_NOEXCEPT = 0;
-
-			/*!
-			  @method
-
-			  @abstract Return the interval that the Timer was constructed
-			  with.
-
-			  @result The interval that the Timer was constructed with.
-			*/
-			virtual std::chrono::milliseconds get_interval() const TITANIUM_NOEXCEPT final;
-
-		private:
-// Silence 4251 on Windows since private member variables do not
-// need to be exported from a DLL.
-#pragma warning(push)
-#pragma warning(disable : 4251)
-			std::chrono::milliseconds interval__;
-#pragma warning(pop)
-		};
 
 	protected:
 		// Silence 4251 on Windows since private member variables do not
@@ -283,34 +208,7 @@ namespace Titanium
 		virtual bool requiredNativeModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT;
 		virtual JSValue requireNativeModule(const JSContext& js_context, const std::string& moduleId);
 
-		/*!
-		  @method
-
-		  @abstract Create a Timer instance that repeatedly calls the given
-		  callback at the given interval after its Start method is
-		  called. Native platforms must implementat this method in order
-		  for setTimeout, clearTimeout, setInterval and clearInterval to
-		  function correctly.
-
-		  @param callback The function to call repeatedly at the given
-		  interval after the Timer's Start method is called.
-
-		  @param interval The interval to repeatedly call the given
-		  function after the Timer's Start method is called.
-
-		  @result A std::shared_ptr<Timer> instance that repeatedly calls
-		  the given callback at the given interval after its Start method
-		  is called.
-		*/
-		virtual std::shared_ptr<Timer> CreateTimer(Callback_t callback, const std::chrono::milliseconds& interval) const TITANIUM_NOEXCEPT;
-
 	private:
-
-		void RegisterCallback(JSObject&& function, const unsigned& timerId) TITANIUM_NOEXCEPT;
-		void UnregisterCallback(const unsigned& timerId) TITANIUM_NOEXCEPT;
-		void InvokeCallback(const unsigned& timerId) TITANIUM_NOEXCEPT;
-		void StartTimer(Callback_t&& callback, const unsigned& timerId, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT;
-		void StopTimer(const unsigned& timerId) TITANIUM_NOEXCEPT;
 
 // Silence 4251 on Windows since private member variables do not
 // need to be exported from a DLL.
@@ -319,10 +217,6 @@ namespace Titanium
 		std::unordered_map<std::string, std::string> module_path_cache__;
 		std::unordered_map<std::string, JSValue> module_cache__;
 		std::string currentDir__;
-		std::unordered_map<unsigned, std::shared_ptr<Timer>> timer_map__;
-		std::unordered_map<unsigned, JSObject> timer_callback_map__;
-
-		static std::atomic<unsigned> timer_id_generator__;
 #pragma warning(pop)
 
 #undef TITANIUM_GLOBALOBJECT_LOCK_GUARD
