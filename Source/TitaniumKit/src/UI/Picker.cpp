@@ -105,7 +105,7 @@ namespace Titanium
 
 		void Picker::reloadColumn(const std::shared_ptr<PickerColumn>& column) TITANIUM_NOEXCEPT
 		{
-			set_columns({ column });
+			column->reload();
 		}
 
 		std::shared_ptr<PickerRow> Picker::getSelectedRow(const std::uint32_t& columnIndex) TITANIUM_NOEXCEPT

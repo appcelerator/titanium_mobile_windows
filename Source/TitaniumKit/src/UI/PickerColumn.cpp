@@ -42,6 +42,11 @@ namespace Titanium
 			}
 		}
 
+		void PickerColumn::reload() TITANIUM_NOEXCEPT
+		{
+			TITANIUM_LOG_WARN("PickerColumn::reload() is not implemented");
+		}
+
 		void PickerColumn::JSExportInitialize()
 		{
 			JSExport<PickerColumn>::SetClassVersion(1);
