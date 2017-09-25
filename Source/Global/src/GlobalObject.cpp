@@ -11,7 +11,6 @@
 #include "Titanium/Module.hpp"
 #include <ratio>
 #include <sstream>
-#include <concrt.h>
 #include <collection.h>
 #include <boost/algorithm/string.hpp>
 #include "TitaniumWindows/Utility.hpp"
