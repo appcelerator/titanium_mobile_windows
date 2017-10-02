@@ -29,7 +29,7 @@ var fs = require('fs'),
 	WINDOWS_PHONE = 'WindowsPhone';
 
 // With node.js on Windows: use symbols available in terminal default fonts
-if ('win32' == os.platform()) {
+if (os.platform() == 'win32') {
 	symbols.ok = '\u221A';
 	symbols.err = '\u00D7';
 	symbols.dot = '.';
@@ -64,7 +64,7 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, 
 		wrench.mkdirSyncRecursive(dest);
 	}
 	// Now let's generate the solution
-	prc = spawn('cmake', ['-G', generator,
+	prc = spawn('cmake', [ '-G', generator,
 		'-DCMAKE_SYSTEM_NAME=' + platform,
 		'-DCMAKE_SYSTEM_VERSION=' + sdkVersion,
 		'-DTitaniumWindows_DISABLE_TESTS=ON',
@@ -74,9 +74,9 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, 
 		'-DTitaniumKit_DISABLE_TESTS=ON',
 		'-DHAL_DISABLE_TESTS=ON',
 		example_folder
-		], {
-			cwd: dest
-		});
+	], {
+		cwd: dest
+	});
 	prc.stdout.on('data', function (data) {
 		console.log(data.toString());
 	});
@@ -86,7 +86,7 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, 
 	prc.on('close', function (code) {
 		var setProcess;
 		if (code != 0) {
-			next("Failed to generate project!");
+			next('Failed to generate project!');
 		} else {
 			next();
 		}
@@ -96,11 +96,10 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, 
 // API
 exports.generateProject = generateProject;
 
-
-////////////////////////////////////
-////////// MAIN EXECUTION //////////
-////////////////////////////////////
-if (module.id === ".") {
+// //////////////////////////////////
+// //////// MAIN EXECUTION //////////
+// //////////////////////////////////
+if (module.id === '.') {
 	(function () {
 		// Process command line input
 		program
@@ -112,17 +111,16 @@ if (module.id === ".") {
 			.option('-s, --sdk-version <version>', 'Target a specific Windows SDK version [version]', /^(8\.1|10\.0)$/, WIN_8_1)
 			.option('-m, --msbuild <msbuild>', '"12.0" (VS 2013) or "14.0" (VS 2015)', /^(12\.0|14\.0)$/, MSBUILD_12);
 
-		program.command('new'.blue+' <example_name>'.white)
-				.description('	create a new project from the packaged examples'.grey);
+		program.command('new'.blue + ' <example_name>'.white)
+			.description('	create a new project from the packaged examples'.grey);
 
 		program.parse(process.argv);
 
 		Error.stackTraceLimit = Infinity;
 
-		if (program.args.length === 0)
-		{
+		if (program.args.length === 0) {
 			var help = program.helpInformation();
-			help = help.replace('Usage: generate_project COMMAND [ARGS] [OPTIONS]','Usage: '+'generate_project'.blue+' COMMAND'.white+' [ARGS] [OPTIONS]'.grey);
+			help = help.replace('Usage: generate_project COMMAND [ARGS] [OPTIONS]', 'Usage: ' + 'generate_project'.blue + ' COMMAND'.white + ' [ARGS] [OPTIONS]'.grey);
 			console.log(help);
 			process.exit(1);
 		}
@@ -154,5 +152,5 @@ if (module.id === ".") {
 			}
 			console.log((symbols.ok + ' Generated VS solution. Open ' + dest + '\\' + example_name + '.sln to begin development.').green);
 		});
-	})();
+	}());
 }

@@ -14,7 +14,6 @@ var path = require('path'),
 	windowsTitaniumKit = {},         // Stores what's implemented in Titanium Windows
 	windowsTitaniumKit_Missing = []; // Stores missing module names
 
-
 // FIXME: We could populate this while reading in the files, but it would
 // require changes to how we read in, his isnt the nicest, but works for now
 var APIS = [
@@ -97,8 +96,8 @@ var APIS = [
 	'XML'
 ];
 
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
+String.prototype.capitalize = function () {
+	return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
 //
@@ -115,7 +114,7 @@ function extract(callback) {
 			}
 		}
 	);
-	walker.on('end', function() {
+	walker.on('end', function () {
 		extractWhiteList(callback);
 	});
 }
@@ -125,13 +124,16 @@ function extract(callback) {
 //
 function extractTitaniumKit(root, file, next) {
 	var reader = new LineReader(path.join(root, file)),
-		module_name, properties = [] , methods = [], events = [];
-	reader.on('line', function(line) {
+		module_name,
+		properties = [],
+		methods = [],
+		events = [];
+	reader.on('line', function (line) {
 		var namespace_match = line.match(/\s*\:\s*\w+\(js_context,\s*\"([\w\.]+)\"\)/);
 		var unknown_match   = line.match(/\s*\:\s*Module\(js_context,\s*apiName\)/);
 		var property_match  = line.match(/TITANIUM_ADD_PROPERTY\w*\((\w+),\s*(\w+)\);/);
 		var function_match  = line.match(/TITANIUM_ADD_FUNCTION\((\w+),\s*(\w+)\);/);
-		var constant_match  = line.match(/TITANIUM_ADD_CONSTANT_PROPERTY\w*\((\w+),\s*(\w+)\);/)
+		var constant_match  = line.match(/TITANIUM_ADD_CONSTANT_PROPERTY\w*\((\w+),\s*(\w+)\);/);
 
 		if (namespace_match) {
 			module_name = namespace_match[1];
@@ -163,11 +165,11 @@ function extractTitaniumKit(root, file, next) {
 			properties.push(constant_match[2]);
 		}
 	});
-	reader.on('error', function(err) {
+	reader.on('error', function (err) {
 		console.error(err);
 		process.exit(1);
 	});
-	reader.on('end', function() {
+	reader.on('end', function () {
 		if (module_name) {
 			titaniumKit[module_name] = {
 				module_name: module_name,
@@ -186,7 +188,10 @@ function extractTitaniumKit(root, file, next) {
 function extractWhiteList(callback) {
 	var titaniumKit_whitelist = {};
 	var reader = new LineReader(path.join(__dirname, 'whitelist.txt')),
-		module_name, properties = [], methods = [], events = [];
+		module_name,
+		properties = [],
+		methods = [],
+		events = [];
 	function addWhitelistEntry() {
 		if (module_name) {
 			titaniumKit_whitelist[module_name] = {
@@ -199,7 +204,7 @@ function extractWhiteList(callback) {
 		module_name = null;
 		properties = [], methods = [], events = [];
 	}
-	reader.on('line', function(line) {
+	reader.on('line', function (line) {
 		var element = line.split(' '),
 			type = element[0];
 		if (type === 'C') {
@@ -210,16 +215,16 @@ function extractWhiteList(callback) {
 			methods.push(element[1]);
 		} else if (type === 'E') {
 			events.push(element[1]);
-		} else if (line.trim() == "") {
+		} else if (line.trim() == '') {
 			// new whitelist entry
 			addWhitelistEntry();
 		}
 	});
-	reader.on('error', function(err) {
+	reader.on('error', function (err) {
 		console.error(err);
 		process.exit(1);
 	});
-	reader.on('end', function() {
+	reader.on('end', function () {
 		// include last entry into whitelist
 		addWhitelistEntry();
 
@@ -248,9 +253,13 @@ function extractWindowsKit(callback) {
 			if (/\.hpp$/.test(stat.name)) {
 				var reader = new LineReader(path.join(root, stat.name)),
 					module_name,
-					properties = [], methods = [], events = [],
-					un_properties = [], un_methods = [], un_events = [];
-				reader.on('line', function(line) {
+					properties = [],
+					methods = [],
+					events = [],
+					un_properties = [],
+					un_methods = [],
+					un_events = [];
+				reader.on('line', function (line) {
 					var module_match = line.match(/\s*TITANIUM_MODULE_UNIMPLEMENTED\(\"*(\w[\w.]*)\"*\)/);
 					if (module_match) {
 						windowsTitaniumKit_Missing.push(module_match[1]);
@@ -278,11 +287,11 @@ function extractWindowsKit(callback) {
 					}
 
 				});
-				reader.on('error', function(err) {
+				reader.on('error', function (err) {
 					console.error(err);
 					process.exit(1);
 				});
-				reader.on('end', function() {
+				reader.on('end', function () {
 					if (module_name && titaniumKit[module_name]) {
 						windowsTitaniumKit[module_name] = {
 							module_name: module_name,
@@ -338,7 +347,7 @@ function exportYAML() {
 
 		// dump to file
 		var modulepath = module_name.split('.');
-		var classname  = modulepath[modulepath.length-1];
+		var classname  = modulepath[modulepath.length - 1];
 
 		modulepath.pop();
 		// everything should be go to Titanium directory
@@ -359,7 +368,7 @@ function isEmpty(prop) {
 //
 // Extract API from source & export to YAML
 //
-extract(function() {
+extract(function () {
 	// remove unimplemented API
 	for (var i = 0; i < windowsTitaniumKit_Missing.length; i++) {
 		delete titaniumKit[windowsTitaniumKit_Missing[i]];

@@ -43,7 +43,7 @@ var path = require('path'),
  * @param next {Function} callback function
  **/
 function installSDK(branch, next) {
-	var prc = spawn('node', [titanium, 'sdk', 'install', '-b', branch, '-d', '--no-colors']),
+	var prc = spawn('node', [ titanium, 'sdk', 'install', '-b', branch, '-d', '--no-colors' ]),
 		sdkVersion;
 	prc.stdout.on('data', function (data) {
 		var value = data.toString().trim(),
@@ -64,10 +64,10 @@ function installSDK(branch, next) {
 
 	prc.on('close', function (code) {
 		if (code != 0) {
-			next("Failed to install SDK. Exit code: " + code);
+			next('Failed to install SDK. Exit code: ' + code);
 		} else {
-			console.log("Making sure " + sdkVersion + " is selected");
-			var selectPrc = spawn('node', [titanium, 'sdk', 'select', sdkVersion]);
+			console.log('Making sure ' + sdkVersion + ' is selected');
+			var selectPrc = spawn('node', [ titanium, 'sdk', 'select', sdkVersion ]);
 			selectPrc.stdout.on('data', function (data) {
 				console.log(data.toString());
 			});
@@ -76,7 +76,7 @@ function installSDK(branch, next) {
 			});
 			selectPrc.on('close', function (code) {
 				if (code != 0) {
-					next("Failed to select SDK. Exit code: " + code);
+					next('Failed to select SDK. Exit code: ' + code);
 				} else {
 					next(null, sdkVersion);
 				}
@@ -102,13 +102,13 @@ function getSDKInstallDir(tiSDKVersion, next) {
 
 		out = JSON.parse(stdout);
 		if (tiSDKVersion) {
-			console.log("Looks like the SDK was already installed: " + tiSDKVersion);
+			console.log('Looks like the SDK was already installed: ' + tiSDKVersion);
 			selectedSDK = tiSDKVersion;
 		} else {
 			selectedSDK = out['titaniumCLI']['selectedSDK'];
 		}
 		if (!selectedSDK) {
-			console.error("There is no selected SDK for the titanium CLI and we didn't sniff the version on install!");
+			console.error('There is no selected SDK for the titanium CLI and we didn\'t sniff the version on install!');
 		}
 
 		next(null, out['titanium'][selectedSDK]['path']);
@@ -173,7 +173,7 @@ function generateWindowsProject(next) {
 	if (fs.existsSync(projectDir)) {
 		wrench.rmdirSyncRecursive(projectDir);
 	}
-	prc = spawn('node', [titanium, 'create', '--force', '--type', 'app', '--platforms', 'windows', '--name', 'mocha', '--id', 'com.appcelerator.mocha.testing', '--url', 'http://www.appcelerator.com', '--workspace-dir', __dirname, '--no-prompt']);
+	prc = spawn('node', [ titanium, 'create', '--force', '--type', 'app', '--platforms', 'windows', '--name', 'mocha', '--id', 'com.appcelerator.mocha.testing', '--url', 'http://www.appcelerator.com', '--workspace-dir', __dirname, '--no-prompt' ]);
 	prc.stdout.on('data', function (data) {
 		console.log(data.toString());
 	});
@@ -182,7 +182,7 @@ function generateWindowsProject(next) {
 	});
 	prc.on('close', function (code) {
 		if (code != 0) {
-			next("Failed to create project");
+			next('Failed to create project');
 		} else {
 			next();
 		}
@@ -200,7 +200,7 @@ function addTiAppProperties(sdkVersion, next) {
 
 	// Not so smart but this should work...
 	var content = [];
-	fs.readFileSync(tiapp_xml).toString().split(/\r?\n/).forEach(function(line) {
+	fs.readFileSync(tiapp_xml).toString().split(/\r?\n/).forEach(function (line) {
 		content.push(line);
 		if (line.indexOf('<guid>') >= 0) {
 			content.push('\t<property name="presetString" type="string">Hello!</property>');
@@ -271,7 +271,7 @@ function getDeviceId(sdkVersion, target, next) {
 		if (target === WP_EMULATOR) {
 			deviceId = results.emulators && results.emulators[shortSdkVersion] && results.emulators[shortSdkVersion][0] && results.emulators[shortSdkVersion][0].udid;
 
-			for(i in results.emulators[shortSdkVersion]) {
+			for (i in results.emulators[shortSdkVersion]) {
 				var emulator = results.emulators[shortSdkVersion][i];
 				if (sdkVersionRegex.test(emulator.uapVersion)) {
 					deviceId = emulator.udid;
@@ -338,8 +338,7 @@ function runBuild(target, deviceId, sdkVersion, count, next) {
 					prc.kill();
 					break;
 				}
-			}
-			else if ((index = str.indexOf('!TEST_RESULTS_START!')) != -1) {
+			} else if ((index = str.indexOf('!TEST_RESULTS_START!')) != -1) {
 				inResults = true;
 				testResults = str.substr(index + 20).trim();
 			}
@@ -348,7 +347,7 @@ function runBuild(target, deviceId, sdkVersion, count, next) {
 			if ((index = str.indexOf('-- End application log ----')) != -1) {
 				prc.kill(); // quit this build...
 				if (count > MAX_RETRIES) {
-					next("failed to get test results before log ended!"); // failed too many times
+					next('failed to get test results before log ended!'); // failed too many times
 				} else {
 					runBuild(target, deviceId, sdkVersion, count + 1, next); // retry
 				}
@@ -375,20 +374,20 @@ function runBuild(target, deviceId, sdkVersion, count, next) {
  */
 function parseTestResults(testResults, next) {
 	if (!testResults) {
-		return next("Failed to retrieve any tests results!");
+		return next('Failed to retrieve any tests results!');
 	}
 
 	// preserve newlines, etc - use valid JSON
-	testResults = testResults.replace(/\\n/g, "\\n")
-			   .replace(/\\'/g, "\\'")
+	testResults = testResults.replace(/\\n/g, '\\n')
+			   .replace(/\\'/g, '\\\'')
 			   .replace(/\\"/g, '\\"')
-			   .replace(/\\&/g, "\\&")
-			   .replace(/\\r/g, "\\r")
-			   .replace(/\\t/g, "\\t")
-			   .replace(/\\b/g, "\\b")
-			   .replace(/\\f/g, "\\f");
+			   .replace(/\\&/g, '\\&')
+			   .replace(/\\r/g, '\\r')
+			   .replace(/\\t/g, '\\t')
+			   .replace(/\\b/g, '\\b')
+			   .replace(/\\f/g, '\\f');
 	// remove non-printable and other non-valid JSON chars
-	testResults = testResults.replace(/[\u0000-\u0019]+/g,"");
+	testResults = testResults.replace(/[\u0000-\u0019]+/g, '');
 	jsonResults = JSON.parse(testResults);
 	next();
 }
@@ -406,8 +405,8 @@ function outputJUnitXML(jsonResults, prefix, next) {
 		keys = [],
 		values = [],
 		r = '';
-	jsonResults.results.forEach(function(item) {
-		var s = suites[item.suite] || {tests: [], suite: item.suite, duration: 0, passes: 0, failures: 0, start:''}; // suite name to group by
+	jsonResults.results.forEach(function (item) {
+		var s = suites[item.suite] || { tests: [], suite: item.suite, duration: 0, passes: 0, failures: 0, start:'' }; // suite name to group by
 		s.tests.unshift(item);
 		s.duration += item.duration;
 		if (item.state == 'failed') {
@@ -418,7 +417,7 @@ function outputJUnitXML(jsonResults, prefix, next) {
 		suites[item.suite] = s;
 	});
 	keys = Object.keys(suites);
-	values = keys.map(function(v) { return suites[v]; });
+	values = keys.map(function (v) { return suites[v]; });
 	var r = ejs.render('' + fs.readFileSync(path.join('.', 'junit.xml.ejs')),  { 'suites': values, 'prefix': prefix });
 
 	// Write the JUnit XML to a file
@@ -451,7 +450,7 @@ function cleanNonGaSDKs(sdkPath, next) {
 				return callback(null);
 			}
 			wrench.rmdirRecursive(thisSDKPath, callback);
-		}, function(err) {
+		}, function (err) {
 			next(err);
 		});
 	});
@@ -479,7 +478,7 @@ function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 	async.series([
 		function (next) {
 			// If this is already installed we don't re-install, thankfully
-			console.log("Installing SDK from " + branch + " branch");
+			console.log('Installing SDK from ' + branch + ' branch');
 			installSDK(branch, function (err, version) {
 				if (err) {
 					return next(err);
@@ -498,7 +497,7 @@ function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 			});
 		},
 		function (next) {
-			console.log("Copying built Windows SDK into master SDK");
+			console.log('Copying built Windows SDK into master SDK');
 			copyWindowsIntoSDK(sdkPath, next);
 		},
 		function (next) {
@@ -509,15 +508,15 @@ function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 			}
 		},
 		function (next) {
-			console.log("Generating Windows project");
+			console.log('Generating Windows project');
 			generateWindowsProject(next);
 		},
 		function (next) {
-			console.log("Adding properties for tiapp.xml");
+			console.log('Adding properties for tiapp.xml');
 			addTiAppProperties(shortSdkVersion, next);
 		},
 		function (next) {
-			console.log("Copying test scripts into project");
+			console.log('Copying test scripts into project');
 			copyMochaAssets(next);
 		},
 		function (next) {
@@ -535,7 +534,7 @@ function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 			});
 		},
 		function (next) {
-			console.log("Launching test project in simulator");
+			console.log('Launching test project in simulator');
 			runBuild(target, deviceId, shortSdkVersion, 1, next);
 		},
 		function (next) {
@@ -555,7 +554,7 @@ function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 exports.test = test;
 
 // When run as single script.
-if (module.id === ".") {
+if (module.id === '.') {
 	(function () {
 		var program = require('commander');
 
@@ -584,5 +583,5 @@ if (module.id === ".") {
 				process.exit(0);
 			}
 		});
-	})();
+	}());
 }

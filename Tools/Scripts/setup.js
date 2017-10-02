@@ -43,9 +43,8 @@ var async = require('async'),
 	BOOST_URL = 'http://nchc.dl.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.zip',
 	BOOST_DIR = 'boost_1_60_0'; // directory inside zipfile
 
-
 // With node.js on Windows: use symbols available in terminal default fonts
-if ('win32' == os.platform()) {
+if (os.platform() == 'win32') {
 	SYMBOLS.OK = '\u221A';
 	SYMBOLS.ERROR = '\u00D7';
 }
@@ -93,7 +92,6 @@ function downloadURL(url, callback) {
 				bar && bar.tick(buffer.length);
 			});
 
-
 			tempStream.on('close', function () {
 				if (bar) {
 					bar.tick(total);
@@ -106,7 +104,7 @@ function downloadURL(url, callback) {
 			var busy;
 
 			if (!process.argv.indexOf('--quiet') && !process.argv.indexOf('--no-progress-bars')) {
-				busy = new appc.busyindicator;
+				busy = new appc.busyindicator();
 				busy.start();
 			}
 
@@ -127,7 +125,7 @@ function extract(filename, installLocation, keepFiles, callback) {
 	appc.zip.unzip(filename, installLocation, {
 		visitor: function (entry, i, total) {
 			if (i == 0) {
-				if(!process.argv.indexOf('--quiet') && !process.argv.indexOf('--no-progress-bars')) {
+				if (!process.argv.indexOf('--quiet') && !process.argv.indexOf('--no-progress-bars')) {
 					bar = new appc.progress('  :paddedPercent [:bar]', {
 						complete: '='.cyan,
 						incomplete: '.'.grey,
@@ -160,10 +158,10 @@ function extract(filename, installLocation, keepFiles, callback) {
 function setENV(key, value, next) {
 	if (os.platform() === 'win32') {
 		// Set the env var "permanently" for user
-		var prc = spawn('setx', [key, value]);
-		//prc.stdout.on('data', function (data) {
+		var prc = spawn('setx', [ key, value ]);
+		// prc.stdout.on('data', function (data) {
 		//   console.log(data.toString());
-		//});
+		// });
 
 		prc.on('close', function (code) {
 			var setProcess;
@@ -249,7 +247,7 @@ function downloadIfNecessary(envKey, defaultDest, expectedDir, url, next) {
 			}
 			// Extract to parent of destination...
 			var dest = path.normalize(path.join(destination, '..'));
-			extract(filename, dest, true, function() {
+			extract(filename, dest, true, function () {
 				// Need to rename the extracted directory to match our expected destination!
 				var extractedDir = path.join(dest, expectedDir);
 				wrench.copyDirSyncRecursive(extractedDir, destination);
@@ -271,7 +269,7 @@ function downloadIfNecessary(envKey, defaultDest, expectedDir, url, next) {
  * @param next {Function} callback function when finished
  */
 function setupBoost(url, next) {
-	if (typeof url == 'function') {
+	if (typeof url === 'function') {
 		next = url;
 		url = BOOST_URL;
 	}
@@ -287,7 +285,7 @@ function setupBoost(url, next) {
  * @param next {Function} callback function when finished
  */
 function setupGTest(url, next) {
-	if (typeof url == 'function') {
+	if (typeof url === 'function') {
 		next = url;
 		url = GTEST_URL;
 	}
@@ -304,7 +302,7 @@ function setupGTest(url, next) {
  * @param next {Function} callback function when finished
  */
 function setupJSC(sdkVersion, url, next) {
-	if (typeof url == 'function') {
+	if (typeof url === 'function') {
 		next = url;
 		url = JSC_URL;
 	}
@@ -350,7 +348,7 @@ function setupCMake(next) {
  * @param callback {Function} callback function when finished
  **/
 function setup(overrides, callback) {
-	if (typeof overrides == 'function') {
+	if (typeof overrides === 'function') {
 		callback = overrides;
 		overrides = {};
 	}
@@ -383,7 +381,7 @@ exports.setupJSC = setupJSC;
 exports.setupCMake = setupCMake;
 
 // When run as single script.
-if (module.id === ".") {
+if (module.id === '.') {
 	(function () {
 		var program = require('commander');
 
@@ -417,5 +415,5 @@ if (module.id === ".") {
 			}
 			process.exit(0);
 		});
-	})();
+	}());
 }

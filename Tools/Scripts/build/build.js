@@ -44,8 +44,8 @@ var path = require('path'),
  * @param callback {Function} what to invoke when done/errored
  */
 function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, msBuildVersion, platform, arch, parallel, quiet, callback) {
-	var platformAbbrev = "win10";
-	if (sdkVersion == "8.1") {
+	var platformAbbrev = 'win10';
+	if (sdkVersion == '8.1') {
 		platformAbbrev = (platform == 'WindowsPhone') ? 'phone' : 'store';
 	}
 
@@ -54,7 +54,7 @@ function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, ms
 		function (next) {
 			runCMake(sourceDir, path.join(buildDir, platformAbbrev, arch), buildType, sdkVersion, msBuildVersion, platform, arch, quiet, next);
 		},
-		function(next) {
+		function (next) {
 			runNuGet(path.join(buildDir, platformAbbrev, arch, 'TitaniumWindows.sln'), quiet, next);
 		},
 		function (next) {
@@ -85,7 +85,7 @@ function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
 			if (githash) {
 				return next();
 			}
-			exec('git rev-parse --short --no-color HEAD', {cwd: path.dirname(tiModuleCPP)}, function (error, stdout, stderr) {
+			exec('git rev-parse --short --no-color HEAD', { cwd: path.dirname(tiModuleCPP) }, function (error, stdout, stderr) {
 				if (error) {
 					return next('Failed to get Git HASH: ' + error);
 				}
@@ -103,7 +103,7 @@ function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
 					return callback('Failed to get contents of TiModule.cpp to replace hard-coded values: ' + error);
 				}
 				date = new Date();
-				timestamp = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+				timestamp = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes();
 
 				contents = data.toString();
 				// FIXME How can we set the version? It doesn't get set until later _after_ we've built! We'll need to pull it in from some file!
@@ -138,7 +138,7 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
 	}
 	wrench.mkdirSyncRecursive(buildDir);
 
-	if ('ARM' == arch) {
+	if (arch == 'ARM') {
 		generator += ' ARM';
 	}
 
@@ -161,7 +161,7 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
 		sourceDir
 	];
 
-	var options = {cwd: buildDir};
+	var options = { cwd: buildDir };
 	spawnWithArgs('CMake', cmakeLocation, args, options, quiet, callback);
 }
 
@@ -171,7 +171,7 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
  * @param callback {Function} what to invoke when done/errored
  */
 function runNuGet(slnFile, quiet, callback) {
-	spawnWithArgs('NuGet', path.join(__dirname,'..','..','..','cli','vendor','nuget','nuget.exe'), ['restore',slnFile], {}, quiet, callback);
+	spawnWithArgs('NuGet', path.join(__dirname, '..', '..', '..', 'cli', 'vendor', 'nuget', 'nuget.exe'), [ 'restore', slnFile ], {}, quiet, callback);
 }
 
 /**
@@ -184,8 +184,8 @@ function runNuGet(slnFile, quiet, callback) {
  * @param callback {Function} what to invoke when done/errored
  */
 function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet, callback) {
-	var args = ['/p:Configuration=' + buildType];
-	if ('ARM' == arch) {
+	var args = [ '/p:Configuration=' + buildType ];
+	if (arch == 'ARM') {
 		args.unshift('/p:Platform=ARM');
 	}
 	args.unshift(slnFile);
@@ -295,11 +295,10 @@ function spawnWithArgs(name, file, args, options, quiet, callback) {
  */
 function copyDir(from, to) {
 	return function (next) {
-		wrench.copyDirRecursive(from, to, {forceDelete: true}, function (err) {
+		wrench.copyDirRecursive(from, to, { forceDelete: true }, function (err) {
 			if (err) {
 				next(err);
-			}
-			else {
+			} else {
 				next();
 			}
 		});
@@ -316,8 +315,7 @@ function copyFile(from, to) {
 		fs.createReadStream(from).pipe(fs.createWriteStream(to)).on('finish', function (err) {
 			if (err) {
 				next(err);
-			}
-			else {
+			} else {
 				next();
 			}
 		});
@@ -378,7 +376,7 @@ function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, fin
 				copyDir(path.join(rootDir, 'cli'), path.join(distRoot, 'cli'))
 			];
 
-			var include_TitaniumWindows = ['Filesystem', 'Global', 'Map', 'Media', 'Network', 'Sensors', 'Ti', 'UI'];
+			var include_TitaniumWindows = [ 'Filesystem', 'Global', 'Map', 'Media', 'Network', 'Sensors', 'Ti', 'UI' ];
 			for (var i = 0; i < include_TitaniumWindows.length; i++) {
 				tasks.push(copyDir(path.join(rootDir, 'Source', include_TitaniumWindows[i], 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows_' + include_TitaniumWindows[i], 'include', 'TitaniumWindows')));
 			}
@@ -400,7 +398,7 @@ function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, fin
 exports.build = build;
 
 // When run as script
-if (module.id === ".") {
+if (module.id === '.') {
 	(function () {
 		var program = require('commander'),
 			// default platform/arch targets
@@ -446,6 +444,6 @@ if (module.id === ".") {
 					process.exit(1);
 				}
 				process.exit(0);
-		});
-	})();
+			});
+	}());
 }
