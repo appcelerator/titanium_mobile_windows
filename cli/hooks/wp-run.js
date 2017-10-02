@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Runs an app on a Windows Phone device or emulator.
  *

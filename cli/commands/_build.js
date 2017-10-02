@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Windows build command.
  *

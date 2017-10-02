@@ -1,6 +1,7 @@
+'use strict';
+
 var appc = require('node-appc'),
 	__ = appc.i18n(__dirname).__;
-
 
 /**
  * Defines the --win-sdk option.
@@ -15,8 +16,8 @@ module.exports = function configOptionSDK(order) {
 
 	if (this.windowsInfo) {
 		for (var version in this.windowsInfo.windowsphone) {
+			sdkTargets.push(version);
 			if (unsupportedTargets.indexOf(version) === -1) {
-				sdkTargets.push(version);
 			}
 		}
 		if (this.windowsInfo.windowsphone && this.windowsInfo.windowsphone[version]) {

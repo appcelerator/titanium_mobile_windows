@@ -1,3 +1,5 @@
+'use strict';
+
 var appc = require('node-appc'),
 	windowslib = require('windowslib'),
 	__ = appc.i18n(__dirname).__;

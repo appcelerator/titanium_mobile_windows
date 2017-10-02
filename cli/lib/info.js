@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Detects Windows development environment and displays it in the "titanium info" command.
  *
@@ -78,7 +80,7 @@ exports.render = function (logger, config, rpad, styleHeading, styleValue, style
 	if (!data) return;
 
 	if (process.platform === 'win32') {
-						
+
 		// Visual Studio
 		logger.log(styleHeading(__('Microsoft (R) Visual Studio')));
 		if (data.visualstudio && Object.keys(data.visualstudio).length) {

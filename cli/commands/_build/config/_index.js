@@ -1,3 +1,5 @@
+'use strict';
+
 exports.configOptionDeployType = require('./deployType');
 exports.configOptionDeviceID = require('./deviceID');
 exports.configOptionOutputDir = require('./outputDir');

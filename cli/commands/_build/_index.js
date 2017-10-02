@@ -1,3 +1,5 @@
+'use strict';
+
 exports.analytics = require('./analytics');
 exports.checks = require('./checks');
 exports.compile = require('./compile');

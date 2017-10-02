@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
@@ -16,7 +18,7 @@ var source_dir  = path.resolve(__dirname, '..', '..', 'Source', 'TitaniumKit', '
 var include_dir = path.resolve(__dirname, '..', '..', 'Source', 'TitaniumKit', 'include', 'Titanium');
 
 var files_to_process = [
-    { 
+    {
         from: path.join(source_dir,  'analytics.js'),
         to:   path.join(include_dir, 'analytics_js.hpp')
     },

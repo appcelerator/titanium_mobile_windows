@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Windows Titanium Module Generator
  *
@@ -444,10 +446,10 @@ function mkdir(dirname, cb) {
 	if (cb) {
 		fs.mkdirp(dirname, cb);
 	} else {
-		try { 
+		try {
 			fs.mkdirpSync(dirname);
 			return true;
-		} catch(e) { 
+		} catch(e) {
 			console.error(e.message);
 			return false;
 		}

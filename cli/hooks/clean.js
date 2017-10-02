@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * clean.js: Titanium Mobile CLI clean command for Windows
  *

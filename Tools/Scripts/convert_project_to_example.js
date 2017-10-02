@@ -1,3 +1,5 @@
+'use strict';
+
 // TODO Assumes we have a ti project that has had ti build -p windows run for it and has a build folder
 // TODO Create a folder under Examples with name matching project name
 // copy Examples/NG/Native over into it

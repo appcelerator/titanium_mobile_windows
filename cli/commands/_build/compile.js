@@ -1,3 +1,5 @@
+'use strict';
+
 var appc = require('node-appc'),
 	fs = require('fs'),
 	os = require('os'),
@@ -72,7 +74,7 @@ function compileApp(next) {
 	p = spawn((process.env.comspec || 'cmd.exe'), ['/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ \(\)\&]/g, '^$&') +
 		' &&' + ' MSBuild' + ' /p:Platform=' + _t.cmakeArch + ' /p:Configuration=' + _t.buildConfiguration + ' ' + slnFile, '"'
 	], {windowsVerbatimArguments: true});
-	
+
 	p.stdout.on('data', function (data) {
 		var line = data.toString().trim();
 		if (line.indexOf('error ') >= 0) {

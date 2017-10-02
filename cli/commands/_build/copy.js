@@ -1,3 +1,5 @@
+'use strict';
+
 var appc = require('node-appc'),
 	async = require('async'),
 	cleanCSS = require('clean-css'),

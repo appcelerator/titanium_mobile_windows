@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * Windows module build command.
 *

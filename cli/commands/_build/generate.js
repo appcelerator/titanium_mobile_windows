@@ -1,3 +1,5 @@
+'use strict';
+
 var appc = require('node-appc'),
 	nativeModuleGenerator = require('../../lib/stub'),
 	DOMParser = require('xmldom').DOMParser,
@@ -113,7 +115,7 @@ function generateNativeTypes(next) {
 		this.windowsInfo.windowsphone['10.0'] &&
 		this.windowsInfo.windowsphone['10.0'].sdks &&
 		this.windowsInfo.windowsphone['10.0'].sdks.length > 0) {
-		
+
 		var supportedSdkVersions = this.windowslibOptions.supportedWindows10SDKVersions.replace(/(\d+\.\d+\.\d+)\.\d+/g, '$1'),
 			sdks = this.windowsInfo.windowsphone['10.0'].sdks;
 
@@ -744,7 +746,7 @@ function copyModuleOverride(next) {
 				moduleSrc = path.join(module.modulePath, 'platform');
 			if (fs.existsSync(moduleSrc)) {
 				wrench.readdirSyncRecursive(moduleSrc).forEach(function(res) {
-					var from = path.join(moduleSrc, res), 
+					var from = path.join(moduleSrc, res),
 						to   = path.join(_t.buildDir, res);
 					if (fs.statSync(from).isFile()) {
 						_t.logger.info('Module [' + module.manifest.moduleid + '] overrides ' + res);

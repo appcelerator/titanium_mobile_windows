@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Signs an app.
  *

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Generates native API wrapper classes and headers from API metadata.
  *
@@ -47,7 +49,7 @@ function generateCmakeList(dest, modules, next) {
 				return;
 			}
 		}
-		
+
 		fs.writeFile(cmakelist, data, function(err) {
 			next(err);
 		});
@@ -68,10 +70,10 @@ function getCppClassForModule(moduleId) {
 
 /**
  * Generates the code in TypeHelper.cs to handle building up the list of native types registered.
- * @param {String} dest - 
- * @param {Array[map]} native_types - 
- * @param {Array[map]} native_events - 
- * @param {Function} next - 
+ * @param {String} dest -
+ * @param {Array[map]} native_types -
+ * @param {Array[map]} native_events -
+ * @param {Function} next -
  */
 function generateNativeTypeHelper(dest, native_types, native_events, next) {
 	var helper_cs = path.join(dest, 'src', 'TypeHelper.cs'),
@@ -82,7 +84,7 @@ function generateNativeTypeHelper(dest, native_types, native_events, next) {
 	fs.readFile(template, 'utf8', function (err, data) {
 		if (err) throw err;
 
-		data = ejs.render(data, { 
+		data = ejs.render(data, {
 			native_types:native_types,
 			native_events:native_events
 		}, {});
@@ -103,9 +105,9 @@ function generateNativeTypeHelper(dest, native_types, native_events, next) {
 
 /**
  * Generates the code in RequireHook.cpp to handle building up the list of native modules registered.
- * @param {String} dest - 
- * @param {Array[map]} modules - 
- * @param {Function} next - 
+ * @param {String} dest -
+ * @param {Array[map]} modules -
+ * @param {Function} next -
  */
 function generateRequireHook(dest, modules, native_types, next) {
 	var require_hook = path.join(dest, 'src', 'RequireHook.cpp'),
@@ -133,7 +135,7 @@ function generateRequireHook(dest, modules, native_types, next) {
 			}
 		}
 
-		data = ejs.render(data, { 
+		data = ejs.render(data, {
 			native_module_includes:native_module_includes,
 			native_modules:native_modules,
 			native_types:native_types
@@ -176,7 +178,7 @@ function generateNativeProject(dest, platform, builder, options, callback) {
 
 	fs.readFile(template, 'utf8', function (err, data) {
 		if (err) throw err;
-		data = ejs.render(data, { 
+		data = ejs.render(data, {
 			externalReferences:          externalReferences,
 			targetPlatformSdkVersion:    options.sdkVersion,
 			targetPlatformSdkMinVersion: options.sdkMinVersion
@@ -270,7 +272,7 @@ exports.generate = function generate(builder, finished) {
 	var dest = builder.buildDir,
 		modules = builder.modules,
 		native_types   = builder.native_types || {},
-		native_events  = builder.native_events || {},	
+		native_events  = builder.native_events || {},
 		dest_Native    = path.join(dest, 'Native'),
 		dest_Hyperloop = path.join(dest, 'TitaniumWindows_Hyperloop');
 
@@ -325,7 +327,7 @@ exports.generate = function generate(builder, finished) {
 						generateNativeTypeHelper(dest_Hyperloop, native_types, native_events, next);
 					},
 					function(next) {
-						generateNativeProject(dest_Hyperloop, platform, builder, 
+						generateNativeProject(dest_Hyperloop, platform, builder,
 							{
 								sdkVersion: sdkVersion,
 								sdkMinVersion: sdkMinVersion

@@ -1,3 +1,5 @@
+'use strict';
+
 var appc = require('node-appc'),
 	spawn = require('child_process').spawn,
 	fs = require('fs'),

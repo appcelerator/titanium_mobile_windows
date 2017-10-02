@@ -1,3 +1,5 @@
+'use strict';
+
 var appc = require('node-appc'),
 	os = require('os'),
 	path = require('path'),

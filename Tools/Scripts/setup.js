@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Sets up a Windows machine for Titanium Mobile Windows/HAL/TitaniumKit development.
  *

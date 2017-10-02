@@ -1,3 +1,5 @@
+'use strict';
+
 var appc = require('node-appc'),
 	DOMParser = require('xmldom').DOMParser,
 	fs = require('fs'),

@@ -1,3 +1,5 @@
+'use strict';
+
 var appc = require('node-appc'),
 	Builder = require('node-titanium-sdk/lib/builder'),
 	fs = require('fs'),

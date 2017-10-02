@@ -1,3 +1,5 @@
+'use strict';
+
 var appc = require('node-appc'),
 	fields = require('fields'),
 	windowslib = require('windowslib'),

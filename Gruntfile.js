@@ -5,7 +5,7 @@ module.exports = function (grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		appcJs: {
-			src: [ 'Gruntfile.js', 'Tools/**/*.js', 'cli/!(locales)/**/*.js' ]
+			src: [ 'Gruntfile.js', 'apidoc/**/*.js', 'cli/!(locales)/**/*.js', 'Tools/**/*.js' ]
 		},
 		clangFormat: {
 			src: [ 'Source/**/*.cpp', 'Source/**/*.hpp' ]

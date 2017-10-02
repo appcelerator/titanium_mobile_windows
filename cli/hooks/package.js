@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Copies the result to the specified output directory.
  *
