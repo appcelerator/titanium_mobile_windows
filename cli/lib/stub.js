@@ -22,17 +22,17 @@ var fs = require('fs'),
 function generateCmakeList(dest, modules, next) {
 	var cmakelist_template = path.join(dest, 'CMakeLists.txt.ejs'),
 		cmakelist = path.join(dest, 'CMakeLists.txt');
-	logger.info("Setting up native modules for CMakeLists.txt...");
+	logger.info('Setting up native modules for CMakeLists.txt...');
 	fs.readFile(cmakelist_template, 'utf8', function (err, data) {
-		if (err) throw err;
+		if (err) { throw err; }
 
 		var native_modules = [],
-			contents = "";
+			contents = '';
 
 		for (var i = 0; i < modules.length; i++) {
 			var module = modules[i],
 				projectname = module.manifest.moduleIdAsIdentifier;
-			if (module.manifest.platform == "windows") {
+			if (module.manifest.platform == 'windows') {
 				native_modules.push({
 					projectname:projectname,
 					path:module.modulePath.replace(/\\/g, '/').replace(' ', '\\ ')
@@ -40,17 +40,17 @@ function generateCmakeList(dest, modules, next) {
 			}
 		}
 
-		data = ejs.render(data, {native_modules:native_modules }, {});
+		data = ejs.render(data, { native_modules:native_modules }, {});
 		if (fs.existsSync(cmakelist)) {
 			contents = fs.readFileSync(cmakelist).toString();
 			if (contents == data) {
-				logger.debug("CMakeLists.txt contents unchanged, retaining existing file.");
+				logger.debug('CMakeLists.txt contents unchanged, retaining existing file.');
 				next();
 				return;
 			}
 		}
 
-		fs.writeFile(cmakelist, data, function(err) {
+		fs.writeFile(cmakelist, data, function (err) {
 			next(err);
 		});
 	});
@@ -61,7 +61,8 @@ function capitalize(str) {
 }
 
 function getCppClassForModule(moduleId) {
-	var ids = moduleId.split('.'), names = [];
+	var ids = moduleId.split('.'),
+		names = [];
 	for (var i = 0; i < ids.length; i++) {
 		names.push(capitalize(ids[i]));
 	}
@@ -80,9 +81,9 @@ function generateNativeTypeHelper(dest, native_types, native_events, next) {
 		template = path.join(dest, 'src', 'TypeHelper.cs.ejs');
 	// Now we'll add all the types we know about as includes into our TypeHelper class
 	// This let's us load these types by name using C# Reflection
-	logger.trace("Adding native API type listing to TypeHelper.cs...");
+	logger.trace('Adding native API type listing to TypeHelper.cs...');
 	fs.readFile(template, 'utf8', function (err, data) {
-		if (err) throw err;
+		if (err) { throw err; }
 
 		data = ejs.render(data, {
 			native_types:native_types,
@@ -91,17 +92,16 @@ function generateNativeTypeHelper(dest, native_types, native_events, next) {
 
 		// if contents haven't changed, don't overwrite so we don't recompile the file
 		if (fs.existsSync(helper_cs) && fs.readFileSync(helper_cs, 'utf8').toString() == data) {
-			logger.debug("TypeHelper.cs contents unchanged, retaining existing file.");
+			logger.debug('TypeHelper.cs contents unchanged, retaining existing file.');
 			next();
 			return;
 		}
 
-		fs.writeFile(helper_cs, data, function(err) {
+		fs.writeFile(helper_cs, data, function (err) {
 			next(err);
 		});
 	});
 }
-
 
 /**
  * Generates the code in RequireHook.cpp to handle building up the list of native modules registered.
@@ -114,9 +114,9 @@ function generateRequireHook(dest, modules, native_types, next) {
 		template = path.join(dest, 'src', 'RequireHook.cpp.ejs');
 	// Now we'll add all the types we know about as includes into our require hook class
 	// This let's us load these types by name using require!
-	logger.trace("Adding native module listing to RequireHook.cpp...");
+	logger.trace('Adding native module listing to RequireHook.cpp...');
 	fs.readFile(template, 'utf8', function (err, data) {
-		if (err) throw err;
+		if (err) { throw err; }
 
 		var native_module_includes = [], // built up includes
 			native_modules = []; // built up code for appending list of native types
@@ -125,8 +125,8 @@ function generateRequireHook(dest, modules, native_types, next) {
 		for (var i = 0; i < modules.length; i++) {
 			var module = modules[i],
 				classname = module.manifest.classname ? module.manifest.classname : getCppClassForModule(module.manifest.moduleid);
-			if (module.manifest.platform == "windows") {
-				native_module_includes.push(module.manifest.moduleIdAsIdentifier + ".hpp");
+			if (module.manifest.platform == 'windows') {
+				native_module_includes.push(module.manifest.moduleIdAsIdentifier + '.hpp');
 				native_modules.push({
 					name:module.manifest.moduleid,
 					className:classname,
@@ -139,17 +139,16 @@ function generateRequireHook(dest, modules, native_types, next) {
 			native_module_includes:native_module_includes,
 			native_modules:native_modules,
 			native_types:native_types
-			}, {});
-
+		}, {});
 
 		// if contents haven't changed, don't overwrite so we don't recompile the file
 		if (fs.existsSync(require_hook) && fs.readFileSync(require_hook).toString() == data) {
-			logger.debug("RequireHook contents unchanged, retaining existing file.");
+			logger.debug('RequireHook contents unchanged, retaining existing file.');
 			next();
 			return;
 		}
 
-		fs.writeFile(require_hook, data, function(err) {
+		fs.writeFile(require_hook, data, function (err) {
 			next(err);
 		});
 	});
@@ -157,8 +156,8 @@ function generateRequireHook(dest, modules, native_types, next) {
 
 function buildNativeTypeHelper(dest, platform, buildConfiguration, callback) {
 	var slnFile = path.join(dest, platform, 'TitaniumWindows_Hyperloop.sln');
-	runNuGet(slnFile, function(err) {
-		if (err) return callback(err);
+	runNuGet(slnFile, function (err) {
+		if (err) { return callback(err); }
 		runMSBuild(slnFile, buildConfiguration, callback);
 	});
 }
@@ -167,7 +166,7 @@ function generateNativeProject(dest, platform, builder, options, callback) {
 	var template = path.join(dest, platform, 'TitaniumWindows_Hyperloop.csproj.ejs'),
 		csproj   = path.join(dest, platform, 'TitaniumWindows_Hyperloop.csproj'),
 		externalReferences = [];
-		thirdpartyLibraries = builder.hyperloopConfig.windows.thirdparty && Object.keys(builder.hyperloopConfig.windows.thirdparty) || [];
+	thirdpartyLibraries = builder.hyperloopConfig.windows.thirdparty && Object.keys(builder.hyperloopConfig.windows.thirdparty) || [];
 
 	for (var i = 0; i < thirdpartyLibraries.length; i++) {
 		externalReferences.push({
@@ -177,14 +176,14 @@ function generateNativeProject(dest, platform, builder, options, callback) {
 	}
 
 	fs.readFile(template, 'utf8', function (err, data) {
-		if (err) throw err;
+		if (err) { throw err; }
 		data = ejs.render(data, {
 			externalReferences:          externalReferences,
 			targetPlatformSdkVersion:    options.sdkVersion,
 			targetPlatformSdkMinVersion: options.sdkMinVersion
 		}, {});
 
-		fs.writeFile(csproj, data, function(err) {
+		fs.writeFile(csproj, data, function (err) {
 			callback(err);
 		});
 	});
@@ -194,7 +193,7 @@ function runNuGet(slnFile, callback) {
 	logger.debug('nuget restore ' + slnFile);
 	// Make sure project dependencies are installed via NuGet
 	var nuget = path.resolve(__dirname, '..', 'vendor', 'nuget', 'nuget.exe');
-		p = spawn(nuget, ['restore', slnFile]);
+	p = spawn(nuget, [ 'restore', slnFile ]);
 	p.stdout.on('data', function (data) {
 		var line = data.toString().trim();
 		if (line.indexOf('error ') >= 0) {
@@ -229,22 +228,19 @@ function runMSBuild(slnFile, buildConfiguration, callback) {
 	logger.debug('Running MSBuild on solution: ' + slnFile + ' for ' + buildConfiguration);
 
 	// Use spawn directly so we can pipe output as we go
-	var p = spawn((process.env.comspec || 'cmd.exe'), ['/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ \(\)\&]/g, '^$&') +
-		' &&' + ' MSBuild' + ' /p:Platform=\"Any CPU\"' + ' /p:Configuration=' + buildConfiguration + ' ' + slnFile, '"'
-	], {windowsVerbatimArguments: true});
+	var p = spawn((process.env.comspec || 'cmd.exe'), [ '/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ \(\)\&]/g, '^$&')
+		+ ' &&' + ' MSBuild' + ' /p:Platform=\"Any CPU\"' + ' /p:Configuration=' + buildConfiguration + ' ' + slnFile, '"'
+	], { windowsVerbatimArguments: true });
 
 	p.stdout.on('data', function (data) {
 		var line = data.toString().trim();
 		if (line.indexOf('error ') >= 0) {
 			logger.error(line);
-		}
-		else if (line.indexOf('warning ') >= 0) {
+		} else if (line.indexOf('warning ') >= 0) {
 			logger.warn(line);
-		}
-		else if (line.indexOf(':\\') === -1) {
+		} else if (line.indexOf(':\\') === -1) {
 			logger.debug(line);
-		}
-		else {
+		} else {
 			logger.trace(line);
 		}
 	});
@@ -297,17 +293,17 @@ exports.generate = function generate(builder, finished) {
 		//
 		builder.cli.createHook('build.windows.stub.generate', builder, function (builder, done) {
 			async.parallel([
-				function(cb) {
+				function (cb) {
 					builder.cli.createHook('build.windows.stub.generateCmakeList', builder, function (builder, cb) {
 						generateCmakeList(dest_Native, builder.modules, cb);
 					})(builder, cb);
 				},
-				function(cb) {
+				function (cb) {
 					builder.cli.createHook('build.windows.stub.generateRequireHook', builder, function (builder, cb) {
 						generateRequireHook(dest_Native, builder.modules, builder.native_types, cb);
 					})(builder, cb);
 				}
-			], function() {
+			], function () {
 				done();
 			});
 		})(builder, finished);
@@ -317,34 +313,34 @@ exports.generate = function generate(builder, finished) {
 		// Use 'built-in' code generation for older version of Hyperloop module (< Hyperloop 2.2.0)
 		//
 		async.parallel([
-			function(callback) {
+			function (callback) {
 				// generate native types only when hyperloop is used
 				if (Object.keys(native_types).length === 0) {
 					return callback();
 				}
 				async.series([
-					function(next) {
+					function (next) {
 						generateNativeTypeHelper(dest_Hyperloop, native_types, native_events, next);
 					},
-					function(next) {
+					function (next) {
 						generateNativeProject(dest_Hyperloop, platform, builder,
 							{
 								sdkVersion: sdkVersion,
 								sdkMinVersion: sdkMinVersion
 							}, next);
 					},
-					function(next) {
+					function (next) {
 						buildNativeTypeHelper(dest_Hyperloop, platform, 'Debug', next);
 					},
-					function(next) {
+					function (next) {
 						buildNativeTypeHelper(dest_Hyperloop, platform, 'Release', next);
 					}
 				], callback);
 			},
-			function(callback) {
+			function (callback) {
 				generateCmakeList(dest_Native, modules, callback);
 			},
-			function(callback) {
+			function (callback) {
 				generateRequireHook(dest_Native, modules, native_types, callback);
 			}
 		], finished);

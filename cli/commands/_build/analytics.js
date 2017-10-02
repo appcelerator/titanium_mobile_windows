@@ -29,9 +29,9 @@ function doAnalytics(next) {
 		tiapp = this.cli.tiapp;
 
 	if (this.target === 'dist-phonestore') {
-		eventName = "windows.distribute.phonestore";
+		eventName = 'windows.distribute.phonestore';
 	} else if (this.target === 'dist-winstore') {
-		eventName = "windows.distribute.winstore";
+		eventName = 'windows.distribute.winstore';
 	} else if (this.allowDebugging && this.cli.argv['debug-host']) {
 		eventName += '.debug';
 	} else if (this.allowProfiling && this.cli.argv['profiler-host']) {

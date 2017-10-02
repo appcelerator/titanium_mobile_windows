@@ -3,7 +3,6 @@
 var appc = require('node-appc'),
 	__ = appc.i18n(__dirname).__;
 
-
 /**
  * Defines the --target option.
  *

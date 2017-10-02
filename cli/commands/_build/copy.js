@@ -128,7 +128,7 @@ function copyResources(next) {
 	 * Check JS syntax and report errors. Mostly copied from jsanalyze
 	 */
 	function reportJSErrors(filename, contents, ex) {
-		var errmsg = [__('Failed to parse %s', filename)];
+		var errmsg = [ __('Failed to parse %s', filename) ];
 		if (ex.line) {
 			errmsg.push(__('%s [line %s, column %s]', ex.message, ex.line, ex.col));
 		} else {
@@ -160,7 +160,7 @@ function copyResources(next) {
 			files = fs.readdirSync(src);
 		} else {
 			// we have a file, so fake a directory listing
-			files = [path.basename(src)];
+			files = [ path.basename(src) ];
 			src = path.dirname(src);
 		}
 
@@ -268,76 +268,76 @@ function copyResources(next) {
 			missingIcons = [
 
 			// Square24x24Logo
-			{
-				description: 'Square24x24Logo.png - Used for badge',
-				file: path.join(appIconSetDir, 'Square24x24Logo.png'),
-				width: 24,
-				height: 24,
-				required: true
-			},
+				{
+					description: 'Square24x24Logo.png - Used for badge',
+					file: path.join(appIconSetDir, 'Square24x24Logo.png'),
+					width: 24,
+					height: 24,
+					required: true
+				},
 
-			// Square44x44Logo
-			{
-				description: 'Square44x44Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square44x44Logo.png'),
-				width: 44,
-				height: 44,
-				required: true
-			},
+				// Square44x44Logo
+				{
+					description: 'Square44x44Logo.png - Used for logo',
+					file: path.join(appIconSetDir, 'Square44x44Logo.png'),
+					width: 44,
+					height: 44,
+					required: true
+				},
 
-			// Square71x71Logo
-			{
-				description: 'Square71x71Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square71x71Logo.png'),
-				width: 71,
-				height: 71,
-				required: true
-			},
+				// Square71x71Logo
+				{
+					description: 'Square71x71Logo.png - Used for logo',
+					file: path.join(appIconSetDir, 'Square71x71Logo.png'),
+					width: 71,
+					height: 71,
+					required: true
+				},
 
-			// Square150x150Logo
-			{
-				description: 'Square150x150Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square150x150Logo.png'),
-				width: 150,
-				height: 150,
-				required: true
-			},
+				// Square150x150Logo
+				{
+					description: 'Square150x150Logo.png - Used for logo',
+					file: path.join(appIconSetDir, 'Square150x150Logo.png'),
+					width: 150,
+					height: 150,
+					required: true
+				},
 
-			// Logo.png
-			{
-				description: 'Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Logo.png'),
-				width: 150,
-				height: 150,
-				required: true
-			},
+				// Logo.png
+				{
+					description: 'Logo.png - Used for logo',
+					file: path.join(appIconSetDir, 'Logo.png'),
+					width: 150,
+					height: 150,
+					required: true
+				},
 
-			// StoreLogo.png
-			{
-				description: 'StoreLogo.png - Used for logo',
-				file: path.join(appIconSetDir, 'StoreLogo.png'),
-				width: 50,
-				height: 50,
-				required: true
-			},
+				// StoreLogo.png
+				{
+					description: 'StoreLogo.png - Used for logo',
+					file: path.join(appIconSetDir, 'StoreLogo.png'),
+					width: 50,
+					height: 50,
+					required: true
+				},
 
-			// SmallLogo.png
-			{
-				description: 'SmallLogo.png - Used for logo',
-				file: path.join(appIconSetDir, 'SmallLogo.png'),
-				width: 30,
-				height: 30,
-				required: true
-			}
+				// SmallLogo.png
+				{
+					description: 'SmallLogo.png - Used for logo',
+					file: path.join(appIconSetDir, 'SmallLogo.png'),
+					width: 30,
+					height: 30,
+					required: true
+				}
 
 			// TODO: Generate SplashScreen.scale-100.png?
-		],
-		md5 = function (file) {
-			return crypto
-				.createHash('md5')
-				.update(fs.readFileSync(file), 'binary')
-				.digest('hex')
-		};
+			],
+			md5 = function (file) {
+				return crypto
+					.createHash('md5')
+					.update(fs.readFileSync(file), 'binary')
+					.digest('hex');
+			};
 
 		// if the app icon does not exist then check if it exists in the project root
 		// if it does not exist in project root then generate the missing icon
@@ -352,17 +352,15 @@ function copyResources(next) {
 					copyFile.call(this, platformResourceIcon, icon.file);
 				}
 				missingIcons.splice(i, 1);
-			} else {
-				if (fs.existsSync(resourceIcon)) {
-					if (fs.existsSync(icon.file) && md5(icon.file) === md5(resourceIcon)) {
-						this.logger.debug(__('%s already exists, skipping...', icon.file));
-					} else {
-						copyFile.call(this, resourceIcon, icon.file);
-					}
-					missingIcons.splice(i, 1);
+			} else if (fs.existsSync(resourceIcon)) {
+				if (fs.existsSync(icon.file) && md5(icon.file) === md5(resourceIcon)) {
+					this.logger.debug(__('%s already exists, skipping...', icon.file));
 				} else {
-					this.logger.debug(__('%s missing, generating...', icon.file));
+					copyFile.call(this, resourceIcon, icon.file);
 				}
+				missingIcons.splice(i, 1);
+			} else {
+				this.logger.debug(__('%s missing, generating...', icon.file));
 			}
 		}
 
@@ -464,7 +462,7 @@ function copyResources(next) {
 	});
 
 	// this.modules.forEach(function (module) {
-		// TODO: copy any module specific resources here
+	// TODO: copy any module specific resources here
 	// }, this);
 
 	var platformPaths = [];
@@ -525,7 +523,7 @@ function copyResources(next) {
 				t_.native_events = t_.native_events || {};
 
 				// Look for native requires here
-				var fromContent = fs.readFileSync(from, {encoding: 'utf8'}),
+				var fromContent = fs.readFileSync(from, { encoding: 'utf8' }),
 					ast;
 				try {
 					ast = babylon.parse(fromContent, { filename: from });
@@ -541,32 +539,32 @@ function copyResources(next) {
 				if (!t_.useHyperloopBuilder) {
 					traverse(ast, {
 						CallExpression: {
-							enter: function(path) {
+							enter: function (path) {
 
 								// if we're calling require with one string literal argument...
 								// FIXME What if it is a requires, but not a string? What if it is a dynamically built string?
-								if (types.isIdentifier(path.node.callee, { name: 'require' }) &&
-										path.node.arguments && path.node.arguments.length == 1 &&
-										types.isStringLiteral(path.node.arguments[0])) {
+								if (types.isIdentifier(path.node.callee, { name: 'require' })
+										&& path.node.arguments && path.node.arguments.length == 1
+										&& types.isStringLiteral(path.node.arguments[0])) {
 									// check if the required type is "native"
 									var node_value = path.node.arguments[0].value;
 									if (hasWindowsAPI(node_value)) {
-										t_.logger.info("Detected native API reference: " + node_value);
-										t_.native_types[node_value] = {name: node_value};
+										t_.logger.info('Detected native API reference: ' + node_value);
+										t_.native_types[node_value] = { name: node_value };
 									}
-								} else if (types.isMemberExpression(path.node.callee) && // are we calling 'addEventListener'?
-										types.isIdentifier(path.node.callee.property, { name: 'addEventListener' }) &&
-										path.node.arguments && path.node.arguments.length > 0 && // with at least one argument
-										types.isStringLiteral(path.node.arguments[0]) && // first argument is a string literal
-										types.isIdentifier(path.node.callee.object) // on some variable
-										) {
+								} else if (types.isMemberExpression(path.node.callee) // are we calling 'addEventListener'?
+										&& types.isIdentifier(path.node.callee.property, { name: 'addEventListener' })
+										&& path.node.arguments && path.node.arguments.length > 0 // with at least one argument
+										&& types.isStringLiteral(path.node.arguments[0]) // first argument is a string literal
+										&& types.isIdentifier(path.node.callee.object) // on some variable
+								) {
 									var event_name = path.node.arguments[0].value,  // record the event name
 										binding = path.scope.getBinding(path.node.callee.object.name); // get binding for the receiver variable
-									if (binding && // if we got the initial binding for the variable
-											types.isVariableDeclarator(binding.path.node) && // and it declares the variable
-											types.isNewExpression(binding.path.node.init) && // and it's assigned from a 'new' expression
-											types.isIdentifier(binding.path.node.init.callee) // and the type is an identifier
-											) {
+									if (binding // if we got the initial binding for the variable
+											&& types.isVariableDeclarator(binding.path.node) // and it declares the variable
+											&& types.isNewExpression(binding.path.node.init) // and it's assigned from a 'new' expression
+											&& types.isIdentifier(binding.path.node.init.callee) // and the type is an identifier
+									) {
 										var ctor = path.scope.getBinding(binding.path.node.init.callee.name); // and it's the constructor variable
 										if (ctor && ctor.path.node.init && ctor.path.node.init.arguments && ctor.path.node.init.arguments.length > 0) {
 											var detectedConstructorType = ctor.path.node.init.arguments[0].value; // record the type of the constructor
@@ -605,7 +603,7 @@ function copyResources(next) {
 					this.cli.createHook('build.windows.analyzeJsFile', this, function (from, to, ast, traverse, types, cb) {
 						this.cli.createHook('build.windows.copyResource', this, function (from, to, cb) {
 							// parse the AST
-							var r = jsanalyze.analyzeJsFile(from, {minify: this.minifyJS});
+							var r = jsanalyze.analyzeJsFile(from, { minify: this.minifyJS });
 
 							// we want to sort by the "to" filename so that we correctly handle file overwriting
 							this.tiSymbols[to] = r.symbols;
@@ -654,8 +652,8 @@ function copyResources(next) {
 
 			// write the app info file
 			var appInfoFile = path.join(this.buildTargetAssetsDir, '_app_info_.json'),
-				appInfo =
-				{
+				appInfo
+				= {
 					deployType: this.deployType,
 					name: this.tiapp.name,
 					id: this.tiapp.id,

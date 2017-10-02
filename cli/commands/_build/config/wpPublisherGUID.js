@@ -4,7 +4,6 @@ var appc = require('node-appc'),
 	fields = require('fields'),
 	__ = appc.i18n(__dirname).__;
 
-
 /**
  * Defines the --wp-publisher-guid option.
  *

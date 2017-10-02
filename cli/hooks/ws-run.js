@@ -33,11 +33,11 @@ exports.init = function (logger, config, cli) {
 	cli.on('build.pre.compile', {
 		priority: 8000,
 		post: function (builder, finished) {
-			if (builder.buildOnly || !/^ws-local$/.test(builder.target)) return finished();
+			if (builder.buildOnly || !/^ws-local$/.test(builder.target)) { return finished(); }
 
 			async.series([
 				function (next) {
-					if (!builder.enableLogging) return next();
+					if (!builder.enableLogging) { return next(); }
 
 					// create the log relay instance so we can get a token to embed in our app
 					var session = appc.auth.status(),
@@ -75,11 +75,11 @@ exports.init = function (logger, config, cli) {
 					});
 
 					logRelay.on('disconnect', function () {
-						logger.info("Disconnected from app");
+						logger.info('Disconnected from app');
 					});
 
 					logRelay.on('connection', function () {
-						logger.info("Connected to app");
+						logger.info('Connected to app');
 					});
 
 					logRelay.on('started', function () {
@@ -96,7 +96,7 @@ exports.init = function (logger, config, cli) {
 
 	cli.on('build.windows.copyResources', {
 		pre: function (builder, finished) {
-			if (!/^ws-local$/.test(builder.target)) return finished();
+			if (!/^ws-local$/.test(builder.target)) { return finished(); }
 			// write the titanium settings file
 			fs.writeFileSync(
 				path.join(builder.buildTargetAssetsDir, 'titanium_settings.ini'),
@@ -120,7 +120,7 @@ exports.init = function (logger, config, cli) {
 	cli.on('build.post.compile', {
 		priority: 8000,
 		post: function (builder, finished) {
-			if (builder.buildOnly || !/^ws-local$/.test(builder.target)) return finished();
+			if (builder.buildOnly || !/^ws-local$/.test(builder.target)) { return finished(); }
 
 			var delta = appc.time.prettyDiff(cli.startTime, Date.now());
 			logger.info(__('Finished building the application in %s', delta.cyan));
@@ -165,16 +165,16 @@ exports.init = function (logger, config, cli) {
 						wpsdk: builder.wpsdk
 					}, builder.windowslibOptions);
 
-				async.series([function(next) {
+				async.series([ function (next) {
 					logger.info(__('Uninstalling old versions of the application'));
 					windowslib.winstore.uninstall(appId, opts, next);
-				}, function(next) {
+				}, function (next) {
 					logger.info(__('Installing the application'));
 					windowslib.winstore.install(projectDir, opts, next);
 				}, function (next) {
 					logger.info(__('Making the application exempt from loopback IP restrictions for logging'));
 					windowslib.winstore.loopbackExempt(appId, opts, next);
-				}, function(next) {
+				}, function (next) {
 					logger.info(__('Launching the application'));
 					windowslib.winstore.launch(appId, opts, function (err, pid) {
 						if (err) {
@@ -206,7 +206,7 @@ exports.init = function (logger, config, cli) {
 							next(null);
 						}
 					});
-				}], function (err, results) {
+				} ], function (err, results) {
 					if (err) {
 						logger.error(err);
 						process.exit(1);

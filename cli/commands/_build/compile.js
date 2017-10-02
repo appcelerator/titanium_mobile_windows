@@ -41,12 +41,12 @@ function compileApp(next) {
 	fs.existsSync(vcxproj) && fs.renameSync(vcxproj, vcxproj + '.bak');
 	// Only modify the one property group we care about!
 	modified = modified.replace(/<\/PropertyGroup>\s*<ItemDefinitionGroup/m,
-		'<AppxBundle>Always</AppxBundle>' +
-		'<AppxBundlePlatforms>' + this.arch + '</AppxBundlePlatforms>' +
-		(
-			!/^ws-local|dist-winstore$/.test(this.target) && this.wpsdk != '10.0' ? '' :
-			'<PackageCertificateThumbprint>' + this.certificateThumbprint + '</PackageCertificateThumbprint>' +
-			'<PackageCertificateKeyFile>' + this.certificatePath + '</PackageCertificateKeyFile>'
+		'<AppxBundle>Always</AppxBundle>'
+		+ '<AppxBundlePlatforms>' + this.arch + '</AppxBundlePlatforms>'
+		+ (
+			!/^ws-local|dist-winstore$/.test(this.target) && this.wpsdk != '10.0' ? ''
+				: '<PackageCertificateThumbprint>' + this.certificateThumbprint + '</PackageCertificateThumbprint>'
+			+ '<PackageCertificateKeyFile>' + this.certificatePath + '</PackageCertificateKeyFile>'
 		) + '$&');
 
 	// Fix quoted hint paths for native module winmd paths
@@ -71,22 +71,19 @@ function compileApp(next) {
 	}
 
 	// Use spawn directly so we can pipe output as we go
-	p = spawn((process.env.comspec || 'cmd.exe'), ['/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ \(\)\&]/g, '^$&') +
-		' &&' + ' MSBuild' + ' /p:Platform=' + _t.cmakeArch + ' /p:Configuration=' + _t.buildConfiguration + ' ' + slnFile, '"'
-	], {windowsVerbatimArguments: true});
+	p = spawn((process.env.comspec || 'cmd.exe'), [ '/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ \(\)\&]/g, '^$&')
+		+ ' &&' + ' MSBuild' + ' /p:Platform=' + _t.cmakeArch + ' /p:Configuration=' + _t.buildConfiguration + ' ' + slnFile, '"'
+	], { windowsVerbatimArguments: true });
 
 	p.stdout.on('data', function (data) {
 		var line = data.toString().trim();
 		if (line.indexOf('error ') >= 0) {
 			_t.logger.error(line);
-		}
-		else if (line.indexOf('warning ') >= 0) {
+		} else if (line.indexOf('warning ') >= 0) {
 			_t.logger.warn(line);
-		}
-		else if (line.indexOf(':\\') === -1) {
+		} else if (line.indexOf(':\\') === -1) {
 			_t.logger.debug(line);
-		}
-		else {
+		} else {
 			_t.logger.trace(line);
 		}
 	});

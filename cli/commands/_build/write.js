@@ -28,7 +28,6 @@ function mixin(WindowsBuilder) {
 function writeBuildManifest(next) {
 	this.logger.info(__('Writing build manifest: %s', this.buildManifestFile.cyan));
 
-
 	this.cli.createHook('build.windows.writeBuildManifest', this, function (manifest, cb) {
 		fs.existsSync(this.buildDir) || wrench.mkdirSyncRecursive(this.buildDir);
 		fs.existsSync(this.buildManifestFile) && fs.unlinkSync(this.buildManifestFile);
@@ -57,4 +56,4 @@ function writeBuildManifest(next) {
 		encryptJS: this.encryptJS,
 		propertiesHash: this.propertiesHash
 	}, next);
-};
+}

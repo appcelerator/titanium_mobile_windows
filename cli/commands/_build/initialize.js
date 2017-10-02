@@ -81,10 +81,10 @@ function initialize(next) {
 	this.publisherId = argv['win-publisher-id'];
 	if (this.publisherId.indexOf('CN=') != 0) {
 		// We need to prepend CN= prefix for appxmanifest and cert generation
-		this.publisherId = "CN=" + this.publisherId;
+		this.publisherId = 'CN=' + this.publisherId;
 	}
-	this.phonePublisherId = argv['wp-publisher-guid'] ? argv['wp-publisher-guid'] : "00000000-0000-0000-0000-000000000000";
-	this.phoneProductId = argv['win-product-guid'] ? argv['win-product-guid'] : (argv['wp-product-guid'] ? argv['wp-product-guid'] : "f0473be1-c557-4f98-a103-4ba9f453b5b0");
+	this.phonePublisherId = argv['wp-publisher-guid'] ? argv['wp-publisher-guid'] : '00000000-0000-0000-0000-000000000000';
+	this.phoneProductId = argv['win-product-guid'] ? argv['win-product-guid'] : (argv['wp-product-guid'] ? argv['wp-product-guid'] : 'f0473be1-c557-4f98-a103-4ba9f453b5b0');
 
 	this.buildSrcDir = path.join(this.buildDir, 'src'); // Where the src files go
 	this.cmakeTargetDir = path.join(this.buildDir, this.cmakeTarget); // where cmake generates the VS solution

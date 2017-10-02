@@ -4,7 +4,6 @@ var appc = require('node-appc'),
 	fields = require('fields'),
 	__ = appc.i18n(__dirname).__;
 
-
 /**
  * Defines the --win-publisher-id option.
  *
@@ -22,9 +21,9 @@ module.exports = function configOptionWindowsPublisherID(order) {
 
 	function shouldPrompt(argv) {
 		// You need to check abbreviated form too here because they are not expanded yet
-		return (argv['T'] === 'dist-phonestore' || argv['target']      === 'dist-phonestore') ||
-		       (argv['T'] === 'dist-winstore'   || argv['target']      === 'dist-winstore') ||
-		       (argv['D'] === 'production'      || argv['deploy-type'] === 'production');
+		return (argv['T'] === 'dist-phonestore' || argv['target']      === 'dist-phonestore')
+		       || (argv['T'] === 'dist-winstore'   || argv['target']      === 'dist-winstore')
+		       || (argv['D'] === 'production'      || argv['deploy-type'] === 'production');
 	}
 
 	return {
@@ -38,7 +37,7 @@ module.exports = function configOptionWindowsPublisherID(order) {
 				promptLabel: __('What is your __Windows Publisher ID__?'),
 				validate: validate
 			}));
-		}.bind(this),
+		},
 		validate: validate,
 		required: true,
 		verifyIfRequired: function (callback) {

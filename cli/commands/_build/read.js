@@ -52,10 +52,11 @@ function readTiAppManifest() {
 	var tiapp = fs.readFileSync(path.join(this.projectDir, 'tiapp.xml'), 'utf8'),
 		dom = new DOMParser().parseFromString(tiapp, 'text/xml'),
 		root = dom.documentElement,
-		_t = this, windows_node;
+		_t = this,
+		windows_node;
 
 	appc.xml.forEachElement(root, function (elem) {
-		if (elem.tagName == "windows") {
+		if (elem.tagName == 'windows') {
 			windows_node = elem;
 		}
 	});

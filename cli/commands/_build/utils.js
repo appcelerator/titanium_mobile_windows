@@ -2,7 +2,6 @@
 
 var appc = require('node-appc');
 
-
 /*
  Public API.
  */
@@ -67,7 +66,7 @@ function getTargetDevices() {
 		for (var d in devices) {
 			var device = devices[d];
 			// only list local devices
-			if (device.ip && device.ip !== "127.0.0.1") {
+			if (device.ip && device.ip !== '127.0.0.1') {
 				devices.splice(d, 1);
 			}
 		}
@@ -90,7 +89,6 @@ function sanitizeProjectName(str) {
 		.map(function (s) { return appc.string.capitalize(s); })
 		.join('');
 }
-
 
 /**
  * Generate hashes of modules and properties from the tiapp.xml so we can detect

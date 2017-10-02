@@ -52,7 +52,7 @@ function validate(logger, config, cli) {
 	if (cli.tiapp.properties['ti.deploytype']) {
 		logger.warn(__('The %s tiapp.xml property has been deprecated, please use the %s option', 'ti.deploytype'.cyan, '--deploy-type'.cyan));
 	}
-	cli.tiapp.properties['ti.deploytype'] = {type: 'string', value: this.deployType};
+	cli.tiapp.properties['ti.deploytype'] = { type: 'string', value: this.deployType };
 
 	// manually inject the build profile settings into the tiapp.xml
 	switch (this.deployType) {
@@ -140,9 +140,9 @@ function validate(logger, config, cli) {
 	}
 
 	// make sure we have an icon
-	if (!cli.tiapp.icon || !['Resources', 'Resources/windows'].some(function (p) {
-			return fs.existsSync(cli.argv['project-dir'], p, cli.tiapp.icon);
-		})) {
+	if (!cli.tiapp.icon || ![ 'Resources', 'Resources/windows' ].some(function (p) {
+		return fs.existsSync(cli.argv['project-dir'], p, cli.tiapp.icon);
+	})) {
 		cli.tiapp.icon = 'appicon.png';
 	}
 

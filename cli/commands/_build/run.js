@@ -92,8 +92,8 @@ function runCmake(next) {
 		generatorName += ' ARM';
 	}
 
-	this.logger.debug(this.cmake + ' ' +
-		JSON.stringify([
+	this.logger.debug(this.cmake + ' '
+		+ JSON.stringify([
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
 			'-DCMAKE_SYSTEM_VERSION=' + this.targetPlatformSdkVersion,
@@ -112,7 +112,7 @@ function runCmake(next) {
 		{
 			cwd: this.cmakeTargetDir
 		});
-	p.on('error', function(err) {
+	p.on('error', function (err) {
 		_t.logger.error(cmake);
 		_t.logger.error(err);
 	});

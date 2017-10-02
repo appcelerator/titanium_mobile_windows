@@ -30,7 +30,7 @@ function processEncryption(next) {
 
 	// encrypt the javascript
 	var fileListing = path.join(this.buildDir, 'titanium_prep_listing.txt'),
-		args = [this.tiapp.guid, this.tiapp.id, this.buildTargetAssetsDir, '--file-listing', fileListing];
+		args = [ this.tiapp.guid, this.tiapp.id, this.buildTargetAssetsDir, '--file-listing', fileListing ];
 
 	fs.writeFileSync(fileListing, this.jsFilesToEncrypt.join('\n'));
 

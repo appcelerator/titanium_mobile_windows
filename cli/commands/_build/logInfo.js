@@ -28,14 +28,14 @@ function loginfo(next) {
 		// windows phone targets
 		case 'wp-emulator':
 			this.logger.info(this.deviceId
-					? __('Building for Windows Phone emulator: %s', this.deviceId.cyan)
-					: __('Building for Windows Phone emulator')
+				? __('Building for Windows Phone emulator: %s', this.deviceId.cyan)
+				: __('Building for Windows Phone emulator')
 			);
 			break;
 		case 'wp-device':
 			this.logger.info(this.deviceId
-					? __('Building for Windows Phone device: %s', this.deviceId.cyan)
-					: __('Building for Windows Phone device')
+				? __('Building for Windows Phone device: %s', this.deviceId.cyan)
+				: __('Building for Windows Phone device')
 			);
 			break;
 		case 'dist-phonestore':

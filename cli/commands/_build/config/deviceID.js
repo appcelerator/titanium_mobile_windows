@@ -25,8 +25,8 @@ module.exports = function configOptionDeviceID(order) {
 
 		// xd: first emulator
 		// de: first device
-		if (((cli.argv.target === 'wp-emulator' && value === 'xd') ||
-			 (cli.argv.target === 'wp-device' && value === 'de')) && devices[0]) {
+		if (((cli.argv.target === 'wp-emulator' && value === 'xd')
+			 || (cli.argv.target === 'wp-device' && value === 'de')) && devices[0]) {
 
 			// if win-sdk is not specified, use wpsdk for device
 			if (dev.wpsdk && !this.isWindowsSDKTargetSpecified()) {
@@ -43,13 +43,13 @@ module.exports = function configOptionDeviceID(order) {
 		// validate device
 		if (!devices.some(function (d) {
 			// because we specify ignorecase below, we may get the name lowercased!
-				if (d.udid == value || d.name.toLowerCase() === value.toLowerCase()) {
-					dev = d;
-					value = d.udid;
-					return true;
-				}
-				return false;
-			})) {
+			if (d.udid == value || d.name.toLowerCase() === value.toLowerCase()) {
+				dev = d;
+				value = d.udid;
+				return true;
+			}
+			return false;
+		})) {
 			return callback(new Error(__('Invalid device id "%s"', value)));
 		}
 
@@ -94,8 +94,8 @@ module.exports = function configOptionDeviceID(order) {
 
 			callback(fields.select({
 				title: cli.argv.target === 'wp-emulator'
-					? __("Which emulator do you want to install your app on?")
-					: __("Which device do you want to install your app on?"),
+					? __('Which emulator do you want to install your app on?')
+					: __('Which device do you want to install your app on?'),
 				promptLabel: __('Select by number or name'),
 				default: devices.length && devices[0].name,
 				formatters: {
@@ -107,7 +107,7 @@ module.exports = function configOptionDeviceID(order) {
 				autoSelectOne: true,
 				numbered: true,
 				relistOnError: true,
-				complete: ['name', 'udid'],
+				complete: [ 'name', 'udid' ],
 				completeIgnoreCase: true,
 				ignoreCase: true,
 				suggest: false,

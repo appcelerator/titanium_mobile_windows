@@ -33,8 +33,8 @@ exports.init = function (logger, config, cli) {
 
 			// If we're not distributing and we haven't specified a PFX,
 			// Then use the included temp key from cmake
-			if (!builder.wsCert && 'dist-winstore' != builder.target &&
-				!('dist-phonestore' == builder.target && builder.wpsdk == '10.0')) {
+			if (!builder.wsCert && builder.target != 'dist-winstore'
+				&& !(builder.target == 'dist-phonestore' && builder.wpsdk == '10.0')) {
 				logger.info(__('Using existing temporary pfx'));
 				builder.certificatePath = CMAKE_TEMP_KEY;
 				return windowslib.certs.thumbprint(CMAKE_TEMP_KEY, null, function (err, thumbprint) {
@@ -71,7 +71,7 @@ exports.init = function (logger, config, cli) {
 					logger.info('');
 					logger.info(__('Creating a certificate'));
 					logger.info(__('Please follow the prompts'));
-					windowslib.certs.generate(builder.publisherId, cer, builder.windowslibOptions, function(err, privateKey, certFile) {
+					windowslib.certs.generate(builder.publisherId, cer, builder.windowslibOptions, function (err, privateKey, certFile) {
 						return !err ? next() : next(err || new Error('Certificate generation failed'));
 					});
 				},
@@ -81,14 +81,12 @@ exports.init = function (logger, config, cli) {
 						return next();
 					}
 					logger.info(__('Creating a PFX'));
-					windowslib.certs.generatePFX(pvk, cer, pfx, builder.pfxPassword, builder.windowslibOptions, function(err, pfxFile) {
+					windowslib.certs.generatePFX(pvk, cer, pfx, builder.pfxPassword, builder.windowslibOptions, function (err, pfxFile) {
 						if (err) {
 							next(err);
-						}
-						else if (!fs.existsSync(pfx)) {
+						} else if (!fs.existsSync(pfx)) {
 							next(new Error('PFX file was not generated at: "' + pfx + '"'));
-						}
-						else {
+						} else {
 							next();
 						}
 					});

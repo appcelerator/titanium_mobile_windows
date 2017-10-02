@@ -37,11 +37,11 @@ exports.init = function (logger, config, cli) {
 	cli.on('build.pre.compile', {
 		priority: 8000,
 		post: function (builder, finished) {
-			if (builder.buildOnly || !/^wp-emulator|wp-device$/.test(builder.target)) return finished();
+			if (builder.buildOnly || !/^wp-emulator|wp-device$/.test(builder.target)) { return finished(); }
 
 			async.series([
 				function (next) {
-					if (builder.target !== 'wp-emulator') return next();
+					if (builder.target !== 'wp-emulator') { return next(); }
 
 					logger.info(__('Launching emulator: %s', builder.deviceId.cyan));
 
@@ -76,7 +76,7 @@ exports.init = function (logger, config, cli) {
 				},
 
 				function (next) {
-					if (!builder.enableLogging) return next();
+					if (!builder.enableLogging) { return next(); }
 
 					// create the log relay instance so we can get a token to embed in our app
 					var session = appc.auth.status(),
@@ -114,11 +114,11 @@ exports.init = function (logger, config, cli) {
 					});
 
 					logRelay.on('disconnect', function () {
-						logger.info("Disconnected from app");
+						logger.info('Disconnected from app');
 					});
 
 					logRelay.on('connection', function () {
-						logger.info("Connected to app");
+						logger.info('Connected to app');
 					});
 
 					logRelay.on('started', function () {
@@ -137,7 +137,7 @@ exports.init = function (logger, config, cli) {
 		pre: function (builder, finished) {
 			var deployType = builder.tiapp.properties['ti.deploytype'].value;
 			// disable logging on deployment for production
-			if (/^production$/.test(deployType)) return finished();
+			if (/^production$/.test(deployType)) { return finished(); }
 			// write the titanium settings file
 			fs.writeFileSync(
 				path.join(builder.buildTargetAssetsDir, 'titanium_settings.ini'),
@@ -161,7 +161,7 @@ exports.init = function (logger, config, cli) {
 	cli.on('build.post.compile', {
 		priority: 8000,
 		post: function (builder, finished) {
-			if (builder.buildOnly || !/^wp-emulator|wp-device$/.test(builder.target)) return finished();
+			if (builder.buildOnly || !/^wp-emulator|wp-device$/.test(builder.target)) { return finished(); }
 
 			function install() {
 				if (logRelay) {
@@ -198,29 +198,29 @@ exports.init = function (logger, config, cli) {
 					// name of the directory holding appx and dependencies subfolder
 					dirName = sanitizedName + '_' + appc.version.format(tiapp.version, 4, 4, true) + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test');
 					// path to folder holding appx
-					appxDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
-					// path to folder holding depencies of the app
-					dependenciesDir = path.resolve(appxDir, 'Dependencies', (builder.cmakeArch == 'Win32') ? 'x86' : builder.cmakeArch),
-					// Options for installing app
-					opts = appc.util.mix({
-						killIfRunning: false,
-						timeout: config.get('windows.log.timeout', 60000),
-						wpsdk: builder.wpsdk
-					}, builder.windowslibOptions),
-					// Options for dependencies
-					installOnlyOpts = appc.util.mix({
-							skipLaunch: true
-					}, opts),
-					appxExtensions = ['.appx', '.appxbundle'],
-					installs = [];
+				appxDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
+				// path to folder holding depencies of the app
+				dependenciesDir = path.resolve(appxDir, 'Dependencies', (builder.cmakeArch == 'Win32') ? 'x86' : builder.cmakeArch),
+				// Options for installing app
+				opts = appc.util.mix({
+					killIfRunning: false,
+					timeout: config.get('windows.log.timeout', 60000),
+					wpsdk: builder.wpsdk
+				}, builder.windowslibOptions),
+				// Options for dependencies
+				installOnlyOpts = appc.util.mix({
+					skipLaunch: true
+				}, opts),
+				appxExtensions = [ '.appx', '.appxbundle' ],
+				installs = [];
 
 				function installApp(deviceId, xapFile, opts, next) {
 					// Now install the real app
 					var installed = false;
 					logger.info(__('Installing the application...'));
 					windowslib.install(deviceId, xapFile, appc.util.mix({
-								appGuid: builder.phoneProductId
-							}, opts))
+						appGuid: builder.phoneProductId
+					}, opts))
 						.on('launched', function () {
 							logger.info(__('Finished launching the application'));
 						})
@@ -273,40 +273,40 @@ exports.init = function (logger, config, cli) {
 				if (!cli.argv.hasOwnProperty('skipInstallDependencies')) {
 					// Install dependencies
 					var possibleDependencies = fs.readdirSync(dependenciesDir);
-					possibleDependencies = possibleDependencies.filter(function(file) {
+					possibleDependencies = possibleDependencies.filter(function (file) {
 						return appxExtensions.indexOf(path.extname(file)) !== -1;
 					});
-					possibleDependencies.forEach(function(file) {
+					possibleDependencies.forEach(function (file) {
 						installs.push(function (next) {
 							logger.info(__('Installing dependency: %s', file));
 							windowslib.install(builder.deviceId, path.resolve(dependenciesDir, file), installOnlyOpts)
-							.on('installed', function (handle) {
-								next();
-							})
-							.on('timeout', function (err) {
-								logRelay && logRelay.stop();
-								next(err.message);
-							})
-							.on('error', function (err) {
-								// We should skip installing dependency when it is aready there
-								if (err.message && err.message.indexOf('A debug application is already installed') != -1) {
-									logger.info(__('Skipping installing dependency: %s', file));
+								.on('installed', function (handle) {
 									next();
-								} else {
+								})
+								.on('timeout', function (err) {
 									logRelay && logRelay.stop();
 									next(err.message);
-								}
-							});
+								})
+								.on('error', function (err) {
+								// We should skip installing dependency when it is aready there
+									if (err.message && err.message.indexOf('A debug application is already installed') != -1) {
+										logger.info(__('Skipping installing dependency: %s', file));
+										next();
+									} else {
+										logRelay && logRelay.stop();
+										next(err.message);
+									}
+								});
 						});
 					});
 				}
 
 				// Install actual app(s)
 				var possibleApps = fs.readdirSync(appxDir);
-				possibleApps = possibleApps.filter(function(file) {
+				possibleApps = possibleApps.filter(function (file) {
 					return appxExtensions.indexOf(path.extname(file)) !== -1;
 				});
-				possibleApps.forEach(function(file) {
+				possibleApps.forEach(function (file) {
 					installs.push(function (next) {
 						installApp(builder.deviceId, path.resolve(appxDir, file), opts, next);
 					});
