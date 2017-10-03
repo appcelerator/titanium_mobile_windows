@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = function (grunt) {
-
+	// TODO: node_modules should all be in the top level
 	// Project configuration.
 	grunt.initConfig({
 		appcJs: {
-			src: [ 'Gruntfile.js', 'apidoc/**/*.js', 'cli/!(locales)/**/*.js', 'Tools/**/*.js' ]
+			src: [ 'Gruntfile.js', 'apidoc/*.js', 'cli/!(locales)/**/*.js', '!cli/lib/node_modules/**/*.js', 'templates/**/*.js', 'Tools/**/*.js' ]
 		},
 		clangFormat: {
 			src: [ 'Source/**/*.cpp', 'Source/**/*.hpp' ]
