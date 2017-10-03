@@ -6,13 +6,13 @@
  * Please see the LICENSE included with this distribution for details.
  */
 // modules
-var path = require('path'),
+const path = require('path'),
 	fs = require('fs'),
 	async = require('async'),
-	colors = require('colors'),
+	colors = require('colors'),  // eslint-disable-line no-unused-vars
 	wrench = require('wrench'),
-	exec = require('child_process').exec,
-	spawn = require('child_process').spawn,
+	exec = require('child_process').exec, // eslint-disable-line security/detect-child-process
+	spawn = require('child_process').spawn, // eslint-disable-line security/detect-child-process
 	// Constants
 	WIN_8_1 = '8.1',
 	WIN_10 = '10.0',
@@ -31,22 +31,22 @@ var path = require('path'),
 	distLib = path.join(distRoot, 'lib');
 
 /**
- * @param sourceDir {String} The original source directory (in Source/)
- * @param buildDir {String} Where to build the modules temporarily
- * @param destDir {String} The top-level destination directory where we copy the built libraries
- * @param buildType {String} 'Release' || 'Debug'
- * @param sdkVersion {String} '8.1' || '10.0'
- * @param msBuildVersion {String} '12.0' || '14.0' || '15.0'
- * @param platform {String} 'WindowsPhone' || 'WindowsStore'
- * @param arch {String} 'x86' || 'ARM'
- * @param parallel {Boolean} should we run MSBuild in parallel?
- * @param quiet {Boolean} log stdout of processes?
- * @param callback {Function} what to invoke when done/errored
+ * @param {String} sourceDir The original source directory (in Source/)
+ * @param {String} buildDir Where to build the modules temporarily
+ * @param {String} destDir The top-level destination directory where we copy the built libraries
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {String} sdkVersion '8.1' || '10.0'
+ * @param {String} msBuildVersion '12.0' || '14.0' || '15.0'
+ * @param {String} platform 'WindowsPhone' || 'WindowsStore'
+ * @param {String} arch 'x86' || 'ARM'
+ * @param {Boolean} parallel should we run MSBuild in parallel?
+ * @param {Boolean} quiet log stdout of processes?
+ * @param {Function} callback what to invoke when done/errored
  */
 function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, msBuildVersion, platform, arch, parallel, quiet, callback) {
 	var platformAbbrev = 'win10';
-	if (sdkVersion == '8.1') {
-		platformAbbrev = (platform == 'WindowsPhone') ? 'phone' : 'store';
+	if (sdkVersion === '8.1') {
+		platformAbbrev = (platform === 'WindowsPhone') ? 'phone' : 'store';
 	}
 
 	console.log('Building ' + platform + ' ' + sdkVersion + ' ' + arch + ': ' + buildType);
@@ -63,7 +63,7 @@ function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, ms
 		function (next) {
 			copyToDistribution(buildDir, destDir, buildType, platformAbbrev, arch, next);
 		}
-	], function (err, results) {
+	], function (err) {
 		if (err) {
 			callback(err);
 		} else {
@@ -75,9 +75,9 @@ function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, ms
 }
 
 /**
- * @param githash SHA1 to use for Ti.buildHash, computed if not supplied
- * @param tiModuleCPP the file to update
- * @param callback what to invoke when done/errored
+ * @param {String} githash SHA1 to use for Ti.buildHash, computed if not supplied
+ * @param {String} tiModuleCPP the file to update
+ * @param {Function} callback what to invoke when done/errored
  */
 function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
 	async.series([
@@ -85,7 +85,7 @@ function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
 			if (githash) {
 				return next();
 			}
-			exec('git rev-parse --short --no-color HEAD', { cwd: path.dirname(tiModuleCPP) }, function (error, stdout, stderr) {
+			exec('git rev-parse --short --no-color HEAD', { cwd: path.dirname(tiModuleCPP) }, function (error, stdout) {
 				if (error) {
 					return next('Failed to get Git HASH: ' + error);
 				}
@@ -100,7 +100,7 @@ function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
 					timestamp,
 					date;
 				if (err) {
-					return callback('Failed to get contents of TiModule.cpp to replace hard-coded values: ' + error);
+					return callback('Failed to get contents of TiModule.cpp to replace hard-coded values: ' + err);
 				}
 				date = new Date();
 				timestamp = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes();
@@ -109,26 +109,29 @@ function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
 				// FIXME How can we set the version? It doesn't get set until later _after_ we've built! We'll need to pull it in from some file!
 				contents = contents.replace(/__TITANIUM_BUILD_DATE__/, timestamp).replace(/__TITANIUM_BUILD_HASH__/, githash);
 				fs.writeFile(tiModuleCPP, contents, callback);
+				next();
 			});
 		}
 	], callback);
 }
 
 /**
- * @param sourceDir {String} Where the source is
- * @param buildDir {String} Where to build the project
- * @param buildType {String} 'Release' || 'Debug'
- * @param platform {String} 'WindowsPhone' || 'WindowsStore'
- * @param arch {String} 'x86' || 'ARM'
- * @param quiet {Boolean} log stdout of process?
- * @param callback {Function} what to invoke when done/errored
+ * @param {String} sourceDir Where the source is
+ * @param {String} buildDir Where to build the project
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {Strng} sdkVersion '8.1'||'10.0'
+ * @param {String} msBuildVersion '12.0'||14.0
+ * @param {String} platform 'WindowsPhone' || 'WindowsStore'
+ * @param {String} arch 'x86' || 'ARM'
+ * @param {Boolean} quiet log stdout of process?
+ * @param {Function} callback what to invoke when done/errored
  */
 function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, platform, arch, quiet, callback) {
 	var generator = VS_2013_GENERATOR;
 
-	if (msBuildVersion == MSBUILD_14) {
+	if (msBuildVersion === MSBUILD_14) {
 		generator = VS_2015_GENERATOR;
-	} else if (msBuildVersion == MSBUILD_15) {
+	} else if (msBuildVersion === MSBUILD_15) {
 		generator = VS_2017_GENERATOR;
 	}
 
@@ -138,11 +141,11 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
 	}
 	wrench.mkdirSyncRecursive(buildDir);
 
-	if (arch == 'ARM') {
+	if (arch === 'ARM') {
 		generator += ' ARM';
 	}
 
-	var args = [
+	const args = [
 		'-G', generator,
 		'-DCMAKE_SYSTEM_NAME=' + platform,
 		'-DCMAKE_BUILD_TYPE=' + buildType,
@@ -161,31 +164,31 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
 		sourceDir
 	];
 
-	var options = { cwd: buildDir };
+	const options = { cwd: buildDir };
 	spawnWithArgs('CMake', cmakeLocation, args, options, quiet, callback);
 }
 
 /**
- * @param slnFile {String} The VS solution file to build.
- * @param quiet {Boolean} log stdout of process?
- * @param callback {Function} what to invoke when done/errored
+ * @param {String} slnFile The VS solution file to build.
+ * @param {Boolean} quiet log stdout of process?
+ * @param {Function} callback what to invoke when done/errored
  */
 function runNuGet(slnFile, quiet, callback) {
 	spawnWithArgs('NuGet', path.join(__dirname, '..', '..', '..', 'cli', 'vendor', 'nuget', 'nuget.exe'), [ 'restore', slnFile ], {}, quiet, callback);
 }
 
 /**
- * @param msBuildVersion {String} The version of MSBuild to run: '12.0' or '14.0'
- * @param slnFile {String} The VS solution file to build.
- * @param buildType {String} 'Release' || 'Debug'
- * @param arch {String} 'x86' || 'ARM'
- * @param parallel {Boolean} Run msbuild in parallel? (/m option)
- * @param quiet {Boolean} log stdout of process?
- * @param callback {Function} what to invoke when done/errored
+ * @param {String} msBuildVersion The version of MSBuild to run: '12.0' or '14.0'
+ * @param {String} slnFile The VS solution file to build.
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {String} arch 'x86' || 'ARM'
+ * @param {Boolean} parallel Run msbuild in parallel? (/m option)
+ * @param {Boolean} quiet log stdout of process?
+ * @param {Function} callback what to invoke when done/errored
  */
 function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet, callback) {
 	var args = [ '/p:Configuration=' + buildType ];
-	if (arch == 'ARM') {
+	if (arch === 'ARM') {
 		args.unshift('/p:Platform=ARM');
 	}
 	args.unshift(slnFile);
@@ -195,12 +198,12 @@ function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet, c
 }
 
 /**
- * @param sourceDir The top-level folder containing all the built libraries from the sln
- * @param destDir The top-level destination directory where we copy the built libraries
- * @param buildType 'Release' || 'Debug'
- * @param platformAbbrev 'phone' || 'store' || 'win10'
- * @param arch 'x86' || 'ARM'
- * @param callback what to invoke when done/errored
+ * @param {String} sourceDir The top-level folder containing all the built libraries from the sln
+ * @param {String} destDir The top-level destination directory where we copy the built libraries
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {String} platformAbbrev 'phone' || 'store' || 'win10'
+ * @param {String} arch 'x86' || 'ARM'
+ * @param {String} callback what to invoke when done/errored
  */
 function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch, callback) {
 	var libs = {
@@ -226,7 +229,7 @@ function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch,
 		header;
 
 	// For each lib, copy the output files!
-	for (var key in libs) {
+	for (const key in libs) {
 		if (!libs.hasOwnProperty(key)) {
 			continue;
 		}
@@ -248,7 +251,8 @@ function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch,
 			forceDelete: true, // Whether to overwrite existing directory or not
 			preserveTimestamps: true, // Preserve the mtime and atime when copying files
 			// FIXME This seems to be copying over everything for TitaniumWindows artifacts, but not sub-libraries
-			include: new RegExp(lib + '\.*') // Include the library's artifacts regardless of file extension
+			// eslint-disable-next-line security/detect-non-literal-regexp
+			include: new RegExp(lib + '.*') // Include the library's artifacts regardless of file extension
 		});
 		// Copy the export header!
 		header = lib.toLowerCase() + '_export.h';
@@ -264,12 +268,12 @@ function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch,
 
 /**
  * Spawns the specified file with its args, logging its output, and executing the callback when it has finished.
- * @param name {String} Name to use for log messages
- * @param file {String} Filepath to execute
- * @param args {Array} args to pass to spawn
- * @param options {Object} options ot pass to spawn
- * @param quiet {Boolean} Should we log stdout?
- * @param callback {Function} callback function when finished
+ * @param {String} name Name to use for log messages
+ * @param {String} file Filepath to execute
+ * @param {Array} args args to pass to spawn
+ * @param {Object} options options ot pass to spawn
+ * @param {Boolean} quiet Should we log stdout?
+ * @param {Function} callback callback function when finished
  */
 function spawnWithArgs(name, file, args, options, quiet, callback) {
 	var child = spawn(file, args, options);
@@ -280,7 +284,7 @@ function spawnWithArgs(name, file, args, options, quiet, callback) {
 		console.log(data.toString().trim().red);
 	});
 	child.on('close', function (code) {
-		if (code != 0) {
+		if (code !== 0) {
 			callback('Failed to run ' + name);
 		} else {
 			callback();
@@ -290,8 +294,9 @@ function spawnWithArgs(name, file, args, options, quiet, callback) {
 
 /**
  * Recursively copies a directory.
- * @param from
- * @param to
+ * @param {String} from Directory to copy from
+ * @param {String} to	Location to copy to
+ * @return {Function}
  */
 function copyDir(from, to) {
 	return function (next) {
@@ -307,8 +312,9 @@ function copyDir(from, to) {
 
 /**
  * Copies a file.
- * @param from
- * @param to
+ * @param {String} from File to copy from
+ * @param {String} to	Location to copy to
+ * @return {Function}
  */
 function copyFile(from, to) {
 	return function (next) {
@@ -323,20 +329,21 @@ function copyFile(from, to) {
 }
 
 /**
- * @param sdkVersion {String} '8.1' || '10.0'
- * @param sha {String} sha1 to use for Ti.buildHash, computed if not provided
- * @param msBuildVersion {String} '12.0' || '14.0'
- * @param buildType {String} 'Release' || 'Debug'
- * @param targets {Array[String]}
- * @param options {Object}
- * @param options.parallel {Boolean} Run builds in parallel?
- * @param options.quiet {Boolean} Log stdout of processes?
- * @param finished {Function} callback
+ * Build the SDK
+ * @param {String} sdkVersion '8.1' || '10.0'
+ * @param {String} sha sha1 to use for Ti.buildHash, computed if not provided
+ * @param {String} msBuildVersion '12.0' || '14.0'
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {Array} targets Targets to build for
+ * @param {Object} options	Object of options
+ * @param {Boolean} options.parallel Run builds in parallel?
+ * @param {Boolean} options.quiet Log stdout of processes?
+ * @param {Function} finished callback
  **/
 function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, finished) {
 	var overallTimer = process.hrtime(),
-		timer = process.hrtime(),
-		options = options || {};
+		timer = process.hrtime();
+	options = options || {};
 
 	async.series([
 		function updateBuildValues(next) {
@@ -356,10 +363,10 @@ function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, fin
 		},
 		function copyIncludedHeaders(next) {
 			console.log('Copying over include headers...');
-			var newDir = path.join(distLib, 'TitaniumKit', 'include', 'Titanium');
+			const newDir = path.join(distLib, 'TitaniumKit', 'include', 'Titanium');
 			wrench.mkdirSyncRecursive(newDir);
 
-			var tasks = [
+			const tasks = [
 				copyDir(path.join(rootDir, 'Source', 'HAL', 'include', 'HAL'), path.join(distLib, 'HAL', 'include', 'HAL')),
 				copyDir(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'Titanium'), path.join(distLib, 'TitaniumKit', 'include', 'Titanium')),
 				copyDir(path.join(process.env.JavaScriptCore_HOME, 'includes', 'JavaScriptCore'), path.join(distLib, 'HAL', 'include', 'JavaScriptCore')),
@@ -376,8 +383,8 @@ function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, fin
 				copyDir(path.join(rootDir, 'cli'), path.join(distRoot, 'cli'))
 			];
 
-			var include_TitaniumWindows = [ 'Filesystem', 'Global', 'Map', 'Media', 'Network', 'Sensors', 'Ti', 'UI' ];
-			for (var i = 0; i < include_TitaniumWindows.length; i++) {
+			const include_TitaniumWindows = [ 'Filesystem', 'Global', 'Map', 'Media', 'Network', 'Sensors', 'Ti', 'UI' ];
+			for (let i = 0; i < include_TitaniumWindows.length; i++) {
 				tasks.push(copyDir(path.join(rootDir, 'Source', include_TitaniumWindows[i], 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows_' + include_TitaniumWindows[i], 'include', 'TitaniumWindows')));
 			}
 
@@ -409,7 +416,7 @@ if (module.id === '.') {
 			];
 
 		function collectArches(val, memo) {
-			var m = /^Windows(Store|Phone)\-(x86|ARM)$/.exec(val);
+			var m = /^Windows(Store|Phone)-(x86|ARM)$/.exec(val);
 			if (m) {
 				memo.push(val);
 			}
@@ -428,7 +435,7 @@ if (module.id === '.') {
 			.parse(process.argv);
 
 		// When doing win 10, it has to use msbuild 14
-		if (program.sdkVersion == WIN_10 && program.msbuild == MSBUILD_12) {
+		if (program.sdkVersion === WIN_10 && program.msbuild === MSBUILD_12) {
 			// TODO Log warning if they used msbuild 12!
 			program.msbuild = MSBUILD_14;
 		}
@@ -438,7 +445,7 @@ if (module.id === '.') {
 				parallel: program.parallel,
 				quiet: program.quiet
 			},
-			function (err, results) {
+			function (err) {
 				if (err) {
 					console.error(err.toString().red);
 					process.exit(1);

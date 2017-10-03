@@ -5,11 +5,10 @@
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
-var path = require('path'),
+const path = require('path'),
 	fs   = require('fs.extra'),
 	_    = require('underscore'),
 	LineReader = require('line-by-line'),
-	path = require('path'),
 	titaniumKit = {},
 	windowsTitaniumKit = {},         // Stores what's implemented in Titanium Windows
 	windowsTitaniumKit_Missing = []; // Stores missing module names
@@ -108,7 +107,7 @@ function extract(callback) {
 	walker.on('file',
 		function (root, stat, next) {
 			if (/\.cpp$/.test(stat.name)) {
-			    extractTitaniumKit(root, stat.name, next);
+				extractTitaniumKit(root, stat.name, next);
 			} else {
 				next();
 			}
@@ -129,8 +128,8 @@ function extractTitaniumKit(root, file, next) {
 		methods = [],
 		events = [];
 	reader.on('line', function (line) {
-		var namespace_match = line.match(/\s*\:\s*\w+\(js_context,\s*\"([\w\.]+)\"\)/);
-		var unknown_match   = line.match(/\s*\:\s*Module\(js_context,\s*apiName\)/);
+		var namespace_match = line.match(/\s*:\s*\w+\(js_context,\s*"([\w.]+)"\)/);
+		var unknown_match   = line.match(/\s*:\s*Module\(js_context,\s*apiName\)/);
 		var property_match  = line.match(/TITANIUM_ADD_PROPERTY\w*\((\w+),\s*(\w+)\);/);
 		var function_match  = line.match(/TITANIUM_ADD_FUNCTION\((\w+),\s*(\w+)\);/);
 		var constant_match  = line.match(/TITANIUM_ADD_CONSTANT_PROPERTY\w*\((\w+),\s*(\w+)\);/);
@@ -138,7 +137,7 @@ function extractTitaniumKit(root, file, next) {
 		if (namespace_match) {
 			module_name = namespace_match[1];
 			// convert Ti.* to Titanium.*
-			if (module_name.indexOf('Ti.') == 0) {
+			if (module_name.indexOf('Ti.') === 0) {
 				module_name = 'Titanium.' + module_name.slice(3);
 			} else if (module_name === 'Ti') {
 				module_name = 'Titanium';
@@ -147,18 +146,18 @@ function extractTitaniumKit(root, file, next) {
 			//
 			// Some modules are using special pattern for now...
 			//
-			if (file == 'IOStream.cpp') {
+			if (file === 'IOStream.cpp') {
 				module_name = 'Titanium.IOStream';
-			} else if (file == 'View.cpp') {
+			} else if (file === 'View.cpp') {
 				module_name = 'Titanium.UI.View';
 			}
 		}
 
 		// Don't expose internal property/function which starts with "_"
-		if (property_match && property_match[2][0] != '_') {
+		if (property_match && property_match[2][0] !== '_') {
 			properties.push(property_match[2]);
 		}
-		if (function_match && function_match[2][0] != '_') {
+		if (function_match && function_match[2][0] !== '_') {
 			methods.push(function_match[2]);
 		}
 		if (constant_match && APIS.indexOf(constant_match[2]) === -1) {
@@ -202,7 +201,9 @@ function extractWhiteList(callback) {
 			};
 		}
 		module_name = null;
-		properties = [], methods = [], events = [];
+		properties = [];
+		methods = [];
+		events = [];
 	}
 	reader.on('line', function (line) {
 		var element = line.split(' '),
@@ -215,7 +216,7 @@ function extractWhiteList(callback) {
 			methods.push(element[1]);
 		} else if (type === 'E') {
 			events.push(element[1]);
-		} else if (line.trim() == '') {
+		} else if (line.trim() === '') {
 			// new whitelist entry
 			addWhitelistEntry();
 		}
@@ -229,7 +230,7 @@ function extractWhiteList(callback) {
 		addWhitelistEntry();
 
 		// merge the result
-		for (name in titaniumKit_whitelist) {
+		for (const name in titaniumKit_whitelist) {
 			if (titaniumKit[name]) {
 				titaniumKit[name].properties = _.union(titaniumKit[name].properties, titaniumKit_whitelist[name].properties);
 				titaniumKit[name].methods    = _.union(titaniumKit[name].methods, titaniumKit_whitelist[name].methods);
@@ -251,35 +252,32 @@ function extractWindowsKit(callback) {
 	walker.on('file',
 		function (root, stat, next) {
 			if (/\.hpp$/.test(stat.name)) {
-				var reader = new LineReader(path.join(root, stat.name)),
+				let reader = new LineReader(path.join(root, stat.name)),
 					module_name,
-					properties = [],
-					methods = [],
-					events = [],
 					un_properties = [],
 					un_methods = [],
 					un_events = [];
 				reader.on('line', function (line) {
-					var module_match = line.match(/\s*TITANIUM_MODULE_UNIMPLEMENTED\(\"*(\w[\w.]*)\"*\)/);
+					var module_match = line.match(/\s*TITANIUM_MODULE_UNIMPLEMENTED\("*(\w[\w.]*)"*\)/);
 					if (module_match) {
 						windowsTitaniumKit_Missing.push(module_match[1]);
 					}
 
 					// C++ header should contain @ingroup to represent Titanium proxy name
-					var class_match = line.match(/@ingroup\s+([\w.]+)/);
+					const class_match = line.match(/@ingroup\s+([\w.]+)/);
 					if (class_match) {
 						module_name = class_match[1];
 					}
 					// Unimplemented Ti method be marked with TITANIUM_FUNCTION_UNIMPLEMENTED
-					var method_match = line.match(/\s*TITANIUM_FUNCTION_UNIMPLEMENTED\(\"*(\w+)\"*\)/);
+					const method_match = line.match(/\s*TITANIUM_FUNCTION_UNIMPLEMENTED\("*(\w+)"*\)/);
 					if (method_match) {
 						un_methods.push(method_match[1]);
 					}
 					// Unimplemented Ti property be marked with TITANIUM_PROPERTY_UNIMPLEMENTED
-					var property_match = line.match(/\s*TITANIUM_PROPERTY_UNIMPLEMENTED\(\"*(\w+)\"*\)/);
+					const property_match = line.match(/\s*TITANIUM_PROPERTY_UNIMPLEMENTED\("*(\w+)"*\)/);
 					if (property_match) {
-						var property_name   = property_match[1];
-						var property_name_C = property_name.capitalize();
+						const property_name   = property_match[1];
+						const property_name_C = property_name.capitalize();
 						un_properties.push(property_name);
 						// Disable property getter/setter too
 						un_methods.push('get' + property_name_C);
@@ -313,31 +311,31 @@ function extractWindowsKit(callback) {
 // Export API document to YAML
 //
 function exportYAML() {
-	for (module_name in titaniumKit) {
-		var lines = [];
+	for (const module_name in titaniumKit) {
+		const lines = [];
 		lines.push('name: ' + module_name);
 		lines.push('platforms: [windowsphone]');
 
 		// dump properties
 		titaniumKit[module_name].properties.length > 0 && lines.push('properties:');
-		for (var i = 0; i < titaniumKit[module_name].properties.length; i++) {
-			var property  = titaniumKit[module_name].properties[i];
+		for (let i = 0; i < titaniumKit[module_name].properties.length; i++) {
+			const property  = titaniumKit[module_name].properties[i];
 			lines.push('  - name: ' + property);
 			lines.push('    platforms: [windowsphone]');
 		}
 
 		// dump methods
 		titaniumKit[module_name].methods.length > 0 && lines.push('methods:');
-		for (var i = 0; i < titaniumKit[module_name].methods.length; i++) {
-			var method    = titaniumKit[module_name].methods[i];
+		for (let i = 0; i < titaniumKit[module_name].methods.length; i++) {
+			const method    = titaniumKit[module_name].methods[i];
 			lines.push('  - name: ' + method);
 			lines.push('    platforms: [windowsphone]');
 		}
 
 		// dump events
 		titaniumKit[module_name].events.length > 0 && lines.push('events:');
-		for (var i = 0; i < titaniumKit[module_name].events.length; i++) {
-			var eventname = titaniumKit[module_name].events[i];
+		for (let i = 0; i < titaniumKit[module_name].events.length; i++) {
+			const eventname = titaniumKit[module_name].events[i];
 			lines.push('  - name: ' + eventname);
 			lines.push('    platforms: [windowsphone]');
 		}
@@ -346,16 +344,16 @@ function exportYAML() {
 		lines.push('\n');
 
 		// dump to file
-		var modulepath = module_name.split('.');
-		var classname  = modulepath[modulepath.length - 1];
+		let modulepath = module_name.split('.');
+		const classname  = modulepath[modulepath.length - 1];
 
 		modulepath.pop();
 		// everything should be go to Titanium directory
-		if (modulepath[0] != 'Titanium') {
+		if (modulepath[0] !== 'Titanium') {
 			modulepath[0] = 'Titanium';
 		}
-		var outdir = path.join(modulepath.join(path.sep));
-		var outfile = path.join(outdir, classname + '.yml');
+		const outdir = path.join(modulepath.join(path.sep));
+		const outfile = path.join(outdir, classname + '.yml');
 		console.log('Generating ' + outfile);
 		fs.mkdirpSync(path.join(__dirname, outdir));
 		fs.writeFileSync(path.join(__dirname, outfile), lines.join('\n'));
@@ -363,20 +361,20 @@ function exportYAML() {
 }
 
 function isEmpty(prop) {
-	return prop.properties.length == 0 && prop.methods.length == 0 && prop.events.length == 0;
+	return prop.properties.length === 0 && prop.methods.length === 0 && prop.events.length === 0;
 }
 //
 // Extract API from source & export to YAML
 //
 extract(function () {
 	// remove unimplemented API
-	for (var i = 0; i < windowsTitaniumKit_Missing.length; i++) {
+	for (let i = 0; i < windowsTitaniumKit_Missing.length; i++) {
 		delete titaniumKit[windowsTitaniumKit_Missing[i]];
 	}
 
 	// now merge the supported API
-	for (name in titaniumKit) {
-		var winprop = windowsTitaniumKit[name];
+	for (const name in titaniumKit) {
+		const  winprop = windowsTitaniumKit[name];
 		if (winprop) {
 			titaniumKit[name] = winprop;
 		}

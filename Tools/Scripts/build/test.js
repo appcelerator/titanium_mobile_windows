@@ -5,15 +5,15 @@
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
-var path = require('path'),
+const path = require('path'),
 	fs = require('fs'),
 	async = require('async'),
-	colors = require('colors'),
+	colors = require('colors'), // eslint-disable-line no-unused-vars
 	wrench = require('wrench'),
 	ejs = require('ejs'),
 	windowslib = require('windowslib'),
-	spawn = require('child_process').spawn,
-	exec = require('child_process').exec,
+	spawn = require('child_process').spawn, // eslint-disable-line security/detect-child-process
+	exec = require('child_process').exec, // eslint-disable-line security/detect-child-process
 	titanium = path.join(__dirname, 'node_modules', 'titanium', 'bin', 'titanium'),
 	DIST_DIR = path.join(__dirname, '..', '..', '..', 'dist'),
 	WINDOWS_DIST_DIR = path.join(DIST_DIR, 'windows'),
@@ -29,25 +29,26 @@ var path = require('path'),
 	WP_EMULATOR = 'wp-emulator',
 	MAX_RETRIES = 3,
 	// Global vars
-	hadWindowsSDK = false,
 	projectDir = path.join(__dirname, 'mocha'),
-	testResults,
-	jsonResults,
 	sdkRegex = /^(8\.1|10\.0)(\.\d+)*/;
+
+let hadWindowsSDK = false,
+	testResults,
+	jsonResults;
 
 /**
  * Installs the latest SDK from master branch remotely, sets it as the default
  * SDK. We'll be hacking it to add our locally built Windows SDK into it.
  *
- * @param barnch {String} branch name or URL of Titanium SDK to use
- * @param next {Function} callback function
+ * @param {String} branch branch name or URL of Titanium SDK to use
+ * @param {Function} next callback function
  **/
 function installSDK(branch, next) {
 	var prc = spawn('node', [ titanium, 'sdk', 'install', '-b', branch, '-d', '--no-colors' ]),
 		sdkVersion;
 	prc.stdout.on('data', function (data) {
 		var value = data.toString().trim(),
-			regexp = /You're up\-to\-date\. Version (\d+\.\d+\.\d+\.v\d+)/, // when SDK is already installed
+			regexp = /You're up-to-date\. Version (\d+\.\d+\.\d+\.v\d+)/, // when SDK is already installed
 			regexp2 = /Titanium SDK (\d+\.\d+\.\d+\.v\d+) successfully installed/, // when we installed the SDK
 			matches = value.match(regexp);
 		if (!matches) { // first regexp didn't find anything (check if normal successful install)
@@ -63,11 +64,11 @@ function installSDK(branch, next) {
 	});
 
 	prc.on('close', function (code) {
-		if (code != 0) {
+		if (code !== 0) {
 			next('Failed to install SDK. Exit code: ' + code);
 		} else {
 			console.log('Making sure ' + sdkVersion + ' is selected');
-			var selectPrc = spawn('node', [ titanium, 'sdk', 'select', sdkVersion ]);
+			const selectPrc = spawn('node', [ titanium, 'sdk', 'select', sdkVersion ]);
 			selectPrc.stdout.on('data', function (data) {
 				console.log(data.toString());
 			});
@@ -75,7 +76,7 @@ function installSDK(branch, next) {
 				console.error(data.toString().trim());
 			});
 			selectPrc.on('close', function (code) {
-				if (code != 0) {
+				if (code !== 0) {
 					next('Failed to select SDK. Exit code: ' + code);
 				} else {
 					next(null, sdkVersion);
@@ -89,11 +90,11 @@ function installSDK(branch, next) {
  * Look up the full path to the SDK we just installed (the SDK we'll be hacking
  * to add our locally built Windows SDK into).
  *
- * @param tiSDKVersion {String} The versionw e installed (if we know it)
- * @param next {Function} callback function
+ * @param {String} tiSDKVersion The versionw e installed (if we know it)
+ * @param {Function} next callback function
  **/
 function getSDKInstallDir(tiSDKVersion, next) {
-	var prc = exec('node "' + titanium + '" info -o json -t titanium', function (error, stdout, stderr) {
+	exec('node "' + titanium + '" info -o json -t titanium', function (error, stdout) {
 		var out,
 			selectedSDK;
 		if (error !== null) {
@@ -119,9 +120,8 @@ function getSDKInstallDir(tiSDKVersion, next) {
  * Adds 'windows' into the list of supported platforms for a given SDK we're
  * hacking.
  *
- * @param sdkPath {String} path to the Titanium SDK we'll be hacking to copy our
- * 													locally built Windows SDK into
- * @param next {Function} callback function
+ * @param {String} sdkPath path to the Titanium SDK we'll be hacking to copy our locally built Windows SDK into
+ * @param {Function} next callback function
  **/
 function copyWindowsIntoSDK(sdkPath, next) {
 	var dest = path.join(sdkPath, 'windows');
@@ -138,8 +138,8 @@ function copyWindowsIntoSDK(sdkPath, next) {
  * Adds 'windows' into the list of supported platforms for a given SDK we're
  * hacking.
  *
- * @param sdkPath {String} path to the Titanium SDK we'll be hacking
- * @param next {Function} callback function
+ * @param {String} sdkPath path to the Titanium SDK we'll be hacking
+ * @param {Function} next callback function
  **/
 function addWindowsToSDKManifest(sdkPath, next) {
 	var manifest = path.join(sdkPath, 'manifest.json');
@@ -149,7 +149,7 @@ function addWindowsToSDKManifest(sdkPath, next) {
 			next(err);
 		}
 		// append 'windows' to platforms array
-		var json = JSON.parse(data);
+		const json = JSON.parse(data);
 		json['platforms'].push('windows');
 		// Write new JSON back to file
 		fs.writeFile(manifest, JSON.stringify(json), function (err) {
@@ -165,7 +165,7 @@ function addWindowsToSDKManifest(sdkPath, next) {
  * Generates a new project for Windows. This will be the project we use for
  * running unit tests.
  *
- * @param next {Function} callback function
+ * @param {Function} next callback function
  **/
 function generateWindowsProject(next) {
 	var prc;
@@ -181,7 +181,7 @@ function generateWindowsProject(next) {
 		console.log(data.toString());
 	});
 	prc.on('close', function (code) {
-		if (code != 0) {
+		if (code !== 0) {
 			next('Failed to create project');
 		} else {
 			next();
@@ -191,9 +191,8 @@ function generateWindowsProject(next) {
 
 /**
  * Add required properties for our unit tests to the tiapp.xml
- *
- * @params sdkVersion {String} '8.1'||'10.0'
- * @param next {Function} callback function
+ * @param {String} sdkVersion '8.1'||'10.0'
+ * @param {Function} next callback function
  **/
 function addTiAppProperties(sdkVersion, next) {
 	var tiapp_xml = path.join(projectDir, 'tiapp.xml');
@@ -207,15 +206,14 @@ function addTiAppProperties(sdkVersion, next) {
 			content.push('\t<property name="presetBool" type="bool">true</property>');
 			content.push('\t<property name="presetInt" type="int">1337</property>');
 			content.push('\t<property name="presetDouble" type="double">1.23456</property>');
-			content.push('\t<windows><manifest><Capabilities><Capability Name=\"internetClient\" />');
-			content.push('\t<Capability Name=\"contacts\" />');
+			content.push('\t<windows><manifest><Capabilities><Capability Name="internetClient" />');
+			content.push('\t<Capability Name="contacts" />');
 			content.push('\t</Capabilities>');
 			content.push('\t<Extensions> <Extension Category="windows.backgroundTasks" EntryPoint="TitaniumWindows_Ti.BackgroundServiceTask"> <BackgroundTasks> <Task Type="timer" /> <Task Type="pushNotification" /> </BackgroundTasks> </Extension> </Extensions>');
 			content.push('\t</manifest></windows>');
-		}
-		// TODO Have this look at the existing modules under the test app folder to inject them
-		// inject the test modules for require
-		else if (line.indexOf('<modules>') >= 0) {
+		} else if (line.indexOf('<modules>') >= 0) {
+			// TODO Have this look at the existing modules under the test app folder to inject them
+			// inject the test modules for require
 			content.push('<module version="1.0.0">commonjs.index_js</module>');
 			content.push('<module version="1.0.0">commonjs.index_json</module>');
 			content.push('<module version="1.0.0">commonjs.legacy</module>');
@@ -233,7 +231,7 @@ function addTiAppProperties(sdkVersion, next) {
 /**
  * Copies the assets from the NMocha example app into the generated project.
  *
- * @param next {Function} callback function
+ * @param {Function} next callback function
  **/
 function copyMochaAssets(next) {
 	// Copy over Resources
@@ -253,16 +251,15 @@ function copyMochaAssets(next) {
 /**
  * Grabs the id of the first emulator for a given sdk version
  *
- * @param sdkVersion {String} '8.1'|'10.0' Used to grab the list of valid
- *														emulators for the given sdk version
- * @param target {String} 'wp-emulator'|'ws-local'|'wp-device'
- * @param next {Function} callback function
+ * @param {String} sdkVersion '8.1'|'10.0' Used to grab the list of valid emulators for the given sdk version
+ * @param {String} target 'wp-emulator'|'ws-local'|'wp-device'
+ * @param {Function} next callback function
  **/
 function getDeviceId(sdkVersion, target, next) {
 	windowslib.detect(function (err, results) {
 		var deviceId = DEFAULT_DEVICE_ID,
 			shortSdkVersion = sdkRegex.exec(sdkVersion)[1],
-			sdkVersionRegex = new RegExp(sdkVersion);
+			sdkVersionRegex = new RegExp(sdkVersion); // eslint-disable-line security/detect-non-literal-regexp
 		if (err) {
 			next(err);
 			return;
@@ -271,8 +268,8 @@ function getDeviceId(sdkVersion, target, next) {
 		if (target === WP_EMULATOR) {
 			deviceId = results.emulators && results.emulators[shortSdkVersion] && results.emulators[shortSdkVersion][0] && results.emulators[shortSdkVersion][0].udid;
 
-			for (i in results.emulators[shortSdkVersion]) {
-				var emulator = results.emulators[shortSdkVersion][i];
+			for (let i in results.emulators[shortSdkVersion]) {
+				const emulator = results.emulators[shortSdkVersion][i];
 				if (sdkVersionRegex.test(emulator.uapVersion)) {
 					deviceId = emulator.udid;
 					console.log('Found ' + emulator.uapVersion + ' : ' + deviceId);
@@ -291,12 +288,11 @@ function getDeviceId(sdkVersion, target, next) {
 /**
  * Runs the build, should run the unit tests
  *
- * @param target {String} 'wp-emulator'|'ws-local'
- * @param deviceId {String} deviceId to launch on. '0' for actual physical
- *							device. Something like '8-1-1' for first Windows 8.1 emulator
- * @param count {Number} Tracks how many times we've tried to run this build.
- *											Used so we can finally abort after max retry count.
- * @param next {Function} callback function
+ * @param {String} target 'wp-emulator'|'ws-local'
+ * @param {String} deviceId deviceId to launch on. '0' for actual physical device. Something like '8-1-1' for first Windows 8.1 emulator
+ * @param {String} sdkVersion '8.1'||'10.0'
+ * @param {Number} count Tracks how many times we've tried to run this build. Used so we can finally abort after max retry count.
+ * @param {Function} next callback function
  **/
 function runBuild(target, deviceId, sdkVersion, count, next) {
 	var prc,
@@ -317,16 +313,16 @@ function runBuild(target, deviceId, sdkVersion, count, next) {
 	prc = spawn('node', args);
 	prc.stdout.on('data', function (data) {
 		console.log(data.toString());
-		var lines = data.toString().trim().match(/^.*([\n\r]+|$)/gm);
-		for (var i = 0; i < lines.length; i++) {
-			var str = lines[i],
+		const lines = data.toString().trim().match(/^.*([\n\r]+|$)/gm);
+		for (let i = 0; i < lines.length; i++) {
+			let str = lines[i],
 				index = -1;
 
 			if (inResults) {
-				if ((index = str.indexOf('[INFO]')) != -1) {
+				if ((index = str.indexOf('[INFO]')) !== -1) {
 					str = str.slice(index + 8).trim();
 				}
-				if ((index = str.indexOf('!TEST_RESULTS_STOP!')) != -1) {
+				if ((index = str.indexOf('!TEST_RESULTS_STOP!')) !== -1) {
 					str = str.slice(0, index).trim();
 					inResults = false;
 					done = true; // we got the results we need, when we kill this process we'll move on
@@ -338,13 +334,13 @@ function runBuild(target, deviceId, sdkVersion, count, next) {
 					prc.kill();
 					break;
 				}
-			} else if ((index = str.indexOf('!TEST_RESULTS_START!')) != -1) {
+			} else if ((index = str.indexOf('!TEST_RESULTS_START!')) !== -1) {
 				inResults = true;
 				testResults = str.substr(index + 20).trim();
 			}
 
 			// Handle when app crashes and we haven't finished tests yet!
-			if ((index = str.indexOf('-- End application log ----')) != -1) {
+			if ((index = str.indexOf('-- End application log ----')) !== -1) {
 				prc.kill(); // quit this build...
 				if (count > MAX_RETRIES) {
 					next('failed to get test results before log ended!'); // failed too many times
@@ -359,7 +355,7 @@ function runBuild(target, deviceId, sdkVersion, count, next) {
 		console.log(data.toString());
 	});
 
-	prc.on('close', function (code) {
+	prc.on('close', function () {
 		if (done) {
 			next(); // only move forward if we got results and killed the process!
 		}
@@ -369,8 +365,9 @@ function runBuild(target, deviceId, sdkVersion, count, next) {
 /**
  * Converts the raw string outut from the test app into a JSON Object.
  *
- * @param testResults {String} Raw string output from the logs of the test app
- * @param next {Function} callback function
+ * @param {String} testResults Raw string output from the logs of the test app
+ * @param {Function} next callback function
+ * @return {Function}
  */
 function parseTestResults(testResults, next) {
 	if (!testResults) {
@@ -379,25 +376,25 @@ function parseTestResults(testResults, next) {
 
 	// preserve newlines, etc - use valid JSON
 	testResults = testResults.replace(/\\n/g, '\\n')
-			   .replace(/\\'/g, '\\\'')
-			   .replace(/\\"/g, '\\"')
-			   .replace(/\\&/g, '\\&')
-			   .replace(/\\r/g, '\\r')
-			   .replace(/\\t/g, '\\t')
-			   .replace(/\\b/g, '\\b')
-			   .replace(/\\f/g, '\\f');
+		.replace(/\\'/g, '\\\'')
+		.replace(/\\"/g, '\\"')
+		.replace(/\\&/g, '\\&')
+		.replace(/\\r/g, '\\r')
+		.replace(/\\t/g, '\\t')
+		.replace(/\\b/g, '\\b')
+		.replace(/\\f/g, '\\f');
 	// remove non-printable and other non-valid JSON chars
 	testResults = testResults.replace(/[\u0000-\u0019]+/g, '');
 	jsonResults = JSON.parse(testResults);
-	next();
+	return next();
 }
 
 /**
  * Converts JSON results of unit tests into a JUnit test result XML formatted file.
  *
- * @param jsonResults {Object} JSON containing results of the unit test output
- * @param prefix {String} prefix for test names to identify them uniquely
- * @param next {Function} callback function
+ * @param {Object} jsonResults JSON containing results of the unit test output
+ * @param {String} prefix prefix for test names to identify them uniquely
+ * @param {Function} next callback function
  */
 function outputJUnitXML(jsonResults, prefix, next) {
 	// We need to go through the results and separate them out into suites!
@@ -409,16 +406,18 @@ function outputJUnitXML(jsonResults, prefix, next) {
 		var s = suites[item.suite] || { tests: [], suite: item.suite, duration: 0, passes: 0, failures: 0, start:'' }; // suite name to group by
 		s.tests.unshift(item);
 		s.duration += item.duration;
-		if (item.state == 'failed') {
+		if (item.state === 'failed') {
 			s.failures += 1;
-		} else if (item.state == 'passed') {
+		} else if (item.state === 'passed') {
 			s.passes += 1;
 		}
 		suites[item.suite] = s;
 	});
 	keys = Object.keys(suites);
-	values = keys.map(function (v) { return suites[v]; });
-	var r = ejs.render('' + fs.readFileSync(path.join('.', 'junit.xml.ejs')),  { 'suites': values, 'prefix': prefix });
+	values = keys.map(function (v) {
+		return suites[v];
+	});
+	r = ejs.render('' + fs.readFileSync(path.join('.', 'junit.xml.ejs')),  { 'suites': values, 'prefix': prefix });
 
 	// Write the JUnit XML to a file
 	fs.writeFileSync(path.join(DIST_DIR, 'junit_report.xml'), r);
@@ -428,10 +427,10 @@ function outputJUnitXML(jsonResults, prefix, next) {
 /**
  * Remove all CI SDKs installed. Skip GA releases, and skip the passed in SDK path we just installed.
  * @param  {String} sdkPath The SDK we just installed for testing. Keep this one in case next run can use it.
- * @param {Function} next
+ * @param {Function} next callback to call when done
  */
 function cleanNonGaSDKs(sdkPath, next) {
-	var prc = exec('node "' + titanium + '" sdk list -o json', function (error, stdout, stderr) {
+	exec('node "' + titanium + '" sdk list -o json', function (error, stdout) {
 		var out,
 			installedSDKs;
 		if (error !== null) {
@@ -462,13 +461,13 @@ function cleanNonGaSDKs(sdkPath, next) {
  * and then runs the project in a Windows simulator which will run the mocha unit tests. The test results are piped to
  * the CLi, which takes them and generates a JUnit test result XML report for the Jenkins build machine.
  *
- * @param sdkVersion {String} '8.1'|'10.0'
- * @param msbuild {String} '12.0'|'14.0' (Visual Studio 2013 or 2015)
- * @param branch {String} branch or filename/URL of Titanium SDK to use
- * @param target {String} 'wp-emulator'|'ws-local'
- * @param deviceId {String} id of the device to run tests on
- * @param prefix {String} prefix to use for test results to uniquely identify them
- * @param callback {Function} callback function
+ * @param {String} sdkVersion '8.1'|'10.0'
+ * @param {String} msbuild '12.0'|'14.0' (Visual Studio 2013 or 2015)
+ * @param {String} branch branch or filename/URL of Titanium SDK to use
+ * @param {String} target 'wp-emulator'|'ws-local'
+ * @param {String} deviceId id of the device to run tests on
+ * @param {String} prefix prefix to use for test results to uniquely identify them
+ * @param {Function} callback callback function
  */
 function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 	var sdkPath,
@@ -520,7 +519,7 @@ function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 			copyMochaAssets(next);
 		},
 		function (next) {
-			if (deviceId || target == 'ws-local') {
+			if (deviceId || target === 'ws-local') {
 				return next();
 			}
 
@@ -563,19 +562,19 @@ if (module.id === '.') {
 			.version('0.0.1')
 			.option('-m, --msbuild [version]', 'Use a specific version of MSBuild', /^(12\.0|14\.0)$/, MSBUILD_12)
 			.option('-s, --sdk-version [version]', 'Target a specific Windows SDK version [version]', sdkRegex, WIN_8_1)
-			.option('-T, --target [target]', 'Target a specific deploy target [target]', /^wp\-emulator|ws\-local|wp\-device$/, WP_EMULATOR)
+			.option('-T, --target [target]', 'Target a specific deploy target [target]', /^wp-emulator|ws-local|wp-device$/, WP_EMULATOR)
 			.option('-C, --device-id [udid]', 'Target a specific device/emulator')
 			.option('-b, --branch [branch]', 'Specify the Titanium SDK build/branch to use for testing', 'master')
 			.option('-p, --prefix [prefix]', 'Set a prefix to put before testsuite names to uniquely identify them') // we run same suite for Windows 8.1/10 and phone/desktop. Use this to prefix tests so we can identify them uniquely?
 			.parse(process.argv);
 
 		// When doing win 10, it has to use msbuild 14
-		if (program.sdkVersion == WIN_10) {
+		if (program.sdkVersion === WIN_10) {
 			// TODO Log warning if they used msbuild 12!
 			program.msbuild = MSBUILD_14;
 		}
 		// TODO Use default prefix based on SDK version and target?
-		test(program.sdkVersion, program.msbuild, program.branch, program.target, program.deviceId, program.prefix, function (err, results) {
+		test(program.sdkVersion, program.msbuild, program.branch, program.target, program.deviceId, program.prefix, function (err) {
 			if (err) {
 				console.error(err.toString().red);
 				process.exit(1);

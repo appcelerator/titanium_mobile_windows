@@ -5,18 +5,17 @@
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
-var fs = require('fs'),
-	colors = require('colors'),
+const fs = require('fs'),
+	colors = require('colors'), // eslint-disable-line no-unused-vars
 	path = require('path'),
-	home = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA,
-	spawn = require('child_process').spawn,
+	spawn = require('child_process').spawn,  // eslint-disable-line security/detect-child-process
 	os = require('os'),
 	program = require('commander'),
 	wrench = require('wrench'),
 	symbols = {
-	  ok: '✓',
-	  err: '✖',
-	  dot: '․'
+		ok: '✓',
+		err: '✖',
+		dot: '․'
 	},
 	// Constants
 	WIN_8_1 = '8.1',
@@ -25,11 +24,9 @@ var fs = require('fs'),
 	MSBUILD_14 = '14.0',
 	VS_2013_GENERATOR = 'Visual Studio 12 2013',
 	VS_2015_GENERATOR = 'Visual Studio 14 2015',
-	WINDOWS_STORE = 'WindowsStore',
-	WINDOWS_PHONE = 'WindowsPhone';
-
+	WINDOWS_STORE = 'WindowsStore';
 // With node.js on Windows: use symbols available in terminal default fonts
-if (os.platform() == 'win32') {
+if (os.platform() === 'win32') {
 	symbols.ok = '\u221A';
 	symbols.err = '\u00D7';
 	symbols.dot = '.';
@@ -38,23 +35,22 @@ if (os.platform() == 'win32') {
 /**
  * Generates a VS solution and project to run/debug our Example apps manually.
  *
- * @param example_name {String} Name of the example app to generate from (See Examples folder)
- * @param dest {String} output location/folder
- * @param platform {String} 'WindowsStore'|'WindowsPhone'
- * @param sdkVersion {String} '8.1'|'10.0'
- * @param msdev {String} '12.0'|'14.0' MSBuild version to use
- * @param arch {String} 'ARM'|'Win32'
- * @param next {Function} callback function
+ * @param {String} example_name Name of the example app to generate from (See Examples folder)
+ * @param {String} dest output location/folder
+ * @param {String} platform 'WindowsStore'|'WindowsPhone'
+ * @param {String} sdkVersion '8.1'|'10.0'
+ * @param {String} msdev '12.0'|'14.0' MSBuild version to use
+ * @param {String} arch 'ARM'|'Win32'
+ * @param {Function} next callback function
  **/
 function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, next) {
 	var example_folder = path.join(__dirname, '..', '..', 'Examples', example_name),
 		generator,
-		prc,
-		out = '';
+		prc;
 
 	// cmake generator name
-	generator = (msdev == MSBUILD_14) ? VS_2015_GENERATOR : VS_2013_GENERATOR;
-	if (arch == 'ARM') {
+	generator = (msdev === MSBUILD_14) ? VS_2015_GENERATOR : VS_2013_GENERATOR;
+	if (arch === 'ARM') {
 		generator += ' ARM';
 	}
 
@@ -84,8 +80,7 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, 
 		console.log(data.toString());
 	});
 	prc.on('close', function (code) {
-		var setProcess;
-		if (code != 0) {
+		if (code !== 0) {
 			next('Failed to generate project!');
 		} else {
 			next();
@@ -119,7 +114,7 @@ if (module.id === '.') {
 		Error.stackTraceLimit = Infinity;
 
 		if (program.args.length === 0) {
-			var help = program.helpInformation();
+			let help = program.helpInformation();
 			help = help.replace('Usage: generate_project COMMAND [ARGS] [OPTIONS]', 'Usage: ' + 'generate_project'.blue + ' COMMAND'.white + ' [ARGS] [OPTIONS]'.grey);
 			console.log(help);
 			process.exit(1);
@@ -127,23 +122,23 @@ if (module.id === '.') {
 
 		// TODO USe command built-in API for new command!
 		// Validate the given command, only can be 'new' right now
-		var command = program.args[0];
-		if (command != 'new') {
+		const command = program.args[0];
+		if (command !== 'new') {
 			console.log('Unknown command: ' + command.red);
 			process.exit(1);
 		}
-		var example_name = program.args[1] || 'NG'; // The example from Examples dir to turn into a project
-		var abbrev = program.platform; // part of folder name for generated project
+		const example_name = program.args[1] || 'NG'; // The example from Examples dir to turn into a project
+		let abbrev = program.platform; // part of folder name for generated project
 
 		// Win 10 must be 'WindowsStore', VS 2015 and MSBuild 14.0
-		if (program.sdkVersion == WIN_10) {
+		if (program.sdkVersion === WIN_10) {
 			program.msbuild = MSBUILD_14;
 			program.platform = WINDOWS_STORE;
 			abbrev = 'Windows10';
 		}
 
 		// output location
-		var dest = program.outputPath || path.join('.', example_name + '.' + abbrev + '.' + program.arch);
+		const dest = program.outputPath || path.join('.', example_name + '.' + abbrev + '.' + program.arch);
 
 		generateProject(example_name, dest, program.platform, program.sdkVersion, program.msbuild, program.arch, function (err) {
 			if (err) {

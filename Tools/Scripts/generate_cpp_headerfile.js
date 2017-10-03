@@ -11,13 +11,13 @@
  * Usage: node generate_cpp_headerfile.js
  */
 
-var fs = require('fs'),
+const fs = require('fs'),
 	path = require('path');
 
-var source_dir  = path.resolve(__dirname, '..', '..', 'Source', 'TitaniumKit', 'src');
-var include_dir = path.resolve(__dirname, '..', '..', 'Source', 'TitaniumKit', 'include', 'Titanium');
+const source_dir  = path.resolve(__dirname, '..', '..', 'Source', 'TitaniumKit', 'src');
+const include_dir = path.resolve(__dirname, '..', '..', 'Source', 'TitaniumKit', 'include', 'Titanium');
 
-var files_to_process = [
+const files_to_process = [
 	{
 		from: path.join(source_dir,  'analytics.js'),
 		to:   path.join(include_dir, 'analytics_js.hpp')
@@ -49,12 +49,12 @@ var files_to_process = [
 ];
 
 function bufferToCIntArray(data) {
-	var indent = '    ',
+	let indent = '    ',
 		position = 0,
 		split = 30,
 		length = data.length,
 		output = [];
-	for (var i = 0; i < length; ++i, ++position) {
+	for (let i = 0; i < length; ++i, ++position) {
 		if ((position % split) === 0) {
 			output.push('\n' + indent);
 		}
@@ -67,14 +67,14 @@ function bufferToCIntArray(data) {
 	return output.join('').trim();
 }
 
-for (var i = 0; i < files_to_process.length; i++) {
-	var from_file = files_to_process[i].from;
-	var to_file   = files_to_process[i].to;
+for (let i = 0; i < files_to_process.length; i++) {
+	const from_file = files_to_process[i].from;
+	const to_file   = files_to_process[i].to;
 
-	var varname  = path.basename(from_file).replace(/[^a-z0-9]/g, '_');
-	var src = fs.readFileSync(from_file, 'utf8');
-	var buffer = bufferToCIntArray(new Buffer(src, 'utf8'));
-	var output = 'static const char ' + varname + '[] = { ' + buffer + ' };\n\n';
+	const varname  = path.basename(from_file).replace(/[^a-z0-9]/g, '_');
+	const src = fs.readFileSync(from_file, 'utf8');
+	const buffer = bufferToCIntArray(new Buffer(src, 'utf8'));// eslint-disable-line security/detect-new-buffer
+	const output = 'static const char ' + varname + '[] = { ' + buffer + ' };\n\n';
 
 	fs.writeFileSync(to_file, output);
 }

@@ -4,27 +4,12 @@
 // TODO Create a folder under Examples with name matching project name
 // copy Examples/NG/Native over into it
 
-var path = require('path'),
+const path = require('path'),
 	fs = require('fs'),
 	async = require('async'),
 	wrench = require('wrench'),
 	EXAMPLES_DIR = path.join(__dirname, '..', '..', 'Examples'),
 	NG_DIR = path.join(EXAMPLES_DIR, 'NG');
-
-/**
- * Copies a file.
- * @param from
- * @param to
- */
-function copyFile(from, to, next) {
-	fs.createReadStream(from).pipe(fs.createWriteStream(to)).on('finish', function (err) {
-		if (err) {
-			next(err);
-		} else {
-			next();
-		}
-	});
-}
 
 function generateExample(projectPath, next) {
 	var projectName = path.basename(projectPath),
@@ -48,13 +33,15 @@ function generateExample(projectPath, next) {
 		var packageName = 'Package.' + name + '.appxmanifest.in';
 
 		fs.readFile(path.join(projectPath, 'build', 'windows', packageName), 'utf8', function (err, data) {
-		  if (err) {
+			if (err) {
 				return next(err);
-		  }
-		  var result = data.replace(/ms-resource:app_(name|description)/g, '@SHORT_NAME@');
-		   fs.writeFile(path.join(projectExample, 'src', packageName), result, 'utf8', function (err) {
-				 if (err) { return next(err); }
-				 next();
+			}
+			const result = data.replace(/ms-resource:app_(name|description)/g, '@SHORT_NAME@');
+			fs.writeFile(path.join(projectExample, 'src', packageName), result, 'utf8', function (err) {
+				if (err) {
+					return next(err);
+				}
+				next();
 			});
 		});
 	});
@@ -65,34 +52,36 @@ function generateExample(projectPath, next) {
 
 	// TODO How do we combine the CMakeLists.txt files together?
 	fs.readFile(path.join(projectExample, 'CMakeLists.txt'), 'utf8', function (err, data) {
-	  if (err) {
-	    return next(err);
-	  }
+		if (err) {
+			return next(err);
+		}
 
-	  fs.readFile(path.join(projectPath, 'build', 'windows', 'CMakeLists.txt'), 'utf8', function (err, projectCmake) {
-	    if (err) {
-	      return next(err);
-	    }
+		fs.readFile(path.join(projectPath, 'build', 'windows', 'CMakeLists.txt'), 'utf8', function (err, projectCmake) {
+			if (err) {
+				return next(err);
+			}
 
 			// Get the contents of NG copy, split by newlines
-			var lines = data.split(/\r?\n/);
-			var replacement = projectCmake.split(/\r?\n/).slice(85, -51);
+			const lines = data.split(/\r?\n/);
+			const replacement = projectCmake.split(/\r?\n/).slice(85, -51);
 			// Cut out the section we don't want from NG, insert section from project and stick them together
 			// (we keep lines 1-17, 20-117, 150+)
 			// TODO Use lines 65-71 from projectCmake to replace lines 100-107?
-			var result = lines.slice(0, 17).concat([ 'project(' + projectName + ')' ], lines.slice(20, 117), replacement, lines.slice(150)).join('\n');
-		  fs.writeFile(path.join(projectExample, 'CMakeLists.txt'), result, 'utf8', function (err) {
-		     if (err) { return next(err); }
-			 next();
-		  });
-	  });
+			const result = lines.slice(0, 17).concat([ 'project(' + projectName + ')' ], lines.slice(20, 117), replacement, lines.slice(150)).join('\n');
+			fs.writeFile(path.join(projectExample, 'CMakeLists.txt'), result, 'utf8', function (err) {
+				if (err) {
+					return next(err);
+				}
+				next();
+			});
+		});
 	});
 }
 
 // When run as single script.
 if (module.id === '.') {
 	(function () {
-		generateExample(path.resolve(process.argv[2]), function (err, results) {
+		generateExample(path.resolve(process.argv[2]), function (err) {
 			if (err) {
 				console.error(err.toString().red);
 				process.exit(1);
