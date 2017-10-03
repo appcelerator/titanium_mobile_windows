@@ -22,8 +22,8 @@ module.exports = function configOptionWindowsPublisherID(order) {
 	function shouldPrompt(argv) {
 		// You need to check abbreviated form too here because they are not expanded yet
 		return (argv['T'] === 'dist-phonestore' || argv['target']      === 'dist-phonestore')
-		       || (argv['T'] === 'dist-winstore'   || argv['target']      === 'dist-winstore')
-		       || (argv['D'] === 'production'      || argv['deploy-type'] === 'production');
+				|| (argv['T'] === 'dist-winstore'   || argv['target']      === 'dist-winstore')
+				|| (argv['D'] === 'production'      || argv['deploy-type'] === 'production');
 	}
 
 	return {

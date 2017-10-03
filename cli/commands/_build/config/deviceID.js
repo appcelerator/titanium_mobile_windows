@@ -2,7 +2,6 @@
 
 var appc = require('node-appc'),
 	fields = require('fields'),
-	windowslib = require('windowslib'),
 	__ = appc.i18n(__dirname).__;
 
 /**
@@ -20,13 +19,13 @@ module.exports = function configOptionDeviceID(order) {
 			return callback(new Error(__('Invalid device id')));
 		}
 
-		var devices = this.getTargetDevices(),
+		let devices = this.getTargetDevices(),
 			dev = null;
 
 		// xd: first emulator
 		// de: first device
 		if (((cli.argv.target === 'wp-emulator' && value === 'xd')
-			 || (cli.argv.target === 'wp-device' && value === 'de')) && devices[0]) {
+			|| (cli.argv.target === 'wp-device' && value === 'de')) && devices[0]) {
 
 			// if win-sdk is not specified, use wpsdk for device
 			if (dev.wpsdk && !this.isWindowsSDKTargetSpecified()) {
@@ -43,7 +42,7 @@ module.exports = function configOptionDeviceID(order) {
 		// validate device
 		if (!devices.some(function (d) {
 			// because we specify ignorecase below, we may get the name lowercased!
-			if (d.udid == value || d.name.toLowerCase() === value.toLowerCase()) {
+			if (d.udid === value || d.name.toLowerCase() === value.toLowerCase()) {
 				dev = d;
 				value = d.udid;
 				return true;
@@ -70,7 +69,7 @@ module.exports = function configOptionDeviceID(order) {
 		callback(null, value);
 	}
 
-	var sdkTarget   = this.getWindowsSDKTarget(),
+	let sdkTarget   = this.getWindowsSDKTarget(),
 		isWindows10 = sdkTarget ? sdkTarget.startsWith('10.0') : false,
 		targetName  = isWindows10 ? 'Windows 10 Mobile' : 'Windows Phone';
 

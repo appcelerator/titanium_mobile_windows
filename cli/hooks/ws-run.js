@@ -15,7 +15,6 @@ const
 	appc = require('node-appc'),
 	async = require('async'),
 	ejs = require('ejs'),
-	fields = require('fields'),
 	fs = require('fs'),
 	os = require('os'),
 	path = require('path'),
@@ -26,21 +25,23 @@ const
 exports.cliVersion = '>=3.2.1';
 
 exports.init = function (logger, config, cli) {
-	var emuHandle,
-		emuInstall,
-		logRelay;
+	var logRelay;
 
 	cli.on('build.pre.compile', {
 		priority: 8000,
 		post: function (builder, finished) {
-			if (builder.buildOnly || !/^ws-local$/.test(builder.target)) { return finished(); }
+			if (builder.buildOnly || !/^ws-local$/.test(builder.target)) {
+				return finished();
+			}
 
 			async.series([
 				function (next) {
-					if (!builder.enableLogging) { return next(); }
+					if (!builder.enableLogging) {
+						return next();
+					}
 
 					// create the log relay instance so we can get a token to embed in our app
-					var session = appc.auth.status(),
+					let session = appc.auth.status(),
 						userToken = session.loggedIn && session.email || uuid.v4(),
 						appToken = builder.tiapp.id,
 						machineToken = os.hostname(),
@@ -60,7 +61,7 @@ exports.init = function (logger, config, cli) {
 						var m = msg.match(logLevelRE);
 						if (m) {
 							lastLogger = m[2].toLowerCase();
-							if (levels.indexOf(lastLogger) == -1) {
+							if (levels.indexOf(lastLogger) === -1) {
 								logger.log(msg.grey);
 							} else {
 								logger[lastLogger](m[4].trim());
@@ -96,7 +97,9 @@ exports.init = function (logger, config, cli) {
 
 	cli.on('build.windows.copyResources', {
 		pre: function (builder, finished) {
-			if (!/^ws-local$/.test(builder.target)) { return finished(); }
+			if (!/^ws-local$/.test(builder.target)) {
+				return finished();
+			}
 			// write the titanium settings file
 			fs.writeFileSync(
 				path.join(builder.buildTargetAssetsDir, 'titanium_settings.ini'),
@@ -120,19 +123,21 @@ exports.init = function (logger, config, cli) {
 	cli.on('build.post.compile', {
 		priority: 8000,
 		post: function (builder, finished) {
-			if (builder.buildOnly || !/^ws-local$/.test(builder.target)) { return finished(); }
+			if (builder.buildOnly || !/^ws-local$/.test(builder.target)) {
+				return finished();
+			}
 
-			var delta = appc.time.prettyDiff(cli.startTime, Date.now());
+			const delta = appc.time.prettyDiff(cli.startTime, Date.now());
 			logger.info(__('Finished building the application in %s', delta.cyan));
 
 			function install() {
 				if (logRelay) {
 					// start the log relay server
-					var started = false;
+					let started = false;
 
 					function endLog() {
 						if (started) {
-							var endLogTxt = __('End application log');
+							const endLogTxt = __('End application log');
 							logger.log('\r' + ('-- ' + endLogTxt + ' ' + (new Array(75 - endLogTxt.length)).join('-')).grey + '\n');
 							started = false;
 						}
@@ -140,7 +145,7 @@ exports.init = function (logger, config, cli) {
 
 					logRelay.on('connection', function () {
 						endLog();
-						var startLogTxt = __('Start application log');
+						const startLogTxt = __('Start application log');
 						logger.log(('-- ' + startLogTxt + ' ' + (new Array(75 - startLogTxt.length)).join('-')).grey);
 						started = true;
 					});
@@ -155,7 +160,7 @@ exports.init = function (logger, config, cli) {
 					});
 				}
 
-				var tiapp = builder.tiapp,
+				const tiapp = builder.tiapp,
 					appId = tiapp.windows.id || tiapp.id,
 					projectDir = path.resolve(builder.cmakeTargetDir, 'AppPackages'),
 					// Options for installing and launching app
@@ -183,7 +188,7 @@ exports.init = function (logger, config, cli) {
 						logger.info(__('Finished launching the application'));
 
 						// Poll on pid for when the app closes like we do for the emulator!
-						var pollInterval = config.get('windows.emulator.pollInterval', 1000);
+						const pollInterval = config.get('windows.emulator.pollInterval', 1000);
 						if (pollInterval > 0) {
 							(function watchForAppQuit() {
 								setTimeout(function () {
@@ -206,7 +211,7 @@ exports.init = function (logger, config, cli) {
 							next(null);
 						}
 					});
-				} ], function (err, results) {
+				} ], function (err) {
 					if (err) {
 						logger.error(err);
 						process.exit(1);

@@ -1,6 +1,6 @@
 'use strict';
 
-var appc = require('node-appc'),
+const appc = require('node-appc'),
 	fields = require('fields'),
 	path = require('path'),
 	__ = appc.i18n(__dirname).__;

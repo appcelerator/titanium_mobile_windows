@@ -20,6 +20,7 @@ function mixin(WindowsBuilder) {
 
 /**
  * Returns Windows SDK argument
+ * @return {String}
  */
 function getWindowsSDKTarget() {
 	return this.cli.argv['win-sdk'] ? this.cli.argv['win-sdk'] : (this.cli.argv['wp-sdk'] ? this.cli.argv['wp-sdk'] : null);
@@ -27,6 +28,7 @@ function getWindowsSDKTarget() {
 
 /**
  * Returns whether Windows SDK is specified
+ * @return {Boolean}
  */
 function isWindowsSDKTargetSpecified() {
 	return this.cli.argv.$_.indexOf('--wp-sdk') !== -1 || this.cli.argv.$_.indexOf('--win-sdk') !== -1 || this.cli.argv.$_.indexOf('-S') !== -1;
@@ -46,7 +48,7 @@ function getTargetDevices() {
 		return this.deviceCache;
 	}
 
-	var target = this.cli.argv.target,
+	const target = this.cli.argv.target,
 		wpsdk  = this.getWindowsSDKTarget(),
 		wpsdkDefault = !this.isWindowsSDKTargetSpecified();
 
@@ -62,9 +64,9 @@ function getTargetDevices() {
 		}, this);
 		return this.deviceCache;
 	} else if (target === 'wp-device' && Array.isArray(this.windowsInfo.devices)) {
-		var devices = this.windowsInfo.devices;
-		for (var d in devices) {
-			var device = devices[d];
+		const devices = this.windowsInfo.devices;
+		for (const d in devices) {
+			const device = devices[d];
 			// only list local devices
 			if (device.ip && device.ip !== '127.0.0.1') {
 				devices.splice(d, 1);
@@ -78,8 +80,8 @@ function getTargetDevices() {
 
 /**
  * Removes characters from the project name that aren't supported.
- * @param str
- * @returns {string}
+ * @param {String} str	project name
+ * @returns {String}
  */
 function sanitizeProjectName(str) {
 	return str

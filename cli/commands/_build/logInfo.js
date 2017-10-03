@@ -1,9 +1,6 @@
 'use strict';
 
 var appc = require('node-appc'),
-	os = require('os'),
-	path = require('path'),
-	ti = require('node-titanium-sdk'),
 	__ = appc.i18n(__dirname).__;
 
 /*

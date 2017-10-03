@@ -3,7 +3,6 @@
 var appc = require('node-appc'),
 	Builder = require('node-titanium-sdk/lib/builder'),
 	fs = require('fs'),
-	os = require('os'),
 	path = require('path'),
 	version = appc.version,
 	__ = appc.i18n(__dirname).__;
@@ -18,13 +17,6 @@ exports.mixin = mixin;
  */
 function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.validate = validate;
-}
-
-/**
- * Escapes a value in a relative distinguished name. Used to generate the distinguished name for the windows cert string from tiapp publisher value.
- **/
-function restrictToManifestSTPublisher(value) {
-	return value.trim().replace(/[, ="<>#;]/g, '');
 }
 
 /**
@@ -109,9 +101,9 @@ function validate(logger, config, cli) {
 
 	// check that the build directory is writeable
 	// try to build under temp if the path is shorter and we have write access
-	var home = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA;
-	var ti_home = path.join(home, '.titanium');
-	var tempBuildDir = path.join(ti_home, 'vsbuild');
+	const home = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA;
+	const ti_home = path.join(home, '.titanium');
+	const tempBuildDir = path.join(ti_home, 'vsbuild');
 	if (appc.fs.isDirWritable(home)) {
 		if (!fs.existsSync(ti_home)) {
 			fs.mkdirSync(ti_home);
@@ -126,7 +118,7 @@ function validate(logger, config, cli) {
 	} else {
 		this.originalBuildDir = null;
 	}
-	var buildDir = path.join(cli.argv['project-dir'], 'build');
+	const buildDir = path.join(cli.argv['project-dir'], 'build');
 	if (fs.existsSync(buildDir)) {
 		if (!appc.fs.isDirWritable(buildDir)) {
 			logger.error(__('The build directory is not writeable: %s', buildDir) + '\n');
@@ -156,7 +148,7 @@ function validate(logger, config, cli) {
 			// TODO: Windows specific module stuff, if needed
 
 			modules.found.forEach(function (module) {
-				if (module.platform.indexOf('commonjs') != -1) {
+				if (module.platform.indexOf('commonjs') !== -1) {
 					this.commonJsModules.push(module);
 				}
 

@@ -3,10 +3,7 @@
 var appc = require('node-appc'),
 	DOMParser = require('xmldom').DOMParser,
 	fs = require('fs'),
-	os = require('os'),
-	path = require('path'),
-	ti = require('node-titanium-sdk'),
-	__ = appc.i18n(__dirname).__;
+	path = require('path');
 
 /*
  Public API.
@@ -35,7 +32,9 @@ function readBuildManifest(next) {
 	if (fs.existsSync(this.buildManifestFile)) {
 		try {
 			this.buildManifest = JSON.parse(fs.readFileSync(this.buildManifestFile)) || {};
-		} catch (e) {}
+		} catch (e) {
+			// Do nothing
+		}
 	}
 
 	next();
@@ -49,14 +48,14 @@ function readTiAppManifest() {
 		return;
 	}
 
-	var tiapp = fs.readFileSync(path.join(this.projectDir, 'tiapp.xml'), 'utf8'),
+	let tiapp = fs.readFileSync(path.join(this.projectDir, 'tiapp.xml'), 'utf8'),
 		dom = new DOMParser().parseFromString(tiapp, 'text/xml'),
 		root = dom.documentElement,
 		_t = this,
 		windows_node;
 
 	appc.xml.forEachElement(root, function (elem) {
-		if (elem.tagName == 'windows') {
+		if (elem.tagName === 'windows') {
 			windows_node = elem;
 		}
 	});

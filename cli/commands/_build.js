@@ -62,8 +62,8 @@ function WindowsBuilder() {
 
 util.inherits(WindowsBuilder, Builder);
 
-var prototypes = require('./_build/_index');
-for (var key in prototypes) {
+const prototypes = require('./_build/_index');
+for (const key in prototypes) {
 	if (prototypes.hasOwnProperty(key)) {
 		prototypes[key].mixin(WindowsBuilder);
 	}
@@ -72,7 +72,7 @@ for (var key in prototypes) {
 /*
  Create an instance of WindowsBuilder and bind several of our exports to it.
  */
-var windowsBuilder = new WindowsBuilder(module);
+const windowsBuilder = new WindowsBuilder(module);
 exports.config = windowsBuilder.config.bind(windowsBuilder);
 exports.validate = windowsBuilder.validate.bind(windowsBuilder);
 exports.run = windowsBuilder.run.bind(windowsBuilder);

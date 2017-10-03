@@ -50,7 +50,7 @@ exports.detect = function (types, config, next) {
 				return dir;
 			}
 			dir = path.dirname(dir);
-			return dir != '/' && scan(dir);
+			return dir !== '/' && scan(dir);
 		}(__dirname)));
 
 		if (results.issues.length) {
@@ -77,7 +77,9 @@ exports.detect = function (types, config, next) {
 
 exports.render = function (logger, config, rpad, styleHeading, styleValue, styleBad) {
 	var data = this.data;
-	if (!data) { return; }
+	if (!data) {
+		return;
+	}
 
 	if (process.platform === 'win32') {
 

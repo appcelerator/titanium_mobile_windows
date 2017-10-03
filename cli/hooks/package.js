@@ -21,7 +21,14 @@ const
 exports.cliVersion = '>=3.2';
 
 function sanitizeProjectName(str) {
-	return str.replace(/[^a-zA-Z0-9_]/g, '_').replace(/_+/g, '_').split(/[\W_]/).map(function (s) { return appc.string.capitalize(s); }).join('');
+	return str
+		.replace(/[^a-zA-Z0-9_]/g, '_')
+		.replace(/_+/g, '_')
+		.split(/[\W_]/)
+		.map(function (s) {
+			return appc.string.capitalize(s);
+		})
+		.join('');
 }
 
 exports.init = function (logger, config, cli) {
@@ -32,20 +39,20 @@ exports.init = function (logger, config, cli) {
 				return finished();
 			}
 
-			var outputDir = builder.outputDir,
+			const outputDir = builder.outputDir,
 				tiapp = builder.tiapp,
 				sanitizedName = sanitizeProjectName(tiapp.name),
 				// name of the directory holding appx and dependencies subfolder
-				dirName = sanitizedName + '_' + appc.version.format(tiapp.version, 4, 4, true) + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test');
+				dirName = sanitizedName + '_' + appc.version.format(tiapp.version, 4, 4, true) + ((builder.buildConfiguration === 'Debug') ? '_Debug_Test' : '_Test'),
 				// path to folder holding appx
-			appxDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
-			appxExtensions = [ '.appx', '.appxbundle' ],
-			appx = path.join(appxDir, fs.readdirSync(appxDir).filter(function (f) {
-				return appxExtensions.indexOf(path.extname(f)) !== -1;
-			})[0]),
-			dest = path.join(outputDir, path.basename(appx));
+				appxDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
+				appxExtensions = [ '.appx', '.appxbundle' ],
+				appx = path.join(appxDir, fs.readdirSync(appxDir).filter(function (f) {
+					return appxExtensions.indexOf(path.extname(f)) !== -1;
+				})[0]),
+				dest = path.join(outputDir, path.basename(appx));
 
-			if (outputDir && outputDir != path.dirname(appx)) {
+			if (outputDir && outputDir !== path.dirname(appx)) {
 				fs.existsSync(outputDir) || wrench.mkdirSyncRecursive(outputDir);
 				fs.existsSync(dest) && fs.unlinkSync(dest);
 				appc.fs.copyFileSync(appx, dest, { logger: logger.debug });

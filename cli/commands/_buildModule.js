@@ -19,12 +19,11 @@ var archiver = require('archiver'),
 	Builder = require('node-titanium-sdk/lib/builder'),
 	DOMParser = require('xmldom').DOMParser,
 	fs = require('fs'),
-	os = require('os'),
 	wrench = require('wrench'),
 	path = require('path'),
 	windowslib = require('windowslib'),
 	util = require('util'),
-	spawn = require('child_process').spawn,
+	spawn = require('child_process').spawn, // eslint-disable-line security/detect-child-process
 	defaultTypes = [ 'WindowsPhone', 'WindowsStore', 'Windows10' ],
 	types = defaultTypes.slice(0),
 	typesMin = [ 'phone', 'store', 'win10' ],
@@ -37,7 +36,7 @@ function WindowsModuleBuilder() {
 }
 util.inherits(WindowsModuleBuilder, Builder);
 
-WindowsModuleBuilder.prototype.config = function config(logger, config, cli) {
+WindowsModuleBuilder.prototype.config = function config() {
 	Builder.prototype.config.apply(this, arguments);
 };
 
@@ -122,12 +121,12 @@ WindowsModuleBuilder.prototype.initialize = function initialize(next) {
 	var _t = this;
 
 	function assertIssue(issues, name) {
-		for (var i = 0, l = issues.length; i < l; i++) {
+		for (let i = 0, l = issues.length; i < l; i++) {
 			if ((typeof name === 'string' && issues[i].id === name) || (typeof name === 'object' && name.test(issues[i].id))) {
 				issues[i].message.split('\n').forEach(function (line) {
-					logger.error(line.replace(/(__(.+?)__)/g, '$2'.bold));
+					_t.logger.error(line.replace(/(__(.+?)__)/g, '$2'.bold));
 				});
-				logger.log();
+				_t.logger.log();
 				process.exit(1);
 			}
 		}
@@ -139,24 +138,24 @@ WindowsModuleBuilder.prototype.initialize = function initialize(next) {
 
 	// TIMOB-23557
 	// read timodule.xml and get configuration
-	var timodule = path.join(this.projectDir, 'timodule.xml');
+	const timodule = path.join(this.projectDir, 'timodule.xml');
 	if (fs.existsSync(timodule)) {
-		var ti_dom  = new DOMParser().parseFromString(fs.readFileSync(timodule, 'utf8').toString()),
+		const ti_dom  = new DOMParser().parseFromString(fs.readFileSync(timodule, 'utf8').toString()),
 			ti_root = ti_dom.getElementsByTagName('windows');
 		if (ti_root.length > 0) {
-			var win_items = ti_root.item(0);
+			const win_items = ti_root.item(0);
 			appc.xml.forEachElement(win_items, function (item) {
-				if (item.tagName == 'manifest') {
+				if (item.tagName === 'manifest') {
 					appc.xml.forEachElement(item, function (node) {
-						if (node.tagName == 'uses-sdk') {
-							var sdk_version = appc.xml.getAttr(node, 'targetSdkVersion');
+						if (node.tagName === 'uses-sdk') {
+							const sdk_version = appc.xml.getAttr(node, 'targetSdkVersion');
 							if (sdk_version) {
 								_t.targetPlatformSdkVersion = sdk_version;
 								_t.logger.debug('targetSdkVersion: ' + sdk_version);
 								// Remove Windows10 target only when it targets to 8.1 explicitly
-								if (sdk_version == '8.1') {
-									_t.logger.error('The specified version of the Windows and Windows Phone SDK "%s" is not supported by Titanium %s', sdk_version, _t.titaniumSdkName)
-									process.exit(0)
+								if (sdk_version === '8.1') {
+									_t.logger.error('The specified version of the Windows and Windows Phone SDK "%s" is not supported by Titanium %s', sdk_version, _t.titaniumSdkName);
+									process.exit(0);
 								}
 							}
 						}
@@ -172,7 +171,7 @@ WindowsModuleBuilder.prototype.initialize = function initialize(next) {
 		assertIssue(windowsInfo.issues, 'WINDOWS_MSBUILD_TOO_OLD');
 
 		if (!windowsInfo.selectedVisualStudio) {
-			logger.error('Unable to find a supported Visual Studio installation');
+			_t.logger.error('Unable to find a supported Visual Studio installation');
 			process.exit(1);
 		}
 
@@ -210,9 +209,9 @@ WindowsModuleBuilder.prototype.loginfo = function loginfo(next) {
 };
 
 WindowsModuleBuilder.prototype.generateModuleProject = function generateModuleProject(next) {
-       	var data  = this;
+	var data  = this;
 	if (this.cli.argv.hasOwnProperty('run-cmake')) {
-		var tasks = [
+		const tasks = [
 			function (done) {
 				runCmake(data, 'WindowsStore', 'Win32', '10.0', done);
 			},
@@ -222,7 +221,7 @@ WindowsModuleBuilder.prototype.generateModuleProject = function generateModulePr
 		];
 
 		// Visual Studio 2017 doesn't support Windows/Phone 8.1 project anymore
-		if (selectVisualStudio(data) != 'Visual Studio 15 2017') {
+		if (selectVisualStudio(data) !== 'Visual Studio 15 2017') {
 			tasks.push(function (done) {
 				runCmake(data, 'WindowsPhone', 'Win32', '8.1', done);
 			});
@@ -265,7 +264,7 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 		// Check the build output dir that the module is set up for.
 		// If it doesn't exist, copy our local copy of everything over to it.
 		buildPath = path.resolve(vcxContent.match(/<OutDir .+?>(.+?)<\/OutDir>/)[1], '..');
-		if (buildPath != nativeAssetsDir) {
+		if (buildPath !== nativeAssetsDir) {
 			fs.existsSync(buildPath) && wrench.rmdirSyncRecursive(buildPath);
 			// make sure destination exists
 			fs.existsSync(buildPath) || wrench.mkdirSyncRecursive(buildPath);
@@ -275,8 +274,8 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 			sln = path.join(buildPath, _t.manifest.moduleIdAsIdentifier + '.vcxproj');
 		}
 
-		var p = spawn((process.env.comspec || 'cmd.exe'), [ '/S', '/C', '"', _t.windowsInfo.selectedVisualStudio.vsDevCmd.replace(/[ \(\)\&]/g, '^$&')
-			+ ' &&' + ' MSBuild' + ' /p:Platform=' + arch + ' /p:Configuration=' + config + ' ' + sln, '"'
+		const p = spawn((process.env.comspec || 'cmd.exe'), [ '/S', '/C', '"', _t.windowsInfo.selectedVisualStudio.vsDevCmd.replace(/[ ()&]/g, '^$&')
+			+ ' && MSBuild /p:Platform=' + arch + ' /p:Configuration=' + config + ' ' + sln, '"'
 		], { windowsVerbatimArguments: true });
 
 		p.stdout.on('data', function (data) {
@@ -295,7 +294,7 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 			_t.logger.error(data.toString().trim());
 		});
 		p.on('close', function (code) {
-			if (code != 0) {
+			if (code !== 0) {
 				process.exit(code);
 			}
 			next();
@@ -303,7 +302,7 @@ WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
 	}
 
 	// compile module projects
-	var archs = _t.manifest.architectures.split(' ');
+	const archs = _t.manifest.architectures.split(' ');
 	async.eachSeries(types, function (type, next_type) {
 		async.eachSeries(archs, function (arch, next_arch) {
 			var architecture = vs_architectures[arch],
@@ -367,7 +366,7 @@ WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 	// Suppress warnings from Stream
 	EventEmitter.defaultMaxListeners = 100;
 
-	var buildDir = path.join(this.projectDir, 'build'),
+	const buildDir = path.join(this.projectDir, 'build'),
 		moduleDir = path.join(buildDir, this.manifest.moduleid, this.manifest.version),
 		projectname = this.manifest.moduleIdAsIdentifier,
 		_t = this;
@@ -379,7 +378,7 @@ WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 	wrench.mkdirSyncRecursive(moduleDir);
 
 	// copy necesary folders and files
-	var parent_folders = [ 'documentation', 'example', 'assets' ],
+	const parent_folders = [ 'documentation', 'example', 'assets' ],
 		parent_files   = [ 'LICENSE' ];
 	parent_folders.forEach(function (folder) {
 		var from = path.join(_t.projectDir, '..', folder);
@@ -399,10 +398,10 @@ WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 	fs.createReadStream(path.join(this.projectDir, 'timodule.xml')).pipe(fs.createWriteStream(path.join(moduleDir, 'timodule.xml')));
 
 	// Whatever files in platform directory will be copied into build/windows directory during app build
-	var platformOverrideDir = path.join(this.projectDir, 'platform');
+	const platformOverrideDir = path.join(this.projectDir, 'platform');
 	if (fs.existsSync(platformOverrideDir)) {
 		wrench.copyDirSyncRecursive(platformOverrideDir, path.join(moduleDir, 'platform'));
-		var readme = path.join(moduleDir, 'platform', 'README.md');
+		const readme = path.join(moduleDir, 'platform', 'README.md');
 		if (fs.existsSync(readme)) {
 			fs.unlinkSync(readme); // We don't need README.md
 		}
@@ -418,15 +417,15 @@ WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 				return;
 			}
 
-			var moduleSrc = path.join(moduleProjectDir, configuration),
+			let moduleSrc = path.join(moduleProjectDir, configuration),
 				moduleDst = path.join(moduleDir, typesMin[index], arch);
 
 			// We may have built in temp because of long path issues!
 			// Check to see if the dll exists in normal spot, if not, fall back to trying temp location!
 			if (!fs.existsSync(path.join(moduleSrc, projectname) + '.dll')) {
-				var home = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA,
-				    ti_home = path.join(home, '.titanium'),
-				    tempBuildDir = path.join(ti_home, 'vsbuild');
+				const home = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA,
+					ti_home = path.join(home, '.titanium'),
+					tempBuildDir = path.join(ti_home, 'vsbuild');
 
 				moduleSrc = path.join(tempBuildDir, path.basename(path.dirname(_t.projectDir)), path.basename(moduleProjectDir), configuration);
 			}
@@ -443,7 +442,7 @@ WindowsModuleBuilder.prototype.copyModule = function copyModule(next) {
 			});
 
 			// copy one of export.hpp
-			var export_file     = projectname + '_export.h',
+			const export_file     = projectname + '_export.h',
 				export_hpp_from = path.join(moduleProjectDir, export_file),
 				export_hpp_to   = path.join(moduleDir, 'include', export_file);
 			if (!fs.existsSync(export_hpp_to)) {
@@ -481,9 +480,9 @@ WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
 		if (err) {
 			throw err;
 		}
-		for (var i = 0; i < files.length; i++) {
-			var file = files[i];
-			var relative_path = path.join('modules', 'windows', _t.manifest.moduleid, _t.manifest.version, file.relative);
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+			const relative_path = path.join('modules', 'windows', _t.manifest.moduleid, _t.manifest.version, file.relative);
 			if (file.stats.isFile()) {
 				_t.logger.debug('Packing: ' + JSON.stringify(relative_path, null, 2));
 				archive.append(fs.createReadStream(file.path), { name: relative_path });
@@ -502,9 +501,9 @@ function selectVisualStudio(data) {
 		version = data.windowsInfo.selectedVisualStudio.version;
 	}
 
-	if (version == '12.0') {
+	if (version === '12.0') {
 		return 'Visual Studio 12 2013';
-	} else if (version == '14.0') {
+	} else if (version === '14.0') {
 		return 'Visual Studio 14 2015';
 	} else if (/^Visual Studio \w+ 2017/.test(version)) {
 		return 'Visual Studio 15 2017';
@@ -521,8 +520,8 @@ function rmdir(dirPath, fs, path, logger, removeSelf) {
 		return;
 	}
 	if (files.length > 0) {
-		for (var i = 0; i < files.length; i++) {
-			var filePath = path.join(dirPath, files[i]);
+		for (let i = 0; i < files.length; i++) {
+			const filePath = path.join(dirPath, files[i]);
 			if (fs.statSync(filePath).isFile()) {
 				fs.unlinkSync(filePath);
 			} else {
@@ -549,12 +548,12 @@ function runCmake(data, platform, arch, sdkVersion, next) {
 
 	fs.mkdirSync(cmakeWorkDir);
 
-	var targetSdkVersion = sdkVersion;
+	let targetSdkVersion = sdkVersion;
 	if (sdkVersion === '10.0' && data.targetPlatformSdkVersion) {
 		targetSdkVersion = data.targetPlatformSdkVersion;
 	}
 
-	var p = spawn(path.join(data.titaniumSdkPath, 'windows', 'cli', 'vendor', 'cmake', 'bin', 'cmake.exe'),
+	const p = spawn(path.join(data.titaniumSdkPath, 'windows', 'cli', 'vendor', 'cmake', 'bin', 'cmake.exe'),
 		[
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + platform,
@@ -566,7 +565,6 @@ function runCmake(data, platform, arch, sdkVersion, next) {
 			cwd: cmakeWorkDir
 		});
 	p.on('error', function (err) {
-		logger.error(cmake);
 		logger.error(err);
 	});
 	p.stdout.on('data', function (data) {
@@ -576,7 +574,7 @@ function runCmake(data, platform, arch, sdkVersion, next) {
 		logger.warn(data.toString().trim());
 	});
 	p.on('close', function (code) {
-		if (code != 0) {
+		if (code !== 0) {
 			process.exit(1); // Exit with code from cmake?
 		}
 		next();

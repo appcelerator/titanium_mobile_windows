@@ -1,6 +1,6 @@
 'use strict';
 
-var appc = require('node-appc'),
+const appc = require('node-appc'),
 	Builder = require('node-titanium-sdk/lib/builder'),
 	windowslib = require('windowslib'),
 	windowsPackageJson = appc.pkginfo.package(module);
@@ -17,7 +17,7 @@ exports.mixin = mixin;
  */
 function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.config = config;
-	for (var key in configOptions) {
+	for (const key in configOptions) {
 		if (configOptions.hasOwnProperty(key)) {
 			WindowsBuilder.prototype[key] = configOptions[key];
 		}
@@ -36,7 +36,7 @@ function mixin(WindowsBuilder) {
 function config(logger, config, cli) {
 	Builder.prototype.config.apply(this, arguments);
 
-	var target = (cli.argv['target'] || cli.argv['T']),
+	const target = (cli.argv['target'] || cli.argv['T']),
 		vstarget = (cli.argv['vs-target'] || cli.argv['V']);
 
 	this.windowslibOptions = {
@@ -53,8 +53,8 @@ function config(logger, config, cli) {
 		skipWpTool: cli.argv['build-only'] || (target !== 'wp-device' && target !== 'wp-emulator' && target !== undefined && this.targets.indexOf(target) !== -1)
 	};
 
-	this.ignoreDirs = new RegExp(config.get('cli.ignoreDirs'));
-	this.ignoreFiles = new RegExp(config.get('cli.ignoreFiles'));
+	this.ignoreDirs = new RegExp(config.get('cli.ignoreDirs')); // eslint-disable-line security/detect-non-literal-regexp
+	this.ignoreFiles = new RegExp(config.get('cli.ignoreFiles')); // eslint-disable-line security/detect-non-literal-regexp
 
 	function assertIssue(issues, name) {
 		var i = 0,

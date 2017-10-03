@@ -1,6 +1,6 @@
 'use strict';
 
-var appc = require('node-appc'),
+const appc = require('node-appc'),
 	__ = appc.i18n(__dirname).__;
 
 /**
@@ -12,16 +12,16 @@ var appc = require('node-appc'),
  */
 module.exports = function configOptionSDK(order) {
 	var sdkTargets = [],
-		unsupportedTargets = ['8.0', '8.1'];
+		unsupportedTargets = [ '8.0', '8.1' ];
 
 	if (this.windowsInfo) {
-		for (var version in this.windowsInfo.windowsphone) {
-			sdkTargets.push(version);
+		for (const version in this.windowsInfo.windowsphone) {
 			if (unsupportedTargets.indexOf(version) === -1) {
+				sdkTargets.push(version);
 			}
-		}
-		if (this.windowsInfo.windowsphone && this.windowsInfo.windowsphone[version]) {
-			sdkTargets = sdkTargets.concat(this.windowsInfo.windowsphone[version].sdks);
+			if (this.windowsInfo.windowsphone[version].sdks) {
+				sdkTargets = sdkTargets.concat(this.windowsInfo.windowsphone[version].sdks);
+			}
 		}
 	}
 
@@ -37,12 +37,12 @@ module.exports = function configOptionSDK(order) {
 				this.targetPlatformSdkVersion = value;
 				this.cli.argv['win-sdk'] = '10.0';
 			}
-			var target = this.cli.argv['target'];
+			const target = this.cli.argv['target'];
 			// We can use built-in temp key for local/emulator builds. For dist,
 			// insist on user/generated PFX when app requires one
-			if (target == 'dist-winstore' || (isWindows10(value) && target == 'dist-phonestore')) {
+			if (target === 'dist-winstore' || (isWindows10(value) && target === 'dist-phonestore')) {
 				// --ws-cert will be deprecated in the future release
-				if (this.cli.argv['ws-cert'] == undefined) {
+				if (this.cli.argv['ws-cert'] === undefined) {
 					this.conf.options['win-cert'].required = true;
 				}
 			}

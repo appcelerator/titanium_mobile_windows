@@ -2,8 +2,6 @@
 
 var appc = require('node-appc'),
 	fs = require('fs'),
-	os = require('os'),
-	path = require('path'),
 	ti = require('node-titanium-sdk'),
 	wrench = require('wrench'),
 	__ = appc.i18n(__dirname).__;

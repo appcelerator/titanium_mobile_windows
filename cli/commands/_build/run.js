@@ -1,7 +1,7 @@
 'use strict';
 
 var appc = require('node-appc'),
-	spawn = require('child_process').spawn,
+	spawn = require('child_process').spawn, // eslint-disable-line security/detect-child-process
 	fs = require('fs'),
 	wrench = require('wrench'),
 	Builder = require('node-titanium-sdk/lib/builder'),
@@ -64,7 +64,7 @@ function run(logger, config, cli, finished) {
 		function (next) {
 			// now that the app is built, if we're going to do some logging, then we print how long the app took so far
 			if (!this.buildOnly && (this.target === 'wp-device' || this.target === 'wp-emulator')) {
-				var delta = appc.time.prettyDiff(this.cli.startTime, Date.now());
+				const delta = appc.time.prettyDiff(this.cli.startTime, Date.now());
 				this.logger.info(__('Finished building the application in %s', delta.cyan));
 			}
 
@@ -84,11 +84,11 @@ function run(logger, config, cli, finished) {
  */
 function runCmake(next) {
 	this.logger.info(__('Running cmake at %s in directory %s', this.cmake.cyan, this.cmakeTargetDir.cyan));
-	var _t = this,
+	let _t = this,
 		generatorName = this.cmakeGeneratorName,
 		p;
 
-	if (this.cmakeArch == 'ARM') {
+	if (this.cmakeArch === 'ARM') {
 		generatorName += ' ARM';
 	}
 
@@ -101,7 +101,7 @@ function runCmake(next) {
 		], null, 2));
 	fs.existsSync(this.cmakeTargetDir) || wrench.mkdirSyncRecursive(this.cmakeTargetDir);
 	// Use spawn directly so we can pipe output as we go
-	var cmake = this.cmake;
+	const cmake = this.cmake;
 	p = spawn(cmake,
 		[
 			'-G', generatorName,
@@ -123,7 +123,7 @@ function runCmake(next) {
 		_t.logger.warn(data.toString().trim());
 	});
 	p.on('close', function (code) {
-		if (code != 0) {
+		if (code !== 0) {
 			process.exit(1); // Exit with code from cmake?
 		}
 
