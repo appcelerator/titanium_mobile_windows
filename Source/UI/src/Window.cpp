@@ -177,6 +177,8 @@ namespace TitaniumWindows
 			if (rootFrame) {
 				rootFrame->Focus(Windows::UI::Xaml::FocusState::Programmatic);
 			}
+
+			fireEvent("focus");
 		}
 
 		void Window::SetActiveTabWindow(const std::shared_ptr<TitaniumWindows::UI::Window>& window)
