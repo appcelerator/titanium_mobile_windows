@@ -173,8 +173,10 @@ namespace TitaniumWindows
 
 			SetActiveTabWindow(get_object().GetPrivate<Window>());
 
-			// Xaml Canvas doesn't actually fire GotFocus. Let's fire Ti event manually
-			fireEvent("focus");
+			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+			if (rootFrame) {
+				rootFrame->Focus(Windows::UI::Xaml::FocusState::Programmatic);
+			}
 		}
 
 		void Window::SetActiveTabWindow(const std::shared_ptr<TitaniumWindows::UI::Window>& window)
