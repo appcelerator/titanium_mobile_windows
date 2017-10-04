@@ -83,11 +83,9 @@ namespace TitaniumWindows
 			separatorBrush__ = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Transparent);
 
 			// TIMOB-25273: Remove default padding
-			Platform::String^ style = R"(
-<Style xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" TargetType="ListViewItem">
-            <Setter Property="Padding" Value="0,0"/>
-</Style>			)";
-			tableview__->ItemContainerStyle = static_cast<Style^>(Markup::XamlReader::Load(style));
+			auto itemStyle = ref new Windows::UI::Xaml::Style(Controls::ListViewItem::typeid);
+			itemStyle->Setters->Append(ref new Setter(Controls::ListViewItem::PaddingProperty, Windows::UI::Xaml::Thickness(0)));
+			tableview__->ItemContainerStyle = itemStyle;
 
 			resetTableDataBinding();
 
