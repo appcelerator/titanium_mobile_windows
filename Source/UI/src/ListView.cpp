@@ -45,11 +45,9 @@ namespace TitaniumWindows
 			listview__->SelectionMode = Controls::ListViewSelectionMode::None;
 
 			// TIMOB-25298: Remove default padding
-			Platform::String^ style = R"(
-<Style xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" TargetType="ListViewItem">
-            <Setter Property="Padding" Value="0,0"/>
-</Style>			)";
-			listview__->ItemContainerStyle = static_cast<Style^>(Markup::XamlReader::Load(style));
+			auto itemStyle = ref new Windows::UI::Xaml::Style(Controls::ListViewItem::typeid);
+			itemStyle->Setters->Append(ref new Setter(Controls::ListViewItem::PaddingProperty, Windows::UI::Xaml::Thickness(0)));
+			listview__->ItemContainerStyle = itemStyle;
 
 			// Since VisualTreeHelper is only available after Loaded event is fired, we need to register scroll/scrollend event after that.
 			loaded_event__ = listview__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
