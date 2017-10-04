@@ -27,8 +27,13 @@ module.exports = function configOptionDeviceID(order) {
 			 (cli.argv.target === 'wp-device' && value === 'de')) && devices[0]) {
 
 			// if win-sdk is not specified, use wpsdk for device
-			if (devices[0].wpsdk && !this.isWindowsSDKTargetSpecified()) {
-				cli.argv['win-sdk'] = devices[0].wpsdk;
+			if (dev.wpsdk && !this.isWindowsSDKTargetSpecified()) {
+				if (appc.version.satisfies(dev.wpsdk, this.packageJson.vendorDependencies['windows phone sdk'], false)) {
+					cli.argv['win-sdk'] = dev.wpsdk;
+				} else {
+					this.logger.error(__('The connected device is running %s, which is unsupported by Titanium SDK %s', dev.wpsdk, this.cli.sdk.name));
+					process.exit(10)
+				}
 			}
 			return callback(null, devices[0].udid);
 		}
@@ -48,7 +53,12 @@ module.exports = function configOptionDeviceID(order) {
 
 		// if win-sdk is not specified, use wpsdk specified for device
 		if (dev.wpsdk && !this.isWindowsSDKTargetSpecified()) {
-			cli.argv['win-sdk'] = dev.wpsdk;
+			if (appc.version.satisfies(dev.wpsdk, this.packageJson.vendorDependencies['windows phone sdk'], false)) {
+				cli.argv['win-sdk'] = dev.wpsdk;
+			} else {
+				this.logger.error(__('The connected device is running %s, which is unsupported by Titanium SDK %s', dev.wpsdk, this.cli.sdk.name));
+				process.exit(10)
+			}
 		}
 
 		// check the device
