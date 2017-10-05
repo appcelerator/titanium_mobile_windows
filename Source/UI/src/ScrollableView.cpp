@@ -108,6 +108,11 @@ namespace TitaniumWindows
 			layoutDelegate->setStyleComponent(scroll_viewer__);
 			layoutDelegate->setComponent(border__, nullptr, border__);
 
+			scroll_viewer__->ViewChanged += ref new Windows::Foundation::EventHandler<Windows::UI::Xaml::Controls::ScrollViewerViewChangedEventArgs ^>(
+				[this](Platform::Object ^sender, Windows::UI::Xaml::Controls::ScrollViewerViewChangedEventArgs ^args) {
+				currentPage__ = scroll_viewer__->HorizontalOffset / getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent()->Width;
+			});
+
 			auto contentLayoutDelegate = getContentViewLayoutDelegate();
 
 			auto nativeChildView = content->getComponent();
