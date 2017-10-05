@@ -374,8 +374,26 @@ namespace TitaniumWindows
 				}
 			}
 		}
-		const auto to_path = Windows::Storage::KnownFolders::PicturesLibrary->Path;
-		if (media->copy(TitaniumWindows::Utility::ConvertString(to_path))) {
+		auto to_path = Windows::Storage::KnownFolders::PicturesLibrary->Path;
+
+		// On Windows Store app, path for the PicturesLibrary may become nullptr.
+		// Workaround there is to create empty file and retrieve path from it.
+		if (to_path == nullptr) {
+			concurrency::event evt;
+			const auto desiredName = TitaniumWindows::Utility::ConvertString(media->get_name());
+			concurrency::task<StorageFile^>(Windows::Storage::KnownFolders::PicturesLibrary->CreateFileAsync(desiredName,
+				CreationCollisionOption::GenerateUniqueName)).then([&to_path, &evt](concurrency::task<StorageFile^> task) {
+				try {
+					to_path = task.get()->Path;
+				} catch (...) {
+					to_path = nullptr;
+				}
+				evt.set();
+			}, concurrency::task_continuation_context::use_arbitrary());
+			evt.wait();
+		}
+
+		if (to_path && media->copy(TitaniumWindows::Utility::ConvertString(to_path))) {
 			if (onSuccess.IsFunction()) {
 				auto arg = ctx.CreateObject();
 				arg.SetProperty("success", ctx.CreateBoolean(true));

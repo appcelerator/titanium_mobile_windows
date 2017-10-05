@@ -1,0 +1,74 @@
+name: Titanium.App.Windows
+summary: |
+    Windows specific app capabilities.
+    All properties, methods and events in this namespace will only work on Windows devices.
+extends: Titanium.Module
+platforms: [windowsphone]
+
+properties:
+  - name: EXTENDED_EXECUTION_REASON_LOCATION_TRACKING
+    summary: |
+        To support location tracking for the background execution request.
+    type: Number
+    permission: read-only
+  - name: EXTENDED_EXECUTION_REASON_SAVING_DATA
+    summary: |
+        To save data for the background execution request.
+    type: Number
+    permission: read-only
+  - name: EXTENDED_EXECUTION_REASON_UNSPECIFIED
+    summary: |
+        No reason specified for the background execution request.
+    type: Number
+    permission: read-only
+  - name: EXTENDED_EXECUTION_REVOKED_REASON_RESUMED
+    summary: |
+        Background execution is revoked because app is resumed.
+    type: Number
+    permission: read-only
+  - name: EXTENDED_EXECUTION_REVOKED_REASON_SYSTEM_POLICY
+    summary: |
+        Background execution is revoked due to system policy.
+    type: Number
+    permission: read-only
+methods:
+  - name: requestExtendedExecution
+    summary: Postpone app suspension with background execution.
+    parameters:
+      - name: options
+        summary: |
+            Options for the background execution request.
+        type: ExtendedExecutionOptionsType
+        optional: true
+    returns:
+      - type: void
+  - name: closeExtendedExecution
+    summary: End background execution.
+    returns:
+      - type: void
+
+---
+name: ExtendedExecutionOptionsType
+summary: |
+    Simple object for specifying options to
+    [requestExtendedExecution](Titanium.App.Windows.requestExtendedExecution).
+properties: 
+  - name: reason
+    summary: |
+        Reason for the background execution request.
+    type: Number
+    constants: Titanium.App.Windows.EXTENDED_EXECUTION_REASON_*
+    optional: true
+    default: Titanium.App.Windows.EXTENDED_EXECUTION_REASON_UNSPECIFIED
+  - name: result
+    summary: |
+        Function to call upon extended execution request.
+        Callbacks `true` when request is granted.
+    type: Callback<bool>
+    optional: true
+  - name: revoked
+    summary: |
+        Function to call upon extended execution revocation.
+        Callbacks one of the <Titanium.App.Windows.EXTENDED_EXECUTION_REVOKED_REASON_*> constants.
+    type: Callback<Number>
+    optional: true

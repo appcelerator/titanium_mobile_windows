@@ -1392,8 +1392,8 @@ namespace TitaniumWindows
 						const auto button = safe_cast<Controls::Button^>(sender);
 						// Set center of the button since Button::Click does not provide position info
 						Windows::Foundation::Point pos;
-						pos.X = static_cast<float>(button->Width  * 0.5);
-						pos.Y = static_cast<float>(button->Height * 0.5);
+						pos.X = static_cast<float>(button->ActualWidth  * 0.5);
+						pos.Y = static_cast<float>(button->ActualWidth * 0.5);
 						fireSimplePositionEvent("click", pos);
 					});
 				} else {

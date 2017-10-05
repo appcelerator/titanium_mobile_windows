@@ -10,6 +10,7 @@
 
 #include "Titanium/Module.hpp"
 #include "TitaniumWindows_Ti_EXPORT.h"
+#include "TitaniumWindows/WindowsMacros.hpp"
 
 namespace TitaniumWindows
 {
@@ -39,6 +40,23 @@ namespace TitaniumWindows
 			static void JSExportInitialize();
 
 			TITANIUM_PROPERTY_READONLY_DEF(BackgroundService);
+			TITANIUM_PROPERTY_READONLY_DEF(EXTENDED_EXECUTION_REASON_LOCATION_TRACKING);
+			TITANIUM_PROPERTY_READONLY_DEF(EXTENDED_EXECUTION_REASON_SAVING_DATA);
+			TITANIUM_PROPERTY_READONLY_DEF(EXTENDED_EXECUTION_REASON_UNSPECIFIED);
+			TITANIUM_PROPERTY_READONLY_DEF(EXTENDED_EXECUTION_REVOKED_REASON_RESUMED);
+			TITANIUM_PROPERTY_READONLY_DEF(EXTENDED_EXECUTION_REVOKED_REASON_SYSTEM_POLICY);
+			TITANIUM_FUNCTION_DEF(requestExtendedExecution);
+			TITANIUM_FUNCTION_DEF(closeExtendedExecution);
+
+		private:
+#if defined(IS_WINDOWS_10)
+			Windows::ApplicationModel::ExtendedExecution::ExtendedExecutionSession^ extendedExecutionSession__;
+			Windows::Foundation::EventRegistrationToken extendedExecution_revoked_token__;
+
+			void beginExtendedExecution(Windows::ApplicationModel::ExtendedExecution::ExtendedExecutionReason, JSObject& result_callback, JSObject& revoked_callback);
+			void endExtendedExecution();
+			void clearExtendedExecution();
+#endif
 		};
 	}  // namespace App
 }  // namespace TitaniumWindows
