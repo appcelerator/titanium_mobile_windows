@@ -110,7 +110,7 @@ namespace TitaniumWindows
 
 			scroll_viewer__->ViewChanged += ref new Windows::Foundation::EventHandler<Windows::UI::Xaml::Controls::ScrollViewerViewChangedEventArgs ^>(
 				[this](Platform::Object ^sender, Windows::UI::Xaml::Controls::ScrollViewerViewChangedEventArgs ^args) {
-				currentPage__ = scroll_viewer__->HorizontalOffset / getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent()->Width;
+				currentPage__ = static_cast<std::uint32_t>(scroll_viewer__->HorizontalOffset / getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent()->Width);
 			});
 
 			auto contentLayoutDelegate = getContentViewLayoutDelegate();

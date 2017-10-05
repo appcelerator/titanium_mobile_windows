@@ -135,8 +135,9 @@ namespace TitaniumWindows
 				text_box__->TextAlignment = Windows::UI::Xaml::TextAlignment::Left;
 			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::RIGHT) {
 				text_box__->TextAlignment = Windows::UI::Xaml::TextAlignment::Right;
+			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::JUSTIFY) {
+				text_box__->TextAlignment = Windows::UI::Xaml::TextAlignment::Justify;
 			}
-			// TODO Windows supports JUSTIFY!
 		}
 
 		std::string TextArea::get_value() const TITANIUM_NOEXCEPT
