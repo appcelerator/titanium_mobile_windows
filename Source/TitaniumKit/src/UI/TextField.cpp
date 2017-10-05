@@ -85,6 +85,11 @@ namespace Titanium
 			return false;
 		}
 
+		void TextField::setSelection(const std::uint32_t& start, const std::uint32_t& end) TITANIUM_NOEXCEPT
+		{
+			TITANIUM_LOG_WARN("TextField.setSelection is not implemented.");
+		}
+
 		void TextField::JSExportInitialize()
 		{
 			JSExport<TextField>::SetClassVersion(1);
@@ -116,6 +121,7 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(TextField, blur);
 			TITANIUM_ADD_FUNCTION(TextField, focus);
 			TITANIUM_ADD_FUNCTION(TextField, hasText);
+			TITANIUM_ADD_FUNCTION(TextField, setSelection);
 			// property accessor methods
 			TITANIUM_ADD_FUNCTION(TextField, getAttributedHintString);
 			TITANIUM_ADD_FUNCTION(TextField, setAttributedHintString);
@@ -428,5 +434,20 @@ namespace Titanium
 			TITANIUM_ASSERT(arguments.size() == 0);
 			return get_context().CreateBoolean(hasText());
 		}
+
+		TITANIUM_FUNCTION(TextField, setSelection)
+		{
+			TITANIUM_ASSERT(arguments.size() == 2);
+
+			ENSURE_INT_AT_INDEX(start, 0);
+			ENSURE_INT_AT_INDEX(end, 1);
+
+			TITANIUM_ASSERT_AND_THROW(start <= end, "Invalid selection range");
+
+			setSelection(start, end);
+
+			return get_context().CreateUndefined();
+		}
+
 	} // namespace UI
 }  // namespace Titanium

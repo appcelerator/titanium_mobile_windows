@@ -293,6 +293,18 @@ namespace Titanium
 			*/
 			virtual bool hasText() TITANIUM_NOEXCEPT;
 
+			/*!
+			  @method
+
+			  @abstract setSelection() : void
+
+			  @discussion Selects the text in range (start, end).
+
+			  @result void
+			*/
+			virtual void setSelection(const std::uint32_t& start, const std::uint32_t& end) TITANIUM_NOEXCEPT;
+
+
 			TextField(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~TextField() = default;
@@ -396,6 +408,8 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(blur);
 			TITANIUM_FUNCTION_DEF(focus);
 			TITANIUM_FUNCTION_DEF(hasText);
+
+			TITANIUM_FUNCTION_DEF(setSelection);
 
 		private:
 #pragma warning(push)

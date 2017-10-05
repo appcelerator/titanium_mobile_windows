@@ -295,6 +295,19 @@ namespace TitaniumWindows
 			return false;
 		}
 
+		void TextField::setSelection(const std::uint32_t& start, const std::uint32_t& end) TITANIUM_NOEXCEPT
+		{
+			if (text_box__) {
+				text_box__->Select(start, (end - start));
+			} else if (password_box__) {
+				//
+				// Windows PasswordBox doesn't support selection with range. 
+				//
+				TITANIUM_LOG_WARN("TextField.setSelection doesn't work with passwordMask on Windows");
+			}
+		}
+
+
 		void TextField::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::TextField::disableEvent(event_name);
