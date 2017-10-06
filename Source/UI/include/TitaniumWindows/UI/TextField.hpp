@@ -85,10 +85,12 @@ namespace TitaniumWindows
 
 		private:
 			void initTextComponent();
+			void updateClearButtonVisibility(const bool& hasFocus = true) TITANIUM_NOEXCEPT;
 
 			Windows::UI::Xaml::Controls::Border^ border__{ nullptr };
 			Windows::UI::Xaml::Controls::TextBox^ text_box__{ nullptr };
 			Windows::UI::Xaml::Controls::PasswordBox^ password_box__{ nullptr };
+			Windows::UI::Xaml::Controls::Button^ delete_button__{ nullptr };
 
 			// Event handlers
 			Windows::Foundation::EventRegistrationToken change_event__;
