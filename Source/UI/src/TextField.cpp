@@ -298,6 +298,10 @@ namespace TitaniumWindows
 		void TextField::setSelection(const std::uint32_t& start, const std::uint32_t& end) TITANIUM_NOEXCEPT
 		{
 			if (text_box__) {
+				// We just ignore invalid range. Use native Length() method to avoid manual unicode handling
+				if (start >= text_box__->Text->Length() || end > text_box__->Text->Length()) {
+					return;
+				}
 				text_box__->Select(start, (end - start));
 			} else if (password_box__) {
 				//

@@ -442,7 +442,10 @@ namespace Titanium
 			ENSURE_INT_AT_INDEX(start, 0);
 			ENSURE_INT_AT_INDEX(end, 1);
 
-			TITANIUM_ASSERT_AND_THROW(start <= end, "Invalid selection range");
+			// For parity with iOS, reverse the range when start > end
+			if (start > end) {
+				std::swap(start, end);
+			}
 
 			setSelection(start, end);
 
