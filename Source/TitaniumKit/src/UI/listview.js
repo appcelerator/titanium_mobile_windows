@@ -17,7 +17,7 @@ var LISTVIEW_LIST_ITEM_TEMPLATE_DEFAULT = {
 			type: 'Ti.UI.ImageView',
 			bindId: 'image',
 			properties: {
-				left: 0, top: 0, width: 50, height: 50
+				left: 0, top: 0
 			}
 		},
 		{
@@ -25,7 +25,7 @@ var LISTVIEW_LIST_ITEM_TEMPLATE_DEFAULT = {
 			bindId: 'text',
 			properties: {
 				color: 'white',
-				left: 52, top: 0,
+				left: 0, top: 0,
 			}
 		}
 	]
