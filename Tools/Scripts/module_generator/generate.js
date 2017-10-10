@@ -43,12 +43,12 @@ if (myArgs.length === 0) {
 		}
 	}
 	inq.prompt(
-		[ {
+		[{
 			type: 'list',
 			name: 'module',
 			message: 'Select a module to generate',
 			choices: modules
-		} ],
+		}],
 		function (result) {
 			generateModule(result.module);
 		}

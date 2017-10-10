@@ -33,7 +33,7 @@ module.exports = function configOptionDeviceID(order) {
 					cli.argv['win-sdk'] = dev.wpsdk;
 				} else {
 					this.logger.error(__('The connected device is running %s, which is unsupported by Titanium SDK %s', dev.wpsdk, this.cli.sdk.name));
-					process.exit(10)
+					process.exit(10);
 				}
 			}
 			return callback(null, devices[0].udid);
@@ -58,7 +58,7 @@ module.exports = function configOptionDeviceID(order) {
 				cli.argv['win-sdk'] = dev.wpsdk;
 			} else {
 				this.logger.error(__('The connected device is running %s, which is unsupported by Titanium SDK %s', dev.wpsdk, this.cli.sdk.name));
-				process.exit(10)
+				process.exit(10);
 			}
 		}
 
