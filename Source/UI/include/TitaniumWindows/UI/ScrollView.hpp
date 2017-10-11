@@ -77,6 +77,7 @@ namespace TitaniumWindows
 
 			virtual void scrollTo(const double& x, const double& y) TITANIUM_NOEXCEPT override;
 			virtual void scrollToBottom() TITANIUM_NOEXCEPT override;
+			virtual void scrollToTop() TITANIUM_NOEXCEPT override;
 
 			virtual std::string get_contentWidth() const TITANIUM_NOEXCEPT override;
 			virtual std::string get_contentHeight() const TITANIUM_NOEXCEPT override;
