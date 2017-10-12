@@ -82,10 +82,12 @@ namespace TitaniumWindows
 			collectionViewItems__ = ref new Vector<Platform::Object^>();
 			separatorBrush__ = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Transparent);
 
+#if !defined(IS_WINDOWS_PHONE)
 			// TIMOB-25273: Remove default padding
 			auto itemStyle = ref new Windows::UI::Xaml::Style(Controls::ListViewItem::typeid);
 			itemStyle->Setters->Append(ref new Setter(Controls::ListViewItem::PaddingProperty, Windows::UI::Xaml::Thickness(0)));
 			tableview__->ItemContainerStyle = itemStyle;
+#endif
 
 			resetTableDataBinding();
 
