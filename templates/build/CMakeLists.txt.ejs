@@ -85,6 +85,8 @@ set(SOURCE_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
   lib/TitaniumKit.dll
   lib/HAL.dll
+  "${WINDOWS_SOURCE_DIR}/lib/JavaScriptCore/${PLATFORM}/${Ti_ARCH}/JavaScriptCore.dll"
+  "${WINDOWS_SOURCE_DIR}/lib/JavaScriptCore/${PLATFORM}/${Ti_ARCH}/WTF.dll"
 <% for(var i = 0; i < thirdPartyReferences.length; i++) { -%>
 <% if (thirdPartyReferences[i].ContentPath) { -%>
   "<%= thirdPartyReferences[i].ContentPath.replace(/\\/g, '/') %>"
