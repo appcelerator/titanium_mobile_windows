@@ -79,7 +79,9 @@ namespace TitaniumWindows
 							const auto width  = panel->ActualWidth;
 							const auto height = panel->ActualHeight;
 							if (width > 0) {
-								if (!skipResizing) label__->MaxWidth = width;
+								if (!skipResizing) {
+									label__->MaxWidth = width;
+								}
 								if (!layout->get_right().empty()) {
 									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
 									const auto rightPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_right(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
@@ -89,7 +91,9 @@ namespace TitaniumWindows
 								}
 							}
 							if (height > 0) {
-								if (!skipResizing) label__->MaxHeight = height;
+								if (!skipResizing) {
+									label__->MaxHeight = height;
+								}
 								if (!layout->get_bottom().empty()) {
 									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Height);
 									const auto bottomPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_height(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
