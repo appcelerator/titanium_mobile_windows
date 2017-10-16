@@ -359,8 +359,10 @@ function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, fin
 				var parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
 				console.log('Copying JavaScriptCore for ' + parts[1] + '...');
 				var newDir = path.join(distLib, 'JavaScriptCore', 'win10', parts[1]);
+				var fromDir = path.join(process.env.JavaScriptCore_HOME, parts[1]);
 				wrench.mkdirSyncRecursive(newDir);
-				wrench.copyDirRecursive(path.join(process.env.JavaScriptCore_HOME, parts[1], 'Release'), newDir, {forceDelete: true}, next);
+				wrench.copyDirSyncRecursive(path.join(fromDir, 'Release'), newDir, {forceDelete: true});
+				fs.createReadStream(path.join(fromDir, 'JavaScriptCore-Release.lib')).pipe(fs.createWriteStream(path.join(newDir, 'JavaScriptCore.lib'))).on('finish', next);
 			}, next);
 		},
 		function copyIncludedHeaders(next) {
