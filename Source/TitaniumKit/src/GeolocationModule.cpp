@@ -258,7 +258,7 @@ namespace Titanium
 	void GeolocationModule::forwardGeocoder(const std::string& address, JSObject callback) TITANIUM_NOEXCEPT
 	{
 		static const std::string forwardGeocoder_js = R"JS((function(self) {
-			var requestUrl = 'http://api.appcelerator.net/p/v1/geo?d=f',
+			var requestUrl = 'http://api.appcelerator.com/p/v1/geo?d=f',
 				client = Ti.Network.createHTTPClient({
 					onload: function (e) {
 						var response = this.responseText.split(','),
@@ -314,7 +314,7 @@ namespace Titanium
 	void GeolocationModule::reverseGeocoder(const double& latitude, const double& longitude, JSObject callback) TITANIUM_NOEXCEPT
 	{
 		static const std::string reverseGeocoder_js = R"JS((function(self) {
-			var requestUrl = 'http://api.appcelerator.net/p/v1/geo?d=r',
+			var requestUrl = 'http://api.appcelerator.com/p/v1/geo?d=r',
 				client = Ti.Network.createHTTPClient({
 					onload: function (e) {
 						var response = JSON.parse(this.responseText);
