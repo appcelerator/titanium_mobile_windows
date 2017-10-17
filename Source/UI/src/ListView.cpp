@@ -44,6 +44,11 @@ namespace TitaniumWindows
 			listview__->IsItemClickEnabled = true;
 			listview__->SelectionMode = Controls::ListViewSelectionMode::None;
 
+			// TIMOB-25298: Remove default padding
+			auto itemStyle = ref new Windows::UI::Xaml::Style(Controls::ListViewItem::typeid);
+			itemStyle->Setters->Append(ref new Setter(Controls::ListViewItem::PaddingProperty, Windows::UI::Xaml::Thickness(0)));
+			listview__->ItemContainerStyle = itemStyle;
+
 			// Since VisualTreeHelper is only available after Loaded event is fired, we need to register scroll/scrollend event after that.
 			loaded_event__ = listview__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
 				scrollview__ = GetScrollView(Media::VisualTreeHelper::GetChild(listview__, 0));
@@ -71,8 +76,18 @@ namespace TitaniumWindows
 				//
 				const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 				const auto isSize = layout->get_height() == Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
-				if (isSize && e->NewSize.Height > 0) {
-					layout->set_height(std::to_string(e->NewSize.Height));
+				double newHeight = e->NewSize.Height;
+				if (isSize && newHeight > 0) {
+					// Don't exceed parent height otherwize scrollbar never appears
+					const auto parentHeight = get_parent()->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent()->ActualHeight;
+					if (newHeight > parentHeight) {
+						newHeight = parentHeight;
+					} else {
+						// Workaround: According to the studies from some environments ListView needs some more margins,
+						// otherwise unexpected scrollbar appears. Following number worked fine but I don't know why.
+						newHeight = newHeight + 6 * listview__->Items->Size;
+					}
+					layout->set_height(std::to_string(newHeight));
 				}
 			});
 
