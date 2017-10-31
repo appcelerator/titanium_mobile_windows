@@ -541,22 +541,18 @@ function runCmake(data, platform, arch, sdkVersion, next) {
         targetSdkVersion = data.targetPlatformSdkVersion;
     }
 
-    logger.debug('cmake ' +
-        JSON.stringify([
-            '-G', generatorName,
-            '-DCMAKE_SYSTEM_NAME=' + platform,
-            '-DCMAKE_SYSTEM_VERSION=' + targetSdkVersion,
-            path.resolve(data.projectDir)
-        ], null, 2));
-
-    var p = spawn(path.join(data.titaniumSdkPath,'windows','cli','vendor','cmake','bin','cmake.exe'),
-        [
+    var cmakeArg = [
             '-G', generatorName,
             '-DCMAKE_SYSTEM_NAME=' + platform,
             '-DCMAKE_SYSTEM_VERSION=' + targetSdkVersion,
             '-DCMAKE_BUILD_TYPE=Debug',
             path.resolve(data.projectDir)
-        ],
+        ];
+
+    logger.debug(JSON.stringify(cmakeArg, null, 2));
+
+    var p = spawn(path.join(data.titaniumSdkPath,'windows','cli','vendor','cmake','bin','cmake.exe'),
+    	cmakeArg,
         {
             cwd: cmakeWorkDir
         });
