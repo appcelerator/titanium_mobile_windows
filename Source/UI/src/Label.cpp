@@ -66,11 +66,22 @@ namespace TitaniumWindows
 					if (border__->Parent) {
 						const auto panel = dynamic_cast<FrameworkElement^>(border__->Parent);
 						if (panel) {
+							//
+							// TIMOB-25385: Workaround: Skip limiting Label size when parent view is TableViewRow
+							// because table view row doesn't return property width on the event for some reason.
+							//
+							auto skipResizing = false;
+							const auto parent = get_parent();
+							if (parent && parent->get_apiName() == "Ti.UI.TableViewRow") {
+								skipResizing = true;
+							}
 							const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 							const auto width  = panel->ActualWidth;
 							const auto height = panel->ActualHeight;
 							if (width > 0) {
-								label__->MaxWidth = width;
+								if (!skipResizing) {
+									label__->MaxWidth = width;
+								}
 								if (!layout->get_right().empty()) {
 									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
 									const auto rightPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_right(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
@@ -80,7 +91,9 @@ namespace TitaniumWindows
 								}
 							}
 							if (height > 0) {
-								label__->MaxHeight = height;
+								if (!skipResizing) {
+									label__->MaxHeight = height;
+								}
 								if (!layout->get_bottom().empty()) {
 									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Height);
 									const auto bottomPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_height(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
