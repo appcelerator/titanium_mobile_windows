@@ -75,6 +75,8 @@ namespace TitaniumWindows
 			Titanium::UI::Picker::setLayoutDelegate<WindowsPickerLayoutDelegate>();
 
 			parent__ = ref new Windows::UI::Xaml::Controls::Grid();
+			parent__->VerticalAlignment = VerticalAlignment::Stretch;
+			parent__->HorizontalAlignment = HorizontalAlignment::Stretch;
 
 			// Fill width
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
