@@ -153,7 +153,8 @@ WindowsModuleBuilder.prototype.initialize = function initialize(next) {
 								_t.logger.debug('targetSdkVersion: ' + sdk_version);
 								// Remove Windows10 target only when it targets to 8.1 explicitly
 								if (sdk_version == '8.1') {
-									types = defaultTypes.slice(0, 2);
+									_t.logger.error('The specified version of the Windows and Windows Phone SDK "%s" is not supported by Titanium %s', sdk_version, _t.titaniumSdkName)
+									process.exit(0)
 								}
 							}
 						}
@@ -217,19 +218,6 @@ WindowsModuleBuilder.prototype.generateModuleProject = function generateModulePr
                     runCmake(data, 'WindowsStore', 'ARM', '10.0', done);
                 }
             ];
-
-            // Visual Studio 2017 doesn't support Windows/Phone 8.1 project anymore
-            if (selectVisualStudio(data) != 'Visual Studio 15 2017') {
-                tasks.push(function(done) {
-                    runCmake(data, 'WindowsPhone', 'Win32', '8.1', done);
-                });
-                tasks.push(function(done) {
-                    runCmake(data, 'WindowsPhone', 'ARM', '8.1', done);
-                });
-                tasks.push(function(done) {
-                    runCmake(data, 'WindowsStore', 'Win32', '8.1', done);
-                });
-            }
 
             appc.async.series(this, tasks, function(err) {
                 next(err);
@@ -488,7 +476,7 @@ WindowsModuleBuilder.prototype.packageZip = function packageZip(next) {
 				_t.logger.debug('Packing: '+JSON.stringify(relative_path, null, 2));
 				archive.append(fs.createReadStream(file.path), {name: relative_path });
 			}
-		}	
+		}
 		archive.finalize();
 	});
 
