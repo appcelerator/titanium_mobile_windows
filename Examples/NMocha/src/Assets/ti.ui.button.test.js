@@ -69,8 +69,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	// Skip on Windows 10 and 8.1 desktop for now, it hangs
-	(utilities.isWindows10() || (utilities.isWindows8_1() && utilities.isWindowsDesktop()) ? it.skip : it)('image(Blob)', function (finish) {
+	it('image(Blob)', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -88,7 +87,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundColor/Image', function (finish) {
+	it('backgroundColor/Image', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -110,7 +109,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundFocusedColor/Image', function (finish) {
+	it('backgroundFocusedColor/Image', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -132,7 +131,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundSelectedColor/Image', function (finish) {
+	it('backgroundSelectedColor/Image', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'
@@ -154,7 +153,7 @@ describe('Titanium.UI.Button', function () {
 		w.open();
 	});
 
-	(utilities.isWindowsDesktop() ? it.skip : it)('backgroundDisabledColor/Image', function (finish) {
+	it('backgroundDisabledColor/Image', function (finish) {
 		this.timeout(5000);
 		var w = Ti.UI.createWindow({
 			backgroundColor: 'blue'

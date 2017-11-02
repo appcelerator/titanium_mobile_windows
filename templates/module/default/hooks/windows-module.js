@@ -74,33 +74,6 @@ exports.init = function (logger, config, cli) {
 						next();
 					},
 					function(next) {
-						if (sdks.windowsphone.hasOwnProperty('8.1')) {
-							logger.info('Generating WindowsPhone ARM project');
-							runCMake(logger, cmake, projectDir, 'WindowsPhone', 'ARM', generator, next);
-						} else {
-							logger.info('Skipping WindowsPhone ARM project as Windows 8.1 SDK is not installed');
-							next()
-						}
-					},
-					function(next) {
-						if (sdks.windowsphone.hasOwnProperty('8.1')) {
-							logger.info('Generating WindowsPhone Win32 project');
-							runCMake(logger, cmake, projectDir, 'WindowsPhone', 'Win32', generator, next);
-						} else {
-							logger.info('Skipping WindowsPhone Win32 project as Windows 8.1 SDK is not installed');
-							next()
-						}
-					},
-					function(next) {
-						if (sdks.windowsphone.hasOwnProperty('8.1')) { // still uses windowsphone sdk
-							logger.info('Generating WindowsStore Win32 project');
-							runCMake(logger, cmake, projectDir, 'WindowsStore', 'Win32', generator, next);
-						} else {
-							logger.info('Skipping WindowsStore Win32 project as Windows 8.1 SDK is not installed');
-							next()
-						}
-					},
-					function(next) {
 						if (sdks.windows.hasOwnProperty('10.0')) {
 							logger.info('Generating Windows 10 Win32 project');
 							runCMake(logger, cmake, projectDir, 'Windows10', 'Win32', generator, next);

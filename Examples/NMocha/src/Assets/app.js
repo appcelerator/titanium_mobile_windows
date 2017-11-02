@@ -8,6 +8,21 @@
 var win = Ti.UI.createWindow({
     backgroundColor: 'lightyellow'
 });
+
+win.addEventListener('open', function () {
+    if (Ti.App.Windows.requestExtendedExecution) {
+        Ti.App.Windows.requestExtendedExecution({
+            reason: Ti.App.Windows.EXTENDED_EXECUTION_REASON_UNSPECIFIED,
+            result: function (granted) {
+                Ti.API.info('Windows extended execution requested: result = ' + granted);
+            },
+            revoked: function (reason) {
+                Ti.API.info('Windows extended execution revoked: reason = ' + reason);
+            }
+        });
+    }
+});
+
 win.open();
 
 require('./ti-mocha');
@@ -36,6 +51,7 @@ require('./ti.contacts.person.test');
 require('./ti.database.test');
 require('./ti.filestream.test');
 require('./ti.filesystem.test');
+require('./ti.filesystem.file.test');
 // TODO FIXME TIMOB-23776 Skip tests on Windows 8.1 Desktop due to intermittent crash
 if (utilities.isWindowsDesktop()) {
     Ti.API.info('TIMOB-23776: Skipping UI tests on Windows 8.1 Desktop');
@@ -136,4 +152,9 @@ mocha.run(function () {
             results: $results
         })) +
     '\n!TEST_RESULTS_STOP!');
+
+    if (Ti.App.Windows.closeExtendedExecution) {
+        Ti.App.Windows.closeExtendedExecution();
+    }
+
 });

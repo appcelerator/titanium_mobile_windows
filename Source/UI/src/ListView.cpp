@@ -44,6 +44,11 @@ namespace TitaniumWindows
 			listview__->IsItemClickEnabled = true;
 			listview__->SelectionMode = Controls::ListViewSelectionMode::None;
 
+			// TIMOB-25298: Remove default padding
+			auto itemStyle = ref new Windows::UI::Xaml::Style(Controls::ListViewItem::typeid);
+			itemStyle->Setters->Append(ref new Setter(Controls::ListViewItem::PaddingProperty, Windows::UI::Xaml::Thickness(0)));
+			listview__->ItemContainerStyle = itemStyle;
+
 			// Since VisualTreeHelper is only available after Loaded event is fired, we need to register scroll/scrollend event after that.
 			loaded_event__ = listview__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
 				scrollview__ = GetScrollView(Media::VisualTreeHelper::GetChild(listview__, 0));
@@ -62,6 +67,28 @@ namespace TitaniumWindows
 				}
 
 				checkMarkers();
+			});
+
+			listview__->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler([this](Platform::Object^, Windows::UI::Xaml::SizeChangedEventArgs^ e) {
+				//
+				// TIMOB-25175: Use the first size on SizeChanged event when height equals SIZE
+				// ListView changes its size based on the row content.
+				//
+				const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+				const auto isSize = layout->get_height() == Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
+				double newHeight = e->NewSize.Height;
+				if (isSize && newHeight > 0) {
+					// Don't exceed parent height otherwize scrollbar never appears
+					const auto parentHeight = get_parent()->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent()->ActualHeight;
+					if (newHeight > parentHeight) {
+						newHeight = parentHeight;
+					} else {
+						// Workaround: According to the studies from some environments ListView needs some more margins,
+						// otherwise unexpected scrollbar appears. Following number worked fine but I don't know why.
+						newHeight = newHeight + 6 * listview__->Items->Size;
+					}
+					layout->set_height(std::to_string(newHeight));
+				}
 			});
 
 			resetListViewDataBinding();

@@ -73,6 +73,13 @@ namespace Titanium
 			*/
 			virtual void removeRow(const std::shared_ptr<PickerRow>& row) TITANIUM_NOEXCEPT;
 
+			/*!
+			  @method
+			  @abstract reload
+			  @discussion reload this column.
+			*/
+			virtual void reload() TITANIUM_NOEXCEPT;
+
 			PickerColumn(const JSContext&) TITANIUM_NOEXCEPT;
 			virtual ~PickerColumn()                      = default;
 			PickerColumn(const PickerColumn&)            = default;

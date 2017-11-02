@@ -42,6 +42,10 @@ function validate(logger, config, cli) {
 	this.deployType = !/^dist-$/.test(this.target) && cli.argv['deploy-type'] ? cli.argv['deploy-type'] : this.deployTypes[this.target];
 	this.buildType = cli.argv['build-type'] || '';
 
+	if (this.wpsdk == '8.1') {
+		logger.warn(__('Support for Windows 8.1 and Windows Phone 8.1 SDKs has been dropped as of Titanium SDK 6.3.0.GA, and will be removed in Titanium SDK 7.0.0.GA'));
+	}
+
 	// ti.deploytype is deprecated and so we force the real deploy type
 	if (cli.tiapp.properties['ti.deploytype']) {
 		logger.warn(__('The %s tiapp.xml property has been deprecated, please use the %s option', 'ti.deploytype'.cyan, '--deploy-type'.cyan));

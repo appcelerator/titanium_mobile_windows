@@ -883,11 +883,9 @@ namespace TitaniumWindows
 			writer->WriteBytes(Platform::ArrayReference<std::uint8_t>(&data[0], data.size()));
 
 			concurrency::event event;
-			concurrency::create_task(writer->StoreAsync()).then([writer](std::uint32_t) {
-				return writer->FlushAsync();
-			}).then([&event](concurrency::task<bool> task) {
+			concurrency::create_task(writer->StoreAsync()).then([writer, &event](std::uint32_t) {
 				try {
-					task.get();
+					writer->DetachStream();
 				} catch (Platform::Exception^ e) {
 					TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(e->Message));
 				} catch (...) {
@@ -1394,8 +1392,8 @@ namespace TitaniumWindows
 						const auto button = safe_cast<Controls::Button^>(sender);
 						// Set center of the button since Button::Click does not provide position info
 						Windows::Foundation::Point pos;
-						pos.X = static_cast<float>(button->Width  * 0.5);
-						pos.Y = static_cast<float>(button->Height * 0.5);
+						pos.X = static_cast<float>(button->ActualWidth  * 0.5);
+						pos.Y = static_cast<float>(button->ActualWidth * 0.5);
 						fireSimplePositionEvent("click", pos);
 					});
 				} else {

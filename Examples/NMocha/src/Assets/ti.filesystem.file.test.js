@@ -250,7 +250,7 @@ describe('Titanium.Filesystem.File', function () {
 
 	// createFile and deleteFile
 	it('createFile_and_deleteFile', function (finish) {
-		var newFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'myfile');
+		var newFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'myfile');
 		should(newFile.exists()).be.false;
 		newFile.createFile();
 		should(newFile.exists()).be.true;

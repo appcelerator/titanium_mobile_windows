@@ -53,8 +53,6 @@ namespace TitaniumWindows
 					if (!IS_WINDOWS_MOBILE) {
 						updateWindowSize();
 					}
-					// Update back button visibility. Note that back button is available on Store App too.
-					SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = AppViewBackButtonVisibility::Visible;
 				} catch (...) {
 					TITANIUM_LOG_DEBUG("Error at root frame Navigated");
 				}
@@ -268,6 +266,9 @@ namespace TitaniumWindows
 						}
 					}
 
+#if defined(IS_WINDOWS_10)
+					SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = window_stack__.size() > 1 ? AppViewBackButtonVisibility::Visible : AppViewBackButtonVisibility::Collapsed;
+#endif
 					// start accepting events for the new Window
 					next_window->enableEvents();
 					next_window->focus();
@@ -376,6 +377,10 @@ namespace TitaniumWindows
 			if (tab__ == nullptr) {
 				window_stack__.push_back(this->get_object().GetPrivate<Window>());
 			}
+
+#if defined(IS_WINDOWS_10)
+			SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = window_stack__.size() > 1 ? AppViewBackButtonVisibility::Visible : AppViewBackButtonVisibility::Collapsed;
+#endif
 
 			// start accepting events
 			enableEvents();

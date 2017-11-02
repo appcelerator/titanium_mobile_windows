@@ -29,6 +29,12 @@ function closeAndFinish(win, finish) {
 	finish();
 }
 
+function cleanerCreateWindow(_args) {
+    _args = _args || {};
+    _args.backgroundColor = _args.backgroundColor || 'red';
+    return Ti.UI.createWindow(_args);
+}
+
 describe('Titanium.UI.Layout', function () {
 	this.timeout(5000);
 
@@ -1185,7 +1191,7 @@ describe('Titanium.UI.Layout', function () {
 	// left/right/top/bottom should just work for child view
 	// when both left/right/top/bottom are specified to parent
 	//
-	it('TIMOB-23372 #1', function (finish) {
+	(utilities.isWindows10Desktop() ? it : it.skip)('TIMOB-23372 #1', function (finish) {
 		var a = Ti.UI.createView({
 			backgroundColor: 'orange',
 			top: 10,
@@ -1200,7 +1206,8 @@ describe('Titanium.UI.Layout', function () {
 			right: 10,
 			bottom: 10,
 		});
-		var win = createWindow({}, function() {
+		var win = cleanerCreateWindow();
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(a.rect.x).eql(10);
@@ -1212,6 +1219,7 @@ describe('Titanium.UI.Layout', function () {
 			} catch (e) {
 				err = e;
 			}
+			win.close();
 			finish(err);
 		});
 		a.add(b);
@@ -1224,7 +1232,7 @@ describe('Titanium.UI.Layout', function () {
 	// left & right should just work for child view (vertical)
 	// when both left & right are specified to parent
 	//
-	(utilities.isWindows10() ? it.skip : it)('TIMOB-23372 #2', function (finish) {
+	it.skip('TIMOB-23372 #2', function (finish) {
 		var view = Ti.UI.createView({
 			backgroundColor: 'orange',
 			layout: 'vertical',
@@ -1241,7 +1249,8 @@ describe('Titanium.UI.Layout', function () {
 			backgroundColor: 'yellow',
 			text: 'this is test text'
 		});
-		var win = createWindow({}, function() {
+		var win = cleanerCreateWindow();
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1252,6 +1261,7 @@ describe('Titanium.UI.Layout', function () {
 			} catch (e) {
 				err = e;
 			}
+			win.close();
 			finish(err);
 		});
 		view.add(label);
@@ -1264,7 +1274,7 @@ describe('Titanium.UI.Layout', function () {
 	// left & right should just work for child view (composite)
 	// when both left & right are specified to parent
 	//
-	(utilities.isWindows10() ? it.skip : it)('TIMOB-23372 #3', function (finish) {
+	it.skip('TIMOB-23372 #3', function (finish) {
 		var view = Ti.UI.createView({
 			backgroundColor: 'yellow',
 			layout: 'composite',
@@ -1281,7 +1291,8 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		view.add(label);
-		var win = createWindow({}, function () {
+		var win = cleanerCreateWindow();
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1292,6 +1303,7 @@ describe('Titanium.UI.Layout', function () {
 			} catch (e) {
 				err = e;
 			}
+			win.close();
 			finish(err);
 		});
 		win.add(view);
@@ -1303,7 +1315,7 @@ describe('Titanium.UI.Layout', function () {
 	// left & right should just work for child view (horizontal)
 	// when both left & right are specified to parent
 	//
-	(utilities.isWindows10() ? it.skip : it)('TIMOB-23372 #4', function (finish) {
+	it.skip('TIMOB-23372 #4', function (finish) {
 		var view = Ti.UI.createView({
 			backgroundColor: 'yellow',
 			layout: 'horizontal',
@@ -1320,7 +1332,8 @@ describe('Titanium.UI.Layout', function () {
 			text: 'this is test text'
 		});
 		view.add(label);
-		var win = createWindow({}, function() {
+		var win = cleanerCreateWindow();
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1331,6 +1344,7 @@ describe('Titanium.UI.Layout', function () {
 			} catch (e) {
 				err = e;
 			}
+			win.close();
 			finish(err);
 		});
 		win.add(view);
@@ -1343,7 +1357,7 @@ describe('Titanium.UI.Layout', function () {
 	// even when parent view doesn't have right value.
 	// parent view should fit the size of the child, not Window
 	//
-	it('TIMOB-23372 #5', function (finish) {
+	(utilities.isWindows10Desktop() ? it : it.skip)('TIMOB-23372 #5', function (finish) {
 		var view = Ti.UI.createView({
 			backgroundColor: 'orange',
 			layout: 'horizontal',
@@ -1359,7 +1373,9 @@ describe('Titanium.UI.Layout', function () {
 			backgroundColor: 'yellow',
 			text: 'this is test text'
 		});
-		var win = createWindow({}, function() {
+		var win = cleanerCreateWindow();
+
+        win.addEventListener('open', function() {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1371,6 +1387,7 @@ describe('Titanium.UI.Layout', function () {
 			} catch (e) {
 				err = e;
 			}
+			win.close();
 			finish(err);
 		});
 		view.add(label);
@@ -1384,7 +1401,7 @@ describe('Titanium.UI.Layout', function () {
 	// even when parent view doesn't have right value.
 	// parent view should fit the size of the child, not Window
 	//
-	it('TIMOB-23372 #6', function (finish) {
+	(utilities.isWindows10Desktop() ? it : it.skip)('TIMOB-23372 #6', function (finish) {
 		var view = Ti.UI.createView({
 			backgroundColor: 'orange',
 			layout: 'vertical',
@@ -1400,7 +1417,8 @@ describe('Titanium.UI.Layout', function () {
 			backgroundColor: 'yellow',
 			text: 'this is test text'
 		});
-		var win = createWindow({}, function() {
+		var win = cleanerCreateWindow();
+		win.addEventListener('open', function() {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1412,6 +1430,7 @@ describe('Titanium.UI.Layout', function () {
 			} catch (e) {
 				err = e;
 			}
+            win.close()
 			finish(err);
 		});
 		view.add(label);
@@ -1425,7 +1444,7 @@ describe('Titanium.UI.Layout', function () {
 	// even when parent view doesn't have right value.
 	// parent view should fit the size of the child, not Window
 	//
-	it('TIMOB-23372 #7', function (finish) {
+	(utilities.isWindows10Desktop() ? it : it.skip)('TIMOB-23372 #7', function (finish) {
 		var view = Ti.UI.createView({
 			backgroundColor: 'orange',
 			layout: 'composite',
@@ -1441,7 +1460,8 @@ describe('Titanium.UI.Layout', function () {
 			backgroundColor: 'yellow',
 			text: 'this is test text'
 		});
-		var win = createWindow({}, function() {
+		var win = cleanerCreateWindow();
+		win.addEventListener('open', function () {
 			var err;
 			try {
 				should(view.rect.x).eql(10);
@@ -1453,6 +1473,7 @@ describe('Titanium.UI.Layout', function () {
 			} catch (e) {
 				err = e;
 			}
+			win.close();
 			finish(err);
 		});
 		view.add(label);
