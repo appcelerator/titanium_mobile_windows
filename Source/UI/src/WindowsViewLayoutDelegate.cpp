@@ -104,15 +104,17 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::blur()
 		{
-			TITANIUM_LOG_WARN("blur() is not supported on Windows");
+			const auto parent = get_parent();
+			if (parent) {
+				parent->focus();
+			}
 		}
 
 		void WindowsViewLayoutDelegate::focus()
 		{
-			if (is_control__) {
-				dynamic_cast<Control^>(component__)->Focus(FocusState::Programmatic);
-			} else {
-				TITANIUM_LOG_WARN("focus() is not supported for this control");
+			const auto component = dynamic_cast<Control^>(getEventComponent());
+			if (component) {
+				component->Focus(FocusState::Programmatic);
 			}
 		}
 
