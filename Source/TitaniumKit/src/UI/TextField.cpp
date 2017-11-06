@@ -69,16 +69,6 @@ namespace Titanium
 			}
 		}
 
-		void TextField::blur() TITANIUM_NOEXCEPT
-		{
-			TITANIUM_LOG_DEBUG("TextField::blur");
-		}
-
-		void TextField::focus() TITANIUM_NOEXCEPT
-		{
-			TITANIUM_LOG_DEBUG("TextField::focus");
-		}
-
 		bool TextField::hasText() TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_DEBUG("TextField::hasText");
