@@ -248,6 +248,15 @@ namespace TitaniumWindows
 				true);
 		}
 
+		void ScrollView::scrollToTop() TITANIUM_NOEXCEPT
+		{
+			scroll_viewer__->ChangeView(
+				ref new Platform::Box<double>(0),
+				ref new Platform::Box<double>(0),
+				nullptr,
+				true);
+		}
+
 		std::string ScrollView::get_contentWidth() const TITANIUM_NOEXCEPT
 		{
 			return static_cast<std::string>(contentView__.GetProperty("width"));
