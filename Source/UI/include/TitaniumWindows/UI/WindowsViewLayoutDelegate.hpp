@@ -559,7 +559,7 @@ namespace TitaniumWindows
 			// compute its fixed size when either width or height (not both) is Ti.UI.SIZE
 			virtual Titanium::LayoutEngine::Rect computeRelativeSize(const double& x, const double& y,  const double& baseWidth, const double& baseHeight);
 
-			static Windows::UI::Color ColorForName(const std::string& colorName);
+			static Windows::UI::Color ColorForName(const std::string& colorName, const Windows::UI::Color defaultColor = Windows::UI::Colors::Transparent);
 			static Windows::UI::Color ColorForHexCode(const std::string& hexCode);
 
 			virtual void setDefaultBackground();
