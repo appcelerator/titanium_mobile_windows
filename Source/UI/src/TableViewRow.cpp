@@ -50,7 +50,6 @@ namespace TitaniumWindows
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::SIZE);
 
 			getViewLayoutDelegate<WindowsTableViewRowLayoutDelegate>()->setComponent(content__);
-			getViewLayoutDelegate()->set_layout("horizontal");
 		}
 
 		void TableViewRow::JSExportInitialize() 
