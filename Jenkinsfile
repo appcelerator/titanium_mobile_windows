@@ -70,7 +70,6 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion) {
 			bat 'npm install .'
 			echo "Running tests on ${target}"
 			try {
-
 				timeout(20) {
 					if ('ws-local'.equals(target)) {
 						bat "node test.js -p windows -T ${target} --skip-sdk-install --cleanup"
@@ -78,6 +77,18 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion) {
 						bat "node test.js -p windows -T ${target} -C ${defaultEmulatorID} --skip-sdk-install --cleanup"
 					}
 				}
+			} catch (e) {
+				// Archive the crash reports...
+				// Crash event report:
+				// C:\ProgramData\Microsoft\Windows\WER\ReportArchive\AppCrash_com.appcelerator_8a7a6091d98a3b6827daff1404991c2a9e161a7_8c8df8cd_0a167d3a\Report.wer
+				bat 'mkdir crash_reports'
+				dir ('crash_reports') {
+					// move command doesn't grok wildcards, so we hack it: https://serverfault.com/questions/374997/move-directory-in-dos-batch-file-without-knowing-full-directory-name
+					bat "FOR /d %i IN (C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_com.appcelerator_*) DO move %i ."
+				}
+				archiveArtifacts 'crash_reports/**/*'
+				bat 'rmdir crash_reports /Q /S'
+				throw e
 			} finally {
 				// kill the emulator/app
 				if ('ws-local'.equals(target)) {

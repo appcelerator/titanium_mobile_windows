@@ -159,7 +159,6 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(View, borderRadius);
 			TITANIUM_ADD_PROPERTY(View, borderWidth);
 			TITANIUM_ADD_PROPERTY(View, clipMode);
-			TITANIUM_ADD_PROPERTY(View, enabled);
 			TITANIUM_ADD_PROPERTY(View, focusable);
 			TITANIUM_ADD_PROPERTY(View, opacity);
 			TITANIUM_ADD_PROPERTY(View, overrideCurrentAnimation);
@@ -238,8 +237,6 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(View, setBorderWidth);
 			TITANIUM_ADD_FUNCTION(View, getClipMode);
 			TITANIUM_ADD_FUNCTION(View, setClipMode);
-			TITANIUM_ADD_FUNCTION(View, getEnabled);
-			TITANIUM_ADD_FUNCTION(View, setEnabled);
 			TITANIUM_ADD_FUNCTION(View, getFocusable);
 			TITANIUM_ADD_FUNCTION(View, setFocusable);
 			TITANIUM_ADD_FUNCTION(View, getOpacity);
@@ -945,18 +942,6 @@ namespace Titanium
 			return true;
 		}
 
-		TITANIUM_PROPERTY_GETTER(View, enabled)
-		{
-			TITANIUM_API_LOG_WARN("Ti.UI.View.enabled property is deprecated. Please use touchEnabled.");
-			return js_get_touchEnabled();
-		}
-
-		TITANIUM_PROPERTY_SETTER(View, enabled)
-		{
-			TITANIUM_API_LOG_WARN("Ti.UI.View.enabled property is deprecated. Please use touchEnabled.");
-			return js_set_touchEnabled(argument);
-		}
-
 		TITANIUM_PROPERTY_GETTER(View, width)
 		{
 			CHECK_UI_DELEGATE_GETTER
@@ -1097,8 +1082,6 @@ namespace Titanium
 		TITANIUM_FUNCTION_AS_SETTER(View, setBorderWidth, borderWidth)
 		TITANIUM_FUNCTION_AS_GETTER(View, getClipMode, clipMode)
 		TITANIUM_FUNCTION_AS_SETTER(View, setClipMode, clipMode)
-		TITANIUM_FUNCTION_AS_GETTER(View, getEnabled, enabled)
-		TITANIUM_FUNCTION_AS_SETTER(View, setEnabled, enabled)
 		TITANIUM_FUNCTION_AS_GETTER(View, getFocusable, focusable)
 		TITANIUM_FUNCTION_AS_SETTER(View, setFocusable, focusable)
 		TITANIUM_FUNCTION_AS_GETTER(View, getOpacity, opacity)
