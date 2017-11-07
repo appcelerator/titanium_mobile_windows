@@ -38,7 +38,6 @@ namespace TitaniumWindows
 			TITANIUM_PROPERTY_UNIMPLEMENTED(returnKeyType);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(rightButtonMode);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(suppressReturn);
-			TITANIUM_FUNCTION_UNIMPLEMENTED(blur);
 
 			TextField(const JSContext&) TITANIUM_NOEXCEPT;
 

@@ -257,32 +257,6 @@ namespace Titanium
 			/*!
 			  @method
 
-			  @abstract blur() : void
-
-			  @discussion Forces the field to lose focus.
-
-			  @param
-
-			  @result void
-			*/
-			virtual void blur() TITANIUM_NOEXCEPT;
-
-			/*!
-			  @method
-
-			  @abstract focus() : void
-
-			  @discussion Forces the field to gain focus.
-
-			  @param
-
-			  @result void
-			*/
-			virtual void focus() TITANIUM_NOEXCEPT;
-
-			/*!
-			  @method
-
 			  @abstract hasText() : Boolean
 
 			  @discussion Returns true if this text field contains text.
