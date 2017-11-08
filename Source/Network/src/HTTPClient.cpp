@@ -130,12 +130,6 @@ namespace TitaniumWindows
 
 		void HTTPClient::send(const std::map<std::string, JSValue>& postDataPairs, const bool& useMultipartForm) TITANIUM_NOEXCEPT
 		{
-			if (method__ == Titanium::Network::RequestMethod::Get) {
-				TITANIUM_MODULE_LOG_WARN("HTTPClient::send: Data found during a GET request. Method will be changed to POST.");
-				method__ = Titanium::Network::RequestMethod::Post;
-			}
-
-
 			Windows::Web::Http::IHttpContent^ postData;
 			if (useMultipartForm) {
 				postData = ref new Windows::Web::Http::HttpMultipartFormDataContent();
