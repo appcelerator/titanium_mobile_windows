@@ -257,32 +257,6 @@ namespace Titanium
 			/*!
 			  @method
 
-			  @abstract blur() : void
-
-			  @discussion Forces the field to lose focus.
-
-			  @param
-
-			  @result void
-			*/
-			virtual void blur() TITANIUM_NOEXCEPT;
-
-			/*!
-			  @method
-
-			  @abstract focus() : void
-
-			  @discussion Forces the field to gain focus.
-
-			  @param
-
-			  @result void
-			*/
-			virtual void focus() TITANIUM_NOEXCEPT;
-
-			/*!
-			  @method
-
 			  @abstract hasText() : Boolean
 
 			  @discussion Returns true if this text field contains text.
@@ -292,6 +266,18 @@ namespace Titanium
 			  @result bool
 			*/
 			virtual bool hasText() TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
+			  @abstract setSelection() : void
+
+			  @discussion Selects the text in range (start, end).
+
+			  @result void
+			*/
+			virtual void setSelection(const std::uint32_t& start, const std::uint32_t& end) TITANIUM_NOEXCEPT;
+
 
 			TextField(const JSContext&) TITANIUM_NOEXCEPT;
 
@@ -396,6 +382,8 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(blur);
 			TITANIUM_FUNCTION_DEF(focus);
 			TITANIUM_FUNCTION_DEF(hasText);
+
+			TITANIUM_FUNCTION_DEF(setSelection);
 
 		private:
 #pragma warning(push)
