@@ -187,6 +187,13 @@ namespace Titanium
 			*/
 			virtual void scrollToBottom() TITANIUM_NOEXCEPT;
 
+			/*!
+			@method
+			@abstract scrollToTop
+			@discussion Moves the top of the scrollable region into the viewable area.
+			*/
+			virtual void scrollToTop() TITANIUM_NOEXCEPT;
+
 			ScrollView(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~ScrollView() = default;
@@ -226,6 +233,7 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setScrollIndicatorStyle);
 			TITANIUM_FUNCTION_DEF(scrollTo);
 			TITANIUM_FUNCTION_DEF(scrollToBottom);
+			TITANIUM_FUNCTION_DEF(scrollToTop);
 			TITANIUM_FUNCTION_DEF(getCanCancelEvents);
 			TITANIUM_FUNCTION_DEF(setCanCancelEvents);
 			TITANIUM_FUNCTION_DEF(getContentOffset);

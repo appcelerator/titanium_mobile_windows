@@ -43,6 +43,8 @@ namespace Titanium
 				parent->lastChild = child->prev;
 			}
 
+			child->next = nullptr;
+
 			removeChildElement(&parent->element, &child->element);
 		}
 
