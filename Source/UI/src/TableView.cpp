@@ -390,10 +390,11 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::TableView::updateSection(index, section, animation);
 			unbindCollectionViewSource();
-			collectionViewItems__->SetAt(index, createUIElementsForSection(index));
 
 			// Make sure to unregister rows from LayoutEngine
 			unregisterSectionLayoutNode(section);
+
+			collectionViewItems__->SetAt(index, createUIElementsForSection(index));
 
 			bindCollectionViewSource();
 		}

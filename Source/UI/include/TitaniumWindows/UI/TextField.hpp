@@ -38,7 +38,6 @@ namespace TitaniumWindows
 			TITANIUM_PROPERTY_UNIMPLEMENTED(returnKeyType);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(rightButtonMode);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(suppressReturn);
-			TITANIUM_FUNCTION_UNIMPLEMENTED(blur);
 
 			TextField(const JSContext&) TITANIUM_NOEXCEPT;
 
@@ -77,6 +76,7 @@ namespace TitaniumWindows
 
 			virtual void focus() TITANIUM_NOEXCEPT override final;
 			virtual bool hasText() TITANIUM_NOEXCEPT override final;
+			virtual void setSelection(const std::uint32_t& start, const std::uint32_t& end) TITANIUM_NOEXCEPT override;
 
 			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
 			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
