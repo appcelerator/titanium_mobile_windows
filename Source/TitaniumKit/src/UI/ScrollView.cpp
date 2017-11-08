@@ -28,6 +28,11 @@ namespace Titanium
 			TITANIUM_LOG_WARN("ScrollView::scrollToBottom: Unimplemented");
 		}
 
+		void ScrollView::scrollToTop() TITANIUM_NOEXCEPT
+		{
+			TITANIUM_LOG_WARN("ScrollView::scrollToTop: Unimplemented");
+		}
+
 		TITANIUM_PROPERTY_READWRITE(ScrollView, std::int32_t, decelerationRate)
 		TITANIUM_PROPERTY_READWRITE(ScrollView, std::int32_t, overScrollMode)
 		TITANIUM_PROPERTY_READWRITE(ScrollView, std::int32_t, scrollIndicatorStyle)
@@ -74,6 +79,7 @@ namespace Titanium
 
 			TITANIUM_ADD_FUNCTION(ScrollView, scrollTo);
 			TITANIUM_ADD_FUNCTION(ScrollView, scrollToBottom);
+			TITANIUM_ADD_FUNCTION(ScrollView, scrollToTop);
 			TITANIUM_ADD_FUNCTION(ScrollView, getCanCancelEvents);
 			TITANIUM_ADD_FUNCTION(ScrollView, setCanCancelEvents);
 			TITANIUM_ADD_FUNCTION(ScrollView, getContentOffset);
@@ -124,6 +130,12 @@ namespace Titanium
 		TITANIUM_FUNCTION(ScrollView, scrollToBottom)
 		{
 			scrollToBottom();
+			return get_context().CreateUndefined();
+		}
+
+		TITANIUM_FUNCTION(ScrollView, scrollToTop)
+		{
+			scrollToTop();
 			return get_context().CreateUndefined();
 		}
 
