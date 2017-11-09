@@ -1395,7 +1395,7 @@ namespace TitaniumWindows
 						// Set center of the button since Button::Click does not provide position info
 						Windows::Foundation::Point pos;
 						pos.X = static_cast<float>(button->ActualWidth  * 0.5);
-						pos.Y = static_cast<float>(button->ActualWidth * 0.5);
+						pos.Y = static_cast<float>(button->ActualHeight * 0.5);
 						fireSimplePositionEvent("click", pos);
 					});
 				} else {
