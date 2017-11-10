@@ -180,7 +180,7 @@ namespace Titanium
 			for (const auto section : model__->get_saved_sections()) {
 				for (const auto row : section->get_rows()) {
 					if (row->contains(query, filterAnchored, filterCaseInsensitive, filterAttribute)) {
-						suggestions.push_back(row->get_title());
+						suggestions.push_back(row->get_title(filterAttribute));
 					}
 				}
 			}
