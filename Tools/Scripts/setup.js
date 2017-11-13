@@ -34,7 +34,7 @@ var async = require('async'),
 	// Default JSC URL to build for Win 8.1.
 	JSC_81_URL = 'http://timobile.appcelerator.com.s3.amazonaws.com/jscore/dist/JavaScriptCore-Windows-1472849469.zip',
 	// Default JSC URL for building against Win 10
-	JSC_10_URL = 'http://timobile.appcelerator.com.s3.amazonaws.com/jscore/dist/JavaScriptCore-Windows-1472849469-win10.zip',
+	JSC_10_URL = 'http://timobile.appcelerator.com.s3.amazonaws.com/jscore/dist/JavaScriptCore-Windows-1508145738839-win10.zip',
 	JSC_DIR = 'JavaScriptCore', // directory inside zipfile
 	GTEST_URL = (os.platform() === 'win32') ? 'http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-windows.zip' : 'http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-osx.zip',
 	GTEST_DIR = (os.platform() === 'win32') ? 'gtest-1.7.0-windows' : 'gtest-1.7.0-osx', // directory inside zipfile

@@ -1395,7 +1395,7 @@ namespace TitaniumWindows
 						// Set center of the button since Button::Click does not provide position info
 						Windows::Foundation::Point pos;
 						pos.X = static_cast<float>(button->ActualWidth  * 0.5);
-						pos.Y = static_cast<float>(button->ActualWidth * 0.5);
+						pos.Y = static_cast<float>(button->ActualHeight * 0.5);
 						fireSimplePositionEvent("click", pos);
 					});
 				} else {
@@ -1976,12 +1976,11 @@ namespace TitaniumWindows
 #define INSERT_WINDOWS_UI_COLOR(COLOR_NAME) color_name_map.insert(std::make_pair(toLowerCase(#COLOR_NAME), Windows::UI::Colors::##COLOR_NAME));
 
 		// Can this be optimized? MS is giving a lot of choices for colors!
-		Windows::UI::Color WindowsViewLayoutDelegate::ColorForName(const std::string& colorName)
+		Windows::UI::Color WindowsViewLayoutDelegate::ColorForName(const std::string& colorName, const Windows::UI::Color defaultColor)
 		{
 			// pre condition
 			TITANIUM_ASSERT(!colorName.empty());
 
-			static const Windows::UI::Color defaultColor = Windows::UI::Colors::Transparent;
 			using ColorNameMap_t = std::unordered_map<std::string, Windows::UI::Color>;
 			static ColorNameMap_t color_name_map;
 			static std::once_flag of;

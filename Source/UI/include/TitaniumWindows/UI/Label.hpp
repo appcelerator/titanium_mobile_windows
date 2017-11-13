@@ -62,6 +62,7 @@ namespace TitaniumWindows
 
 			Windows::UI::Xaml::Controls::Border^ border__;
 			Windows::UI::Xaml::Controls::TextBlock^ label__;
+			Windows::UI::Color defaultForegroundColor__;
 
 			bool need_measure__ { false };
 #pragma warning(push)
