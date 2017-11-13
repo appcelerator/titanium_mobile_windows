@@ -12,6 +12,9 @@
  */
 
 var LISTVIEW_LIST_ITEM_TEMPLATE_DEFAULT = {
+	properties: {
+		layout: 'horizontal'
+	},
 	childTemplates: [
 		{
 			type: 'Ti.UI.ImageView',

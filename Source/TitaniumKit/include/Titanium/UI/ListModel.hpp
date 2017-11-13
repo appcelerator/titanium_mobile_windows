@@ -25,6 +25,7 @@ namespace Titanium
 			bool found { false };
 			std::uint32_t sectionIndex { 0 };
 			std::uint32_t rowIndex { 0 };
+			std::uint32_t fullIndex{ 0 }; // index without header through whole table items
 			bool header { false };
 			bool footer { false };
 		};
@@ -66,6 +67,8 @@ namespace Titanium
 					return result;
 				}
 
+				result.fullIndex = selectedIndex;
+
 				std::uint32_t sectionIndex = 0;
 				std::uint32_t totalItemCount = offset__;
 
@@ -75,6 +78,9 @@ namespace Titanium
 					const auto rowCountIncludingHeader = itemCount + (section->hasHeader() ? 1 : 0) + (section->hasFooter() ? 1 : 0);
 					const int32_t rowIndex = selectedIndex - totalItemCount - (section->hasHeader() ? 1 : 0);
 					totalItemCount += rowCountIncludingHeader;
+
+					result.fullIndex -= (section->hasHeader() ? 1 : 0);
+
 					if (totalItemCount <= selectedIndex) {
 						// we just count the total item
 						continue;
