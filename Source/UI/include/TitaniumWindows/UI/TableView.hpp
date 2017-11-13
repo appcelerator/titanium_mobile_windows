@@ -34,9 +34,6 @@ namespace TitaniumWindows
 
 			TITANIUM_PROPERTY_UNIMPLEMENTED(allowsSelection);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(allowsSelectionDuringEditing);
-			TITANIUM_PROPERTY_UNIMPLEMENTED(filterAttribute);
-			TITANIUM_PROPERTY_UNIMPLEMENTED(filterAnchored);
-			TITANIUM_PROPERTY_UNIMPLEMENTED(filterCaseInsensitive);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(maxRowHeight);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(minRowHeight);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(rowHeight);
@@ -61,6 +58,8 @@ namespace TitaniumWindows
 			virtual void set_separatorColor(const std::string& color) TITANIUM_NOEXCEPT override;
 			virtual void set_headerView(const std::shared_ptr<Titanium::UI::View>&) TITANIUM_NOEXCEPT override;
 			virtual void set_headerTitle(const std::string&) TITANIUM_NOEXCEPT override;
+			virtual void set_footerView(const std::shared_ptr<Titanium::UI::View>&) TITANIUM_NOEXCEPT override;
+			virtual void set_footerTitle(const std::string&) TITANIUM_NOEXCEPT override;
 			virtual void set_search(const std::shared_ptr<Titanium::UI::SearchBar>&) TITANIUM_NOEXCEPT override;
 
 			virtual void appendSection(const std::vector<std::shared_ptr<Titanium::UI::TableViewSection>>& sections, const std::shared_ptr<Titanium::UI::TableViewAnimationProperties>& animation) TITANIUM_NOEXCEPT override;

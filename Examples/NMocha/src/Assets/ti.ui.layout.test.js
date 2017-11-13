@@ -1668,5 +1668,20 @@ describe('Titanium.UI.Layout', function () {
 	    win.open();
 	});
 
+	it('TIMOB-25257', function (finish) {
+	    var win = createWindow({}, finish);
+	    var view = Ti.UI.createView({
+	        backgroundColor: 'green',
+	        width: 50, height: 50
+	    });
+	    win.add(view);
+	    win.addEventListener('open', function (e) {
+	        win.remove(view);
+	        setTimeout(function () {
+                win.add(view);
+	        }, 500);
+	    });
+	    win.open();
+	});
 
 });
