@@ -1318,7 +1318,7 @@ namespace TitaniumWindows
 						Windows::Foundation::Point childPos = rootPosition;
 						childPos.X += static_cast<float>(Canvas::GetLeft(childView));
 						childPos.Y += static_cast<float>(Canvas::GetTop(childView));
-						const auto found = getHierarchyEventSource(rootPosition, child, true);
+						const auto found = getHierarchyEventSource(position, child, true);
 						if (found) {
 							return found;
 						}
