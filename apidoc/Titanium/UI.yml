@@ -151,6 +151,8 @@ properties:
     platforms: [windowsphone]
   - name: TEXT_ALIGNMENT_RIGHT
     platforms: [windowsphone]
+  - name: TEXT_ALIGNMENT_JUSTIFY
+    platforms: [windowsphone]
   - name: TEXT_AUTOCAPITALIZATION_ALL
     platforms: [windowsphone]
   - name: TEXT_AUTOCAPITALIZATION_NONE
