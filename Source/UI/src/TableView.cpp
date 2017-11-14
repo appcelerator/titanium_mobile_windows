@@ -200,23 +200,37 @@ namespace TitaniumWindows
 
 		void TableView::set_headerView(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
+			// Remove old header
+			unregisterTableViewRowAsLayoutNode(headerView__);
+			Titanium::UI::TableView::set_headerView(view);
 			if (propertiesSet__) {
-				unregisterSections();
-				Titanium::UI::TableView::set_headerView(view);
-				createTableSectionUIElements();
-			} else {
-				Titanium::UI::TableView::set_headerView(view);
+				setTableHeader();
 			}
 		}
 
 		void TableView::set_headerTitle(const std::string& title) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::TableView::set_headerTitle(title);
 			if (propertiesSet__) {
-				unregisterSections();
-				Titanium::UI::TableView::set_headerTitle(title);
-				createTableSectionUIElements();
-			} else {
-				Titanium::UI::TableView::set_headerTitle(title);
+				setTableHeader();
+			}
+		}
+
+		void TableView::set_footerView(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
+		{
+			// Remove old footer
+			unregisterTableViewRowAsLayoutNode(footerView__);
+			Titanium::UI::TableView::set_footerView(view);
+			if (propertiesSet__) {
+				setTableFooter();
+			}
+		}
+
+		void TableView::set_footerTitle(const std::string& title) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::TableView::set_footerTitle(title);
+			if (propertiesSet__) {
+				setTableFooter();
 			}
 		}
 
@@ -279,14 +293,14 @@ namespace TitaniumWindows
 		void TableView::afterPropertiesSet() TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::TableView::afterPropertiesSet();
+			setTableHeader();
+			setTableFooter();
 			createTableSectionUIElements();
 		}
 
 		void TableView::createTableSectionUIElements() TITANIUM_NOEXCEPT
 		{
 			clearTableData();
-			setTableHeader();
-			setTableFooter();
 			for (uint32_t i = 0; i < model__->get_sectionCount(); i++) {
 				collectionViewItems__->Append(createUIElementsForSection(i));
 			}
@@ -512,7 +526,7 @@ namespace TitaniumWindows
 						if (result.found) {
 							JSObject  eventArgs = ctx.CreateObject();
 							eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(result.sectionIndex));
-							eventArgs.SetProperty("index", ctx.CreateNumber(result.rowIndex));
+							eventArgs.SetProperty("index", ctx.CreateNumber(result.fullIndex));
 
 							const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
 							const auto row = section->get_rows().at(result.rowIndex);
