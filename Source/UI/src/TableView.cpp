@@ -526,7 +526,7 @@ namespace TitaniumWindows
 						if (result.found) {
 							JSObject  eventArgs = ctx.CreateObject();
 							eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(result.sectionIndex));
-							eventArgs.SetProperty("index", ctx.CreateNumber(result.rowIndex));
+							eventArgs.SetProperty("index", ctx.CreateNumber(result.fullIndex));
 
 							const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
 							const auto row = section->get_rows().at(result.rowIndex);
