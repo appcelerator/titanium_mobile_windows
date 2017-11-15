@@ -47,6 +47,12 @@ namespace TitaniumWindows
 			border__ = ref new Controls::Border();
 			label__ = ref new Windows::UI::Xaml::Controls::TextBlock();
 
+			// default color inspection
+			const auto currentBrush = dynamic_cast<Media::SolidColorBrush^>(label__->Foreground);
+			if (currentBrush) {
+				defaultForegroundColor__ = currentBrush->Color;
+			}
+
 			Titanium::UI::Label::setLayoutDelegate<WindowsViewLayoutDelegate>();
 
 			label__->TextWrapping = Windows::UI::Xaml::TextWrapping::Wrap;
@@ -143,7 +149,7 @@ namespace TitaniumWindows
 		void Label::set_color(const std::string& colorName) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::Label::set_color(colorName);
-			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
+			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName, defaultForegroundColor__);
 			label__->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
 		}
 
@@ -244,8 +250,9 @@ namespace TitaniumWindows
 				label__->TextAlignment = Windows::UI::Xaml::TextAlignment::Left;
 			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::RIGHT) {
 				label__->TextAlignment = Windows::UI::Xaml::TextAlignment::Right;
+			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::JUSTIFY) {
+				label__->TextAlignment = Windows::UI::Xaml::TextAlignment::Justify;
 			}
-			// TODO Windows supports JUSTIFY!
 		}
 
 		void Label::set_verticalAlign(const Titanium::UI::TEXT_VERTICAL_ALIGNMENT& verticalAlign) TITANIUM_NOEXCEPT

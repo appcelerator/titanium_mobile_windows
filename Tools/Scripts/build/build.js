@@ -354,6 +354,17 @@ function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, fin
 			timer = process.hrtime();
 			next();
 		},
+		function copyJavaScriptCore(next) {
+			async.eachSeries(targets, function (configuration, next) {
+				var parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
+				console.log('Copying JavaScriptCore for ' + parts[1] + '...');
+				var newDir = path.join(distLib, 'JavaScriptCore', 'win10', parts[1]);
+				var fromDir = path.join(process.env.JavaScriptCore_HOME, parts[1]);
+				wrench.mkdirSyncRecursive(newDir);
+				wrench.copyDirSyncRecursive(path.join(fromDir, 'Release'), newDir, {forceDelete: true});
+				fs.createReadStream(path.join(fromDir, 'JavaScriptCore-Release.lib')).pipe(fs.createWriteStream(path.join(newDir, 'JavaScriptCore.lib'))).on('finish', next);
+			}, next);
+		},
 		function copyIncludedHeaders(next) {
 			console.log('Copying over include headers...');
 			var newDir = path.join(distLib, 'TitaniumKit', 'include', 'Titanium');

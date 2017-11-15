@@ -426,11 +426,14 @@ namespace Titanium
 		  @constant LEFT Left align text.
 
 		  @constant RIGHT Right align text.
+
+		  @constant JUSTIFY Justify align text.
 		*/
 		enum class TITANIUMKIT_EXPORT TEXT_ALIGNMENT {
 			CENTER,
 			LEFT,
-			RIGHT
+			RIGHT,
+			JUSTIFY
 		};
 
 		/*!

@@ -44,6 +44,7 @@ list(INSERT CMAKE_MODULE_PATH 0 ${APPCELERATOR_CMAKE_MODULE_PATH})
 find_package(HAL REQUIRED)
 find_package(TitaniumKit REQUIRED)
 find_package(TitaniumWindows_Utility REQUIRED)
+find_package(JavaScriptCore REQUIRED)
 
 enable_testing()
 
@@ -75,6 +76,7 @@ target_include_directories(<%- moduleIdAsIdentifier %> PUBLIC
 file(GLOB MODULE_TARGET_LIBS ${PROJECT_SOURCE_DIR}/lib/${PLATFORM}/${<%- moduleIdAsIdentifier %>_ARCH}/*.lib)
 
 target_link_libraries(<%- moduleIdAsIdentifier %>
+  JavaScriptCore
   HAL
   TitaniumKit
   TitaniumWindows_Utility

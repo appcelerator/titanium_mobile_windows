@@ -76,6 +76,7 @@ namespace TitaniumWindows
 
 			virtual void focus() TITANIUM_NOEXCEPT override final;
 			virtual bool hasText() TITANIUM_NOEXCEPT override final;
+			virtual void setSelection(const std::uint32_t& start, const std::uint32_t& end) TITANIUM_NOEXCEPT override;
 
 			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
 			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
@@ -84,10 +85,12 @@ namespace TitaniumWindows
 
 		private:
 			void initTextComponent();
+			void updateClearButtonVisibility(const bool& hasFocus = true) TITANIUM_NOEXCEPT;
 
 			Windows::UI::Xaml::Controls::Border^ border__{ nullptr };
 			Windows::UI::Xaml::Controls::TextBox^ text_box__{ nullptr };
 			Windows::UI::Xaml::Controls::PasswordBox^ password_box__{ nullptr };
+			Windows::UI::Xaml::Controls::Button^ delete_button__{ nullptr };
 
 			// Event handlers
 			Windows::Foundation::EventRegistrationToken change_event__;

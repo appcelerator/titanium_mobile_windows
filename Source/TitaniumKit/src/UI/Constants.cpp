@@ -993,6 +993,7 @@ namespace Titanium
       map[TEXT_ALIGNMENT::CENTER] = "center";
       map[TEXT_ALIGNMENT::LEFT]   = "left";
       map[TEXT_ALIGNMENT::RIGHT]  = "right";
+      map[TEXT_ALIGNMENT::JUSTIFY] = "justify";
 			});
 
 			std::string string = unknown_string;
@@ -1012,6 +1013,7 @@ namespace Titanium
       map["center"] = TEXT_ALIGNMENT::CENTER;
       map["left"]   = TEXT_ALIGNMENT::LEFT;
       map["right"]  = TEXT_ALIGNMENT::RIGHT;
+      map["justify"] = TEXT_ALIGNMENT::JUSTIFY;
 			});
 
 			TEXT_ALIGNMENT textAlignment = TEXT_ALIGNMENT::LEFT;
@@ -1033,6 +1035,7 @@ namespace Titanium
       map[static_cast<std::underlying_type<TEXT_ALIGNMENT>::type>(TEXT_ALIGNMENT::CENTER)]        = TEXT_ALIGNMENT::CENTER;
       map[static_cast<std::underlying_type<TEXT_ALIGNMENT>::type>(TEXT_ALIGNMENT::LEFT)]           = TEXT_ALIGNMENT::LEFT;
       map[static_cast<std::underlying_type<TEXT_ALIGNMENT>::type>(TEXT_ALIGNMENT::RIGHT)] = TEXT_ALIGNMENT::RIGHT;
+      map[static_cast<std::underlying_type<TEXT_ALIGNMENT>::type>(TEXT_ALIGNMENT::JUSTIFY)] = TEXT_ALIGNMENT::JUSTIFY;
 			});
 
 			TEXT_ALIGNMENT textAlignment = TEXT_ALIGNMENT::LEFT;
