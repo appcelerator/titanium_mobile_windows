@@ -34,6 +34,8 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::PickerColumn::postCallAsConstructor(js_context, arguments);
 			picker__ = ref new Windows::UI::Xaml::Controls::ComboBox();
+			picker__->HorizontalAlignment = HorizontalAlignment::Stretch;
+			picker__->VerticalAlignment = VerticalAlignment::Stretch;
 		}
 
 		std::shared_ptr<Titanium::UI::PickerRow> PickerColumn::get_selectedRow() const TITANIUM_NOEXCEPT

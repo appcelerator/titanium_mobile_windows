@@ -65,6 +65,7 @@ namespace TitaniumWindows
 			virtual void set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT override;
 			virtual void set_message(const std::string& message)  TITANIUM_NOEXCEPT override;
 			virtual void set_indicatorColor(const std::string& color) TITANIUM_NOEXCEPT override;
+			virtual void set_indicatorDiameter(const std::string& diameter) TITANIUM_NOEXCEPT override;
 
 		private:
 			Windows::UI::Xaml::Controls::StackPanel^ panel__;

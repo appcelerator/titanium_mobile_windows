@@ -41,12 +41,63 @@ namespace TitaniumWindows
 			text_box__->AcceptsReturn = false;
 			text_box__->IsSpellCheckEnabled = true;
 
+			// VisualTreeHelper is only available after Loaded event is fired
+			text_box__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
+				if (Media::VisualTreeHelper::GetChildrenCount(text_box__) > 0) {
+					//
+					// assuming the first component appeared in the TextBox is Grid that includes the button
+					//
+					const auto grid = dynamic_cast<Controls::Grid^>(Media::VisualTreeHelper::GetChild(text_box__, 0));
+					if (grid) {
+						const auto count = Media::VisualTreeHelper::GetChildrenCount(grid);
+						for (auto i = 0; i < count; i++) {
+							//
+							// assuming the first button appeared in the Grid is the "DeleteButton"
+							//
+							const auto button = dynamic_cast<Controls::Button^>(Media::VisualTreeHelper::GetChild(grid, i));
+							if (button) {
+								delete_button__ = button;
+								return;
+							}
+						}
+					}
+				}
+			});
+
+			text_box__->TextChanged += ref new Controls::TextChangedEventHandler([this](Platform::Object^ sender, Controls::TextChangedEventArgs^) {
+				updateClearButtonVisibility();
+			});				
+			text_box__->LostFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+				updateClearButtonVisibility(false);
+			});
+			text_box__->GotFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+				updateClearButtonVisibility(true);
+			});
+
 			border__->Child = text_box__;
 
 			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 			layout->setComponent(border__, nullptr, border__);
 			layout->setStyleComponent(text_box__);
 			initTextComponent();
+		}
+
+		void TextField::updateClearButtonVisibility(const bool& hasFocus) TITANIUM_NOEXCEPT
+		{
+			//
+			// On Windows, clear button works only when text box has focus.
+			// In that sense we should hide the button when text box lost focus anyway.
+			// Also this means ONFOCUS and ONBLUR don't make sense there.
+			//
+			auto mode = get_clearButtonMode();
+			auto show = hasFocus && mode != Titanium::UI::INPUT_BUTTONMODE::NEVER;
+
+			if (delete_button__) {
+				const auto visible = text_box__->Text->IsEmpty() ? false : show;
+				delete_button__->MaxHeight = visible ? HUGE_VAL : 0;
+				delete_button__->MaxWidth = visible ? HUGE_VAL : 0;
+				delete_button__->Visibility = visible ? Visibility::Visible : Visibility::Collapsed;
+			}
 		}
 
 		void TextField::initTextComponent()
@@ -229,8 +280,9 @@ namespace TitaniumWindows
 					text_box__->TextAlignment = TextAlignment::Left;
 				} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::RIGHT) {
 					text_box__->TextAlignment = TextAlignment::Right;
+				} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::JUSTIFY) {
+					text_box__->TextAlignment = TextAlignment::Justify;
 				}
-				// TODO Windows supports JUSTIFY!
 			} else {
 				TITANIUM_LOG_WARN("TexeField.textAlign can not be used with passwordMask");
 			}

@@ -135,6 +135,12 @@ namespace Titanium
 					}
 				}
 			}
+
+			// When there's no results, show "No results"
+			if (section->get_itemCount() == 0) {
+				section->set_headerTitle("No results");
+			}
+
 			model__->save_positions(saved_position);
 			section->appendItems(items, nullptr);
 			set_sections(sections);
