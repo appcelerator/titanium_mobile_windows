@@ -250,8 +250,9 @@ namespace TitaniumWindows
 				label__->TextAlignment = Windows::UI::Xaml::TextAlignment::Left;
 			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::RIGHT) {
 				label__->TextAlignment = Windows::UI::Xaml::TextAlignment::Right;
+			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::JUSTIFY) {
+				label__->TextAlignment = Windows::UI::Xaml::TextAlignment::Justify;
 			}
-			// TODO Windows supports JUSTIFY!
 		}
 
 		void Label::set_verticalAlign(const Titanium::UI::TEXT_VERTICAL_ALIGNMENT& verticalAlign) TITANIUM_NOEXCEPT

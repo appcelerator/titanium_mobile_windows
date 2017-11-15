@@ -280,8 +280,9 @@ namespace TitaniumWindows
 					text_box__->TextAlignment = TextAlignment::Left;
 				} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::RIGHT) {
 					text_box__->TextAlignment = TextAlignment::Right;
+				} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::JUSTIFY) {
+					text_box__->TextAlignment = TextAlignment::Justify;
 				}
-				// TODO Windows supports JUSTIFY!
 			} else {
 				TITANIUM_LOG_WARN("TexeField.textAlign can not be used with passwordMask");
 			}

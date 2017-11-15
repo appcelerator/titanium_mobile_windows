@@ -101,6 +101,9 @@ namespace TitaniumWindows
 							const auto button = dynamic_cast<Button^>(Media::VisualTreeHelper::GetChild(grid, i));
 							if (button) {
 								delete_button__ = button;
+								delete_button__->Click += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+									updateCancelButtonVisibility(false);
+								});
 								return;
 							}
 						}
@@ -166,6 +169,12 @@ namespace TitaniumWindows
 					for (const auto item : items) {
 						suggestItems__->Append(TitaniumWindows::Utility::ConvertString(item));
 					}
+
+					// When there's no results, show "No results"
+					if (items.size() == 0) {
+						suggestItems__->Append("No results");
+					}
+
 					suggest_box__->ItemsSource = suggestItems__;
 				}
 			});
