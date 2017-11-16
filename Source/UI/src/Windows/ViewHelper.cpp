@@ -23,6 +23,9 @@ namespace TitaniumWindows
 			template void SetFont<Button^>(const JSContext& js_context, Button^, const Titanium::UI::Font&);
 			template void SetFont<Span^>(const JSContext& js_context, Span^, const Titanium::UI::Font&);
 			template void SetFont<PasswordBox^>(const JSContext& js_context, PasswordBox^, const Titanium::UI::Font&);
+			template void SetFont<DatePicker^>(const JSContext& js_context, DatePicker^, const Titanium::UI::Font&);
+			template void SetFont<TimePicker^>(const JSContext& js_context, TimePicker^, const Titanium::UI::Font&);
+			template void SetFont<ComboBox^>(const JSContext& js_context, ComboBox^, const Titanium::UI::Font&);
 
 			template <typename T>
 			void SetFont(const JSContext& js_context, T component, const Titanium::UI::Font& font)

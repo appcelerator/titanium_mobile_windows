@@ -1067,6 +1067,10 @@ namespace TitaniumWindows
 				border__->BorderBrush = borderColorBrush__;
 				border__->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
 				border__->CornerRadius = CornerRadiusHelper::FromUniformRadius(Titanium::LayoutEngine::parseUnitValue(get_borderRadius(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px"));
+			} else if (is_grid__) {
+				const auto control = dynamic_cast<Controls::Grid^>(component__);
+				control->BorderBrush = borderColorBrush__;
+				control->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
 			}
 		}
 
