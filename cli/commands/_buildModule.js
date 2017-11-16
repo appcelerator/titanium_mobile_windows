@@ -208,23 +208,18 @@ WindowsModuleBuilder.prototype.loginfo = function loginfo(next) {
 };
 
 WindowsModuleBuilder.prototype.generateModuleProject = function generateModuleProject(next) {
-       	var data  = this;
-        if (this.cli.argv.hasOwnProperty('run-cmake')) {
-            var tasks = [
-                function(done) {
-                    runCmake(data, 'WindowsStore', 'Win32', '10.0', done);
-                },
-                function(done) {
-                    runCmake(data, 'WindowsStore', 'ARM', '10.0', done);
-                }
-            ];
-
-            appc.async.series(this, tasks, function(err) {
-                next(err);
-            });
-        } else {
-            next();
+    var tasks = [
+        function(done) {
+           runCmake(this, 'WindowsStore', 'Win32', '10.0', done);
+        },
+        function(done) {
+            runCmake(this, 'WindowsStore', 'ARM', '10.0', done);
         }
+    ];
+
+    appc.async.series(this, tasks, function(err) {
+        next(err);
+    });
 };
 
 WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
@@ -529,6 +524,10 @@ function runCmake(data, platform, arch, sdkVersion, next) {
         cmakeProjectName = (sdkVersion === '10.0' ? 'Windows10' : platform) + '.' + arch,
         cmakeWorkDir = path.resolve(data.projectDir,cmakeProjectName);
 
+    if (!data.cli.argv.hasOwnProperty('run-cmake') && fs.existsSync(cmakeWorkDir)) {
+        return next();
+    }
+
     logger.debug('Run CMake on ' + cmakeWorkDir);
 
     if (fs.existsSync(cmakeWorkDir)) {
@@ -542,14 +541,18 @@ function runCmake(data, platform, arch, sdkVersion, next) {
         targetSdkVersion = data.targetPlatformSdkVersion;
     }
 
-    var p = spawn(path.join(data.titaniumSdkPath,'windows','cli','vendor','cmake','bin','cmake.exe'),
-        [
+    var cmakeArg = [
             '-G', generatorName,
             '-DCMAKE_SYSTEM_NAME=' + platform,
             '-DCMAKE_SYSTEM_VERSION=' + targetSdkVersion,
             '-DCMAKE_BUILD_TYPE=Debug',
             path.resolve(data.projectDir)
-        ],
+        ];
+
+    logger.debug(JSON.stringify(cmakeArg, null, 2));
+
+    var p = spawn(path.join(data.titaniumSdkPath,'windows','cli','vendor','cmake','bin','cmake.exe'),
+    	cmakeArg,
         {
             cwd: cmakeWorkDir
         });
