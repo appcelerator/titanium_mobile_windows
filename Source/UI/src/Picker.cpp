@@ -16,6 +16,7 @@
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
 #include "TitaniumWindows/WindowsTiImpl.hpp"
+#include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
 
 namespace TitaniumWindows
 {
@@ -78,10 +79,6 @@ namespace TitaniumWindows
 			parent__->VerticalAlignment = VerticalAlignment::Stretch;
 			parent__->HorizontalAlignment = HorizontalAlignment::Stretch;
 
-			// Fill width
-			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
-			layoutDelegate__->set_autoLayoutForWidth(Titanium::UI::LAYOUT::FILL);
-
 			getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->setComponent(parent__, nullptr, false);
 		}
 
@@ -98,15 +95,35 @@ namespace TitaniumWindows
 				getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->setStyleComponent(plainPicker__);
 			} else if (type__ == Titanium::UI::PICKER_TYPE::DATE) {
 				datePicker__  = ref new Windows::UI::Xaml::Controls::DatePicker();
-				parent__->Children->Append(datePicker__);
-				parent__->SetColumn(datePicker__, 0);
-				parent__->SetRow(datePicker__, 0);
+				datePicker__->HorizontalAlignment = HorizontalAlignment::Stretch;
+				datePicker__->VerticalAlignment = VerticalAlignment::Stretch;
+
+				// Adding Grid in Grid just to make border properties work. Otherwise it crashes for no reason
+				const auto border = ref new Windows::UI::Xaml::Controls::Grid();
+				border->Children->Append(datePicker__);
+				border->SetColumn(datePicker__, 0);
+				border->SetRow(datePicker__, 0);
+
+				parent__->Children->Append(border);
+				parent__->SetColumn(border, 0);
+				parent__->SetRow(border, 0);
+
 				getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->setStyleComponent(datePicker__);
 			} else if (type__ == Titanium::UI::PICKER_TYPE::TIME) {
 				timePicker__  = ref new Windows::UI::Xaml::Controls::TimePicker();
-				parent__->Children->Append(timePicker__);
-				parent__->SetColumn(timePicker__, 0);
-				parent__->SetRow(timePicker__, 0);
+				timePicker__->HorizontalAlignment = HorizontalAlignment::Stretch;
+				timePicker__->VerticalAlignment = VerticalAlignment::Stretch;
+
+				// Adding Grid in Grid just to make border properties work. Otherwise it crashes for no reason
+				const auto border = ref new Windows::UI::Xaml::Controls::Grid();
+				border->Children->Append(timePicker__);
+				border->SetColumn(timePicker__, 0);
+				border->SetRow(timePicker__, 0);
+
+				parent__->Children->Append(border);
+				parent__->SetColumn(border, 0);
+				parent__->SetRow(border, 0);
+
 				getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->setStyleComponent(timePicker__);
 			}
 
@@ -115,7 +132,21 @@ namespace TitaniumWindows
 			set_maxDate(maxDate__);
 			set_minDate(minDate__);
 			set_columns(columns__);
+			set_font(font__);
+		}
 
+		void Picker::set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Picker::set_font(font);
+			if (plainPicker__) {
+				for (const auto column : columns__) {
+					column->set_font(font);
+				}
+			} else if (datePicker__) {
+				TitaniumWindows::UI::ViewHelper::SetFont<Windows::UI::Xaml::Controls::DatePicker^>(get_context(), datePicker__, font);
+			} else if (timePicker__) {
+				TitaniumWindows::UI::ViewHelper::SetFont<Windows::UI::Xaml::Controls::TimePicker^>(get_context(), timePicker__, font);
+			}
 		}
 
 		void Picker::set_value(const boost::optional<std::chrono::system_clock::time_point>& value) TITANIUM_NOEXCEPT
@@ -201,6 +232,8 @@ namespace TitaniumWindows
 					plainPicker__->ColumnDefinitions->Append(cdef);
 					plainPicker__->SetColumn(picker, (plainPicker__->Children->Size - 1));
 					plainPicker__->SetRow(picker, 0);
+
+					column->set_font(get_font());
 				}
 			} else {
 				TITANIUM_MODULE_LOG_WARN("Picker::add: Unable to modify columns. This only works with plain picker");

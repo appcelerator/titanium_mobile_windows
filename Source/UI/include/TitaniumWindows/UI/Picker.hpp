@@ -57,6 +57,7 @@ namespace TitaniumWindows
 			virtual void set_value(const boost::optional<std::chrono::system_clock::time_point>& value) TITANIUM_NOEXCEPT override;
 			virtual void set_maxDate(const boost::optional<std::chrono::system_clock::time_point>& value) TITANIUM_NOEXCEPT override;
 			virtual void set_minDate(const boost::optional<std::chrono::system_clock::time_point>& value) TITANIUM_NOEXCEPT override;
+			virtual void set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT override;
 
 			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;
 			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override;

@@ -49,6 +49,7 @@ namespace TitaniumWindows
 			virtual void removeRow(const std::shared_ptr<Titanium::UI::PickerRow>& row) TITANIUM_NOEXCEPT override;
 			virtual std::shared_ptr<Titanium::UI::PickerRow> get_selectedRow() const TITANIUM_NOEXCEPT override;
 			virtual void set_selectedRow(const std::shared_ptr<Titanium::UI::PickerRow>&) TITANIUM_NOEXCEPT override;
+			virtual void set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT override;
 			virtual void reload() TITANIUM_NOEXCEPT override;
 
 			Windows::UI::Xaml::Controls::ComboBox^ getComponent() const TITANIUM_NOEXCEPT
