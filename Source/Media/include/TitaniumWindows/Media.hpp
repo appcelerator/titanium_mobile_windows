@@ -91,7 +91,8 @@ namespace TitaniumWindows
 		  @abstract saveToPhotoGallery
 		  @discussion Saves media to the device's photo gallery / camera roll.
 		*/
-		virtual void saveToPhotoGallery(const std::shared_ptr<Titanium::Filesystem::File>& media, JSValue callbacks) TITANIUM_NOEXCEPT override;
+		virtual void saveToPhotoGallery(const std::shared_ptr<Titanium::Blob>& blob, JSValue callbacks) TITANIUM_NOEXCEPT override;
+		virtual void saveToPhotoGallery(const std::shared_ptr<Titanium::Filesystem::File>& file, JSValue callbacks) TITANIUM_NOEXCEPT override;
 
 		/*!
 		  @method

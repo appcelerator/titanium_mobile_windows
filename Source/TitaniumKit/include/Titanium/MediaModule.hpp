@@ -10,6 +10,7 @@
 #define _TITANIUM_MEDIA_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/Blob.hpp"
 #include "Titanium/Media/Constants.hpp"
 #include "Titanium/Media/RouteDescription.hpp"
 #include <unordered_map>
@@ -189,7 +190,8 @@ namespace Titanium
 		  @abstract saveToPhotoGallery
 		  @discussion Saves media to the device's photo gallery / camera roll.
 		*/
-		virtual void saveToPhotoGallery(const std::shared_ptr<Titanium::Filesystem::File>& media, JSValue callbacks) TITANIUM_NOEXCEPT;
+		virtual void saveToPhotoGallery(const std::shared_ptr<Titanium::Blob>& blob, JSValue callbacks) TITANIUM_NOEXCEPT;
+		virtual void saveToPhotoGallery(const std::shared_ptr<Titanium::Filesystem::File>& file, JSValue callbacks) TITANIUM_NOEXCEPT;
 
 		/*!
 		  @method
