@@ -5,6 +5,7 @@
  */
 
 #include "TitaniumWindows/Media.hpp"
+#include "TitaniumWindows/Filesystem.hpp"
 #include "Titanium/Filesystem/File.hpp"
 #include "Titanium/Media/Constants.hpp"
 #include "Titanium/Media/Item.hpp"
@@ -352,7 +353,7 @@ namespace TitaniumWindows
 	}
 
 
-	void MediaModule::saveToPhotoGallery(const std::shared_ptr<Titanium::Filesystem::File>& media, JSValue callbacks) TITANIUM_NOEXCEPT
+	void MediaModule::saveToPhotoGallery(const std::shared_ptr<Titanium::Blob>& blob, JSValue callbacks) TITANIUM_NOEXCEPT
 	{
 		const auto ctx = get_context();
 
@@ -374,26 +375,39 @@ namespace TitaniumWindows
 				}
 			}
 		}
-		auto to_path = Windows::Storage::KnownFolders::PicturesLibrary->Path;
+
+		auto destinationPath = Windows::Storage::KnownFolders::PicturesLibrary->Path;
 
 		// On Windows Store app, path for the PicturesLibrary may become nullptr.
 		// Workaround there is to create empty file and retrieve path from it.
-		if (to_path == nullptr) {
+		if (destinationPath == nullptr) {
 			concurrency::event evt;
-			const auto desiredName = TitaniumWindows::Utility::ConvertString(media->get_name());
+			const auto desiredName = TitaniumWindows::Utility::ConvertString(blob->get_file() ? blob->get_file()->get_name() : std::string("photo.bmp"));
 			concurrency::task<StorageFile^>(Windows::Storage::KnownFolders::PicturesLibrary->CreateFileAsync(desiredName,
-				CreationCollisionOption::GenerateUniqueName)).then([&to_path, &evt](concurrency::task<StorageFile^> task) {
+				CreationCollisionOption::GenerateUniqueName)).then([&destinationPath, &evt](concurrency::task<StorageFile^> task) {
 				try {
-					to_path = task.get()->Path;
+					destinationPath = task.get()->Path;
 				} catch (...) {
-					to_path = nullptr;
+					destinationPath = nullptr;
 				}
 				evt.set();
 			}, concurrency::task_continuation_context::use_arbitrary());
 			evt.wait();
 		}
 
-		if (to_path && media->copy(TitaniumWindows::Utility::ConvertString(to_path))) {
+		boolean result = false;
+		std::string path = TitaniumWindows::Utility::ConvertString(destinationPath);
+
+		if (blob->get_file()) {
+			result = blob->get_file()->copy(path);
+		} else {
+			const auto js_filesystem = ctx.CreateObject(JSExport<Titanium::FilesystemModule>::Class()).CallAsConstructor();
+			const auto filesystem_obj = static_cast<JSObject>(js_filesystem).CallAsConstructor();
+			const auto filesystem = filesystem_obj.GetPrivate<Titanium::FilesystemModule>();
+			const auto file = filesystem->getFile(ctx, path);
+			result = file->write(blob, false);
+		}
+		if (result) {
 			if (onSuccess.IsFunction()) {
 				auto arg = ctx.CreateObject();
 				arg.SetProperty("success", ctx.CreateBoolean(true));
@@ -409,6 +423,11 @@ namespace TitaniumWindows
 				onError({ arg }, get_object());
 			}
 		}
+	}
+
+	void MediaModule::saveToPhotoGallery(const std::shared_ptr<Titanium::Filesystem::File>& file, JSValue callbacks) TITANIUM_NOEXCEPT
+	{
+		return saveToPhotoGallery(file->read(), callbacks);
 	}
 
 	void MediaModule::hideCamera() TITANIUM_NOEXCEPT

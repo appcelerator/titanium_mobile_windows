@@ -99,7 +99,12 @@ namespace Titanium
 		TITANIUM_LOG_WARN("MediaModule::previewImage: Unimplemented");
 	}
 
-	void MediaModule::saveToPhotoGallery(const std::shared_ptr<Titanium::Filesystem::File>& media, JSValue callbacks) TITANIUM_NOEXCEPT
+	void MediaModule::saveToPhotoGallery(const std::shared_ptr<Titanium::Blob>& blob, JSValue callbacks) TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_WARN("MediaModule::saveToPhotoGallery: Unimplemented");
+	}
+
+	void MediaModule::saveToPhotoGallery(const std::shared_ptr<Titanium::Filesystem::File>& file, JSValue callbacks) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("MediaModule::saveToPhotoGallery: Unimplemented");
 	}
@@ -1166,7 +1171,15 @@ namespace Titanium
 		ENSURE_OBJECT_AT_INDEX(media, 0);
 		ENSURE_OBJECT_AT_INDEX(callbacks, 1);
 
-		saveToPhotoGallery(media.GetPrivate<Titanium::Filesystem::File>(), callbacks);
+		const auto blob = media.GetPrivate<Titanium::Blob>();
+		const auto file = media.GetPrivate<Titanium::Filesystem::File>();
+		if (blob) {
+			saveToPhotoGallery(blob, callbacks);
+		} else if (file) {
+			saveToPhotoGallery(file, callbacks);
+		} else {
+			TITANIUM_LOG_ERROR("invalid object, expected type Titanium.Blob/Titanium.Filesystem.File");
+		}
 		return get_context().CreateUndefined();
 	}
 

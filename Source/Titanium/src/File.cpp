@@ -38,6 +38,15 @@ namespace TitaniumWindows
 			return name;
 		}
 
+		std::string File::filename(const std::string& path)
+		{
+			size_t seperator = path.find_last_of("\\");
+			if (seperator != std::string::npos) {
+				return path.substr(seperator + 1, path.size() - seperator - 1);
+			}
+			return path;
+		}
+
 		void File::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
 			// TODO: if argument is empty, we assume it's called from initializer.
 			if (arguments.empty()) {
@@ -58,7 +67,8 @@ namespace TitaniumWindows
 				path_ = name;
 			}
 
-			name_ = name;
+			// obtain filename
+			name_ = filename(name);
 
 			file_ = getFileFromPathSync(path_);
 			if (file_ == nullptr) {
