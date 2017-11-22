@@ -223,6 +223,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(Label);
 		TITANIUM_PROPERTY_READONLY_DEF(ListView);
 		TITANIUM_PROPERTY_READONLY_DEF(ListSection);
+		TITANIUM_PROPERTY_READONLY_DEF(NavigationWindow);
 		TITANIUM_PROPERTY_READONLY_DEF(Notification);
 		TITANIUM_PROPERTY_READONLY_DEF(OptionDialog);
 		TITANIUM_PROPERTY_READONLY_DEF(ProgressBar);
@@ -269,6 +270,7 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(createListItem);
 		TITANIUM_FUNCTION_DEF(createListSection);
 		TITANIUM_FUNCTION_DEF(createListView);
+		TITANIUM_FUNCTION_DEF(createNavigationWindow);
 		TITANIUM_FUNCTION_DEF(createNotification);
 		TITANIUM_FUNCTION_DEF(createOptionDialog);
 		TITANIUM_FUNCTION_DEF(createPicker);
@@ -305,6 +307,7 @@ namespace Titanium
 		UIModule& AnimationClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& SwitchClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& TwoDMatrixClass(const JSClass&) TITANIUM_NOEXCEPT;
+		UIModule& NavigationWindowClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& NotificationClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& TextAreaClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& ClipboardClass(const JSClass&) TITANIUM_NOEXCEPT;
@@ -350,6 +353,7 @@ namespace Titanium
 		JSClass picker__;
 		JSClass clipboard__;
 		JSClass textarea__;
+		JSClass navigationWindow__;
 		JSClass notification__;
 		JSClass twodmatrix__;
 		JSClass switch__;
