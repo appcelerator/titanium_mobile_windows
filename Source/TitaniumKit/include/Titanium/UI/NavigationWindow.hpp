@@ -70,7 +70,6 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(open);
 			TITANIUM_FUNCTION_DEF(closeWindow);
 			TITANIUM_FUNCTION_DEF(openWindow);
-			TITANIUM_FUNCTION_DEF(popToRootWindow);
 
 			TITANIUM_PROPERTY_DEF(window);
 			TITANIUM_FUNCTION_DEF(getWindow);
