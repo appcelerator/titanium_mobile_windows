@@ -72,7 +72,8 @@ namespace Titanium
 		{
 			TITANIUM_ASSERT_AND_THROW(window__ != nullptr, "window parameter is not specified");
 			if (window__) {
-				return window__->js_close(arguments, window__->get_object());
+				auto window_object = window__->get_object();
+				return window__->js_close(arguments, window_object);
 			}
 
 			return get_context().CreateUndefined();
@@ -83,7 +84,8 @@ namespace Titanium
 			TITANIUM_ASSERT_AND_THROW(window__ != nullptr, "window parameter is not specified");
 			// Open root Window
 			if (window__) {
-				return window__->js_open(arguments, window__->get_object());
+				auto window_object = window__->get_object();
+				return window__->js_open(arguments, window_object);
 			}
 
 			return get_context().CreateUndefined();
