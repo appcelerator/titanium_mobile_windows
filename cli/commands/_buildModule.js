@@ -44,6 +44,16 @@ WindowsModuleBuilder.prototype.validate = function validate(logger, config, cli)
 		logger.error('Invalid platform');
 		process.exit(1);
 	}
+
+	var manifest = cli.manifest;
+	var sdkModuleAPIVersion = cli.sdk.manifest && cli.sdk.manifest.moduleAPIVersion && cli.sdk.manifest.moduleAPIVersion['windows'];
+	if (manifest.apiversion && sdkModuleAPIVersion && manifest.apiversion !== sdkModuleAPIVersion) {
+		logger.error(__('The module manifest apiversion is currently set to %s', manifest.apiversion));
+		logger.error(__('Titanium SDK %s Windows module apiversion is at %s', cli.sdk.manifest.version, sdkModuleAPIVersion));
+		logger.error(__('Please update module manifest apiversion to match Titanium SDK module apiversion'));
+		logger.error(__('and the minsdk to %s',  cli.sdk.manifest.version));
+		process.exit(1);
+	}
 };
 
 WindowsModuleBuilder.prototype.run = function run(logger, config, cli, finished) {
