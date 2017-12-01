@@ -1277,11 +1277,7 @@ namespace TitaniumWindows
 			} else if (event_name == "touchend") {
 				component->PointerReleased -= touchend_event__;
 			} else if (event_name == "click") {
-				if (is_button__) {
-					dynamic_cast<Controls::Button^>(underlying_control__)->Click -= click_event__;
-				} else {
-					component->Tapped -= click_event__;
-				}
+				component->Tapped -= click_event__;
 			} else if (event_name == "dblclick") {
 				component->DoubleTapped -= dblclick_event__;
 			} else if (event_name == "singletap") {
@@ -1319,9 +1315,6 @@ namespace TitaniumWindows
 				for (const auto e : elements) {
 					// Let's check its descendents so we can support nested views
 					if (child->get_children().size() > 0) {
-						Windows::Foundation::Point childPos = rootPosition;
-						childPos.X += static_cast<float>(Canvas::GetLeft(childView));
-						childPos.Y += static_cast<float>(Canvas::GetTop(childView));
 						const auto found = getHierarchyEventSource(position, child, true);
 						if (found) {
 							return found;
@@ -1403,21 +1396,10 @@ namespace TitaniumWindows
 					fireSimplePositionEvent("touchend", point->Position);
 				});
 			} else if (event_name == "click") {
-				if (is_button__) {
-					click_event__ = dynamic_cast<Controls::Button^>(underlying_control__)->Click += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
-						const auto button = safe_cast<Controls::Button^>(sender);
-						// Set center of the button since Button::Click does not provide position info
-						Windows::Foundation::Point pos;
-						pos.X = static_cast<float>(button->ActualWidth  * 0.5);
-						pos.Y = static_cast<float>(button->ActualHeight * 0.5);
-						fireSimplePositionEvent("click", pos);
-					});
-				} else {
-					click_event__ = component->Tapped += ref new TappedEventHandler([this](Platform::Object^ sender, TappedRoutedEventArgs^ e) {
-						const auto component = safe_cast<FrameworkElement^>(sender);
-						fireSimplePositionEvent("click", e->GetPosition(component));
-					});
-				}
+				click_event__ = component->Tapped += ref new TappedEventHandler([this](Platform::Object^ sender, TappedRoutedEventArgs^ e) {
+					const auto component = safe_cast<FrameworkElement^>(sender);
+					fireSimplePositionEvent("click", e->GetPosition(component));
+				});
 			} else if (event_name == "dblclick") {
 				dblclick_event__ = component->DoubleTapped += ref new DoubleTappedEventHandler([this](Platform::Object^ sender, DoubleTappedRoutedEventArgs^ e) {
 					const auto component = safe_cast<FrameworkElement^>(sender);

@@ -160,14 +160,36 @@ namespace Titanium
 		fireEvent(name, get_context().CreateObject());
 	}
 
-	void Module::fireEvent(const std::string& name, const JSObject& event) TITANIUM_NOEXCEPT
+	void Module::fireEvent(const std::string& name, const JSObject& event, const bool& propagate) TITANIUM_NOEXCEPT
 	{
 		if (!enableEvents__) {
 			TITANIUM_LOG_WARN(apiName__, " fireEvent: Stopped firing '", name, "'");
 			return;
 		}
+
+		// bubbleParent:
+		// 1. if bubbleParent=true and parent listens to the event, invoke event for both
+		// 2. if bubbleParent=false and parent listens to the event, don't fire parent event
+
+		// if source is not 'this' module and its bubleParent=false, leave it to the source
+		const auto source = event.GetProperty("source");
+		if (source.IsObject()) {
+			const auto sourceObj = static_cast<JSObject>(source).GetPrivate<Module>();
+			if (sourceObj && !sourceObj->get_bubbleParent()) {
+				return;
+			}
+		}
+
+		// if this module does not listen to it
 		if (event_listener_map__.find(name) == event_listener_map__.end()) {
-			TITANIUM_LOG_WARN(apiName__, " fireEvent: No event named '", name, "' has been added");
+			// bubbleParent=true and parent listens to it? then invoke parent event
+			const auto parent = get_object().GetProperty("parent");
+			if (propagate && get_bubbleParent() && parent.IsObject()) {
+				const auto parentObj = static_cast<JSObject>(parent).GetPrivate<Module>();
+				if (parentObj) {
+					parentObj->fireEvent(name, event);
+				}
+			}
 			return;
 		}
 
