@@ -58,6 +58,7 @@ namespace TitaniumWindows
 				JSObject  eventArgs = ctx.CreateObject();
 				eventArgs.SetProperty("x", ctx.CreateNumber(pos.X));
 				eventArgs.SetProperty("y", ctx.CreateNumber(pos.Y));
+				eventArgs.SetProperty("source", get_object());
 
 				// If button is part of TableViewRow, it needs additional data
 				const auto bubbleEventData = getBubbleEventData();
