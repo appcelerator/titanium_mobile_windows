@@ -509,6 +509,8 @@ namespace Titanium
 				if (!defaultUnit || *defaultUnit == "system")
 				{
 					DefaultUnit__ = "px";
+				} else {
+					DefaultUnit__ = *defaultUnit;
 				}
 				// Validate that unit is one of our set of known units!
 				// FIXME Some platforms allow other units. See "sp" and "sip" for Android
