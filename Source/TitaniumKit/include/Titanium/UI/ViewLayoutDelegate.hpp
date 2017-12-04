@@ -619,9 +619,13 @@ namespace Titanium
 			ViewLayoutDelegate() TITANIUM_NOEXCEPT;
 			virtual ~ViewLayoutDelegate();
 
+			static std::string GetDefaultUnit(const std::shared_ptr<ViewLayoutEventDelegate>& event_delegate) TITANIUM_NOEXCEPT;
+
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
+			static std::string DefaultUnit__;
+
 			std::shared_ptr<View> parent__;
 			std::vector<std::shared_ptr<View>> children__;
 			std::string backgroundImage__;

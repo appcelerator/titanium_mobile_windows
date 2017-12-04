@@ -1057,20 +1057,24 @@ namespace TitaniumWindows
 
 			const auto ppi = ComputePPI(Titanium::LayoutEngine::ValueName::Width);
 
+			auto event_delegate = event_delegate__.lock();
+			TITANIUM_ASSERT(event_delegate != nullptr);
+			std::string defaultUnits = ViewLayoutDelegate::GetDefaultUnit(event_delegate);
+
 			if ((is_control__ || underlying_control__) && !is_border__) {
 				// Xaml::Control descendant has its own border property.
 				// Use it then, it usually works better than Xaml::Border. Note that it doesn't support border radius though...
 				const auto control = underlying_control__ ? underlying_control__ : dynamic_cast<Control^>(component__);
 				control->BorderBrush = borderColorBrush__;
-				control->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+				control->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnits);
 			} else if (border__) {
 				border__->BorderBrush = borderColorBrush__;
-				border__->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
-				border__->CornerRadius = CornerRadiusHelper::FromUniformRadius(Titanium::LayoutEngine::parseUnitValue(get_borderRadius(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px"));
+				border__->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnits);
+				border__->CornerRadius = CornerRadiusHelper::FromUniformRadius(Titanium::LayoutEngine::parseUnitValue(get_borderRadius(), Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnits));
 			} else if (is_grid__) {
 				const auto control = dynamic_cast<Controls::Grid^>(component__);
 				control->BorderBrush = borderColorBrush__;
-				control->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+				control->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnits);
 			}
 		}
 
@@ -1666,8 +1670,13 @@ namespace TitaniumWindows
 			if (parent__) {
 				const auto p_border = parent__->getViewLayoutDelegate()->get_borderWidth();
 				const auto ppi = ComputePPI(Titanium::LayoutEngine::ValueName::Width);
-				rect.x -= Titanium::LayoutEngine::parseUnitValue(p_border, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
-				rect.y -= Titanium::LayoutEngine::parseUnitValue(p_border, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+
+				auto event_delegate = event_delegate__.lock();
+				TITANIUM_ASSERT(event_delegate != nullptr);
+				std::string defaultUnits = ViewLayoutDelegate::GetDefaultUnit(event_delegate);
+
+				rect.x -= Titanium::LayoutEngine::parseUnitValue(p_border, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnits);
+				rect.y -= Titanium::LayoutEngine::parseUnitValue(p_border, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnits);
 			}
 
 			auto skipHeight = shouldUseOwnHeight() || (is_default_height_size__ && rect.height == 0);
@@ -1902,22 +1911,9 @@ namespace TitaniumWindows
 			double ppi = ComputePPI(name);
 
 			// Get the defaultUnits from ti.ui.defaultUnit!
-			std::string defaultUnits = "px";
 			auto event_delegate = event_delegate__.lock();
-		 	if (event_delegate != nullptr) {
-			 	JSContext js_context = event_delegate->get_context();
-
-			 	JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
-				TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-				JSObject Titanium = static_cast<JSObject>(Titanium_property);
-
-				JSValue App_property = Titanium.GetProperty("App");
-				TITANIUM_ASSERT(App_property.IsObject());  // precondition
-				JSObject App = static_cast<JSObject>(App_property);
-
-				const auto object_ptr = App.GetPrivate<Titanium::AppModule>();
-				defaultUnits = object_ptr->defaultUnit();
-		 	}
+			TITANIUM_ASSERT(event_delegate != nullptr);
+			std::string defaultUnits = ViewLayoutDelegate::GetDefaultUnit(event_delegate);
 			Titanium::LayoutEngine::populateLayoutProperties(prop, properties ? properties.get() : &layout_node__->properties, ppi, defaultUnits);
 
 			if (isLoaded()) {

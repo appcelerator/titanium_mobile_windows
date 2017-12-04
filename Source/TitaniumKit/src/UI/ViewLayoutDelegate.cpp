@@ -9,11 +9,15 @@
 #include "Titanium/UI/ViewLayoutDelegate.hpp"
 #include "Titanium/UI/View.hpp"
 #include "Titanium/detail/TiLogger.hpp"
+#include "Titanium/App.hpp"
+#include "Titanium/App/Properties.hpp"
 
 namespace Titanium
 {
 	namespace UI
 	{
+		std::string ViewLayoutDelegate::DefaultUnit__;
+
 		ViewLayoutDelegate::ViewLayoutDelegate() TITANIUM_NOEXCEPT :
 			opacity__(1.0),
 			borderWidth__("0"),
@@ -487,6 +491,37 @@ namespace Titanium
 		void ViewLayoutDelegate::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
 			TITANIUM_LOG_WARN("ViewLayoutDelegate::enableEvent: Unimplemented");
+		}
+
+		std::string ViewLayoutDelegate::GetDefaultUnit(const std::shared_ptr<ViewLayoutEventDelegate>& event_delegate) TITANIUM_NOEXCEPT
+		{
+			if (DefaultUnit__.empty()) {
+				const auto js_context = event_delegate->get_context();
+				JSObject App = Titanium::AppModule::GetStaticObject(js_context);
+
+				JSValue Properties_property = App.GetProperty("Properties");
+				TITANIUM_ASSERT(Properties_property.IsObject());  // precondition
+				JSObject Properties = static_cast<JSObject>(Properties_property);
+
+				auto props = Properties.GetPrivate<::Titanium::App::Properties>();
+				auto defaultUnit = props->getString("ti.ui.defaultunit", boost::optional<std::string>("px"));
+
+				if (!defaultUnit || *defaultUnit == "system")
+				{
+					DefaultUnit__ = "px";
+				}
+				// Validate that unit is one of our set of known units!
+				// FIXME Some platforms allow other units. See "sp" and "sip" for Android
+				if (DefaultUnit__ != "mm" && DefaultUnit__ != "cm" &&
+					DefaultUnit__ != "em" && DefaultUnit__ != "pt" &&
+					DefaultUnit__ != "pc" && DefaultUnit__ != "in" &&
+					DefaultUnit__ != "px" && DefaultUnit__ != "dp" &&
+					DefaultUnit__ != "dip")
+				{
+					DefaultUnit__ = "px";
+				}
+			}
+			return DefaultUnit__;
 		}
 
 		ViewLayoutEventDelegate::ViewLayoutEventDelegate(View* view) TITANIUM_NOEXCEPT :
