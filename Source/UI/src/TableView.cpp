@@ -654,17 +654,26 @@ namespace TitaniumWindows
 			TITANIUM_ASSERT(collectionViewItems__->Size > sectionIndex);
 
 			if (name == "append") {
+				auto new_row = row;
+				// copy existing properties when given row is already added to section
+				// re-using exsiting view causes internal error at rendering.
+				if (row->get_added()) {
+					auto ctor = get_context().CreateObject(JSExport<TitaniumWindows::UI::TableViewRow>::Class());
+					new_row = ctor.CallAsConstructor().GetPrivate<TitaniumWindows::UI::TableViewRow>();
+					new_row->applyProperties(row->get_data(), new_row->get_object());
+				}
+
 				unbindCollectionViewSource();
 				const auto rowIndexInCollectionView = getRowIndexInCollectionView(section, rowIndex);
 				const auto views = static_cast<Vector<UIElement^>^>(collectionViewItems__->GetAt(sectionIndex));
-				const auto rowContent = row->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
+				const auto rowContent = new_row->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
 				TITANIUM_ASSERT(rowContent);
 				if (views->Size > rowIndexInCollectionView) {
 					views->InsertAt(rowIndexInCollectionView, rowContent);
 				} else {
 					views->Append(rowContent);
 				}
-				registerTableViewRowAsLayoutNode(row);
+				registerTableViewRowAsLayoutNode(new_row);
 				bindCollectionViewSource();
 			} else if (name == "remove") {
 				unbindCollectionViewSource();
@@ -675,6 +684,7 @@ namespace TitaniumWindows
 			} else if (name == "update") {
 				TITANIUM_ASSERT(old_row != nullptr);
 				// copy existing properties when given row is already added to section
+				// re-using exsiting view causes internal error at rendering.
 				if (row->get_added()) {
 					auto ctor   = get_context().CreateObject(JSExport<TitaniumWindows::UI::TableViewRow>::Class());
 					auto new_row = ctor.CallAsConstructor().GetPrivate<TitaniumWindows::UI::TableViewRow>();
