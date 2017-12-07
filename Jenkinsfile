@@ -70,7 +70,7 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion) {
 			bat 'npm install .'
 			echo "Running tests on ${target}"
 			try {
-				timeout(20) {
+				timeout(30) {
 					if ('ws-local'.equals(target)) {
 						bat "node test.js -p windows -T ${target} --skip-sdk-install --cleanup"
 					} else if ('wp-emulator'.equals(target)) {
