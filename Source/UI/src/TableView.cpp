@@ -237,7 +237,6 @@ namespace TitaniumWindows
 		void TableView::set_data(const std::vector<JSObject>& data) TITANIUM_NOEXCEPT
 		{
 			if (propertiesSet__) {
-				unregisterSections();
 				Titanium::UI::TableView::set_data(data);
 				createTableSectionUIElements();
 			} else {
