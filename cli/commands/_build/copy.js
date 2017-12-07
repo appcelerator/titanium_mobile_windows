@@ -21,29 +21,7 @@ exports.mixin = mixin;
  Implementation.
  */
 function mixin(WindowsBuilder) {
-	WindowsBuilder.prototype.copyResultsToProject = copyResultsToProject;
 	WindowsBuilder.prototype.copyResources = copyResources;
-}
-
-// Copy to original location!
-/**
- * Copies the build directory back to the project's build directory if we compiled in temp.
- *
- * @param {Function} next - A function to call after the build manifest has been written.
- */
-function copyResultsToProject(next) {
-	if (this.originalBuildDir) {
-		this.logger.info(__('Copying results back to project build directory'));
-		// if already exists, wipe it
-		fs.existsSync(this.originalBuildDir) && wrench.rmdirSyncRecursive(this.originalBuildDir);
-		// make sure destination exists
-		fs.existsSync(this.originalBuildDir) || wrench.mkdirSyncRecursive(this.originalBuildDir);
-		// Now copy this.buildDir into this.originalBuildDir
-		wrench.copyDirSyncRecursive(this.buildDir, this.originalBuildDir, {
-			forceDelete: true
-		});
-	}
-	next();
 }
 
 /**
