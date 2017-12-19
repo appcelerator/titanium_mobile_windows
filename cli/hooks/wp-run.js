@@ -201,7 +201,7 @@ exports.init = function (logger, config, cli) {
 					dependenciesDir = path.resolve(appxDir, 'Dependencies', (builder.cmakeArch == 'Win32') ? 'x86' : builder.cmakeArch),
 					// Options for installing app
 					opts = appc.util.mix({
-						forceUnInstall: cli.argv['forceUnInstall'],
+						forceUnInstall: cli.argv.hasOwnProperty('forceUnInstall'),
 						killIfRunning: false,
 						timeout: config.get('windows.log.timeout', 60000),
 						wpsdk: builder.wpsdk
