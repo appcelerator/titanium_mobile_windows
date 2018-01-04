@@ -31,22 +31,16 @@ function Titanium_RedScreenOfDeath(e) {
     }
 
     try {
-
-        Ti.API.error("----- Titanium Javascript Runtime Error -----");
-        Ti.API.error("In " + e.fileName + ": " + e.line + "," + e.column);
-        Ti.API.error("Message: Uncaught Error: " + e.message);
-
-        var f = e.fileName || "",
-            match = f.match(/:\/\/.+(\/.*)/),
-            filename = match ? match[1] : e.fileName,
-            line = e.lineNumber,
-            win = Ti.UI.createWindow({
+        var win = Ti.UI.createWindow({
                 backgroundColor: "#f00",
                 layout: "vertical"
             }),
             view,
             button;
 
+        function makeMessage(e) {
+            return (e.fileName ? "In " + e.fileName + " " : "") + (e.message || e.toString()).trim() + (e.lineNumber ? " (line " + e.lineNumber + " column " + e.columnNumber + ")" : "");
+        } 
         function makeLabel(text, height, color, fontSize) {
             var label = Ti.UI.createView({
                 height: height,
@@ -63,9 +57,12 @@ function Titanium_RedScreenOfDeath(e) {
             win.add(label);
         }
 
+        Ti.API.error("----- Titanium Javascript Runtime Error -----");
+        Ti.API.error("Message: Uncaught Error: " + makeMessage(e));
+
         win.add(view = Ti.UI.createView({ height: "12%" }));
         makeLabel("Application Error", "15%", "#0f0", "34");
-        makeLabel((e.message || e.toString()).trim() + (line ? " (line " + line + ")" : ""), "45%", "#fff", "26");
+        makeLabel(makeMessage(e), "45%", "#fff", "26");
         win.add(view = Ti.UI.createView({ height: "12%" }));
         view.add(button = Ti.UI.createButton({ title: "Dismiss" }));
         button.addEventListener("click", function () {
