@@ -253,6 +253,9 @@ namespace Titanium
 		void ViewLayoutDelegate::set_borderColor(const std::string& borderColor) TITANIUM_NOEXCEPT
 		{
 			borderColor__ = borderColor;
+			if (borderWidth__.empty() || borderWidth__ == "0") {
+				set_borderWidth("1");
+			}
 		}
 
 		std::string ViewLayoutDelegate::get_borderRadius() const TITANIUM_NOEXCEPT
