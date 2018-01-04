@@ -450,7 +450,15 @@ namespace TitaniumWindows
 					ui_view = layoutDelegate__->rescueGetView(viewObj);
 				}
 				if (ui_view) {
-					ui_view->set_parent(this->get_object().GetPrivate<View>());
+					const auto parent_view_ptr = this->get_object().GetPrivate<View>();
+
+					// Compare parent, this indicates you're trying to add it before it's removed
+					if (ui_view->get_parent() == parent_view_ptr) {
+						TITANIUM_LOG_WARN("Window.add: This indicates this component is already added");
+						return get_context().CreateUndefined();
+					}
+
+					ui_view->set_parent(parent_view_ptr);
 					layoutDelegate__->add(ui_view);
 				} else {
 					HAL::detail::ThrowRuntimeError("Window::add", "Window.add: Unable to get native view from View");
