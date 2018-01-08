@@ -522,14 +522,17 @@ namespace Titanium
 		TITANIUM_PROPERTY_SETTER(View, transform)
 		{
 			CHECK_UI_DELEGATE_SETTER;
-			TITANIUM_ASSERT(argument.IsObject());
-			const auto object = static_cast<JSObject>(argument);
-			const auto matrix2d = object.GetPrivate<TwoDMatrix>();
-			const auto matrix3d = object.GetPrivate<ThreeDMatrix>();
-			if (matrix2d) {
-				layoutDelegate__->set_transform2D(matrix2d);
-			} else if (matrix3d) {
-				layoutDelegate__->set_transform3D(matrix3d);
+			if (argument.IsObject()) {
+				const auto object = static_cast<JSObject>(argument);
+				const auto matrix2d = object.GetPrivate<TwoDMatrix>();
+				const auto matrix3d = object.GetPrivate<ThreeDMatrix>();
+				if (matrix2d) {
+					layoutDelegate__->set_transform2D(matrix2d);
+				} else if (matrix3d) {
+					layoutDelegate__->set_transform3D(matrix3d);
+				}
+			} else {
+				layoutDelegate__->set_transform3D(nullptr);
 			}
 			return true;
 		}
