@@ -117,7 +117,7 @@ namespace Titanium
 
 			// Compare parent, this indicates you're trying to add it before it's removed
 			if (view_ptr->get_parent() == parent_view_ptr) {
-				get_context().JSEvaluateScript("Ti.API.warn('View.add: This indicates this component is already added');");
+				TITANIUM_LOG_WARN("Ti.API.warn('View.add: This indicates this component is already added');");
 				return;
 			}
 
@@ -696,7 +696,7 @@ namespace Titanium
 
 			// Compare parent, this indicates you're trying to add it before it's removed
 			if (view_ptr->get_parent() == parent_view_ptr) {
-				get_context().JSEvaluateScript("Ti.API.warn('View.add: This indicates this component is already added');");
+				TITANIUM_LOG_WARN("Ti.API.warn('View.add: This indicates this component is already added');");
 				return get_context().CreateUndefined();
 			}
 
