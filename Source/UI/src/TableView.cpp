@@ -155,10 +155,10 @@ namespace TitaniumWindows
 					saved_collectionViewItems__ = collectionViewItems__;
 				}
 
-				const auto section = ref new Vector<UIElement^>();
+				const auto views = ref new Vector<UIElement^>();
 
 				collectionViewItems__ = ref new Vector<Platform::Object^>();
-				collectionViewItems__->Append(section);
+				collectionViewItems__->Append(views);
 
 				if (model__->get_saved_positions().size() > 0) {
 					// filter out rows
@@ -166,8 +166,9 @@ namespace TitaniumWindows
 						const auto sectionIndex = std::get<0>(pos);
 						const auto rowIndex     = std::get<1>(pos);
 
+						const auto section = model__->getSectionAtIndex(sectionIndex);
 						const auto group = reinterpret_cast<Vector<UIElement^>^>(saved_collectionViewItems__->GetAt(sectionIndex));
-						section->Append(group->GetAt(rowIndex));
+						views->Append(group->GetAt(rowIndex + (section->hasHeader() ? 1 : 0)));
 					}
 				} else {
 					// When there's no results, show "No results"
@@ -176,7 +177,7 @@ namespace TitaniumWindows
 					TITANIUM_ASSERT(row_ptr != nullptr);
 					row_ptr->set_title("No results");
 
-					section->Append(row_ptr->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent());
+					views->Append(row_ptr->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent());
 				}
 
 				bindCollectionViewSource();
