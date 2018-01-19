@@ -482,6 +482,7 @@ namespace TitaniumWindows
 		{
 			auto layoutDelegate = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 			Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), view->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getLayoutNode());
+			Titanium::LayoutEngine::nodeLayout(layoutDelegate->getLayoutNode());
 		}
 
 		// Remove child view 

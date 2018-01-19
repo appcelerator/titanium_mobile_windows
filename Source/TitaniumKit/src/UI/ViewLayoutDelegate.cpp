@@ -35,7 +35,7 @@ namespace Titanium
 
 		void ViewLayoutDelegate::add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
-			auto it = std::find(children__.begin(), children__.end(), view);
+			const auto it = std::find(children__.begin(), children__.end(), view);
 			if (it == children__.end()) {
 				children__.push_back(view);
 			}
@@ -43,7 +43,7 @@ namespace Titanium
 
 		void ViewLayoutDelegate::remove(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
-			auto it = std::find(children__.begin(), children__.end(), view);
+			const auto it = std::find(children__.begin(), children__.end(), view);
 			if (it != children__.end()) {
 				children__.erase(it);
 			}
@@ -56,13 +56,19 @@ namespace Titanium
 
 		void ViewLayoutDelegate::insertAt(const ViewInsertOrReplaceParams& params) TITANIUM_NOEXCEPT
 		{
-			children__.insert(children__.begin() + params.position, params.view);
+			const auto it = std::find(children__.begin(), children__.end(), params.view);
+			if (it == children__.end()) {
+				children__.insert(children__.begin() + params.position, params.view);
+			}
 		}
 
 		void ViewLayoutDelegate::replaceAt(const ViewInsertOrReplaceParams& params) TITANIUM_NOEXCEPT
 		{
-			children__.erase(children__.begin() + params.position);
-			children__.insert(children__.begin() + params.position, params.view);
+			const auto it = std::find(children__.begin(), children__.end(), params.view);
+			if (it != children__.end()) {
+				children__.erase(children__.begin() + params.position);
+				children__.insert(children__.begin() + params.position, params.view);
+			}
 		}
 
 		void ViewLayoutDelegate::animate(const std::shared_ptr<Titanium::UI::Animation>& animation, JSObject& callback, const JSObject& this_object) TITANIUM_NOEXCEPT
