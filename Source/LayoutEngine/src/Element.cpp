@@ -53,20 +53,26 @@ namespace Titanium
 
 		void addChildElement(Element* parent, Element* child)
 		{
-			(*parent).children.push_back(child);
+			const auto it = std::find(parent->children.begin(), parent->children.end(), child);
+			if (it == parent->children.end()) {
+				parent->children.push_back(child);
+			}
 		}
 
 		void removeChildElement(struct Element* parent, struct Element* child)
 		{
-			auto i = std::find(parent->children.begin(), parent->children.end(), child);
-			if (i != parent->children.end()) {
-				parent->children.erase(i);
+			const auto it = std::find(parent->children.begin(), parent->children.end(), child);
+			if (it != parent->children.end()) {
+				parent->children.erase(it);
 			}
 		}
 
 		void insertChildElementAt(Element* parent, Element* child, unsigned int index) 
 		{
-			parent->children.insert(parent->children.begin() + index, child);
+			const auto it = std::find(parent->children.begin(), parent->children.end(), child);
+			if (it == parent->children.end()) {
+				parent->children.insert(parent->children.begin() + index, child);
+			}
 		}
 	} // namespace LayoutEngine
 } // namespace Titanium
