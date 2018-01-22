@@ -237,7 +237,6 @@ namespace TitaniumWindows
 		void TableView::set_data(const std::vector<JSObject>& data) TITANIUM_NOEXCEPT
 		{
 			if (propertiesSet__) {
-				unregisterSections();
 				Titanium::UI::TableView::set_data(data);
 				createTableSectionUIElements();
 			} else {
@@ -483,6 +482,7 @@ namespace TitaniumWindows
 		{
 			auto layoutDelegate = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 			Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), view->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getLayoutNode());
+			Titanium::LayoutEngine::nodeLayout(layoutDelegate->getLayoutNode());
 		}
 
 		// Remove child view 

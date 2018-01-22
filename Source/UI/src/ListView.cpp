@@ -625,6 +625,7 @@ namespace TitaniumWindows
 			}
 			auto layoutDelegate = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 			Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), view->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getLayoutNode());
+			Titanium::LayoutEngine::nodeLayout(layoutDelegate->getLayoutNode());
 		}
 
 		void ListView::unregisterListViewItemAsLayoutNode(const std::shared_ptr<Titanium::UI::View>& view) 

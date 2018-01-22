@@ -113,13 +113,20 @@ namespace Titanium
 				return;
 			}
 			auto view_ptr = view.GetPrivate<View>();
+			const auto parent_view_ptr = this->get_object().GetPrivate<View>();
+
+			// Compare parent, this indicates you're trying to add it before it's removed
+			if (view_ptr->get_parent() == parent_view_ptr) {
+				TITANIUM_LOG_WARN("View.add: This indicates this component is already added");
+				return;
+			}
 
 			// For mixing Ti.Ui.View and native view.
 			if (view_ptr == nullptr) {
 				view_ptr = layoutDelegate__->rescueGetView(view);
 			}
 
-			view_ptr->set_parent(this->get_object().GetPrivate<View>());
+			view_ptr->set_parent(parent_view_ptr);
 
 			layoutDelegate__->add(view_ptr);
 		}
@@ -663,7 +670,9 @@ namespace Titanium
 		{
 			CHECK_UI_DELEGATE_GETTER
 			ENSURE_OBJECT_AT_INDEX(view, 0);
-			layoutDelegate__->remove(view.GetPrivate<View>());
+			const auto view_ptr = view.GetPrivate<View>();
+			view_ptr->set_parent(nullptr);
+			layoutDelegate__->remove(view_ptr);
 			return get_context().CreateUndefined();
 		}
 
@@ -680,7 +689,20 @@ namespace Titanium
 			CHECK_UI_DELEGATE_GETTER
 			ENSURE_OBJECT_AT_INDEX(params, 0);
 
-			layoutDelegate__->insertAt(js_to_ViewInsertOrReplaceParams(params));
+			const auto viewInsertParams = js_to_ViewInsertOrReplaceParams(params);
+			const auto view_ptr = viewInsertParams.view;
+
+			const auto parent_view_ptr = this->get_object().GetPrivate<View>();
+
+			// Compare parent, this indicates you're trying to add it before it's removed
+			if (view_ptr->get_parent() == parent_view_ptr) {
+				TITANIUM_LOG_WARN("View.add: This indicates this component is already added");
+				return get_context().CreateUndefined();
+			}
+
+			view_ptr->set_parent(this->get_object().GetPrivate<View>());
+
+			layoutDelegate__->insertAt(viewInsertParams);
 			return get_context().CreateUndefined();
 		}
 
@@ -689,7 +711,11 @@ namespace Titanium
 			CHECK_UI_DELEGATE_GETTER
 			ENSURE_OBJECT_AT_INDEX(params, 0);
 
-			layoutDelegate__->replaceAt(js_to_ViewInsertOrReplaceParams(params));
+			const auto viewInsertParams = js_to_ViewInsertOrReplaceParams(params);
+			const auto view_ptr = viewInsertParams.view;
+			view_ptr->set_parent(this->get_object().GetPrivate<View>());
+
+			layoutDelegate__->replaceAt(viewInsertParams);
 			return get_context().CreateUndefined();
 		}
 
