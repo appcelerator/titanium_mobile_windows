@@ -135,8 +135,6 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::removeView(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
-			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::remove ", view.get(), " for ", this);
-
 			if (!is_panel__) {
 				TITANIUM_LOG_WARN("WindowsViewLayoutDelegate::remove: Unknown component");
 				return;
@@ -171,8 +169,6 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ViewLayoutDelegate::add(view);
 
-			TITANIUM_LOG_WARN("WindowsViewLayoutDelegate::add ", view.get(), " for ", this);
-
 			if (!is_panel__) {
 				TITANIUM_LOG_WARN("WindowsViewLayoutDelegate::add: Unknown component");
 				return;
@@ -186,10 +182,11 @@ namespace TitaniumWindows
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
 					uint32_t index = 0;
 					if (nativeView->Children->IndexOf(nativeChildView, &index)) {
-						TITANIUM_LOG_DEBUG("This UI element is already added");
+						TITANIUM_LOG_WARN("This UI element is already added");
 						return;
 					}
 					nativeView->Children->Append(nativeChildView);
+					TITANIUM_LOG_DEBUG("Titanium::LayoutEngine::nodeAddChild ", newView->getLayoutNode(), " for ", layout_node__ );
 					Titanium::LayoutEngine::nodeAddChild(layout_node__, newView->getLayoutNode());
 					if (isLoaded()) {
 						requestLayout();
@@ -1543,6 +1540,7 @@ namespace TitaniumWindows
 					component->ActualWidth,
 					component->ActualHeight
 				);
+
 				onComponentLoaded(rect);
 			});
 
@@ -1758,6 +1756,8 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::requestLayout(const bool& fire_event)
 		{
+			Titanium::LayoutEngine::nodeLayout(layout_node__);
+
 			const auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
 			if (root) {
 				Titanium::LayoutEngine::nodeLayout(root);

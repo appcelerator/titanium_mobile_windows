@@ -60,6 +60,12 @@ namespace Titanium
 
 		void TableView::set_data(const std::vector<JSObject>& data) TITANIUM_NOEXCEPT
 		{
+			// Clear exsting sections in model
+			for (const auto section : model__->get_sections()) {
+				for (const auto row : section->get_rows()) {
+					section->remove(row);
+				}
+			}
 			model__->clear();
 			for (std::uint32_t i = 0; i < data.size(); i++) {
 				const auto datum    = data.at(i);
