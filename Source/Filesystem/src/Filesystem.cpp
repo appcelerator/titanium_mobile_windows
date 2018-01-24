@@ -83,6 +83,9 @@ namespace TitaniumWindows
 		// Need to check exception here because this requires "Removable Storage" capability
 		try {
 			const auto value = Windows::Storage::KnownFolders::RemovableDevices->Path;
+			if (value->IsEmpty()) {
+				return "";
+			}
 			return TitaniumWindows::Utility::ConvertString(value) + separator(); // FIXME Only append separator if not already there!
 		} catch (Platform::AccessDeniedException^ e) {
 			return "";
