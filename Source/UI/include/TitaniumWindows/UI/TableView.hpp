@@ -113,6 +113,7 @@ namespace TitaniumWindows
 			Windows::UI::Xaml::Controls::ScrollViewer^ scrollview__;
 			Windows::UI::Xaml::Data::CollectionViewSource^ collectionViewSource__;
 			Windows::Foundation::Collections::IObservableVector<::Platform::Object^>^ collectionViewItems__;
+			Windows::Foundation::Collections::IObservableVector<::Platform::Object^>^ saved_collectionViewItems__;
 			Windows::UI::Xaml::Media::Brush^ separatorBrush__;
 
 			Windows::Foundation::EventRegistrationToken click_event__;
