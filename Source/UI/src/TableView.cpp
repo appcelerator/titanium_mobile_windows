@@ -50,6 +50,8 @@ namespace TitaniumWindows
 			auto binding = ref new Data::Binding();
 			binding->Source = collectionViewSource__;
 			Data::BindingOperations::SetBinding(tableview__, Controls::ListView::ItemsSourceProperty, binding);
+
+			saved_collectionViewItems__ = ref new Vector<Platform::Object^>();
 		}
 
 		void TableView::clearTableData() 
@@ -131,7 +133,54 @@ namespace TitaniumWindows
 		{
 			// Make sure to update UI from UI thread
 			TitaniumWindows::Utility::RunOnUIThread([this, query]() {
+
 				Titanium::UI::TableView::querySubmitted(query);
+
+				if (query.empty()) {
+					// restore sections
+					if (saved_collectionViewItems__->Size > 0) {
+						unbindCollectionViewSource();
+
+						collectionViewItems__ = saved_collectionViewItems__;
+						saved_collectionViewItems__ = ref new Vector<Platform::Object^>();
+
+						bindCollectionViewSource();
+					}
+					return;
+				}
+
+				unbindCollectionViewSource();
+
+				if (saved_collectionViewItems__->Size == 0) {
+					saved_collectionViewItems__ = collectionViewItems__;
+				}
+
+				const auto views = ref new Vector<UIElement^>();
+
+				collectionViewItems__ = ref new Vector<Platform::Object^>();
+				collectionViewItems__->Append(views);
+
+				if (model__->get_saved_positions().size() > 0) {
+					// filter out rows
+					for (const auto pos : model__->get_saved_positions()) {
+						const auto sectionIndex = std::get<0>(pos);
+						const auto rowIndex     = std::get<1>(pos);
+
+						const auto section = model__->getSectionAtIndex(sectionIndex);
+						const auto group = reinterpret_cast<Vector<UIElement^>^>(saved_collectionViewItems__->GetAt(sectionIndex));
+						views->Append(group->GetAt(rowIndex + (section->hasHeader() ? 1 : 0)));
+					}
+				} else {
+					// When there's no results, show "No results"
+					auto ctor = get_context().CreateObject(JSExport<TableViewRow>::Class());
+					auto row_ptr = ctor.CallAsConstructor().GetPrivate<TableViewRow>();
+					TITANIUM_ASSERT(row_ptr != nullptr);
+					row_ptr->set_title("No results");
+
+					views->Append(row_ptr->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent());
+				}
+
+				bindCollectionViewSource();
 			});
 		}
 

@@ -141,7 +141,6 @@ namespace Titanium
 				if (model__->isSaved()) {
 					model__->restore();
 				}
-				set_sections(model__->get_sections());
 				return;
 			}
 
@@ -163,24 +162,13 @@ namespace Titanium
 					if (row->contains(query, filterAnchored, filterCaseInsensitive, filterAttribute)) {
 						// Save "original" position so we can search it easily later on
 						saved_position.push_back(std::make_tuple(sectionIndex, itemIndex));
-						section->add(row);
 					}
 				}
 			}
 
-			// When there's no results, show "No results"
-			if (section->get_itemCount() == 0) {
-				JSObject param = get_context().CreateObject();
-				CREATE_TITANIUM_UI_INSTANCE(js_row, param, TableViewRow);
-				const auto row_ptr = js_row.GetPrivate<TableViewRow>();
-				TITANIUM_ASSERT(row_ptr != nullptr);
-				row_ptr->set_title("No results");
-				section->add(row_ptr);
+			if (saved_position.size() > 0) {
+				model__->save_positions(saved_position);
 			}
-
-			model__->save_positions(saved_position);
-			sections.push_back(section);
-			set_sections(sections);
 		}
 
 		std::vector<std::string> TableView::suggestionRequested(const std::string& query)
