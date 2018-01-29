@@ -124,6 +124,20 @@ namespace Titanium
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(std::unordered_set<AUTOLINK>, autoLink);
 
+			/*!
+			  @property
+			  @abstract minimumFontSize
+			  @discussion Minimum font size when the font is sized based on the contents.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(double, minimumFontSize);
+
+			/*!
+			  @property
+			  @abstract maxLines
+			  @discussion Maximum lines of text shown in the Label.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::uint32_t, maxLines);
+
 			Label(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~Label() = default;
@@ -176,6 +190,14 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getAutoLink);
 			TITANIUM_FUNCTION_DEF(setAutoLink);
 
+			TITANIUM_PROPERTY_DEF(minimumFontSize);
+			TITANIUM_FUNCTION_DEF(getMinimumFontSize);
+			TITANIUM_FUNCTION_DEF(setMinimumFontSize);
+
+			TITANIUM_PROPERTY_DEF(maxLines);
+			TITANIUM_FUNCTION_DEF(getMaxLines);
+			TITANIUM_FUNCTION_DEF(setMaxLines);
+
 		private:
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -189,6 +211,8 @@ namespace Titanium
 			bool wordWrap__;
 			std::shared_ptr<AttributedString> attributedString__;
 			std::unordered_set<AUTOLINK> autoLink__;
+			double minimumFontSize__;
+			std::uint32_t maxLines__;
 #pragma warning(pop)
 		};
 	} // namespace UI
