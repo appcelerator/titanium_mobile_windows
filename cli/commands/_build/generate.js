@@ -21,6 +21,7 @@ exports.mixin = mixin;
  Implementation.
  */
 function mixin(WindowsBuilder) {
+	WindowsBuilder.prototype.generateBuildVersion = generateBuildVersion;
 	WindowsBuilder.prototype.generateI18N = generateI18N;
 	WindowsBuilder.prototype.generateNativeTypes = generateNativeTypes;
 	WindowsBuilder.prototype.generateModuleFinder = generateModuleFinder;
@@ -31,6 +32,37 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.generateAppxManifest = generateAppxManifest;
 	WindowsBuilder.prototype.fixCSharpConfiguration = fixCSharpConfiguration;
 	WindowsBuilder.prototype.copyModuleOverride = copyModuleOverride;
+}
+
+/**
+ * Generates new build number based on tiapp.version
+ *
+ * @param {Function} next - A function to call after new version number have been generated.
+ */
+function generateBuildVersion(next) {
+	// Generates new build number based on tiapp.version
+	var version = appc.version.format(this.tiapp.version, 3, 4, true);
+	// If revision number is omitted, we generate it. Only available on development/test build.
+	// Can be disabled when 'use-auto-versioning' set false in <windows> section.
+	var disabled = this.tiapp.windows && this.tiapp.windows['use-auto-versioning'] === false;
+
+	if (!disabled && !/^dist-/.test(this.target) && version.split('.').length <= 3) {
+		var buildNumber = 0;
+		if (this.buildManifest.buildNumber) {
+			var number = parseInt(this.buildManifest.buildNumber, 10);
+			if (isNaN(number)) {
+				number = 0;
+			}
+			buildNumber = number;
+		}
+		buildNumber++;
+		this.buildVersion = appc.version.format(version + '.' + buildNumber, 4, 4, true);
+		this.buildNumber = buildNumber;
+	} else {
+		this.buildVersion = appc.version.format(version, 4, 4, true);
+		this.buildNumber  = 0;
+	}
+	next();
 }
 
 /**
@@ -268,7 +300,7 @@ function generateCmakeList(next) {
 		{
 			projectName: this.sanitizeProjectName(this.cli.tiapp.name),
 			windowsSrcDir: path.resolve(__dirname, '..', '..', '..').replace(/\\/g, '/').replace(' ', '\\ '), // cmake likes unix separators
-			version: appc.version.format(this.tiapp.version, 4, 4, true),
+			version: this.buildVersion,
 			assets: assetList.join('\n'),
 			publisherDisplayName: this.cli.tiapp.publisher,
 			publisherId: this.publisherId,
