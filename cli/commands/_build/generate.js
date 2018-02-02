@@ -21,6 +21,7 @@ exports.mixin = mixin;
  Implementation.
  */
 function mixin(WindowsBuilder) {
+	WindowsBuilder.prototype.generateBuildVersion = generateBuildVersion;
 	WindowsBuilder.prototype.generateI18N = generateI18N;
 	WindowsBuilder.prototype.generateNativeTypes = generateNativeTypes;
 	WindowsBuilder.prototype.generateModuleFinder = generateModuleFinder;
@@ -31,6 +32,31 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.generateAppxManifest = generateAppxManifest;
 	WindowsBuilder.prototype.fixCSharpConfiguration = fixCSharpConfiguration;
 	WindowsBuilder.prototype.copyModuleOverride = copyModuleOverride;
+}
+/**
+ * Generates new build number based on tiapp.version
+ *
+ * @param {Function} next - A function to call after new version number have been generated.
+ */
+function generateBuildVersion(next) {
+    var version = appc.version.format(this.tiapp.version, 2, 4, true);
+    // If build number is omitted, we generate it
+    if (version.split('.').length < 3) {
+        var buildNumber = 0;
+        var buildNumberCache = path.join(this.projectDir, 'tiapp_build_number.txt');
+        if (fs.existsSync(buildNumberCache)) {
+            buildNumber = parseInt(fs.readFileSync(buildNumberCache).toString(), 10);
+        }
+        buildNumber++;
+        fs.writeFileSync(buildNumberCache, buildNumber.toString());
+        version = appc.version.format(version + '.' + buildNumber, 4, 4, true);
+    } else {
+        version = appc.version.format(version, 4, 4, true);
+    }
+
+    this.tiapp_build_number = version;
+
+    next();
 }
 
 /**
@@ -268,7 +294,7 @@ function generateCmakeList(next) {
 		{
 			projectName: this.sanitizeProjectName(this.cli.tiapp.name),
 			windowsSrcDir: path.resolve(__dirname, '..', '..', '..').replace(/\\/g, '/').replace(' ', '\\ '), // cmake likes unix separators
-			version: appc.version.format(this.tiapp.version, 4, 4, true),
+			version: this.tiapp_build_number,
 			assets: assetList.join('\n'),
 			publisherDisplayName: this.cli.tiapp.publisher,
 			publisherId: this.publisherId,

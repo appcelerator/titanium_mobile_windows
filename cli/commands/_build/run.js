@@ -34,6 +34,7 @@ function run(logger, config, cli, finished) {
 			cli.emit('build.pre.construct', this, next);
 		},
 
+		'generateBuildVersion',
 		'doAnalytics',
 		'initialize',
 		'loginfo',

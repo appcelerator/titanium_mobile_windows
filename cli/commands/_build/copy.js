@@ -660,7 +660,7 @@ function copyResources(next) {
 					analytics: this.tiapp.analytics,
 					publisher: this.tiapp.publisher,
 					url: this.tiapp.url,
-					version: this.tiapp.version,
+					version: this.tiapp_build_number,
 					description: this.tiapp.description,
 					copyright: this.tiapp.copyright,
 					guid: this.tiapp.guid,
