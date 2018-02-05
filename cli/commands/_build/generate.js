@@ -33,30 +33,33 @@ function mixin(WindowsBuilder) {
 	WindowsBuilder.prototype.fixCSharpConfiguration = fixCSharpConfiguration;
 	WindowsBuilder.prototype.copyModuleOverride = copyModuleOverride;
 }
+
 /**
  * Generates new build number based on tiapp.version
  *
  * @param {Function} next - A function to call after new version number have been generated.
  */
 function generateBuildVersion(next) {
-    var version = appc.version.format(this.tiapp.version, 2, 4, true);
-    // If build number is omitted, we generate it
-    if (version.split('.').length < 3) {
-        var buildNumber = 0;
-        var buildNumberCache = path.join(this.projectDir, 'tiapp_build_number.txt');
-        if (fs.existsSync(buildNumberCache)) {
-            buildNumber = parseInt(fs.readFileSync(buildNumberCache).toString(), 10);
-        }
-        buildNumber++;
-        fs.writeFileSync(buildNumberCache, buildNumber.toString());
-        version = appc.version.format(version + '.' + buildNumber, 4, 4, true);
-    } else {
-        version = appc.version.format(version, 4, 4, true);
-    }
-
-    this.tiapp_build_number = version;
-
-    next();
+	// Generates new build number based on tiapp.version
+	var version = appc.version.format(this.tiapp.version, 2, 4, true);
+	// If build number is omitted, we generate it
+	if (version.split('.').length < 3) {
+		var buildNumber = 0;
+		if (this.buildManifest.buildNumber) {
+			var number = parseInt(this.buildManifest.buildNumber, 10);
+			if (isNaN(number)) {
+				number = 0;
+			}
+			buildNumber = number;
+		}
+		buildNumber++;
+		this.buildVersion = appc.version.format(version + '.' + buildNumber, 4, 4, true);
+		this.buildNumber = buildNumber;
+	} else {
+		this.buildVersion = appc.version.format(version, 4, 4, true);
+		this.buildNumber  = 0;
+	}
+	next();
 }
 
 /**
@@ -294,7 +297,7 @@ function generateCmakeList(next) {
 		{
 			projectName: this.sanitizeProjectName(this.cli.tiapp.name),
 			windowsSrcDir: path.resolve(__dirname, '..', '..', '..').replace(/\\/g, '/').replace(' ', '\\ '), // cmake likes unix separators
-			version: this.tiapp_build_number,
+			version: this.buildVersion,
 			assets: assetList.join('\n'),
 			publisherDisplayName: this.cli.tiapp.publisher,
 			publisherId: this.publisherId,

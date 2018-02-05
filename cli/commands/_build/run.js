@@ -34,13 +34,13 @@ function run(logger, config, cli, finished) {
 			cli.emit('build.pre.construct', this, next);
 		},
 
-		'generateBuildVersion',
 		'doAnalytics',
 		'initialize',
 		'loginfo',
 		'computeHashes',
 		'readBuildManifest',
 		'checkIfNeedToRecompile',
+		'generateBuildVersion',
 
 		function (next) {
 			cli.emit('build.pre.compile', this, next);
