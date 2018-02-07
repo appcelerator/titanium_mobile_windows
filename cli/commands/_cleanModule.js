@@ -1,5 +1,5 @@
 /**
-* Android module clean command.
+* Windows module clean command.
 *
 * @module cli/_cleanModule
 *
@@ -26,8 +26,9 @@ exports.run = function run(logger, config, cli, finished) {
 	const moduleVersion = cli.manifest.version;
 	const moduleZipName = [ moduleId, '-windows-', moduleVersion, '.zip' ].join('');
 
+	const moduleBuildDir = path.join('build', moduleId);
 	const toDelete = [
-		'build', 'dist', 'Windows10.ARM', 'Windows10.Win32', 'WindowsPhone.ARM/',
+		moduleBuildDir, 'dist', 'Windows10.ARM', 'Windows10.Win32', 'WindowsPhone.ARM/',
 		'WindowsPhone.Win32', 'WindowsStore.Win32', 'CMakeLists.txt', moduleZipName
 	];
 	toDelete.forEach((f) => {
