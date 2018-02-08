@@ -41,12 +41,12 @@ function mixin(WindowsBuilder) {
  */
 function generateBuildVersion(next) {
 	// Generates new build number based on tiapp.version
-	var version = appc.version.format(this.tiapp.version, 2, 4, true);
-	// If build number is omitted, we generate it. Only available on development/test build.
+	var version = appc.version.format(this.tiapp.version, 3, 4, true);
+	// If revision number is omitted, we generate it. Only available on development/test build.
 	// Can be disabled when 'use-auto-versioning' set false in <windows> section.
 	var disabled = this.tiapp.windows && this.tiapp.windows['use-auto-versioning'] === false;
 
-	if (!disabled && !/^dist-/.test(this.target) && version.split('.').length < 3) {
+	if (!disabled && !/^dist-/.test(this.target) && version.split('.').length <= 3) {
 		var buildNumber = 0;
 		if (this.buildManifest.buildNumber) {
 			var number = parseInt(this.buildManifest.buildNumber, 10);
