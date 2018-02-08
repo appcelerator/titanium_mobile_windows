@@ -164,8 +164,12 @@ exports.init = function (logger, config, cli) {
 					}, builder.windowslibOptions);
 
 				async.series([function(next) {
-					logger.info(__('Uninstalling old versions of the application'));
-					windowslib.winstore.uninstall(appId, opts, next);
+					if (cli.argv.hasOwnProperty('forceUnInstall')) {
+						logger.info(__('Uninstalling old versions of the application'));
+						windowslib.winstore.uninstall(appId, opts, next);
+					} else {
+						next();
+					}
 				}, function(next) {
 					logger.info(__('Installing the application'));
 					windowslib.winstore.install(projectDir, opts, next);
