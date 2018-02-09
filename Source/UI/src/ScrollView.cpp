@@ -38,6 +38,8 @@ namespace TitaniumWindows
 
 			// contentOffset should be updated *after* LayoutEngine did the layout.
 			scrollview__->set_contentOffset(scrollview__->get_contentOffset());
+
+			contentView__.GetPrivate<View>()->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->requestLayout(fire_event);
 		}
 
 		
@@ -47,18 +49,22 @@ namespace TitaniumWindows
 			contentView__.GetPrivate<View>()->getViewLayoutDelegate()->add(view);
 
 			view->addEventListener("click", clickCallback__, contentView__);
+
+			requestLayout(false);
 		}
 
 		void ScrollViewLayoutDelegate::removeAllChildren() TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::removeAllChildren();
 			contentView__.GetPrivate<View>()->getViewLayoutDelegate()->removeAllChildren();
+			requestLayout(false);
 		}
 
 		void ScrollViewLayoutDelegate::remove(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::remove(view);
 			contentView__.GetPrivate<View>()->getViewLayoutDelegate()->remove(view);
+			requestLayout(false);
 		}
 
 		void ScrollViewLayoutDelegate::set_layout(const std::string& layout) TITANIUM_NOEXCEPT
