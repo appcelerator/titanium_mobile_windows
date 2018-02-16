@@ -305,7 +305,7 @@ function setupGTest(url, next) {
 function setupJSC(sdkVersion, url, next) {
 	if (typeof url === 'function') {
 		next = url;
-		url = JSC_URL; // TODO: Find the default URL or remove
+		url = JSC_10_URL; // TODO: Find the default URL or remove
 	}
 
 	console.log('Setting up JavaScriptCore pre-built libraries...');
