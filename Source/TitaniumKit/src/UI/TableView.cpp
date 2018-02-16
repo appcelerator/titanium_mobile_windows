@@ -60,6 +60,12 @@ namespace Titanium
 
 		void TableView::set_data(const std::vector<JSObject>& data) TITANIUM_NOEXCEPT
 		{
+			// Clear exsting sections in model
+			for (const auto section : model__->get_sections()) {
+				for (const auto row : section->get_rows()) {
+					section->remove(row);
+				}
+			}
 			model__->clear();
 			for (std::uint32_t i = 0; i < data.size(); i++) {
 				const auto datum    = data.at(i);
@@ -135,7 +141,6 @@ namespace Titanium
 				if (model__->isSaved()) {
 					model__->restore();
 				}
-				set_sections(model__->get_sections());
 				return;
 			}
 
@@ -157,14 +162,13 @@ namespace Titanium
 					if (row->contains(query, filterAnchored, filterCaseInsensitive, filterAttribute)) {
 						// Save "original" position so we can search it easily later on
 						saved_position.push_back(std::make_tuple(sectionIndex, itemIndex));
-						section->add(row);
 					}
 				}
 			}
 
-			model__->save_positions(saved_position);
-			sections.push_back(section);
-			set_sections(sections);
+			if (saved_position.size() > 0) {
+				model__->save_positions(saved_position);
+			}
 		}
 
 		std::vector<std::string> TableView::suggestionRequested(const std::string& query)
@@ -180,7 +184,7 @@ namespace Titanium
 			for (const auto section : model__->get_saved_sections()) {
 				for (const auto row : section->get_rows()) {
 					if (row->contains(query, filterAnchored, filterCaseInsensitive, filterAttribute)) {
-						suggestions.push_back(row->get_title());
+						suggestions.push_back(row->get_title(filterAttribute));
 					}
 				}
 			}

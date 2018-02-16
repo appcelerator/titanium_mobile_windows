@@ -48,6 +48,7 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion) {
 def unitTests(target, branch, testSuiteBranch, nodeVersion) {
 	def defaultEmulatorID = '10-0-1'
 	unarchive mapping: ['dist/' : '.'] // copy in built SDK from dist/ folder (from Build stage)
+	unstash 'sources'
 	// nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 		// bat 'npm install -g npm@5.4.1' // Install NPM 5.4.1
 		dir('Tools/Scripts/build') {
@@ -64,19 +65,31 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion) {
 			// TODO Do a shallow clone, using same credentials as from scm object
 			git changelog: false, poll: false, credentialsId: 'd05dad3c-d7f9-4c65-9cb6-19fef98fc440', url: 'https://github.com/appcelerator/titanium-mobile-mocha-suite.git', branch: testSuiteBranch
 		}
-
+		unstash 'override-tests'
+		bat '(robocopy tests titanium-mobile-mocha-suite /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0'
 		dir('titanium-mobile-mocha-suite/scripts') {
 			bat 'npm install .'
 			echo "Running tests on ${target}"
 			try {
-
-				timeout(20) {
+				timeout(30) {
 					if ('ws-local'.equals(target)) {
 						bat "node test.js -p windows -T ${target} --skip-sdk-install --cleanup"
 					} else if ('wp-emulator'.equals(target)) {
 						bat "node test.js -p windows -T ${target} -C ${defaultEmulatorID} --skip-sdk-install --cleanup"
 					}
 				}
+			} catch (e) {
+				// Archive the crash reports...
+				// Crash event report:
+				// C:\ProgramData\Microsoft\Windows\WER\ReportArchive\AppCrash_com.appcelerator_8a7a6091d98a3b6827daff1404991c2a9e161a7_8c8df8cd_0a167d3a\Report.wer
+				bat 'mkdir crash_reports'
+				dir ('crash_reports') {
+					// move command doesn't grok wildcards, so we hack it: https://serverfault.com/questions/374997/move-directory-in-dos-batch-file-without-knowing-full-directory-name
+					bat "FOR /d %i IN (C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_com.appcelerator_*) DO move %i ."
+				}
+				archiveArtifacts 'crash_reports/**/*'
+				bat 'rmdir crash_reports /Q /S'
+				throw e
 			} finally {
 				// kill the emulator/app
 				if ('ws-local'.equals(target)) {
@@ -110,6 +123,7 @@ timestamps {
 			gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 			// Stash our source code/scripts so we don't need to checkout again?
 			stash name: 'sources', includes: '**', excludes: 'apidoc/**,test/**,Examples/**'
+			stash name: 'override-tests', includes: 'tests/'
 		} // Checkout stage
 
 		stage('Docs') {

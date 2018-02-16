@@ -188,7 +188,6 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(borderRadius);
 			TITANIUM_PROPERTY_DEF(borderWidth);
 			TITANIUM_PROPERTY_DEF(clipMode);
-			TITANIUM_PROPERTY_DEF(enabled);
 			TITANIUM_PROPERTY_DEF(focusable);
 			TITANIUM_PROPERTY_DEF(opacity);
 			TITANIUM_PROPERTY_DEF(overrideCurrentAnimation);
@@ -267,8 +266,6 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setBorderWidth);
 			TITANIUM_FUNCTION_DEF(getClipMode);
 			TITANIUM_FUNCTION_DEF(setClipMode);
-			TITANIUM_FUNCTION_DEF(getEnabled);
-			TITANIUM_FUNCTION_DEF(setEnabled);
 			TITANIUM_FUNCTION_DEF(getFocusable);
 			TITANIUM_FUNCTION_DEF(setFocusable);
 			TITANIUM_FUNCTION_DEF(getOpacity);

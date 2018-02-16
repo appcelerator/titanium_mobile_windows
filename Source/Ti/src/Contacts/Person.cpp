@@ -14,7 +14,11 @@
 #include <concrt.h>
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
-#
+
+#define CONTACT_VOID_GUARD if (contact__ == nullptr) return;
+#define CONTACT_STRING_GUARD if (contact__ == nullptr) return "";
+#define CONTACT_VALUE_GUARD(VALUE) if (contact__ == nullptr) return VALUE;
+
 namespace TitaniumWindows
 {
 	namespace Contacts
@@ -48,6 +52,8 @@ namespace TitaniumWindows
 		{
 			Titanium::Contacts::Addresses addresses = Titanium::Contacts::create_empty_Addresses(get_context());
 
+			CONTACT_VALUE_GUARD(addresses)
+
 			for (size_t i = 0; i < contact__->Addresses->Size; i++) {
 				auto win_address = contact__->Addresses->GetAt(i);
 
@@ -76,6 +82,7 @@ namespace TitaniumWindows
 		void Person::set_address(const Titanium::Contacts::Addresses& addresses) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_address(addresses);
+			CONTACT_VOID_GUARD
 			contact__->Addresses->Clear();
 			for (auto ad : addresses.home) {
 				auto address = createAddress(ad, ContactAddressKind::Home);
@@ -127,6 +134,7 @@ namespace TitaniumWindows
 
 		std::string Person::get_birthday() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			for (size_t i = 0; i < contact__->ImportantDates->Size; i++) {
 				auto date = contact__->ImportantDates->GetAt(i);
 				if (date->Kind == ContactDateKind::Birthday) {
@@ -139,7 +147,7 @@ namespace TitaniumWindows
 		void Person::set_birthday(const std::string& birthday) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_birthday(birthday);
-			
+			CONTACT_VOID_GUARD
 			// Loop through ImportantDates and Remove birthday entries?
 			// keep track of which entries are birthdays...
 			std::vector<size_t> to_erase;
@@ -161,7 +169,7 @@ namespace TitaniumWindows
 		Titanium::Contacts::Dates Person::get_date() const TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Dates dates = Titanium::Contacts::create_empty_Dates(get_context());
-
+			CONTACT_VALUE_GUARD(dates)
 			// Only add anniversaries and other, not birthdays
 			std::vector<size_t> to_erase;
 			for (size_t i = 0; i < contact__->ImportantDates->Size; i++) {
@@ -184,7 +192,7 @@ namespace TitaniumWindows
 		void Person::set_date(const Titanium::Contacts::Dates& dates) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_date(dates);
-
+			CONTACT_VOID_GUARD
 			// Loop through ImportantDates and Remove non-birthday entries?
 			// keep track of which entries are not birthdays...
 			std::vector<size_t> to_erase;
@@ -234,6 +242,7 @@ namespace TitaniumWindows
 
 		std::string Person::get_department() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			auto job_infos = contact__->JobInfo;
 			if (job_infos->Size == 0) {
 				return ""; // No job info, so no department
@@ -247,6 +256,7 @@ namespace TitaniumWindows
 		void Person::set_department(const std::string& department) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_department(department);
+			CONTACT_VOID_GUARD
 			auto job_infos = contact__->JobInfo;
 			ContactJobInfo^ info;
 			if (job_infos->Size == 0) {
@@ -263,6 +273,7 @@ namespace TitaniumWindows
 		Titanium::Contacts::Emails Person::get_email() const TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Emails emails = Titanium::Contacts::create_empty_Emails(get_context());
+			CONTACT_VALUE_GUARD(emails)
 			for (size_t i = 0; i < contact__->Emails->Size; i++) {
 				auto email = contact__->Emails->GetAt(i);
 				auto address = TitaniumWindows::Utility::ConvertUTF8String(email->Address);
@@ -284,6 +295,7 @@ namespace TitaniumWindows
 		void Person::set_email(const Titanium::Contacts::Emails& emails) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_email(emails);
+			CONTACT_VOID_GUARD
 			contact__->Emails->Clear();
 			for (auto ad : emails.home) {
 				auto address = createEmail(ad, ContactEmailKind::Personal);
@@ -309,29 +321,34 @@ namespace TitaniumWindows
 
 		std::string Person::get_firstName() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->FirstName);
 		}
 
 		void Person::set_firstName(const std::string& firstName) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_firstName(firstName);
+			CONTACT_VOID_GUARD
 			contact__->FirstName = TitaniumWindows::Utility::ConvertUTF8String(firstName);
 		}
 
 		std::string Person::get_firstPhonetic() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->YomiGivenName);
 		}
 
 		void Person::set_firstPhonetic(const std::string& firstPhonetic) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_firstPhonetic(firstPhonetic);
+			CONTACT_VOID_GUARD
 			contact__->YomiGivenName = TitaniumWindows::Utility::ConvertUTF8String(firstPhonetic);
 		}
 
 		std::string Person::get_fullName() const TITANIUM_NOEXCEPT
 		{
 #if defined(IS_WINDOWS_10)
+			CONTACT_STRING_GUARD
 			// Windows 10+
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->FullName);
 #else
@@ -347,6 +364,7 @@ namespace TitaniumWindows
 
 		std::string Person::get_identifier() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->Id);
 		}
 
@@ -363,6 +381,9 @@ namespace TitaniumWindows
 		Titanium::Contacts::InstantMessages Person::get_instantMessage() const TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::InstantMessages ims = Titanium::Contacts::create_empty_InstantMessages(get_context());
+
+			CONTACT_VALUE_GUARD(ims)
+
 			// FIXME How do we differentiate between socialprofile and instantMessages?
 			// Should we do some filtering based on the service name?
 			// AIM, Facebook, GaduGadu, GoogleTalk, ICQ, Jabber, MSN, QQ, Skype, or Yahoo for IM
@@ -380,6 +401,7 @@ namespace TitaniumWindows
 		void Person::set_instantMessage(const Titanium::Contacts::InstantMessages& instantMessage) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_instantMessage(instantMessage);
+			CONTACT_VOID_GUARD
 			// They only allow you to specify the service name and id, but can't organize by work/home/other
 			contact__->ConnectedServiceAccounts->Clear();
 			for (auto ad : instantMessage.home) {
@@ -406,6 +428,7 @@ namespace TitaniumWindows
 
 		std::string Person::get_jobTitle() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			auto job_infos = contact__->JobInfo;
 			if (job_infos->Size == 0) {
 				return ""; // No job info, so no title
@@ -419,6 +442,7 @@ namespace TitaniumWindows
 		void Person::set_jobTitle(const std::string& jobTitle) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_jobTitle(jobTitle);
+			CONTACT_VOID_GUARD
 			auto job_infos = contact__->JobInfo;
 			ContactJobInfo^ info;
 			if (job_infos->Size == 0)
@@ -441,34 +465,40 @@ namespace TitaniumWindows
 
 		std::string Person::get_lastName() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->LastName);
 		}
 
 		void Person::set_lastName(const std::string& lastName) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_lastName(lastName);
+			CONTACT_VOID_GUARD
 			contact__->LastName = TitaniumWindows::Utility::ConvertUTF8String(lastName);
 		}
 
 		std::string Person::get_lastPhonetic() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->YomiFamilyName);
 		}
 
 		void Person::set_lastPhonetic(const std::string& lastPhonetic) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_firstPhonetic(lastPhonetic);
+			CONTACT_VOID_GUARD
 			contact__->YomiFamilyName = TitaniumWindows::Utility::ConvertUTF8String(lastPhonetic);
 		}
 
 		std::string Person::get_middleName() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->MiddleName);
 		}
 
 		void Person::set_middleName(const std::string& middleName) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_middleName(middleName);
+			CONTACT_VOID_GUARD
 			contact__->MiddleName = TitaniumWindows::Utility::ConvertUTF8String(middleName);
 		}
 
@@ -481,6 +511,7 @@ namespace TitaniumWindows
 		std::string Person::get_nickname() const TITANIUM_NOEXCEPT
 		{
 #if defined(IS_WINDOWS_10)
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->Nickname);
 #else
 			return Titanium::Contacts::Person::get_nickname();
@@ -491,6 +522,7 @@ namespace TitaniumWindows
 		{
 			Titanium::Contacts::Person::set_nickname(nickname);
 #if defined(IS_WINDOWS_10)
+			CONTACT_VOID_GUARD
 			contact__->Nickname = TitaniumWindows::Utility::ConvertUTF8String(nickname);
 #else
 			TITANIUM_MODULE_LOG_WARN("Person::set_nickname: Unimplemented");
@@ -499,17 +531,20 @@ namespace TitaniumWindows
 
 		std::string Person::get_note() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->Notes);
 		}
 
 		void Person::set_note(const std::string& note) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_note(note);
+			CONTACT_VOID_GUARD
 			contact__->Notes = TitaniumWindows::Utility::ConvertUTF8String(note);
 		}
 
 		std::string Person::get_organization() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			auto job_infos = contact__->JobInfo;
 			if (job_infos->Size == 0) {
 				return "";
@@ -525,6 +560,7 @@ namespace TitaniumWindows
 		void Person::set_organization(const std::string& organization) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_organization(organization);
+			CONTACT_VOID_GUARD
 			auto job_infos = contact__->JobInfo;
 			ContactJobInfo^ info;
 			if (job_infos->Size == 0) {
@@ -542,6 +578,7 @@ namespace TitaniumWindows
 		Titanium::Contacts::Phones Person::get_phone() const TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Phones phones = Titanium::Contacts::create_empty_Phones(get_context());
+			CONTACT_VALUE_GUARD(phones)
 			for (size_t i = 0; i < contact__->Phones->Size; i++) {
 				auto phone = contact__->Phones->GetAt(i);
 				auto number = TitaniumWindows::Utility::ConvertUTF8String(phone->Number);
@@ -604,6 +641,7 @@ namespace TitaniumWindows
 		void Person::set_phone(const Titanium::Contacts::Phones& phones) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_phone(phones);
+			CONTACT_VOID_GUARD
 			contact__->Phones->Clear();
 
 			for (auto ad : phones.home) {
@@ -677,18 +715,21 @@ namespace TitaniumWindows
 
 		std::string Person::get_prefix() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->HonorificNamePrefix);
 		}
 
 		void Person::set_prefix(const std::string& prefix) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_prefix(prefix);
+			CONTACT_VOID_GUARD
 			contact__->HonorificNamePrefix = TitaniumWindows::Utility::ConvertUTF8String(prefix);
 		}
 
 		Titanium::Contacts::RelatedNames Person::get_relatedNames() const TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::RelatedNames names = Titanium::Contacts::create_empty_RelatedNames(get_context());
+			CONTACT_VALUE_GUARD(names)
 			for (size_t i = 0; i < contact__->SignificantOthers->Size; i++) {
 				auto so = contact__->SignificantOthers->GetAt(i);
 				auto name = TitaniumWindows::Utility::ConvertUTF8String(so->Name);
@@ -753,6 +794,7 @@ namespace TitaniumWindows
 		void Person::set_relatedNames(const Titanium::Contacts::RelatedNames& relatedNames) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_relatedNames(relatedNames);
+			CONTACT_VOID_GUARD
 			contact__->SignificantOthers->Clear();
 			for (auto ad : relatedNames.mother) {
 				auto p = createSignificantOther(ad, "mother");
@@ -833,6 +875,7 @@ namespace TitaniumWindows
 		Titanium::Contacts::InstantMessages Person::get_socialProfile() const TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::InstantMessages ims = Titanium::Contacts::create_empty_InstantMessages(get_context());
+			CONTACT_VALUE_GUARD(ims)
 			// FIXME How do we differentiate between socialprofile and instantMessages?
 			// Should we do some filtering based on the service name?
 			// twitter, sinaweibo, gamecenter, facebook, myspace, linkedin, or flickr for socialProfile
@@ -850,6 +893,7 @@ namespace TitaniumWindows
 		void Person::set_socialProfile(const Titanium::Contacts::InstantMessages& instantMessage) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_socialProfile(instantMessage);
+			CONTACT_VOID_GUARD
 			// They only allow you to specify the service name and id, but can't organize by work/home/other
 			// FIXME Need to only wipe out the "social profile" accounts, but not the instant message ones!
 			contact__->ConnectedServiceAccounts->Clear();
@@ -869,18 +913,21 @@ namespace TitaniumWindows
 
 		std::string Person::get_suffix() const TITANIUM_NOEXCEPT
 		{
+			CONTACT_STRING_GUARD
 			return TitaniumWindows::Utility::ConvertUTF8String(contact__->HonorificNameSuffix);
 		}
 
 		void Person::set_suffix(const std::string& suffix) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_suffix(suffix);
+			CONTACT_VOID_GUARD
 			contact__->HonorificNameSuffix = TitaniumWindows::Utility::ConvertUTF8String(suffix);
 		}
 
 		Titanium::Contacts::Urls Person::get_url() const TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Urls urls = Titanium::Contacts::create_empty_Urls(get_context());
+			CONTACT_VALUE_GUARD(urls)
 			for (size_t i = 0; i < contact__->Websites->Size; i++) {
 				auto website = contact__->Websites->GetAt(i);
 				auto url = TitaniumWindows::Utility::ConvertUTF8String(website->Uri->AbsoluteUri);
@@ -904,6 +951,7 @@ namespace TitaniumWindows
 		void Person::set_url(const Titanium::Contacts::Urls& urls) TITANIUM_NOEXCEPT
 		{
 			Titanium::Contacts::Person::set_url(urls);
+			CONTACT_VOID_GUARD
 			contact__->Websites->Clear();
 			for (auto ad : urls.homepage) {
 				auto address = createWebsite(ad, "homepage");
@@ -946,6 +994,7 @@ namespace TitaniumWindows
 		{
 			// TODO Remove from any contact lists in DB
 #if defined(IS_WINDOWS_10)
+			CONTACT_VOID_GUARD
 			const auto list_id = contact__->ContactListId;
 			// Pull up the contact list associated with this contact...
 			concurrency::event event;

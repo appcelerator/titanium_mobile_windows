@@ -89,6 +89,7 @@ namespace TitaniumWindows
 			bool createDirectory(const std::string& desiredName);
 
 			std::string normalizePath(const std::string& path);
+			std::string filename(const std::string& path);
 
 			// Creates a file at the path identified by this file object.
 			bool File::createEmptyFile(const std::string& path)

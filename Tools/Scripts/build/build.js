@@ -1,15 +1,14 @@
 'use strict';
-
 /**
  * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
 // modules
-const path = require('path'),
+var path = require('path'),
 	fs = require('fs'),
 	async = require('async'),
-	colors = require('colors'),  // eslint-disable-line no-unused-vars
+	colors = require('colors'), // eslint-disable-line no-unused-vars
 	wrench = require('wrench'),
 	exec = require('child_process').exec, // eslint-disable-line security/detect-child-process
 	spawn = require('child_process').spawn, // eslint-disable-line security/detect-child-process
@@ -108,8 +107,7 @@ function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
 				contents = data.toString();
 				// FIXME How can we set the version? It doesn't get set until later _after_ we've built! We'll need to pull it in from some file!
 				contents = contents.replace(/__TITANIUM_BUILD_DATE__/, timestamp).replace(/__TITANIUM_BUILD_HASH__/, githash);
-				fs.writeFile(tiModuleCPP, contents, callback);
-				next();
+				fs.writeFile(tiModuleCPP, contents, next);
 			});
 		}
 	], callback);
@@ -229,7 +227,7 @@ function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch,
 		header;
 
 	// For each lib, copy the output files!
-	for (const key in libs) {
+	for (let key in libs) {
 		if (!libs.hasOwnProperty(key)) {
 			continue;
 		}
@@ -251,7 +249,7 @@ function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch,
 			forceDelete: true, // Whether to overwrite existing directory or not
 			preserveTimestamps: true, // Preserve the mtime and atime when copying files
 			// FIXME This seems to be copying over everything for TitaniumWindows artifacts, but not sub-libraries
-			// eslint-disable-next-line security/detect-non-literal-regexp
+			// eslint-disable-next-line 
 			include: new RegExp(lib + '.*') // Include the library's artifacts regardless of file extension
 		});
 		// Copy the export header!
@@ -360,6 +358,17 @@ function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, fin
 			console.info('Build and Package Time: %ds %dms', elapsed[0], elapsed[1] / 1000000);
 			timer = process.hrtime();
 			next();
+		},
+		function copyJavaScriptCore(next) {
+			async.eachSeries(targets, function (configuration, next) {
+				const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
+				console.log('Copying JavaScriptCore for ' + parts[1] + '...');
+				const newDir = path.join(distLib, 'JavaScriptCore', 'win10', parts[1]);
+				const fromDir = path.join(process.env.JavaScriptCore_HOME, parts[1]);
+				wrench.mkdirSyncRecursive(newDir);
+				wrench.copyDirSyncRecursive(path.join(fromDir, 'Release'), newDir, { forceDelete: true });
+				fs.createReadStream(path.join(fromDir, 'JavaScriptCore-Release.lib')).pipe(fs.createWriteStream(path.join(newDir, 'JavaScriptCore.lib'))).on('finish', next);
+			}, next);
 		},
 		function copyIncludedHeaders(next) {
 			console.log('Copying over include headers...');

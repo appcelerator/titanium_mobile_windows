@@ -31,7 +31,7 @@ namespace Titanium
 
 		void nodeRemoveChild(struct Node* parent, struct Node* child)
 		{
-			child->parent = 0;
+			child->parent = nullptr;
 			if (child->prev) {
 				child->prev->next = child->next;
 			} else {
@@ -42,6 +42,8 @@ namespace Titanium
 			} else {
 				parent->lastChild = child->prev;
 			}
+
+			child->next = nullptr;
 
 			removeChildElement(&parent->element, &child->element);
 		}

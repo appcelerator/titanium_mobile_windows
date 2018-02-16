@@ -29,7 +29,8 @@ var archiver = require('archiver'),
 	typesMin = [ 'phone', 'store', 'win10' ],
 	configuration = 'Release',
 	EventEmitter = require('events').EventEmitter,
-	vs_architectures = { ARM:'ARM', x86:'Win32' }; // x86 -> Win32 mapping
+	vs_architectures = { ARM:'ARM', x86:'Win32' }, // x86 -> Win32 mapping
+	__ = appc.i18n(__dirname).__;
 
 function WindowsModuleBuilder() {
 	Builder.apply(this, arguments);
@@ -43,6 +44,16 @@ WindowsModuleBuilder.prototype.config = function config() {
 WindowsModuleBuilder.prototype.validate = function validate(logger, config, cli) {
 	if (cli.argv.platform && cli.argv.platform !== 'windows') {
 		logger.error('Invalid platform');
+		process.exit(1);
+	}
+
+	const manifest = cli.manifest;
+	const sdkModuleAPIVersion = cli.sdk.manifest && cli.sdk.manifest.moduleAPIVersion && cli.sdk.manifest.moduleAPIVersion['windows'];
+	if (manifest.apiversion && sdkModuleAPIVersion && manifest.apiversion !== sdkModuleAPIVersion) {
+		logger.error(__('The module manifest apiversion is currently set to %s', manifest.apiversion));
+		logger.error(__('Titanium SDK %s Windows module apiversion is at %s', cli.sdk.manifest.version, sdkModuleAPIVersion));
+		logger.error(__('Please update module manifest apiversion to match Titanium SDK module apiversion'));
+		logger.error(__('and the minsdk to %s',  cli.sdk.manifest.version));
 		process.exit(1);
 	}
 };
@@ -209,36 +220,18 @@ WindowsModuleBuilder.prototype.loginfo = function loginfo(next) {
 };
 
 WindowsModuleBuilder.prototype.generateModuleProject = function generateModuleProject(next) {
-	var data  = this;
-	if (this.cli.argv.hasOwnProperty('run-cmake')) {
-		const tasks = [
-			function (done) {
-				runCmake(data, 'WindowsStore', 'Win32', '10.0', done);
-			},
-			function (done) {
-				runCmake(data, 'WindowsStore', 'ARM', '10.0', done);
-			}
-		];
-
-		// Visual Studio 2017 doesn't support Windows/Phone 8.1 project anymore
-		if (selectVisualStudio(data) !== 'Visual Studio 15 2017') {
-			tasks.push(function (done) {
-				runCmake(data, 'WindowsPhone', 'Win32', '8.1', done);
-			});
-			tasks.push(function (done) {
-				runCmake(data, 'WindowsPhone', 'ARM', '8.1', done);
-			});
-			tasks.push(function (done) {
-				runCmake(data, 'WindowsStore', 'Win32', '8.1', done);
-			});
+	var tasks = [
+		function (done) {
+			runCmake(this, 'WindowsStore', 'Win32', '10.0', done);
+		},
+		function (done) {
+			runCmake(this, 'WindowsStore', 'ARM', '10.0', done);
 		}
+	];
 
-		appc.async.series(this, tasks, function (err) {
-			next(err);
-		});
-	} else {
-		next();
-	}
+	appc.async.series(this, tasks, function (err) {
+		next(err);
+	});
 };
 
 WindowsModuleBuilder.prototype.compileModule = function compileModule(next) {
@@ -540,6 +533,10 @@ function runCmake(data, platform, arch, sdkVersion, next) {
 		cmakeProjectName = (sdkVersion === '10.0' ? 'Windows10' : platform) + '.' + arch,
 		cmakeWorkDir = path.resolve(data.projectDir, cmakeProjectName);
 
+	if (!data.cli.argv.hasOwnProperty('run-cmake') && fs.existsSync(cmakeWorkDir)) {
+		return next();
+	}
+
 	logger.debug('Run CMake on ' + cmakeWorkDir);
 
 	if (fs.existsSync(cmakeWorkDir)) {
@@ -553,14 +550,18 @@ function runCmake(data, platform, arch, sdkVersion, next) {
 		targetSdkVersion = data.targetPlatformSdkVersion;
 	}
 
+	const cmakeArg = [
+		'-G', generatorName,
+		'-DCMAKE_SYSTEM_NAME=' + platform,
+		'-DCMAKE_SYSTEM_VERSION=' + targetSdkVersion,
+		'-DCMAKE_BUILD_TYPE=Debug',
+		path.resolve(data.projectDir)
+	];
+
+	logger.debug(JSON.stringify(cmakeArg, null, 2));
+
 	const p = spawn(path.join(data.titaniumSdkPath, 'windows', 'cli', 'vendor', 'cmake', 'bin', 'cmake.exe'),
-		[
-			'-G', generatorName,
-			'-DCMAKE_SYSTEM_NAME=' + platform,
-			'-DCMAKE_SYSTEM_VERSION=' + targetSdkVersion,
-			'-DCMAKE_BUILD_TYPE=Debug',
-			path.resolve(data.projectDir)
-		],
+		cmakeArg,
 		{
 			cwd: cmakeWorkDir
 		});

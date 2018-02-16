@@ -47,6 +47,12 @@ namespace TitaniumWindows
 			border__ = ref new Controls::Border();
 			label__ = ref new Windows::UI::Xaml::Controls::TextBlock();
 
+			// default color inspection
+			const auto currentBrush = dynamic_cast<Media::SolidColorBrush^>(label__->Foreground);
+			if (currentBrush) {
+				defaultForegroundColor__ = currentBrush->Color;
+			}
+
 			Titanium::UI::Label::setLayoutDelegate<WindowsViewLayoutDelegate>();
 
 			label__->TextWrapping = Windows::UI::Xaml::TextWrapping::Wrap;
@@ -66,11 +72,22 @@ namespace TitaniumWindows
 					if (border__->Parent) {
 						const auto panel = dynamic_cast<FrameworkElement^>(border__->Parent);
 						if (panel) {
+							//
+							// TIMOB-25385: Workaround: Skip limiting Label size when parent view is TableViewRow
+							// because table view row doesn't return property width on the event for some reason.
+							//
+							auto skipResizing = false;
+							const auto parent = get_parent();
+							if (parent && parent->get_apiName() == "Ti.UI.TableViewRow") {
+								skipResizing = true;
+							}
 							const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 							const auto width  = panel->ActualWidth;
 							const auto height = panel->ActualHeight;
 							if (width > 0) {
-								label__->MaxWidth = width;
+								if (!skipResizing) {
+									label__->MaxWidth = width;
+								}
 								if (!layout->get_right().empty()) {
 									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
 									const auto rightPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_right(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
@@ -80,7 +97,9 @@ namespace TitaniumWindows
 								}
 							}
 							if (height > 0) {
-								label__->MaxHeight = height;
+								if (!skipResizing) {
+									label__->MaxHeight = height;
+								}
 								if (!layout->get_bottom().empty()) {
 									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Height);
 									const auto bottomPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_height(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
@@ -130,7 +149,7 @@ namespace TitaniumWindows
 		void Label::set_color(const std::string& colorName) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::Label::set_color(colorName);
-			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
+			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName, defaultForegroundColor__);
 			label__->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
 		}
 
@@ -231,8 +250,9 @@ namespace TitaniumWindows
 				label__->TextAlignment = Windows::UI::Xaml::TextAlignment::Left;
 			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::RIGHT) {
 				label__->TextAlignment = Windows::UI::Xaml::TextAlignment::Right;
+			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::JUSTIFY) {
+				label__->TextAlignment = Windows::UI::Xaml::TextAlignment::Justify;
 			}
-			// TODO Windows supports JUSTIFY!
 		}
 
 		void Label::set_verticalAlign(const Titanium::UI::TEXT_VERTICAL_ALIGNMENT& verticalAlign) TITANIUM_NOEXCEPT

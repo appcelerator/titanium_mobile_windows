@@ -104,15 +104,17 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::blur()
 		{
-			TITANIUM_LOG_WARN("blur() is not supported on Windows");
+			const auto parent = get_parent();
+			if (parent) {
+				parent->focus();
+			}
 		}
 
 		void WindowsViewLayoutDelegate::focus()
 		{
-			if (is_control__) {
-				dynamic_cast<Control^>(component__)->Focus(FocusState::Programmatic);
-			} else {
-				TITANIUM_LOG_WARN("focus() is not supported for this control");
+			const auto component = dynamic_cast<Control^>(getEventComponent());
+			if (component) {
+				component->Focus(FocusState::Programmatic);
 			}
 		}
 
@@ -133,8 +135,6 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::removeView(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
-			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::remove ", view.get(), " for ", this);
-
 			if (!is_panel__) {
 				TITANIUM_LOG_WARN("WindowsViewLayoutDelegate::remove: Unknown component");
 				return;
@@ -169,8 +169,6 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::ViewLayoutDelegate::add(view);
 
-			TITANIUM_LOG_WARN("WindowsViewLayoutDelegate::add ", view.get(), " for ", this);
-
 			if (!is_panel__) {
 				TITANIUM_LOG_WARN("WindowsViewLayoutDelegate::add: Unknown component");
 				return;
@@ -184,10 +182,11 @@ namespace TitaniumWindows
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
 					uint32_t index = 0;
 					if (nativeView->Children->IndexOf(nativeChildView, &index)) {
-						TITANIUM_LOG_DEBUG("This UI element is already added");
+						TITANIUM_LOG_WARN("This UI element is already added");
 						return;
 					}
 					nativeView->Children->Append(nativeChildView);
+					TITANIUM_LOG_DEBUG("Titanium::LayoutEngine::nodeAddChild ", newView->getLayoutNode(), " for ", layout_node__ );
 					Titanium::LayoutEngine::nodeAddChild(layout_node__, newView->getLayoutNode());
 					if (isLoaded()) {
 						requestLayout();
@@ -1065,6 +1064,10 @@ namespace TitaniumWindows
 				border__->BorderBrush = borderColorBrush__;
 				border__->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
 				border__->CornerRadius = CornerRadiusHelper::FromUniformRadius(Titanium::LayoutEngine::parseUnitValue(get_borderRadius(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px"));
+			} else if (is_grid__) {
+				const auto control = dynamic_cast<Controls::Grid^>(component__);
+				control->BorderBrush = borderColorBrush__;
+				control->BorderThickness = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
 			}
 		}
 
@@ -1295,18 +1298,28 @@ namespace TitaniumWindows
 			}
 		}
 
-		std::shared_ptr<Titanium::UI::View> WindowsViewLayoutDelegate::getHierarchyEventSource(Windows::Foundation::Point position, const std::shared_ptr<Titanium::UI::View>& root) const TITANIUM_NOEXCEPT
+		std::shared_ptr<Titanium::UI::View> WindowsViewLayoutDelegate::getHierarchyEventSource(Windows::Foundation::Point rootPosition, const std::shared_ptr<Titanium::UI::View>& root, const bool& nested) const TITANIUM_NOEXCEPT
 		{
+			const auto rootComponent = root == nullptr ? getEventComponent() : root->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getEventComponent();
+			Windows::Foundation::Point position = rootPosition;
+			if (!nested) {
+				position.X += static_cast<float>(Canvas::GetLeft(rootComponent));
+				position.Y += static_cast<float>(Canvas::GetTop(rootComponent));
+			}
+
 			const auto children = root == nullptr ? get_children() : root->get_children();
 			// Let's find correct source
 			for (const auto child : children) {
 				const auto childLayout = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>();
-				const auto childView   = childLayout->getComponent();
+				const auto childView   = childLayout->getEventComponent();
 				const auto elements = Windows::UI::Xaml::Media::VisualTreeHelper::FindElementsInHostCoordinates(position, childView);
 				for (const auto e : elements) {
 					// Let's check its descendents so we can support nested views
 					if (child->get_children().size() > 0) {
-						const auto found = getHierarchyEventSource(position, child);
+						Windows::Foundation::Point childPos = rootPosition;
+						childPos.X += static_cast<float>(Canvas::GetLeft(childView));
+						childPos.Y += static_cast<float>(Canvas::GetTop(childView));
+						const auto found = getHierarchyEventSource(position, child, true);
 						if (found) {
 							return found;
 						}
@@ -1393,7 +1406,7 @@ namespace TitaniumWindows
 						// Set center of the button since Button::Click does not provide position info
 						Windows::Foundation::Point pos;
 						pos.X = static_cast<float>(button->ActualWidth  * 0.5);
-						pos.Y = static_cast<float>(button->ActualWidth * 0.5);
+						pos.Y = static_cast<float>(button->ActualHeight * 0.5);
 						fireSimplePositionEvent("click", pos);
 					});
 				} else {
@@ -1527,6 +1540,7 @@ namespace TitaniumWindows
 					component->ActualWidth,
 					component->ActualHeight
 				);
+
 				onComponentLoaded(rect);
 			});
 
@@ -1742,6 +1756,8 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::requestLayout(const bool& fire_event)
 		{
+			Titanium::LayoutEngine::nodeLayout(layout_node__);
+
 			const auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
 			if (root) {
 				Titanium::LayoutEngine::nodeLayout(root);
@@ -1974,12 +1990,11 @@ namespace TitaniumWindows
 #define INSERT_WINDOWS_UI_COLOR(COLOR_NAME) color_name_map.insert(std::make_pair(toLowerCase(#COLOR_NAME), Windows::UI::Colors::##COLOR_NAME));
 
 		// Can this be optimized? MS is giving a lot of choices for colors!
-		Windows::UI::Color WindowsViewLayoutDelegate::ColorForName(const std::string& colorName)
+		Windows::UI::Color WindowsViewLayoutDelegate::ColorForName(const std::string& colorName, const Windows::UI::Color defaultColor)
 		{
 			// pre condition
 			TITANIUM_ASSERT(!colorName.empty());
 
-			static const Windows::UI::Color defaultColor = Windows::UI::Colors::Transparent;
 			using ColorNameMap_t = std::unordered_map<std::string, Windows::UI::Color>;
 			static ColorNameMap_t color_name_map;
 			static std::once_flag of;

@@ -101,7 +101,7 @@ namespace TitaniumWindows
 			} else if (textAlign == Titanium::UI::TEXT_ALIGNMENT::RIGHT) {
 				button__->HorizontalContentAlignment = HorizontalAlignment::Right;
 			}
-			// TODO Windows supports JUSTIFY!
+			// TODO Windows supports stretch!
 		}
 
 		void Button::set_title(const std::string& title) TITANIUM_NOEXCEPT

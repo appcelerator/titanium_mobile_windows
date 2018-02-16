@@ -50,6 +50,8 @@ namespace TitaniumWindows
 			auto binding = ref new Data::Binding();
 			binding->Source = collectionViewSource__;
 			Data::BindingOperations::SetBinding(tableview__, Controls::ListView::ItemsSourceProperty, binding);
+
+			saved_collectionViewItems__ = ref new Vector<Platform::Object^>();
 		}
 
 		void TableView::clearTableData() 
@@ -81,6 +83,11 @@ namespace TitaniumWindows
 			tableview__ = ref new Controls::ListView();
 			collectionViewItems__ = ref new Vector<Platform::Object^>();
 			separatorBrush__ = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Transparent);
+
+			// TIMOB-25273: Remove default padding
+			auto itemStyle = ref new Windows::UI::Xaml::Style(Controls::ListViewItem::typeid);
+			itemStyle->Setters->Append(ref new Setter(Controls::ListViewItem::PaddingProperty, Windows::UI::Xaml::Thickness(0)));
+			tableview__->ItemContainerStyle = itemStyle;
 
 			resetTableDataBinding();
 
@@ -126,7 +133,54 @@ namespace TitaniumWindows
 		{
 			// Make sure to update UI from UI thread
 			TitaniumWindows::Utility::RunOnUIThread([this, query]() {
+
 				Titanium::UI::TableView::querySubmitted(query);
+
+				if (query.empty()) {
+					// restore sections
+					if (saved_collectionViewItems__->Size > 0) {
+						unbindCollectionViewSource();
+
+						collectionViewItems__ = saved_collectionViewItems__;
+						saved_collectionViewItems__ = ref new Vector<Platform::Object^>();
+
+						bindCollectionViewSource();
+					}
+					return;
+				}
+
+				unbindCollectionViewSource();
+
+				if (saved_collectionViewItems__->Size == 0) {
+					saved_collectionViewItems__ = collectionViewItems__;
+				}
+
+				const auto views = ref new Vector<UIElement^>();
+
+				collectionViewItems__ = ref new Vector<Platform::Object^>();
+				collectionViewItems__->Append(views);
+
+				if (model__->get_saved_positions().size() > 0) {
+					// filter out rows
+					for (const auto pos : model__->get_saved_positions()) {
+						const auto sectionIndex = std::get<0>(pos);
+						const auto rowIndex     = std::get<1>(pos);
+
+						const auto section = model__->getSectionAtIndex(sectionIndex);
+						const auto group = reinterpret_cast<Vector<UIElement^>^>(saved_collectionViewItems__->GetAt(sectionIndex));
+						views->Append(group->GetAt(rowIndex + (section->hasHeader() ? 1 : 0)));
+					}
+				} else {
+					// When there's no results, show "No results"
+					auto ctor = get_context().CreateObject(JSExport<TableViewRow>::Class());
+					auto row_ptr = ctor.CallAsConstructor().GetPrivate<TableViewRow>();
+					TITANIUM_ASSERT(row_ptr != nullptr);
+					row_ptr->set_title("No results");
+
+					views->Append(row_ptr->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent());
+				}
+
+				bindCollectionViewSource();
 			});
 		}
 
@@ -195,30 +249,43 @@ namespace TitaniumWindows
 
 		void TableView::set_headerView(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
+			// Remove old header
+			unregisterTableViewRowAsLayoutNode(headerView__);
+			Titanium::UI::TableView::set_headerView(view);
 			if (propertiesSet__) {
-				unregisterSections();
-				Titanium::UI::TableView::set_headerView(view);
-				createTableSectionUIElements();
-			} else {
-				Titanium::UI::TableView::set_headerView(view);
+				setTableHeader();
 			}
 		}
 
 		void TableView::set_headerTitle(const std::string& title) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::TableView::set_headerTitle(title);
 			if (propertiesSet__) {
-				unregisterSections();
-				Titanium::UI::TableView::set_headerTitle(title);
-				createTableSectionUIElements();
-			} else {
-				Titanium::UI::TableView::set_headerTitle(title);
+				setTableHeader();
+			}
+		}
+
+		void TableView::set_footerView(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
+		{
+			// Remove old footer
+			unregisterTableViewRowAsLayoutNode(footerView__);
+			Titanium::UI::TableView::set_footerView(view);
+			if (propertiesSet__) {
+				setTableFooter();
+			}
+		}
+
+		void TableView::set_footerTitle(const std::string& title) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::TableView::set_footerTitle(title);
+			if (propertiesSet__) {
+				setTableFooter();
 			}
 		}
 
 		void TableView::set_data(const std::vector<JSObject>& data) TITANIUM_NOEXCEPT
 		{
 			if (propertiesSet__) {
-				unregisterSections();
 				Titanium::UI::TableView::set_data(data);
 				createTableSectionUIElements();
 			} else {
@@ -274,14 +341,14 @@ namespace TitaniumWindows
 		void TableView::afterPropertiesSet() TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::TableView::afterPropertiesSet();
+			setTableHeader();
+			setTableFooter();
 			createTableSectionUIElements();
 		}
 
 		void TableView::createTableSectionUIElements() TITANIUM_NOEXCEPT
 		{
 			clearTableData();
-			setTableHeader();
-			setTableFooter();
 			for (uint32_t i = 0; i < model__->get_sectionCount(); i++) {
 				collectionViewItems__->Append(createUIElementsForSection(i));
 			}
@@ -385,10 +452,11 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::TableView::updateSection(index, section, animation);
 			unbindCollectionViewSource();
-			collectionViewItems__->SetAt(index, createUIElementsForSection(index));
 
 			// Make sure to unregister rows from LayoutEngine
 			unregisterSectionLayoutNode(section);
+
+			collectionViewItems__->SetAt(index, createUIElementsForSection(index));
 
 			bindCollectionViewSource();
 		}
@@ -463,6 +531,7 @@ namespace TitaniumWindows
 		{
 			auto layoutDelegate = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 			Titanium::LayoutEngine::nodeAddChild(layoutDelegate->getLayoutNode(), view->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getLayoutNode());
+			Titanium::LayoutEngine::nodeLayout(layoutDelegate->getLayoutNode());
 		}
 
 		// Remove child view 
@@ -506,7 +575,7 @@ namespace TitaniumWindows
 						if (result.found) {
 							JSObject  eventArgs = ctx.CreateObject();
 							eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(result.sectionIndex));
-							eventArgs.SetProperty("index", ctx.CreateNumber(result.rowIndex));
+							eventArgs.SetProperty("index", ctx.CreateNumber(result.fullIndex));
 
 							const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
 							const auto row = section->get_rows().at(result.rowIndex);
@@ -634,17 +703,26 @@ namespace TitaniumWindows
 			TITANIUM_ASSERT(collectionViewItems__->Size > sectionIndex);
 
 			if (name == "append") {
+				auto new_row = row;
+				// copy existing properties when given row is already added to section
+				// re-using exsiting view causes internal error at rendering.
+				if (row->get_added()) {
+					auto ctor = get_context().CreateObject(JSExport<TitaniumWindows::UI::TableViewRow>::Class());
+					new_row = ctor.CallAsConstructor().GetPrivate<TitaniumWindows::UI::TableViewRow>();
+					new_row->applyProperties(row->get_data(), new_row->get_object());
+				}
+
 				unbindCollectionViewSource();
 				const auto rowIndexInCollectionView = getRowIndexInCollectionView(section, rowIndex);
 				const auto views = static_cast<Vector<UIElement^>^>(collectionViewItems__->GetAt(sectionIndex));
-				const auto rowContent = row->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
+				const auto rowContent = new_row->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
 				TITANIUM_ASSERT(rowContent);
 				if (views->Size > rowIndexInCollectionView) {
 					views->InsertAt(rowIndexInCollectionView, rowContent);
 				} else {
 					views->Append(rowContent);
 				}
-				registerTableViewRowAsLayoutNode(row);
+				registerTableViewRowAsLayoutNode(new_row);
 				bindCollectionViewSource();
 			} else if (name == "remove") {
 				unbindCollectionViewSource();
@@ -655,6 +733,7 @@ namespace TitaniumWindows
 			} else if (name == "update") {
 				TITANIUM_ASSERT(old_row != nullptr);
 				// copy existing properties when given row is already added to section
+				// re-using exsiting view causes internal error at rendering.
 				if (row->get_added()) {
 					auto ctor   = get_context().CreateObject(JSExport<TitaniumWindows::UI::TableViewRow>::Class());
 					auto new_row = ctor.CallAsConstructor().GetPrivate<TitaniumWindows::UI::TableViewRow>();

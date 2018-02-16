@@ -61,10 +61,9 @@ namespace TitaniumWindows
 
 			label__->FontSize = TitaniumWindows::UI::Label::DefaultFontSize;
 
-			// relative position from container should start from top & left
-			panel__->VerticalAlignment   = VerticalAlignment::Top;
-			panel__->HorizontalAlignment = HorizontalAlignment::Left;
-			label__->HorizontalAlignment = HorizontalAlignment::Center;
+			// alignment of the components should be centered
+			panel__->VerticalAlignment   = VerticalAlignment::Center;
+			panel__->HorizontalAlignment = HorizontalAlignment::Center;
 
 			panel__->Children->Append(ring__);
 			panel__->Children->Append(label__);
@@ -87,6 +86,15 @@ namespace TitaniumWindows
 			Titanium::UI::ActivityIndicator::set_indicatorColor(colorName);
 			const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
 			ring__->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
+		}
+
+		void ActivityIndicator::set_indicatorDiameter(const std::string& diameter) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::ActivityIndicator::set_indicatorDiameter(diameter);
+			const auto ppi = TitaniumWindows::UI::WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
+			const auto value = Titanium::LayoutEngine::parseUnitValue(diameter, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+			ring__->Width  = value;
+			ring__->Height = value;
 		}
 
 		void ActivityIndicator::set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT

@@ -10,6 +10,7 @@
 #include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/UI/PickerRow.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
 #include <collection.h>
 
 namespace TitaniumWindows
@@ -34,6 +35,14 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::PickerColumn::postCallAsConstructor(js_context, arguments);
 			picker__ = ref new Windows::UI::Xaml::Controls::ComboBox();
+			picker__->HorizontalAlignment = HorizontalAlignment::Stretch;
+			picker__->VerticalAlignment = VerticalAlignment::Stretch;
+		}
+
+		void PickerColumn::set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::PickerColumn::set_font(font);
+			TitaniumWindows::UI::ViewHelper::SetFont<Windows::UI::Xaml::Controls::ComboBox^>(get_context(), picker__, font);
 		}
 
 		std::shared_ptr<Titanium::UI::PickerRow> PickerColumn::get_selectedRow() const TITANIUM_NOEXCEPT
