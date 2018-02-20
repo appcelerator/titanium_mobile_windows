@@ -106,7 +106,7 @@ namespace TitaniumWindows
 			filter__ = ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter();
 			httpClient__ = ref new Windows::Web::Http::HttpClient(filter__);
 			cancellationTokenSource__ = concurrency::cancellation_token_source();
-			filter__->AllowAutoRedirect = true;
+			filter__->AllowAutoRedirect = false;
 			filter__->CacheControl->ReadBehavior = Windows::Web::Http::Filters::HttpCacheReadBehavior::MostRecent;
 
 			if (!username__.empty()) {
@@ -216,24 +216,50 @@ namespace TitaniumWindows
 			}
 			setRequestHeaders(request);
 
-			auto operation = httpClient__->SendRequestAsync(request);
-
 			// Startup a timer that will abort the request after the timeout period is reached.
 			startDispatcherTimer();
 			responseWaiter__.reset();
 
 			// clang-format off
 			const auto token = cancellationTokenSource__.get_token();
-			create_task(operation, token)
-				.then([this, token](Windows::Web::Http::HttpResponseMessage^ response) {
+
+			Windows::Web::Http::HttpResponseMessage^ response = nullptr;
+			concurrency::event evt;
+			create_task(httpClient__->SendRequestAsync(request), token)
+				.then([&evt, &response](concurrency::task<Windows::Web::Http::HttpResponseMessage^> task) {
+				try {
+					response = task.get();
+				} catch (...) {
+					// DO NOTHING HERE, THROW ERROR LATER
+				}
+				evt.set();
+			}, CONTINUATION_CONTEXT());
+			evt.wait();
+
+			if (response) {
 				interruption_point();
-				readyState__ = Titanium::Network::RequestState::Opened;
-				onreadystatechange(readyState__);
 
-				SerializeHeaders(response);
+				// Handle redirects because we need to update location
+				const auto status = static_cast<std::uint32_t>(response->StatusCode);
+				const auto location = response->Headers->Location;
+				if (location && status >= 300 && status <= 399) {
+					location__ = TitaniumWindows::Utility::ConvertString(location->AbsoluteUri);
+					send(content);
+					return;
+				}
+			} else {
+				RunOnUIThread([=]() {
+					onerror(-1, "Unable to get response from server", false);
+				});
+				return;
+			}
 
-				return create_task(response->Content->ReadAsInputStreamAsync(), token);
-			}, CONTINUATION_CONTEXT())
+			interruption_point();
+			readyState__ = Titanium::Network::RequestState::Opened;
+			onreadystatechange(readyState__);
+			SerializeHeaders(response);
+
+			create_task(response->Content->ReadAsInputStreamAsync(), token)
 				.then([this, token](Windows::Storage::Streams::IInputStream^ stream) {
 				interruption_point();
 
