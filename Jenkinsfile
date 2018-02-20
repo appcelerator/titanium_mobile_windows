@@ -65,7 +65,8 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion) {
 			// TODO Do a shallow clone, using same credentials as from scm object
 			git changelog: false, poll: false, credentialsId: 'd05dad3c-d7f9-4c65-9cb6-19fef98fc440', url: 'https://github.com/appcelerator/titanium-mobile-mocha-suite.git', branch: testSuiteBranch
 		}
-
+		unstash 'override-tests'
+		bat '(robocopy tests titanium-mobile-mocha-suite /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0'
 		dir('titanium-mobile-mocha-suite/scripts') {
 			bat 'npm install .'
 			echo "Running tests on ${target}"
@@ -122,6 +123,7 @@ timestamps {
 			gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 			// Stash our source code/scripts so we don't need to checkout again?
 			stash name: 'sources', includes: '**', excludes: 'apidoc/**,test/**,Examples/**'
+			stash name: 'override-tests', includes: 'tests/'
 		} // Checkout stage
 
 		stage('Docs') {
