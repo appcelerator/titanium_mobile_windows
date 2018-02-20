@@ -252,7 +252,6 @@ namespace TitaniumWindows
 					previousTask.get();
 
 					if (!disposed__ && httpClient__) {
-						onreadystatechange(readyState__);
 
 						// Fire onerror only if there's an onerror handler registered and status code is 400-599.
 						// Otherwise fire onload (so 400-599 fall back to onload if no onerror handler)
@@ -268,6 +267,7 @@ namespace TitaniumWindows
 
 						onsendstream(1.0);
 						ondatastream(1.0);
+						onreadystatechange(readyState__);
 					}
 				} catch (const task_canceled&) {
 					if (!disposed__ && httpClient__) {
