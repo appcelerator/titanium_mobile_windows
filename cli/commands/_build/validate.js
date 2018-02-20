@@ -85,6 +85,8 @@ function validate(logger, config, cli) {
 			this.buildConfiguration = 'Release';
 	}
 
+	this.transpile = this.cli.tiapp.transpile !== false;
+
 	if (cli.argv['skip-js-minify']) {
 		this.minifyJS = false;
 	}
