@@ -179,7 +179,7 @@ describe('Titanium.Network.HTTPClient', function () {
 
 	// https://appcelerator.lighthouseapp.com/projects/32238/tickets/2339
 	// Timing out on Windows Phone
-	it.windowsBroken('responseHeadersBug', function (finish) {
+	it('responseHeadersBug', function (finish) {
 		var xhr = Ti.Network.createHTTPClient(),
 			attempts = 3;
 		xhr.setTimeout(3e4);
