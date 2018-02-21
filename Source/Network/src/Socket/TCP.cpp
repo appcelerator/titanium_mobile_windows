@@ -68,7 +68,16 @@ namespace TitaniumWindows
 											try {
 												connected_obj({ args }, get_object());
 											} catch (std::exception e) {
-												HAL::detail::ThrowRuntimeError("TCP::connected", std::string(e.what()));
+												const auto what = std::string(e.what());
+												TITANIUM_LOG_ERROR("TCP::connect: Titanium::Network::Socket::TCP: " + what);
+												error(what);
+											} catch (Platform::COMException^ e) {
+												const auto what = TitaniumWindows::Utility::ConvertString(e->Message);
+												TITANIUM_LOG_ERROR("TCP::connect: Titanium::Network::Socket::TCP: Could not connect: ", what);
+												error(what);
+											} catch (...) {
+												TITANIUM_LOG_ERROR("TCP::connect: Titanium::Network::Socket::TCP: Unknown error while invoking connected callback");
+												error(" Unknown error while invoking connected callback");
 											}
 										}
 									}
@@ -169,7 +178,21 @@ namespace TitaniumWindows
 								auto args = get_context().CreateObject();
 								args.SetProperty("inbound", tcp_obj);
 								args.SetProperty("socket", get_object());
-								static_cast<JSObject>(accepted_obj)({ args }, get_object());
+
+								try {
+									static_cast<JSObject>(accepted_obj)({ args }, get_object());
+								} catch (std::exception e) {
+									const auto what = std::string(e.what());
+									TITANIUM_LOG_ERROR("TCP::accepted: Titanium::Network::Socket::TCP: " + what);
+									error(what);
+								} catch (Platform::COMException^ e) {
+									const auto what = TitaniumWindows::Utility::ConvertString(e->Message);
+									TITANIUM_LOG_ERROR("TCP::accepted: Titanium::Network::Socket::TCP: Could not connect: ", what);
+									error(what);
+								} catch (...) {
+									TITANIUM_LOG_ERROR("TCP::accepted: Titanium::Network::Socket::TCP: Unknown error while invoking accepted callback");
+									error(" Unknown error while invoking accepted callback");
+								}
 							}
 						});
 					}
@@ -268,7 +291,13 @@ namespace TitaniumWindows
 								error.success = false;
 							}
 							TitaniumWindows::Utility::RunOnUIThread([=] {
-								callback(error, count);
+								try {
+									callback(error, count);
+								} catch (Platform::COMException^ e) {
+									TITANIUM_LOG_ERROR("TCP::readAsync: Failed to invoke callback: " + TitaniumWindows::Utility::ConvertString(e->Message));
+								} catch (...) {
+									TITANIUM_LOG_ERROR("TCP::readAsync: Failed to invoke callback");
+								}
 							});
 						} while (count >= 0);
 				}, concurrency::task_continuation_context::use_arbitrary());
@@ -337,7 +366,14 @@ namespace TitaniumWindows
 						error.success = false;
 					}
 					TitaniumWindows::Utility::RunOnUIThread([=] {
-						callback(error, count);
+						try {
+							callback(error, count);
+						} catch (Platform::COMException^ e) {
+							TITANIUM_LOG_ERROR("TCP::writeAsync: Failed to invoke callback: " + TitaniumWindows::Utility::ConvertString(e->Message));
+						} catch (...) {
+							TITANIUM_LOG_ERROR("TCP::writeAsync: Failed to invoke callback");
+						}
+
 					});
 				}, concurrency::task_continuation_context::use_arbitrary());
 			}
