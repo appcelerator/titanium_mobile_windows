@@ -68,6 +68,21 @@ namespace TitaniumWindows
 		Picker::~Picker() 
 		{
 			TITANIUM_LOG_DEBUG("Picker::dtor ", this);
+			unregisterChangeEvents();
+		}
+
+		void Picker::unregisterChangeEvents()
+		{
+			if (plainPicker__) {
+				for (std::uint32_t i = 0; i < columns__.size(); i++) {
+					const auto column = std::dynamic_pointer_cast<TitaniumWindows::UI::PickerColumn>(columns__[i]);
+					const auto picker = column->getComponent();
+					if (change_events__.size() > i) {
+						picker->SelectionChanged -= change_events__.at(i);
+					}
+				}
+				change_events__.clear();
+			}
 		}
 
 		void Picker::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
@@ -221,6 +236,7 @@ namespace TitaniumWindows
 		void Picker::addColumns(const std::vector<std::shared_ptr<Titanium::UI::PickerColumn>>& columns)
 		{
 			if (type__ == Titanium::UI::PICKER_TYPE::PLAIN) {
+				unregisterChangeEvents();
 				for (std::uint32_t i = 0; i < columns.size(); i++) {
 					const auto column = std::dynamic_pointer_cast<TitaniumWindows::UI::PickerColumn>(columns[i]);
 					const auto picker = column->getComponent();
@@ -234,6 +250,24 @@ namespace TitaniumWindows
 					plainPicker__->SetRow(picker, 0);
 
 					column->set_font(get_font());
+
+					change_events__.push_back(picker->SelectionChanged += ref new SelectionChangedEventHandler([column, i, this](Platform::Object^ sender, SelectionChangedEventArgs^ e) {
+						TITANIUM_EXCEPTION_CATCH_START{
+							const auto picker = static_cast<ComboBox^>(sender);
+							const auto rowIndex = picker->SelectedIndex;
+							const auto ctx = get_context();
+							JSObject  eventArgs = ctx.CreateObject();
+							if (rowIndex >= 0 && column->get_rowCount() > static_cast<std::uint32_t>(rowIndex)) {
+								eventArgs.SetProperty("rowIndex", ctx.CreateNumber(rowIndex));
+								eventArgs.SetProperty("row", column->get_rows().at(rowIndex)->get_object());
+							}
+							eventArgs.SetProperty("columnIndex", ctx.CreateNumber(i));
+							eventArgs.SetProperty("column", column->get_object());
+							eventArgs.SetProperty("selectedValue", ctx.CreateArray(getSelectedJSValues()));
+							fireEvent("change", eventArgs);
+						} TITANIUMWINDOWS_EXCEPTION_CATCH_END
+					}));
+
 				}
 			} else {
 				TITANIUM_MODULE_LOG_WARN("Picker::add: Unable to modify columns. This only works with plain picker");
@@ -283,30 +317,7 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::Picker::enableEvent(event_name);
 			if (event_name == "change") {
-
-				if (plainPicker__) {
-					for (std::uint32_t i = 0; i < columns__.size(); i++) {
-						const auto column = std::dynamic_pointer_cast<TitaniumWindows::UI::PickerColumn>(columns__[i]);
-						const auto picker = column->getComponent();
-						const std::uint32_t columnIndex = columns__.size() + i;
-						change_events__.push_back(picker->SelectionChanged += ref new SelectionChangedEventHandler([column, columnIndex, this](Platform::Object^ sender, SelectionChangedEventArgs^ e) {
-							TITANIUM_EXCEPTION_CATCH_START {
-								const auto picker = static_cast<ComboBox^>(sender);
-								const auto rowIndex = picker->SelectedIndex;
-								const auto ctx = get_context();
-								JSObject  eventArgs = ctx.CreateObject();
-								if (rowIndex >= 0 && column->get_rowCount() > static_cast<std::uint32_t>(rowIndex)) {
-									eventArgs.SetProperty("rowIndex", ctx.CreateNumber(rowIndex));
-									eventArgs.SetProperty("row", column->get_rows().at(rowIndex)->get_object());
-								}
-								eventArgs.SetProperty("columnIndex", ctx.CreateNumber(columnIndex));
-								eventArgs.SetProperty("column", column->get_object());
-								eventArgs.SetProperty("selectedValue", ctx.CreateArray(getSelectedJSValues()));
-								fireEvent("change", eventArgs);
-							} TITANIUMWINDOWS_EXCEPTION_CATCH_END
-						}));
-					}
-				} else if (datePicker__) {
+				if (datePicker__) {
 					change_event__ = datePicker__->DateChanged += ref new EventHandler<DatePickerValueChangedEventArgs^>([this](Platform::Object^ sender, DatePickerValueChangedEventArgs^ e) {
 						TITANIUM_EXCEPTION_CATCH_START {
 							value__ = TitaniumWindows::Utility::GetDateTime(datePicker__->Date);
@@ -341,15 +352,7 @@ namespace TitaniumWindows
 			Titanium::UI::Picker::disableEvent(event_name);
 
 			if (event_name == "change") {
-				if (plainPicker__) {
-					for (std::uint32_t i = 0; i < columns__.size(); i++) {
-						const auto column = std::dynamic_pointer_cast<TitaniumWindows::UI::PickerColumn>(columns__[i]);
-						const auto picker = column->getComponent();
-						if (change_events__.size() > i) {
-							picker->SelectionChanged -= change_events__.at(i);
-						}
-					}
-				} else if (datePicker__) {
+				if (datePicker__) {
 					datePicker__->DateChanged -= change_event__;
 				} else if (timePicker__) {
 					timePicker__->TimeChanged -= change_event__;
