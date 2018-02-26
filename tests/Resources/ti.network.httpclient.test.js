@@ -512,28 +512,20 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send(form);
 	});
 
-	// HttpClient.location should point to redirected location
-	it('TIMOB-25760', function (finish) {
-		var xhr = Ti.Network.createHTTPClient(),
-			attempts = 3;
+	it('TIMOB-25696', function (finish) {
+		var xhr = Ti.Network.createHTTPClient();
 		xhr.setTimeout(6e4);
 
 		xhr.onload = function () {
-			should(xhr.location).be.eql('https://www.appcelerator.com/');
-			finish();
-		};
-		xhr.onerror = function (e) {
-			if (attempts-- > 0) {
-				Ti.API.warn('failed, attempting to retry request...');
-				xhr.send();
-			} else {
-				Ti.API.debug(JSON.stringify(e, null, 2));
-				finish(new Error('failed to retrieve redirected content: ' + e));
-			}
+			// This should cause runtime error but should not crash app
+            Ti.API.info('Connected to server at port ' + port);
 		};
 
-		xhr.open('GET', 'http://www.httpbin.org/redirect-to?url=https%3A%2F%2Fappcelerator.com/');
-		xhr.send();
+		setTimeout(function() {
+			finish();
+		}, 1500);
+
+		xhr.open('GET', 'http://www.appcelerator.com/');
 	});
 
 });
