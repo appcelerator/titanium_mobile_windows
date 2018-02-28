@@ -1756,8 +1756,6 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::requestLayout(const bool& fire_event)
 		{
-			Titanium::LayoutEngine::nodeLayout(layout_node__);
-
 			const auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
 			if (root) {
 				Titanium::LayoutEngine::nodeLayout(root);
