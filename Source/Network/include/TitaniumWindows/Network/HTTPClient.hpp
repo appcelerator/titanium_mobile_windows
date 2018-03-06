@@ -102,6 +102,7 @@ namespace TitaniumWindows
 			// requestHeaders__ - the case-insensitive collection of key value pairs to be sent to the server
 			std::map<const std::string, std::string, lexicographicalComparator> requestHeaders__;
 
+			bool enableStreamEvents__ { true };
 			bool disposed__ { false };
 #pragma warning(pop)
 

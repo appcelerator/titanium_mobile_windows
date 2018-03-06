@@ -221,6 +221,7 @@ namespace TitaniumWindows
 			// Startup a timer that will abort the request after the timeout period is reached.
 			startDispatcherTimer();
 			responseWaiter__.reset();
+			enableStreamEvents__ = true;
 
 			// clang-format off
 			const auto token = cancellationTokenSource__.get_token();
@@ -228,9 +229,12 @@ namespace TitaniumWindows
 				.then([this, token](Windows::Web::Http::HttpResponseMessage^ response) {
 				interruption_point();
 				readyState__ = Titanium::Network::RequestState::Opened;
-				RunOnUIThread([this]() {
-					onreadystatechange(readyState__);
-				});
+
+				if (enableStreamEvents__) {
+					RunOnUIThread([this]() {
+						onreadystatechange(readyState__);
+					});
+				}
 
 				SerializeHeaders(response);
 
@@ -240,9 +244,11 @@ namespace TitaniumWindows
 				interruption_point();
 
 				readyState__ = Titanium::Network::RequestState::Loading;
-				RunOnUIThread([this]() {
-					onreadystatechange(readyState__);
-				});
+				if (enableStreamEvents__) {
+					RunOnUIThread([this]() {
+						onreadystatechange(readyState__);
+					});
+				}
 				// FIXME Fire ondatastream/onsendstream callbacks throughout!
 
 				return HTTPResultAsync(stream, token);
@@ -250,7 +256,6 @@ namespace TitaniumWindows
 				.then([this](task<Windows::Storage::Streams::IBuffer^> previousTask) {
 				try {
 					readyState__ = Titanium::Network::RequestState::Done;
-					responseWaiter__.set();
 
 					// Check if any previous task threw an exception.
 					previousTask.get();
@@ -384,21 +389,16 @@ namespace TitaniumWindows
 					cancel_current_task();
 				}
 
-				// Stop the timeout timer
-				if (dispatcherTimer__ != nullptr && httpClient__ != nullptr) {
-					RunOnUIThread([=] {
-						dispatcherTimer__->Stop();
-					});
-				}
-
-				if (contentLength__ != -1 && contentLength__ != 0) {
-					RunOnUIThread([=] {
-						ondatastream(responseBuffer->Length / contentLength__);
-					});
-				} else {
-					RunOnUIThread([this] {
-						ondatastream(-1.0); // chunked encoding was used
-					});
+				if (enableStreamEvents__) {
+					if (contentLength__ != -1 && contentLength__ != 0) {
+						RunOnUIThread([=] {
+							ondatastream(responseBuffer->Length / contentLength__);
+						});
+					} else {
+						RunOnUIThread([this] {
+							ondatastream(-1.0); // chunked encoding was used
+						});
+					}
 				}
 
 				if (responseBuffer->Length) {
@@ -409,7 +409,17 @@ namespace TitaniumWindows
 						&responseData__[responseDataLen__], responseBuffer->Length));
 					responseDataLen__ += responseBuffer->Length;
 				}
-				
+
+				// UI thread is freed
+				responseWaiter__.set();
+
+				// Stop the timeout timer
+				if (dispatcherTimer__ != nullptr && httpClient__ != nullptr) {
+					RunOnUIThread([=] {
+						dispatcherTimer__->Stop();
+					});
+				}
+
 				// FIXME How do we pass the token on in case of readTask?
 				return responseBuffer->Length ? HTTPResultAsync(stream, token) : readTask;
 			});
@@ -463,9 +473,11 @@ namespace TitaniumWindows
 			}
 
 			readyState__ = Titanium::Network::RequestState::Headers_Received;
-			RunOnUIThread([this]() {
-				onreadystatechange(Titanium::Network::RequestState::Headers_Received);
-			});
+			if (enableStreamEvents__) {
+				RunOnUIThread([this]() {
+					onreadystatechange(Titanium::Network::RequestState::Headers_Received);
+				});
+			}
 		}
 
 		void HTTPClient::SerializeHeaderCollection(Windows::Foundation::Collections::IIterable<Windows::Foundation::Collections::IKeyValuePair<Platform::String^, Platform::String^>^>^ headers)
@@ -522,6 +534,7 @@ namespace TitaniumWindows
 
 		void HTTPClient::_waitForResponse() TITANIUM_NOEXCEPT
 		{
+			enableStreamEvents__ = false;
 			responseWaiter__.wait();
 		}
 	}
