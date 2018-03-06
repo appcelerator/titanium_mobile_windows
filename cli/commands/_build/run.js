@@ -40,6 +40,7 @@ function run(logger, config, cli, finished) {
 		'computeHashes',
 		'readBuildManifest',
 		'checkIfNeedToRecompile',
+		'generateBuildVersion',
 
 		function (next) {
 			cli.emit('build.pre.compile', this, next);

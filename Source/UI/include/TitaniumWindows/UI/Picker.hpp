@@ -91,7 +91,7 @@ namespace TitaniumWindows
 
 			void addColumns(const std::vector<std::shared_ptr<Titanium::UI::PickerColumn>>& columns);
 			std::vector<JSValue> getSelectedJSValues();
-
+			void unregisterChangeEvents();
 #pragma warning(pop)
 		};
 	} // namespace UI

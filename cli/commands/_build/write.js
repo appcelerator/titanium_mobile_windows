@@ -47,6 +47,7 @@ function writeBuildManifest(next) {
 		publisher: this.tiapp.publisher,
 		url: this.tiapp.url,
 		version: this.tiapp.version,
+		buildNumber: this.buildNumber,
 		description: this.tiapp.description,
 		copyright: this.tiapp.copyright,
 		guid: this.tiapp.guid,

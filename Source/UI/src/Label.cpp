@@ -226,15 +226,28 @@ namespace TitaniumWindows
 			label__->Measure(desiredSize);
 
 			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+
+			// minimumFontSize decreases the fontsize of the text to fit the width. This enables single-line mode. Only works with minimumFontSize > 0
+			const auto minimumFontSize = get_minimumFontSize();
+			const auto measuredWidth = layout->getLayoutNode()->element.measuredWidth;
+			if (minimumFontSize > 0 && measuredWidth > 0) {
+				auto previousFontSize = label__->FontSize;
+				while (previousFontSize > minimumFontSize && minimumFontSize > 1.0 && measuredWidth < label__->ActualWidth) {
+					previousFontSize -= 0.1;
+					label__->FontSize = previousFontSize;
+					label__->Measure(desiredSize);
+				}
+			}
+
 			const auto width = layout->get_width();
 			const auto height = layout->get_height();
 			const auto TI_UI_SIZE = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
 			if ((width.empty() || width == TI_UI_SIZE || width == "auto") && layout->canUseSizeWidth()) {
-				layout->fixWidth(label__->DesiredSize.Width + border__->BorderThickness.Left + border__->BorderThickness.Right + 1 /* Border needs this margin */ );
+				layout->fixWidth(label__->ActualWidth + border__->BorderThickness.Left + border__->BorderThickness.Right + 1 /* Border needs this margin */ );
 				layout->requestLayout();
 			}
 			if ((height.empty() || height == TI_UI_SIZE || height == "auto") && layout->canUseSizeHeight()) {
-				layout->fixHeight(label__->DesiredSize.Height + border__->BorderThickness.Top + border__->BorderThickness.Bottom + 1 /* Border needs this margin */ );
+				layout->fixHeight(label__->ActualHeight + border__->BorderThickness.Top + border__->BorderThickness.Bottom + 1 /* Border needs this margin */ );
 				layout->requestLayout();
 			}
 
@@ -448,6 +461,12 @@ namespace TitaniumWindows
 			}
 
 			label__->Inlines->Append(root);
+		}
+
+		void Label::set_maxLines(const std::uint32_t& maxLines) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Label::set_maxLines(maxLines);
+			label__->MaxLines = maxLines;
 		}
 
 	} // namespace UI

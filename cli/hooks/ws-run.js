@@ -155,7 +155,10 @@ exports.init = function (logger, config, cli) {
 
 				var tiapp = builder.tiapp,
 					appId = tiapp.windows.id || tiapp.id,
-					projectDir = path.resolve(builder.cmakeTargetDir, 'AppPackages'),
+					sanitizedName = builder.sanitizeProjectName(tiapp.name),
+					// name of the directory holding appx and dependencies subfolder
+					dirName = sanitizedName + '_' + builder.buildVersion + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test'),
+					projectDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
 					// Options for installing and launching app
 					opts = appc.util.mix({
 						killIfRunning: false,
@@ -164,8 +167,12 @@ exports.init = function (logger, config, cli) {
 					}, builder.windowslibOptions);
 
 				async.series([function(next) {
-					logger.info(__('Uninstalling old versions of the application'));
-					windowslib.winstore.uninstall(appId, opts, next);
+					if (cli.argv.hasOwnProperty('forceUnInstall')) {
+						logger.info(__('Uninstalling old versions of the application'));
+						windowslib.winstore.uninstall(appId, opts, next);
+					} else {
+						next();
+					}
 				}, function(next) {
 					logger.info(__('Installing the application'));
 					windowslib.winstore.install(projectDir, opts, next);
