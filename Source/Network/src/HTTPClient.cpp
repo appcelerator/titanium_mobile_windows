@@ -532,6 +532,10 @@ namespace TitaniumWindows
 			}
 		}
 
+		/*
+		 * This is a private API that is specifically designed for LiveView.
+		 * This suppresses some events such as onreadystatechange because this blocks UI thread.
+		 */
 		void HTTPClient::_waitForResponse() TITANIUM_NOEXCEPT
 		{
 			enableStreamEvents__ = false;
