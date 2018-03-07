@@ -106,7 +106,7 @@ namespace TitaniumWindows
 			filter__ = ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter();
 			httpClient__ = ref new Windows::Web::Http::HttpClient(filter__);
 			cancellationTokenSource__ = concurrency::cancellation_token_source();
-			filter__->AllowAutoRedirect = true;
+			filter__->AllowAutoRedirect = false;
 			filter__->CacheControl->ReadBehavior = Windows::Web::Http::Filters::HttpCacheReadBehavior::MostRecent;
 
 			if (!username__.empty()) {
@@ -216,8 +216,6 @@ namespace TitaniumWindows
 			}
 			setRequestHeaders(request);
 
-			auto operation = httpClient__->SendRequestAsync(request);
-
 			// Startup a timer that will abort the request after the timeout period is reached.
 			startDispatcherTimer();
 			responseWaiter__.reset();
@@ -225,8 +223,17 @@ namespace TitaniumWindows
 
 			// clang-format off
 			const auto token = cancellationTokenSource__.get_token();
-			create_task(operation, token)
-				.then([this, token](Windows::Web::Http::HttpResponseMessage^ response) {
+			create_task(httpClient__->SendRequestAsync(request), token)
+				.then([this, token, content](Windows::Web::Http::HttpResponseMessage^ response) {
+
+				const auto status = static_cast<std::uint32_t>(response->StatusCode);
+				const auto location = response->Headers->Location;
+				if (enableStreamEvents__ && location && status >= 300 && status <= 399) {
+					location__ = TitaniumWindows::Utility::ConvertString(location->AbsoluteUri);
+					send(content);
+					return;
+				}
+
 				interruption_point();
 				readyState__ = Titanium::Network::RequestState::Opened;
 
@@ -238,75 +245,74 @@ namespace TitaniumWindows
 
 				SerializeHeaders(response);
 
-				return create_task(response->Content->ReadAsInputStreamAsync(), token);
-			}, CONTINUATION_CONTEXT())
-				.then([this, token](Windows::Storage::Streams::IInputStream^ stream) {
-				interruption_point();
+				create_task(response->Content->ReadAsInputStreamAsync(), token).then([this, token](Windows::Storage::Streams::IInputStream^ stream) {
+					interruption_point();
 
-				readyState__ = Titanium::Network::RequestState::Loading;
-				if (enableStreamEvents__) {
-					RunOnUIThread([this]() {
-						onreadystatechange(readyState__);
-					});
-				}
-				// FIXME Fire ondatastream/onsendstream callbacks throughout!
-
-				return HTTPResultAsync(stream, token);
-			}, CONTINUATION_CONTEXT())
-				.then([this](task<Windows::Storage::Streams::IBuffer^> previousTask) {
-				try {
-					readyState__ = Titanium::Network::RequestState::Done;
-
-					// Check if any previous task threw an exception.
-					previousTask.get();
-
-					if (!disposed__ && httpClient__) {
-
-						// Fire onerror only if there's an onerror handler registered and status code is 400-599.
-						// Otherwise fire onload (so 400-599 fall back to onload if no onerror handler)
-						if (onerror__ && onerror__.IsObject() && static_cast<JSObject>(onerror__).IsFunction() && status__ >= 400 && status__ <= 599) {
-							RunOnUIThread([=]() {
-								onerror(status__, "HTTP Error", false);
-							});
-       					} else {
-							RunOnUIThread([this]() {
-								onload(0, "Response has been loaded.", true);
-							});
-       					}
-
+					readyState__ = Titanium::Network::RequestState::Loading;
+					if (enableStreamEvents__) {
 						RunOnUIThread([this]() {
-							onsendstream(1.0);
-							ondatastream(1.0);
 							onreadystatechange(readyState__);
 						});
 					}
-				} catch (const task_canceled&) {
-					if (!disposed__ && httpClient__) {
-						RunOnUIThread([=]() {
-							onerror(-1, "Session Cancelled", false);
-						});
+					// FIXME Fire ondatastream/onsendstream callbacks throughout!
+
+					return HTTPResultAsync(stream, token);
+				}, CONTINUATION_CONTEXT())
+					.then([this](task<Windows::Storage::Streams::IBuffer^> previousTask) {
+					try {
+						readyState__ = Titanium::Network::RequestState::Done;
+
+						// Check if any previous task threw an exception.
+						previousTask.get();
+
+						if (!disposed__ && httpClient__) {
+
+							// Fire onerror only if there's an onerror handler registered and status code is 400-599.
+							// Otherwise fire onload (so 400-599 fall back to onload if no onerror handler)
+							if (onerror__ && onerror__.IsObject() && static_cast<JSObject>(onerror__).IsFunction() && status__ >= 400 && status__ <= 599) {
+								RunOnUIThread([=]() {
+									onerror(status__, "HTTP Error", false);
+								});
+							} else {
+								RunOnUIThread([this]() {
+									onload(0, "Response has been loaded.", true);
+								});
+							}
+
+							RunOnUIThread([this]() {
+								onsendstream(1.0);
+								ondatastream(1.0);
+								onreadystatechange(readyState__);
+							});
+						}
+					} catch (const task_canceled&) {
+						if (!disposed__ && httpClient__) {
+							RunOnUIThread([=]() {
+								onerror(-1, "Session Cancelled", false);
+							});
+						}
+					} catch (Platform::Exception^ ex) {
+						if (!disposed__ && httpClient__) {
+							RunOnUIThread([=]() {
+								std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));
+								onerror(ex->HResult, error, false);
+							});
+						}
+					} catch (const std::exception& e) {
+						if (!disposed__ && httpClient__) {
+							RunOnUIThread([=]() {
+								std::string error(e.what());
+								onerror(-1, error, false);
+							});
+						}
+					} catch (...) {
+						if (!disposed__ && httpClient__) {
+							RunOnUIThread([=]() {
+								onerror(-1, "Unknown error", false);
+							});
+						}
 					}
-				} catch (Platform::Exception^ ex) {
-					if (!disposed__ && httpClient__) {
-						RunOnUIThread([=]() {
-							std::string error(TitaniumWindows::Utility::ConvertString(ex->Message));
-							onerror(ex->HResult, error, false);
-						});
-					}
-				} catch (const std::exception& e) {
-					if (!disposed__ && httpClient__) {
-						RunOnUIThread([=]() {
-							std::string error(e.what());
-							onerror(-1, error, false);
-						});
-					}
-				} catch (...) {
-					if (!disposed__ && httpClient__) {
-						RunOnUIThread([=]() {
-							onerror(-1, "Unknown error", false);
-						});
-					}
-				}
+				}, CONTINUATION_CONTEXT());
 			}, CONTINUATION_CONTEXT());
 			// clang-format on
 		}
@@ -535,6 +541,7 @@ namespace TitaniumWindows
 		/*
 		 * This is a private API that is specifically designed for LiveView.
 		 * This suppresses some events such as onreadystatechange because this blocks UI thread.
+		 * This also suppresses auto URL redirection.
 		 */
 		void HTTPClient::_waitForResponse() TITANIUM_NOEXCEPT
 		{
