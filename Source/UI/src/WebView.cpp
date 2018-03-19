@@ -110,6 +110,7 @@ namespace TitaniumWindows_UI
 					} catch (...) {
 						TITANIUM_LOG_WARN("Unknown error at WebView GetFileFromApplicationUriAsync");
 					}
+					return static_cast<IInputStream^>(nullptr); // workaround of warning C4715
 				});
 
 				try {
@@ -299,6 +300,15 @@ namespace TitaniumWindows
 			beforeload_event__ = webview__->NavigationStarting += ref new Windows::Foundation::TypedEventHandler
 				<Controls::WebView^, Controls::WebViewNavigationStartingEventArgs^>([this](Controls::WebView^, Controls::WebViewNavigationStartingEventArgs^ e) {
 				try {
+					const auto blacklisted = std::find(blacklistedURLs__.begin(), blacklistedURLs__.end(), url__);
+					if (blacklisted != blacklistedURLs__.end()) {
+						e->Cancel = true;
+						JSObject obj = get_context().CreateObject();
+						obj.SetProperty("url", get_context().CreateString(get_url()));
+						fireEvent("blacklisturl", obj);
+						return;
+					}
+
 					loading__ = true;
 					if (beforeload_event_enabled__) {
 						JSObject obj = get_context().CreateObject();
