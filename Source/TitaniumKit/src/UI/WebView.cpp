@@ -16,6 +16,7 @@ namespace Titanium
 
 		WebView::WebView(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: View(js_context, "Ti.UI.WebView")
+			, onLink__(js_context.CreateNull())
 		{
 		}
 
@@ -104,6 +105,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(WebView, scalesPageToFit);
 			TITANIUM_ADD_PROPERTY(WebView, url);
 			TITANIUM_ADD_PROPERTY(WebView, blacklistedURLs);
+			TITANIUM_ADD_PROPERTY(WebView, onLink);
 			TITANIUM_ADD_FUNCTION(WebView, canGoBack);
 			TITANIUM_ADD_FUNCTION(WebView, canGoForward);
 			TITANIUM_ADD_FUNCTION(WebView, evalJS);
@@ -300,6 +302,17 @@ namespace Titanium
 				// setData(data);
 			}
 			return get_context().CreateUndefined();
+		}
+
+		TITANIUM_PROPERTY_SETTER(WebView, onLink)
+		{
+			onLink__ = argument; // allow setting to null/undefined
+			return true;
+		}
+
+		TITANIUM_PROPERTY_GETTER(WebView, onLink)
+		{
+			return onLink__;
 		}
 
 		TITANIUM_PROPERTY_GETTER_STRING_ARRAY(WebView, blacklistedURLs);

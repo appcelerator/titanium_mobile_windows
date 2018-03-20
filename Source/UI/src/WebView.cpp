@@ -300,13 +300,30 @@ namespace TitaniumWindows
 			beforeload_event__ = webview__->NavigationStarting += ref new Windows::Foundation::TypedEventHandler
 				<Controls::WebView^, Controls::WebViewNavigationStartingEventArgs^>([this](Controls::WebView^, Controls::WebViewNavigationStartingEventArgs^ e) {
 				try {
-					const auto blacklisted = std::find(blacklistedURLs__.begin(), blacklistedURLs__.end(), url__);
+					// blacklistedURLs
+					const auto uri = TitaniumWindows::Utility::ConvertUTF8String(e->Uri->AbsoluteUri);
+					const auto blacklisted = std::find(blacklistedURLs__.begin(), blacklistedURLs__.end(), uri);
 					if (blacklisted != blacklistedURLs__.end()) {
 						e->Cancel = true;
 						JSObject obj = get_context().CreateObject();
-						obj.SetProperty("url", get_context().CreateString(get_url()));
+						obj.SetProperty("url", get_context().CreateString(uri));
 						fireEvent("blacklisturl", obj);
 						return;
+					}
+
+					// onLink callback
+					if (onLink__.IsObject()) {
+						auto onLink = static_cast<JSObject>(onLink__);
+						if (onLink.IsFunction()) {
+							JSObject obj = get_context().CreateObject();
+							obj.SetProperty("url", get_context().CreateString(uri));
+							const std::vector<JSValue> args{ obj };
+							const auto result = onLink(args, get_object());
+							if (result.IsBoolean() && static_cast<bool>(result) == false) {
+								e->Cancel = true;
+								return;
+							}
+						}
 					}
 
 					loading__ = true;
