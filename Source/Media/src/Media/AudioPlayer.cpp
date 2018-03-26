@@ -99,31 +99,6 @@ namespace TitaniumWindows
 					stateChanged();
 				}
 			);
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			background_player__ = BackgroundMediaPlayer::Current;
-			background_player__->AutoPlay = false;
-			background_player__->CurrentStateChanged += ref new TypedEventHandler<MediaPlayer^, Platform::Object^>(
-				[=](MediaPlayer^ sender, Platform::Object^ e) {
-					switch (background_player__->CurrentState) {
-						case MediaPlayerState::Buffering:
-							state__ = Titanium::Media::AudioState::Buffering;
-							break;
-						case MediaPlayerState::Paused:
-							state__ = Titanium::Media::AudioState::Paused;
-							break;
-						case MediaPlayerState::Playing:
-							state__ = Titanium::Media::AudioState::Playing;
-							break;
-						case MediaPlayerState::Stopped:
-							state__ = Titanium::Media::AudioState::Stopped;
-							break;
-					}
-					TitaniumWindows::Utility::RunOnUIThread([=]{
-						stateChanged();
-					});
-				}
-			);
-#endif
 
 			// Add "hidden" MediaElement UI onto current Window, because it doesn't work when it is not on the UI.
 			// This is little bit tricky because this proxy is not kind of View and then you can't use Titanium's layout engine. 
@@ -146,24 +121,6 @@ namespace TitaniumWindows
 			}
 		}
 
-		void AudioPlayer::set_allowBackground(const bool& allowBackground) TITANIUM_NOEXCEPT
-		{
-			Titanium::Media::AudioPlayer::set_allowBackground(allowBackground);
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			if (get_playing()) {
-				if (allowBackground) {
-					background_player__->Position = player__->Position;
-					player__->Pause();
-					background_player__->Play();
-				} else {
-					player__->Position = background_player__->Position;
-					background_player__->Pause();
-					player__->Play();
-				}
-			}
-#endif
-		}
-
 		std::chrono::milliseconds AudioPlayer::get_time() const TITANIUM_NOEXCEPT
 		{
 			if (player__) {
@@ -177,66 +134,26 @@ namespace TitaniumWindows
 			Titanium::Media::AudioPlayer::set_url(url);
 			auto uri = TitaniumWindows::Utility::GetUriFromPath(url);
 			player__->Source = uri;
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			background_player__->SetUriSource(uri);
-#endif
 		}
 
 		void AudioPlayer::pause() TITANIUM_NOEXCEPT
 		{
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			if (get_allowBackground()) {
-				background_player__->Pause();
-			} else {
-				player__->Pause();
-			}
-#else
 			player__->Pause();
-#endif
 		}
 
 		void AudioPlayer::play() TITANIUM_NOEXCEPT
 		{
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			if (get_allowBackground()) {
-				background_player__->Play();
-			} else {
-				player__->Play();
-			}
-#else
 			player__->Play();
-#endif
 		}
 
 		void AudioPlayer::start() TITANIUM_NOEXCEPT
 		{
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			if (get_allowBackground()) {
-				background_player__->Play();
-			} else {
-				player__->Play();
-			}
-#else
 			player__->Play();
-#endif
 		}
 
 		void AudioPlayer::stop() TITANIUM_NOEXCEPT
 		{
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			if (get_allowBackground()) {
-				background_player__->Pause();
-
-				// since there is no Stop(), reset position
-				auto position = Windows::Foundation::TimeSpan();
-				position.Duration = 0;
-				background_player__->Position = position;
-			} else {
-				player__->Stop();
-			}
-#else
 			player__->Stop();
-#endif
 		}
 
 		void AudioPlayer::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
@@ -257,13 +174,6 @@ namespace TitaniumWindows
 						mediaEnded();
 					}
 				);
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-				background_complete_event__ = background_player__->MediaEnded += ref new TypedEventHandler<MediaPlayer^, Platform::Object^>(
-					[=](MediaPlayer^ sender, Platform::Object^ e){
-						mediaEnded();
-					}
-				);
-#endif
 			} else if (event_name == "error") {
 				const auto mediaFailed = [=] {
 					RunOnUIThread([this]() {
@@ -279,13 +189,6 @@ namespace TitaniumWindows
 						mediaFailed();
 					}
 				);
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-				background_failed_event__ = background_player__->MediaFailed += ref new TypedEventHandler<MediaPlayer^, MediaPlayerFailedEventArgs^>(
-					[=](MediaPlayer^ sender, MediaPlayerFailedEventArgs^ e) {
-						mediaFailed();
-					}
-				);
-#endif
 			}
 		}
 
@@ -294,14 +197,8 @@ namespace TitaniumWindows
 			Titanium::Media::AudioPlayer::disableEvent(event_name);
 			if (event_name == "complete") {
 				player__->MediaEnded -= complete_event__;
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-				background_player__->MediaEnded -= background_complete_event__;
-#endif
 			} else if (event_name == "error") {
 				player__->MediaFailed -= failed_event__;
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-				background_player__->MediaFailed -= background_failed_event__;
-#endif
 			}
 		}
 	}
