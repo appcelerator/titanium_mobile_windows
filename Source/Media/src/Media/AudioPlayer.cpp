@@ -32,9 +32,6 @@ namespace TitaniumWindows
 		AudioPlayer::~AudioPlayer()
 		{
 			TITANIUM_LOG_DEBUG("TitaniumWindows::Media::AudioPlayer::dtor");
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			BackgroundMediaPlayer::Shutdown();
-#endif
 		}
 
 		void AudioPlayer::JSExportInitialize()
@@ -62,47 +59,29 @@ namespace TitaniumWindows
 		{
 			Titanium::Media::AudioPlayer::postCallAsConstructor(js_context, arguments);
 
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			// allow background audio on WindowsStore apps
-			// this still requires Package.appxmanifest background task
-			auto controls = Windows::Media::SystemMediaTransportControls::GetForCurrentView();
-			controls->IsPlayEnabled = true;
-			controls->IsPauseEnabled = true;
-#endif
-
-			player__ = ref new MediaElement();
-#pragma warning(push)
-#pragma warning(disable : 4973)
-			// Note: BackgroundCapableMedia is deprecated in Windows 10
-			player__->AudioCategory = AudioCategory::BackgroundCapableMedia;
-#pragma warning(pop)
-			player__->AreTransportControlsEnabled = true;
-			player__->Visibility = Windows::UI::Xaml::Visibility::Collapsed; // Hide UI
+			player__ = ref new MediaPlayer();
+			player__->AudioCategory = Windows::Media::Playback::MediaPlayerAudioCategory::Media;
 			player__->AutoPlay = false;
-			player__->IsLooping = false;
-			player__->CurrentStateChanged += ref new RoutedEventHandler(
-				[=](Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e) {
-					switch (player__->CurrentState) {
-						case MediaElementState::Buffering:
+			player__->IsLoopingEnabled = false;
+			player__->PlaybackSession->PlaybackStateChanged += ref new TypedEventHandler<MediaPlaybackSession^, Platform::Object^>(
+				[=](MediaPlaybackSession^ sender, Platform::Object^ e) {
+					switch (player__->PlaybackSession->PlaybackState) {
+					case MediaPlaybackState::Buffering:
 							state__ = Titanium::Media::AudioState::Buffering;
 							break;
-						case MediaElementState::Paused:
+						case MediaPlaybackState::Paused:
 							state__ = Titanium::Media::AudioState::Paused;
 							break;
-						case MediaElementState::Playing:
+						case MediaPlaybackState::Playing:
 							state__ = Titanium::Media::AudioState::Playing;
 							break;
-						case MediaElementState::Stopped:
-							state__ = Titanium::Media::AudioState::Stopped;
+						case MediaPlaybackState::Opening:
+							state__ = Titanium::Media::AudioState::Starting;
 							break;
 					}
 					stateChanged();
 				}
 			);
-
-			// Add "hidden" MediaElement UI onto current Window, because it doesn't work when it is not on the UI.
-			// This is little bit tricky because this proxy is not kind of View and then you can't use Titanium's layout engine. 
-			TitaniumWindows::Utility::SetHiddenViewForCurrentWindow(player__, navigated_event__);
 		}
 
 		void AudioPlayer::set_volume(const double& volume) TITANIUM_NOEXCEPT
@@ -124,7 +103,7 @@ namespace TitaniumWindows
 		std::chrono::milliseconds AudioPlayer::get_time() const TITANIUM_NOEXCEPT
 		{
 			if (player__) {
-				return TitaniumWindows::Utility::GetMSec(player__->Position);
+				return TitaniumWindows::Utility::GetMSec(player__->PlaybackSession->Position);
 			}
 			return std::chrono::milliseconds(0);
 		}
@@ -133,7 +112,7 @@ namespace TitaniumWindows
 		{
 			Titanium::Media::AudioPlayer::set_url(url);
 			auto uri = TitaniumWindows::Utility::GetUriFromPath(url);
-			player__->Source = uri;
+			player__->Source = Windows::Media::Core::MediaSource::CreateFromUri(uri);
 		}
 
 		void AudioPlayer::pause() TITANIUM_NOEXCEPT
@@ -153,7 +132,12 @@ namespace TitaniumWindows
 
 		void AudioPlayer::stop() TITANIUM_NOEXCEPT
 		{
-			player__->Stop();
+			// since there is no Stop(), reset position
+			auto position = Windows::Foundation::TimeSpan();
+			position.Duration = 0;
+
+			player__->Pause();
+			player__->PlaybackSession->Position = position;
 		}
 
 		void AudioPlayer::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
@@ -169,8 +153,8 @@ namespace TitaniumWindows
 						fireEvent("complete", event_arg);
 					});
 				};
-				complete_event__ = player__->MediaEnded += ref new RoutedEventHandler(
-					[=](Platform::Object^ sender, RoutedEventArgs^ e) {
+				complete_event__ = player__->MediaEnded += ref new TypedEventHandler<MediaPlayer^, Platform::Object^>(
+					[=](MediaPlayer^ sender, Platform::Object^ e) {
 						mediaEnded();
 					}
 				);
@@ -184,8 +168,8 @@ namespace TitaniumWindows
 						fireEvent("complete", event_arg);
 					});
 				};
-				failed_event__ = player__->MediaFailed += ref new ExceptionRoutedEventHandler(
-					[=](Platform::Object^ sender, ExceptionRoutedEventArgs^ e) {
+				failed_event__ = player__->MediaFailed += ref new TypedEventHandler<MediaPlayer^, MediaPlayerFailedEventArgs^>(
+					[=](MediaPlayer^ sender, MediaPlayerFailedEventArgs^ e) {
 						mediaFailed();
 					}
 				);

@@ -61,7 +61,7 @@ namespace TitaniumWindows
 
 		protected:
 			Windows::Media::SystemMediaTransportControls^ controls__;
-			Windows::UI::Xaml::Controls::MediaElement^ player__;
+			Windows::Media::Playback::MediaPlayer^ player__;
 
 			Windows::Foundation::EventRegistrationToken complete_event__;
 			Windows::Foundation::EventRegistrationToken failed_event__;
