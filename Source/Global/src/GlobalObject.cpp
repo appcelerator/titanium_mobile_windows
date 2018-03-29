@@ -36,8 +36,7 @@ namespace TitaniumWindows
 			// The module name which ends with ".*" means it is a native namespace. 
 			// Then it should not be treated as a standard module.
 			if (boost::ends_with(v, ".*")) {
-				const auto name = v.substr(0, v.length() - 2);
-				const auto insert_result = native_module_namespaces__.emplace(name);
+				const auto insert_result = native_module_namespaces__.emplace(v);
 				TITANIUM_ASSERT(insert_result.second);
 			} else {
 				const auto insert_result = native_module_names__.emplace(v, false);
