@@ -71,6 +71,7 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, 
 		'-DTitaniumWindows_UI_DISABLE_TESTS=ON',
 		'-DTitaniumKit_DISABLE_TESTS=ON',
 		'-DHAL_DISABLE_TESTS=ON',
+		'-DHAL_RENAME_AXWAYHAL=ON',
 		example_folder
 		], {
 			cwd: dest
