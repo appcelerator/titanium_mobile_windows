@@ -155,6 +155,7 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
 		'-DTitaniumWindows_Media_DISABLE_TESTS=ON',
 		'-DHAL_DISABLE_TESTS=ON',
 		'-DTitaniumKit_DISABLE_TESTS=ON',
+		'-DHAL_RENAME_AXWAYHAL=ON',
 		'-Wno-dev',
 		sourceDir
 	];
