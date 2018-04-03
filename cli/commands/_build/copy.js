@@ -268,7 +268,7 @@ function copyResources(next) {
 			// Square24x24Logo
 			{
 				description: 'Square24x24Logo.png - Used for badge',
-				file: path.join(appIconSetDir, 'Square24x24Logo.png'),
+				file: path.join(appIconSetDir, 'Square24x24Logo.scale-100.png'),
 				width: 24,
 				height: 24,
 				required: true
@@ -277,7 +277,7 @@ function copyResources(next) {
 			// Square44x44Logo
 			{
 				description: 'Square44x44Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square44x44Logo.png'),
+				file: path.join(appIconSetDir, 'Square44x44Logo.scale-100.png'),
 				width: 44,
 				height: 44,
 				required: true
@@ -286,7 +286,7 @@ function copyResources(next) {
 			// Square71x71Logo
 			{
 				description: 'Square71x71Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square71x71Logo.png'),
+				file: path.join(appIconSetDir, 'Square71x71Logo.scale-100.png'),
 				width: 71,
 				height: 71,
 				required: true
@@ -295,7 +295,7 @@ function copyResources(next) {
 			// Square150x150Logo
 			{
 				description: 'Square150x150Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square150x150Logo.png'),
+				file: path.join(appIconSetDir, 'Square150x150Logo.scale-100.png'),
 				width: 150,
 				height: 150,
 				required: true
@@ -304,7 +304,7 @@ function copyResources(next) {
 			// Square310x310Logo
 			{
 				description: 'Square310x310Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square310x310Logo.png'),
+				file: path.join(appIconSetDir, 'Square310x310Logo.scale-100.png'),
 				width: 310,
 				height: 310,
 				required: true
@@ -313,7 +313,7 @@ function copyResources(next) {
 			// Logo.png
 			{
 				description: 'Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Logo.png'),
+				file: path.join(appIconSetDir, 'Logo.scale-100.png'),
 				width: 150,
 				height: 150,
 				required: true
@@ -322,7 +322,7 @@ function copyResources(next) {
 			// StoreLogo.png
 			{
 				description: 'StoreLogo.png - Used for logo',
-				file: path.join(appIconSetDir, 'StoreLogo.png'),
+				file: path.join(appIconSetDir, 'StoreLogo.scale-100.png'),
 				width: 50,
 				height: 50,
 				required: true
@@ -331,7 +331,7 @@ function copyResources(next) {
 			// SmallLogo.png
 			{
 				description: 'SmallLogo.png - Used for logo',
-				file: path.join(appIconSetDir, 'SmallLogo.png'),
+				file: path.join(appIconSetDir, 'SmallLogo.scale-100.png'),
 				width: 30,
 				height: 30,
 				required: true
