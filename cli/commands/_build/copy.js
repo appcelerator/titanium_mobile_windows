@@ -268,7 +268,7 @@ function copyResources(next) {
 			// Square24x24Logo
 			{
 				description: 'Square24x24Logo.png - Used for badge',
-				file: path.join(appIconSetDir, 'Square24x24Logo.scale-100.png'),
+				file: path.join(appIconSetDir, 'Square24x24Logo.png'),
 				width: 24,
 				height: 24,
 				required: true
