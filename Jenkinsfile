@@ -137,11 +137,11 @@ timestamps {
 			nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 				dir('apidoc') {
 					if (isUnix()) {
-						sh 'npm install -g npm@5.4.1'
+						sh 'npm install -g npm@5.7.1'
 						sh 'npm install .'
 						sh 'node ti_win_yaml.js'
 					} else {
-						bat 'call npm install -g npm@5.4.1'
+						bat 'call npm install -g npm@5.7.1'
 						bat 'call npm install .'
 						bat 'call node ti_win_yaml.js'
 					}
