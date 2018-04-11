@@ -16,7 +16,7 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion) {
 	bat 'mkdir dist\\windows'
 
 	// nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
-	// 	bat 'npm install -g npm@5.4.1' // Install NPM 5.4.1
+	 	bat 'npm install -g npm@5.7.1' // Install NPM 5.7.1
 	// 	def nodeHome = tool(name: "node ${nodeVersion}", type: 'nodejs')
 	// 	echo nodeHome
 	// 	bat "netsh advfirewall firewall add rule name=\"Node ${nodeVersion}\ TCP" program=\"${nodeHome}\\node.exe\" dir=in action=allow protocol=TCP"
@@ -50,7 +50,7 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion) {
 	unarchive mapping: ['dist/' : '.'] // copy in built SDK from dist/ folder (from Build stage)
 	unstash 'sources'
 	// nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
-		// bat 'npm install -g npm@5.4.1' // Install NPM 5.4.1
+		bat 'npm install -g npm@5.7.1' // Install NPM 5.7.1
 		dir('Tools/Scripts/build') {
 			echo 'Setting up SDK'
 			bat 'npm install .'
