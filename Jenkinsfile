@@ -6,7 +6,7 @@ def gitCommit = ''
 // Variables we can change
 // FIXME Using the nodejs jenkins plugin introduces complications that cause us not to properly connect to the Windows Phone emulator for logs
 // Likely need to modify the firewall rules to allow traffic from the new nodejs install like we do for system install!
-def nodeVersion = '6.10.3' // NOTE that changing this requires we set up the desired version on jenkins master first!
+def nodeVersion = '8.11.1' // NOTE that changing this requires we set up the desired version on jenkins master first!
 
 def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion) {
 	unstash 'sources' // for build
@@ -137,11 +137,11 @@ timestamps {
 			nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 				dir('apidoc') {
 					if (isUnix()) {
-						sh 'npm install -g npm@5.4.1'
+						sh 'npm install -g npm@5.7.1'
 						sh 'npm install .'
 						sh 'node ti_win_yaml.js'
 					} else {
-						bat 'call npm install -g npm@5.4.1'
+						bat 'call npm install -g npm@5.7.1'
 						bat 'call npm install .'
 						bat 'call node ti_win_yaml.js'
 					}
