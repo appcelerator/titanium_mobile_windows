@@ -173,7 +173,8 @@ describe('Titanium.Utils', function () {
 		should(test).be.eql('098f6bcd4621d373cade4e832627b4f6');
 	});
 
-	// FIXME Windows gives different md5 hash! Maybe line ending difference?
+	// FIXME Windows gives different md5 hash. 
+	// Turns out that the newline '\n' is converted to '\r\n' probably during git checkout.
 	it.windowsBroken('#md5HexDigest(Ti.Blob with text data)', function () {
 		var f = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'txtFiles/file.txt'),
 			contents = f.read(),
@@ -184,7 +185,7 @@ describe('Titanium.Utils', function () {
 		should(test).be.eql('4fe8a693c64f93f65c5faf42dc49ab23'); // Windows Desktop gives: 'ab1600f840b927f80a3dc000c510d1d3'
 	});
 
-	it.windowsBroken('#md5HexDigest(Ti.Blob with binary data)', function () {
+	it('#md5HexDigest(Ti.Blob with binary data)', function () {
 		var binaryFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'Logo.png'),
 			blob = binaryFile.read(),
 			result;
@@ -234,8 +235,7 @@ describe('Titanium.Utils', function () {
 		should(Ti.Utils.sha256(blob)).eql('54be80ae48e4242d56170248e730ffac60a2828d07260a048e2ac0fd62386234');
 	});
 
-	// FIXME Android and iOS do no newlines for longer output, Windows does. Need to get parity
-	it.windowsBroken('TIMOB-25513', function () {
+	it('TIMOB-25513', function () {
 		var shortString = 'ABCDEFGHIJ1234567890ABCDEFGHIJ12|psndemo2|abcd:1',
 			longString = 'ABCDEFGHIJ1234567890ABCDEFGHIJ12|psndemo2|abcd:12345678901234567890',
 			tiBase64ShortResult = Ti.Utils.base64encode(shortString),
