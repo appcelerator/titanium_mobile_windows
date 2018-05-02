@@ -1,6 +1,6 @@
 {
-    "name": "ti_win_yaml",
-    "version": "0.0.1",
+	"name": "ti_win_yaml",
+	"version": "0.0.1",
 	"description": "generate yaml documentation from the titanium windows classes",
 	"private": true,
 	"dependencies": {
