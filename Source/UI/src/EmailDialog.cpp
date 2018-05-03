@@ -13,6 +13,7 @@
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
+#include "Titanium/Blob.hpp"
 
 namespace TitaniumWindows
 {
@@ -32,16 +33,11 @@ namespace TitaniumWindows
 
 		bool EmailDialog::isSupported() TITANIUM_NOEXCEPT
 		{
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			return true;
-#else
-			return false;
-#endif
 		}
 
 		void EmailDialog::open(const bool& animated) TITANIUM_NOEXCEPT
 		{
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			Windows::ApplicationModel::Email::EmailMessage^ email_message = ref new Windows::ApplicationModel::Email::EmailMessage();
 
 			// Set up all the fields!
@@ -50,7 +46,27 @@ namespace TitaniumWindows
 			setRecipients(get_toRecipients(),  email_message->To);
 			setRecipients(get_ccRecipients(),  email_message->CC);
 			setRecipients(get_bccRecipients(), email_message->Bcc);
-			// TODO Hook up attachments!
+
+			for (const auto blob : attachments__) {
+				auto data = blob->getData();
+				const auto instream = ref new Windows::Storage::Streams::InMemoryRandomAccessStream();
+				const auto writer = ref new Windows::Storage::Streams::DataWriter(instream);
+
+				writer->WriteBytes(Platform::ArrayReference<std::uint8_t>(&data[0], data.size()));
+
+				concurrency::event evt;
+				concurrency::create_task(writer->StoreAsync()).then([writer](std::uint32_t) {
+					return writer->FlushAsync();
+				}, concurrency::task_continuation_context::use_arbitrary()).then([&evt](bool) {
+					evt.set();
+				}, concurrency::task_continuation_context::use_arbitrary());
+				evt.wait();
+
+				instream->Seek(0);
+				const auto stream = Windows::Storage::Streams::RandomAccessStreamReference::CreateFromStream(instream);
+				const auto attachment = ref new Windows::ApplicationModel::Email::EmailAttachment(TitaniumWindows::Utility::ConvertUTF8String(blob->get_nativePath()), stream);
+				email_message->Attachments->Append(attachment);
+			}
 
 			auto composer = Windows::ApplicationModel::Email::EmailManager::ShowComposeNewEmailAsync(email_message);
 			if (complete_event_count__ > 0) {
@@ -66,9 +82,6 @@ namespace TitaniumWindows
 					this->fireEvent("complete", eventArgs);
 				});
 			}
-#else
-			TITANIUM_MODULE_LOG_WARN("EmailDialog not supported on Windows Store apps.");
-#endif
 		}
 
 		void EmailDialog::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT

@@ -166,7 +166,7 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getToRecipients);
 			TITANIUM_FUNCTION_DEF(setToRecipients);
 
-		private:
+		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
 			JSValue cancelled__;
