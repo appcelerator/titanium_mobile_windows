@@ -27,7 +27,7 @@
     "ejs": "~2.5.5",
     "wrench": "~1.5.4",
     "titanium": "*",
-    "windowslib": "~0.2.2",
+    "windowslib": "~0.6.5",
     "commander": "*"
   },
   "engines": {
