@@ -48,11 +48,13 @@ namespace TitaniumWindows
 			virtual void open(const bool& animated) TITANIUM_NOEXCEPT override final;
 			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
 
+			virtual void addAttachment(const std::shared_ptr<Titanium::Blob>& attachment) TITANIUM_NOEXCEPT override;
+			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
+
 		private:
 
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			void setRecipients(const std::vector<std::string>& arg, Windows::Foundation::Collections::IVector<Windows::ApplicationModel::Email::EmailRecipient^>^ recipients);
-#endif
+			Windows::ApplicationModel::Email::EmailMessage^ email_message__;
 
 			// Event handlers
 			Windows::Foundation::EventRegistrationToken complete_event__;
