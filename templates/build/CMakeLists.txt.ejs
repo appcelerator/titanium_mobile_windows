@@ -84,7 +84,7 @@ configure_file(
 set(SOURCE_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
   lib/TitaniumKit.dll
-  lib/HAL.dll
+  lib/AXWAYHAL.dll
   "${WINDOWS_SOURCE_DIR}/lib/JavaScriptCore/${PLATFORM}/${Ti_ARCH}/JavaScriptCore.dll"
   "${WINDOWS_SOURCE_DIR}/lib/JavaScriptCore/${PLATFORM}/${Ti_ARCH}/WTF.dll"
 <% for(var i = 0; i < thirdPartyReferences.length; i++) { -%>
@@ -99,9 +99,10 @@ set(SOURCE_Assets
   )
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
+<% var key_filter = /[\.\/|\@]/g -%>
 <% for(var key in sourceGroups) {%>
 <% if (key == '.') { continue; } -%>
-set(SOURCE_<%= key.replace(/[\.\/]/g, '_') %>
+set(SOURCE_<%= key.replace(key_filter, '_') %>
   <% for(var i = 0; i < sourceGroups[key].length; i++) { -%>
     "<%= sourceGroups[key][i] %>"
   <% } -%>
@@ -111,8 +112,8 @@ source_group("<%= key %>" FILES
     "<%= sourceGroups[key][i] %>"
   <% } -%>
 )
-set_property(SOURCE ${SOURCE_<%= key.replace(/[\.\/]/g, '_') %>} PROPERTY VS_DEPLOYMENT_LOCATION "<%= key.replace(/\//g, '\\\\') %>")
-set_property(SOURCE ${SOURCE_<%= key.replace(/[\.\/]/g, '_') %>} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_<%= key.replace(key_filter, '_') %>} PROPERTY VS_DEPLOYMENT_LOCATION "<%= key.replace(/\//g, '\\\\') %>")
+set_property(SOURCE ${SOURCE_<%= key.replace(key_filter, '_') %>} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 <% } %>
 
 <% for(var i = 0; i < i18nVSResources.length; i++) { var i18n = i18nVSResources[i]; %>
@@ -128,7 +129,7 @@ add_executable(${EXE_NAME} WIN32
   ${SOURCE_Assets}
 <% for(var key in sourceGroups) { -%>
   <% if (key == '.') { continue; } -%>
-  ${SOURCE_<%= key.replace(/[\.\/]/g, '_') %>}
+  ${SOURCE_<%= key.replace(key_filter, '_') %>}
 <% } -%>
 <% for(var i = 0; i < i18nVSResources.length; i++) { var i18n = i18nVSResources[i]; %>
   ${SOURCE_Strings_<%= i18n.locale %>}

@@ -216,11 +216,14 @@ namespace TitaniumWindows
 
 		std::string SearchBar::get_value() const TITANIUM_NOEXCEPT
 		{
+			if (suggest_box__) {
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			return TitaniumWindows::Utility::ConvertUTF8String(suggest_box__->Text);
+				return TitaniumWindows::Utility::ConvertUTF8String(suggest_box__->Text);
 #else
-			return TitaniumWindows::Utility::ConvertUTF8String(suggest_box__->QueryText);
+				return TitaniumWindows::Utility::ConvertUTF8String(suggest_box__->QueryText);
 #endif
+			}
+			return std::string();
 		}
 
 		void SearchBar::set_value(const std::string& value) TITANIUM_NOEXCEPT
@@ -241,7 +244,10 @@ namespace TitaniumWindows
 
 		std::string SearchBar::get_hintText() const TITANIUM_NOEXCEPT
 		{
-			return TitaniumWindows::Utility::ConvertUTF8String(suggest_box__->PlaceholderText);
+			if (suggest_box__) {
+				return TitaniumWindows::Utility::ConvertUTF8String(suggest_box__->PlaceholderText);
+			}
+			return std::string();
 		}
 
 		void SearchBar::set_barColor(const std::string& color) TITANIUM_NOEXCEPT

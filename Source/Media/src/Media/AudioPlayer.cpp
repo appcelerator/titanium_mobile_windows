@@ -166,7 +166,10 @@ namespace TitaniumWindows
 
 		std::chrono::milliseconds AudioPlayer::get_time() const TITANIUM_NOEXCEPT
 		{
-			return TitaniumWindows::Utility::GetMSec(player__->Position);
+			if (player__) {
+				return TitaniumWindows::Utility::GetMSec(player__->Position);
+			}
+			return std::chrono::milliseconds(0);
 		}
 
 		void AudioPlayer::set_url(const std::string& url) TITANIUM_NOEXCEPT

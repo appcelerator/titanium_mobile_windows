@@ -425,10 +425,10 @@ function copyResources(next) {
 		},
 
 		function (cb) {
-			var src = path.join(this.platformPath, 'lib', 'HAL', this.cmakePlatformAbbrev, this.arch, 'HAL.dll');
+			var src = path.join(this.platformPath, 'lib', 'HAL', this.cmakePlatformAbbrev, this.arch, 'AXWAYHAL.dll');
 			copyFile.call(this,
 				src,
-				path.join(this.buildDir, 'lib', 'HAL.dll'),
+				path.join(this.buildDir, 'lib', 'AXWAYHAL.dll'),
 				cb);
 		},
 

@@ -556,6 +556,7 @@ function runCmake(data, platform, arch, sdkVersion, next) {
             '-DCMAKE_SYSTEM_NAME=' + platform,
             '-DCMAKE_SYSTEM_VERSION=' + targetSdkVersion,
             '-DCMAKE_BUILD_TYPE=Debug',
+            '-DHAL_RENAME_AXWAYHAL=ON',
             path.resolve(data.projectDir)
         ];
 

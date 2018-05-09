@@ -16,6 +16,35 @@ namespace Titanium
 {
 	namespace UI
 	{
+
+		TextFieldPadding js_to_TextFieldPadding(const JSObject& object)
+		{
+			TextFieldPadding params;
+			if (object.HasProperty("bottom")) {
+				params.bottom = static_cast<double>(object.GetProperty("bottom"));
+			}
+			if (object.HasProperty("top")) {
+				params.top = static_cast<double>(object.GetProperty("top"));
+			}
+			if (object.HasProperty("left")) {
+				params.left = static_cast<double>(object.GetProperty("left"));
+			}
+			if (object.HasProperty("right")) {
+				params.right = static_cast<double>(object.GetProperty("right"));
+			}
+			return params;
+		};
+
+		JSObject TextFieldPadding_to_js(const JSContext& js_context, const TextFieldPadding& params)
+		{
+			auto object = js_context.CreateObject();
+			object.SetProperty("bottom", js_context.CreateNumber(params.bottom));
+			object.SetProperty("top", js_context.CreateNumber(params.top));
+			object.SetProperty("left", js_context.CreateNumber(params.left));
+			object.SetProperty("right", js_context.CreateNumber(params.right));
+			return object;
+		}
+
 		TextField::TextField(const JSContext& js_context) TITANIUM_NOEXCEPT
 		    : View(js_context, "Ti.UI.TextField"),
 		      autocapitalization__(TEXT_AUTOCAPITALIZATION::NONE),
@@ -58,6 +87,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(TextField, TEXT_VERTICAL_ALIGNMENT, verticalAlign)
 		TITANIUM_PROPERTY_READWRITE(TextField, std::shared_ptr<AttributedString>, attributedHintString)
 		TITANIUM_PROPERTY_READWRITE(TextField, std::shared_ptr<AttributedString>, attributedString)
+		TITANIUM_PROPERTY_READWRITE(TextField, TextFieldPadding, padding)
 
 		TITANIUM_PROPERTY_READ(TextField, std::string, hinttextid)
 		void TextField::set_hinttextid(const std::string& hinttextid) TITANIUM_NOEXCEPT
@@ -107,6 +137,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(TextField, textAlign);
 			TITANIUM_ADD_PROPERTY(TextField, value);
 			TITANIUM_ADD_PROPERTY(TextField, verticalAlign);
+			TITANIUM_ADD_PROPERTY(TextField, padding);
 			// methods
 			TITANIUM_ADD_FUNCTION(TextField, blur);
 			TITANIUM_ADD_FUNCTION(TextField, focus);
@@ -157,6 +188,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(TextField, setValue);
 			TITANIUM_ADD_FUNCTION(TextField, getVerticalAlign);
 			TITANIUM_ADD_FUNCTION(TextField, setVerticalAlign);
+			TITANIUM_ADD_FUNCTION(TextField, getPadding);
+			TITANIUM_ADD_FUNCTION(TextField, setPadding);
 		}
 
 		TITANIUM_FUNCTION_AS_GETTER(TextField, getAttributedHintString, attributedHintString)
@@ -168,6 +201,11 @@ namespace Titanium
 		TITANIUM_PROPERTY_SETTER_OBJECT(TextField, attributedHintString, AttributedString)
 		TITANIUM_PROPERTY_GETTER_OBJECT(TextField, attributedString)
 		TITANIUM_PROPERTY_SETTER_OBJECT(TextField, attributedString, AttributedString)
+		TITANIUM_PROPERTY_GETTER_STRUCT(TextField, padding, TextFieldPadding)
+		TITANIUM_PROPERTY_SETTER_STRUCT(TextField, padding, TextFieldPadding)
+
+		TITANIUM_FUNCTION_AS_GETTER(TextField, getPadding, padding)
+		TITANIUM_FUNCTION_AS_SETTER(TextField, setPadding, padding)
 
 		TITANIUM_PROPERTY_GETTER(TextField, autocapitalization)
 		{
