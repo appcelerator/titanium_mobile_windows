@@ -136,6 +136,18 @@ namespace Titanium
 				onsuccess,
 			};
 			
+			CameraOptionsSize photoAspectRatio;
+			const auto aspect = object.GetProperty("photoAspectRatio");
+			if (aspect.IsObject()) {
+				const auto aspect_obj = static_cast<JSObject>(aspect);
+				const auto width  = aspect_obj.GetProperty("width");
+				const auto height = aspect_obj.GetProperty("height");
+				if (width.IsNumber() && height.IsNumber()) {
+					photoAspectRatio.width  = static_cast<double>(width);
+					photoAspectRatio.height = static_cast<double>(height);
+				}
+			}
+
 			CameraOptionsType config {
 				JSOBJECT_GETPROPERTY(object, allowEditing, bool, false),
 				JSOBJECT_GETPROPERTY(object, animated, bool, true),
@@ -152,7 +164,8 @@ namespace Titanium
 				std::chrono::milliseconds::min(),
 				Quality::High,
 				whichCamera,
-				callbacks
+				callbacks,
+				photoAspectRatio
 			};
 			
 			return config;
@@ -198,6 +211,12 @@ namespace Titanium
 			object.SetProperty("videoMaximumDuration", js_context.CreateNumber(static_cast<double>(config.videoMaximumDuration.count())));
 			object.SetProperty("whichCamera", js_context.CreateNumber(static_cast<std::uint32_t>(config.whichCamera)));
 			object.SetProperty("videoQuality", js_context.CreateNumber(static_cast<std::uint32_t>(config.videoQuality)));
+
+			auto aspect = js_context.CreateObject();
+			aspect.SetProperty("width",  js_context.CreateNumber(config.photoAspectRatio.width));
+			aspect.SetProperty("height", js_context.CreateNumber(config.photoAspectRatio.height));
+			object.SetProperty("photoAspectRatio", aspect);
+
 			return object;
 		}
 	} // namespace Media

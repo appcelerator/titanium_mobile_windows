@@ -539,8 +539,11 @@ namespace TitaniumWindows
 			}
 			captureMode = CameraCaptureUIMode::Video;
 		} else {
-			// TODO: Provide a option to specify aspect ratio
-			cameraCaptureUI->PhotoSettings->CroppedAspectRatio = Size(16, 9);
+			if (options.photoAspectRatio.width > 0 && options.photoAspectRatio.height > 0) {
+				cameraCaptureUI->PhotoSettings->CroppedAspectRatio = Size(static_cast<float>(options.photoAspectRatio.width), static_cast<float>(options.photoAspectRatio.height));
+			} else {
+				cameraCaptureUI->PhotoSettings->CroppedAspectRatio = Size(4, 3);
+			}
 			captureMode = CameraCaptureUIMode::Photo;
 		}
 
