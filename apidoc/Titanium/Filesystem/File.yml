@@ -40,6 +40,8 @@ methods:
     platforms: [windowsphone]
   - name: createTimestamp
     platforms: [windowsphone]
+  - name: createdAt
+    platforms: [windowsphone]
   - name: deleteDirectory
     platforms: [windowsphone]
   - name: deleteFile
@@ -55,6 +57,8 @@ methods:
   - name: isFile
     platforms: [windowsphone]
   - name: modificationTimestamp
+    platforms: [windowsphone]
+  - name: modifiedAt
     platforms: [windowsphone]
   - name: move
     platforms: [windowsphone]
