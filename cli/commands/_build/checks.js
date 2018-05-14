@@ -207,10 +207,6 @@ function checkIfNeedToRecompile(next) {
 		wrench.rmdirSyncRecursive(this.buildDir);
 	}
 
-	// now that we've read the build manifest, delete it so if this build
-	// becomes incomplete, the next build will be a full rebuild
-	fs.existsSync(this.buildManifestFile) && fs.unlinkSync(this.buildManifestFile);
-
 	next();
 };
 

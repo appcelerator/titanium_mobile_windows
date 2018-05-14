@@ -68,7 +68,6 @@ function run(logger, config, cli, finished) {
 		},
 
 		'writeBuildManifest',
-		'copyResultsToProject',
 
 		function (next) {
 			// now that the app is built, if we're going to do some logging, then we print how long the app took so far
