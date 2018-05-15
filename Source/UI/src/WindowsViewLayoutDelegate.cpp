@@ -1215,9 +1215,11 @@ namespace TitaniumWindows
 
 			updateDisabledBackground();
 
-			// propagate to children only when it is disabled
-			if (!enabled) {
-				for (auto child : get_children()) {
+			// propagate to children only when it is disabled, otherwise just refresh the UI.
+			for (auto child : get_children()) {
+				if (enabled) {
+					child->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->refreshTouchEnabledState();
+				} else {
 					child->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->updateTouchEnabled(enabled);
 				}
 			}
