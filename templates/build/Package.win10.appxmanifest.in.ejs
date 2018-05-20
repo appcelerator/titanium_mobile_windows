@@ -42,15 +42,35 @@
       EntryPoint="@SHORT_NAME@.App">
       <uap:VisualElements
         DisplayName="ms-resource:app_name"
-        Square150x150Logo="Square150x150Logo.png"
-        Square44x44Logo="Square44x44Logo.png"
         Description="ms-resource:app_description"
-        BackgroundColor="<%= manifest.Applications.Application.VisualElements.BackgroundColor %>">
-<% if (manifest.requiresBadgeLogo) { -%>
-        <uap:LockScreen Notification="badge" BadgeLogo="Square24x24Logo.png" />
+        Square150x150Logo="<%- manifest.Applications.Application.VisualElements.Square150x150Logo %>"
+        Square44x44Logo="<%- manifest.Applications.Application.VisualElements.Square44x44Logo %>"
+        BackgroundColor="<%- manifest.Applications.Application.VisualElements.BackgroundColor %>">
+<% if (manifest.Applications.Application.VisualElements.LockScreen) { -%>
+        <uap:LockScreen Notification="<%- manifest.Applications.Application.VisualElements.LockScreen.Notification %>"
+                        BadgeLogo="<%- manifest.Applications.Application.VisualElements.LockScreen.BadgeLogo %>" />
 <% } -%>
-        <uap:DefaultTile Square71x71Logo="Square71x71Logo.png"/>
-        <uap:SplashScreen Image="SplashScreen.png" BackgroundColor="<%= manifest.Applications.Application.VisualElements.SplashScreen.BackgroundColor %>" />
+        <uap:DefaultTile Square71x71Logo="<%- manifest.Applications.Application.VisualElements.DefaultTile.Square71x71Logo %>"
+<% if (manifest.Applications.Application.VisualElements.DefaultTile.Wide310x150Logo) { -%>
+                         Wide310x150Logo="<%- manifest.Applications.Application.VisualElements.DefaultTile.Wide310x150Logo %>"
+                         Square310x310Logo="<%- manifest.Applications.Application.VisualElements.DefaultTile.Square310x310Logo %>"
+<% } -%>
+                         >
+<% if (manifest.Applications.Application.VisualElements.DefaultTile.ShowNameOnTiles) { -%>
+          <uap:ShowNameOnTiles>
+<% if (manifest.Applications.Application.VisualElements.DefaultTile.ShowNameOnTiles.square150x150Logo) { -%>
+            <uap:ShowOn Tile="square150x150Logo" />
+<% } -%>
+<% if (manifest.Applications.Application.VisualElements.DefaultTile.ShowNameOnTiles.square310x310Logo) { -%>
+            <uap:ShowOn Tile="square310x310Logo" />
+<% } -%>
+<% if (manifest.Applications.Application.VisualElements.DefaultTile.ShowNameOnTiles.wide310x150Logo) { -%>
+            <uap:ShowOn Tile="wide310x150Logo" />
+<% } -%>
+          </uap:ShowNameOnTiles>
+<% } -%>
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="<%- manifest.Applications.Application.VisualElements.SplashScreen.Image %>" BackgroundColor="<%- manifest.Applications.Application.VisualElements.SplashScreen.BackgroundColor %>" />
       </uap:VisualElements>
 
 <% if (manifest.Extensions.length > 0) { -%>
