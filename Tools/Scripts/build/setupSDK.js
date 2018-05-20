@@ -152,27 +152,27 @@ function setupSDK(branch, location) {
 				tiSDKVersion = version;
 				next();
 			});
-		},
-		function (next) {
-			getSDKInstallDir(tiSDKVersion, function (err, installPath) {
-				if (err) {
-					return next(err);
-				}
-				sdkPath = installPath;
-				next();
-			});
-		},
-		function (next) {
-			console.log("Copying built Windows SDK from " + location + " into master SDK at " + sdkPath);
-			copyWindowsIntoSDK(sdkPath, location, next);
-		},
-		function (next) {
-			if (hadWindowsSDK) {
-				next();
-			} else {
-				addWindowsToSDKManifest(sdkPath, next);
-			}
 		}
+		// function (next) {
+		// 	getSDKInstallDir(tiSDKVersion, function (err, installPath) {
+		// 		if (err) {
+		// 			return next(err);
+		// 		}
+		// 		sdkPath = installPath;
+		// 		next();
+		// 	});
+		// },
+		// function (next) {
+		// 	console.log("Copying built Windows SDK from " + location + " into master SDK at " + sdkPath);
+		// 	// copyWindowsIntoSDK(sdkPath, location, next);
+		// },
+		// function (next) {
+		// 	if (hadWindowsSDK) {
+		// 		next();
+		// 	} else {
+		// 		addWindowsToSDKManifest(sdkPath, next);
+		// 	}
+		// }
 	]);
 }
 

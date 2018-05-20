@@ -51,6 +51,7 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(File, createDirectory);
 			TITANIUM_ADD_FUNCTION(File, createFile);
 			TITANIUM_ADD_FUNCTION(File, createTimestamp);
+			TITANIUM_ADD_FUNCTION(File, createdAt);
 			TITANIUM_ADD_FUNCTION(File, deleteDirectory);
 			TITANIUM_ADD_FUNCTION(File, deleteFile);
 			TITANIUM_ADD_FUNCTION(File, exists);
@@ -59,6 +60,7 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(File, isDirectory);
 			TITANIUM_ADD_FUNCTION(File, isFile);
 			TITANIUM_ADD_FUNCTION(File, modificationTimestamp);
+			TITANIUM_ADD_FUNCTION(File, modifiedAt);
 			TITANIUM_ADD_FUNCTION(File, move);
 			TITANIUM_ADD_FUNCTION(File, open);
 			TITANIUM_ADD_FUNCTION(File, read);
@@ -451,7 +453,18 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(File, createTimestamp)
 		{
-			return get_context().CreateNumber(static_cast<double>(createTimestamp().count()));
+			const auto ctx = get_context();
+			ctx.JSEvaluateScript("Ti.API.warn('createTimestamp() has been deprecated in 7.2.0 in favor of createdAt() to avoid platform-differences for return type. createdAt() will return a Date object on all platforms.');");
+
+			return ctx.CreateNumber(static_cast<double>(createTimestamp().count()));
+		}
+
+		TITANIUM_FUNCTION(File, createdAt)
+		{
+			const auto ctx = get_context();
+
+			const std::vector<JSValue> dateArg = { ctx.CreateNumber(static_cast<double>(createTimestamp().count())) };
+			return ctx.CreateDate(dateArg);
 		}
 
 		TITANIUM_FUNCTION(File, deleteDirectory)
@@ -504,7 +517,18 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(File, modificationTimestamp)
 		{
-			return get_context().CreateNumber(static_cast<double>(modificationTimestamp().count()));
+			const auto ctx = get_context();
+			ctx.JSEvaluateScript("Ti.API.warn('modificationTimestamp() has been deprecated in 7.2.0 in favor of modifiedAt() to avoid platform-differences for return type. modifiedAt() will return a Date object on all platforms.');");
+
+			return ctx.CreateNumber(static_cast<double>(modificationTimestamp().count()));
+		}
+
+		TITANIUM_FUNCTION(File, modifiedAt)
+		{
+			const auto ctx = get_context();
+
+			const std::vector<JSValue> dateArg = { ctx.CreateNumber(static_cast<double>(modificationTimestamp().count())) };
+			return ctx.CreateDate(dateArg);
 		}
 
 		TITANIUM_FUNCTION(File, move)
