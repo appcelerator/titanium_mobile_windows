@@ -277,7 +277,7 @@ function copyResources(next) {
 			// Square44x44Logo
 			{
 				description: 'Square44x44Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square44x44Logo.png'),
+				file: path.join(appIconSetDir, 'Square44x44Logo.scale-100.png'),
 				width: 44,
 				height: 44,
 				required: true
@@ -286,7 +286,7 @@ function copyResources(next) {
 			// Square71x71Logo
 			{
 				description: 'Square71x71Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square71x71Logo.png'),
+				file: path.join(appIconSetDir, 'Square71x71Logo.scale-100.png'),
 				width: 71,
 				height: 71,
 				required: true
@@ -295,16 +295,25 @@ function copyResources(next) {
 			// Square150x150Logo
 			{
 				description: 'Square150x150Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square150x150Logo.png'),
+				file: path.join(appIconSetDir, 'Square150x150Logo.scale-100.png'),
 				width: 150,
 				height: 150,
+				required: true
+			},
+
+			// Square310x310Logo
+			{
+				description: 'Square310x310Logo.png - Used for logo',
+				file: path.join(appIconSetDir, 'Square310x310Logo.scale-100.png'),
+				width: 310,
+				height: 310,
 				required: true
 			},
 
 			// Logo.png
 			{
 				description: 'Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Logo.png'),
+				file: path.join(appIconSetDir, 'Logo.scale-100.png'),
 				width: 150,
 				height: 150,
 				required: true
@@ -313,7 +322,7 @@ function copyResources(next) {
 			// StoreLogo.png
 			{
 				description: 'StoreLogo.png - Used for logo',
-				file: path.join(appIconSetDir, 'StoreLogo.png'),
+				file: path.join(appIconSetDir, 'StoreLogo.scale-100.png'),
 				width: 50,
 				height: 50,
 				required: true
@@ -322,13 +331,12 @@ function copyResources(next) {
 			// SmallLogo.png
 			{
 				description: 'SmallLogo.png - Used for logo',
-				file: path.join(appIconSetDir, 'SmallLogo.png'),
+				file: path.join(appIconSetDir, 'SmallLogo.scale-100.png'),
 				width: 30,
 				height: 30,
 				required: true
 			}
 
-			// TODO: Generate SplashScreen.scale-100.png?
 		],
 		md5 = function (file) {
 			return crypto
@@ -337,9 +345,27 @@ function copyResources(next) {
 				.digest('hex')
 		};
 
+		/*
+		 * Look for basename.png, if it does not exist then look for .scale-100.png because it should have same dimension
+		 */
+		function windowsScaledPNGAssetSelect(filename) {
+			var extname = path.extname(filename),
+				basename = filename.substr(0, filename.length - extname.length),
+				scaledname = basename + '.scale-100' + extname;
+			if (fs.existsSync(scaledname)) {
+				return scaledname;
+			}
+			return filename;
+		}
+
 		// if the app icon does not exist then check if it exists in the project root
 		// if it does not exist in project root then generate the missing icon
 		for (var i = missingIcons.length - 1; i >= 0; i--) {
+
+			// if file does not exist then look for .scale-100.png 
+			// because it should have same dimension
+			missingIcons[i].file = windowsScaledPNGAssetSelect(missingIcons[i].file);
+
 			var icon = missingIcons[i],
 				platformResourceIcon = path.join(this.projectDir, 'Resources', 'Windows', path.basename(icon.file)),
 				resourceIcon = path.join(this.projectDir, 'Resources', path.basename(icon.file));
