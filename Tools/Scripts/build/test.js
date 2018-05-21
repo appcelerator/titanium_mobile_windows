@@ -188,6 +188,27 @@ function generateWindowsProject(next) {
 }
 
 /**
+ * Wiping out project build directory for Windows. (appc ti clean)
+ *
+ * @param next {Function} callback function
+ **/
+function cleanWindowsProject(next) {
+	var prc = spawn('node', [titanium, 'clean', '--project-dir', projectDir]);
+	prc.stdout.on('data', function (data) {
+		console.log(data.toString());
+	});
+	prc.stderr.on('data', function (data) {
+		console.log(data.toString());
+	});
+	prc.on('close', function (code) {
+		if (code != 0) {
+			next("Failed to clean project");
+		} else {
+			next();
+		}
+	});
+}
+/**
  * Add required properties for our unit tests to the tiapp.xml
  *
  * @params sdkVersion {String} '8.1'||'10.0'
@@ -509,6 +530,10 @@ function test(sdkVersion, msbuild, branch, target, deviceId, prefix, callback) {
 		function (next) {
 			console.log("Generating Windows project");
 			generateWindowsProject(next);
+		},
+		function (next) {
+			console.log("Wiping out project build directory");
+			cleanWindowsProject(next);
 		},
 		function (next) {
 			console.log("Adding properties for tiapp.xml");
