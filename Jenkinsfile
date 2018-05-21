@@ -76,8 +76,6 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 			dir('scripts') {
 				try {
 					timeout(30) {
-						// Make sure to clean Titanium build cache directory
-						bat "appc ti clean"
 						if ('ws-local'.equals(target)) {
 							bat "node test.js -p windows -T ${target} --skip-sdk-install --cleanup"
 						} else if ('wp-emulator'.equals(target)) {
