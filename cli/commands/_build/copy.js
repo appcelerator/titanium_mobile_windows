@@ -466,7 +466,25 @@ function copyResources(next) {
 				cb);
 		},
 
-		createAppIconSet
+		createAppIconSet,
+
+		// Remove SplashScreen.png if scaled assets (.scale-100.png) exists.
+		function(cb) {
+			var basename    = 'SplashScreen.scale-100.png',
+				candidates = [path.join(this.projectDir, 'Resources', 'Windows', basename),
+							  path.join(this.projectDir, 'app', 'assets', 'windows', basename),
+							  path.join(this.projectDir, 'Resources', basename) ],
+		 		splashAsset = path.join(this.buildDir, 'Assets', 'SplashScreen.png');
+
+		 	for (var i = 0; i < candidates.length; i++) {
+				if (fs.existsSync(candidates[i]) && fs.existsSync(splashAsset)) {
+					this.logger.debug('Removing SplashScreen.png as scaled-100 asset found.');
+					fs.unlinkSync(splashAsset)
+					break;
+				}
+		 	}
+		 	cb();
+		}
 	];
 
 	// copy all commonjs modules
