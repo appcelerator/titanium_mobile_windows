@@ -164,7 +164,7 @@ function setupSDK(branch, location) {
 		},
 		function (next) {
 			console.log("Copying built Windows SDK from " + location + " into master SDK at " + sdkPath);
-			// copyWindowsIntoSDK(sdkPath, location, next);
+			copyWindowsIntoSDK(sdkPath, location, next);
 		},
 		function (next) {
 			if (hadWindowsSDK) {
