@@ -152,7 +152,7 @@ function setupSDK(branch, location) {
 				tiSDKVersion = version;
 				next();
 			});
-		}
+		},
 		function (next) {
 			getSDKInstallDir(tiSDKVersion, function (err, installPath) {
 				if (err) {
