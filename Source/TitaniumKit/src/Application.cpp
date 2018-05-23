@@ -84,6 +84,7 @@ function Titanium_RedScreenOfDeath(e) {
 			std::ostringstream os;
 			os << "try {\n";
 			os << "  require('" << app_js << "');\n";
+			os << "  Ti.Analytics._startPostingEvents();\n";
 			os << "} catch (E) {\n";
 			os << "  Titanium_RedScreenOfDeath(E);\n";
 			os << "}";

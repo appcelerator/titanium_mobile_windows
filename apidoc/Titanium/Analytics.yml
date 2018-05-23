@@ -3,6 +3,8 @@ platforms: [windowsphone]
 properties:
   - name: lastEvent
     platforms: [windowsphone]
+  - name: optedOut
+    platforms: [windowsphone]
 methods:
   - name: featureEvent
     platforms: [windowsphone]
@@ -10,4 +12,7 @@ methods:
     platforms: [windowsphone]
   - name: getLastEvent
     platforms: [windowsphone]
-
+  - name: getOptedOut
+    platforms: [windowsphone]
+  - name: setOptedOut
+    platforms: [windowsphone]

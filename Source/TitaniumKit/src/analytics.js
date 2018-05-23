@@ -24,7 +24,8 @@ var ANALYTICS_URL = 'https://api.appcelerator.com/p/v3/mobile-track/',
 	FEATURE_MAX_LEVELS = 5,
 	FEATURE_MAX_SIZE = 1000,
 	FEATURE_MAX_KEYS = 35,
-	FEATURE_MAX_KEY_LENGTH = 50;
+	FEATURE_MAX_KEY_LENGTH = 50,
+	OPTED_OUT_KEY = 'Ti.Analytics.optedOut';
 
 /**
  * Creates the analytics object
@@ -44,6 +45,7 @@ function Analytics() {
 	this.timestamp = null;
 	this.lastEvent = {};
 	this.receivedResponse = false;
+	this.optedOut = Ti.App.Properties.getBool(OPTED_OUT_KEY, false);
 }
 
 Analytics.prototype.loadEventQueue = function loadEventQueue() {
@@ -222,6 +224,14 @@ Analytics.prototype.createNavEvent = function navEvent(from, to, name, data) {
  * @private
  */
 Analytics.prototype.postEvents = function postEvents() {
+	if (this.optedOut) {
+		// Clear all pending events
+		this.eventQueue = [];
+		this.saveEventQueue();
+		this.receivedResponse = true;
+		Ti.API.debug('Skipping Ti.Analytics.postEvents because of opted-out');
+		return;
+	}
 	if (Ti.Network.online) {
 		var _t = this,
 			retry = 0;
@@ -262,15 +272,6 @@ Analytics.prototype.postEvents = function postEvents() {
 
 // create analytics
 var analytics = new Analytics();
-// enroll on our first launch
-if (!Ti.App.Properties.getBool('_firstLaunch', false)) {
-	Ti.App.Properties.setBool('_firstLaunch', true);
-	analytics.createEnrollEvent();
-}
-// queue ti.foreground event
-analytics.createForegroundEvent();
-// send events
-analytics.postEvents();
 // listen for 'resume' and 'pause' events
 Ti.App.addEventListener('resume', function resume(e) {
 	// generate a new sessionId if we have been suspeneded for over 30 seconds
@@ -310,5 +311,25 @@ this.exports = {
 	},
 	setReceivedResponse: function (value) {
 		analytics.receivedResponse = value;
+	},
+	startPostingEvents: function() {
+		Ti.API.debug('Start posting initial Ti.Analytics events');
+		// enroll on our first launch
+		if (!Ti.App.Properties.getBool('_firstLaunch', false)) {
+			Ti.App.Properties.setBool('_firstLaunch', true);
+			analytics.createEnrollEvent();
+		}
+		// queue ti.foreground event
+		analytics.createForegroundEvent();
+		// send events
+		analytics.postEvents();
+	},
+	getOptedOut: function() {
+		return analytics.optedOut;
+	},
+	setOptedOut: function(value) {
+		analytics.optedOut = value;
+		Ti.App.Properties.setBool(OPTED_OUT_KEY, value);
+		Ti.API.debug('Saving Ti.Analytics.optedOut=' + value);
 	}
 };

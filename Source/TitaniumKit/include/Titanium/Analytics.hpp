@@ -43,9 +43,13 @@ namespace Titanium
 		TITANIUM_PROPERTY_DEF(_receivedResponse);
 		TITANIUM_PROPERTY_READONLY_DEF(lastEvent);
 		TITANIUM_FUNCTION_DEF(_start);
+		TITANIUM_FUNCTION_DEF(_startPostingEvents);
 		TITANIUM_FUNCTION_DEF(featureEvent);
 		TITANIUM_FUNCTION_DEF(navEvent);
 		TITANIUM_FUNCTION_DEF(getLastEvent);
+		TITANIUM_PROPERTY_DEF(optedOut);
+		TITANIUM_FUNCTION_DEF(setOptedOut);
+		TITANIUM_FUNCTION_DEF(getOptedOut);
 
 		bool loadJS();
 

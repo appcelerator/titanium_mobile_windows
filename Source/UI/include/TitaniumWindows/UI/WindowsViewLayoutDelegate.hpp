@@ -568,6 +568,8 @@ namespace TitaniumWindows
 			virtual void updateDisabledBackground();
 			Windows::UI::Xaml::Media::Brush^ getBackground();
 
+			virtual void updateTouchEnabled(const bool& enabled) TITANIUM_NOEXCEPT;
+			virtual void refreshTouchEnabledState() TITANIUM_NOEXCEPT;
 
 			virtual std::shared_ptr<Titanium::UI::View> rescueGetView(const JSObject& view) TITANIUM_NOEXCEPT override;
 			virtual void fireSimplePositionEvent(const std::string& event_name, Windows::Foundation::Point position);

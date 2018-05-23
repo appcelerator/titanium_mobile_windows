@@ -186,6 +186,13 @@ namespace TitaniumWindows
 						return;
 					}
 					nativeView->Children->Append(nativeChildView);
+
+					// update child's enabled state only when parent is disabled
+					const auto enabled = get_touchEnabled();
+					if (!enabled) {
+						newView->updateTouchEnabled(enabled);
+					}
+
 					TITANIUM_LOG_DEBUG("Titanium::LayoutEngine::nodeAddChild ", newView->getLayoutNode(), " for ", layout_node__ );
 					Titanium::LayoutEngine::nodeAddChild(layout_node__, newView->getLayoutNode());
 					if (isLoaded()) {
@@ -218,6 +225,13 @@ namespace TitaniumWindows
 				try {
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
 					nativeView->Children->InsertAt(params.position, nativeChildView);
+
+					// update child's enabled state only when parent is disabled
+					const auto enabled = get_touchEnabled();
+					if (!enabled) {
+						newView->updateTouchEnabled(enabled);
+					}
+
 				} catch (Platform::Exception^ e) {
 					detail::ThrowRuntimeError("insertAt", Utility::ConvertString(e->Message));
 				}
@@ -1131,7 +1145,16 @@ namespace TitaniumWindows
 		void WindowsViewLayoutDelegate::set_touchEnabled(const bool& enabled) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ViewLayoutDelegate::set_touchEnabled(enabled);
+			updateTouchEnabled(enabled);
+		}
 
+		void WindowsViewLayoutDelegate::refreshTouchEnabledState() TITANIUM_NOEXCEPT
+		{
+			updateTouchEnabled(get_touchEnabled());
+		}
+
+		void WindowsViewLayoutDelegate::updateTouchEnabled(const bool& enabled) TITANIUM_NOEXCEPT
+		{
 			component__->IsTapEnabled = enabled;
 			component__->IsDoubleTapEnabled = enabled;
 			component__->IsHoldingEnabled = enabled;
@@ -1142,11 +1165,15 @@ namespace TitaniumWindows
 			}
 
 			if (is_panel__) {
-				for (const auto child : dynamic_cast<Panel^>(component__)->Children) {
+				for (UIElement^ child : dynamic_cast<Panel^>(component__)->Children) {
 					child->IsTapEnabled = enabled;
 					child->IsDoubleTapEnabled = enabled;
 					child->IsHoldingEnabled = enabled;
 					child->IsRightTapEnabled = enabled;
+					const auto control = dynamic_cast<Control^>(child);
+					if (control) {
+						control->IsEnabled = enabled;
+					}
 				}
 			}
 
@@ -1156,6 +1183,17 @@ namespace TitaniumWindows
 				underlying_control__->IsDoubleTapEnabled = enabled;
 				underlying_control__->IsHoldingEnabled = enabled;
 				underlying_control__->IsRightTapEnabled = enabled;
+			}
+
+			if (styling_component__) {
+				styling_component__->IsTapEnabled = enabled;
+				styling_component__->IsDoubleTapEnabled = enabled;
+				styling_component__->IsHoldingEnabled = enabled;
+				styling_component__->IsRightTapEnabled = enabled;
+				const auto control = dynamic_cast<Control^>(styling_component__);
+				if (control) {
+					control->IsEnabled = enabled;
+				}
 			}
 			
 			if (border__) {
@@ -1177,8 +1215,13 @@ namespace TitaniumWindows
 
 			updateDisabledBackground();
 
+			// propagate to children only when it is disabled, otherwise just refresh the UI.
 			for (auto child : get_children()) {
-				child->getViewLayoutDelegate()->set_touchEnabled(enabled);
+				if (enabled) {
+					child->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->refreshTouchEnabledState();
+				} else {
+					child->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->updateTouchEnabled(enabled);
+				}
 			}
 		}
 
