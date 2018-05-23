@@ -74,6 +74,7 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 			bat 'npm ci'
 			echo "Running tests on ${target}"
 			dir('scripts') {
+				bat 'npm ci'
 				try {
 					timeout(30) {
 						if ('ws-local'.equals(target)) {
