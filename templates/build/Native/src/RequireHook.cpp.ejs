@@ -65,12 +65,19 @@ namespace TitaniumWindows_Native
 		auto names = ref new ::Platform::Collections::Vector<::Platform::String^>();
 
 		//// INSERT SUPPORTED NATIVE MODULE NAMES START
+		// modules
 <% for(var i=0; i<native_modules.length; i++) { -%>
 		names->Append("<%- native_modules[i].name %>");
 <% } -%>
+		// native types
 <% for(var key in native_types) { -%>
 		names->Append("<%- native_types[key].name %>");
 <% } -%>
+		// native namespaces
+<% for(var key in native_namespaces) { -%>
+		names->Append("<%- native_namespaces[key].name %>.*");
+<% } -%>
+
 		//// INSERT SUPPORTED NATIVE MODULE NAMES END
 
 		return names;
