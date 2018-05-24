@@ -8,6 +8,7 @@
 
 #include "Titanium/GlobalString.hpp"
 #include "Titanium/Global/sprintf_js.hpp"
+#include "Titanium/Module.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 
 namespace Titanium

@@ -14,6 +14,8 @@
 
 namespace Titanium
 {
+	std::deque<std::string> Module::BackTrace__;
+
 	Module::Module(const JSContext& js_context, const std::string& apiName) TITANIUM_NOEXCEPT
 	    : JSExportObject(js_context)
 	    , apiName__(apiName)

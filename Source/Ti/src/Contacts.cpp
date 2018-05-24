@@ -189,7 +189,7 @@ namespace TitaniumWindows
 		return result;
 	}
 
-	JSValue ContactsModule::js_createGroup(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue ContactsModule::js_hook_createGroup(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		auto result = Titanium::ContactsModule::js_createGroup(arguments, this_object);
 		// record group we'll need to save later!
@@ -275,7 +275,7 @@ namespace TitaniumWindows
 	}
 #endif
 
-	JSValue ContactsModule::js_createPerson(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
+	JSValue ContactsModule::js_hook_createPerson(const std::vector<JSValue>& arguments, JSObject& this_object) TITANIUM_NOEXCEPT
 	{
 		auto result = Titanium::ContactsModule::js_createPerson(arguments, this_object);
 #if defined(IS_WINDOWS_10)

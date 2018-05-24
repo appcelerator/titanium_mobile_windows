@@ -12,6 +12,7 @@
 #include "Titanium/detail/TiBase.hpp"
 #include <unordered_map>
 #include <vector>
+#include <deque>
 
 namespace Titanium
 {
@@ -148,6 +149,11 @@ namespace Titanium
 		Module(Module&&) = default;
 		Module& operator=(Module&&) = default;
 #endif
+
+#pragma warning(push)
+#pragma warning(disable : 4251)
+		static std::deque<std::string> BackTrace__;
+#pragma warning(pop)
 
 		// TODO: The following functions can automatically be generated from
 		// the YAML API docs.

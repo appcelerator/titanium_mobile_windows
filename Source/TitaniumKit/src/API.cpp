@@ -140,6 +140,7 @@ namespace Titanium
 		TITANIUM_ADD_FUNCTION(API, debug);
 		TITANIUM_ADD_FUNCTION(API, trace);
 		TITANIUM_ADD_FUNCTION(API, log);
+		TITANIUM_ADD_FUNCTION_NOHOOK(API, _saveStacktrace);
 	}
 
 	JSObject API::GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -214,4 +215,13 @@ namespace Titanium
 		return js_context.CreateUndefined();
 	}
 
+	TITANIUM_FUNCTION_NOHOOK(API, _saveStacktrace)
+	{
+		const auto js_context = get_context();
+		std::vector<JSValue> stack;
+		for (auto iter = Titanium::Module::BackTrace__.rbegin(); iter != Titanium::Module::BackTrace__.rend(); ++iter) {
+			stack.push_back(js_context.CreateString(*iter));
+		}
+		return js_context.CreateArray(stack);
+	}
 }  // namespace Titanium

@@ -56,6 +56,10 @@
 
 // For defining the bridge function for a function property exposed on JS Object (hpp)
 #define TITANIUM_FUNCTION_DEF(NAME) \
+JSValue js_hook_##NAME(const std::vector<JSValue>& arguments, JSObject& this_object); \
+JSValue js_##NAME(const std::vector<JSValue>& arguments, JSObject& this_object)
+
+#define TITANIUM_FUNCTION_DEF_NOHOOK(NAME) \
 JSValue js_##NAME(const std::vector<JSValue>& arguments, JSObject& this_object)
 
 // For defining the getter bridge function for a read-only property exposed on JS Object (hpp)

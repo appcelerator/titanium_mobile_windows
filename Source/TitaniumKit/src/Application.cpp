@@ -25,6 +25,8 @@ namespace Titanium
  */
 function Titanium_RedScreenOfDeath(e) {
 
+    var stacktrace = Ti.API._saveStacktrace();
+
     // We don't want to show RSOD in production mode. re-throw.
     if (Ti.App.deployType == "production") {
         throw e;
@@ -32,44 +34,58 @@ function Titanium_RedScreenOfDeath(e) {
 
     try {
         var win = Ti.UI.createWindow({
-                backgroundColor: "#f00",
+                backgroundColor: "#f4f4f4",
                 layout: "vertical"
             }),
-            view,
             button;
 
         function makeMessage(e) {
             return (e.fileName ? "In " + e.fileName + " " : "") + (e.message || e.toString()).trim() + (e.lineNumber ? " (line " + e.lineNumber + " column " + e.columnNumber + ")" : "");
-        } 
-        function makeLabel(text, height, color, fontSize) {
-            var label = Ti.UI.createView({
-                height: height,
-                width: Ti.UI.FILL
-            });
-            label.add(Ti.UI.createLabel({
-                color: color,
-                font: { fontSize: fontSize, fontWeight: "bold" },
-                width:  Ti.UI.FILL,
-                height: Ti.UI.FILL,
-                textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-                text: text
-            }));
-            win.add(label);
+        }
+		function formatTrace(traces) {
+			var str =  '\n';
+            for (var i = 0; i < traces.length; i++) {
+                str += (i + 1 + '').padStart(2) + '  ' + traces[i] + '\n';
+            }
+            return str;
         }
 
-        Ti.API.error("----- Titanium Javascript Runtime Error -----");
         Ti.API.error("Message: Uncaught Error: " + makeMessage(e));
+        if (stacktrace && stacktrace.length > 0) {
+            Ti.API.error(formatTrace(stacktrace));
+        }
 
-        win.add(view = Ti.UI.createView({ height: "12%" }));
-        makeLabel("Application Error", "15%", "#0f0", "34");
-        makeLabel(makeMessage(e), "45%", "#fff", "26");
-        win.add(view = Ti.UI.createView({ height: "12%" }));
-        view.add(button = Ti.UI.createButton({ title: "Dismiss" }));
+        var label = Ti.UI.createView({
+            height: '90%',
+            width: Ti.UI.FILL,
+            top: 10, left: 10,
+			layout: 'vertical',            
+        });
+        label.add(Ti.UI.createLabel({
+            color: 'red',
+            width:  Ti.UI.FILL,
+            height: Ti.UI.SIZE,
+            textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+            verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+            text: makeMessage(e),
+        }));
+		if (stacktrace && stacktrace.length > 0) {
+            label.add(Ti.UI.createView({width: Ti.UI.FILL, height: 20}));
+            label.add(Ti.UI.createLabel({
+                color: 'red',
+                width:  Ti.UI.FILL,
+                height: Ti.UI.SIZE,
+                textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+                verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+                text: formatTrace(stacktrace),
+            }));
+        }
+        win.add(label);
+
+        win.add(button = Ti.UI.createButton({ title: "CONTINUE", backgroundColor: 'red', width: Ti.UI.FILL, height: '10%', bottom: 0 }));
         button.addEventListener("click", function () {
             win.close();
         });
-
-        makeLabel("Error messages will only be displayed during development. When your app is packaged for final distribution, no error screen will appear. Test your code!", "16%", "#000", "20");
 
         win.open();
     } catch (er) {

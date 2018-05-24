@@ -27,6 +27,22 @@
 
 // For implementing the bridge getter function for a function property (cpp)
 #define TITANIUM_FUNCTION(MODULE, NAME) \
+JSValue MODULE::js_hook_##NAME(const std::vector<JSValue>& arguments, JSObject& this_object) \
+{ \
+    Titanium::Module::BackTrace__.push_back(#MODULE "::" #NAME); \
+    if (Titanium::Module::BackTrace__.size() > 10) { \
+        Titanium::Module::BackTrace__.pop_front(); \
+    } \
+    const auto value = js_##NAME(arguments, this_object); \
+    Titanium::Module::BackTrace__.pop_back(); \
+    return value; \
+} \
+JSValue MODULE::js_##NAME(const std::vector<JSValue>& arguments, JSObject& this_object)
+
+#define TITANIUM_FUNCTION_NOHOOK(MODULE, NAME) \
+JSValue MODULE::js_##NAME(const std::vector<JSValue>& arguments, JSObject& this_object) \
+
+#define TITANIUM_FUNCTION_NOHOOK(MODULE, NAME) \
 JSValue MODULE::js_##NAME(const std::vector<JSValue>& arguments, JSObject& this_object)
 
 // For implementing the bridge getter function for a value property (cpp)
@@ -58,6 +74,9 @@ TITANIUM_PROPERTY_WRITE(MODULE, TYPE, NAME)
 
 // For adding a function as a property on the JS Object this type backs (cpp, in JSExportInitialize)
 #define TITANIUM_ADD_FUNCTION(MODULE, NAME) \
+JSExport<MODULE>::AddFunctionProperty(#NAME, std::mem_fn(&MODULE::js_hook_##NAME))
+
+#define TITANIUM_ADD_FUNCTION_NOHOOK(MODULE, NAME) \
 JSExport<MODULE>::AddFunctionProperty(#NAME, std::mem_fn(&MODULE::js_##NAME))
 
 // For adding a value as a read-only property on the JS Object this type backs (cpp, in JSExportInitialize)
