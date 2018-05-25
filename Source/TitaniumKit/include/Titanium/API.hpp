@@ -135,7 +135,6 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(debug);
 		TITANIUM_FUNCTION_DEF(trace);
 		TITANIUM_FUNCTION_DEF(log);
-		TITANIUM_FUNCTION_DEF_NOHOOK(_saveStacktrace);
 
 	private:
 		enum class LogSeverityLevel {

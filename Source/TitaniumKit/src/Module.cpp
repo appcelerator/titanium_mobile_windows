@@ -142,10 +142,20 @@ namespace Titanium
 	void Module::ShowRedScreenOfDeath(const JSContext& ctx, const std::string& message) TITANIUM_NOEXCEPT
 	{
 		try {
-			const auto what = ctx.CreateString(message);
+			std::ostringstream stacktrace;
+			std::uint32_t i = 0;
+			for (auto iter = Titanium::Module::BackTrace__.rbegin(); iter != Titanium::Module::BackTrace__.rend(); ++iter) {
+				i++;
+				stacktrace << i << "  " << *iter << "\n";
+			}
+
+			auto js_error = ctx.CreateError();
+			js_error.SetProperty("message", ctx.CreateString(message));
+			js_error.SetProperty("nativeStack", ctx.CreateString(stacktrace.str()));
+
 			const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
 			auto rsod_func = static_cast<JSObject>(rsod);
-			const std::vector<JSValue> args = { what };
+			const std::vector<JSValue> args = { js_error };
 			rsod_func(args, rsod_func);
 		} catch (...) {
 			// Just to make sure we don't throw another exception :(

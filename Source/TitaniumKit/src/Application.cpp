@@ -7,6 +7,7 @@
  */
 
 #include "Titanium/Application.hpp"
+#include "Titanium/Module.hpp"
 #include <sstream>
 
 namespace Titanium
@@ -25,8 +26,6 @@ namespace Titanium
  */
 function Titanium_RedScreenOfDeath(e) {
 
-    var stacktrace = Ti.API._saveStacktrace();
-
     // We don't want to show RSOD in production mode. re-throw.
     if (Ti.App.deployType == "production") {
         throw e;
@@ -42,24 +41,17 @@ function Titanium_RedScreenOfDeath(e) {
         function makeMessage(e) {
             return (e.fileName ? "In " + e.fileName + " " : "") + (e.message || e.toString()).trim() + (e.lineNumber ? " (line " + e.lineNumber + " column " + e.columnNumber + ")" : "");
         }
-		function formatTrace(traces) {
-			var str =  '\n';
-            for (var i = 0; i < traces.length; i++) {
-                str += (i + 1 + '').padStart(2) + '  ' + traces[i] + '\n';
-            }
-            return str;
-        }
 
         Ti.API.error("Message: Uncaught Error: " + makeMessage(e));
-        if (stacktrace && stacktrace.length > 0) {
-            Ti.API.error(formatTrace(stacktrace));
+        if (e.nativeStack) {
+            Ti.API.error(e.nativeStack);
         }
 
         var label = Ti.UI.createView({
             height: '90%',
             width: Ti.UI.FILL,
             top: 10, left: 10,
-			layout: 'vertical',            
+            layout: 'vertical',            
         });
         label.add(Ti.UI.createLabel({
             color: 'red',
@@ -69,7 +61,7 @@ function Titanium_RedScreenOfDeath(e) {
             verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
             text: makeMessage(e),
         }));
-		if (stacktrace && stacktrace.length > 0) {
+        if (e.nativeStack) {
             label.add(Ti.UI.createView({width: Ti.UI.FILL, height: 20}));
             label.add(Ti.UI.createLabel({
                 color: 'red',
@@ -77,7 +69,7 @@ function Titanium_RedScreenOfDeath(e) {
                 height: Ti.UI.SIZE,
                 textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
                 verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-                text: formatTrace(stacktrace),
+                text: e.nativeStack,
             }));
         }
         win.add(label);
@@ -106,10 +98,19 @@ function Titanium_RedScreenOfDeath(e) {
 			os << "}";
 			return js_context__.JSEvaluateScript(os.str());
 		} catch (const std::exception& stdex) {
-			const auto what = js_context__.CreateString(stdex.what());
+			std::ostringstream stacktrace;
+			std::uint32_t i = 0;
+			for (auto iter = Titanium::Module::BackTrace__.rbegin(); iter != Titanium::Module::BackTrace__.rend(); ++iter) {
+				i++;
+				stacktrace << i << "  " << *iter << "\n";
+			}
+			auto js_error = js_context__.CreateError();
+			js_error.SetProperty("message", js_context__.CreateString(stdex.what()));
+			js_error.SetProperty("nativeStack", js_context__.CreateString(stacktrace.str()));
+
 			const auto rsod = js_context__.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
 			auto rsod_func = static_cast<JSObject>(rsod);
-			const std::vector<JSValue> args = { what };
+			const std::vector<JSValue> args = { js_error };
 			return rsod_func(args, rsod_func);
 		}
 		return js_context__.CreateUndefined();
