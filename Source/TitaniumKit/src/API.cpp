@@ -213,5 +213,4 @@ namespace Titanium
 
 		return js_context.CreateUndefined();
 	}
-
 }  // namespace Titanium
