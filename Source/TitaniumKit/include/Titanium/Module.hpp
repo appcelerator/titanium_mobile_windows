@@ -131,7 +131,7 @@ namespace Titanium
 		  @result void
 		*/
 		virtual void fireEvent(const std::string& name) TITANIUM_NOEXCEPT final;
-		virtual void fireEvent(const std::string& name, const JSObject& event) TITANIUM_NOEXCEPT final;
+		virtual void fireEvent(const std::string& name, const JSObject& event, const bool& propagate = true) TITANIUM_NOEXCEPT final;
 
 		virtual JSObject getCtorProperties() const TITANIUM_NOEXCEPT final
 		{

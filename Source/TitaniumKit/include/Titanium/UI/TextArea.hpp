@@ -22,10 +22,10 @@ namespace Titanium
 		class AttributedString;
 
 		/*!
-		@struct
-		@discussion Dictionary object of parameters for the Titanium.UI.TextArea.
-		selected event and Titanium.UI.TextArea.selection property that describes position and length of the selected text.
-		See http://docs.appcelerator.com/platform/latest/#!/api/textAreaSelectedParams
+		  @struct
+		  @discussion Dictionary object of parameters for the Titanium.UI.TextArea.
+		  selected event and Titanium.UI.TextArea.selection property that describes position and length of the selected text.
+		  See http://docs.appcelerator.com/platform/latest/#!/api/textAreaSelectedParams
 		*/
 		struct TextAreaSelectedParams
 		{
@@ -35,6 +35,22 @@ namespace Titanium
 
 		TITANIUMKIT_EXPORT TextAreaSelectedParams js_to_TextAreaSelectedParams(const JSObject& object);
 		TITANIUMKIT_EXPORT JSObject TextAreaSelectedParams_to_js(const JSContext& js_context, const TextAreaSelectedParams& params);
+
+		/*!
+		  @struct
+		  @discussion Dictionary object of parameters for the Titanium.UI.TextArea.padding that describes the padding
+		  See https://docs.appcelerator.com/platform/latest/#!/api/TextAreaPadding
+		*/
+		struct TextAreaPadding
+		{
+			double bottom{ 0 };
+			double left{ 0 };
+			double right{ 0 };
+			double top{ 0 };
+		};
+
+		TITANIUMKIT_EXPORT TextAreaPadding js_to_TextAreaPadding(const JSObject& object);
+		TITANIUMKIT_EXPORT JSObject TextAreaPadding_to_js(const JSContext& js_context, const TextAreaPadding& params);
 
 		/*!
 		  @class
@@ -234,6 +250,13 @@ namespace Titanium
 			TITANIUM_PROPERTY_IMPL_DEF(TEXT_VERTICAL_ALIGNMENT, verticalAlign);
 
 			/*!
+			  @property
+			  @abstract padding
+			  @discussion Sets the left and right padding of this TextArea.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(TextAreaPadding, padding);
+
+			/*!
 			  @method
 			  @abstract blur
 			  @discussion Forces this text area to lose focus.
@@ -291,6 +314,7 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(textAlign);
 			TITANIUM_PROPERTY_DEF(value);
 			TITANIUM_PROPERTY_DEF(verticalAlign);
+			TITANIUM_PROPERTY_DEF(padding);
 
 			TITANIUM_FUNCTION_DEF(blur);
 			TITANIUM_FUNCTION_DEF(focus);
@@ -347,6 +371,8 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setValue);
 			TITANIUM_FUNCTION_DEF(getVerticalAlign);
 			TITANIUM_FUNCTION_DEF(setVerticalAlign);
+			TITANIUM_FUNCTION_DEF(getPadding);
+			TITANIUM_FUNCTION_DEF(setPadding);
 
 		protected:
 #pragma warning(push)
@@ -376,6 +402,7 @@ namespace Titanium
 			TEXT_ALIGNMENT textAlign__;
 			std::string value__;
 			TEXT_VERTICAL_ALIGNMENT verticalAlign__;
+			TextAreaPadding padding__;
 #pragma warning(pop)
 		};
 

@@ -26,6 +26,52 @@ namespace TitaniumWindows
 		using namespace Windows::UI::Xaml;
 		using namespace Windows::Foundation;
 
+		void WindowsPickerLayoutDelegate::updateTouchEnabled(const bool& enabled)
+		{
+			WindowsViewLayoutDelegate::updateTouchEnabled(enabled);
+
+			const auto parent = dynamic_cast<Grid^>(component__);
+
+			// This happens when properties are not set up
+			if (parent == nullptr || parent->Children->Size == 0) {
+				return;
+			}
+
+			// Picker is a complex component so it should handle enabled state manually
+			const auto picker = parent->Children->GetAt(0);
+			if (picker) {
+				const auto plain = dynamic_cast<Grid^>(picker);
+				const auto date = dynamic_cast<DatePicker^>(picker);
+				const auto time = dynamic_cast<TimePicker^>(picker);
+
+				if (plain) {
+					const auto children = plain->Children;
+					for (std::size_t i = 0; i < children->Size; i++) {
+						const auto child = dynamic_cast<ComboBox^>(children->GetAt(i));
+						if (child) {
+							child->IsEnabled = enabled;
+							child->IsTapEnabled = enabled;
+							child->IsDoubleTapEnabled = enabled;
+							child->IsHoldingEnabled = enabled;
+							child->IsRightTapEnabled = enabled;
+						}
+					}
+				} else if (date) {
+					date->IsEnabled = enabled;
+					date->IsTapEnabled = enabled;
+					date->IsDoubleTapEnabled = enabled;
+					date->IsHoldingEnabled = enabled;
+					date->IsRightTapEnabled = enabled;
+				} else if (time) {
+					time->IsEnabled = enabled;
+					time->IsTapEnabled = enabled;
+					time->IsDoubleTapEnabled = enabled;
+					time->IsHoldingEnabled = enabled;
+					time->IsRightTapEnabled = enabled;
+				}
+			}
+		}
+
 		void WindowsPickerLayoutDelegate::onComponentSizeChange(const Titanium::LayoutEngine::Rect& rect)
 		{
 			WindowsViewLayoutDelegate::onComponentSizeChange(rect);
@@ -148,6 +194,8 @@ namespace TitaniumWindows
 			set_minDate(minDate__);
 			set_columns(columns__);
 			set_font(font__);
+
+			getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->refreshTouchEnabledState();
 		}
 
 		void Picker::set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT
@@ -267,6 +315,8 @@ namespace TitaniumWindows
 							fireEvent("change", eventArgs);
 						} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 					}));
+
+					getViewLayoutDelegate<WindowsPickerLayoutDelegate>()->refreshTouchEnabledState();
 
 				}
 			} else {
