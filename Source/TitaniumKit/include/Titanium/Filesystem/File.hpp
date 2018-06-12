@@ -268,6 +268,7 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(createDirectory);
 			TITANIUM_FUNCTION_DEF(createFile);
 			TITANIUM_FUNCTION_DEF(createTimestamp);
+			TITANIUM_FUNCTION_DEF(createdAt);
 			TITANIUM_FUNCTION_DEF(deleteDirectory);
 			TITANIUM_FUNCTION_DEF(deleteFile);
 			TITANIUM_FUNCTION_DEF(exists);
@@ -276,6 +277,7 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(isDirectory);
 			TITANIUM_FUNCTION_DEF(isFile);
 			TITANIUM_FUNCTION_DEF(modificationTimestamp);
+			TITANIUM_FUNCTION_DEF(modifiedAt);
 			TITANIUM_FUNCTION_DEF(move);
 			TITANIUM_FUNCTION_DEF(open);
 			TITANIUM_FUNCTION_DEF(read);

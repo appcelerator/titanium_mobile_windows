@@ -16,6 +16,8 @@ namespace Titanium
 {
 	namespace LayoutEngine
 	{
+		double PhysicalPixelsFactor = 1.0;
+
 		enum ValueType _getValueType(const std::string& value)
 		{
 			if (value == "UI.SIZE") {
@@ -41,10 +43,10 @@ namespace Titanium
 			} else if (valueType == Fixed) {
 				if ((value.find("mm") != std::string::npos) || (value.find("cm") != std::string::npos) ||
 				    (value.find("em") != std::string::npos) || (value.find("pt") != std::string::npos) ||
-				    (value.find("pc") != std::string::npos) ||
+				    (value.find("pc") != std::string::npos) || (value.find("ppx") != std::string::npos) ||
 				    (value.find("in") != std::string::npos) || (value.find("px") != std::string::npos) ||
 				    (value.find("dp") != std::string::npos) || (value.find("dip") != std::string::npos)) {
-					if ((value.find("dip") != std::string::npos)) {
+					if ((value.find("dip") != std::string::npos) || (value.find("ppx") != std::string::npos)) {
 						units = value.substr(value.size() - 3, 3);
 						parsedValue = atof(value.substr(0, value.size() - 3).c_str());
 					} else {
@@ -70,6 +72,8 @@ namespace Titanium
 					return parsedValue; // px is our base value
 				} else if (units == "dp" || units == "dip") { 
 					return (parsedValue * ppi) / 160.0; // px = device independent pixels * pixels/inch / 160, see https://www.google.com/design/spec/layout/units-measurements.html#units-measurements-designing-layouts-for-dp
+				} else if (units == "ppx") {
+					return parsedValue / PhysicalPixelsFactor;
 				}
 			}
 			return 0;

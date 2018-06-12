@@ -17,6 +17,10 @@ namespace Titanium
 	{
 		void nodeAddChild(struct Node* parent, struct Node* child)
 		{
+			if (child->parent) {
+				nodeRemoveChild(child->parent, child);
+			}
+
 			child->parent = parent;
 			if (parent->lastChild) {
 				child->prev = parent->lastChild;
@@ -31,6 +35,10 @@ namespace Titanium
 
 		void nodeRemoveChild(struct Node* parent, struct Node* child)
 		{
+			if (child->parent != parent) {
+				return;
+			}
+
 			child->parent = nullptr;
 			if (child->prev) {
 				child->prev->next = child->next;
@@ -50,6 +58,10 @@ namespace Titanium
 
 		void nodeInsertChildAt(struct Node* parent, struct Node* child, unsigned int index) 
 		{
+			if (child->parent) {
+				nodeRemoveChild(child->parent, child);
+			}
+
 			child->parent = parent;
 
 			// find target node

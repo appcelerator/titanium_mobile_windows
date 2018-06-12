@@ -61,6 +61,7 @@ namespace Titanium
 			// Check if row is already added, make new row then.
 			std::shared_ptr<TableViewRow> row = MakeSafeRowCopy(get_context(), row_);
 
+			row->set_section(get_object().GetPrivate<TableViewSection>());
 			row->set_added(true);
 			rows__.push_back(row);
 			if (fireEvent) {
@@ -73,6 +74,7 @@ namespace Titanium
 		{
 			std::shared_ptr<TableViewRow> row = MakeSafeRowCopy(get_context(), row_);
 
+			row->set_section(get_object().GetPrivate<TableViewSection>());
 			row->set_added(true);
 			rows__.insert(rows__.begin() + index, row);
 			fireTableViewSectionEvent("append", rows__.at(index), index);
@@ -83,6 +85,7 @@ namespace Titanium
 			const auto it = find(rows__.begin(), rows__.end(), row);
 			if (it != rows__.end()) {
 				const auto index = static_cast<std::uint32_t>(std::distance(rows__.begin(), it));
+				row->set_section(nullptr);
 				row->set_added(false);
 				rows__.erase(it);
 				fireTableViewSectionEvent("remove", row, index);
@@ -96,6 +99,7 @@ namespace Titanium
 		{
 			if (rows__.size() > index) {
 				const auto row = rows__.at(index);
+				row->set_section(nullptr);
 				row->set_added(false);
 				rows__.erase(rows__.begin() + index);
 				fireTableViewSectionEvent("remove", row, index);

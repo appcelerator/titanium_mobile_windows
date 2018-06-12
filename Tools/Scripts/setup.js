@@ -235,7 +235,7 @@ function downloadIfNecessary(envKey, defaultDest, expectedDir, url, next) {
 			if (fs.existsSync(destination)) {
 				var urlFile = path.join(destination, 'SOURCE_URL');
 				if (fs.existsSync(urlFile)) {
-					var contents = fs.readFileSync(urlFile);
+					var contents = fs.readFileSync(urlFile).toString();
 					var base = path.basename(contents.slice(7), '.zip');
 					var byURL = path.normalize(path.join(destination, '..', base));
 					console.log('Destination for ' + url + ' already exists, moving existing directory to ' + byURL + ' before extracting.');

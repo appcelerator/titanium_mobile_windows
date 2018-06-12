@@ -488,38 +488,63 @@ namespace Titanium
 
 		JSString builtin_functions_script = R"js(
 			try {
-			  console = {};
-			  console.log   = Ti.API.info;
-			  console.info  = Ti.API.info;
-			  console.warn  = Ti.API.warn;
-			  console.error = Ti.API.error;
-			  console.debug = Ti.API.debug;
+				console = {};
+				console._times = {};
+				console.log   = Ti.API.info;
+				console.info  = Ti.API.info;
+				console.warn  = Ti.API.warn;
+				console.error = Ti.API.error;
+				console.debug = Ti.API.debug;
+				console.time = function (label) {
+					if (console._times[label]) {
+						console.warn('Label "' + label + '" already exists');
+						return;
+					}
+					if (!label) {
+						label = 'default';
+					}
+					console._times[label] = Date.now();
+				};
+				console.timeEnd = function (label) {
+					if (!label) {
+						label = 'default';
+					}
+					var startTime = console._times[label];
+					if (!startTime) {
+						console.warn('Label "' + label + '" does not exist');
+						return;
+					}
+					var duration = Date.now() - startTime;
+					console.log(label + ': ' + duration + 'ms');
+					delete console._times[label];
+				};
+			
 
-			  // Create the global alert function
-			  alert = function (_msg) {
-				  Ti.UI.createAlertDialog({
-					  title: '',
-					  message: _msg + ''
-				  }).show();
-			  };
+				// Create the global alert function
+				alert = function (_msg) {
+					Ti.UI.createAlertDialog({
+						title: '',
+						message: _msg + ''
+					}).show();
+				};
 
-			  // Load _app_info_.json
-			  Ti.App._loadAppInfo();
-			  // Load _app_props_.json
-			  Ti.App.Properties._loadAppProperties();
+				// Load _app_info_.json
+				Ti.App._loadAppInfo();
+				// Load _app_props_.json
+				Ti.App.Properties._loadAppProperties();
 
-			  // Let's set up our user agent in JS, way easier this way...
-			  Ti.userAgent = 'Appcelerator Titanium/' + Ti.version + ' (' + Ti.Platform.model + '/' + Ti.Platform.version + '; ' + Ti.Platform.osname + '; ' + Ti.Platform.locale + ';)';
+				// Let's set up our user agent in JS, way easier this way...
+				Ti.userAgent = 'Appcelerator Titanium/' + Ti.version + ' (' + Ti.Platform.model + '/' + Ti.Platform.version + '; ' + Ti.Platform.osname + '; ' + Ti.Platform.locale + ';)';
 
-			  Ti.Network.encodeURIComponent = encodeURIComponent;
-			  Ti.Network.decodeURIComponent = decodeURIComponent;
+				Ti.Network.encodeURIComponent = encodeURIComponent;
+				Ti.Network.decodeURIComponent = decodeURIComponent;
 
-			  // Start analytics
-			  Ti.Analytics._start();
+				// Start analytics
+				Ti.Analytics._start();
 
-			  L = Ti.Locale.getString;
+				L = Ti.Locale.getString;
 			} catch (E) {
-			  Ti.API.error("Failed to initialize Titanium: " + E.toString());
+				Ti.API.error("Failed to initialize Titanium: " + E.toString());
 			}
 			)js";
 

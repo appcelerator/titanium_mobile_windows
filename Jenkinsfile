@@ -1,4 +1,5 @@
-#!groovy​
+#!groovy
+library 'pipeline-library'
 // Keep history of up to 30 builds, but only keep artifacts for the last 5
 properties([buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '5'))])
 
@@ -6,30 +7,27 @@ def gitCommit = ''
 // Variables we can change
 // FIXME Using the nodejs jenkins plugin introduces complications that cause us not to properly connect to the Windows Phone emulator for logs
 // Likely need to modify the firewall rules to allow traffic from the new nodejs install like we do for system install!
-def nodeVersion = '6.10.3' // NOTE that changing this requires we set up the desired version on jenkins master first!
+def nodeVersion = '8.11.1' // NOTE that changing this requires we set up the desired version on jenkins master first!
+def npmVersion = '5.8.0'
 
-def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion) {
+def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion, npmVersion) {
 	unstash 'sources' // for build
 	if (fileExists('dist/windows')) {
 		bat 'rmdir dist\\windows /Q /S'
 	}
 	bat 'mkdir dist\\windows'
 
-	// nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
-	// 	bat 'npm install -g npm@5.4.1' // Install NPM 5.4.1
-	// 	def nodeHome = tool(name: "node ${nodeVersion}", type: 'nodejs')
-	// 	echo nodeHome
-	// 	bat "netsh advfirewall firewall add rule name=\"Node ${nodeVersion}\ TCP" program=\"${nodeHome}\\node.exe\" dir=in action=allow protocol=TCP"
-	// 	bat "netsh advfirewall firewall add rule name=\"Node ${nodeVersion}\ UDP" program=\"${nodeHome}\\node.exe\" dir=in action=allow protocol=UDP"
+	nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
+		ensureNPM(npmVersion)
 		dir('Tools/Scripts') {
-			bat 'npm install .'
+			bat 'npm ci'
 			echo "Installing JSC built for Windows ${sdkVersion}"
 			bat "node setup.js -s ${sdkVersion} --no-color --no-progress-bars"
 			bat 'rmdir node_modules /Q /S'
 		}
 
 		dir('Tools/Scripts/build') {
-			bat 'npm install .'
+			bat 'npm ci'
 
 			timeout(45) {
 				echo "Building for ${architecture} ${sdkVersion}"
@@ -41,19 +39,24 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion) {
 				}
 			} // timeout
 		} // dir Tool/Scripts/build
-	// } // nodejs
+	} // nodejs
 	archiveArtifacts artifacts: 'dist/**/*'
 } // def build
 
-def unitTests(target, branch, testSuiteBranch, nodeVersion) {
+def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 	def defaultEmulatorID = '10-0-1'
 	unarchive mapping: ['dist/' : '.'] // copy in built SDK from dist/ folder (from Build stage)
 	unstash 'sources'
-	// nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
-		// bat 'npm install -g npm@5.4.1' // Install NPM 5.4.1
+	nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
+		ensureNPM(npmVersion)
+		def nodeHome = tool(name: "node ${nodeVersion}", type: 'nodejs')
+		echo nodeHome
+		bat "netsh advfirewall firewall add rule name=\"Node ${nodeVersion}\" program=\"${nodeHome}\\node.exe\" dir=in action=allow protocol=udp description=\"Firewall rule\""
+		bat "netsh advfirewall firewall add rule name=\"Node ${nodeVersion}\" program=\"${nodeHome}\\node.exe\" dir=in action=allow protocol=tcp description=\"Firewall rule\""
+
 		dir('Tools/Scripts/build') {
 			echo 'Setting up SDK'
-			bat 'npm install .'
+			bat 'npm ci'
 			bat "node setupSDK.js --branch ${branch}"
 		}
 
@@ -67,40 +70,42 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion) {
 		}
 		unstash 'override-tests'
 		bat '(robocopy tests titanium-mobile-mocha-suite /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0'
-		dir('titanium-mobile-mocha-suite/scripts') {
-			bat 'npm install .'
+		dir('titanium-mobile-mocha-suite') {
+			bat 'npm ci'
 			echo "Running tests on ${target}"
-			try {
-				timeout(30) {
+			dir('scripts') {
+				try {
+					timeout(30) {
+						if ('ws-local'.equals(target)) {
+							bat "node test.js -p windows -T ${target} --skip-sdk-install --cleanup"
+						} else if ('wp-emulator'.equals(target)) {
+							bat "node test.js -p windows -T ${target} -C ${defaultEmulatorID} --skip-sdk-install --cleanup"
+						}
+					}
+				} catch (e) {
+					// Archive the crash reports...
+					// Crash event report:
+					// C:\ProgramData\Microsoft\Windows\WER\ReportArchive\AppCrash_com.appcelerator_8a7a6091d98a3b6827daff1404991c2a9e161a7_8c8df8cd_0a167d3a\Report.wer
+					bat 'mkdir crash_reports'
+					dir ('crash_reports') {
+						// move command doesn't grok wildcards, so we hack it: https://serverfault.com/questions/374997/move-directory-in-dos-batch-file-without-knowing-full-directory-name
+						bat "FOR /d %i IN (C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_com.appcelerator_*) DO move %i ."
+					}
+					archiveArtifacts 'crash_reports/**/*'
+					bat 'rmdir crash_reports /Q /S'
+					throw e
+				} finally {
+					// kill the emulator/app
 					if ('ws-local'.equals(target)) {
-						bat "node test.js -p windows -T ${target} --skip-sdk-install --cleanup"
+						bat 'taskkill /IM mocha.exe /F 2> nul'
 					} else if ('wp-emulator'.equals(target)) {
-						bat "node test.js -p windows -T ${target} -C ${defaultEmulatorID} --skip-sdk-install --cleanup"
+						bat 'taskkill /IM xde.exe /F 2> nul'
 					}
 				}
-			} catch (e) {
-				// Archive the crash reports...
-				// Crash event report:
-				// C:\ProgramData\Microsoft\Windows\WER\ReportArchive\AppCrash_com.appcelerator_8a7a6091d98a3b6827daff1404991c2a9e161a7_8c8df8cd_0a167d3a\Report.wer
-				bat 'mkdir crash_reports'
-				dir ('crash_reports') {
-					// move command doesn't grok wildcards, so we hack it: https://serverfault.com/questions/374997/move-directory-in-dos-batch-file-without-knowing-full-directory-name
-					bat "FOR /d %i IN (C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_com.appcelerator_*) DO move %i ."
-				}
-				archiveArtifacts 'crash_reports/**/*'
-				bat 'rmdir crash_reports /Q /S'
-				throw e
-			} finally {
-				// kill the emulator/app
-				if ('ws-local'.equals(target)) {
-					bat 'taskkill /IM mocha.exe /F 2> nul'
-				} else if ('wp-emulator'.equals(target)) {
-					bat 'taskkill /IM xde.exe /F 2> nul'
-				}
-			}
-			junit 'junit.*.xml'
-		} // dir 'titanium-mobile-mocha-suite/scripts
-	// } // nodejs
+				junit 'junit.*.xml'
+			} // dir 'scripts'
+		} // dir 'titanium-mobile-mocha-suite'
+	} // nodejs
 } // def unitTests
 
 // wrap in timestamps
@@ -135,15 +140,14 @@ timestamps {
 			echo 'Generating docs'
 
 			nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
+				ensureNPM(npmVersion)
 				dir('apidoc') {
 					if (isUnix()) {
-						sh 'npm install -g npm@5.4.1'
-						sh 'npm install .'
+						sh 'npm ci'
 						sh 'node ti_win_yaml.js'
 					} else {
-						bat 'call npm install -g npm@5.4.1'
-						bat 'call npm install .'
-						bat 'call node ti_win_yaml.js'
+						bat 'npm ci'
+						bat 'node ti_win_yaml.js'
 					}
 				}
 			}
@@ -172,13 +176,13 @@ timestamps {
 	stage('Build') {
 		parallel(
 			'Windows 10 x86': {
-				node('msbuild-14 && vs2015 && windows-sdk-10 && node && npm && cmake && jsc') {
-					build('10.0', '14.0', 'WindowsStore-x86', gitCommit, nodeVersion)
+				node('msbuild-14 && vs2015 && windows-sdk-10 && cmake && jsc') {
+					build('10.0', '14.0', 'WindowsStore-x86', gitCommit, nodeVersion, npmVersion)
 				}
 			},
 			'Windows 10 ARM': {
-				node('msbuild-14 && vs2015 && windows-sdk-10 && node && npm && cmake && jsc') {
-					build('10.0', '14.0', 'WindowsStore-ARM', gitCommit, nodeVersion)
+				node('msbuild-14 && vs2015 && windows-sdk-10 && cmake && jsc') {
+					build('10.0', '14.0', 'WindowsStore-ARM', gitCommit, nodeVersion, npmVersion)
 				}
 			},
 			failFast: true
@@ -189,13 +193,13 @@ timestamps {
 		def testSuiteBranch = targetBranch
 		parallel(
 			'ws-local': {
-				node('msbuild-14 && vs2015 && windows-sdk-10 && cmake && node && npm') {
-					unitTests('ws-local', targetBranch, testSuiteBranch, nodeVersion)
+				node('msbuild-14 && vs2015 && windows-sdk-10 && cmake') {
+					unitTests('ws-local', targetBranch, testSuiteBranch, nodeVersion, npmVersion)
 				}
 			},
 			'wp-emulator': {
-				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && cmake && node && npm') {
-					unitTests('wp-emulator', targetBranch, testSuiteBranch, nodeVersion)
+				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && cmake') {
+					unitTests('wp-emulator', targetBranch, testSuiteBranch, nodeVersion, npmVersion)
 				}
 			}
 		)

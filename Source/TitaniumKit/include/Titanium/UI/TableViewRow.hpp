@@ -18,6 +18,8 @@ namespace Titanium
 	{
 		using namespace HAL;
 
+		class TableViewSection;
+
 		/*!
 		  @class
 		  @discussion This is the Titanium TableViewRow Module.
@@ -114,6 +116,17 @@ namespace Titanium
 			{
 				added__ = added;
 			}
+
+			void set_section(const std::shared_ptr<TableViewSection>& section) 
+			{
+				section__ = section;
+			}
+
+			std::shared_ptr<TableViewSection> get_section()
+			{
+				return section__;
+			}
+
 			protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -125,6 +138,7 @@ namespace Titanium
 				JSObject data__;
 				// This indicates this row is already added to section.
 				bool added__;
+				std::shared_ptr<TableViewSection> section__;
 #pragma warning(pop)
 		};
 	} // namespace UI
