@@ -22,6 +22,8 @@
 #include "TitaniumWindows/AppModule.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include "TitaniumWindows/Blob.hpp"
+#include "TitaniumWindows/UIModule.hpp"
+#include "TitaniumWindows/UI/Window.hpp"
 
 #define GET_TITANIUM_APP(VARNAME) \
   const auto ctx = get_context(); \
@@ -452,9 +454,8 @@ namespace TitaniumWindows
 			}
 
 			if (cameraOptionsState__.overlay) {
-				const std::vector<JSValue> remove_args = { cameraOptionsState__.overlay->get_object() };
-				auto window = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI.currentWindow"));
-				static_cast<JSObject>(window.GetProperty("remove"))(remove_args, window);
+				const auto uiModule = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI")).GetPrivate<Titanium::UIModule>();
+				uiModule->get_currentWindow()->getViewLayoutDelegate()->remove(cameraOptionsState__.overlay);
 			}
 
 			if (shouldRemoveRotationEvent__) {
@@ -464,7 +465,8 @@ namespace TitaniumWindows
 
 			TitaniumWindows::Utility::RemoveViewFromCurrentWindow(captureElement__, [this, callback]() {
 				// Close preview Window
-				get_context().JSEvaluateScript("Ti.UI.currentWindow.close();");
+				const auto uiModule = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI")).GetPrivate<Titanium::UIModule>();
+				uiModule->get_currentWindow()->close(nullptr);
 
 				if (callback) {
 					callback();
@@ -769,9 +771,8 @@ namespace TitaniumWindows
 		if (cameraOptionsState__.overlay) {
 			// Add overlay view to new Window. Running on UI thread to make sure it's done on UI thread after SetViewForCurrentWindow.
 			TitaniumWindows::Utility::RunOnUIThread([this]() {
-				auto window = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI.currentWindow;"));
-				const std::vector<JSValue> add_args = { cameraOptionsState__.overlay->get_object() };
-				static_cast<JSObject>(window.GetProperty("add"))(add_args, window);
+				const auto uiModule = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI")).GetPrivate<Titanium::UIModule>();
+				uiModule->get_currentWindow()->getViewLayoutDelegate()->add(cameraOptionsState__.overlay);
 			});
 		}
 #endif
