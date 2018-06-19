@@ -340,6 +340,19 @@ namespace Titanium
 				return getViewLayoutDelegate<ViewLayoutDelegate>();
 			}
 
+			void setBubbleEventData(const std::unordered_map<std::string, std::shared_ptr<Module>>& data)
+			{
+				bubbleEventData__ = data;
+				for (const auto child : get_children()) {
+					child->setBubbleEventData(data);
+				}
+			}
+
+			std::unordered_map<std::string, std::shared_ptr<Module>> getBubbleEventData()
+			{
+				return bubbleEventData__;
+			}
+
 		protected:
 			template<typename T, typename U, typename... Us>
 			void setLayoutDelegate(Us&&... constructor_arguments) TITANIUM_NOEXCEPT
@@ -363,6 +376,9 @@ namespace Titanium
 #pragma warning(disable : 4251)
 			std::shared_ptr<ViewLayoutEventDelegate> layoutEventDelegate__;
 			std::shared_ptr<ViewLayoutDelegate> layoutDelegate__;
+
+			// Used for bubbleParent in special cases, such as TableViewRow
+			std::unordered_map<std::string, std::shared_ptr<Module>> bubbleEventData__;
 
 			bool accessibilityHidden__ { false };
 			std::string accessibilityHint__;

@@ -44,7 +44,10 @@ namespace TitaniumWindows
 
 			// set margin to the progress bar to make both border and bar shown.
 			auto margin = bar__->Margin;
-			margin.Bottom = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width), "px") * 2;
+			auto event_delegate = event_delegate__.lock();
+			TITANIUM_ASSERT(event_delegate != nullptr);
+			const auto defaultUnit = Titanium::UI::ViewLayoutDelegate::GetDefaultUnit(event_delegate->get_context());
+			margin.Bottom = Titanium::LayoutEngine::parseUnitValue(borderWidth, Titanium::LayoutEngine::ValueType::Fixed, WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width), defaultUnit) * 2;
 			bar__->Margin = margin;
 		}
 

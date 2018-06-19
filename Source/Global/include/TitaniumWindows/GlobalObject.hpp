@@ -48,6 +48,9 @@ namespace TitaniumWindows
 		// store supported module names and its loaded status
 		std::unordered_map<std::string, bool> native_module_names__;
 
+		// store supported native namespaces to require namespace like "require(package_name)"
+		std::unordered_set<std::string> native_module_namespaces__;
+
 		// cache for native module
 		std::unordered_map<std::string, JSValue> native_module_cache__;
 		std::function<JSValue(const JSContext& js_context, const std::string&)> native_module_requireHook__;

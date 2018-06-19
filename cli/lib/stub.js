@@ -107,7 +107,7 @@ function generateNativeTypeHelper(dest, native_types, native_events, next) {
  * @param {Array[map]} modules - 
  * @param {Function} next - 
  */
-function generateRequireHook(dest, modules, native_types, next) {
+function generateRequireHook(dest, modules, native_types, native_namespaces, next) {
 	var require_hook = path.join(dest, 'src', 'RequireHook.cpp'),
 		template = path.join(dest, 'src', 'RequireHook.cpp.ejs');
 	// Now we'll add all the types we know about as includes into our require hook class
@@ -135,6 +135,7 @@ function generateRequireHook(dest, modules, native_types, next) {
 
 		data = ejs.render(data, { 
 			native_module_includes:native_module_includes,
+			native_namespaces:native_namespaces,
 			native_modules:native_modules,
 			native_types:native_types
 			}, {});
@@ -302,7 +303,7 @@ exports.generate = function generate(builder, finished) {
 				},
 				function(cb) {
 					builder.cli.createHook('build.windows.stub.generateRequireHook', builder, function (builder, cb) {
-						generateRequireHook(dest_Native, builder.modules, builder.native_types, cb);
+						generateRequireHook(dest_Native, builder.modules, builder.native_types, builder.native_namespaces, cb);
 					})(builder, cb);
 				}
 			], function() {
@@ -343,7 +344,7 @@ exports.generate = function generate(builder, finished) {
 				generateCmakeList(dest_Native, modules, callback);
 			},
 			function(callback) {
-				generateRequireHook(dest_Native, modules, native_types, callback);
+				generateRequireHook(dest_Native, modules, native_types, {}, callback);
 			}
 		], finished);
 	}

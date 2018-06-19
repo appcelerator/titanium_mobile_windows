@@ -460,9 +460,7 @@ TITANIUM_PROPERTY_SETTER(MODULE, NAME) { \
 #define TITANIUM_EXCEPTION_CATCH_START try
 #define TITANIUM_EXCEPTION_CATCH_END_CTX(CTX) \
 catch (const HAL::detail::js_runtime_error& ex) { \
-    std::ostringstream os; \
-    os << "Runtime Error: " << ex.js_message(); \
-    Titanium::Module::ShowRedScreenOfDeath(CTX, os.str()); \
+    Titanium::Module::ShowRedScreenOfDeath(CTX, ex); \
 } catch (...) { \
     Titanium::Module::ShowRedScreenOfDeath(CTX, "Unknown Exception"); \
 }

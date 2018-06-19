@@ -20,11 +20,25 @@ namespace TitaniumWindows
 		using namespace HAL;
 
 		class Label;
+		class TableViewRow;
 
 		class TITANIUMWINDOWS_UI_EXPORT WindowsTableViewRowLayoutDelegate : public WindowsViewLayoutDelegate
 		{
 		public:
+			WindowsTableViewRowLayoutDelegate(const std::unordered_map<std::string, std::shared_ptr<Titanium::Module>>& bubbleEventData) TITANIUM_NOEXCEPT
+				: WindowsViewLayoutDelegate()
+				, bubbleEventData__(bubbleEventData)
+			{
+
+			}
+
 			virtual void add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT override;
+
+		private:
+#pragma warning(push)
+#pragma warning(disable : 4251)
+			std::unordered_map<std::string, std::shared_ptr<Titanium::Module>> bubbleEventData__;
+#pragma warning(pop)
 		};
 
 		/*!
