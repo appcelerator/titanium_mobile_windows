@@ -575,6 +575,8 @@ namespace TitaniumWindows
 			virtual void fireSimplePositionEvent(const std::string& event_name, Windows::Foundation::Point position, ::Platform::Object^ originalSource);
 			virtual void firePostLayoutEvent();
 
+			virtual std::shared_ptr<Titanium::UI::View> sourceTest(::Platform::Object ^ originalSource, const std::shared_ptr<Titanium::UI::View>& root = nullptr);
+
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromPath(const std::string& path);
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBitmapImage(Windows::UI::Xaml::Media::Imaging::BitmapImage^ image);
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBlob(const std::shared_ptr<Titanium::Blob>& blob);
@@ -653,8 +655,6 @@ namespace TitaniumWindows
 			Windows::UI::Xaml::Media::Brush^ previousBackgroundBrush__{ nullptr };
 
 			Windows::UI::Xaml::Media::LinearGradientBrush^ backgroundLinearGradientBrush__{ nullptr };
-
-			std::shared_ptr<Titanium::UI::View> sourceTest(::Platform::Object^ originalSource, const std::shared_ptr<Titanium::UI::View>& root = nullptr);
 #pragma warning(pop)
 
 		};
