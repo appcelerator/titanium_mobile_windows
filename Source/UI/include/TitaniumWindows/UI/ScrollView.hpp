@@ -32,7 +32,7 @@ namespace TitaniumWindows
 			virtual void removeAllChildren() TITANIUM_NOEXCEPT override;
 			virtual void set_layout(const std::string& layout) TITANIUM_NOEXCEPT override;
 			virtual void requestLayout(const bool& fire_event = false) override;
-
+			virtual std::shared_ptr<Titanium::UI::View> sourceTest(::Platform::Object ^, const std::shared_ptr<Titanium::UI::View>& root = nullptr) override;
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
