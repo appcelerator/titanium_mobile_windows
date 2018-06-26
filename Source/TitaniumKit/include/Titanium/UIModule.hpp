@@ -260,6 +260,8 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_DEF(create2DMatrix);
 		TITANIUM_FUNCTION_DEF(create3DMatrix);
+		TITANIUM_FUNCTION_DEF(createMatrix2D);
+		TITANIUM_FUNCTION_DEF(createMatrix3D);
 		TITANIUM_FUNCTION_DEF(createActivityIndicator);
 		TITANIUM_FUNCTION_DEF(createAlertDialog);
 		TITANIUM_FUNCTION_DEF(createAnimation);

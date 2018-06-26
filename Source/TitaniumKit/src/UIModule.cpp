@@ -635,8 +635,8 @@ namespace Titanium
 
 		TITANIUM_ADD_FUNCTION(UIModule, create2DMatrix);
 		TITANIUM_ADD_FUNCTION(UIModule, create3DMatrix);
-		JSExport<UIModule>::AddFunctionProperty("createMatrix2D", std::mem_fn(&UIModule::js_create2DMatrix)); // Alias of create2DMatrix
-		JSExport<UIModule>::AddFunctionProperty("createMatrix3D", std::mem_fn(&UIModule::js_create3DMatrix)); // Alias of create3DMatrix
+		TITANIUM_ADD_FUNCTION(UIModule, createMatrix2D);
+		TITANIUM_ADD_FUNCTION(UIModule, createMatrix3D);
 		TITANIUM_ADD_FUNCTION(UIModule, createActivityIndicator);
 		TITANIUM_ADD_FUNCTION(UIModule, createAnimation);
 		TITANIUM_ADD_FUNCTION(UIModule, createAlertDialog);
@@ -1047,6 +1047,18 @@ namespace Titanium
 	TITANIUM_FUNCTION(UIModule, create3DMatrix)
 	{
 		get_context().JSEvaluateScript("Ti.API.warn('Ti.UI.create3DMatrix DEPRECATED in 8.0.0, in favor of Ti.UI.createMatrix3D');");
+		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
+		CREATE_TITANIUM_UI(Matrix3D);
+	}
+
+	TITANIUM_FUNCTION(UIModule, createMatrix2D)
+	{
+		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
+		CREATE_TITANIUM_UI(Matrix2D);
+	}
+
+	TITANIUM_FUNCTION(UIModule, createMatrix3D)
+	{
 		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
 		CREATE_TITANIUM_UI(Matrix3D);
 	}
