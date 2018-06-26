@@ -634,6 +634,9 @@ namespace Titanium
 		JSExport<UIModule>::SetParent(JSExport<Module>::Class());
 
 		TITANIUM_ADD_FUNCTION(UIModule, create2DMatrix);
+		TITANIUM_ADD_FUNCTION(UIModule, create3DMatrix);
+		JSExport<UIModule>::AddFunctionProperty("createMatrix2D", std::mem_fn(&UIModule::js_create2DMatrix)); // Alias of create2DMatrix
+		JSExport<UIModule>::AddFunctionProperty("createMatrix3D", std::mem_fn(&UIModule::js_create3DMatrix)); // Alias of create3DMatrix
 		TITANIUM_ADD_FUNCTION(UIModule, createActivityIndicator);
 		TITANIUM_ADD_FUNCTION(UIModule, createAnimation);
 		TITANIUM_ADD_FUNCTION(UIModule, createAlertDialog);
@@ -822,7 +825,8 @@ namespace Titanium
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_HEAD);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_TAIL);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_MIDDLE);
-		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, 2DMatrix);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Matrix2D);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Matrix3D);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ActivityIndicator);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ActivityIndicatorStyle);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, AlertDialog);
@@ -858,9 +862,14 @@ namespace Titanium
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Window);
 	}
 
-	TITANIUM_PROPERTY_GETTER(UIModule, 2DMatrix)
+	TITANIUM_PROPERTY_GETTER(UIModule, Matrix2D)
 	{
-		return get_context().CreateObject(twodmatrix__);
+		return get_context().CreateObject(matrix2d__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, Matrix3D)
+	{
+		return get_context().CreateObject(matrix3d__);
 	}
 
 	TITANIUM_PROPERTY_GETTER(UIModule, ActivityIndicator)
@@ -1031,20 +1040,13 @@ namespace Titanium
 	TITANIUM_FUNCTION(UIModule, create2DMatrix)
 	{
 		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
+		CREATE_TITANIUM_UI(Matrix2D);
+	}
 
-		// FIXME Macros didn't work because identifiers can't start with digits!
-		JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium");
-		TITANIUM_ASSERT(Titanium_property.IsObject());
-		JSObject Titanium = static_cast<JSObject>(Titanium_property);
-		JSValue UI_property = Titanium.GetProperty("UI");
-		TITANIUM_ASSERT(UI_property.IsObject());
-		JSObject UI = static_cast<JSObject>(UI_property);
-		JSValue TwoDMatrix_property = UI.GetProperty("2DMatrix");
-		TITANIUM_ASSERT(TwoDMatrix_property.IsObject());
-		JSObject TwoDMatrix = static_cast<JSObject>(TwoDMatrix_property);
-		auto TwoDMatrix_obj = TwoDMatrix.CallAsConstructor(parameters);
-		Titanium::Module::applyProperties(parameters, TwoDMatrix_obj);
-		return TwoDMatrix_obj;
+	TITANIUM_FUNCTION(UIModule, create3DMatrix)
+	{
+		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
+		CREATE_TITANIUM_UI(Matrix3D);
 	}
 
 	TITANIUM_FUNCTION(UIModule, createActivityIndicator)
@@ -1329,9 +1331,15 @@ namespace Titanium
 		return *this;
 	}
 
-	UIModule& UIModule::TwoDMatrixClass(const JSClass& TwoDMatrix) TITANIUM_NOEXCEPT
+	UIModule& UIModule::Matrix2DClass(const JSClass& Matrix2D) TITANIUM_NOEXCEPT
 	{
-		twodmatrix__ = TwoDMatrix;
+		matrix2d__ = Matrix2D;
+		return *this;
+	}
+
+	UIModule& UIModule::Matrix3DClass(const JSClass& Matrix3D) TITANIUM_NOEXCEPT
+	{
+		matrix3d__ = Matrix3D;
 		return *this;
 	}
 
