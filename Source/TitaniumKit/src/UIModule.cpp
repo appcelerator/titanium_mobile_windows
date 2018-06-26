@@ -1039,12 +1039,14 @@ namespace Titanium
 
 	TITANIUM_FUNCTION(UIModule, create2DMatrix)
 	{
+		get_context().JSEvaluateScript("Ti.API.warn('Ti.UI.create2DMatrix DEPRECATED in 8.0.0, in favor of Ti.UI.createMatrix2D');");
 		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
 		CREATE_TITANIUM_UI(Matrix2D);
 	}
 
 	TITANIUM_FUNCTION(UIModule, create3DMatrix)
 	{
+		get_context().JSEvaluateScript("Ti.API.warn('Ti.UI.create3DMatrix DEPRECATED in 8.0.0, in favor of Ti.UI.createMatrix3D');");
 		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
 		CREATE_TITANIUM_UI(Matrix3D);
 	}
