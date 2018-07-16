@@ -1,15 +1,15 @@
 /**
-* Windows module build command.
-*
-* @module cli/_buildModule
-*
-* @copyright
-* Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
-*
-* @license
-* Licensed under the terms of the Apache Public License
-* Please see the LICENSE included with this distribution for details.
-*/
+ * Windows module build command.
+ *
+ * @module cli/_buildModule
+ *
+ * @copyright
+ * Copyright (c) 2015-2018 by Appcelerator, Inc. All Rights Reserved.
+ *
+ * @license
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ */
 
 var archiver = require('archiver'),
 	async = require('async'),
@@ -111,7 +111,6 @@ WindowsModuleBuilder.prototype.doAnalytics = function doAnalytics(next) {
 		eventName = 'windows.' + cli.argv.type;
 
 	cli.addAnalyticsEvent(eventName, {
-		dir: cli.argv['project-dir'],
 		name: manifest.name,
 		publisher: manifest.author,
 		appid: manifest.moduleid,

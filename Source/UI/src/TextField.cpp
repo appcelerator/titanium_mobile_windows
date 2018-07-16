@@ -288,6 +288,16 @@ namespace TitaniumWindows
 			}
 		}
 
+		void TextField::set_padding(const Titanium::UI::TextFieldPadding& padding) TITANIUM_NOEXCEPT
+		{
+			Thickness thickness;
+			thickness.Bottom = padding.bottom;
+			thickness.Top    = padding.top;
+			thickness.Left   = padding.left;
+			thickness.Right  = padding.right;
+			text_box__->Padding = thickness;
+		}
+
 		std::string TextField::get_value() const TITANIUM_NOEXCEPT
 		{
 			if (text_box__) {

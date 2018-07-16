@@ -33,8 +33,15 @@ namespace TitaniumWindows
 	{
 		// store supported native module names
 		for (const auto v : native_module_names) {
-			const auto insert_result = native_module_names__.emplace(v,  false);
-			TITANIUM_ASSERT(insert_result.second);
+			// The module name which ends with ".*" means it is a native namespace. 
+			// Then it should not be treated as a standard module.
+			if (boost::ends_with(v, ".*")) {
+				const auto insert_result = native_module_namespaces__.emplace(v);
+				TITANIUM_ASSERT(insert_result.second);
+			} else {
+				const auto insert_result = native_module_names__.emplace(v, false);
+				TITANIUM_ASSERT(insert_result.second);
+			}
 		}
 
 		// register preloaded modules
@@ -50,7 +57,7 @@ namespace TitaniumWindows
 
 	bool GlobalObject::requiredNativeModuleExists(const JSContext& js_context, const std::string& moduleId) const TITANIUM_NOEXCEPT
 	{
-		return native_module_names__.find(moduleId) != native_module_names__.end();
+		return native_module_names__.find(moduleId) != native_module_names__.end() || native_module_namespaces__.find(moduleId) != native_module_namespaces__.end();
 	}
 
 	JSValue GlobalObject::requireNativeModule(const JSContext& js_context, const std::string& moduleId) TITANIUM_NOEXCEPT
@@ -60,10 +67,10 @@ namespace TitaniumWindows
 			return native_module_cache__.at(moduleId);
 		}
 
-		TITANIUM_ASSERT(native_module_names__.find(moduleId) != native_module_names__.end());
-
-		// mark it as loaded
-		native_module_names__[moduleId] = true;
+		if (native_module_names__.find(moduleId) != native_module_names__.end()) {
+			// mark it as loaded
+			native_module_names__[moduleId] = true;
+		}
 
 		// otherwise try to load dynamically
 		return native_module_requireHook__(js_context, moduleId);
