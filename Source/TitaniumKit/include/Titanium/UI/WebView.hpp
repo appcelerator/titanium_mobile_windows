@@ -155,7 +155,7 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(scalesPageToFit);
 			TITANIUM_PROPERTY_DEF(url);
 			TITANIUM_PROPERTY_DEF(blacklistedURLs);
-			TITANIUM_PROPERTY_DEF(onLink);
+			TITANIUM_PROPERTY_DEF(onlink);
 			TITANIUM_FUNCTION_DEF(canGoBack);
 			TITANIUM_FUNCTION_DEF(canGoForward);
 			TITANIUM_FUNCTION_DEF(evalJS);
@@ -189,7 +189,7 @@ namespace Titanium
 				std::vector<std::uint8_t> data__;
 				std::string html__;
 				std::vector<std::string> blacklistedURLs__;
-				JSValue onLink__;
+				JSValue onlink__;
 #pragma warning(pop)
 
 		};

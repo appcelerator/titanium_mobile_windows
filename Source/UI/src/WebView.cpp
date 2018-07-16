@@ -311,14 +311,14 @@ namespace TitaniumWindows
 						return;
 					}
 
-					// onLink callback
-					if (onLink__.IsObject()) {
-						auto onLink = static_cast<JSObject>(onLink__);
-						if (onLink.IsFunction()) {
+					// onlink callback
+					if (onlink__.IsObject()) {
+						auto onlink = static_cast<JSObject>(onlink__);
+						if (onlink.IsFunction()) {
 							JSObject obj = get_context().CreateObject();
 							obj.SetProperty("url", get_context().CreateString(uri));
 							const std::vector<JSValue> args{ obj };
-							const auto result = onLink(args, get_object());
+							const auto result = onlink(args, get_object());
 							if (result.IsBoolean() && static_cast<bool>(result) == false) {
 								e->Cancel = true;
 								return;
