@@ -90,7 +90,8 @@ namespace TitaniumWindows
 								}
 								if (!layout->get_right().empty()) {
 									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
-									const auto rightPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_right(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+									const auto defaultUnit = Titanium::UI::ViewLayoutDelegate::GetDefaultUnit(get_context());
+									const auto rightPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_right(), Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnit);
 									if (width > rightPadding) {
 										label__->MaxWidth -= rightPadding;
 									}
@@ -101,8 +102,9 @@ namespace TitaniumWindows
 									label__->MaxHeight = height;
 								}
 								if (!layout->get_bottom().empty()) {
+									const auto defaultUnit = Titanium::UI::ViewLayoutDelegate::GetDefaultUnit(get_context());
 									const auto ppi = WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Height);
-									const auto bottomPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_height(), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+									const auto bottomPadding = Titanium::LayoutEngine::parseUnitValue(layout->get_height(), Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnit);
 									if (height > bottomPadding) {
 										label__->MaxHeight -= bottomPadding;
 									}

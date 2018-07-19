@@ -30,6 +30,10 @@ namespace TitaniumWindows
 			if (layout && label) {
 				EnsureRowComponentWidth(layout->getComponent());
 			}
+
+			// TIMOB-24856: Child view needs where to delegate its events
+			view->setBubbleEventData(bubbleEventData__);
+
 			TitaniumWindows::UI::WindowsViewLayoutDelegate::add(view);
 		}
 
@@ -45,7 +49,10 @@ namespace TitaniumWindows
 			Titanium::UI::TableViewRow::postCallAsConstructor(js_context, arguments);
 			content__ = ref new Windows::UI::Xaml::Controls::Canvas();
 
-			Titanium::UI::TableViewRow::setLayoutDelegate<WindowsTableViewRowLayoutDelegate>();
+			std::unordered_map<std::string, std::shared_ptr<Titanium::Module>> bubbleEventData;
+			bubbleEventData.emplace("TableViewRow", get_object().GetPrivate<TableViewRow>());
+
+			Titanium::UI::TableViewRow::setLayoutDelegate<WindowsTableViewRowLayoutDelegate>(bubbleEventData);
 			layoutDelegate__->set_defaultWidth(Titanium::UI::LAYOUT::FILL);
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::SIZE);
 

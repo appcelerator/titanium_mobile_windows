@@ -11,6 +11,7 @@
 #include <concrt.h>
 #include <collection.h>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 using namespace Windows::Storage;
 using namespace Windows::Foundation::Collections;
@@ -35,6 +36,14 @@ namespace TitaniumWindows
 			std::replace(name.begin(), name.end(), '/', '\\');
 			// remove duplicate separators!
 			boost::algorithm::replace_all(name, "\\\\", "\\");
+			// remove leading ./
+			if (boost::starts_with(name, ".\\")) {
+				boost::algorithm::replace_first(name, ".\\", "");
+			}
+			// remove leading /
+			if (boost::starts_with(name, "\\")) {
+				boost::algorithm::replace_first(name, "\\", "");
+			}
 			return name;
 		}
 

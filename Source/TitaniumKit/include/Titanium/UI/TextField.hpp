@@ -22,6 +22,22 @@ namespace Titanium
 		class AttributedString;
 
 		/*!
+		  @struct
+		  @discussion Dictionary object of parameters for the Titanium.UI.TextField.padding that describes the padding
+		  See https://docs.appcelerator.com/platform/latest/#!/api/TextFieldPadding
+		*/
+		struct TextFieldPadding
+		{
+			double bottom{ 0 };
+			double left{ 0 };
+			double right{ 0 };
+			double top{ 0 };
+		};
+
+		TITANIUMKIT_EXPORT TextFieldPadding js_to_TextFieldPadding(const JSObject& object);
+		TITANIUMKIT_EXPORT JSObject TextFieldPadding_to_js(const JSContext& js_context, const TextFieldPadding& params);
+
+		/*!
 		  @class
 
 		  @discussion This is the Titanium.UI.TextField module.
@@ -257,6 +273,15 @@ namespace Titanium
 			/*!
 			  @method
 
+			  @abstract padding
+
+			  @discussion Sets the padding of this text field.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(TextFieldPadding, padding);
+
+			/*!
+			  @method
+
 			  @abstract hasText() : Boolean
 
 			  @discussion Returns true if this text field contains text.
@@ -385,6 +410,10 @@ namespace Titanium
 
 			TITANIUM_FUNCTION_DEF(setSelection);
 
+			TITANIUM_PROPERTY_DEF(padding);
+			TITANIUM_FUNCTION_DEF(getPadding);
+			TITANIUM_FUNCTION_DEF(setPadding);
+
 		private:
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -410,6 +439,7 @@ namespace Titanium
 			TEXT_ALIGNMENT textAlign__;
 			std::string value__;
 			TEXT_VERTICAL_ALIGNMENT verticalAlign__;
+			TextFieldPadding padding__;
 #pragma warning(pop)
 		};
 	} // namespace UI
