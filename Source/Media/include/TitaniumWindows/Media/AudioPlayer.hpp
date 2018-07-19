@@ -34,7 +34,6 @@ namespace TitaniumWindows
 			virtual void set_paused(const bool& paused) TITANIUM_NOEXCEPT override;
 			virtual void set_url(const std::string& url) TITANIUM_NOEXCEPT override;
 			virtual void set_volume(const double& volume) TITANIUM_NOEXCEPT override;
-			virtual void set_allowBackground(const bool& allowBackground) TITANIUM_NOEXCEPT override;
 			virtual std::chrono::milliseconds get_time() const TITANIUM_NOEXCEPT override;
 
 			virtual void pause() TITANIUM_NOEXCEPT override;
@@ -62,10 +61,8 @@ namespace TitaniumWindows
 
 		protected:
 			Windows::Media::SystemMediaTransportControls^ controls__;
-			Windows::UI::Xaml::Controls::MediaElement^ player__;
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			Windows::Media::Playback::MediaPlayer^ background_player__;
-#endif
+			Windows::Media::Playback::MediaPlayer^ player__;
+
 			Windows::Foundation::EventRegistrationToken complete_event__;
 			Windows::Foundation::EventRegistrationToken failed_event__;
 			Windows::Foundation::EventRegistrationToken background_complete_event__;

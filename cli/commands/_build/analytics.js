@@ -39,7 +39,6 @@ function doAnalytics(next) {
 	}
 
 	this.cli.addAnalyticsEvent(eventName, {
-		dir: this.projectDir,
 		name: tiapp.name,
 		publisher: tiapp.publisher,
 		url: tiapp.url,

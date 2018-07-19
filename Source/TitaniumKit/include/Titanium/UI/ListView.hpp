@@ -54,7 +54,7 @@ namespace Titanium
 				loadJS();
 				
 				std::vector<std::shared_ptr<T>> items;
-				const std::vector<JSValue> args { get_object(), model__->getSectionAtIndex(index)->get_object() };
+				const std::vector<JSValue> args { get_object(), model__->getSectionAtIndex(index)->get_object(), get_context().CreateNumber(index) };
 				JSValue result = sectionViewCreateFunction__(args, ti_listview_exports__);
 				TITANIUM_ASSERT(result.IsObject());
 				auto js_items = static_cast<JSObject>(result);
@@ -73,7 +73,8 @@ namespace Titanium
 				loadJS();
 				const auto section = model__->getSectionAtIndex(sectionIndex);
 				const auto item = section->getItemAt(itemIndex);			
-				const std::vector<JSValue> args { get_object(), section->get_object(), ListDataItem_to_js(get_context(), item) };
+				const auto ctx = get_context();
+				const std::vector<JSValue> args { get_object(), section->get_object(), ListDataItem_to_js(ctx, item), ctx.CreateNumber(sectionIndex), ctx.CreateNumber(itemIndex) };
 				JSValue js_view = sectionViewItemCreateFunction__(args, ti_listview_exports__);
 				TITANIUM_ASSERT(js_view.IsObject());
 				return static_cast<JSObject>(js_view).GetPrivate<T>();

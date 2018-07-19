@@ -91,8 +91,9 @@ namespace TitaniumWindows
 		void ActivityIndicator::set_indicatorDiameter(const std::string& diameter) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::ActivityIndicator::set_indicatorDiameter(diameter);
+			const auto defaultUnit = Titanium::UI::ViewLayoutDelegate::GetDefaultUnit(get_context());
 			const auto ppi = TitaniumWindows::UI::WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
-			const auto value = Titanium::LayoutEngine::parseUnitValue(diameter, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+			const auto value = Titanium::LayoutEngine::parseUnitValue(diameter, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnit);
 			ring__->Width  = value;
 			ring__->Height = value;
 		}
