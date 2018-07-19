@@ -435,7 +435,9 @@ namespace Titanium
 
 	TITANIUM_PROPERTY_SETTER(GeolocationModule, accuracy)
 	{
-		TITANIUM_ASSERT(argument.IsNumber());
+		if (!argument.IsNumber()) {
+			HAL::detail::ThrowRuntimeError("Invalid argument supplied", "Ti.Geolocation.accuracy expects Number");
+		}
 		const auto accuracy = Titanium::Geolocation::Constants::to_ACCURACY(static_cast<std::underlying_type<Geolocation::ACCURACY>::type>(argument));
 		set_accuracy(accuracy);
 		return true;

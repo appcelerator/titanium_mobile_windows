@@ -495,30 +495,38 @@ namespace Titanium
 				console.warn  = Ti.API.warn;
 				console.error = Ti.API.error;
 				console.debug = Ti.API.debug;
-				console.time = function (label) {
+				console.time = function (label = 'default') {
 					if (console._times[label]) {
-						console.warn('Label "' + label + '" already exists');
+						console.warn(`Label ${label} already exists`);
 						return;
-					}
-					if (!label) {
-						label = 'default';
 					}
 					console._times[label] = Date.now();
 				};
-				console.timeEnd = function (label) {
-					if (!label) {
-						label = 'default';
+				console.timeEnd = function (label = 'default') {
+					const warned = logTime(label);
+					if (!warned) {
+						delete console._times[label];
 					}
-					var startTime = console._times[label];
-					if (!startTime) {
-						console.warn('Label "' + label + '" does not exist');
-						return;
-					}
-					var duration = Date.now() - startTime;
-					console.log(label + ': ' + duration + 'ms');
-					delete console._times[label];
 				};
-			
+				
+				console.timeLog = function (label = 'default', ...logData) {
+					logTime(label, logData);
+				}
+
+				function logTime(label , logData) {
+					const startTime = console._times[label];
+					if (!startTime) {
+						console.warn(`Label "${label}" does not exist`);
+						return true;
+					}
+					const duration = Date.now() - startTime;
+					if (logData) {
+						console.log(`${label}: ${duration}ms`, ...logData);
+					} else {
+						console.log(`${label}: ${duration}ms`);
+					}
+					return false;
+				}
 
 				// Create the global alert function
 				alert = function (_msg) {

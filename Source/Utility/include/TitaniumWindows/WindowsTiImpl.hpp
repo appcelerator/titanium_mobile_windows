@@ -14,9 +14,7 @@
 
 
 #define TITANIUMWINDOWS_EXCEPTION_SHOW_REDSCREEN(EX, CTX) \
-    std::ostringstream os; \
-    os << "Runtime Error: " << TitaniumWindows::Utility::ConvertString(EX->Message); \
-    Titanium::Module::ShowRedScreenOfDeath(CTX, os.str()); \
+    Titanium::Module::ShowRedScreenOfDeath(CTX, TitaniumWindows::Utility::ConvertString(EX->Message)); \
 
 #define TITANIUMWINDOWS_EXCEPTION_CATCH_END_CTX(CTX) \
 catch (::Platform::Exception^ ex) { \

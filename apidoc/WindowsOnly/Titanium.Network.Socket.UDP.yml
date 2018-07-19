@@ -1,15 +1,15 @@
 name: Titanium.Network.Socket.UDP
-summary: UDP socket. 
+summary: UDP socket.
 description: |
     Most socket operations are asynchronous. When you create a socket, you can define
-    callback funtions to receive the results of API calls, as well as to handle incoming
+    callback functions to receive the results of API calls, as well as to handle incoming
     data.
 
-    For example, for a client-side socket, you define 
+    For example, for a client-side socket, you define
     [started](Titanium.Network.Socket.UDP.started) and
     [error](Titanium.Network.Socket.UDP.error) callback functions.
-    
-    A familiarity with the basics of BSD socket programming is a recommended before using 
+
+    A familiarity with the basics of BSD socket programming is recommended before using
     sockets with Titanium.
 
     Use the <Titanium.Network.Socket.createUDP> method to create a UDP socket.
@@ -17,7 +17,7 @@ extends: Titanium.IOStream
 platforms: [windowsphone]
 createable: true
 examples:
-  - title: Simple UDP Socket 
+  - title: Simple UDP Socket
     example: |
             var socket = Ti.Network.Socket.createUDP({
                 started: function (e) {
@@ -72,16 +72,16 @@ methods:
         type: String
       - name: data
         summary: The data to send in the UDP packet.
-        type: Array<Number>      
+        type: Array<Number>
 
 properties:
   - name: port
     type: Number
-    summary: The port to connect to or listen on. 
+    summary: The port to connect to or listen on.
 
   - name: started
     type: Callback<StartedCallbackArgs>
-    summary: Callback to be fired when the local UDP socket enters the "bound" state. 
+    summary: Callback to be fired when the local UDP socket enters the "bound" state.
 
   - name: data
     type: Callback<DataCallbackArgs>
@@ -129,4 +129,3 @@ properties:
   - name: port
     summary: The local port on which the data arrived.
     type: String
-

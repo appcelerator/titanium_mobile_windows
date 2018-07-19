@@ -41,6 +41,26 @@ namespace TitaniumWindows
 
 			contentView__.GetPrivate<View>()->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->requestLayout(fire_event);
 		}
+		std::shared_ptr<Titanium::UI::View> ScrollViewLayoutDelegate::sourceTest(::Platform::Object ^ source, const std::shared_ptr<Titanium::UI::View>& root)
+		{
+			const auto sender = WindowsViewLayoutDelegate::sourceTest(source, root);
+			if (sender) {
+				return sender;
+			}
+
+			// ScrollViewer may return one of its child components for click event
+			const auto grid = dynamic_cast<Controls::Grid ^>(source);
+			if (grid) {
+				for (unsigned int i = 0; i < grid->Children->Size; i++) {
+					if (dynamic_cast<Controls::ScrollContentPresenter ^>(grid->Children->GetAt(i))) {
+						return root;
+					}				
+				}
+			}
+
+			return nullptr;
+		}
+
 
 		
 		void ScrollViewLayoutDelegate::add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
