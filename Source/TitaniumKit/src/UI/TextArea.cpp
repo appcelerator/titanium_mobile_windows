@@ -34,6 +34,34 @@ namespace Titanium
 			return object;
 		}
 
+		TextAreaPadding js_to_TextAreaPadding(const JSObject& object)
+		{
+			TextAreaPadding params;
+			if (object.HasProperty("bottom")) {
+				params.bottom = static_cast<double>(object.GetProperty("bottom"));
+			}
+			if (object.HasProperty("top")) {
+				params.top = static_cast<double>(object.GetProperty("top"));
+			}
+			if (object.HasProperty("left")) {
+				params.left = static_cast<double>(object.GetProperty("left"));
+			}
+			if (object.HasProperty("right")) {
+				params.right = static_cast<double>(object.GetProperty("right"));
+			}
+			return params;
+		};
+
+		JSObject TextAreaPadding_to_js(const JSContext& js_context, const TextAreaPadding& params)
+		{
+			auto object = js_context.CreateObject();
+			object.SetProperty("bottom", js_context.CreateNumber(params.bottom));
+			object.SetProperty("top", js_context.CreateNumber(params.top));
+			object.SetProperty("left", js_context.CreateNumber(params.left));
+			object.SetProperty("right", js_context.CreateNumber(params.right));
+			return object;
+		}
+
 		TextArea::TextArea(const JSContext& js_context, const std::vector<JSValue>& arguments) TITANIUM_NOEXCEPT
 			: View(js_context, "Ti.UI.TextArea"),
 			appearance__(KEYBOARD_APPEARANCE::DEFAULT),
@@ -85,6 +113,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(TextArea, std::string, value)
 		TITANIUM_PROPERTY_READWRITE(TextArea, bool, scrollable)
 		TITANIUM_PROPERTY_READWRITE(TextArea, std::shared_ptr<AttributedString>, attributedString)
+		TITANIUM_PROPERTY_READWRITE(TextArea, TextAreaPadding, padding)
 
 		TextAreaSelectedParams TextArea::get_selection() const TITANIUM_NOEXCEPT
 		{
@@ -142,6 +171,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(TextArea, textAlign);
 			TITANIUM_ADD_PROPERTY(TextArea, value);
 			TITANIUM_ADD_PROPERTY(TextArea, verticalAlign);
+			TITANIUM_ADD_PROPERTY(TextArea, padding);
 
 			TITANIUM_ADD_FUNCTION(TextArea, blur);
 			TITANIUM_ADD_FUNCTION(TextArea, focus);
@@ -197,6 +227,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(TextArea, setTextAlign);
 			TITANIUM_ADD_FUNCTION(TextArea, getVerticalAlign);
 			TITANIUM_ADD_FUNCTION(TextArea, setVerticalAlign);
+			TITANIUM_ADD_FUNCTION(TextArea, getPadding);
+			TITANIUM_ADD_FUNCTION(TextArea, setPadding);
 		}
 
 		TITANIUM_PROPERTY_GETTER(TextArea, appearance)
@@ -214,6 +246,9 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER_OBJECT(TextArea, attributedString)
 		TITANIUM_PROPERTY_SETTER_OBJECT(TextArea, attributedString, AttributedString)
+
+		TITANIUM_PROPERTY_GETTER_STRUCT(TextArea, padding, TextAreaPadding)
+		TITANIUM_PROPERTY_SETTER_STRUCT(TextArea, padding, TextAreaPadding)
 
 		TITANIUM_PROPERTY_GETTER(TextArea, autocapitalization)
 		{
@@ -467,6 +502,9 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_AS_GETTER(TextArea, getVerticalAlign, verticalAlign)
 		TITANIUM_FUNCTION_AS_SETTER(TextArea, setVerticalAlign, verticalAlign)
+
+		TITANIUM_FUNCTION_AS_GETTER(TextArea, getPadding, padding)
+		TITANIUM_FUNCTION_AS_SETTER(TextArea, setPadding, padding)
 
 	} // namespace UI
 } // namespace Titanium

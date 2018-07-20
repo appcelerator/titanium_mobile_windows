@@ -137,14 +137,41 @@ namespace Titanium
 		TITANIUM_LOG_DEBUG(apiName__, " afterPropertiesSet for ", this);
 	}
 
+	void Module::ShowRedScreenOfDeath(const JSContext& ctx, const HAL::detail::js_runtime_error& e) TITANIUM_NOEXCEPT
+	{
+		try {
+			auto js_error = ctx.CreateError();
+			js_error.SetProperty("message", ctx.CreateString(e.js_message()));
+			js_error.SetProperty("name", ctx.CreateString(e.js_name()));
+			js_error.SetProperty("fileName", ctx.CreateString(e.js_filename()));
+			js_error.SetProperty("stack", ctx.CreateString(e.js_stack()));
+			js_error.SetProperty("nativeStack", ctx.CreateString(e.js_nativeStack()));
+			js_error.SetProperty("lineNumber", ctx.CreateNumber(e.js_linenumber()));
+
+			const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
+			auto rsod_func = static_cast<JSObject>(rsod);
+			const std::vector<JSValue> args = { js_error };
+			rsod_func(args, rsod_func);
+			HAL::JSError::ClearNativeStack();
+		}
+		catch (...) {
+			// Just to make sure we don't throw another exception :(
+		}
+
+	}
+
 	void Module::ShowRedScreenOfDeath(const JSContext& ctx, const std::string& message) TITANIUM_NOEXCEPT
 	{
 		try {
-			const auto what = ctx.CreateString(message);
+			auto js_error = ctx.CreateError();
+			js_error.SetProperty("message", ctx.CreateString(message));
+			js_error.SetProperty("nativeStack", ctx.CreateString(HAL::JSError::GetNativeStack()));
+
 			const auto rsod = ctx.get_global_object().GetProperty("Titanium_RedScreenOfDeath");
 			auto rsod_func = static_cast<JSObject>(rsod);
-			const std::vector<JSValue> args = { what };
+			const std::vector<JSValue> args = { js_error };
 			rsod_func(args, rsod_func);
+			HAL::JSError::ClearNativeStack();
 		} catch (...) {
 			// Just to make sure we don't throw another exception :(
 		}
@@ -160,14 +187,36 @@ namespace Titanium
 		fireEvent(name, get_context().CreateObject());
 	}
 
-	void Module::fireEvent(const std::string& name, const JSObject& event) TITANIUM_NOEXCEPT
+	void Module::fireEvent(const std::string& name, const JSObject& event, const bool& propagate) TITANIUM_NOEXCEPT
 	{
 		if (!enableEvents__) {
 			TITANIUM_LOG_WARN(apiName__, " fireEvent: Stopped firing '", name, "'");
 			return;
 		}
+
+		// bubbleParent:
+		// 1. if bubbleParent=true and parent listens to the event, invoke event for both
+		// 2. if bubbleParent=false and parent listens to the event, don't fire parent event
+
+		// if source is not 'this' module and its bubleParent=false, leave it to the source
+		const auto source = event.GetProperty("source");
+		if (source.IsObject()) {
+			const auto sourceObj = static_cast<JSObject>(source).GetPrivate<Module>();
+			if (sourceObj && !sourceObj->get_bubbleParent()) {
+				return;
+			}
+		}
+
+		// if this module does not listen to it
 		if (event_listener_map__.find(name) == event_listener_map__.end()) {
-			TITANIUM_LOG_WARN(apiName__, " fireEvent: No event named '", name, "' has been added");
+			// bubbleParent=true and parent listens to it? then invoke parent event
+			const auto parent = get_object().GetProperty("parent");
+			if (propagate && get_bubbleParent() && parent.IsObject()) {
+				const auto parentObj = static_cast<JSObject>(parent).GetPrivate<Module>();
+				if (parentObj) {
+					parentObj->fireEvent(name, event);
+				}
+			}
 			return;
 		}
 

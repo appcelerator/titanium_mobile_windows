@@ -141,6 +141,7 @@ function runCMake(logger, cmake, projectDir, targetEnv, targetArch, targetGenera
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + targetPlatform,
 			'-DCMAKE_SYSTEM_VERSION=' + targetVersion,
+			'-DHAL_RENAME_AXWAYHAL=ON',
 			path.join(projectDir)
 		],
 		{

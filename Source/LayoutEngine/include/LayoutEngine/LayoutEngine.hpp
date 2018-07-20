@@ -21,6 +21,8 @@ namespace Titanium
 {
 	namespace LayoutEngine
 	{
+		extern double PhysicalPixelsFactor;
+
 		struct Rect
 		{
 			double width = 0;

@@ -404,7 +404,7 @@ namespace TitaniumWindows
 
 		std::string WebView::get_url() const TITANIUM_NOEXCEPT
 		{
-			if (webview__->Source != nullptr) {
+			if (webview__ && webview__->Source != nullptr) {
 				return TitaniumWindows::Utility::ConvertUTF8String(webview__->Source->ToString());
 			} else {
 				return "";

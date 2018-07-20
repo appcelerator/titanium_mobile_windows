@@ -41,6 +41,26 @@ namespace TitaniumWindows
 
 			contentView__.GetPrivate<View>()->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->requestLayout(fire_event);
 		}
+		std::shared_ptr<Titanium::UI::View> ScrollViewLayoutDelegate::sourceTest(::Platform::Object ^ source, const std::shared_ptr<Titanium::UI::View>& root)
+		{
+			const auto sender = WindowsViewLayoutDelegate::sourceTest(source, root);
+			if (sender) {
+				return sender;
+			}
+
+			// ScrollViewer may return one of its child components for click event
+			const auto grid = dynamic_cast<Controls::Grid ^>(source);
+			if (grid) {
+				for (unsigned int i = 0; i < grid->Children->Size; i++) {
+					if (dynamic_cast<Controls::ScrollContentPresenter ^>(grid->Children->GetAt(i))) {
+						return root;
+					}				
+				}
+			}
+
+			return nullptr;
+		}
+
 
 		
 		void ScrollViewLayoutDelegate::add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
@@ -302,7 +322,7 @@ namespace TitaniumWindows
 
 		bool ScrollView::get_scrollingEnabled() const TITANIUM_NOEXCEPT
 		{
-			return scroll_viewer__->HorizontalScrollMode != Windows::UI::Xaml::Controls::ScrollMode::Disabled;
+			return scroll_viewer__ && scroll_viewer__->HorizontalScrollMode != Windows::UI::Xaml::Controls::ScrollMode::Disabled;
 		}
 
 		void ScrollView::set_scrollingEnabled(const bool& enabled) TITANIUM_NOEXCEPT
@@ -317,7 +337,7 @@ namespace TitaniumWindows
 
 		bool ScrollView::get_showHorizontalScrollIndicator() const TITANIUM_NOEXCEPT
 		{
-			return scroll_viewer__->HorizontalScrollBarVisibility != Windows::UI::Xaml::Controls::ScrollBarVisibility::Hidden;
+			return scroll_viewer__ && scroll_viewer__->HorizontalScrollBarVisibility != Windows::UI::Xaml::Controls::ScrollBarVisibility::Hidden;
 		}
 
 		void ScrollView::set_showHorizontalScrollIndicator(const bool& enabled) TITANIUM_NOEXCEPT
@@ -332,7 +352,7 @@ namespace TitaniumWindows
 
 		bool ScrollView::get_showVerticalScrollIndicator() const TITANIUM_NOEXCEPT
 		{
-			return scroll_viewer__->VerticalScrollBarVisibility != Windows::UI::Xaml::Controls::ScrollBarVisibility::Hidden;
+			return scroll_viewer__ && scroll_viewer__->VerticalScrollBarVisibility != Windows::UI::Xaml::Controls::ScrollBarVisibility::Hidden;
 		}
 
 		void ScrollView::set_showVerticalScrollIndicator(const bool& enabled) TITANIUM_NOEXCEPT

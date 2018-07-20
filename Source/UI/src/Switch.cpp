@@ -72,7 +72,7 @@ namespace TitaniumWindows
 
 		bool Switch::get_value() const TITANIUM_NOEXCEPT
 		{
-			return switch__->IsOn;
+			return switch__ && switch__->IsOn;
 		}
 
 		void Switch::set_value(const bool& value) TITANIUM_NOEXCEPT

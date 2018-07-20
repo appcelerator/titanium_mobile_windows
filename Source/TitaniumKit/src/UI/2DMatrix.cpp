@@ -52,14 +52,14 @@ namespace Titanium
 				const auto _0 = arguments.at(0);
 				TITANIUM_ASSERT(_0.IsObject());
 				const auto object = static_cast<JSObject>(_0);
-				Titanium::UI::MatrixCreationDict dict = Titanium::UI::js_to_MatrixCreationDict(object);
+				params__ = Titanium::UI::js_to_MatrixCreationDict(object);
 
 				auto blah = get_shared_ptr_for_module<Titanium::UI::TwoDMatrix>();
-				if (dict.rotate != 0) {
-					blah = rotate(dict.rotate, 0);
+				if (params__.rotate != 0) {
+					blah = rotate(params__.rotate, 0);
 				}
-				if (dict.scale != 1.0) {
-					blah = scale(dict.scale, dict.scale, 0, 0);
+				if (params__.scale != 1.0) {
+					blah = scale(params__.scale, params__.scale, 0, 0);
 				}
 
 				set_a(blah->get_a());

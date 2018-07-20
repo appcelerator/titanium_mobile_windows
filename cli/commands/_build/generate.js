@@ -79,12 +79,12 @@ function generateI18N(next) {
 		}),
 		template = fs.readFileSync(path.join(this.platformPath, 'templates', 'build', 'Resources.resw')).toString();
 
-	data.en || (data.en = {});
-	data.en.app || (data.en.app = {});
-	data.en.app.appname || (data.en.app.appname = this.tiapp.name);
+	data['en-US'] || (data['en-US'] = {});
+	data['en-US'].app || (data['en-US'].app = {});
+	data['en-US'].app.appname || (data['en-US'].app.appname = this.tiapp.name);
 
 	this.i18nVSResources = [];
-	this.defaultLanguage = 'en'; // set as 'en' for now
+	this.defaultLanguage = 'en-US'; // default language needs to be qualified (TIMOB-25183)
 
 	Object.keys(data).forEach(function (locale) {
 		var destDir = path.join(this.buildTargetStringsDir, locale),
@@ -109,7 +109,7 @@ function generateI18N(next) {
 
 		// process default app_name
 		if (!data[locale].strings.app_name) {
-			data[locale].strings.app_name = data[locale].app.appname ? data[locale].app.appname : data.en.app.appname;
+			data[locale].strings.app_name = data[locale].app.appname ? data[locale].app.appname : data['en-US'].app.appname;
 		}
 		// process default app_description
 		if (!data[locale].strings.app_description) {
@@ -249,11 +249,6 @@ function generateCmakeList(next) {
 	// Generate source groups!
 	// go through the asset list, and basically generate a group for each folder
 	assetList.forEach(function (filepath) {
-		// Skip scale-xx.png assets because WindowsStore doesn't need it
-		// TODO: we don't even need to copy these resources for WindowsStore
-		if (isBuildForWindowsStore && /.scale-\d+.png$/.test(filepath)) {
-			return;
-		}
 		// lop off Assets/
 		var truncatedPath = filepath.substring(7);
 		// drop the file basename?
@@ -566,15 +561,37 @@ function generateAppxManifestForPlatform(target, properties) {
 	var defaultApplications = {
 		Application: {
 			VisualElements: {
+				Square150x150Logo: 'Square150x150Logo.png',
+				Square44x44Logo:   'Square44x44Logo.png',
 				BackgroundColor: 'transparent',
-				ForegroundText: 'light',
+				DefaultTile: {
+					Square71x71Logo: 'Square71x71Logo.png',
+					Square310x310Logo: 'Square310x310Logo.png',
+				},
 				SplashScreen: {
-					BackgroundColor: '#b41100'
+					BackgroundColor: '#b41100',
+					Image: 'SplashScreen.png'
 				}
 			}
 		}
 	};
-	properties.Applications = defaultsdeep(applications, defaultApplications);
+
+	/*
+	 * Look for basename.png, if it does not exist then look for .scale-100.png because it should have same dimension
+	 */
+	function windowsScaledPNGAssetExists(basename) {
+		if (fs.existsSync(basename + '.png')) {
+			return true;
+		} else if (fs.existsSync(basename + '.scale-100.png')) {
+			return true;
+		}
+		return false;
+	}
+
+	// Enable Wide310x150Logo only when file exists
+	if (windowsScaledPNGAssetExists(path.join(this.buildTargetAssetsDir, 'Wide310x150Logo'))) {
+		defaultApplications.Application.VisualElements.DefaultTile.Wide310x150Logo = 'Wide310x150Logo.png';
+	}
 
 	// Enable badge logo only when BackgroundTask Extension is used.
 	var requiresBadgeLogo = false;
@@ -589,7 +606,15 @@ function generateAppxManifestForPlatform(target, properties) {
 			}
 		}
 	});
-	properties.requiresBadgeLogo = requiresBadgeLogo;
+	if (requiresBadgeLogo) {
+		defaultApplications.Application.VisualElements.LockScreen = 
+		{
+			Notification: 'badge',
+			BadgeLogo: 'Square24x24Logo.png'
+		};
+	}
+
+	properties.Applications = defaultsdeep(applications, defaultApplications);
 
 	this.vsSdkReferences = [];
 	properties.SDKReferences.forEach(function (node) {

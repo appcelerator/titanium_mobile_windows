@@ -71,6 +71,7 @@ namespace TitaniumWindows
 			virtual std::string get_value() const TITANIUM_NOEXCEPT override final;
 			virtual void set_value(const std::string&) TITANIUM_NOEXCEPT override final;
 			virtual void set_verticalAlign(const Titanium::UI::TEXT_VERTICAL_ALIGNMENT& verticalAlign) TITANIUM_NOEXCEPT override final;
+			virtual void set_padding(const Titanium::UI::TextAreaPadding& padding) TITANIUM_NOEXCEPT override final;
 
 			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
 			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
