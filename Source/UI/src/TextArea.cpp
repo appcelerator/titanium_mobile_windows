@@ -121,8 +121,10 @@ namespace TitaniumWindows
 		Titanium::UI::TextAreaSelectedParams TextArea::get_selection() const TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::TextAreaSelectedParams params;
-			params.location = text_box__->SelectionStart;
-			params.length   = text_box__->SelectionLength;
+			if (text_box__) {
+				params.location = text_box__->SelectionStart;
+				params.length = text_box__->SelectionLength;
+			}
 			return params;
 		}
 
@@ -140,9 +142,22 @@ namespace TitaniumWindows
 			}
 		}
 
+		void TextArea::set_padding(const Titanium::UI::TextAreaPadding& padding) TITANIUM_NOEXCEPT
+		{
+			Thickness thickness;
+			thickness.Bottom = padding.bottom;
+			thickness.Top = padding.top;
+			thickness.Left = padding.left;
+			thickness.Right = padding.right;
+			text_box__->Padding = thickness;
+		}
+
 		std::string TextArea::get_value() const TITANIUM_NOEXCEPT
 		{
-			return TitaniumWindows::Utility::ConvertUTF8String(text_box__->Text);
+			if (text_box__) {
+				return TitaniumWindows::Utility::ConvertUTF8String(text_box__->Text);
+			}
+			return std::string();
 		}
 
 		void TextArea::set_value(const std::string& value) TITANIUM_NOEXCEPT

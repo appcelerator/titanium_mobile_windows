@@ -39,6 +39,7 @@ namespace TitaniumWindows
 		TableView::~TableView()
 		{
 			tableview__->Loaded -= loaded_event__;
+			tableview__->ItemClick -= click_event__;
 		}
 
 		void TableView::resetTableDataBinding()
@@ -107,6 +108,45 @@ namespace TitaniumWindows
 					}
 				} catch (...) {
 					TITANIUM_LOG_DEBUG("Error at TableView::Loaded");
+				}
+			});
+
+			// TableView listens click event by default so it can notify TableViewRow.
+			click_event__ = tableview__->ItemClick += ref new Controls::ItemClickEventHandler(
+				[this](Platform::Object^ sender, Controls::ItemClickEventArgs^ e) {
+				try {
+					if (model__->empty()) {
+						TITANIUM_LOG_DEBUG("TableView is clicked but there's no data");
+						return;
+					}
+
+					const auto listview = safe_cast<Controls::ListView^>(sender);
+
+					uint32_t selectedIndex;
+					const auto found = listview->Items->IndexOf(e->ClickedItem, &selectedIndex);
+					if (!found) return;
+
+					const auto result = model__->searchRowBySelectedIndex(selectedIndex);
+
+					if (result.found) {
+						const auto ctx = get_context();
+						JSObject  eventArgs = ctx.CreateObject();
+						eventArgs.SetProperty("section", model__->getSectionAtIndex(result.sectionIndex)->get_object());
+						eventArgs.SetProperty("index", ctx.CreateNumber(result.fullIndex));
+
+						const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
+						const auto row = section->get_rows().at(result.rowIndex);
+						eventArgs.SetProperty("row", row->get_object());
+						eventArgs.SetProperty("rowData", row->get_data());
+						eventArgs.SetProperty("source", row->get_object());
+
+						// Make sure not to propagate this event to parent
+						row->fireEvent("click", eventArgs, false);
+
+						fireEvent("click", eventArgs);
+					}
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error At TableView.click");
 				}
 			});
 
@@ -389,6 +429,7 @@ namespace TitaniumWindows
 
 			for (uint32_t i = 0; i < rows.size(); i++) {
 				auto row = rows.at(i);
+				row->set_parent(get_object().GetPrivate<Titanium::UI::View>());
 				auto view = row->get_object().GetPrivate<TitaniumWindows::UI::TableViewRow>();
 				auto rowContent = view->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent();
 				TITANIUM_ASSERT(rowContent);
@@ -549,47 +590,14 @@ namespace TitaniumWindows
 
 		void TableView::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 		{
+			// Note: "click" event is handled by default at constructor
 			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->filterEvents({ "click", "touchmove" });
 
 			Titanium::UI::TableView::enableEvent(event_name);
 
 			const JSContext ctx = this->get_context();
 
-			if (event_name == "click") {
-				click_event__ = tableview__->ItemClick += ref new Controls::ItemClickEventHandler(
-					[this, ctx](Platform::Object^ sender, Controls::ItemClickEventArgs^ e) {
-					try {
-						if (model__->empty()) {
-							TITANIUM_LOG_DEBUG("TableView is clicked but there's no data");
-							return;
-						}
-
-						const auto listview = safe_cast<Controls::ListView^>(sender);
-
-						uint32_t selectedIndex;
-						const auto found = listview->Items->IndexOf(e->ClickedItem, &selectedIndex);
-						if (!found) return;
-
-						const auto result = model__->searchRowBySelectedIndex(selectedIndex);
-
-						if (result.found) {
-							JSObject  eventArgs = ctx.CreateObject();
-							eventArgs.SetProperty("sectionIndex", ctx.CreateNumber(result.sectionIndex));
-							eventArgs.SetProperty("index", ctx.CreateNumber(result.fullIndex));
-
-							const auto section = model__->getFilteredSectionAtIndex(result.sectionIndex);
-							const auto row = section->get_rows().at(result.rowIndex);
-							eventArgs.SetProperty("row", row->get_object());
-							eventArgs.SetProperty("rowData", row->get_data());
-							eventArgs.SetProperty("source", row->get_object());
-
-							fireEvent("click", eventArgs);
-						}
-					} catch (...) {
-						TITANIUM_LOG_DEBUG("Error At TableView.click");
-					}
-				});
-			} else if (event_name == "scroll") {
+			if (event_name == "scroll") {
 				// This means addEventListener is called after ListView.Loaded event.
 				if (scrollview__) {
 					registerScrollEvent();
@@ -621,9 +629,7 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::TableView::disableEvent(event_name);
 
-			if (event_name == "click") {
-				tableview__->ItemClick -= click_event__;
-			} else if (event_name == "scroll") {
+			if (event_name == "scroll") {
 				if (scrollview__) {
 					scrollview__->ViewChanging -= scroll_event__;
 				}
@@ -702,6 +708,8 @@ namespace TitaniumWindows
 			const std::uint32_t sectionIndex = model__->getSectionIndex(section);
 			TITANIUM_ASSERT(collectionViewItems__->Size > sectionIndex);
 
+			row->set_parent(get_object().GetPrivate<Titanium::UI::View>());
+
 			if (name == "append") {
 				auto new_row = row;
 				// copy existing properties when given row is already added to section
@@ -738,6 +746,7 @@ namespace TitaniumWindows
 					auto ctor   = get_context().CreateObject(JSExport<TitaniumWindows::UI::TableViewRow>::Class());
 					auto new_row = ctor.CallAsConstructor().GetPrivate<TitaniumWindows::UI::TableViewRow>();
 					new_row->applyProperties(row->get_data(), new_row->get_object());
+					new_row->set_parent(get_object().GetPrivate<Titanium::UI::View>());
 					updateRow(rowIndex, new_row, nullptr);
 				} else {
 					unbindCollectionViewSource();

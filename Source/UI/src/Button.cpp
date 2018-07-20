@@ -9,6 +9,8 @@
 #include "TitaniumWindows/UI/Button.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
+#include "TitaniumWindows/UI/TableViewRow.hpp"
+#include "Titanium/UI/TableViewSection.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
 
@@ -44,6 +46,47 @@ namespace TitaniumWindows
 					button__->BorderThickness = 0;
 				}
 			});
+
+			click_event__ = button__->Click += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
+				const auto button = safe_cast<Controls::Button^>(sender);
+				// Set center of the button since Button::Click does not provide position info
+				Windows::Foundation::Point pos;
+				pos.X = static_cast<float>(button->ActualWidth  * 0.5);
+				pos.Y = static_cast<float>(button->ActualHeight * 0.5);
+
+				const auto ctx = get_context();
+				JSObject  eventArgs = ctx.CreateObject();
+				eventArgs.SetProperty("x", ctx.CreateNumber(pos.X));
+				eventArgs.SetProperty("y", ctx.CreateNumber(pos.Y));
+				eventArgs.SetProperty("source", get_object());
+
+				// If button is part of TableViewRow, it needs additional data
+				const auto bubbleEventData = getBubbleEventData();
+				const auto isTableViewRow = bubbleEventData.find("TableViewRow") != bubbleEventData.end();
+				if (isTableViewRow) {
+					const auto row = std::dynamic_pointer_cast<Titanium::UI::TableViewRow>(bubbleEventData.at("TableViewRow"));
+					if (row) {
+						eventArgs.SetProperty("row", row->get_object());
+						eventArgs.SetProperty("rowData", row->get_data());
+						const auto section = row->get_section();
+						if (section) {
+							eventArgs.SetProperty("section", section->get_object());
+							eventArgs.SetProperty("index", ctx.CreateNumber(section->getItemIndex(row)));
+						}
+					}
+				}
+
+				if (hasEventListener("click")) {
+					fireEvent("click", eventArgs);
+				}
+
+				// Bubble to parent here because Xaml Button blocks propagating events (Only for TableViewRow)
+				const auto parent = get_parent();
+				if (isTableViewRow && parent && get_bubbleParent()) {
+					parent->fireEvent("click", eventArgs);
+				}
+			});
+
 
 			// TIMOB-19143: reset MinWidth to fix size issues
 			button__->MinWidth = 0;
@@ -128,7 +171,7 @@ namespace TitaniumWindows
 			//
 			// Disable some touch events because Xaml Button has a inconsistency on Pointer event handling.
 			//
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->filterEvents({ "touchstart", "touchend", "touchcancel" });
+			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->filterEvents({ "click", "touchstart", "touchend", "touchcancel" });
 
 			Titanium::UI::Button::enableEvent(event_name);
 		}

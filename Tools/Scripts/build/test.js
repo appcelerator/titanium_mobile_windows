@@ -307,7 +307,7 @@ function runBuild(target, deviceId, sdkVersion, count, next) {
 			'--target', target,
 			'--wp-sdk', sdkVersion,
 			'--win-publisher-id', '13AFB724-65F2-4F30-8994-C79399EDBD80',
-			'--no-prompt', '--no-colors'
+			'--no-prompt', '--no-colors', '--forceUnInstall'
 		];
 	if (deviceId) {
 		args = args.concat('--device-id', deviceId);

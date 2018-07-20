@@ -113,17 +113,20 @@ namespace Titanium
 				return;
 			}
 			auto view_ptr = view.GetPrivate<View>();
+
+			// For mixing Ti.Ui.View and native view.
+			if (view_ptr == nullptr) {
+				view_ptr = layoutDelegate__->rescueGetView(view);
+			}
+
+			TITANIUM_ASSERT(view_ptr != nullptr);
+
 			const auto parent_view_ptr = this->get_object().GetPrivate<View>();
 
 			// Compare parent, this indicates you're trying to add it before it's removed
 			if (view_ptr->get_parent() == parent_view_ptr) {
 				TITANIUM_LOG_WARN("View.add: This indicates this component is already added");
 				return;
-			}
-
-			// For mixing Ti.Ui.View and native view.
-			if (view_ptr == nullptr) {
-				view_ptr = layoutDelegate__->rescueGetView(view);
 			}
 
 			view_ptr->set_parent(parent_view_ptr);

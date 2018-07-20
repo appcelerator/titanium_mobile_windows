@@ -301,6 +301,15 @@ function copyResources(next) {
 				required: true
 			},
 
+			// Square310x310Logo
+			{
+				description: 'Square310x310Logo.png - Used for logo',
+				file: path.join(appIconSetDir, 'Square310x310Logo.png'),
+				width: 310,
+				height: 310,
+				required: true
+			},
+
 			// Logo.png
 			{
 				description: 'Logo.png - Used for logo',
@@ -328,7 +337,6 @@ function copyResources(next) {
 				required: true
 			}
 
-			// TODO: Generate SplashScreen.scale-100.png?
 		],
 		md5 = function (file) {
 			return crypto
@@ -337,17 +345,43 @@ function copyResources(next) {
 				.digest('hex')
 		};
 
+		/*
+		 * Look for basename.png, if it does not exist then look for .scale-100.png because it should have same dimension
+		 */
+		function windowsScaledPNGAssetSelect(filename) {
+			var extname = path.extname(filename),
+				basename = filename.substr(0, filename.length - extname.length),
+				scaledname = basename + '.scale-100' + extname;
+			if (fs.existsSync(scaledname)) {
+				return scaledname;
+			}
+			return filename;
+		}
+
 		// if the app icon does not exist then check if it exists in the project root
 		// if it does not exist in project root then generate the missing icon
 		for (var i = missingIcons.length - 1; i >= 0; i--) {
+
+			// if file does not exist then look for .scale-100.png 
+			// because it should have same dimension
+			missingIcons[i].file = windowsScaledPNGAssetSelect(missingIcons[i].file);
+
 			var icon = missingIcons[i],
 				platformResourceIcon = path.join(this.projectDir, 'Resources', 'Windows', path.basename(icon.file)),
+				alloyPlatformResourceIcon = path.join(this.projectDir, 'app', 'assets', 'windows', path.basename(icon.file)),
 				resourceIcon = path.join(this.projectDir, 'Resources', path.basename(icon.file));
 			if (fs.existsSync(platformResourceIcon)) {
 				if (fs.existsSync(icon.file) && md5(icon.file) === md5(platformResourceIcon)) {
 					this.logger.debug(__('%s already exists, skipping...', icon.file));
 				} else {
 					copyFile.call(this, platformResourceIcon, icon.file);
+				}
+				missingIcons.splice(i, 1);
+			} else if (fs.existsSync(alloyPlatformResourceIcon)) {
+				if (fs.existsSync(icon.file) && md5(icon.file) === md5(alloyPlatformResourceIcon)) {
+					this.logger.debug(__('%s already exists, skipping...', icon.file));
+				} else {
+					copyFile.call(this, alloyPlatformResourceIcon, icon.file);
 				}
 				missingIcons.splice(i, 1);
 			} else {
@@ -425,14 +459,32 @@ function copyResources(next) {
 		},
 
 		function (cb) {
-			var src = path.join(this.platformPath, 'lib', 'HAL', this.cmakePlatformAbbrev, this.arch, 'HAL.dll');
+			var src = path.join(this.platformPath, 'lib', 'HAL', this.cmakePlatformAbbrev, this.arch, 'AXWAYHAL.dll');
 			copyFile.call(this,
 				src,
-				path.join(this.buildDir, 'lib', 'HAL.dll'),
+				path.join(this.buildDir, 'lib', 'AXWAYHAL.dll'),
 				cb);
 		},
 
-		createAppIconSet
+		createAppIconSet,
+
+		// Remove SplashScreen.png if scaled assets (.scale-100.png) exists.
+		function(cb) {
+			var basename    = 'SplashScreen.scale-100.png',
+				candidates = [path.join(this.projectDir, 'Resources', 'Windows', basename),
+							  path.join(this.projectDir, 'app', 'assets', 'windows', basename),
+							  path.join(this.projectDir, 'Resources', basename) ],
+		 		splashAsset = path.join(this.buildDir, 'Assets', 'SplashScreen.png');
+
+		 	for (var i = 0; i < candidates.length; i++) {
+				if (fs.existsSync(candidates[i]) && fs.existsSync(splashAsset)) {
+					this.logger.debug('Removing SplashScreen.png as scaled-100 asset found.');
+					fs.unlinkSync(splashAsset)
+					break;
+				}
+		 	}
+		 	cb();
+		}
 	];
 
 	// copy all commonjs modules
@@ -610,7 +662,8 @@ function copyResources(next) {
 								transpile: this.transpile,
 								targets: {
 									safari: '10' // matches the version of jscore we use
-								}
+								},
+								resourcesDir: this.buildTargetAssetsDir
 							});
 							const newContents = r.contents;
 
@@ -667,7 +720,7 @@ function copyResources(next) {
 					analytics: this.tiapp.analytics,
 					publisher: this.tiapp.publisher,
 					url: this.tiapp.url,
-					version: this.tiapp.version,
+					version: this.buildVersion,
 					description: this.tiapp.description,
 					copyright: this.tiapp.copyright,
 					guid: this.tiapp.guid,
