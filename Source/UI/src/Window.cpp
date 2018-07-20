@@ -334,11 +334,14 @@ namespace TitaniumWindows
 			float width  = currentBounds.Width;
 			float height = currentBounds.Height;
 
-			if (!strWidth.empty() && std::all_of(strWidth.begin(), strWidth.end(), ::isdigit)) {
-				width = std::stof(strWidth);
+			const auto defaultUnit = Titanium::UI::ViewLayoutDelegate::GetDefaultUnit(get_context());
+			const auto ppi = TitaniumWindows::UI::WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
+
+			if (!strWidth.empty()) {
+				width = static_cast<float>(Titanium::LayoutEngine::parseUnitValue(strWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnit));
 			}
-			if (!strHeight.empty() && std::all_of(strHeight.begin(), strHeight.end(), ::isdigit)) {
-				height = std::stof(strHeight);
+			if (!strHeight.empty()) {
+				height = static_cast<float>(Titanium::LayoutEngine::parseUnitValue(strHeight, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnit));
 			}
 
 			// TryResizeView returns false when given size is too small/big. We don't have a way to get valid range here unfortunately.
@@ -386,14 +389,16 @@ namespace TitaniumWindows
 			SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = window_stack__.size() > 1 ? AppViewBackButtonVisibility::Visible : AppViewBackButtonVisibility::Collapsed;
 #endif
 
-			// start accepting events
-			enableEvents();
+			TitaniumWindows::Utility::RunOnUIThread([this]() {
+				// start accepting events
+				enableEvents();
 
-			// Fire open event on this window
-			fireEvent("open");
+				// Fire open event on this window
+				fireEvent("open");
 
-			// Fire focus event on this window
-			focus();
+				// Fire focus event on this window
+				focus();
+			});
 		}
 
 		void Window::set_orientationModes(const std::vector<Titanium::UI::ORIENTATION>& modes) TITANIUM_NOEXCEPT

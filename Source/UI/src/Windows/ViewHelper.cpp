@@ -40,8 +40,9 @@ namespace TitaniumWindows
 					}
 				}
 				if (font.fontSize.length() > 0) {
+					const auto defaultUnit = Titanium::UI::ViewLayoutDelegate::GetDefaultUnit(js_context);
 					const auto ppi = TitaniumWindows::UI::WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
-					component->FontSize = Titanium::LayoutEngine::parseUnitValue(font.fontSize, Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+					component->FontSize = Titanium::LayoutEngine::parseUnitValue(font.fontSize, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnit);
 				}
 
 				if (font.fontStyle == Titanium::UI::FONT_STYLE::ITALIC) {
