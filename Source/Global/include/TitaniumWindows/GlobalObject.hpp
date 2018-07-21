@@ -37,6 +37,11 @@ namespace TitaniumWindows
 		GlobalObject& operator=(GlobalObject&&) = default;
 #endif
 
+		virtual unsigned setTimeout(JSObject& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT override;
+		virtual unsigned setInterval(JSObject& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT override;
+		virtual void clearTimeout(const unsigned& timerId) TITANIUM_NOEXCEPT override;
+		virtual void clearInterval(const unsigned& timerId) TITANIUM_NOEXCEPT override;
+
 		static void JSExportInitialize();
 		void setSeed(::Platform::String^ seed);
 		virtual std::string readRequiredModule(const JSObject& parent, const std::string& path) const override final;
@@ -54,6 +59,11 @@ namespace TitaniumWindows
 		// cache for native module
 		std::unordered_map<std::string, JSValue> native_module_cache__;
 		std::function<JSValue(const JSContext& js_context, const std::string&)> native_module_requireHook__;
+
+		Windows::Foundation::Collections::IMap<unsigned, Windows::System::Threading::ThreadPoolTimer^>^ timer_dispatcher_map__;
+		std::unordered_map<unsigned, JSObject> timer_callback_map__;
+		static std::atomic<unsigned> timer_id_generator__;
+
 #pragma warning(pop)
 
 		// native module
@@ -61,7 +71,8 @@ namespace TitaniumWindows
 		virtual JSValue requireNativeModule(const JSContext& js_context, const std::string& moduleId) TITANIUM_NOEXCEPT override;
 
 		virtual bool requiredModuleExists(const std::string& path) const TITANIUM_NOEXCEPT override final;
-		virtual std::shared_ptr<Titanium::GlobalObject::Timer> CreateTimer(Callback_t callback, const std::chrono::milliseconds& interval) const TITANIUM_NOEXCEPT override final;
+
+		unsigned invokeTimerCallback(JSObject& function, const std::chrono::milliseconds& delay, const bool isSetTimeout) TITANIUM_NOEXCEPT;
 
 	private:
 		::Platform::String^ seed__;

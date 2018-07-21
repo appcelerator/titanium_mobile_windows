@@ -8,11 +8,13 @@
 
 #include "TitaniumWindows/GlobalObject.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/Module.hpp"
 #include <ratio>
 #include <sstream>
-#include <concrt.h>
+#include <collection.h>
 #include <boost/algorithm/string.hpp>
 #include "TitaniumWindows/Utility.hpp"
+#include "TitaniumWindows/LogForwarder.hpp"
 
 using Windows::Security::Cryptography::Core::SymmetricAlgorithmNames;
 using Windows::Security::Cryptography::Core::SymmetricKeyAlgorithmProvider;
@@ -29,6 +31,99 @@ using concurrency::task_continuation_context;
 
 namespace TitaniumWindows
 {
+	std::atomic<std::uint32_t> GlobalObject::timer_id_generator__;
+
+	unsigned GlobalObject::setTimeout(JSObject& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT
+	{
+		return invokeTimerCallback(function, delay, true);
+	}
+
+	unsigned GlobalObject::setInterval(JSObject& function, const std::chrono::milliseconds& delay) TITANIUM_NOEXCEPT
+	{
+		return invokeTimerCallback(function, delay, false);
+	}
+
+	void GlobalObject::clearTimeout(const unsigned& timerId) TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_DEBUG("clearTimeout: ", timerId);
+
+		const bool timer_found = timer_dispatcher_map__->HasKey(timerId);
+
+		// dispatcher won't be found when interval equals zero
+		if (timer_found) {
+			timer_dispatcher_map__->Lookup(timerId)->Cancel();
+			timer_dispatcher_map__->Remove(timerId);
+		}
+
+		if (timer_callback_map__.find(timerId) != timer_callback_map__.end()) {
+			timer_callback_map__.erase(timerId);
+		}
+	}
+
+	void GlobalObject::clearInterval(const unsigned& timerId) TITANIUM_NOEXCEPT
+	{
+		clearTimeout(timerId);
+	}
+
+	unsigned GlobalObject::invokeTimerCallback(JSObject& function, const std::chrono::milliseconds& delay, const bool isSetTimeout) TITANIUM_NOEXCEPT
+	{
+		const auto timerId = timer_id_generator__++;
+		timer_callback_map__.emplace(timerId, function);
+
+		std::function<void()> run = [this, timerId, delay, function, isSetTimeout]() {
+			TitaniumWindows::Utility::RunOnUIThread(Windows::UI::Core::CoreDispatcherPriority::High, [this, timerId, delay, function, isSetTimeout]() {
+				TITANIUM_EXCEPTION_CATCH_START{
+					TITANIUM_LOG_DEBUG((isSetTimeout ? "setTimeout" : "setInterval"), ": id=", timerId, " delay=", delay.count());
+					const auto found = timer_callback_map__.find(timerId);
+
+					//
+					// This could happen when setInterval/Timeout is cleared while waiting for invocation.
+					// In that case we can just ignore the callback.
+					//
+					if (found == timer_callback_map__.end()) {
+						TITANIUM_LOG_DEBUG("setInterval/Timeout is cleared while waiting for invocation: ", timerId);
+						return;
+					}
+
+					auto callback = found->second;
+					TITANIUM_ASSERT(callback.IsFunction());
+					callback(get_context().get_global_object());
+
+					if (isSetTimeout) {
+						clearTimeout(timerId);
+					}
+				} TITANIUM_EXCEPTION_CATCH_END
+			});
+		};
+
+		//
+		// Invoke callback immediately when interval equals zero
+		//
+		if (delay.count() == 0) {
+			run();
+			return timerId;
+		}
+
+		// A Windows::Foundation::TimeSpan is a time period expressed in
+		// 100-nanosecond units.
+		//
+		// Reference:
+		// http://msdn.microsoft.com/en-us/library/windows/apps/windows.foundation.timespan
+		std::chrono::duration<std::chrono::nanoseconds::rep, std::ratio_multiply<std::ratio<100>, std::nano>> timer_interval_ticks = delay;
+
+		Windows::Foundation::TimeSpan time_span;
+		time_span.Duration = timer_interval_ticks.count();
+		auto dispatcher_timer = Windows::System::Threading::ThreadPoolTimer::CreatePeriodicTimer(
+			ref new Windows::System::Threading::TimerElapsedHandler([run](Windows::System::Threading::ThreadPoolTimer ^timer) {
+			run();
+		}), time_span);
+
+		timer_dispatcher_map__->Insert(timerId, dispatcher_timer);
+
+		return timerId;
+	}
+
+
 	void GlobalObject::registerNativeModuleRequireHook(const std::vector<std::string>& native_module_names, const std::unordered_map<std::string, JSValue>& preloaded_modules, std::function<JSValue(const JSContext&, const std::string&)> requireHook)
 	{
 		// store supported native module names
@@ -208,104 +303,10 @@ namespace TitaniumWindows
 		return TitaniumWindows::Utility::ConvertUTF8String(content);
 	}
 
-#pragma warning(push)
-#pragma warning(disable : 4251)
-	class TITANIUMWINDOWS_GLOBAL_EXPORT Timer final : public Titanium::GlobalObject::Timer, public std::enable_shared_from_this<Timer>
-	{
-#pragma warning(pop)
-	public:
-		Timer(Titanium::GlobalObject::Callback_t callback, const std::chrono::milliseconds& _interval)
-		    : Titanium::GlobalObject::Timer(callback, _interval), callback__(callback)
-		{
-			TITANIUM_LOG_DEBUG("Timer: ctor");
-
-			std::chrono::milliseconds interval = _interval;
-			// Avoid zero interval
-			if (interval.count() == 0) {
-				interval = std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(100));
-			}
-
-			// A Windows::Foundation::TimeSpan is a time period expressed in
-			// 100-nanosecond units.
-			//
-			// Reference:
-			// http://msdn.microsoft.com/en-us/library/windows/apps/windows.foundation.timespan
-			std::chrono::duration<std::chrono::nanoseconds::rep, std::ratio_multiply<std::ratio<100>, std::nano>> timer_interval_ticks = interval;
-			TITANIUM_LOG_DEBUG("Timer: ctor: timer_interval_ticks = ", timer_interval_ticks.count());
-
-			Windows::Foundation::TimeSpan time_span;
-			time_span.Duration = timer_interval_ticks.count();
-			dispatcher_timer__ = ref new Windows::UI::Xaml::DispatcherTimer();
-			dispatcher_timer__->Interval = time_span;
-		}
-
-		virtual ~Timer()
-		{
-			TITANIUM_LOG_DEBUG("Timer: dtor");
-			if (dispatcher_timer__->IsEnabled) {
-				dispatcher_timer__->Stop();
-			}
-
-			// TODO: what happens if start was never called? Is this an error?
-			dispatcher_timer__->Tick -= event_registration_token__;
-			dispatcher_timer__ = nullptr;
-		}
-
-		virtual void Start() TITANIUM_NOEXCEPT override final
-		{
-			TITANIUM_LOG_DEBUG("Timer::Start");
-			std::call_once(dispatcher_timer_once_flag__, [this] {
-				// Bring in the placeholders _1, _2, etc. for std::bind.
-				using namespace std::placeholders;
-				std::weak_ptr<Timer> weakThis(shared_from_this());
-				auto callback = std::bind([](const std::weak_ptr<Timer>& weakThis, Platform::Object^ sender, Platform::Object^ event) {
-						auto strong_ptr = weakThis.lock();
-						if (strong_ptr) {
-							strong_ptr->callback__();
-						}
-					},
-					std::move(weakThis), _1, _2);
-        
-				this->event_registration_token__ = this->dispatcher_timer__->Tick += ref new Windows::Foundation::EventHandler<Platform::Object^>(callback);
-			});
-
-			if (!(dispatcher_timer__->IsEnabled)) {
-				TITANIUM_LOG_DEBUG("Timer::Start: start timer ");
-				dispatcher_timer__->Start();
-			} else {
-				TITANIUM_LOG_WARN("Timer::Start: start called while timer is already running");
-			}
-		}
-
-		virtual void Stop() TITANIUM_NOEXCEPT override final
-		{
-			TITANIUM_LOG_DEBUG("Timer::Stop");
-			if (dispatcher_timer__->IsEnabled) {
-				TITANIUM_LOG_DEBUG("Timer::Stop: stop timer ");
-				dispatcher_timer__->Stop();
-			} else {
-				TITANIUM_LOG_WARN("Timer::Stop: stop called while timer is not running");
-			}
-		}
-
-	private:
-#pragma warning(push)
-#pragma warning(disable : 4251)
-		Titanium::GlobalObject::Callback_t callback__;
-		std::once_flag dispatcher_timer_once_flag__;
-#pragma warning(pop)
-		Windows::UI::Xaml::DispatcherTimer^ dispatcher_timer__;
-		Windows::Foundation::EventRegistrationToken event_registration_token__;
-	};
-
-	std::shared_ptr<Titanium::GlobalObject::Timer> GlobalObject::CreateTimer(Titanium::GlobalObject::Callback_t callback, const std::chrono::milliseconds& interval) const TITANIUM_NOEXCEPT
-	{
-		TITANIUM_LOG_DEBUG("Timer::CreateTimer");
-		return std::make_shared<TitaniumWindows::Timer>(callback, interval);
-	}
 	GlobalObject::GlobalObject(const JSContext& js_context) TITANIUM_NOEXCEPT
 	    : Titanium::GlobalObject(js_context),
 		seed__(nullptr)
+		, timer_dispatcher_map__(ref new Platform::Collections::Map<unsigned, Windows::System::Threading::ThreadPoolTimer^>())
 	{
 		TITANIUM_LOG_DEBUG("GlobalObject::ctor");
 	}
