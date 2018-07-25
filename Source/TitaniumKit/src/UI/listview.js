@@ -169,7 +169,7 @@ function createSectionItemView(listview, section, item, sectionIndex, itemIndex,
 			item.properties.height = Ti.UI.SIZE;
 		}
 		// builtin template has different format
-		if (template.type == 'Ti.UI.Label') {
+		if (template.type == 'Ti.UI.Label' && item.properties.title) {
 			item.properties.text = item.properties.title;
 			view.applyProperties(item.properties);
 		} else {
