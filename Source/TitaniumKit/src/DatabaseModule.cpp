@@ -19,8 +19,7 @@ namespace Titanium
 	static const std::string ti_db_js = R"TI_DB_JS(
 	var self = this;
 	this.exports = {};
-	this.exports.install = function(path,dbName) {
-		var dbResourceFilePath = Ti.Filesystem.applicationDirectory + Ti.Filesystem.separator + path;
+	this.exports.install = function(dbResourceFilePath,dbName) {
 		var dbResourceFile = Ti.Filesystem.getFile(dbResourceFilePath);
 		var dbDirPath = Ti.Filesystem.applicationDataDirectory + Ti.Filesystem.separator + "databases";
 		var dbDir = Ti.Filesystem.getFile(dbDirPath);

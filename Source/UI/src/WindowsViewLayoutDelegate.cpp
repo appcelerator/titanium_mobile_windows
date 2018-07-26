@@ -59,7 +59,7 @@ namespace TitaniumWindows
 		{
 			element__ = element;
 			Titanium::UI::View::setLayoutDelegate<WindowsViewLayoutDelegate>();
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(element__);
+			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(element__, nullptr, false);
 
 		}
 
@@ -185,7 +185,7 @@ namespace TitaniumWindows
 				try {
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
 					uint32_t index = 0;
-					if (nativeView->Children->IndexOf(nativeChildView, &index)) {
+					if (nativeChildView->Parent != nullptr || nativeView->Children->IndexOf(nativeChildView, &index)) {
 						TITANIUM_LOG_WARN("This UI element is already added");
 						return;
 					}
