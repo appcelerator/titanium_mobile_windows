@@ -12,7 +12,6 @@ namespace Titanium
 	NetworkModule::NetworkModule(const JSContext& js_context) TITANIUM_NOEXCEPT
 	    : Module(js_context, "Ti.Network")
 		, networkType__(Titanium::Network::TYPE::UNKNOWN)
-		, networkTypeName__(Titanium::Network::Constants::to_string(Titanium::Network::TYPE::UNKNOWN))
 		, online__(false)
 		, remoteDeviceUUID__("")
 		, remoteNotificationsEnabled__(false)
@@ -22,7 +21,6 @@ namespace Titanium
 	}
 
 	TITANIUM_PROPERTY_READ(NetworkModule, Network::TYPE, networkType);
-	TITANIUM_PROPERTY_READ(NetworkModule, std::string, networkTypeName);
 	TITANIUM_PROPERTY_READ(NetworkModule, std::string, remoteDeviceUUID);
 	TITANIUM_PROPERTY_READ(NetworkModule, std::vector<Network::NOTIFICATION_TYPE>, remoteNotificationTypes);
 	TITANIUM_PROPERTY_READ(NetworkModule, bool, remoteNotificationsEnabled);
