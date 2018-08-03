@@ -106,10 +106,11 @@ namespace TitaniumWindows
 		const auto iterator = filter__->CookieManager->GetCookies(uri)->First();
 		while (iterator->HasCurrent) {
 			const auto cookie = iterator->Current;
-			if (cookieName->Equals(cookie->Name)) {
-				cookies.push_back(createCookie(cookie));
-			}
 			iterator->MoveNext();
+			if (!cookieName->IsEmpty() && !cookieName->Equals(cookie->Name)) {
+				continue;
+			}
+			cookies.push_back(createCookie(cookie));
 		}
 
 		return cookies;

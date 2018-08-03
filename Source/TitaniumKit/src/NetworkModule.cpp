@@ -398,10 +398,10 @@ namespace Titanium
 
 	TITANIUM_FUNCTION(NetworkModule, getHTTPCookies)
 	{
-		ENSURE_ARGUMENT_INDEX(2);
+		ENSURE_ARGUMENT_INDEX(1);
 		ENSURE_STRING_AT_INDEX(domain, 0);
 		ENSURE_STRING_AT_INDEX(path, 1);
-		ENSURE_STRING_AT_INDEX(name, 2);
+		ENSURE_OPTIONAL_STRING_AT_INDEX(name, 2, "");
 
 		std::vector<JSValue> values;
 		for (const auto value : getHTTPCookies(domain, path, name)) {
