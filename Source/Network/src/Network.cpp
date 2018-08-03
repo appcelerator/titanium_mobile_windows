@@ -8,6 +8,7 @@
 #include "Titanium/detail/TiLogger.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include <boost/format.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 namespace TitaniumWindows
 {
@@ -76,8 +77,14 @@ namespace TitaniumWindows
 
 		const auto expiryDate = cookie->get_expiryDate();
 		if (!expiryDate.empty()) {
+
+			// Ti.Network.Cookie.expiryDate has strange format unlike JavaScript Date standard.
+			// Such as "yyyy-MM-ddTHH:mm:ss.SSS+0000" which JavaScript can't recognize.
+			// The trailing '+0000' should be replaced with 'Z' here.
+			const auto expiryDate = boost::algorithm::replace_last_copy(cookie->get_expiryDate(), "+0000", "Z");
+
 			const auto ctx = get_context();
-			const std::vector<JSValue> args = { ctx.CreateString(cookie->get_expiryDate()) };
+			const std::vector<JSValue> args = { ctx.CreateString(expiryDate) };
 			const auto expires = TitaniumWindows::Utility::GetDateTime(ctx.CreateDate(args));
 			httpCookie->Expires = expires;
 		}
