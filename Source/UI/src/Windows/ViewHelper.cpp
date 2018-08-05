@@ -7,6 +7,9 @@
 */
 #include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
 #include "TitaniumWindows/UI/View.hpp"
+#include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
+#include "LayoutEngine/LayoutEngine.hpp"
+
 namespace TitaniumWindows
 {
 	namespace UI
@@ -37,7 +40,9 @@ namespace TitaniumWindows
 					}
 				}
 				if (font.fontSize.length() > 0) {
-					component->FontSize = std::stod(font.fontSize);
+					const auto defaultUnit = Titanium::UI::ViewLayoutDelegate::GetDefaultUnit(js_context);
+					const auto ppi = TitaniumWindows::UI::WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
+					component->FontSize = Titanium::LayoutEngine::parseUnitValue(font.fontSize, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnit);
 				}
 
 				if (font.fontStyle == Titanium::UI::FONT_STYLE::ITALIC) {

@@ -53,7 +53,10 @@ namespace TitaniumWindows
 
 		double Slider::get_value() const TITANIUM_NOEXCEPT
 		{
-			return slider__->Value;
+			if (slider__) {
+				return slider__->Value;
+			}
+			return 0;
 		}
 
 		void Slider::set_value(const double& value) TITANIUM_NOEXCEPT

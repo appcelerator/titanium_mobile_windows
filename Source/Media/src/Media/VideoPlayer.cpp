@@ -109,7 +109,10 @@ namespace TitaniumWindows
 		std::chrono::milliseconds VideoPlayer::get_duration() const TITANIUM_NOEXCEPT
 		{
 			// convert 100 nanosecond to milliseconds
-			return TitaniumWindows::Utility::GetMSec(player__->NaturalDuration.TimeSpan);
+			if (player__) {
+				return TitaniumWindows::Utility::GetMSec(player__->NaturalDuration.TimeSpan);
+			}
+			return std::chrono::milliseconds(0);
 		}
 
 		std::chrono::milliseconds VideoPlayer::get_endPlaybackTime() const TITANIUM_NOEXCEPT
@@ -125,7 +128,10 @@ namespace TitaniumWindows
 		std::chrono::milliseconds VideoPlayer::get_currentPlaybackTime() const TITANIUM_NOEXCEPT
 		{
 			// convert 100 nanosecond to milliseconds
-			return TitaniumWindows::Utility::GetMSec(player__->Position);
+			if (player__) {
+				return TitaniumWindows::Utility::GetMSec(player__->Position);
+			}
+			return std::chrono::milliseconds(0);
 		}
 
 		void VideoPlayer::enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT

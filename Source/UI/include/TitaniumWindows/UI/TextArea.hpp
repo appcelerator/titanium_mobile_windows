@@ -71,6 +71,7 @@ namespace TitaniumWindows
 			virtual std::string get_value() const TITANIUM_NOEXCEPT override final;
 			virtual void set_value(const std::string&) TITANIUM_NOEXCEPT override final;
 			virtual void set_verticalAlign(const Titanium::UI::TEXT_VERTICAL_ALIGNMENT& verticalAlign) TITANIUM_NOEXCEPT override final;
+			virtual void set_padding(const Titanium::UI::TextAreaPadding& padding) TITANIUM_NOEXCEPT override final;
 
 			virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
 			virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
@@ -79,6 +80,7 @@ namespace TitaniumWindows
 #pragma warning(push)
 #pragma warning(disable : 4251)
 			std::unordered_map<std::string, std::string> custom_fonts__;
+			bool dirty__ { false };
 #pragma warning(pop)
 			Windows::UI::Xaml::Controls::Border^ border__;
 			Windows::UI::Xaml::Controls::TextBox^ text_box__;

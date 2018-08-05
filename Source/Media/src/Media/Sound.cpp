@@ -88,7 +88,10 @@ namespace TitaniumWindows
 
 		std::chrono::milliseconds Sound::get_time() const TITANIUM_NOEXCEPT
 		{
+			if (player__) {
 			return TitaniumWindows::Utility::GetMSec(player__->Position);
+			}
+			return std::chrono::milliseconds(0);
 		}
 
 		void Sound::set_url(const std::string& url) TITANIUM_NOEXCEPT

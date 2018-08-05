@@ -114,6 +114,21 @@ namespace Titanium
 
 			/*!
 			  @method
+			  @abstract getItemIndex
+			  @discussion Returns index of the row in this section.
+			  @returns index of the row. -1 if not found.
+			*/
+			virtual int32_t getItemIndex(const std::shared_ptr<TableViewRow>& row) TITANIUM_NOEXCEPT
+			{
+				const auto pos = std::find(rows__.begin(), rows__.end(), row);
+				if (pos != rows__.end()) {
+					return std::distance(rows__.begin(), pos);
+				}
+				return -1;
+			}
+
+			/*!
+			  @method
 			  @abstract update
 			  @discussion Update a table view row from this section by index.
 			*/
