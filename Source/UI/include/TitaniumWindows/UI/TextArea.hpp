@@ -80,6 +80,7 @@ namespace TitaniumWindows
 #pragma warning(push)
 #pragma warning(disable : 4251)
 			std::unordered_map<std::string, std::string> custom_fonts__;
+			bool dirty__ { false };
 #pragma warning(pop)
 			Windows::UI::Xaml::Controls::Border^ border__;
 			Windows::UI::Xaml::Controls::TextBox^ text_box__;

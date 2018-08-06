@@ -10,6 +10,7 @@
 #define _TITANIUM_2DMATRIX_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/UI/MatrixCreationDict.hpp"
 
 namespace Titanium
 {
@@ -144,6 +145,10 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getTy);
 			TITANIUM_FUNCTION_DEF(setTy);
 
+			Titanium::UI::MatrixCreationDict get_parameters() 
+			{
+				return params__;
+			}
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -153,6 +158,9 @@ namespace Titanium
 			double d__;
 			double tx__;
 			double ty__;
+
+			// Save constructor parameters
+			Titanium::UI::MatrixCreationDict params__;
 #pragma warning(pop)
 
 			std::shared_ptr<TwoDMatrix> multiply(const double a, const double b, const double c, const double d, const double tx, const double ty);

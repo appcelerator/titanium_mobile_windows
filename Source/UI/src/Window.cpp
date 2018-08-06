@@ -388,17 +388,19 @@ namespace TitaniumWindows
 			SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = window_stack__.size() > 1 ? AppViewBackButtonVisibility::Visible : AppViewBackButtonVisibility::Collapsed;
 #endif
 
-			// Update Window title
-			updateWindowTitle();
+			TitaniumWindows::Utility::RunOnUIThread([this]() {
+				// Update Window title
+				updateWindowTitle();
 
-			// start accepting events
-			enableEvents();
+				// start accepting events
+				enableEvents();
 
-			// Fire open event on this window
-			fireEvent("open");
+				// Fire open event on this window
+				fireEvent("open");
 
-			// Fire focus event on this window
-			focus();
+				// Fire focus event on this window
+				focus();
+			});
 		}
 
 		void Window::set_orientationModes(const std::vector<Titanium::UI::ORIENTATION>& modes) TITANIUM_NOEXCEPT

@@ -153,6 +153,7 @@ namespace Titanium
 		// the YAML API docs.
 		static void JSExportInitialize();
 		static void ShowRedScreenOfDeath(const JSContext& js_context, const std::string& message) TITANIUM_NOEXCEPT;
+		static void ShowRedScreenOfDeath(const JSContext& js_context, const HAL::detail::js_runtime_error& ex) TITANIUM_NOEXCEPT;
 
 		TITANIUM_PROPERTY_DEF(bubbleParent);
 		TITANIUM_PROPERTY_READONLY_DEF(apiName);

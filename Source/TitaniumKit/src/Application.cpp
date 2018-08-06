@@ -26,50 +26,61 @@ namespace Titanium
 function Titanium_RedScreenOfDeath(e) {
 
     // We don't want to show RSOD in production mode. re-throw.
-    if (Ti.App.deployType == "production") {
+    if (Ti.App.deployType == 'production') {
         throw e;
     }
 
     try {
         var win = Ti.UI.createWindow({
-                backgroundColor: "#f00",
-                layout: "vertical"
+                backgroundColor: '#F5F5F5',
+                layout: 'vertical'
             }),
-            view,
             button;
 
         function makeMessage(e) {
-            return (e.fileName ? "In " + e.fileName + " " : "") + (e.message || e.toString()).trim() + (e.lineNumber ? " (line " + e.lineNumber + " column " + e.columnNumber + ")" : "");
-        } 
-        function makeLabel(text, height, color, fontSize) {
-            var label = Ti.UI.createView({
-                height: height,
-                width: Ti.UI.FILL
-            });
+            return 'Runtime Exception: ' + (e.fileName ? 'In ' + e.fileName + ' ' : '') + (e.message || e.toString()).trim() + (e.lineNumber ? ' (line ' + e.lineNumber + ' column ' + e.columnNumber + ')' : '');
+        }
+        function makeLabel(label, str) {
             label.add(Ti.UI.createLabel({
-                color: color,
-                font: { fontSize: fontSize, fontWeight: "bold" },
+                color: '#E53935',
                 width:  Ti.UI.FILL,
-                height: Ti.UI.FILL,
-                textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-                text: text
+                height: Ti.UI.SIZE,
+                textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+                verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+                font: { fontFamily: 'Lucida Console'},
+                text: str,
             }));
-            win.add(label);
         }
 
-        Ti.API.error("----- Titanium Javascript Runtime Error -----");
-        Ti.API.error("Message: Uncaught Error: " + makeMessage(e));
+        Ti.API.error('Message: Uncaught Error: ' + makeMessage(e));
+        if (e.stack) {
+            Ti.API.error(e.stack);
+        }
+        if (e.nativeStack) {
+            Ti.API.error(e.nativeStack);
+        }
 
-        win.add(view = Ti.UI.createView({ height: "12%" }));
-        makeLabel("Application Error", "15%", "#0f0", "34");
-        makeLabel(makeMessage(e), "45%", "#fff", "26");
-        win.add(view = Ti.UI.createView({ height: "12%" }));
-        view.add(button = Ti.UI.createButton({ title: "Dismiss" }));
-        button.addEventListener("click", function () {
+        var label = Ti.UI.createView({
+            height: '90%',
+            width: Ti.UI.FILL,
+            top: 10, left: 10,
+            layout: 'vertical',            
+        });
+        makeLabel(label, makeMessage(e));
+        if (e.stack) {
+            label.add(Ti.UI.createView({width: Ti.UI.FILL, height: 20}));
+            makeLabel(label, e.stack);
+        }
+        if (e.nativeStack) {
+            label.add(Ti.UI.createView({width: Ti.UI.FILL, height: 20}));
+            makeLabel(label, e.nativeStack);
+        }
+        win.add(label);
+
+        win.add(button = Ti.UI.createButton({ title: 'CONTINUE', backgroundColor: '#E53935', width: Ti.UI.FILL, height: '10%', bottom: 0 }));
+        button.addEventListener('click', function () {
             win.close();
         });
-
-        makeLabel("Error messages will only be displayed during development. When your app is packaged for final distribution, no error screen will appear. Test your code!", "16%", "#000", "20");
 
         win.open();
     } catch (er) {
