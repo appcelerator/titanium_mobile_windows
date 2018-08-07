@@ -29,8 +29,6 @@ namespace TitaniumWindows
 		class TITANIUMWINDOWS_UI_EXPORT Label final : public Titanium::UI::Label, public JSExport<Label>
 		{
 		public:
-			TITANIUM_PROPERTY_UNIMPLEMENTED(ellipsize);
-
 			Label(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~Label();
@@ -54,6 +52,7 @@ namespace TitaniumWindows
 			virtual void set_attributedString(const std::shared_ptr<Titanium::UI::AttributedString>& attr) TITANIUM_NOEXCEPT override final;
 			virtual void set_autoLink(const std::unordered_set<Titanium::UI::AUTOLINK>& autoLink) TITANIUM_NOEXCEPT override final;
 			virtual void set_maxLines(const std::uint32_t& maxLines) TITANIUM_NOEXCEPT override final;
+			virtual void set_ellipsize(const Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE& ellipsize) TITANIUM_NOEXCEPT override final;
 
 			static const std::uint32_t DefaultFontSize = 20;
 

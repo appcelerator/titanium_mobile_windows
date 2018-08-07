@@ -56,7 +56,7 @@ namespace TitaniumWindows
 			Titanium::UI::Label::setLayoutDelegate<WindowsViewLayoutDelegate>();
 
 			label__->TextWrapping = Windows::UI::Xaml::TextWrapping::Wrap;
-			label__->TextTrimming = Windows::UI::Xaml::TextTrimming::None;
+			label__->TextTrimming = Windows::UI::Xaml::TextTrimming::CharacterEllipsis;
 			label__->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
 			label__->FontSize = DefaultFontSize;
 
@@ -254,6 +254,22 @@ namespace TitaniumWindows
 			}
 
 			need_measure__ = false;
+		}
+
+		void Label::set_ellipsize(const Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE& ellipsize) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Label::set_ellipsize(ellipsize);
+			if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::NONE) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::None;
+			} else if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::CHAR_WRAP) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::CharacterEllipsis;
+			} else if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::END) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::CharacterEllipsis;
+			} else if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::WORD_WRAP) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::WordEllipsis;
+			} else if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::CLIP) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::Clip;
+			}
 		}
 
 		void Label::set_textAlign(const Titanium::UI::TEXT_ALIGNMENT& textAlign) TITANIUM_NOEXCEPT

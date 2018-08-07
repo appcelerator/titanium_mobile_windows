@@ -49,7 +49,7 @@ namespace Titanium
 
 			  Default: false
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(bool, ellipsize);
+			TITANIUM_PROPERTY_IMPL_DEF(TEXT_ELLIPSIZE_TRUNCATE, ellipsize);
 
 			/*!
 			  @method
@@ -202,7 +202,7 @@ namespace Titanium
 #pragma warning(push)
 #pragma warning(disable : 4251)
 			std::string color__;
-			bool ellipsize__;
+			TEXT_ELLIPSIZE_TRUNCATE ellipsize__;
 			Font font__;
 			std::string text__;
 			std::string textid__;
