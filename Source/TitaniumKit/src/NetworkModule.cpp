@@ -18,7 +18,8 @@ namespace Titanium
 		, remoteNotificationsEnabled__(false)
 		, httpURLFormatter__(js_context.CreateNull())
 	{
-
+		get_object().SetProperty("encodeURIComponent", js_context.JSEvaluateScript("encodeURIComponent"));
+		get_object().SetProperty("decodeURIComponent", js_context.JSEvaluateScript("decodeURIComponent"));
 	}
 
 	TITANIUM_PROPERTY_READ(NetworkModule, Network::TYPE, networkType);
