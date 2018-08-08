@@ -28,8 +28,8 @@ namespace Titanium
 		 */
 		struct GradientColorRef
 		{
-			std::string color;
-			double      offset;
+			std::string color{""};
+			double      offset{ 0 };
 		};
 
 		/*!
