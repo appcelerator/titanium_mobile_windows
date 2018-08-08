@@ -544,8 +544,8 @@ namespace Titanium
 				// Let's set up our user agent in JS, way easier this way...
 				Ti.userAgent = 'Appcelerator Titanium/' + Ti.version + ' (' + Ti.Platform.model + '/' + Ti.Platform.version + '; ' + Ti.Platform.osname + '; ' + Ti.Platform.locale + ';)';
 
-				Ti.Network.encodeURIComponent = encodeURIComponent;
-				Ti.Network.decodeURIComponent = decodeURIComponent;
+				//Ti.Network.encodeURIComponent = encodeURIComponent;
+				//Ti.Network.decodeURIComponent = decodeURIComponent;
 
 				// Start analytics
 				Ti.Analytics._start();
