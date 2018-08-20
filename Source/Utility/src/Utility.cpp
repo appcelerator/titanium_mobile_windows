@@ -8,7 +8,6 @@
  */
 
 #include "TitaniumWindows/Utility.hpp"
-#include "HAL/HAL.hpp"
 #include <boost/algorithm/string.hpp>
 #include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
