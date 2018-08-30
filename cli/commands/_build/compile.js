@@ -34,12 +34,14 @@ function compileApp(next) {
 	this.logger.info(__('Targeting Windows SDK: %s', this.targetPlatformSdkVersion.cyan || this.wpsdk.cyan));
 	this.logger.info(__('Running MSBuild on solution: %s', slnFile.cyan));
 
+	var appxBundleParam = this.useAppxBundle ? 'Always' : 'Never';
+
 	// Modify the vcxproj to inject some properties, so we always bundle
 	var modified = fs.readFileSync(vcxproj, 'utf8');
 	fs.existsSync(vcxproj) && fs.renameSync(vcxproj, vcxproj + '.bak');
 	// Only modify the one property group we care about!
 	modified = modified.replace(/<\/PropertyGroup>\s*<ItemDefinitionGroup/m,
-		'<AppxBundle>Always</AppxBundle>' +
+		'<AppxBundle>' + appxBundleParam + '</AppxBundle>' +
 		'<AppxBundlePlatforms>' + this.arch + '</AppxBundlePlatforms>' +
 		(
 			!/^ws-local|dist-winstore$/.test(this.target) && this.wpsdk != '10.0' ? '' :
@@ -75,6 +77,11 @@ function compileApp(next) {
 	
 	p.stdout.on('data', function (data) {
 		var line = data.toString().trim();
+		// msbuild produces "Invalid qualifier" warning for all files that has minus sign (-) in the middle of the file name!
+		// It makes no harm and we just can ignore it.
+		if (line.indexOf('GENERATEPROJECTPRIFILE : warning PRI249: 0xdef00520 - Invalid qualifier') >= 0) {
+			return;
+		}
 		if (line.indexOf('error ') >= 0) {
 			_t.logger.error(line);
 		}
