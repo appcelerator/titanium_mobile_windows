@@ -31,7 +31,8 @@ function compileApp(next) {
 		vcxproj = path.resolve(this.cmakeTargetDir, cmakeProjectName + '.vcxproj'),
 		ZERO_CHECK = path.resolve(this.cmakeTargetDir, 'ZERO_CHECK.vcxproj'),
 		ALL_BUILD  = path.resolve(this.cmakeTargetDir, 'ALL_BUILD.vcxproj'),
-		nativeVcxProj = path.resolve(this.cmakeTargetDir, 'Native', 'TitaniumWindows_Native.vcxproj');
+		nativeVcxProj = path.resolve(this.cmakeTargetDir, 'Native', 'TitaniumWindows_Native.vcxproj'),
+		nativeALL_BUILD = path.resolve(this.cmakeTargetDir, 'Native', 'ALL_BUILD.vcxproj');
 
 	this.logger.info(__('Targeting Windows SDK: %s', this.targetPlatformSdkVersion.cyan || this.wpsdk.cyan));
 	this.logger.info(__('Running MSBuild on solution: %s', slnFile.cyan));
@@ -63,6 +64,10 @@ function compileApp(next) {
 	modified = fs.readFileSync(ALL_BUILD, 'utf8');
 	modified = modified.replace(/<CustomBuild[\s\S]+<\/CustomBuild>/m, '');
 	fs.writeFileSync(ALL_BUILD, modified);
+
+	modified = fs.readFileSync(nativeALL_BUILD, 'utf8');
+	modified = modified.replace(/<CustomBuild[\s\S]+<\/CustomBuild>/m, '');
+	fs.writeFileSync(nativeALL_BUILD, modified);
 
 	// Modify the Native vcxproj to fix quoted hint paths for module winmd paths
 	modified = fs.readFileSync(nativeVcxProj, 'utf8');
