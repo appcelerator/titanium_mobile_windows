@@ -80,7 +80,6 @@ set(SOURCE_TitaniumWindows
   include/TitaniumWindows/Blob.hpp
   src/File.cpp
   include/TitaniumWindows/File.hpp
-  include/TitaniumWindows/detail/TitaniumWindowsBase.hpp
   include/TitaniumWindows/TitaniumApplicationCallback.hpp
 )
 

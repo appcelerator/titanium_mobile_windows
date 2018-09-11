@@ -7,7 +7,6 @@
  */
 
 #include "Titanium/ErrorResponse.hpp"
-#include "HAL/HAL.hpp"
 
 namespace Titanium
 {

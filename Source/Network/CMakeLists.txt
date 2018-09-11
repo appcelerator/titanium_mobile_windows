@@ -48,7 +48,6 @@ endif()
 set(SOURCE_Network
   include/TitaniumWindows/Network.hpp
   include/TitaniumWindows/Network/HTTPClient.hpp
-  include/TitaniumWindows/detail/NetworkBase.hpp
   include/TitaniumWindows/Network/Socket/TCP.hpp
   include/TitaniumWindows/Network/Socket/UDP.hpp
   src/Network.cpp
