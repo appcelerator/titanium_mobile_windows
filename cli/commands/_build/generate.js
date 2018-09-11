@@ -79,12 +79,12 @@ function generateI18N(next) {
 		}),
 		template = fs.readFileSync(path.join(this.platformPath, 'templates', 'build', 'Resources.resw')).toString();
 
-	data.en || (data.en = {});
-	data.en.app || (data.en.app = {});
-	data.en.app.appname || (data.en.app.appname = this.tiapp.name);
+	data['en-US'] || (data['en-US'] = {});
+	data['en-US'].app || (data['en-US'].app = {});
+	data['en-US'].app.appname || (data['en-US'].app.appname = this.tiapp.name);
 
 	this.i18nVSResources = [];
-	this.defaultLanguage = 'en'; // set as 'en' for now
+	this.defaultLanguage = 'en-US'; // default language needs to be qualified (TIMOB-25183)
 
 	Object.keys(data).forEach(function (locale) {
 		var destDir = path.join(this.buildTargetStringsDir, locale),
@@ -109,7 +109,7 @@ function generateI18N(next) {
 
 		// process default app_name
 		if (!data[locale].strings.app_name) {
-			data[locale].strings.app_name = data[locale].app.appname ? data[locale].app.appname : data.en.app.appname;
+			data[locale].strings.app_name = data[locale].app.appname ? data[locale].app.appname : data['en-US'].app.appname;
 		}
 		// process default app_description
 		if (!data[locale].strings.app_description) {
