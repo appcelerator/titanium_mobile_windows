@@ -874,10 +874,17 @@ namespace TitaniumWindows
 				backgroundLinearGradientBrush__ = ref new LinearGradientBrush();
 				backgroundLinearGradientBrush__->StartPoint = startPoint;
 				backgroundLinearGradientBrush__->EndPoint = endPoint;
-				for (auto color : backgroundGradient__.colors) {
+				const auto numberOfColors = backgroundGradient__.colors.size();
+				const double offset = numberOfColors == 1 ? 1.0 : (1.0 / (numberOfColors - 1));
+				for (unsigned int i = 0; i < numberOfColors; i++) {
+					const auto color = backgroundGradient__.colors.at(i);
 					auto stop = ref new GradientStop();
 					stop->Color = ColorForName(color.color);
-					stop->Offset = color.offset;
+					if (color.offset >= 0) {
+						stop->Offset = color.offset;
+					} else {
+						stop->Offset = offset * i; // offsets are equally divided by default
+					}
 					backgroundLinearGradientBrush__->GradientStops->Append(stop);
 				}
 				updateBackground(backgroundLinearGradientBrush__);
