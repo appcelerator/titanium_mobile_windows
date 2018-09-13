@@ -28,8 +28,8 @@ namespace Titanium
 		 */
 		struct GradientColorRef
 		{
-			std::string color;
-			double      offset;
+			std::string color{""};
+			double      offset{ -1 };
 		};
 
 		/*!
@@ -44,8 +44,8 @@ namespace Titanium
 			bool backfillStart {false};
 			double endRadius   {0};
 			double startRadius {0};
-			Point endPoint;
-			Point startPoint;
+			Point endPoint {"0.0", "1.0"};
+			Point startPoint{ "0.0", "0.0" };
 			GRADIENT_TYPE type;
 			std::vector<GradientColorRef> colors;
 		};
