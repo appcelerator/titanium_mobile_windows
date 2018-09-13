@@ -519,12 +519,14 @@ function generateAppxManifestForPlatform(target, properties) {
 				// Just write the XML out as is
 				// TODO Do some validation of DeviceCapability name?
 				if (node.tagName == 'DeviceCapability') {
-					var cap = node.toString();
+					// Capability should have Name property only
+					var cap = '<' + node.tagName + ' Name="' +  appc.xml.getAttr(node, "Name") + '" />';
 					if (deviceCapabilities.indexOf(cap) == -1) {
 						deviceCapabilities.push(cap);
 					}
 				} else {
-					var cap = node.toString();
+					// Capability should have Name property only
+					var cap = '<' + node.tagName + ' Name="' +  appc.xml.getAttr(node, "Name") + '" />';
 					if (capabilities.indexOf(cap) == -1) {
 						capabilities.push(cap);
 					}
