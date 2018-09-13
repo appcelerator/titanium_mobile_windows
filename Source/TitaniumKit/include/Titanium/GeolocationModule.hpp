@@ -11,7 +11,6 @@
 
 #include "Titanium/Module.hpp"
 #include "Titanium/Geolocation/Constants.hpp"
-#include "HAL/HAL.hpp"
 #include <chrono>
 
 namespace Titanium
