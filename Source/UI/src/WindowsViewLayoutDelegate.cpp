@@ -1368,11 +1368,29 @@ namespace TitaniumWindows
 			}
 		}
 
+		bool WindowsViewLayoutDelegate::sourceTest(::Platform::Object ^ source, Windows::UI::Xaml::DependencyObject^ target)
+		{
+			const auto count = VisualTreeHelper::GetChildrenCount(target);
+			for (int i = 0; i < count; i++) {
+				const auto child = VisualTreeHelper::GetChild(target, i);
+				if (source->Equals(child) || sourceTest(source, child)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		std::shared_ptr<Titanium::UI::View> WindowsViewLayoutDelegate::sourceTest(::Platform::Object^ source, const std::shared_ptr<Titanium::UI::View>& root)
 		{
 			if (source->Equals(component__) || source->Equals(border__) || source->Equals(underlying_control__) || source->Equals(styling_component__)) {
 				return root;
 			}
+
+			if (underlying_control__ && sourceTest(source, underlying_control__))
+			{
+				return root;
+			}
+
 			for (const auto child : get_children()) {
 				const auto sender = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->sourceTest(source, child);
 				if (sender) {

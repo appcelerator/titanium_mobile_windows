@@ -590,6 +590,8 @@ namespace TitaniumWindows
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
+			bool sourceTest(::Platform::Object ^ source, Windows::UI::Xaml::DependencyObject^ target);
+
 			Windows::UI::Xaml::Controls::Border^ border__    { nullptr };
 			Windows::UI::Xaml::FrameworkElement^ component__ { nullptr };
 			Windows::UI::Xaml::Controls::Control^ underlying_control__ { nullptr };
