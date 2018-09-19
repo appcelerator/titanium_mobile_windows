@@ -69,6 +69,7 @@ namespace TitaniumWindows
 			while (iterator->HasCurrent) {
 				Windows::Web::Http::HttpCookie ^ cookie = iterator->Current;
 				filter->CookieManager->DeleteCookie(cookie);
+				iterator->MoveNext();
 			}
 		}
 
@@ -108,6 +109,7 @@ namespace TitaniumWindows
 			cancellationTokenSource__ = concurrency::cancellation_token_source();
 			filter__->AllowAutoRedirect = true;
 			filter__->CacheControl->ReadBehavior = Windows::Web::Http::Filters::HttpCacheReadBehavior::MostRecent;
+			responseHeaders__.clear();
 
 			if (!username__.empty()) {
 				filter__->ServerCredential = ref new Windows::Security::Credentials::PasswordCredential(
