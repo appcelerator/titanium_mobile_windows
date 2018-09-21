@@ -92,13 +92,7 @@ namespace TitaniumWindows
 			std::string filename(const std::string& path);
 
 			// Creates a file at the path identified by this file object.
-			bool File::createEmptyFile(const std::string& path)
-			{
-				std::ofstream outfile(path, std::ofstream::out);
-				bool fail = outfile.fail();
-				outfile.close();
-				return !fail;
-			}
+			bool createEmptyFile(const std::string& path);
 
 			bool isFolder() const
 			{
@@ -124,7 +118,7 @@ namespace TitaniumWindows
 
 			Windows::Storage::StorageFolder^ getFolderFromPathSync(const std::string& filename) const
 			{
-				return getFolderFromPathSync(TitaniumWindows::Utility::ConvertString(filename));
+				return getFolderFromPathSync(TitaniumWindows::Utility::ConvertUTF8String(filename));
 			}
 
 			// Get StorageFile from path. Returns nullptr if access denied or
@@ -133,7 +127,7 @@ namespace TitaniumWindows
 
 			Windows::Storage::StorageFile^ getFileFromPathSync(const std::string& filename) const
 			{
-				return getFileFromPathSync(TitaniumWindows::Utility::ConvertString(filename));
+				return getFileFromPathSync(TitaniumWindows::Utility::ConvertUTF8String(filename));
 			}
 
 			Windows::Storage::Streams::IBuffer^ getBufferFromBytes(std::uint8_t* data, std::size_t size, bool append, Windows::Storage::StorageFile^ appendingFile) {
