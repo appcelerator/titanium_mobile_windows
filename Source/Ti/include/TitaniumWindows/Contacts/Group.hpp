@@ -30,6 +30,8 @@ namespace TitaniumWindows
 
 		public:
 
+			TITANIUM_FUNCTION_UNIMPLEMENTED(sortedMembers);
+
 			Group(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 			virtual ~Group()               = default;
 			Group(const Group&)            = default;

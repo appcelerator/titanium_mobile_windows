@@ -37,6 +37,7 @@ namespace TitaniumWindows
 			TITANIUM_PROPERTY_UNIMPLEMENTED(opaquebackground);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(persistent);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(titleid);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(destructive);
 
 			OptionDialog(const JSContext&) TITANIUM_NOEXCEPT;
 
