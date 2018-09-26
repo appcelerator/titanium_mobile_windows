@@ -18,4 +18,3 @@ methods:
     platforms: [windowsphone]
   - name: removeNamedItemNS
     platforms: [windowsphone]
-

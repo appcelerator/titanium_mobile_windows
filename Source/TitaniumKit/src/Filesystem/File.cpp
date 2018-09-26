@@ -496,8 +496,11 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(File, getDirectoryListing)
 		{
+			const auto context = get_context();
+			if (isFile() || !exists()) {
+				return context.CreateNull();
+			}
 			auto listing = getDirectoryListing();
-			auto context = get_context();
 			std::vector<JSValue> result;
 			for (size_t i = 0; i < listing.size(); i++) {
 				result.push_back(context.CreateString(listing.at(i)));
