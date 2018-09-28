@@ -7,4 +7,3 @@ methods:
     platforms: [windowsphone]
   - name: createDocument
     platforms: [windowsphone]
-

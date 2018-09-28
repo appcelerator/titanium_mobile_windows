@@ -15,6 +15,8 @@ properties:
     platforms: [windowsphone]
   - name: maxLength
     platforms: [windowsphone]
+  - name: padding
+    platforms: [windowsphone]
   - name: selection
     platforms: [windowsphone]
   - name: textAlign
@@ -57,6 +59,10 @@ methods:
   - name: getValue
     platforms: [windowsphone]
   - name: setValue
+    platforms: [windowsphone]
+  - name: getPadding
+    platforms: [windowsphone]
+  - name: setPadding
     platforms: [windowsphone]
   - name: getSelection
     platforms: [windowsphone]

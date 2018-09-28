@@ -66,4 +66,3 @@ methods:
     platforms: [windowsphone]
   - name: setVolume
     platforms: [windowsphone]
-

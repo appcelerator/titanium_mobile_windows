@@ -95,6 +95,10 @@ namespace Titanium
 							TITANIUM_ASSERT(item.IsObject());
 							if (item.IsObject()) {
 								gradient.colors.push_back(js_to_GradientColorRef(static_cast<JSObject>(item)));
+							} else if (item.IsString()) {
+								GradientColorRef color;
+								color.color = static_cast<std::string>(item);
+								gradient.colors.push_back(color);
 							} else {
 								TITANIUM_LOG_WARN("js_to_Gradient: Invalid GradientColorRef");
 							}

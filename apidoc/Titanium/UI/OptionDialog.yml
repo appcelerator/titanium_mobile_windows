@@ -3,8 +3,6 @@ platforms: [windowsphone]
 properties:
   - name: cancel
     platforms: [windowsphone]
-  - name: destructive
-    platforms: [windowsphone]
   - name: options
     platforms: [windowsphone]
   - name: selectedIndex
@@ -17,10 +15,6 @@ methods:
   - name: getCancel
     platforms: [windowsphone]
   - name: setCancel
-    platforms: [windowsphone]
-  - name: getDestructive
-    platforms: [windowsphone]
-  - name: setDestructive
     platforms: [windowsphone]
   - name: getOptions
     platforms: [windowsphone]
