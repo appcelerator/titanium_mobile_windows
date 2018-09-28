@@ -34,17 +34,29 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Cookie, std::string, domain)
 		TITANIUM_PROPERTY_READWRITE(Cookie, std::string, expiryDate)
 		TITANIUM_PROPERTY_READWRITE(Cookie, bool, httponly)
-		TITANIUM_PROPERTY_READ(Cookie, std::string, name)
 		TITANIUM_PROPERTY_READWRITE(Cookie, std::string, originalUrl)
 		TITANIUM_PROPERTY_READWRITE(Cookie, std::string, path)
 		TITANIUM_PROPERTY_READWRITE(Cookie, bool, secure)
 		TITANIUM_PROPERTY_READWRITE(Cookie, std::string, value)
 		TITANIUM_PROPERTY_READWRITE(Cookie, std::uint32_t, version)
+		TITANIUM_PROPERTY_READ(Cookie, std::string, name)
+		// name property is creation-only
+		void Cookie::set_name(const std::string& name) TITANIUM_NOEXCEPT
+		{
+			if (name__.empty()) {
+				name__ = name;
+			}
+		}
 
+		/*!
+		  @method
+		  @abstract isValid
+		  @discussion Returns true if the cookie is valid.
+		  For a cookie to be valid the minimum properties requiered are name, value, path and either domain or originalUrl
+		*/
 		bool Cookie::isValid() TITANIUM_NOEXCEPT
 		{
-			TITANIUM_LOG_WARN("Cookie::isValid: Unimplemented");
-			return false;
+			return !name__.empty() && !value__.empty() && !path__.empty() && (!domain__.empty() || !originalUrl__.empty());
 		}
 
 		void Cookie::JSExportInitialize()
@@ -56,7 +68,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Cookie, domain);
 			TITANIUM_ADD_PROPERTY(Cookie, expiryDate);
 			TITANIUM_ADD_PROPERTY(Cookie, httponly);
-			TITANIUM_ADD_PROPERTY_READONLY(Cookie, name);
+			TITANIUM_ADD_PROPERTY(Cookie, name);
 			TITANIUM_ADD_PROPERTY(Cookie, originalUrl);
 			TITANIUM_ADD_PROPERTY(Cookie, path);
 			TITANIUM_ADD_PROPERTY(Cookie, secure);
@@ -96,6 +108,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_SETTER_BOOL(Cookie, httponly)
 
 		TITANIUM_PROPERTY_GETTER_STRING(Cookie, name)
+		TITANIUM_PROPERTY_SETTER_STRING(Cookie, name)
 		TITANIUM_PROPERTY_GETTER_STRING(Cookie, originalUrl)
 		TITANIUM_PROPERTY_SETTER_STRING(Cookie, originalUrl)
 
@@ -113,8 +126,7 @@ namespace Titanium
 
 		TITANIUM_FUNCTION(Cookie, isValid)
 		{
-			isValid();
-			return get_context().CreateUndefined();
+			return get_context().CreateBoolean(isValid());
 		}
 
 		TITANIUM_FUNCTION_AS_GETTER(Cookie, getComment, comment)

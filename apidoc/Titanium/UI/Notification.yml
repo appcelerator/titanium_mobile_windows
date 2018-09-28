@@ -16,4 +16,3 @@ methods:
     platforms: [windowsphone]
   - name: setDuration
     platforms: [windowsphone]
-

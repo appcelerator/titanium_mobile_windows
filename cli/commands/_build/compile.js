@@ -75,6 +75,11 @@ function compileApp(next) {
 	
 	p.stdout.on('data', function (data) {
 		var line = data.toString().trim();
+		// msbuild produces "Invalid qualifier" warning for all files that has minus sign (-) in the middle of the file name!
+		// It makes no harm and we just can ignore it.
+		if (line.indexOf('GENERATEPROJECTPRIFILE : warning PRI249: 0xdef00520 - Invalid qualifier') >= 0) {
+			return;
+		}
 		if (line.indexOf('error ') >= 0) {
 			_t.logger.error(line);
 		}
