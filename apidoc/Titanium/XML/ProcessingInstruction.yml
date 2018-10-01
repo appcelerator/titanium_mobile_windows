@@ -5,4 +5,3 @@ properties:
     platforms: [windowsphone]
   - name: target
     platforms: [windowsphone]
-

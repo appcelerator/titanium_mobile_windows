@@ -63,4 +63,3 @@ events:
     platforms: [windowsphone]
   - name: stop
     platforms: [windowsphone]
-
