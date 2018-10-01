@@ -19,6 +19,7 @@ namespace Titanium
 
 		CameraOptionsType create_empty_CameraOptionsType(const JSContext& js_context)
 		{
+			CameraOptionsSize photoAspectRatio;
 			CameraOptionsType options {
 				false,
 				true,
@@ -35,7 +36,8 @@ namespace Titanium
 				std::chrono::milliseconds::min(),
 				Quality::High,
 				CameraOption::NotDetermined,
-				create_empty_CameraOptionsTypeCallbacks(js_context)
+				create_empty_CameraOptionsTypeCallbacks(js_context),
+				photoAspectRatio
 			};
 			return options;
 		}

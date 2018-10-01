@@ -41,8 +41,8 @@ namespace Titanium
 
 		struct CameraOptionsSize
 		{
-			double width;
-			double height;
+			double width{ 0 };
+			double height{ 0 };
 		};
 
 		/*!
