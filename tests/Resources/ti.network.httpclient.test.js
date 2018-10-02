@@ -20,7 +20,7 @@ describe('Titanium.Network.HTTPClient', function () {
 	});
 
 	// FIXME iOS gives us an ELEMENT_NODE, not DOCUMENT_NODE
-	it.iosAndWindowsBroken('responseXML', function (finish) {
+	it.iosBroken('responseXML', function (finish) {
 		var xhr = Ti.Network.createHTTPClient(),
 			attempts = 3;
 		xhr.setTimeout(6e4);
@@ -179,7 +179,7 @@ describe('Titanium.Network.HTTPClient', function () {
 
 	// https://appcelerator.lighthouseapp.com/projects/32238/tickets/2339
 	// Timing out on Windows Phone
-	it.windowsBroken('responseHeadersBug', function (finish) {
+	it('responseHeadersBug', function (finish) {
 		var xhr = Ti.Network.createHTTPClient(),
 			attempts = 3;
 		xhr.setTimeout(3e4);
@@ -262,8 +262,7 @@ describe('Titanium.Network.HTTPClient', function () {
 	});
 
 	// Confirms that only the selected cookie is deleted
-	// FIXME Windows hangs on this test! Maybe due to setTimeout in onload?
-	it.windowsBroken('clearCookiePositiveTest', function (finish) {
+	it('clearCookiePositiveTest', function (finish) {
 		var xhr = Ti.Network.createHTTPClient(),
 			cookie_string;
 		function second_cookie_fn() {
@@ -512,20 +511,83 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send(form);
 	});
 
-	it('TIMOB-25696', function (finish) {
-		var xhr = Ti.Network.createHTTPClient();
+	it.ios('basic-auth success', function (finish) {
+		var xhr = Ti.Network.createHTTPClient({
+				username: 'user',
+				password: 'passwd'
+			}),
+			attempts = 3;
 		xhr.setTimeout(6e4);
 
 		xhr.onload = function () {
-			// This should cause runtime error but should not crash app
-            Ti.API.info('Connected to server at port ' + port);
+			try {
+				should(this.responseText).be.a.string;
+				finish();
+			} catch (err) {
+				finish(err);
+			}
+		};
+		xhr.onerror = function (e) {
+			if (attempts-- > 0) {
+				Ti.API.warn('failed, attempting to retry request...');
+				xhr.send();
+			} else {
+				Ti.API.debug(JSON.stringify(e, null, 2));
+				finish(new Error('failed to authenticate: ' + e));
+			}
 		};
 
-		setTimeout(function() {
-			finish();
-		}, 1500);
-
-		xhr.open('GET', 'http://www.appcelerator.com/');
+		xhr.open('GET', 'http://httpbin.org/basic-auth/user/passwd');
+		xhr.send();
 	});
 
+	it.ios('basic-auth failure', function (finish) {
+		var xhr = Ti.Network.createHTTPClient({
+			username: 'user',
+			password: 'wrong_password',
+		});
+		xhr.setTimeout(6e4);
+
+		xhr.onload = function () {
+			finish(new Error('With wrong password it is authenticating'));
+		};
+		xhr.onerror = function () {
+			// This request should fail as password is wrong.
+			finish();
+		};
+
+		xhr.open('GET', 'http://httpbin.org/basic-auth/user/passwd');
+		xhr.send();
+	});
+
+	it.android('save response data to temp directory', function (finish) {
+		var xhr = Ti.Network.createHTTPClient(),
+			attempts = 3;
+		xhr.setTimeout(6e4);
+
+		xhr.onload = function (e) {
+			try {
+				should(e.source.responseData.nativePath).be.a.string;
+				if (e.source.responseData.nativePath.includes('cache/_tmp') !== -1) {
+					finish();
+				} else {
+					finish(new Error('not saving response data to temp directory'));
+				}
+			} catch (err) {
+				finish(err);
+			}
+		};
+		xhr.onerror = function (e) {
+			if (attempts-- > 0) {
+				Ti.API.warn('failed, attempting to retry request...');
+				xhr.send();
+			} else {
+				Ti.API.debug(JSON.stringify(e, null, 2));
+				finish(new Error('failed to authenticate: ' + e));
+			}
+		};
+
+		xhr.open('GET', 'https://www.nasa.gov/sites/default/files/thumbnails/image/sun_0.jpg');
+		xhr.send();
+	});
 });

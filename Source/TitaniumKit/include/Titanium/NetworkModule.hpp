@@ -45,13 +45,6 @@ namespace Titanium
 
 		/*!
 		  @property
-		  @abstract networkTypeName
-		  @discussion Network type as a String. Returns one of `NONE`, `WIFI`, `LAN`, `MOBILE`, or `UNKNOWN`.
-		*/
-		TITANIUM_PROPERTY_IMPL_READONLY_DEF(std::string, networkTypeName);
-
-		/*!
-		  @property
 		  @abstract online
 		  @discussion Boolean value indicating if the device can reach the Internet.
 		*/
@@ -234,7 +227,6 @@ namespace Titanium
 		JSClass cookie__;
 		
 		Network::TYPE networkType__;
-		std::string networkTypeName__;
 		bool online__;
 		std::string remoteDeviceUUID__;
 		std::vector<Network::NOTIFICATION_TYPE> remoteNotificationTypes__;
