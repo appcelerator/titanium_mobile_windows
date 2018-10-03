@@ -184,10 +184,10 @@ namespace TitaniumWindows
 
 		std::string TextArea::get_value() const TITANIUM_NOEXCEPT
 		{
-			if (text_box__) {
+			if (isLoaded__) {
 				return TitaniumWindows::Utility::ConvertUTF8String(text_box__->Text);
 			}
-			return std::string();
+			return Titanium::UI::TextArea::get_value();
 		}
 
 		void TextArea::set_value(const std::string& value) TITANIUM_NOEXCEPT
