@@ -32,4 +32,3 @@ methods:
     platforms: [windowsphone]
   - name: setValue
     platforms: [windowsphone]
-

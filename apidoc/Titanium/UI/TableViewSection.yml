@@ -40,4 +40,3 @@ methods:
     platforms: [windowsphone]
   - name: getRows
     platforms: [windowsphone]
-

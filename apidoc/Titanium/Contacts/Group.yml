@@ -14,8 +14,6 @@ methods:
     platforms: [windowsphone]
   - name: remove
     platforms: [windowsphone]
-  - name: sortedMembers
-    platforms: [windowsphone]
   - name: getName
     platforms: [windowsphone]
   - name: setName

@@ -194,7 +194,7 @@ exports.init = function (logger, config, cli) {
 				var tiapp = builder.tiapp,
 					sanitizedName = sanitizeProjectName(tiapp.name),
 					// name of the directory holding appx and dependencies subfolder
-					dirName = sanitizedName + '_' + builder.buildVersion + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test');
+					dirName = sanitizedName + '_' + builder.buildVersion + (builder.useAppxBundle ? '' : ('_' + builder.cmakeArch)) + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test');
 					// path to folder holding appx
 					appxDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
 					// path to folder holding depencies of the app

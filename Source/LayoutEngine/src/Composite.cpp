@@ -212,7 +212,9 @@ namespace Titanium
 				} else if (leftType == Fixed) {
 					x2 -= leftValue;
 				}
-				if (rightType == Percent) {
+				if (centerXType == Fixed) {
+					x2 = 2 * (rightValue - centerXValue);
+				} else if (rightType == Percent) {
 					x1 -= rightValue;
 				} else if (rightType == Fixed) {
 					x2 -= rightValue;
@@ -275,7 +277,9 @@ namespace Titanium
 				} else if (topType == Fixed) {
 					x2 -= topValue;
 				}
-				if (bottomType == Percent) {
+				if (centerYType == Fixed) {
+					x2 = 2 * (bottomValue - centerYValue);
+				} else if (bottomType == Percent) {
 					x1 -= bottomValue;
 				} else if (bottomType == Fixed) {
 					x2 -= bottomValue;

@@ -17,4 +17,3 @@ methods:
     platforms: [windowsphone]
   - name: setText
     platforms: [windowsphone]
-

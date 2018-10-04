@@ -26,4 +26,3 @@ methods:
     platforms: [windowsphone]
   - name: setFont
     platforms: [windowsphone]
-
