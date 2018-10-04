@@ -106,6 +106,14 @@ function copyResources(next) {
 		fs.existsSync(d) || wrench.mkdirSyncRecursive(d);
 
 		if (fs.existsSync(to)) {
+			// Don't overwrite C++ source files because it causes unnecessary recompile
+			if (/\.(cpp|hpp|h)$/.test(to)) {
+				_t.logger.debug(__('Skipping %s', to.cyan));
+				if (next) {
+					next();
+				}
+				return;
+			}
 			_t.logger.debug(__('Overwriting file %s', to.cyan));
 		}
 

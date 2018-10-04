@@ -39,6 +39,12 @@ namespace Titanium
 			std::function<void(const CameraMediaItemType&)> onsuccess;
 		};
 
+		struct CameraOptionsSize
+		{
+			double width{ 0 };
+			double height{ 0 };
+		};
+
 		/*!
 		  @struct
 		  @discussion Simple object for specifying options to showCamera.
@@ -63,6 +69,7 @@ namespace Titanium
 			Quality videoQuality;
 			CameraOption whichCamera;
 			CameraOptionsTypeCallbacks callbacks;
+			CameraOptionsSize photoAspectRatio;
 		};
 		
 		TITANIUMKIT_EXPORT CameraOptionsType create_empty_CameraOptionsType(const JSContext& js_context);

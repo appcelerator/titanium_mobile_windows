@@ -139,4 +139,3 @@ events:
     platforms: [windowsphone]
   - name: start
     platforms: [windowsphone]
-

@@ -232,6 +232,10 @@ namespace Titanium
 		if (!event_copy.HasProperty("source")) {
 			event_copy.SetProperty("source", get_object());
 		}
+		if (!event_copy.HasProperty("bubbles")) {
+			event_copy.SetProperty("bubbles", get_context().CreateBoolean(get_bubbleParent()));
+		}
+
 		event_copy.SetProperty("type", event.get_context().CreateString(name));
 
 		TITANIUM_EXCEPTION_CATCH_START {
