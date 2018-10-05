@@ -13,8 +13,6 @@ properties:
     platforms: [windowsphone]
   - name: ccRecipients
     platforms: [windowsphone]
-  - name: html
-    platforms: [windowsphone]
   - name: messageBody
     platforms: [windowsphone]
   - name: subject
@@ -22,8 +20,6 @@ properties:
   - name: toRecipients
     platforms: [windowsphone]
 methods:
-  - name: addAttachment
-    platforms: [windowsphone]
   - name: isSupported
     platforms: [windowsphone]
   - name: open
@@ -35,10 +31,6 @@ methods:
   - name: getCcRecipients
     platforms: [windowsphone]
   - name: setCcRecipients
-    platforms: [windowsphone]
-  - name: getHtml
-    platforms: [windowsphone]
-  - name: setHtml
     platforms: [windowsphone]
   - name: getMessageBody
     platforms: [windowsphone]

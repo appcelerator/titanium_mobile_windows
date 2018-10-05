@@ -55,20 +55,6 @@ function checkIfShouldForceRebuild() {
 		return true;
 	}
 
-	// if encryption is enabled, then we must recompile the java files
-	if (this.encryptJS) {
-		this.logger.info(__('Forcing rebuild: JavaScript files need to be re-encrypted'));
-		return true;
-	}
-
-	// if encryptJS changed, then we need to recompile the java files
-	if (this.encryptJS !== manifest.encryptJS) {
-		this.logger.info(__('Forcing rebuild: JavaScript encryption flag changed'));
-		this.logger.info('  ' + __('Was: %s', manifest.encryptJS));
-		this.logger.info('  ' + __('Now: %s', this.encryptJS));
-		return true;
-	}
-
 	// check if the titanium sdk paths are different
 	if (this.platformPath !== manifest.platformPath) {
 		this.logger.info(__('Forcing rebuild: Titanium SDK path changed since last build'));

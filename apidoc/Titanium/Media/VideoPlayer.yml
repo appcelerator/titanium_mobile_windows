@@ -9,8 +9,6 @@ properties:
     platforms: [windowsphone]
   - name: endPlaybackTime
     platforms: [windowsphone]
-  - name: media
-    platforms: [windowsphone]
   - name: playableDuration
     platforms: [windowsphone]
   - name: playbackState
@@ -45,8 +43,6 @@ methods:
   - name: getEndPlaybackTime
     platforms: [windowsphone]
   - name: setEndPlaybackTime
-    platforms: [windowsphone]
-  - name: setMedia
     platforms: [windowsphone]
   - name: getPlayableDuration
     platforms: [windowsphone]

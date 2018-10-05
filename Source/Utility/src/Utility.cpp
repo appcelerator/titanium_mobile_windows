@@ -35,7 +35,7 @@ namespace TitaniumWindows
 		//
 		std::string ConvertString(::Platform::String^ str) 
 		{
-			if (str->IsEmpty()) {
+			if (str == nullptr || str->IsEmpty()) {
 				return "";
 			}
 			return std::string(str->Begin(), str->End());
@@ -70,7 +70,7 @@ namespace TitaniumWindows
 		//
 		std::string ConvertUTF8String(::Platform::String^ str) 
 		{
-			if (str->IsEmpty()) {
+			if (str == nullptr || str->IsEmpty()) {
 				return "";
 			}
 			std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
