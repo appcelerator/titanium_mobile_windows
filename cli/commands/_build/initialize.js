@@ -94,6 +94,9 @@ function initialize(next) {
 	this.cmakeListFile = path.join(this.buildDir, 'CMakeLists.txt'); // lives above the buildSrcDir
 	this.cmakeFinderDir = path.join(this.buildDir, 'cmake');
 
+	// Generate appxbundle only for dist-* because it is not actually required for other targets.
+	this.useAppxBundle = (/^dist-(phone|win)store$/.test(this.target));
+
 	// Hyperloop configuration
 	var hyperloopAppcJs = path.join(this.projectDir, 'appc.windows.js');
 	this.hyperloopConfig = fs.existsSync(hyperloopAppcJs) && require(hyperloopAppcJs).hyperloop || {};
