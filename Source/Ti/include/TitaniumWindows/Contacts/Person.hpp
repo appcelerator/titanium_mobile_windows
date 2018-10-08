@@ -106,7 +106,7 @@ namespace TitaniumWindows
 			virtual Titanium::Contacts::Urls get_url() const TITANIUM_NOEXCEPT override final;
 			virtual void set_url(const Titanium::Contacts::Urls&) TITANIUM_NOEXCEPT override final;
 
-			void remove();
+			void remove(Windows::ApplicationModel::Contacts::ContactStore^);
 #if defined(IS_WINDOWS_10)
 			Contact^ GetContact() const;
 #endif
