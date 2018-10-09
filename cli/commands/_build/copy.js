@@ -671,7 +671,8 @@ function copyResources(next) {
 								targets: {
 									safari: '10' // matches the version of jscore we use
 								},
-								resourcesDir: this.buildTargetAssetsDir
+								resourcesDir: this.buildTargetAssetsDir,
+								logger: t_.logger
 							});
 							const newContents = r.contents;
 
