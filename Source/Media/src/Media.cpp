@@ -434,8 +434,16 @@ namespace TitaniumWindows
 			}
 
 			if (cameraOptionsState__.overlay) {
-				const auto uiModule = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI")).GetPrivate<Titanium::UIModule>();
-				uiModule->get_currentWindow()->getViewLayoutDelegate()->remove(cameraOptionsState__.overlay);
+				auto titanium_js = get_context().get_global_object().GetProperty("Titanium");
+				TITANIUM_ASSERT(titanium_js.IsObject());
+				auto titanium_obj = static_cast<JSObject>(titanium_js);
+
+				auto ui_js = titanium_obj.GetProperty("UI");
+				TITANIUM_ASSERT(ui_js.IsObject());
+				auto ui_obj = static_cast<JSObject>(ui_js);
+				auto ui_ptr = ui_obj.GetPrivate<Titanium::UIModule>();
+
+				ui_ptr->get_currentWindow()->getViewLayoutDelegate()->remove(cameraOptionsState__.overlay);
 			}
 
 			if (shouldRemoveRotationEvent__) {
@@ -445,8 +453,16 @@ namespace TitaniumWindows
 
 			TitaniumWindows::Utility::RemoveViewFromCurrentWindow(captureElement__, [this, callback]() {
 				// Close preview Window
-				const auto uiModule = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI")).GetPrivate<Titanium::UIModule>();
-				uiModule->get_currentWindow()->close(nullptr);
+				auto titanium_js = get_context().get_global_object().GetProperty("Titanium");
+				TITANIUM_ASSERT(titanium_js.IsObject());
+				auto titanium_obj = static_cast<JSObject>(titanium_js);
+
+				auto ui_js = titanium_obj.GetProperty("UI");
+				TITANIUM_ASSERT(ui_js.IsObject());
+				auto ui_obj = static_cast<JSObject>(ui_js);
+				auto ui_ptr = ui_obj.GetPrivate<Titanium::UIModule>();
+
+				ui_ptr->get_currentWindow()->close(nullptr);
 
 				if (callback) {
 					callback();
@@ -761,8 +777,16 @@ namespace TitaniumWindows
 		if (cameraOptionsState__.overlay) {
 			// Add overlay view to new Window. Running on UI thread to make sure it's done on UI thread after SetViewForCurrentWindow.
 			TitaniumWindows::Utility::RunOnUIThread([this]() {
-				const auto uiModule = static_cast<JSObject>(get_context().JSEvaluateScript("Ti.UI")).GetPrivate<Titanium::UIModule>();
-				uiModule->get_currentWindow()->getViewLayoutDelegate()->add(cameraOptionsState__.overlay);
+				auto titanium_js = get_context().get_global_object().GetProperty("Titanium");
+				TITANIUM_ASSERT(titanium_js.IsObject());
+				auto titanium_obj = static_cast<JSObject>(titanium_js);
+
+				auto ui_js = titanium_obj.GetProperty("UI");
+				TITANIUM_ASSERT(ui_js.IsObject());
+				auto ui_obj = static_cast<JSObject>(ui_js);
+				auto ui_ptr = ui_obj.GetPrivate<Titanium::UIModule>();
+
+				ui_ptr->get_currentWindow()->getViewLayoutDelegate()->add(cameraOptionsState__.overlay);
 			});
 		}
 	}
