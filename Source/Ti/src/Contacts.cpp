@@ -18,6 +18,12 @@
 #include <collection.h>
 #include <concrt.h>
 
+#define ENSURE_CONTACTSTORE(RESULT) \
+  if (contactStore__ == nullptr) { \
+    HAL::detail::ThrowRuntimeError("TitaniumWindows::Contact", "Call Ti.Contacts.requestContactsPermissions before accessing contacts."); \
+    return RESULT; \
+  } \
+
 namespace TitaniumWindows
 {
 
@@ -44,17 +50,12 @@ namespace TitaniumWindows
 	std::vector<std::shared_ptr<Titanium::Contacts::Person>> ContactsModule::getAllPeople(const uint32_t& limit) TITANIUM_NOEXCEPT
 	{
 		std::vector<std::shared_ptr<Titanium::Contacts::Person>> result;
-#if defined(IS_WINDOWS_10)
-		// FIXME Should we grab the contact store during requestContactsPermissions?
+		ENSURE_CONTACTSTORE(result);
 		try {
-
 			IVectorView<Contact^>^ contacts;
 			concurrency::event event;
-			concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
-			.then([](ContactStore^ store) {
-				return store->FindContactsAsync();
-			}, concurrency::task_continuation_context::use_arbitrary())
-			.then([&contacts, &event] (concurrency::task<IVectorView<Contact^>^> task) {
+			concurrency::create_task(contactStore__->FindContactsAsync(), concurrency::task_continuation_context::use_arbitrary())
+			  .then([&contacts, &event] (concurrency::task<IVectorView<Contact^>^> task) {
 				try {
 					contacts = task.get();
 				} catch (Platform::AccessDeniedException^ ade) {
@@ -84,34 +85,23 @@ namespace TitaniumWindows
 		} catch (...) {
 			TITANIUM_LOG_ERROR("Ti.Contacts.getAllPeople: Unknown error");
 		}
-#else
-		TITANIUM_LOG_ERROR("Ti.Contacts.getAllPeople: Contact access not allowed on Windows 8.1 Store/Desktop apps");
-#endif
 		return result;
 	}
 
 	std::shared_ptr<Titanium::Contacts::Group> ContactsModule::getGroupByIdentifier(const std::string& id) TITANIUM_NOEXCEPT
 	{
-#if defined(IS_WINDOWS_10)
 		return TitaniumWindows::Contacts::Group::getGroupByIdentifier(id, get_context());
-#else
-		TITANIUM_LOG_WARN("Ti.Contacts.getGroupByIdentifier: Not supported in Windows 8.1");
-		return nullptr;
-#endif
 	}
 
 	std::vector<std::shared_ptr<Titanium::Contacts::Person>> ContactsModule::getPeopleWithName(const std::string& name) TITANIUM_NOEXCEPT
 	{
 		std::vector<std::shared_ptr<Titanium::Contacts::Person>> result;
-#if defined(IS_WINDOWS_10)
-		// FIXME Should we grab the contact store during requestContactsPermissions?
+		ENSURE_CONTACTSTORE(result);
+
 		IVectorView<Contact^>^ contacts;
 		const auto query = TitaniumWindows::Utility::ConvertUTF8String(name);
 		concurrency::event event;
-		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
-		.then([&query](ContactStore^ store) {
-			return store->FindContactsAsync(query);
-		}, concurrency::task_continuation_context::use_arbitrary())
+		concurrency::create_task(contactStore__->FindContactsAsync(query), concurrency::task_continuation_context::use_arbitrary())
 		.then([&contacts, &event](concurrency::task<IVectorView<Contact^>^> task) {
 			try {
 				contacts = task.get();
@@ -138,24 +128,17 @@ namespace TitaniumWindows
 				result.push_back(TitaniumWindows::Contacts::contactToPerson(ctx, contact));
 			}
 		}
-#else
-		TITANIUM_LOG_ERROR("Ti.Contacts.getPeopleWithName: Contact access not allowed on Windows 8.1 Store/Desktop apps");
-#endif
 		return result;
 	}
 
 	std::shared_ptr<Titanium::Contacts::Person> ContactsModule::getPersonByIdentifier(const std::string& id) TITANIUM_NOEXCEPT
 	{
 		std::shared_ptr<Titanium::Contacts::Person> result = nullptr;
-#if defined(IS_WINDOWS_10)
-		// FIXME Should we grab the contact store during requestContactsPermissions?
+		ENSURE_CONTACTSTORE(result);
 		Contact^ contact;
 		const auto identifier = Utility::ConvertUTF8String(id);
 		concurrency::event event;
-		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
-		.then([&identifier](ContactStore^ store) {
-			return store->GetContactAsync(identifier);
-		}, concurrency::task_continuation_context::use_arbitrary())
+		concurrency::create_task(contactStore__->GetContactAsync(identifier), concurrency::task_continuation_context::use_arbitrary())
 		.then([&contact, &event](concurrency::task<Contact^> task) {
 			try {
 				contact = task.get();
@@ -183,9 +166,6 @@ namespace TitaniumWindows
 			const auto ctx = get_context();
 			result = TitaniumWindows::Contacts::contactToPerson(ctx, contact);
 		}
-#else
-		TITANIUM_LOG_ERROR("Ti.Contacts.getPersonByIdentifier: Contact access not allowed on Windows 8.1 Store/Desktop apps");
-#endif
 		return result;
 	}
 
@@ -209,13 +189,11 @@ namespace TitaniumWindows
 		ContactList^ default_list;
 		ContactStore^ contact_store;
 
+		ENSURE_CONTACTSTORE(default_list);
+
 		// Search to see if it exists
 		concurrency::event event;
-		concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AppContactsReadWrite), concurrency::task_continuation_context::use_arbitrary())
-			.then([&contact_store](ContactStore^ store) {
-			contact_store = store;
-			return store->FindContactListsAsync();
-		}, concurrency::task_continuation_context::use_arbitrary())
+		concurrency::create_task(contactStore__->FindContactListsAsync(), concurrency::task_continuation_context::use_arbitrary())
 			.then([&default_list, &event](concurrency::task<IVectorView<ContactList^>^> task) {
 			try {
 				const auto lists = task.get();
@@ -325,8 +303,13 @@ namespace TitaniumWindows
 
 	void ContactsModule::removePerson(const std::shared_ptr<Titanium::Contacts::Person>& person) TITANIUM_NOEXCEPT
 	{
+		if (contactStore__ == nullptr) {
+				HAL::detail::ThrowRuntimeError("TitaniumWindows::Contact", "Call Ti.Contacts.requestContactsPermissions before accessing contacts.");
+				return;
+		}
+
 		std::shared_ptr<TitaniumWindows::Contacts::Person> win_person = std::dynamic_pointer_cast<TitaniumWindows::Contacts::Person>(person);
-		win_person->remove();
+		win_person->remove(contactStore__);
 	}
 
 	void ContactsModule::revert() TITANIUM_NOEXCEPT
@@ -386,16 +369,14 @@ namespace TitaniumWindows
 	void ContactsModule::requestContactsPermissions(JSObject& callback) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_EXCEPTION_CATCH_START{
-			Titanium::ErrorResponse e;
-			e.code = 0;
-			e.error = "";
-	#if defined(IS_WINDOWS_10)
 			if (Titanium::Contacts::AUTHORIZATION::UNKNOWN == contactsAuthorization__) {
-				concurrency::event event;
-				concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly), concurrency::task_continuation_context::use_arbitrary())
-				.then([&callback, &event, &e, this](concurrency::task<ContactStore^> task) {
+				concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AllContactsReadOnly))
+				.then([callback, this](concurrency::task<ContactStore^> task) {
+					Titanium::ErrorResponse e;
+					e.code = 0;
+					e.error = "";
 					try {
-						task.get(); // TODO Set a field to hold the store for re-use in the other methods?
+						contactStore__ = task.get();
 						contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::AUTHORIZED;
 					} catch (Platform::AccessDeniedException^ ade) {
 						e.code = ade->HResult;
@@ -410,24 +391,28 @@ namespace TitaniumWindows
 						contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::DENIED;
 						TITANIUM_LOG_ERROR("Unable to get contact store");
 					}
-					event.set();
-				}, concurrency::task_continuation_context::use_arbitrary());
-				event.wait();
-			}
-	#else
-			contactsAuthorization__ = Titanium::Contacts::AUTHORIZATION::RESTRICTED;
-			e.error = "Access denied to contacts: Contact query/lookup not allowed on Windows 8.1 Store/Desktop apps. You can still call showContacts() to pick a contact.";
-	#endif
 
-			if (Titanium::Contacts::AUTHORIZATION::DENIED == contactsAuthorization__) {
-				e.success = false;
+					if (Titanium::Contacts::AUTHORIZATION::DENIED == contactsAuthorization__) {
+						e.success = false;
+					}
+
+					// fire the callback in main thread
+					const std::vector<JSValue> args = {
+						ErrorResponse_to_js(callback.get_context(), e)
+					};
+					static_cast<JSObject>(callback)(args, get_object());
+
+				});
+			} else {
+				Titanium::ErrorResponse e;
+				e.code = 0;
+				e.error = "";
+				const std::vector<JSValue> args = {
+					ErrorResponse_to_js(callback.get_context(), e)
+				};
+				static_cast<JSObject>(callback)(args, get_object());
 			}
 
-			// fire the callback in main thread
-			const std::vector<JSValue> args = {
-				ErrorResponse_to_js(callback.get_context(), e)
-			};
-			callback(args, get_object());
 		} TITANIUMWINDOWS_EXCEPTION_CATCH_END
 	}
 

@@ -990,18 +990,14 @@ namespace TitaniumWindows
 		}
 #endif
 
-		void Person::remove()
+		void Person::remove(Windows::ApplicationModel::Contacts::ContactStore^ contactStore)
 		{
 			// TODO Remove from any contact lists in DB
-#if defined(IS_WINDOWS_10)
 			CONTACT_VOID_GUARD
 			const auto list_id = contact__->ContactListId;
 			// Pull up the contact list associated with this contact...
 			concurrency::event event;
-			concurrency::create_task(ContactManager::RequestStoreAsync(ContactStoreAccessType::AppContactsReadWrite))
-			.then([&list_id](ContactStore^ store) {
-				return store->GetContactListAsync(list_id);
-			}, concurrency::task_continuation_context::use_arbitrary())
+			concurrency::create_task(contactStore->GetContactListAsync(list_id), concurrency::task_continuation_context::use_arbitrary())
 			.then([this] (ContactList^ list) {
 				return list->DeleteContactAsync(contact__);
 			}, concurrency::task_continuation_context::use_arbitrary())
@@ -1015,9 +1011,6 @@ namespace TitaniumWindows
 				event.set();
 			}, concurrency::task_continuation_context::use_arbitrary());
 			event.wait();
-#else
-			TITANIUM_MODULE_LOG_WARN("Person::remove: Unimplemented");
-#endif
 		}
 
 	}  // namespace Contacts

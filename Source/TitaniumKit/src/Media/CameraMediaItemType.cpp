@@ -23,7 +23,10 @@ namespace Titanium
 			auto object = static_cast<JSObject>(js_context.JSEvaluateScript(R"(
 				var item = { get media() {
                     if (this._media_filename) {
-						return Ti.Filesystem.getFile(this._media_filename).read();
+						var file = Ti.Filesystem.getFile(this._media_filename);
+						if (file.exists()) {
+							return file.read();
+						}
 				    }
 					return null;
 				}};
