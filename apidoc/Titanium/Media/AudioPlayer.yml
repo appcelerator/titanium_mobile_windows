@@ -19,21 +19,9 @@ properties:
     platforms: [windowsphone]
   - name: STATE_WAITING_FOR_QUEUE
     platforms: [windowsphone]
-  - name: allowBackground
-    platforms: [windowsphone]
-  - name: autoplay
-    platforms: [windowsphone]
-  - name: bitRate
-    platforms: [windowsphone]
-  - name: duration
-    platforms: [windowsphone]
-  - name: idle
-    platforms: [windowsphone]
   - name: paused
     platforms: [windowsphone]
   - name: playing
-    platforms: [windowsphone]
-  - name: progress
     platforms: [windowsphone]
   - name: state
     platforms: [windowsphone]
@@ -42,8 +30,6 @@ properties:
   - name: volume
     platforms: [windowsphone]
   - name: waiting
-    platforms: [windowsphone]
-  - name: bufferSize
     platforms: [windowsphone]
   - name: time
     platforms: [windowsphone]
@@ -60,29 +46,11 @@ methods:
     platforms: [windowsphone]
   - name: stop
     platforms: [windowsphone]
-  - name: getAllowBackground
-    platforms: [windowsphone]
-  - name: setAllowBackground
-    platforms: [windowsphone]
-  - name: getAutoplay
-    platforms: [windowsphone]
-  - name: setAutoplay
-    platforms: [windowsphone]
-  - name: getBitRate
-    platforms: [windowsphone]
-  - name: setBitRate
-    platforms: [windowsphone]
-  - name: getDuration
-    platforms: [windowsphone]
-  - name: getIdle
-    platforms: [windowsphone]
   - name: getPaused
     platforms: [windowsphone]
   - name: setPaused
     platforms: [windowsphone]
   - name: getPlaying
-    platforms: [windowsphone]
-  - name: getProgress
     platforms: [windowsphone]
   - name: getState
     platforms: [windowsphone]
@@ -95,10 +63,6 @@ methods:
   - name: setVolume
     platforms: [windowsphone]
   - name: getWaiting
-    platforms: [windowsphone]
-  - name: getBufferSize
-    platforms: [windowsphone]
-  - name: setBufferSize
     platforms: [windowsphone]
   - name: getTime
     platforms: [windowsphone]

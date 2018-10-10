@@ -55,7 +55,6 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.55.0 REQUIRED)
 
 set(SOURCE_TitaniumKit
-  include/Titanium/Titanium.hpp
   include/Titanium/Application.hpp
   src/Application.cpp
   include/Titanium/GlobalObject.hpp

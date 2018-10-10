@@ -874,10 +874,17 @@ namespace TitaniumWindows
 				backgroundLinearGradientBrush__ = ref new LinearGradientBrush();
 				backgroundLinearGradientBrush__->StartPoint = startPoint;
 				backgroundLinearGradientBrush__->EndPoint = endPoint;
-				for (auto color : backgroundGradient__.colors) {
+				const auto numberOfColors = backgroundGradient__.colors.size();
+				const double offset = numberOfColors == 1 ? 1.0 : (1.0 / (numberOfColors - 1));
+				for (unsigned int i = 0; i < numberOfColors; i++) {
+					const auto color = backgroundGradient__.colors.at(i);
 					auto stop = ref new GradientStop();
 					stop->Color = ColorForName(color.color);
-					stop->Offset = color.offset;
+					if (color.offset >= 0) {
+						stop->Offset = color.offset;
+					} else {
+						stop->Offset = offset * i; // offsets are equally divided by default
+					}
 					backgroundLinearGradientBrush__->GradientStops->Append(stop);
 				}
 				updateBackground(backgroundLinearGradientBrush__);
@@ -1361,11 +1368,29 @@ namespace TitaniumWindows
 			}
 		}
 
+		bool WindowsViewLayoutDelegate::sourceTest(::Platform::Object ^ source, Windows::UI::Xaml::DependencyObject^ target)
+		{
+			const auto count = VisualTreeHelper::GetChildrenCount(target);
+			for (int i = 0; i < count; i++) {
+				const auto child = VisualTreeHelper::GetChild(target, i);
+				if (source->Equals(child) || sourceTest(source, child)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		std::shared_ptr<Titanium::UI::View> WindowsViewLayoutDelegate::sourceTest(::Platform::Object^ source, const std::shared_ptr<Titanium::UI::View>& root)
 		{
 			if (source->Equals(component__) || source->Equals(border__) || source->Equals(underlying_control__) || source->Equals(styling_component__)) {
 				return root;
 			}
+
+			if (underlying_control__ && sourceTest(source, underlying_control__))
+			{
+				return root;
+			}
+
 			for (const auto child : get_children()) {
 				const auto sender = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->sourceTest(source, child);
 				if (sender) {
@@ -1476,7 +1501,16 @@ namespace TitaniumWindows
 				 	if (event_delegate != nullptr) {
 					 	JSContext js_context = event_delegate->get_context();
 						JSObject eventArgs = js_context.CreateObject();
-						eventArgs.SetProperty("source", event_delegate->get_object());
+						const auto source = sourceTest(e->OriginalSource);
+						if (source) {
+							// focus should not bubble
+							if (source->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent() != getComponent()) {
+								return;
+							}
+							eventArgs.SetProperty("source", source->get_object());
+						}
+
+						eventArgs.SetProperty("bubbles", js_context.CreateBoolean(false));
 						event_delegate->fireEvent("focus", eventArgs);
 				 	}
 				});
@@ -1486,7 +1520,15 @@ namespace TitaniumWindows
 					if (event_delegate != nullptr) {
 						JSContext js_context = event_delegate->get_context();
 						JSObject eventArgs = js_context.CreateObject();
-						eventArgs.SetProperty("source", event_delegate->get_object());
+						const auto source = sourceTest(e->OriginalSource);
+						if (source) {
+							// blur should not bubble
+							if (source->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent() != getComponent()) {
+								return;
+							}
+							eventArgs.SetProperty("source", source->get_object());
+						}
+						eventArgs.SetProperty("bubbles", js_context.CreateBoolean(false));
 						event_delegate->fireEvent("blur", eventArgs);
 					}
 				});

@@ -12,7 +12,6 @@ namespace Titanium
 	NetworkModule::NetworkModule(const JSContext& js_context) TITANIUM_NOEXCEPT
 	    : Module(js_context, "Ti.Network")
 		, networkType__(Titanium::Network::TYPE::UNKNOWN)
-		, networkTypeName__(Titanium::Network::Constants::to_string(Titanium::Network::TYPE::UNKNOWN))
 		, online__(false)
 		, remoteDeviceUUID__("")
 		, remoteNotificationsEnabled__(false)
@@ -22,7 +21,6 @@ namespace Titanium
 	}
 
 	TITANIUM_PROPERTY_READ(NetworkModule, Network::TYPE, networkType);
-	TITANIUM_PROPERTY_READ(NetworkModule, std::string, networkTypeName);
 	TITANIUM_PROPERTY_READ(NetworkModule, std::string, remoteDeviceUUID);
 	TITANIUM_PROPERTY_READ(NetworkModule, std::vector<Network::NOTIFICATION_TYPE>, remoteNotificationTypes);
 	TITANIUM_PROPERTY_READ(NetworkModule, bool, remoteNotificationsEnabled);
@@ -400,10 +398,10 @@ namespace Titanium
 
 	TITANIUM_FUNCTION(NetworkModule, getHTTPCookies)
 	{
-		ENSURE_ARGUMENT_INDEX(2);
+		ENSURE_ARGUMENT_INDEX(1);
 		ENSURE_STRING_AT_INDEX(domain, 0);
 		ENSURE_STRING_AT_INDEX(path, 1);
-		ENSURE_STRING_AT_INDEX(name, 2);
+		ENSURE_OPTIONAL_STRING_AT_INDEX(name, 2, "");
 
 		std::vector<JSValue> values;
 		for (const auto value : getHTTPCookies(domain, path, name)) {

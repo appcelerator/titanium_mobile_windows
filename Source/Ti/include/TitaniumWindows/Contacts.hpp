@@ -64,6 +64,7 @@ namespace TitaniumWindows
 #endif
 #pragma warning(push)
 #pragma warning(disable : 4251)
+		Windows::ApplicationModel::Contacts::ContactStore^ contactStore__;
 		std::vector<std::shared_ptr<TitaniumWindows::Contacts::Group>> to_create;
 		std::vector<std::shared_ptr<TitaniumWindows::Contacts::Group>> to_remove;
 #pragma warning(pop)

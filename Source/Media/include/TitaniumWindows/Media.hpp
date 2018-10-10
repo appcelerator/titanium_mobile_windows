@@ -197,13 +197,8 @@ namespace TitaniumWindows
 
 		void focus(const Titanium::Media::CameraOptionsType&, const bool& reportError = true) TITANIUM_NOEXCEPT;
 
-#if !defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		void showDefaultCamera(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT;
-#endif
-
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		void updatePreviewOrientation();
-#endif
 		void findCameraDevices();
 		Windows::Storage::FileProperties::PhotoOrientation toPhotoOrientation();
 		std::uint32_t orientationToDegrees();
@@ -220,7 +215,6 @@ namespace TitaniumWindows
 		Titanium::Media::MusicLibraryOptionsType openMusicLibraryOptionsState__;
 		JSFunction js_beep__;
 		Windows::Devices::Enumeration::DeviceInformationCollection^ cameraDevices__{ nullptr };
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 		Titanium::Media::CameraOptionsType cameraOptionsState__;
 		bool screenCaptureStarted__{ false };
 		bool cameraPreviewStarted__ { false };
@@ -233,7 +227,6 @@ namespace TitaniumWindows
 		Windows::Foundation::EventRegistrationToken camera_navigated_event__;
 		Windows::Foundation::EventRegistrationToken camera_orientation_event__;
 		TakingPictureState^ takingPictureState__;
-#endif
 #pragma warning(pop)
 	};
 

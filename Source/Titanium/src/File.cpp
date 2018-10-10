@@ -28,6 +28,39 @@ namespace TitaniumWindows
 			TITANIUM_LOG_DEBUG("TitaniumWindows::Filesystem::File::ctor");
 		}
 
+		// Creates a file at the path identified by this file object.
+		bool File::createEmptyFile(const std::string& path)
+		{
+			try {
+				auto separator = path.find_last_of("\\");
+
+				if (separator == std::string::npos) {
+					return false;
+				}
+
+				const auto folder = getFolderFromPathSync(path.substr(0, separator));
+				if (folder) {
+					const auto filename = TitaniumWindows::Utility::ConvertUTF8String(path.substr(separator + 1, path.size() - separator - 1));
+					bool status = false;
+					concurrency::event evt;
+					concurrency::create_task(folder->CreateFileAsync(filename)).then([&evt, path, &status](concurrency::task<Windows::Storage::StorageFile^> task) {
+						try {
+							task.get();
+							status = true;
+						} catch (...) {
+							TITANIUM_LOG_WARN("Unable to create file for ", path);
+						}
+						evt.set();
+					}, concurrency::task_continuation_context::use_arbitrary());
+					evt.wait();
+					return status;
+				}
+			} catch (...) {
+				TITANIUM_LOG_WARN("Unable to get a folder for ", path);
+			}
+			return false;
+		}
+
 		std::string File::normalizePath(const std::string& path)
 		{
 			// this assumes we already joined the arguments with separator
@@ -71,7 +104,7 @@ namespace TitaniumWindows
 			// if this path is relative path, let's use application installed location path
 			if (name.find(":\\") == std::string::npos) {
 				const auto location = Windows::ApplicationModel::Package::Current->InstalledLocation->Path;
-				path_ = TitaniumWindows::Utility::ConvertString(location) + "\\" + name;
+				path_ = TitaniumWindows::Utility::ConvertUTF8String(location) + "\\" + name;
 			} else {
 				path_ = name;
 			}
@@ -113,7 +146,7 @@ namespace TitaniumWindows
 				const auto folder = getFolderFromPathSync(parent);
 				bool result = false;
 				concurrency::event event;
-				task<StorageFolder^>(folder->CreateFolderAsync(TitaniumWindows::Utility::ConvertString(desiredName))).then([&result, &event](task<StorageFolder^> task) {
+				task<StorageFolder^>(folder->CreateFolderAsync(TitaniumWindows::Utility::ConvertUTF8String(desiredName))).then([&result, &event](task<StorageFolder^> task) {
 						try {
 							task.get();
 							result = true;
@@ -363,7 +396,7 @@ namespace TitaniumWindows
 			if (result) {
 				// because this creates new file which didn't exist, update the
 				// file_ member
-				file_ = getFileFromPathSync(TitaniumWindows::Utility::ConvertString(path_));
+				file_ = getFileFromPathSync(path_);
 				folder_ = nullptr;
 			}
 			return result;
@@ -432,7 +465,7 @@ namespace TitaniumWindows
 					try {
 						auto folders = task.get();
 						std::for_each(begin(folders), end(folders), [&filenames](StorageFolder^ folder) {
-							filenames.push_back(TitaniumWindows::Utility::ConvertString(folder->Name));
+							filenames.push_back(TitaniumWindows::Utility::ConvertUTF8String(folder->Name));
 						});
 					} catch (Platform::Exception^ ex) {
 						TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
@@ -450,7 +483,7 @@ namespace TitaniumWindows
 					try {
 						auto files = task.get();
 						std::for_each(begin(files), end(files), [&filenames](StorageFile^ file) {
-							filenames.push_back(TitaniumWindows::Utility::ConvertString(file->Name));
+							filenames.push_back(TitaniumWindows::Utility::ConvertUTF8String(file->Name));
 						});
 					} catch (Platform::Exception^ ex) {
 						TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
@@ -514,7 +547,7 @@ namespace TitaniumWindows
 			}
 
 			// retrieve destination file
-			StorageFile^ fileToReplace = getFileFromPathSync(TitaniumWindows::Utility::ConvertString(path));
+			StorageFile^ fileToReplace = getFileFromPathSync(path);
 
 			if (fileToReplace == nullptr) {
 				return false;
@@ -565,7 +598,7 @@ namespace TitaniumWindows
 			auto item = getStorageItem();
 			concurrency::event event;
 			bool result = false;
-			create_task(item->RenameAsync(TitaniumWindows::Utility::ConvertString(path))).then([&result, &event](task<void> task) {
+			create_task(item->RenameAsync(TitaniumWindows::Utility::ConvertUTF8String(path))).then([&result, &event](task<void> task) {
 					try {
 						task.get();
 						result = true;
@@ -624,7 +657,7 @@ namespace TitaniumWindows
 					TITANIUM_LOG_WARN("File::write: Can't write to file");
 					return false;
 				}
-				file_ = getFileFromPathSync(TitaniumWindows::Utility::ConvertString(path_));
+				file_ = getFileFromPathSync(path_);
 				if (file_ == nullptr) {
 					TITANIUM_LOG_WARN("File::write: Can't get file");
 					return false;
