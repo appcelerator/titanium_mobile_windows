@@ -674,8 +674,6 @@ namespace Titanium
 		TITANIUM_ADD_PROPERTY(UIModule, currentTab);
 		TITANIUM_ADD_FUNCTION(UIModule, getCurrentTab);
 		TITANIUM_ADD_FUNCTION(UIModule, setCurrentTab);
-		TITANIUM_ADD_PROPERTY_READONLY(UIModule, currentWindow);
-		TITANIUM_ADD_FUNCTION(UIModule, getCurrentWindow);
 
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ANIMATION_CURVE_EASE_IN);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ANIMATION_CURVE_EASE_IN_OUT);
@@ -1282,22 +1280,12 @@ namespace Titanium
 		return true;
 	}
 
-	TITANIUM_PROPERTY_GETTER(UIModule, currentWindow)
-	{
-		const auto window = get_currentWindow();
-		if (window != nullptr) {
-			return window->get_object();
-		}
-		return get_context().CreateNull();
-	}
-
 	TITANIUM_FUNCTION_AS_GETTER(UIModule, getBackgroundImage, backgroundImage)
 	TITANIUM_FUNCTION_AS_SETTER(UIModule, setBackgroundImage, backgroundImage)
 	TITANIUM_FUNCTION_AS_GETTER(UIModule, getBackgroundColor, backgroundColor)
 	TITANIUM_FUNCTION_AS_SETTER(UIModule, setBackgroundColor, backgroundColor)
 	TITANIUM_FUNCTION_AS_GETTER(UIModule, getCurrentTab, currentTab)
 	TITANIUM_FUNCTION_AS_SETTER(UIModule, setCurrentTab, currentTab)
-	TITANIUM_FUNCTION_AS_GETTER(UIModule, getCurrentWindow, currentWindow)
 
 	UIModule& UIModule::ListViewClass(const JSClass& ListView) TITANIUM_NOEXCEPT
 	{

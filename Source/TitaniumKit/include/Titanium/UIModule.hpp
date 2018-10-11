@@ -63,7 +63,6 @@ namespace Titanium
 		TITANIUM_PROPERTY_DEF(backgroundImage);
 		TITANIUM_PROPERTY_DEF(backgroundColor);
 		TITANIUM_PROPERTY_DEF(currentTab);
-		TITANIUM_PROPERTY_READONLY_DEF(currentWindow);
 
 		TITANIUM_PROPERTY_READONLY_DEF(ANIMATION_CURVE_EASE_IN);
 		TITANIUM_PROPERTY_READONLY_DEF(ANIMATION_CURVE_EASE_IN_OUT);
@@ -297,7 +296,6 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(setBackgroundImage);
 		TITANIUM_FUNCTION_DEF(getCurrentTab);
 		TITANIUM_FUNCTION_DEF(setCurrentTab);
-		TITANIUM_FUNCTION_DEF(getCurrentWindow);
 
 		UIModule& ListViewClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& ListSectionClass(const JSClass&) TITANIUM_NOEXCEPT;
