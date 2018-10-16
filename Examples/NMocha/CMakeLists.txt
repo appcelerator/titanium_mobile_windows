@@ -110,145 +110,472 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
   @ONLY)
 
-file(GLOB_RECURSE ASSETS_DIRECTORY "src/Assets/*.*")
-
-# Exclude i18n files, that's supposed to be used from CLI
-file(GLOB_RECURSE I18N_FILES "src/Assets/i18n/*")
-list(REMOVE_ITEM ASSETS_DIRECTORY ${I18N_FILES})
-
-set(SOURCE_Assets
+set(SOURCE_analytics
+  "src/Assets/analytics/featureEventPayload.json"
+  )
+source_group("analytics" FILES
+  "src/Assets/analytics/featureEventPayload.json"
+  )
+set_property(SOURCE ${SOURCE_analytics} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_analytics} PROPERTY VS_DEPLOYMENT_LOCATION "analytics")
+set(SOURCE_src_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
-  ${ASSETS_DIRECTORY}
   ${JavaScriptCore_LIBRARY_DIR}/Release/JavaScriptCore.dll
   ${JavaScriptCore_LIBRARY_DIR}/Release/WTF.dll
+  "src/Assets/app.js"
+  "src/Assets/console.test.js"
+  "src/Assets/error.test.js"
+  "src/Assets/global.test.js"
+  "src/Assets/Logo.png"
+  "src/Assets/require.test.js"
+  "src/Assets/sample.mp3"
+  "src/Assets/should.js"
+  "src/Assets/SmallLogo.png"
+  "src/Assets/SplashScreen.png"
+  "src/Assets/StoreLogo.png"
+  "src/Assets/string.test.js"
+  "src/Assets/testDbResource.db"
+  "src/Assets/ti-mocha.js"
+  "src/Assets/ti.accelerometer.test.js"
+  "src/Assets/ti.analytics.test.js"
+  "src/Assets/ti.android.notificationmanager.test.js"
+  "src/Assets/ti.android.service.interval.js"
+  "src/Assets/ti.android.service.normal.js"
+  "src/Assets/ti.android.service.test.js"
+  "src/Assets/ti.android.test.js"
+  "src/Assets/ti.api.test.js"
+  "src/Assets/ti.app.ios.searchquery.test.js"
+  "src/Assets/ti.app.ios.test.js"
+  "src/Assets/ti.app.ios.useractivity.test.js"
+  "src/Assets/ti.app.properties.test.js"
+  "src/Assets/ti.app.test.js"
+  "src/Assets/ti.app.windows.backgroundservice.test.js"
+  "src/Assets/ti.blob.test.js"
+  "src/Assets/ti.bootstrap.test.js"
+  "src/Assets/ti.buffer.test.js"
+  "src/Assets/ti.calendar.calendar.test.js"
+  "src/Assets/ti.codec.test.js"
+  "src/Assets/ti.contacts.group.test.js"
+  "src/Assets/ti.contacts.person.test.js"
+  "src/Assets/ti.contacts.test.js"
+  "src/Assets/ti.database.test.js"
+  "src/Assets/ti.filesystem.file.test.js"
+  "src/Assets/ti.filesystem.filestream.test.js"
+  "src/Assets/ti.filesystem.test.js"
+  "src/Assets/ti.geolocation.test.js"
+  "src/Assets/ti.gesture.test.js"
+  "src/Assets/ti.locale.test.js"
+  "src/Assets/ti.map.test.js"
+  "src/Assets/ti.media.audioplayer.test.js"
+  "src/Assets/ti.media.sound.test.js"
+  "src/Assets/ti.media.test.js"
+  "src/Assets/ti.media.videoplayer.test.js"
+  "src/Assets/ti.network.cookie.test.js"
+  "src/Assets/ti.network.httpclient.test.js"
+  "src/Assets/ti.network.socket.tcp.test.js"
+  "src/Assets/ti.network.socket.udp.test.js"
+  "src/Assets/ti.network.test.js"
+  "src/Assets/ti.platform.displaycaps.test.js"
+  "src/Assets/ti.platform.test.js"
+  "src/Assets/ti.proxy.test.js"
+  "src/Assets/ti.require.test_test.js"
+  "src/Assets/ti.stream.test.js"
+  "src/Assets/ti.test.js"
+  "src/Assets/ti.ui.2dmatrix.test.js"
+  "src/Assets/ti.ui.activityindicator.test.js"
+  "src/Assets/ti.ui.alertdialog.test.js"
+  "src/Assets/ti.ui.android.drawerlayout.test.js"
+  "src/Assets/ti.ui.attributedstring.test.js"
+  "src/Assets/ti.ui.button.test.js"
+  "src/Assets/ti.ui.constants.test.js"
+  "src/Assets/ti.ui.emaildialog.test.js"
+  "src/Assets/ti.ui.imageview.test.js"
+  "src/Assets/ti.ui.ios.navigationwindow.test.js"
+  "src/Assets/ti.ui.ios.previewcontext.test.js"
+  "src/Assets/ti.ui.ios.test.js"
+  "src/Assets/ti.ui.label.test.js"
+  "src/Assets/ti.ui.layout.test.js"
+  "src/Assets/ti.ui.listview.test.js"
+  "src/Assets/ti.ui.maskedimage.test.js"
+  "src/Assets/ti.ui.optiondialog.test.js"
+  "src/Assets/ti.ui.picker.test.js"
+  "src/Assets/ti.ui.progressbar.test.js"
+  "src/Assets/ti.ui.scrollableview.test.js"
+  "src/Assets/ti.ui.scrollview.test.js"
+  "src/Assets/ti.ui.searchbar.test.js"
+  "src/Assets/ti.ui.slider.test.js"
+  "src/Assets/ti.ui.switch.test.js"
+  "src/Assets/ti.ui.tab.test.js"
+  "src/Assets/ti.ui.tabgroup.test.js"
+  "src/Assets/ti.ui.tableview.test.js"
+  "src/Assets/ti.ui.test.js"
+  "src/Assets/ti.ui.textarea.test.js"
+  "src/Assets/ti.ui.textfield.test.js"
+  "src/Assets/ti.ui.toolbar.test.js"
+  "src/Assets/ti.ui.view.test.js"
+  "src/Assets/ti.ui.webview.test.html"
+  "src/Assets/ti.ui.webview.test.js"
+  "src/Assets/ti.ui.window.test.js"
+  "src/Assets/ti.ui.windows.commandbar.test.js"
+  "src/Assets/ti.utils.test.js"
+  "src/Assets/ti.xml.test.js"
+  "src/Assets/timers.test.js"
   )
-
-set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-
-file(GLOB_RECURSE COMMONJS_INDEX_JS_DIRECTORY "modules/commonjs/commonjs.index_js/1.0.0/*.*")
-set(SOURCE_commonjs_index_js ${COMMONJS_INDEX_JS_DIRECTORY})
-source_group("node_modules/commonjs.index_js" FILES ${COMMONJS_INDEX_JS_DIRECTORY})
-set_property(SOURCE ${SOURCE_commonjs_index_js} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.index_js")
-set_property(SOURCE ${SOURCE_commonjs_index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE COMMONJS_INDEX_JSON_DIRECTORY "modules/commonjs/commonjs.index_json/1.0.0/*.*")
-set(SOURCE_commonjs_index_json ${COMMONJS_INDEX_JSON_DIRECTORY})
-source_group("node_modules/commonjs.index_json" FILES ${COMMONJS_INDEX_JSON_DIRECTORY})
-set_property(SOURCE ${SOURCE_commonjs_index_json} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.index_json")
-set_property(SOURCE ${SOURCE_commonjs_index_json} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE COMMONJS_LEGACY_DIRECTORY "modules/commonjs/commonjs.legacy/1.0.0/*.*")
-set(SOURCE_commonjs_legacy ${COMMONJS_LEGACY_DIRECTORY})
-source_group("node_modules/commonjs.legacy" FILES ${COMMONJS_LEGACY_DIRECTORY})
-set_property(SOURCE ${SOURCE_commonjs_legacy} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy")
-set_property(SOURCE ${SOURCE_commonjs_legacy} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE COMMONJS_LEGACY_INDEX_JS_DIRECTORY "modules/commonjs/commonjs.legacy.index_js/1.0.0/*.*")
-set(SOURCE_commonjs_legacy_index_js ${COMMONJS_LEGACY_INDEX_JS_DIRECTORY})
-source_group("node_modules/commonjs.legacy.index_js" FILES ${COMMONJS_LEGACY_INDEX_JS_DIRECTORY})
-set_property(SOURCE ${SOURCE_commonjs_legacy_index_js} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.index_js")
-set_property(SOURCE ${SOURCE_commonjs_legacy_index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE COMMONJS_LEGACY_INDEX_JSON_DIRECTORY "modules/commonjs/commonjs.legacy.index_json/1.0.0/*.*")
-set(SOURCE_commonjs_legacy_index_json ${COMMONJS_LEGACY_INDEX_JSON_DIRECTORY})
-source_group("node_modules/commonjs.legacy.index_json" FILES ${COMMONJS_LEGACY_INDEX_JSON_DIRECTORY})
-set_property(SOURCE ${SOURCE_commonjs_legacy_index_json} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.index_json")
-set_property(SOURCE ${SOURCE_commonjs_legacy_index_json} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE COMMONJS_LEGACY_PACKAGE_DIRECTORY "modules/commonjs/commonjs.legacy.package/1.0.0/*.*")
-set(SOURCE_commonjs_legacy_package ${COMMONJS_LEGACY_PACKAGE_DIRECTORY})
-source_group("node_modules/commonjs.legacy.package" FILES ${COMMONJS_LEGACY_PACKAGE_DIRECTORY})
-set_property(SOURCE ${SOURCE_commonjs_legacy_package} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.package")
-set_property(SOURCE ${SOURCE_commonjs_legacy_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE COMMONJS_PACKAGE_DIRECTORY "modules/commonjs/commonjs.package/1.0.0/*.*")
-set(SOURCE_commonjs_package ${COMMONJS_PACKAGE_DIRECTORY})
-source_group("node_modules/commonjs.package" FILES ${COMMONJS_PACKAGE_DIRECTORY})
-set_property(SOURCE ${SOURCE_commonjs_package} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.package")
-set_property(SOURCE ${SOURCE_commonjs_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE NODE_MODULES_FOO "src/Assets/node_modules/foo/*.*")
-set(SOURCE_node_modules_foo ${NODE_MODULES_FOO})
-source_group("node_modules/foo" FILES ${NODE_MODULES_FOO})
-set_property(SOURCE ${SOURCE_node_modules_foo} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\foo")
-set_property(SOURCE ${SOURCE_node_modules_foo} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE NODE_MODULES_BAR "src/Assets/node_modules/bar/*.*")
-set(SOURCE_node_modules_bar ${NODE_MODULES_BAR})
-source_group("node_modules/bar" FILES ${NODE_MODULES_BAR})
-set_property(SOURCE ${SOURCE_node_modules_bar} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\bar")
+set_property(SOURCE ${SOURCE_src_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set(SOURCE_bootstraps
+  "src/Assets/bootstraps/simple.bootstrap.js"
+  "src/Assets/bootstraps/ui.bootstrap.js"
+  )
+source_group("bootstraps" FILES
+  "src/Assets/bootstraps/simple.bootstrap.js"
+  "src/Assets/bootstraps/ui.bootstrap.js"
+  )
+set_property(SOURCE ${SOURCE_bootstraps} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_bootstraps} PROPERTY VS_DEPLOYMENT_LOCATION "bootstraps")
+set(SOURCE_fixtures
+  "src/Assets/fixtures/empty-double.js"
+  "src/Assets/fixtures/empty-single.js"
+  "src/Assets/fixtures/false.js"
+  "src/Assets/fixtures/nan.js"
+  "src/Assets/fixtures/null.js"
+  "src/Assets/fixtures/undefined.js"
+  "src/Assets/fixtures/zero.js"
+  )
+source_group("fixtures" FILES
+  "src/Assets/fixtures/empty-double.js"
+  "src/Assets/fixtures/empty-single.js"
+  "src/Assets/fixtures/false.js"
+  "src/Assets/fixtures/nan.js"
+  "src/Assets/fixtures/null.js"
+  "src/Assets/fixtures/undefined.js"
+  "src/Assets/fixtures/zero.js"
+  )
+set_property(SOURCE ${SOURCE_fixtures} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_fixtures} PROPERTY VS_DEPLOYMENT_LOCATION "fixtures")
+set(SOURCE_json_files
+  "src/Assets/json_files/amber.json"
+  )
+source_group("json_files" FILES
+  "src/Assets/json_files/amber.json"
+  )
+set_property(SOURCE ${SOURCE_json_files} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_json_files} PROPERTY VS_DEPLOYMENT_LOCATION "json_files")
+set(SOURCE_node_modules_abbrev
+  "src/Assets/node_modules/abbrev/abbrev.js"
+  "src/Assets/node_modules/abbrev/CONTRIBUTING.md"
+  "src/Assets/node_modules/abbrev/LICENSE"
+  "src/Assets/node_modules/abbrev/package.json"
+  "src/Assets/node_modules/abbrev/README.md"
+  )
+source_group("node_modules_abbrev" FILES
+  "src/Assets/node_modules/abbrev/abbrev.js"
+  "src/Assets/node_modules/abbrev/CONTRIBUTING.md"
+  "src/Assets/node_modules/abbrev/LICENSE"
+  "src/Assets/node_modules/abbrev/package.json"
+  "src/Assets/node_modules/abbrev/README.md"
+  )
+set_property(SOURCE ${SOURCE_node_modules_abbrev} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_abbrev} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\abbrev")
+set(SOURCE_node_modules_bar
+  "src/Assets/node_modules/bar/bar.js"
+  "src/Assets/node_modules/bar/package.json"
+  )
+source_group("node_modules_bar" FILES
+  "src/Assets/node_modules/bar/bar.js"
+  "src/Assets/node_modules/bar/package.json"
+  )
 set_property(SOURCE ${SOURCE_node_modules_bar} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE NODE_MODULES_BAR_BAZ "src/Assets/node_modules/bar/node_modules/baz/*.*")
-set(SOURCE_node_modules_bar_baz ${NODE_MODULES_BAR_BAZ})
-source_group("node_modules/bar/node_modules/baz" FILES ${NODE_MODULES_BAR_BAZ})
-set_property(SOURCE ${SOURCE_node_modules_bar_baz} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\bar\\node_modules\\baz")
-set_property(SOURCE ${SOURCE_node_modules_bar_baz} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE NODE_MODULES_BAZ "src/Assets/node_modules/baz/*.*")
-set(SOURCE_node_modules_baz ${NODE_MODULES_BAZ})
-source_group("node_modules/baz" FILES ${NODE_MODULES_BAZ})
-set_property(SOURCE ${SOURCE_node_modules_baz} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\baz")
+set_property(SOURCE ${SOURCE_node_modules_bar} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\bar")
+set(SOURCE_node_modules_bar_node_modules_baz
+  "src/Assets/node_modules/bar/node_modules/baz/index.js"
+  )
+source_group("node_modules_bar_node_modules_baz" FILES
+  "src/Assets/node_modules/bar/node_modules/baz/index.js"
+  )
+set_property(SOURCE ${SOURCE_node_modules_bar_node_modules_baz} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_bar_node_modules_baz} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\bar\\node_modules\\baz")
+set(SOURCE_node_modules_baz
+  "src/Assets/node_modules/baz/index.js"
+  )
+source_group("node_modules_baz" FILES
+  "src/Assets/node_modules/baz/index.js"
+  )
 set_property(SOURCE ${SOURCE_node_modules_baz} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_baz} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\baz")
 
-file(GLOB_RECURSE WITH_INDEX_JS_DIRECTORY "src/Assets/with_index_js/*.*")
-set(SOURCE_with_index_js ${WITH_INDEX_JS_DIRECTORY})
-source_group("with_index_js" FILES ${WITH_INDEX_JS_DIRECTORY})
-set_property(SOURCE ${SOURCE_with_index_js} PROPERTY VS_DEPLOYMENT_LOCATION "with_index_js")
-set_property(SOURCE ${SOURCE_with_index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set(SOURCE_node_modules_commonjs.index_js
+  "src/Assets/node_modules/commonjs.index_js/index.js"
+  "src/Assets/node_modules/commonjs.index_js/index.json"
+  "src/Assets/node_modules/commonjs.index_js/manifest"
+  )
+source_group("node_modules_commonjs.index_js" FILES
+  "src/Assets/node_modules/commonjs.index_js/index.js"
+  "src/Assets/node_modules/commonjs.index_js/index.json"
+  "src/Assets/node_modules/commonjs.index_js/manifest"
+  )
+set_property(SOURCE ${SOURCE_node_modules_commonjs.index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_commonjs.index_js} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.index_js")
+set(SOURCE_node_modules_commonjs.index_json
+  "src/Assets/node_modules/commonjs.index_json/index.json"
+  "src/Assets/node_modules/commonjs.index_json/manifest"
+  )
+source_group("node_modules_commonjs.index_json" FILES
+  "src/Assets/node_modules/commonjs.index_json/index.json"
+  "src/Assets/node_modules/commonjs.index_json/manifest"
+  )
+set_property(SOURCE ${SOURCE_node_modules_commonjs.index_json} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_commonjs.index_json} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.index_json")
+set(SOURCE_node_modules_commonjs.legacy
+  "src/Assets/node_modules/commonjs.legacy/commonjs.legacy.js"
+  "src/Assets/node_modules/commonjs.legacy/manifest"
+  )
+source_group("node_modules_commonjs.legacy" FILES
+  "src/Assets/node_modules/commonjs.legacy/commonjs.legacy.js"
+  "src/Assets/node_modules/commonjs.legacy/manifest"
+  )
+set_property(SOURCE ${SOURCE_node_modules_commonjs.legacy} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_commonjs.legacy} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy")
+set(SOURCE_node_modules_commonjs.legacy.index_js
+  "src/Assets/node_modules/commonjs.legacy.index_js/commonjs.legacy.index_js.js"
+  "src/Assets/node_modules/commonjs.legacy.index_js/index.js"
+  "src/Assets/node_modules/commonjs.legacy.index_js/index.json"
+  "src/Assets/node_modules/commonjs.legacy.index_js/manifest"
+  )
+source_group("node_modules_commonjs.legacy.index_js" FILES
+  "src/Assets/node_modules/commonjs.legacy.index_js/commonjs.legacy.index_js.js"
+  "src/Assets/node_modules/commonjs.legacy.index_js/index.js"
+  "src/Assets/node_modules/commonjs.legacy.index_js/index.json"
+  "src/Assets/node_modules/commonjs.legacy.index_js/manifest"
+  )
+set_property(SOURCE ${SOURCE_node_modules_commonjs.legacy.index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_commonjs.legacy.index_js} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.index_js")
+set(SOURCE_node_modules_commonjs.legacy.index_json
+  "src/Assets/node_modules/commonjs.legacy.index_json/commonjs.legacy.index_json.js"
+  "src/Assets/node_modules/commonjs.legacy.index_json/index.json"
+  "src/Assets/node_modules/commonjs.legacy.index_json/manifest"
+  )
+source_group("node_modules_commonjs.legacy.index_json" FILES
+  "src/Assets/node_modules/commonjs.legacy.index_json/commonjs.legacy.index_json.js"
+  "src/Assets/node_modules/commonjs.legacy.index_json/index.json"
+  "src/Assets/node_modules/commonjs.legacy.index_json/manifest"
+  )
+set_property(SOURCE ${SOURCE_node_modules_commonjs.legacy.index_json} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_commonjs.legacy.index_json} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.index_json")
+set(SOURCE_node_modules_commonjs.legacy.package
+  "src/Assets/node_modules/commonjs.legacy.package/commonjs.legacy.package.js"
+  "src/Assets/node_modules/commonjs.legacy.package/index.js"
+  "src/Assets/node_modules/commonjs.legacy.package/index.json"
+  "src/Assets/node_modules/commonjs.legacy.package/main.js"
+  "src/Assets/node_modules/commonjs.legacy.package/manifest"
+  "src/Assets/node_modules/commonjs.legacy.package/package.json"
+  )
+source_group("node_modules_commonjs.legacy.package" FILES
+  "src/Assets/node_modules/commonjs.legacy.package/commonjs.legacy.package.js"
+  "src/Assets/node_modules/commonjs.legacy.package/index.js"
+  "src/Assets/node_modules/commonjs.legacy.package/index.json"
+  "src/Assets/node_modules/commonjs.legacy.package/main.js"
+  "src/Assets/node_modules/commonjs.legacy.package/manifest"
+  "src/Assets/node_modules/commonjs.legacy.package/package.json"
+  )
+set_property(SOURCE ${SOURCE_node_modules_commonjs.legacy.package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_commonjs.legacy.package} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.legacy.package")
+set(SOURCE_node_modules_commonjs.package
+  "src/Assets/node_modules/commonjs.package/index.js"
+  "src/Assets/node_modules/commonjs.package/index.json"
+  "src/Assets/node_modules/commonjs.package/main.js"
+  "src/Assets/node_modules/commonjs.package/manifest"
+  "src/Assets/node_modules/commonjs.package/package.json"
+  )
+source_group("node_modules_commonjs.package" FILES
+  "src/Assets/node_modules/commonjs.package/index.js"
+  "src/Assets/node_modules/commonjs.package/index.json"
+  "src/Assets/node_modules/commonjs.package/main.js"
+  "src/Assets/node_modules/commonjs.package/manifest"
+  "src/Assets/node_modules/commonjs.package/package.json"
+  )
+set_property(SOURCE ${SOURCE_node_modules_commonjs.package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_commonjs.package} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\commonjs.package")
 
-file(GLOB_RECURSE WITH_INDEX_JSON_DIRECTORY "src/Assets/with_index_json/*.*")
-set(SOURCE_with_index_json ${WITH_INDEX_JSON_DIRECTORY})
-source_group("with_index_json" FILES ${WITH_INDEX_JSON_DIRECTORY})
-set_property(SOURCE ${SOURCE_with_index_json} PROPERTY VS_DEPLOYMENT_LOCATION "with_index_json")
-set_property(SOURCE ${SOURCE_with_index_json} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE WITH_PACKAGE_DIRECTORY "src/Assets/with_package/*.*")
-set(SOURCE_with_package ${WITH_PACKAGE_DIRECTORY})
-source_group("with_package" FILES ${WITH_PACKAGE_DIRECTORY})
-set_property(SOURCE ${SOURCE_with_package} PROPERTY VS_DEPLOYMENT_LOCATION "with_package")
-set_property(SOURCE ${SOURCE_with_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-file(GLOB_RECURSE UTILITIES_DIRECTORY "src/Assets/utilities/*.*")
-set(SOURCE_utilities ${UTILITIES_DIRECTORY})
-source_group("utilities" FILES ${UTILITIES_DIRECTORY})
-set_property(SOURCE ${SOURCE_utilities} PROPERTY VS_DEPLOYMENT_LOCATION "utilities")
+set(SOURCE_node_modules_foo
+  "src/Assets/node_modules/foo/index.js"
+  "src/Assets/node_modules/foo/package.json"
+  )
+source_group("node_modules_foo" FILES
+  "src/Assets/node_modules/foo/index.js"
+  "src/Assets/node_modules/foo/package.json"
+  )
+set_property(SOURCE ${SOURCE_node_modules_foo} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_node_modules_foo} PROPERTY VS_DEPLOYMENT_LOCATION "node_modules\\foo")
+set(SOURCE_Strings_en
+  "src/Assets/Strings/en/Resources.resw"
+  )
+source_group("Strings\\en" FILES
+  "src/Assets/Strings/en/Resources.resw"
+  )
+set(SOURCE_Strings_en-GB
+  "src/Assets/Strings/en-GB/Resources.resw"
+  )
+source_group("Strings\\en-GB" FILES
+  "src/Assets/Strings/en-GB/Resources.resw"
+  )
+set(SOURCE_Strings_en-US
+  "src/Assets/Strings/en-US/Resources.resw"
+  )
+source_group("Strings\\en-US" FILES
+  "src/Assets/Strings/en-US/Resources.resw"
+  )
+set(SOURCE_Strings_ja
+  "src/Assets/Strings/ja/Resources.resw"
+  )
+source_group("Strings\\ja" FILES
+  "src/Assets/Strings/ja/Resources.resw"
+  )
+set(SOURCE_ti.touchid
+  "src/Assets/ti.touchid/example.js"
+  )
+source_group("ti.touchid" FILES
+  "src/Assets/ti.touchid/example.js"
+  )
+set_property(SOURCE ${SOURCE_ti.touchid} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_ti.touchid} PROPERTY VS_DEPLOYMENT_LOCATION "ti.touchid")
+set(SOURCE_txtFiles
+  "src/Assets/txtFiles/decodedFile.txt"
+  "src/Assets/txtFiles/empty.txt"
+  "src/Assets/txtFiles/encodedFile.txt"
+  "src/Assets/txtFiles/file.txt"
+  "src/Assets/txtFiles/stream_test_in.txt"
+  "src/Assets/txtFiles/stream_test_out.txt"
+  "src/Assets/txtFiles/text.txt"
+  )
+source_group("txtFiles" FILES
+  "src/Assets/txtFiles/decodedFile.txt"
+  "src/Assets/txtFiles/empty.txt"
+  "src/Assets/txtFiles/encodedFile.txt"
+  "src/Assets/txtFiles/file.txt"
+  "src/Assets/txtFiles/stream_test_in.txt"
+  "src/Assets/txtFiles/stream_test_out.txt"
+  "src/Assets/txtFiles/text.txt"
+  )
+set_property(SOURCE ${SOURCE_txtFiles} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_txtFiles} PROPERTY VS_DEPLOYMENT_LOCATION "txtFiles")
+set(SOURCE_utilities
+  "src/Assets/utilities/assertions.js"
+  "src/Assets/utilities/mocha-filter.js"
+  "src/Assets/utilities/utilities.js"
+  )
+source_group("utilities" FILES
+  "src/Assets/utilities/assertions.js"
+  "src/Assets/utilities/mocha-filter.js"
+  "src/Assets/utilities/utilities.js"
+  )
 set_property(SOURCE ${SOURCE_utilities} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-
-set(SOURCE_Strings_en "src/Assets/Strings/en/Resources.resw")
-source_group("Strings\\en" FILES "src/Assets/Strings/en/Resources.resw")
-
-set(SOURCE_Strings_en_GB "src/Assets/Strings/en-GB/Resources.resw")
-source_group("Strings\\en-GB" FILES "src/Assets/Strings/en-GB/Resources.resw")
-
-set(SOURCE_Strings_ja "src/Assets/Strings/ja/Resources.resw")
-source_group("Strings\\ja" FILES "src/Assets/Strings/ja/Resources.resw")
-
+set_property(SOURCE ${SOURCE_utilities} PROPERTY VS_DEPLOYMENT_LOCATION "utilities")
+set(SOURCE_with_index_js
+  "src/Assets/with_index_js/index.js"
+  "src/Assets/with_index_js/index.json"
+  "src/Assets/with_index_js/sub1.js"
+  "src/Assets/with_index_js/sub2.js"
+  "src/Assets/with_index_js/sub3.js"
+  )
+source_group("with_index_js" FILES
+  "src/Assets/with_index_js/index.js"
+  "src/Assets/with_index_js/index.json"
+  "src/Assets/with_index_js/sub1.js"
+  "src/Assets/with_index_js/sub2.js"
+  "src/Assets/with_index_js/sub3.js"
+  )
+set_property(SOURCE ${SOURCE_with_index_js} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_with_index_js} PROPERTY VS_DEPLOYMENT_LOCATION "with_index_js")
+set(SOURCE_with_index_json
+  "src/Assets/with_index_json/index.json"
+  )
+source_group("with_index_json" FILES
+  "src/Assets/with_index_json/index.json"
+  )
+set_property(SOURCE ${SOURCE_with_index_json} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_with_index_json} PROPERTY VS_DEPLOYMENT_LOCATION "with_index_json")
+set(SOURCE_with_package
+  "src/Assets/with_package/index.js"
+  "src/Assets/with_package/index.json"
+  "src/Assets/with_package/main.js"
+  "src/Assets/with_package/package.json"
+  )
+source_group("with_package" FILES
+  "src/Assets/with_package/index.js"
+  "src/Assets/with_package/index.json"
+  "src/Assets/with_package/main.js"
+  "src/Assets/with_package/package.json"
+  )
+set_property(SOURCE ${SOURCE_with_package} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_with_package} PROPERTY VS_DEPLOYMENT_LOCATION "with_package")
+set(SOURCE_xml
+  "src/Assets/xml/attrs.xml"
+  "src/Assets/xml/cdata.xml"
+  "src/Assets/xml/cdataEntities.xml"
+  "src/Assets/xml/element.xml"
+  "src/Assets/xml/elementNS.xml"
+  "src/Assets/xml/mismatched_tag.xml"
+  "src/Assets/xml/nodeCount.xml"
+  "src/Assets/xml/nodes.xml"
+  "src/Assets/xml/no_end.xml"
+  "src/Assets/xml/no_toplevel.xml"
+  "src/Assets/xml/soap.xml"
+  "src/Assets/xml/with_dtd.xml"
+  "src/Assets/xml/with_ns.xml"
+  "src/Assets/xml/xpath.xml"
+  )
+source_group("xml" FILES
+  "src/Assets/xml/attrs.xml"
+  "src/Assets/xml/cdata.xml"
+  "src/Assets/xml/cdataEntities.xml"
+  "src/Assets/xml/element.xml"
+  "src/Assets/xml/elementNS.xml"
+  "src/Assets/xml/mismatched_tag.xml"
+  "src/Assets/xml/nodeCount.xml"
+  "src/Assets/xml/nodes.xml"
+  "src/Assets/xml/no_end.xml"
+  "src/Assets/xml/no_toplevel.xml"
+  "src/Assets/xml/soap.xml"
+  "src/Assets/xml/with_dtd.xml"
+  "src/Assets/xml/with_ns.xml"
+  "src/Assets/xml/xpath.xml"
+  )
+set_property(SOURCE ${SOURCE_xml} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+set_property(SOURCE ${SOURCE_xml} PROPERTY VS_DEPLOYMENT_LOCATION "xml")
 add_executable(${EXE_NAME} WIN32
   src/main.cpp
   include/OutputDebugStringBuf.hpp
   include/pch.h
-  ${SOURCE_Assets}
-  ${SOURCE_commonjs_index_js}
-  ${SOURCE_commonjs_index_json}
-  ${SOURCE_commonjs_legacy}
-  ${SOURCE_commonjs_legacy_index_js}
-  ${SOURCE_commonjs_legacy_index_json}
-  ${SOURCE_commonjs_legacy_package}
-  ${SOURCE_commonjs_package}
+  ${SOURCE_analytics}
+  ${SOURCE_src_Assets}
+  ${SOURCE_bootstraps}
+  ${SOURCE_fixtures}
+  ${SOURCE_json_files}
+  ${SOURCE_node_modules_abbrev}
+  ${SOURCE_node_modules_bar}
+  ${SOURCE_node_modules_bar_node_modules_baz}
+  ${SOURCE_node_modules_baz}
+  ${SOURCE_node_modules_commonjs.index_js}
+  ${SOURCE_node_modules_commonjs.index_json}
+  ${SOURCE_node_modules_commonjs.legacy}
+  ${SOURCE_node_modules_commonjs.legacy.index_js}
+  ${SOURCE_node_modules_commonjs.legacy.index_json}
+  ${SOURCE_node_modules_commonjs.legacy.package}
+  ${SOURCE_node_modules_commonjs.package}
+  ${SOURCE_node_modules_foo}
+  ${SOURCE_Strings_en}
+  ${SOURCE_Strings_en-GB}
+  ${SOURCE_Strings_en-US}
+  ${SOURCE_Strings_ja}
+  ${SOURCE_ti.touchid}
+  ${SOURCE_txtFiles}
+  ${SOURCE_utilities}
   ${SOURCE_with_index_js}
   ${SOURCE_with_index_json}
   ${SOURCE_with_package}
-  ${SOURCE_node_modules_foo}
-  ${SOURCE_node_modules_bar}
-  ${SOURCE_node_modules_bar_baz}
-  ${SOURCE_node_modules_baz}
-  ${SOURCE_utilities}
-  ${SOURCE_Strings_en}
-  ${SOURCE_Strings_en_GB}
-  ${SOURCE_Strings_ja}
+  ${SOURCE_xml}
 )
+
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
 target_link_libraries(${EXE_NAME} TitaniumWindows)
