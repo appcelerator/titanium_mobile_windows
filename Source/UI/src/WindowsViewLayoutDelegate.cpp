@@ -66,14 +66,17 @@ namespace TitaniumWindows
 		WindowsViewLayoutDelegate::WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 			: ViewLayoutDelegate()
 		{
-			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::ctor ", this);
 			// Update physical pixels factor for the current display information
-			Titanium::LayoutEngine::PhysicalPixelsFactor = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+			static double RawPixelsPerViewPixel;
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				RawPixelsPerViewPixel = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+			});
+			Titanium::LayoutEngine::PhysicalPixelsFactor = RawPixelsPerViewPixel;
 		}
 
 		WindowsViewLayoutDelegate::~WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 		{
-			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::dtor ", this);
 			if (component__) {
 				component__->SizeChanged -= size_change_event__;
 				component__->Loaded -= loaded_event__;
@@ -1977,7 +1980,6 @@ namespace TitaniumWindows
 				prop.value = "UI.FILL";
 			}
 
-			auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 			double ppi = ComputePPI(name);
 
 			// Get the default unit from ti.ui.defaultUnit
