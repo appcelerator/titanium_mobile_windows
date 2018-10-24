@@ -11,6 +11,7 @@
 #include "Titanium/UI/OpenWindowParams.hpp"
 #include "Titanium/UI/CloseWindowParams.hpp"
 #include "Titanium/UI/Tab.hpp"
+#include "Titanium/UI/NavigationWindow.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/Locale.hpp"
 
@@ -30,8 +31,8 @@ namespace Titanium
 		std::vector<std::shared_ptr<Window>> Window::window_stack__;
 		bool Window::restarting__(false);
 
-		Window::Window(const JSContext& js_context) TITANIUM_NOEXCEPT
-		    : View(js_context, "Ti.UI.Window"),
+		Window::Window(const JSContext& js_context, const std::string& apiName) TITANIUM_NOEXCEPT
+		    : View(js_context, apiName),
 		      openWindowParams_ctor__(js_context.CreateObject(JSExport<Titanium::UI::OpenWindowParams>::Class())),
 		      closeWindowParams_ctor__(js_context.CreateObject(JSExport<Titanium::UI::CloseWindowParams>::Class())),
 		      barColor__(""),
@@ -42,6 +43,7 @@ namespace Titanium
 		      modal__(false),
 		      navBarHidden__(false),
 		      navTintColor__(""),
+			  navigationWindow__(nullptr),
 		      orientationModes__(),
 		      theme__(""),
 		      title__(""),
@@ -95,6 +97,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Window, bool, translucent)
 		TITANIUM_PROPERTY_READWRITE(Window, std::string, barColor)
 		TITANIUM_PROPERTY_READWRITE(Window, std::shared_ptr<Tab>, tab)
+		TITANIUM_PROPERTY_READWRITE(Window, std::shared_ptr<NavigationWindow>, navigationWindow)
 		TITANIUM_PROPERTY_READWRITE(Window, std::string, title)
 		TITANIUM_PROPERTY_READ(Window, std::string, titleid)
 		void Window::set_titleid(const std::string& titleid) TITANIUM_NOEXCEPT
@@ -122,6 +125,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Window, modal);
 			TITANIUM_ADD_PROPERTY(Window, navBarHidden);
 			TITANIUM_ADD_PROPERTY(Window, navTintColor);
+			TITANIUM_ADD_PROPERTY_READONLY(Window, navigationWindow);
 			TITANIUM_ADD_PROPERTY(Window, orientationModes);
 			TITANIUM_ADD_PROPERTY(Window, theme);
 			TITANIUM_ADD_PROPERTY(Window, titleAttributes);
@@ -158,6 +162,7 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Window, setTitleAttributes);
 			TITANIUM_ADD_FUNCTION(Window, getTranslucent);
 			TITANIUM_ADD_FUNCTION(Window, setTranslucent);
+			TITANIUM_ADD_FUNCTION(Window, getNavigationWindow);
 		}
 
 		TITANIUM_FUNCTION(Window, close)
@@ -393,5 +398,9 @@ namespace Titanium
 		TITANIUM_PROPERTY_SETTER_STRING(Window, titleid)
 		TITANIUM_FUNCTION_AS_GETTER(Window, getTitleid, titleid)
 		TITANIUM_FUNCTION_AS_SETTER(Window, setTitleid, titleid)
+
+		TITANIUM_PROPERTY_GETTER_OBJECT(Window, navigationWindow)
+		TITANIUM_FUNCTION_AS_GETTER(Window, getNavigationWindow, navigationWindow)
+
 	} // namespace UI
 }  // namespace Titanium

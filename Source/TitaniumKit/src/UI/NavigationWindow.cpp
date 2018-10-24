@@ -16,7 +16,7 @@ namespace Titanium
 	{
 
 		NavigationWindow::NavigationWindow(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Titanium::Module(js_context, "Ti.UI.NavigationWindow")
+			: Titanium::UI::Window(js_context, "Ti.UI.NavigationWindow")
 		{
 			TITANIUM_LOG_DEBUG("NavigationWindow:: ctor ", this);
 		}
@@ -36,7 +36,7 @@ namespace Titanium
 		void NavigationWindow::JSExportInitialize()
 		{
 			JSExport<NavigationWindow>::SetClassVersion(1);
-			JSExport<NavigationWindow>::SetParent(JSExport<Titanium::Module>::Class());
+			JSExport<NavigationWindow>::SetParent(JSExport<Titanium::UI::Window>::Class());
 			TITANIUM_ADD_FUNCTION(NavigationWindow, closeWindow);
 			TITANIUM_ADD_FUNCTION(NavigationWindow, openWindow);
 			TITANIUM_ADD_FUNCTION(NavigationWindow, close);
@@ -63,7 +63,10 @@ namespace Titanium
 		{
 			TITANIUM_ASSERT_AND_THROW(window__ != nullptr, "window parameter is not specified");
 			ENSURE_OBJECT_AT_INDEX(window, 0);
-			openWindow(window.GetPrivate<Window>());
+
+			const auto window_ptr = window.GetPrivate<Window>();
+			window_ptr->set_navigationWindow(get_object().GetPrivate<NavigationWindow>());
+			openWindow(window_ptr);
 
 			return get_context().CreateUndefined();
 		}
@@ -102,7 +105,9 @@ namespace Titanium
 		TITANIUM_PROPERTY_SETTER(NavigationWindow, window)
 		{
 			if (argument.IsObject()) {
-				set_window(static_cast<JSObject>(argument).GetPrivate<Window>());
+				const auto window_ptr = static_cast<JSObject>(argument).GetPrivate<Window>();
+				window_ptr->set_navigationWindow(get_object().GetPrivate<NavigationWindow>());
+				set_window(window_ptr);
 			}
 			return true;
 		}

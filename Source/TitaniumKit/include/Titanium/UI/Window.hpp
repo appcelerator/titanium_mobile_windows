@@ -22,6 +22,7 @@ namespace Titanium
 		class OpenWindowParams;
 		class CloseWindowParams;
 		class Tab;
+		class NavigationWindow;
 
 		/*!
 		  @class
@@ -251,8 +252,16 @@ namespace Titanium
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(std::shared_ptr<Tab>, tab);
 
+			/*!
+			  @method
 
-			Window(const JSContext&) TITANIUM_NOEXCEPT;
+			  @abstract navigationWindow : Ti.UI.NavigationWindow
+
+			  @discussion Returns the navigation window that hosts this window.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::shared_ptr<NavigationWindow>, navigationWindow);
+
+			Window(const JSContext&, const std::string& apiName = "Ti.UI.Window") TITANIUM_NOEXCEPT;
 
 			virtual ~Window() TITANIUM_NOEXCEPT;  //= default;
 			Window(const Window&) = default;
@@ -325,6 +334,9 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getTranslucent);
 			TITANIUM_FUNCTION_DEF(setTranslucent);
 
+			TITANIUM_PROPERTY_READONLY_DEF(navigationWindow);
+			TITANIUM_FUNCTION_DEF(getNavigationWindow);
+
 		protected:
 // Silence 4251 on Windows since private member variables do not
 // need to be exported from a DLL.
@@ -350,6 +362,7 @@ namespace Titanium
 			JSObject closeWindowParams_ctor__;
 
 			std::shared_ptr<Tab> tab__;
+			std::shared_ptr<NavigationWindow> navigationWindow__;
 			bool is_opened__ { false }; // Indicates this window is already opened
 #pragma warning(pop)
 		};

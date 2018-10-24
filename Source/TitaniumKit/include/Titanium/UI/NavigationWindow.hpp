@@ -10,14 +10,13 @@
 #define _TITANIUM_UI_NAVIGATIONWINDOW_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/UI/Window.hpp"
 
 namespace Titanium
 {
 	namespace UI
 	{
 		using namespace HAL;
-
-		class Window;
 
 		/*!
 		@class
@@ -26,7 +25,7 @@ namespace Titanium
 
 		See http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.UI.Window
 		*/
-		class TITANIUMKIT_EXPORT NavigationWindow : public Titanium::Module, public JSExport<NavigationWindow>
+		class TITANIUMKIT_EXPORT NavigationWindow : public Titanium::UI::Window, public JSExport<NavigationWindow>
 		{
 		public:
 			/*!
