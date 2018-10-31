@@ -61,7 +61,7 @@ namespace Titanium
 			  @abstract name
 			  @discussion The name of the cookie.
 			*/
-			TITANIUM_PROPERTY_IMPL_READONLY_DEF(std::string, name);
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, name);
 
 			/*!
 			  @property
@@ -121,7 +121,7 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(domain);
 			TITANIUM_PROPERTY_DEF(expiryDate);
 			TITANIUM_PROPERTY_DEF(httponly);
-			TITANIUM_PROPERTY_READONLY_DEF(name);
+			TITANIUM_PROPERTY_DEF(name);
 			TITANIUM_PROPERTY_DEF(originalUrl);
 			TITANIUM_PROPERTY_DEF(path);
 			TITANIUM_PROPERTY_DEF(secure);

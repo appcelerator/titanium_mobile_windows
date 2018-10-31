@@ -619,8 +619,7 @@ namespace Titanium
 			ViewLayoutDelegate() TITANIUM_NOEXCEPT;
 			virtual ~ViewLayoutDelegate();
 
-			static std::string GetDefaultUnit(const std::shared_ptr<ViewLayoutEventDelegate>& event_delegate) TITANIUM_NOEXCEPT;
-
+			static std::string GetDefaultUnit(const JSContext& js_context) TITANIUM_NOEXCEPT;
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)

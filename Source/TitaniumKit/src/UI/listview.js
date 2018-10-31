@@ -95,7 +95,7 @@ function ensureLoadTemplates(listview) {
 }
 
 // Create item views from section
-function createSectionView(listview, section) {
+function createSectionView(listview, section, sectionIndex) {
 	section.listview = listview;
 	listview.templates = listview.templates || [];
 	listview.defaultItemTemplate = listview.defaultItemTemplate || Ti.UI.LIST_ITEM_TEMPLATE_DEFAULT;
@@ -105,12 +105,12 @@ function createSectionView(listview, section) {
 	var views = [];
 	var items = section.items;
 	for (var i = 0; i < items.length; i++) {
-		views.push(createSectionItemAt(listview, section, items[i]));
+		views.push(createSectionItemAt(listview, section, items[i], sectionIndex, i));
 	}
 	return views;
 }
 
-function createSectionItemView(listview, item, template, parent) {
+function createSectionItemView(listview, section, item, sectionIndex, itemIndex, template, parent) {
 	var options = template.properties;
 	if (options === void 0) {
 		options = {top:0, left:0, width:Ti.UI.SIZE, height:Ti.UI.SIZE};
@@ -132,11 +132,12 @@ function createSectionItemView(listview, item, template, parent) {
 	}
 
 	// hook click and fire listview event with bindId
-	view.addEventListener('click', function() {
+	view.addEventListener('click', function(e) {
 		// check if other view already processes the event
 		if (listview._itemclick_section_) {
 			// set bindId and forward the event again
 			listview.fireEvent('itemclick', {
+				source:       view,
 				bindId:       listview._itemclick_bindId_ ? listview._itemclick_bindId_ : view.bindId,
 				itemId:       listview._itemclick_itemId_,
 				section:      listview._itemclick_section_,
@@ -149,6 +150,15 @@ function createSectionItemView(listview, item, template, parent) {
 			delete listview._itemclick_section_;
 			delete listview._itemclick_sectionIndex_;
 			delete listview._itemclick_itemIndex_;
+		} else if (e.source.apiName == 'Ti.UI.Button') {
+			listview.fireEvent('itemclick', {
+				source:       view,
+				bindId:       view.bindId,
+				itemId:       view.itemId,
+				section:      section,
+				sectionIndex: sectionIndex,
+				itemIndex:    itemIndex
+			});
 		}
 	});
 
@@ -159,7 +169,7 @@ function createSectionItemView(listview, item, template, parent) {
 			item.properties.height = Ti.UI.SIZE;
 		}
 		// builtin template has different format
-		if (template.type == 'Ti.UI.Label') {
+		if (template.type == 'Ti.UI.Label' && item.properties.title) {
 			item.properties.text = item.properties.title;
 			view.applyProperties(item.properties);
 		} else {
@@ -168,7 +178,7 @@ function createSectionItemView(listview, item, template, parent) {
 	}
 	if (template.childTemplates !== void 0 && Array.isArray(template.childTemplates)) {
 		for (var i = 0; i < template.childTemplates.length; i++) {
-			createSectionItemView(listview, item, template.childTemplates[i], view);
+			createSectionItemView(listview, section, item, sectionIndex, itemIndex, template.childTemplates[i], view);
 		}
 	}
 	if (parent !== void 0) {
@@ -178,12 +188,12 @@ function createSectionItemView(listview, item, template, parent) {
 }
 
 // Create list item for custom template
-function createSectionItemAt(listview, section, item) {
+function createSectionItemAt(listview, section, item, sectionIndex, itemIndex) {
 	var template = listview.templates[listview.defaultItemTemplate];
 	if (item.template !== void 0 && listview.templates[item.template] !== void 0 ) {
 		template = listview.templates[item.template];
 	}
-	return createSectionItemView(listview, item, template);
+	return createSectionItemView(listview, section, item, sectionIndex, itemIndex, template);
 }
 
 this.exports = {};

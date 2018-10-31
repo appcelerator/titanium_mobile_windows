@@ -237,6 +237,16 @@ namespace Titanium
 
 			/*!
 			  @method
+			  @abstract get_saved_position
+			  @discussion Get saved position
+			*/
+			std::vector<std::tuple<size_t, size_t>> get_saved_positions() const TITANIUM_NOEXCEPT
+			{
+				return saved_positions__;
+			}
+
+			/*!
+			  @method
 			  @abstract first
 			  @discussion Get first item
 			*/

@@ -11,6 +11,7 @@ var path = require('path'),
 	wrench = require('wrench'),
 	exec = require('child_process').exec,
 	spawn = require('child_process').spawn,
+	windowslib = require('windowslib'),
 	// Constants
 	WIN_8_1 = '8.1',
 	WIN_10 = '10.0',
@@ -155,6 +156,7 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
 		'-DTitaniumWindows_Media_DISABLE_TESTS=ON',
 		'-DHAL_DISABLE_TESTS=ON',
 		'-DTitaniumKit_DISABLE_TESTS=ON',
+		'-DHAL_RENAME_AXWAYHAL=ON',
 		'-Wno-dev',
 		sourceDir
 	];
@@ -173,7 +175,7 @@ function runNuGet(slnFile, quiet, callback) {
 }
 
 /**
- * @param msBuildVersion {String} The version of MSBuild to run: '12.0' or '14.0'
+ * @param msBuildVersion {String} The version of MSBuild to run: '12.0' || '14.0' || '15.0'
  * @param slnFile {String} The VS solution file to build.
  * @param buildType {String} 'Release' || 'Debug'
  * @param arch {String} 'x86' || 'ARM'
@@ -182,14 +184,51 @@ function runNuGet(slnFile, quiet, callback) {
  * @param callback {Function} what to invoke when done/errored
  */
 function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet, callback) {
-	var args = ['/p:Configuration=' + buildType];
-	if ('ARM' == arch) {
-		args.unshift('/p:Platform=ARM');
-	}
-	args.unshift(slnFile);
-	parallel && args.push('/m');
-	args.push('/nr:false');
-	spawnWithArgs('MSBuild', 'C:/Program Files (x86)/MSBuild/' + msBuildVersion + '/Bin/MSBuild.exe', args, {}, quiet, callback);
+
+	windowslib.detect({}, function(err, results) {
+
+		var vsInfo = results.visualstudio[msBuildVersion];
+		if (vsInfo == undefined && msBuildVersion == '15.0') {
+			for (var key in results.visualstudio) {
+				// If you can't decide which VS2017 to select, use first one
+				if (key.endsWith(' 2017')) {
+					vsInfo = results.visualstudio[key];
+					break;
+				}
+			}
+		}
+
+		if (!vsInfo) {
+			console.log('Unable to find a supported Visual Studio installation');
+			process.exit(1);
+		}
+
+		// Use spawn directly so we can pipe output as we go
+		var p = spawn((process.env.comspec || 'cmd.exe'), ['/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ \(\)\&]/g, '^$&') +
+			' &&' + ' MSBuild' + (arch==='ARM' ? ' /p:Platform=' + arch : '') + (parallel ? ' /m' : '') + ' /nr:false /p:Configuration=Release ' + slnFile, '"'
+		], {windowsVerbatimArguments: true});
+		
+		p.stdout.on('data', function (data) {
+			var line = data.toString().trim();
+			if (line.indexOf('error ') >= 0) {
+				console.log(line);
+			} else if (line.indexOf('warning ') >= 0) {
+				console.log(line);
+			} else {
+				quiet || console.log(line);
+			}
+		});
+		p.stderr.on('data', function (data) {
+			console.log(data.toString().trim());
+		});
+		p.on('close', function (code) {
+			if (code != 0) {
+				process.exit(1);
+			}
+			callback();
+		});
+	});
+
 }
 
 /**
@@ -325,7 +364,7 @@ function copyFile(from, to) {
 /**
  * @param sdkVersion {String} '8.1' || '10.0'
  * @param sha {String} sha1 to use for Ti.buildHash, computed if not provided
- * @param msBuildVersion {String} '12.0' || '14.0'
+ * @param msBuildVersion {String} '12.0' || '14.0' || '15.0'
  * @param buildType {String} 'Release' || 'Debug'
  * @param targets {Array[String]}
  * @param options {Object}

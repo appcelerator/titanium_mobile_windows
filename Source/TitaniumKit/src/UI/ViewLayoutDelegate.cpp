@@ -39,7 +39,7 @@ namespace Titanium
 
 		void ViewLayoutDelegate::add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
-			auto it = std::find(children__.begin(), children__.end(), view);
+			const auto it = std::find(children__.begin(), children__.end(), view);
 			if (it == children__.end()) {
 				children__.push_back(view);
 			}
@@ -47,7 +47,7 @@ namespace Titanium
 
 		void ViewLayoutDelegate::remove(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
-			auto it = std::find(children__.begin(), children__.end(), view);
+			const auto it = std::find(children__.begin(), children__.end(), view);
 			if (it != children__.end()) {
 				children__.erase(it);
 			}
@@ -60,13 +60,19 @@ namespace Titanium
 
 		void ViewLayoutDelegate::insertAt(const ViewInsertOrReplaceParams& params) TITANIUM_NOEXCEPT
 		{
-			children__.insert(children__.begin() + params.position, params.view);
+			const auto it = std::find(children__.begin(), children__.end(), params.view);
+			if (it == children__.end()) {
+				children__.insert(children__.begin() + params.position, params.view);
+			}
 		}
 
 		void ViewLayoutDelegate::replaceAt(const ViewInsertOrReplaceParams& params) TITANIUM_NOEXCEPT
 		{
-			children__.erase(children__.begin() + params.position);
-			children__.insert(children__.begin() + params.position, params.view);
+			const auto it = std::find(children__.begin(), children__.end(), params.view);
+			if (it != children__.end()) {
+				children__.erase(children__.begin() + params.position);
+				children__.insert(children__.begin() + params.position, params.view);
+			}
 		}
 
 		void ViewLayoutDelegate::animate(const std::shared_ptr<Titanium::UI::Animation>& animation, JSObject& callback, const JSObject& this_object) TITANIUM_NOEXCEPT
@@ -257,6 +263,9 @@ namespace Titanium
 		void ViewLayoutDelegate::set_borderColor(const std::string& borderColor) TITANIUM_NOEXCEPT
 		{
 			borderColor__ = borderColor;
+			if (borderWidth__.empty() || borderWidth__ == "0") {
+				set_borderWidth("1");
+			}
 		}
 
 		std::string ViewLayoutDelegate::get_borderRadius() const TITANIUM_NOEXCEPT
@@ -546,5 +555,41 @@ namespace Titanium
 		{
 			view__->fireEvent(name, e);
 		}
+
+		std::string ViewLayoutDelegate::GetDefaultUnit(const JSContext& js_context) TITANIUM_NOEXCEPT
+		{
+			// IMPORTANT: We do not support "dp" for now!
+			// Supporting "dp" in ti.ui.defaultunit will introduce breaking change for most apps.
+			// See TIMOB-25582 for details.
+			if (DefaultUnit__.empty()) {
+				JSObject App = Titanium::AppModule::GetStaticObject(js_context);
+
+				JSValue Properties_property = App.GetProperty("Properties");
+				TITANIUM_ASSERT(Properties_property.IsObject());  // precondition
+				JSObject Properties = static_cast<JSObject>(Properties_property);
+
+				auto props = Properties.GetPrivate<::Titanium::App::Properties>();
+				auto defaultUnit = props->getString("ti.ui.defaultunit", boost::optional<std::string>("px"));
+
+				if (!defaultUnit || *defaultUnit == "system")
+				{
+					DefaultUnit__ = "px";
+				} else {
+					DefaultUnit__ = *defaultUnit;
+				}
+				// Validate that unit is one of our set of known units!
+				// FIXME Some platforms allow other units. See "sp" and "sip" for Android
+				if (DefaultUnit__ != "mm" && DefaultUnit__ != "cm" &&
+					DefaultUnit__ != "em" && DefaultUnit__ != "pt" &&
+					DefaultUnit__ != "pc" && DefaultUnit__ != "in" &&
+					DefaultUnit__ != "px" && /* DefaultUnit__ != "dp" && */
+					DefaultUnit__ != "dip" && DefaultUnit__ != "ppx")
+				{
+					DefaultUnit__ = "px";
+				}
+			}
+			return DefaultUnit__;
+		}
+
 	} // namespace UI
 }  // namespace Titanium

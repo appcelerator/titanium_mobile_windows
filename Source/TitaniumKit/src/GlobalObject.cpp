@@ -328,15 +328,8 @@ namespace Titanium
 			if (boost::ends_with(module_path, ".json")){
 				result = js_context.CreateValueFromJSON(module_js);
 			} else if (js_context.JSCheckScriptSyntax(module_js, moduleId)) {
-				//
-				// app entry point should not be treated as "CommonJS module". It should expose every variables to children.
-				//
-				if (moduleId == "/app") {
-					const std::string app_module_js = "try {__dirname='/',__filename='app.js'; " + module_js + "} catch (E) { E.fileName='app.js'; Titanium_RedScreenOfDeath(E);}";
-					result = js_context.JSEvaluateScript(app_module_js, js_context.get_global_object());
-				} else {
-					const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__dirname='" + currentDir__ + "',__filename='"
-						+ module_path + "';try {" + module_js + R"JS(
+				const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__dirname='" + currentDir__ + "',__filename='"
+					+ module_path + "';try {" + module_js + R"JS(
 						if(module.exports !== __OXP){
 							return module.exports;
 						} else {
@@ -350,8 +343,7 @@ namespace Titanium
 					  }
 					})(this);
 					)JS";
-					result = js_context.JSEvaluateScript(require_module_js, js_context.get_global_object(), module_path);
-				}
+				result = js_context.JSEvaluateScript(require_module_js, js_context.get_global_object(), module_path);
 			} else {
 				currentDir__ = dirname; // Should ensure this gets reset on _EVERY_ code branch possible here. Would be nice if C++/CX had finally blocks
 				detail::ThrowRuntimeError("require", "Could not load module " + moduleId);

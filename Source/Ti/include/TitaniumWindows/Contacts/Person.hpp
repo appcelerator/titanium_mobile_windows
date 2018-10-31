@@ -32,6 +32,15 @@ namespace TitaniumWindows
 
 		public:
 			
+			TITANIUM_PROPERTY_UNIMPLEMENTED(alternateBirthday);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(created);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(id);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(image);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(kind);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(middlePhonetic);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(modified);
+			TITANIUM_PROPERTY_UNIMPLEMENTED(recordId);
+
 			Person(const JSContext&, const std::vector<JSValue>& arguments = {}) TITANIUM_NOEXCEPT;
 			virtual ~Person()                = default;
 			Person(const Person&)            = default;
@@ -97,7 +106,7 @@ namespace TitaniumWindows
 			virtual Titanium::Contacts::Urls get_url() const TITANIUM_NOEXCEPT override final;
 			virtual void set_url(const Titanium::Contacts::Urls&) TITANIUM_NOEXCEPT override final;
 
-			void remove();
+			void remove(Windows::ApplicationModel::Contacts::ContactStore^);
 #if defined(IS_WINDOWS_10)
 			Contact^ GetContact() const;
 #endif

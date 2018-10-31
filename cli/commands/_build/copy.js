@@ -89,6 +89,7 @@ function copyResources(next) {
 		jsFiles = this.jsFiles = {},
 		jsFilesToEncrypt = this.jsFilesToEncrypt = [],
 		htmlJsFiles = this.htmlJsFiles = {},
+		jsBootstrapFiles = [],
 		_t = this;
 
 	function copyDir(opts, callback) {
@@ -106,6 +107,14 @@ function copyResources(next) {
 		fs.existsSync(d) || wrench.mkdirSyncRecursive(d);
 
 		if (fs.existsSync(to)) {
+			// Don't overwrite C++ source files because it causes unnecessary recompile
+			if (/\.(cpp|hpp|h)$/.test(to)) {
+				_t.logger.debug(__('Skipping %s', to.cyan));
+				if (next) {
+					next();
+				}
+				return;
+			}
 			_t.logger.debug(__('Overwriting file %s', to.cyan));
 		}
 
@@ -301,6 +310,15 @@ function copyResources(next) {
 				required: true
 			},
 
+			// Square310x310Logo
+			{
+				description: 'Square310x310Logo.png - Used for logo',
+				file: path.join(appIconSetDir, 'Square310x310Logo.png'),
+				width: 310,
+				height: 310,
+				required: true
+			},
+
 			// Logo.png
 			{
 				description: 'Logo.png - Used for logo',
@@ -328,7 +346,6 @@ function copyResources(next) {
 				required: true
 			}
 
-			// TODO: Generate SplashScreen.scale-100.png?
 		],
 		md5 = function (file) {
 			return crypto
@@ -337,17 +354,43 @@ function copyResources(next) {
 				.digest('hex')
 		};
 
+		/*
+		 * Look for basename.png, if it does not exist then look for .scale-100.png because it should have same dimension
+		 */
+		function windowsScaledPNGAssetSelect(filename) {
+			var extname = path.extname(filename),
+				basename = filename.substr(0, filename.length - extname.length),
+				scaledname = basename + '.scale-100' + extname;
+			if (fs.existsSync(scaledname)) {
+				return scaledname;
+			}
+			return filename;
+		}
+
 		// if the app icon does not exist then check if it exists in the project root
 		// if it does not exist in project root then generate the missing icon
 		for (var i = missingIcons.length - 1; i >= 0; i--) {
+
+			// if file does not exist then look for .scale-100.png 
+			// because it should have same dimension
+			missingIcons[i].file = windowsScaledPNGAssetSelect(missingIcons[i].file);
+
 			var icon = missingIcons[i],
 				platformResourceIcon = path.join(this.projectDir, 'Resources', 'Windows', path.basename(icon.file)),
+				alloyPlatformResourceIcon = path.join(this.projectDir, 'app', 'assets', 'windows', path.basename(icon.file)),
 				resourceIcon = path.join(this.projectDir, 'Resources', path.basename(icon.file));
 			if (fs.existsSync(platformResourceIcon)) {
 				if (fs.existsSync(icon.file) && md5(icon.file) === md5(platformResourceIcon)) {
 					this.logger.debug(__('%s already exists, skipping...', icon.file));
 				} else {
 					copyFile.call(this, platformResourceIcon, icon.file);
+				}
+				missingIcons.splice(i, 1);
+			} else if (fs.existsSync(alloyPlatformResourceIcon)) {
+				if (fs.existsSync(icon.file) && md5(icon.file) === md5(alloyPlatformResourceIcon)) {
+					this.logger.debug(__('%s already exists, skipping...', icon.file));
+				} else {
+					copyFile.call(this, alloyPlatformResourceIcon, icon.file);
 				}
 				missingIcons.splice(i, 1);
 			} else {
@@ -383,6 +426,17 @@ function copyResources(next) {
 			copyDir.call(this, {
 				src: src,
 				dest: path.join(this.buildDir, 'cmake')
+			}, cb);
+		},
+
+		// Copy all of the Titanium SDK's core JS files shared by all platforms.
+		function (cb) {
+			const src = path.join(this.titaniumSdkPath, 'common', 'Resources');
+			_t.logger.debug(__('Copying %s', src.cyan));
+			copyDir.call(this, {
+				src: src,
+				dest: this.buildTargetAssetsDir,
+				ignoreRootDirs: ti.availablePlatformsNames
 			}, cb);
 		},
 
@@ -425,14 +479,32 @@ function copyResources(next) {
 		},
 
 		function (cb) {
-			var src = path.join(this.platformPath, 'lib', 'HAL', this.cmakePlatformAbbrev, this.arch, 'HAL.dll');
+			var src = path.join(this.platformPath, 'lib', 'HAL', this.cmakePlatformAbbrev, this.arch, 'AXWAYHAL.dll');
 			copyFile.call(this,
 				src,
-				path.join(this.buildDir, 'lib', 'HAL.dll'),
+				path.join(this.buildDir, 'lib', 'AXWAYHAL.dll'),
 				cb);
 		},
 
-		createAppIconSet
+		createAppIconSet,
+
+		// Remove SplashScreen.png if scaled assets (.scale-100.png) exists.
+		function(cb) {
+			var basename    = 'SplashScreen.scale-100.png',
+				candidates = [path.join(this.projectDir, 'Resources', 'Windows', basename),
+							  path.join(this.projectDir, 'app', 'assets', 'windows', basename),
+							  path.join(this.projectDir, 'Resources', basename) ],
+		 		splashAsset = path.join(this.buildDir, 'Assets', 'SplashScreen.png');
+
+		 	for (var i = 0; i < candidates.length; i++) {
+				if (fs.existsSync(candidates[i]) && fs.existsSync(splashAsset)) {
+					this.logger.debug('Removing SplashScreen.png as scaled-100 asset found.');
+					fs.unlinkSync(splashAsset)
+					break;
+				}
+		 	}
+		 	cb();
+		}
 	];
 
 	// copy all commonjs modules
@@ -526,7 +598,7 @@ function copyResources(next) {
 				var fromContent = fs.readFileSync(from, {encoding: 'utf8'}),
 					ast;
 				try {
-					ast = babylon.parse(fromContent, { filename: from });
+					ast = babylon.parse(fromContent, { filename: from, sourceType: 'module' });
 				} catch (E) {
 					t_.logger.error(reportJSErrors(from, fromContent, E));
 					return next('Failed to parse JavaScript files.');
@@ -590,6 +662,13 @@ function copyResources(next) {
 					return copyFile.call(this, from, to, done);
 				}
 
+				// A JS file ending with "*.bootstrap.js" is to be loaded before the "app.js".
+				// Add it as a require() compatible string to bootstrap array if it's a match.
+				const bootstrapPath = id.substr(0, id.length - 3);  // Remove the ".js" extension.
+				if (bootstrapPath.endsWith('.bootstrap')) {
+					jsBootstrapFiles.push(bootstrapPath);
+				}
+
 				// we have a js file that may be minified or encrypted
 
 				// if we're encrypting the JavaScript, copy the files to the assets dir
@@ -603,25 +682,34 @@ function copyResources(next) {
 					this.cli.createHook('build.windows.analyzeJsFile', this, function (from, to, ast, traverse, types, cb) {
 						this.cli.createHook('build.windows.copyResource', this, function (from, to, cb) {
 							// parse the AST
-							var r = jsanalyze.analyzeJsFile(from, {minify: this.minifyJS});
+							const originalContents = fs.readFileSync(from).toString();
+							const r = jsanalyze.analyzeJs(originalContents, {
+								filename: from,
+								minify: this.minifyJS,
+								transpile: this.transpile,
+								targets: {
+									safari: '10' // matches the version of jscore we use
+								},
+								resourcesDir: this.buildTargetAssetsDir,
+								logger: t_.logger
+							});
+							const newContents = r.contents;
 
 							// we want to sort by the "to" filename so that we correctly handle file overwriting
 							this.tiSymbols[to] = r.symbols;
 
-							var dir = path.dirname(to);
-							fs.existsSync(dir) || wrench.mkdirSyncRecursive(dir);
+							this.cli.createHook('build.windows.compileJsFile', this, function (r, from, to, cb2) {
+								const dir = path.dirname(to);
+								fs.existsSync(dir) || wrench.mkdirSyncRecursive(dir);
 
-							if (this.minifyJS) {
-								this.logger.debug(__('Copying and minifying %s => %s', from.cyan, to.cyan));
-
-								this.cli.createHook('build.windows.compileJsFile', this, function (r, from, to, cb2) {
-									fs.writeFile(to, r.contents, cb2);
-								})(r, from, to, cb);
-							} else {
-								// we've already read in the file, so just write the original contents
-								this.logger.debug(__('Copying %s => %s', from.cyan, to.cyan));
-								fs.writeFile(to, r.contents, cb);
-							}
+								if (newContents === originalContents) {
+									copyFile.call(this, from, to, cb2);
+								} else {
+									// we've already read in the file, so just write the original contents
+									this.logger.debug(__('Copying %s => %s', from.cyan, to.cyan));
+									fs.writeFile(to, newContents, cb2);
+								}
+							})(r, from, to, cb);
 						})(from, to, cb);
 					})(from, to, ast, traverse, types, done);
 				} catch (ex) {
@@ -660,7 +748,7 @@ function copyResources(next) {
 					analytics: this.tiapp.analytics,
 					publisher: this.tiapp.publisher,
 					url: this.tiapp.url,
-					version: this.tiapp.version,
+					version: this.buildVersion,
 					description: this.tiapp.description,
 					copyright: this.tiapp.copyright,
 					guid: this.tiapp.guid,
@@ -671,6 +759,13 @@ function copyResources(next) {
 				JSON.stringify(appInfo)
 			);
 			this.encryptJS && jsFilesToEncrypt.push('_app_info_.json');
+
+			// Write the "bootstrap.json" file, even if the bootstrap array is empty.
+			// Note: An empty array indicates the app has no bootstrap files.
+			const bootstrapJsonRelativePath = path.join('ti.internal', 'bootstrap.json'),
+				bootstrapJsonAbsolutePath = path.join(this.buildTargetAssetsDir, bootstrapJsonRelativePath);
+			fs.writeFileSync(bootstrapJsonAbsolutePath, JSON.stringify({ scripts: jsBootstrapFiles }));
+			this.encryptJS && jsFilesToEncrypt.push(bootstrapJsonRelativePath);
 
 			if (!jsFilesToEncrypt.length) {
 				// nothing to encrypt, continue

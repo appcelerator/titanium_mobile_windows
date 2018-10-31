@@ -21,8 +21,10 @@ var fs = require('fs'),
 	WIN_10 = '10.0',
 	MSBUILD_12 = '12.0',
 	MSBUILD_14 = '14.0',
+	MSBUILD_15 = '15.0',
 	VS_2013_GENERATOR = 'Visual Studio 12 2013',
 	VS_2015_GENERATOR = 'Visual Studio 14 2015',
+	VS_2017_GENERATOR = 'Visual Studio 15 2017',
 	WINDOWS_STORE = 'WindowsStore',
 	WINDOWS_PHONE = 'WindowsPhone';
 
@@ -51,7 +53,7 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, 
 		out = '';
 
 	// cmake generator name
-	generator = (msdev == MSBUILD_14) ? VS_2015_GENERATOR : VS_2013_GENERATOR;
+	generator = (msdev == MSBUILD_14) ? VS_2015_GENERATOR : VS_2017_GENERATOR;
 	if (arch == 'ARM') {
 		generator += ' ARM';
 	}
@@ -71,6 +73,7 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, 
 		'-DTitaniumWindows_UI_DISABLE_TESTS=ON',
 		'-DTitaniumKit_DISABLE_TESTS=ON',
 		'-DHAL_DISABLE_TESTS=ON',
+		'-DHAL_RENAME_AXWAYHAL=ON',
 		example_folder
 		], {
 			cwd: dest
@@ -106,9 +109,9 @@ if (module.id === ".") {
 			.usage('COMMAND [ARGS] [OPTIONS]')
 			.option('-a, --arch <arch>', '"ARM" (device) or "Win32" (emulator)', /^(ARM|Win32)$/, 'Win32')
 			.option('-o, --outputPath <outputPath>', 'Output path for generated code')
-			.option('-p, --platform <platform>', '"WindowsPhone" or "WindowsStore"', /^Windows(Phone|Store)$/, 'WindowsPhone')
-			.option('-s, --sdk-version <version>', 'Target a specific Windows SDK version [version]', /^(8\.1|10\.0)$/, WIN_8_1)
-			.option('-m, --msbuild <msbuild>', '"12.0" (VS 2013) or "14.0" (VS 2015)', /^(12\.0|14\.0)$/, MSBUILD_12);
+			.option('-p, --platform <platform>', '"WindowsPhone" or "WindowsStore"', /^Windows(Phone|Store)$/, 'WindowsStore')
+			.option('-s, --sdk-version <version>', 'Target a specific Windows SDK version [version]', /^(8\.1|10\.0)$/, WIN_10)
+			.option('-m, --msbuild <msbuild>', '"14.0" (VS 2015) or "15.0" (VS 2017)', /^(14\.0|15\.0)$/, MSBUILD_15);
 
 		program.command('new'.blue+' <example_name>'.white)
 				.description('	create a new project from the packaged examples'.grey);
@@ -137,7 +140,7 @@ if (module.id === ".") {
 
 		// Win 10 must be 'WindowsStore', VS 2015 and MSBuild 14.0
 		if (program.sdkVersion == WIN_10) {
-			program.msbuild = MSBUILD_14;
+			program.msbuild = MSBUILD_15;
 			program.platform = WINDOWS_STORE;
 			abbrev = 'Windows10';
 		}

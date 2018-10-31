@@ -24,6 +24,8 @@ namespace Titanium
 		      textAlign__(TEXT_ALIGNMENT::LEFT),
 		      verticalAlign__(TEXT_VERTICAL_ALIGNMENT::CENTER),
 		      wordWrap__(js_context.CreateBoolean(true))
+			, minimumFontSize__(0)
+			, maxLines__(0)
 		{
 		}
 
@@ -36,6 +38,8 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Label, bool, ellipsize)
 		TITANIUM_PROPERTY_READWRITE(Label, Font, font)
 		TITANIUM_PROPERTY_READWRITE(Label, std::shared_ptr<AttributedString>, attributedString)
+		TITANIUM_PROPERTY_READWRITE(Label, double, minimumFontSize)
+		TITANIUM_PROPERTY_READWRITE(Label, std::uint32_t, maxLines)
 
 		TITANIUM_PROPERTY_READ(Label, std::string, textid)
 		void Label::set_textid(const std::string& textid) TITANIUM_NOEXCEPT
@@ -61,6 +65,8 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Label, verticalAlign);
 			TITANIUM_ADD_PROPERTY(Label, wordWrap);
 			TITANIUM_ADD_PROPERTY(Label, attributedString);
+			TITANIUM_ADD_PROPERTY(Label, minimumFontSize);
+			TITANIUM_ADD_PROPERTY(Label, maxLines);
 
 			TITANIUM_ADD_FUNCTION(Label, getAutoLink);
 			TITANIUM_ADD_FUNCTION(Label, setAutoLink);
@@ -82,6 +88,10 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Label, setWordWrap);
 			TITANIUM_ADD_FUNCTION(Label, getAttributedString);
 			TITANIUM_ADD_FUNCTION(Label, setAttributedString);
+			TITANIUM_ADD_FUNCTION(Label, getMinimumFontSize);
+			TITANIUM_ADD_FUNCTION(Label, setMinimumFontSize);
+			TITANIUM_ADD_FUNCTION(Label, getMaxLines);
+			TITANIUM_ADD_FUNCTION(Label, setMaxLines);
 		}
 
 		TITANIUM_PROPERTY_GETTER(Label, autoLink)
@@ -169,6 +179,11 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER_OBJECT(Label, attributedString)
 		TITANIUM_PROPERTY_SETTER_OBJECT(Label, attributedString, AttributedString)
 
+		TITANIUM_PROPERTY_GETTER_DOUBLE(Label, minimumFontSize)
+		TITANIUM_PROPERTY_SETTER_DOUBLE(Label, minimumFontSize)
+		TITANIUM_PROPERTY_GETTER_UINT(Label, maxLines)
+		TITANIUM_PROPERTY_SETTER_UINT(Label, maxLines)
+
 		TITANIUM_FUNCTION_AS_GETTER(Label, getColor, color)
 		TITANIUM_FUNCTION_AS_SETTER(Label, setColor, color)
 
@@ -195,6 +210,12 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_AS_GETTER(Label, getAttributedString, attributedString)
 		TITANIUM_FUNCTION_AS_SETTER(Label, setAttributedString, attributedString)
+
+		TITANIUM_FUNCTION_AS_GETTER(Label, getMinimumFontSize, minimumFontSize)
+		TITANIUM_FUNCTION_AS_SETTER(Label, setMinimumFontSize, minimumFontSize)
+
+		TITANIUM_FUNCTION_AS_GETTER(Label, getMaxLines, maxLines)
+		TITANIUM_FUNCTION_AS_SETTER(Label, setMaxLines, maxLines)
 
 	} // namespace UI
 }  // namespace Titanium

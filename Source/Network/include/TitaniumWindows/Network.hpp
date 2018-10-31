@@ -14,10 +14,6 @@ namespace TitaniumWindows
 {
 	using namespace HAL;
 
-	// declare what's unimplemented regarding this modules.
-	// Make sure to remove once it's implemented
-	TITANIUM_MODULE_UNIMPLEMENTED(Titanium.Network.Cookie);
-
 	/*!
       @class NetworkModule
       @ingroup Titanium.Network
@@ -33,20 +29,21 @@ namespace TitaniumWindows
 		TITANIUM_PROPERTY_UNIMPLEMENTED(remoteNotificationTypes);
 		TITANIUM_PROPERTY_UNIMPLEMENTED(remoteNotificationsEnabled);
 
-		TITANIUM_FUNCTION_UNIMPLEMENTED(addHTTPCookie);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(addSystemCookie);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(createBonjourBrowser);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(createBonjourService);
-		TITANIUM_FUNCTION_UNIMPLEMENTED(getHTTPCookies);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(getHTTPCookiesForDomain);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(getSystemCookies);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(removeAllHTTPCookies);
-		TITANIUM_FUNCTION_UNIMPLEMENTED(removeAllSystemCookies);
-		TITANIUM_FUNCTION_UNIMPLEMENTED(removeHTTPCookie);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(removeHTTPCookiesForDomain);
+		TITANIUM_FUNCTION_UNIMPLEMENTED(removeAllSystemCookies);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(removeSystemCookie);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(registerForPushNotifications);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(unregisterForPushNotifications);
+
+		virtual std::vector<std::shared_ptr<Titanium::Network::Cookie>> getHTTPCookies(const std::string& domain, const std::string& path, const std::string& name) TITANIUM_NOEXCEPT override;
+		virtual void removeHTTPCookie(const std::string& domain, const std::string& path, const std::string& name) TITANIUM_NOEXCEPT override;
+		virtual void addHTTPCookie(std::shared_ptr<Titanium::Network::Cookie> cookie) TITANIUM_NOEXCEPT override;
 
 		NetworkModule(const JSContext&) TITANIUM_NOEXCEPT;
 
@@ -60,14 +57,13 @@ namespace TitaniumWindows
 
 		static void JSExportInitialize();
 
-		virtual Titanium::Network::TYPE get_networkType() const TITANIUM_NOEXCEPT override final;
-		virtual bool get_online() const TITANIUM_NOEXCEPT override final;
-
-		virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
-		virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
-
 	protected:
+		std::shared_ptr<Titanium::Network::Cookie> createCookie(Windows::Web::Http::HttpCookie^ cookie);
+		Windows::Web::Http::HttpCookie^ createCookie(const std::shared_ptr<Titanium::Network::Cookie>& cookie);
+
+		void updateNetworkStatus();
 		Windows::Foundation::EventRegistrationToken change_event__;
+		Windows::Web::Http::Filters::HttpBaseProtocolFilter^ filter__;
 	};
 
 }

@@ -25,6 +25,7 @@ namespace TitaniumWindows
 			virtual ~WindowsPickerLayoutDelegate() = default;
 
 			virtual void onComponentSizeChange(const Titanium::LayoutEngine::Rect&) override;
+			virtual void updateTouchEnabled(const bool& enabled) override;
 		};
 
 		/*!
@@ -91,7 +92,7 @@ namespace TitaniumWindows
 
 			void addColumns(const std::vector<std::shared_ptr<Titanium::UI::PickerColumn>>& columns);
 			std::vector<JSValue> getSelectedJSValues();
-
+			void unregisterChangeEvents();
 #pragma warning(pop)
 		};
 	} // namespace UI

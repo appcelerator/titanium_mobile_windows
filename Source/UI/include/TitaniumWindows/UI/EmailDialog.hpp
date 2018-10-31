@@ -32,6 +32,10 @@ namespace TitaniumWindows
 		{
 
 		public:
+
+			TITANIUM_PROPERTY_UNIMPLEMENTED(html);
+			TITANIUM_FUNCTION_UNIMPLEMENTED(addAttachment);
+
 			EmailDialog(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~EmailDialog()                  = default;

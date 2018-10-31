@@ -71,6 +71,7 @@ namespace TitaniumWindows
 #pragma warning(push)
 #pragma warning(disable : 4251)
 			Windows::Foundation::EventRegistrationToken loaded_event__;
+			Windows::Foundation::EventRegistrationToken click_event__;
 #pragma warning(pop)
 
 		};

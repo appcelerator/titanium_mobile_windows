@@ -217,8 +217,9 @@ namespace TitaniumWindows
 
 			const auto top_window = window_stack__.back();
 			const auto is_top_window = (top_window.get() == this); // check if window.close has been issued onto the top window
+			const auto exitOnClose = get_exitOnClose();
 
-			if (!get_exitOnClose() && window_stack__.size() > 1) {
+			if (!exitOnClose && window_stack__.size() > 1) {
 
 				// Check if stack-top is not a current Window.
 				// This usually means new windows is opened before current windows is closed,
@@ -280,6 +281,20 @@ namespace TitaniumWindows
 				}
 
 				Titanium::UI::Window::close(params);
+			} else if (!exitOnClose && window_stack__.size() == 1) {
+				// If this is the last Window and exitOnClose equals false, don't close the app.
+				try {
+					window_stack__.clear();
+					const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+					if (rootFrame->CanGoBack) {
+						rootFrame->GoBack();
+					}
+					rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
+					auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
+					page->Content = ref new Windows::UI::Xaml::Controls::Canvas();
+				} catch (Platform::Exception^ e) {
+					TITANIUM_LOG_ERROR("Window.close: failed to set content for the new Window");
+				}
 			} else if (is_top_window) {
 				ExitApp(get_context());
 			}
@@ -334,11 +349,14 @@ namespace TitaniumWindows
 			float width  = currentBounds.Width;
 			float height = currentBounds.Height;
 
-			if (!strWidth.empty() && std::all_of(strWidth.begin(), strWidth.end(), ::isdigit)) {
-				width = std::stof(strWidth);
+			const auto defaultUnit = Titanium::UI::ViewLayoutDelegate::GetDefaultUnit(get_context());
+			const auto ppi = TitaniumWindows::UI::WindowsViewLayoutDelegate::ComputePPI(Titanium::LayoutEngine::ValueName::Width);
+
+			if (!strWidth.empty()) {
+				width = static_cast<float>(Titanium::LayoutEngine::parseUnitValue(strWidth, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnit));
 			}
-			if (!strHeight.empty() && std::all_of(strHeight.begin(), strHeight.end(), ::isdigit)) {
-				height = std::stof(strHeight);
+			if (!strHeight.empty()) {
+				height = static_cast<float>(Titanium::LayoutEngine::parseUnitValue(strHeight, Titanium::LayoutEngine::ValueType::Fixed, ppi, defaultUnit));
 			}
 
 			// TryResizeView returns false when given size is too small/big. We don't have a way to get valid range here unfortunately.
@@ -386,14 +404,16 @@ namespace TitaniumWindows
 			SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = window_stack__.size() > 1 ? AppViewBackButtonVisibility::Visible : AppViewBackButtonVisibility::Collapsed;
 #endif
 
-			// start accepting events
-			enableEvents();
+			TitaniumWindows::Utility::RunOnUIThread([this]() {
+				// start accepting events
+				enableEvents();
 
-			// Fire open event on this window
-			fireEvent("open");
+				// Fire open event on this window
+				fireEvent("open");
 
-			// Fire focus event on this window
-			focus();
+				// Fire focus event on this window
+				focus();
+			});
 		}
 
 		void Window::set_orientationModes(const std::vector<Titanium::UI::ORIENTATION>& modes) TITANIUM_NOEXCEPT
@@ -450,7 +470,15 @@ namespace TitaniumWindows
 					ui_view = layoutDelegate__->rescueGetView(viewObj);
 				}
 				if (ui_view) {
-					ui_view->set_parent(this->get_object().GetPrivate<View>());
+					const auto parent_view_ptr = this->get_object().GetPrivate<View>();
+
+					// Compare parent, this indicates you're trying to add it before it's removed
+					if (ui_view->get_parent() == parent_view_ptr) {
+						TITANIUM_LOG_WARN("Window.add: This indicates this component is already added");
+						return get_context().CreateUndefined();
+					}
+
+					ui_view->set_parent(parent_view_ptr);
 					layoutDelegate__->add(ui_view);
 				} else {
 					HAL::detail::ThrowRuntimeError("Window::add", "Window.add: Unable to get native view from View");

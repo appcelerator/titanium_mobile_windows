@@ -31,12 +31,42 @@ namespace TitaniumWindows
 			
 			text_box__ = ref new Windows::UI::Xaml::Controls::TextBox();
 			text_box__->AcceptsReturn = true;
+			text_box__->TextWrapping = TextWrapping::Wrap;
 
 			border__ = ref new Controls::Border();
 			border__->Child = text_box__;
 
+			// TIMOB-25983: TextArea should be resized when its size is set to auto or Ti.UI.SIZE
+			border__->Loaded += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, Windows::UI::Xaml::RoutedEventArgs^) {
+				isLoaded__ = true;
+				const auto panel = dynamic_cast<FrameworkElement^>(border__->Parent);
+				if (panel && panel->ActualWidth > 0 && panel->ActualHeight > 0) {
+					const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+					const auto width = layout->get_width();
+					const auto height = layout->get_height();
+					const auto TI_UI_SIZE = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
+
+					if ((width.empty() || width == TI_UI_SIZE || width == "auto")) {
+						text_box__->MaxWidth = panel->ActualWidth;
+					}
+					if ((height.empty() || height == TI_UI_SIZE || height == "auto")) {
+						text_box__->MaxHeight = panel->ActualHeight;
+					}
+				}
+				// Lazy initializing text value
+				if (!value__.empty()) {
+					text_box__->Text = TitaniumWindows::Utility::ConvertUTF8String(value__);
+				}
+			});
+
 			Titanium::UI::TextArea::setLayoutDelegate<WindowsViewLayoutDelegate>();
 			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+
+			layout->set_defaultHeight(Titanium::UI::LAYOUT::SIZE);
+			layout->set_defaultWidth(Titanium::UI::LAYOUT::SIZE);
+			layout->set_autoLayoutForHeight(Titanium::UI::LAYOUT::SIZE);
+			layout->set_autoLayoutForWidth(Titanium::UI::LAYOUT::SIZE);
+
 			layout->setStyleComponent(text_box__);
 			layout->setComponent(border__, nullptr, border__);
 		}
@@ -121,8 +151,10 @@ namespace TitaniumWindows
 		Titanium::UI::TextAreaSelectedParams TextArea::get_selection() const TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::TextAreaSelectedParams params;
-			params.location = text_box__->SelectionStart;
-			params.length   = text_box__->SelectionLength;
+			if (text_box__) {
+				params.location = text_box__->SelectionStart;
+				params.length = text_box__->SelectionLength;
+			}
 			return params;
 		}
 
@@ -140,15 +172,30 @@ namespace TitaniumWindows
 			}
 		}
 
+		void TextArea::set_padding(const Titanium::UI::TextAreaPadding& padding) TITANIUM_NOEXCEPT
+		{
+			Thickness thickness;
+			thickness.Bottom = padding.bottom;
+			thickness.Top = padding.top;
+			thickness.Left = padding.left;
+			thickness.Right = padding.right;
+			text_box__->Padding = thickness;
+		}
+
 		std::string TextArea::get_value() const TITANIUM_NOEXCEPT
 		{
-			return TitaniumWindows::Utility::ConvertUTF8String(text_box__->Text);
+			if (isLoaded__) {
+				return TitaniumWindows::Utility::ConvertUTF8String(text_box__->Text);
+			}
+			return Titanium::UI::TextArea::get_value();
 		}
 
 		void TextArea::set_value(const std::string& value) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::TextArea::set_value(value);
-			text_box__->Text = TitaniumWindows::Utility::ConvertUTF8String(value);
+			if (isLoaded__) {
+				text_box__->Text = TitaniumWindows::Utility::ConvertUTF8String(value);
+			}
 		}
 
 		void TextArea::set_verticalAlign(const Titanium::UI::TEXT_VERTICAL_ALIGNMENT& verticalAlign) TITANIUM_NOEXCEPT
