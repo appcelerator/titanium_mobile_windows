@@ -67,6 +67,10 @@ namespace TitaniumWindows
 				label__->MaxHeight = current->Bounds.Height;
 			}
 
+			// TIMOB-26510: ScrollViewer crashes when Label has zero height.
+			// Set reasonable minimum height here
+			label__->MinHeight = 6;
+
 			border__->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler([this](Platform::Object^, Windows::UI::Xaml::SizeChangedEventArgs^ e) {
 				try {
 					if (border__->Parent) {
