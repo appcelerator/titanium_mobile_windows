@@ -231,7 +231,7 @@ namespace TitaniumWindows
 			const auto layout_node = layout->getLayoutNode();
 
 			// Calculate the label size when label is not loaded yet. This effectively updates node element properties.
-			if (!layout->isLoaded()) {
+			if (propertiesSet__ && !layout->isLoaded()) {
 				const auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node);
 				if (root) {
 					Titanium::LayoutEngine::nodeLayout(root);
