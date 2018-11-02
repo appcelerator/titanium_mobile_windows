@@ -101,7 +101,7 @@ namespace TitaniumWindows
 			scroll_viewer__ = ref new Windows::UI::Xaml::Controls::ScrollViewer();
 
 			scroll_viewer__->HorizontalScrollBarVisibility = ScrollBarVisibility::Auto;
-			scroll_viewer__->VerticalScrollBarVisibility = ScrollBarVisibility::Auto;
+			scroll_viewer__->VerticalScrollBarVisibility = ScrollBarVisibility::Visible;
 			scroll_viewer__->HorizontalScrollMode = ScrollMode::Enabled;
 			scroll_viewer__->VerticalScrollMode = ScrollMode::Enabled;
 
