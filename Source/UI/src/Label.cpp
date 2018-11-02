@@ -223,6 +223,8 @@ namespace TitaniumWindows
 		{
 			if (!need_measure__) return;
 
+			need_measure__ = false;
+
 			// TIMOB-23305: Measure desired size for this text and resize parent container accordingly.
 			Windows::Foundation::Size desiredSize{ static_cast<float>(label__->MaxWidth), static_cast<float>(label__->MaxHeight) };
 			label__->Measure(desiredSize);
@@ -261,8 +263,6 @@ namespace TitaniumWindows
 				layout->fixHeight(label__->ActualHeight + border__->BorderThickness.Top + border__->BorderThickness.Bottom + 1 /* Border needs this margin */ );
 				layout->requestLayout();
 			}
-
-			need_measure__ = false;
 		}
 
 		void Label::set_textAlign(const Titanium::UI::TEXT_ALIGNMENT& textAlign) TITANIUM_NOEXCEPT
