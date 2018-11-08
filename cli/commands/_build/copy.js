@@ -533,9 +533,15 @@ function copyResources(next) {
 		});
 	});
 
-	// this.modules.forEach(function (module) {
-		// TODO: copy any module specific resources here
-	// }, this);
+	this.modules.forEach(function (module) {
+		// copy any module specific resources here
+		tasks.push(function (cb) {
+			copyDir.call(this, {
+				src: path.join(module.modulePath, 'platform', 'Assets'),
+				dest: path.join(this.buildTargetAssetsDir)
+			}, cb);
+		});
+	}, this);
 
 	var platformPaths = [];
 	// WARNING! This is pretty dangerous, but yes, we're intentionally copying
