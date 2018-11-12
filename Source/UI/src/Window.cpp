@@ -217,8 +217,9 @@ namespace TitaniumWindows
 
 			const auto top_window = window_stack__.back();
 			const auto is_top_window = (top_window.get() == this); // check if window.close has been issued onto the top window
+			const auto exitOnClose = get_exitOnClose();
 
-			if (!get_exitOnClose() && window_stack__.size() > 1) {
+			if (!exitOnClose && window_stack__.size() > 1) {
 
 				// Check if stack-top is not a current Window.
 				// This usually means new windows is opened before current windows is closed,
@@ -280,6 +281,20 @@ namespace TitaniumWindows
 				}
 
 				Titanium::UI::Window::close(params);
+			} else if (!exitOnClose && window_stack__.size() == 1) {
+				// If this is the last Window and exitOnClose equals false, don't close the app.
+				try {
+					window_stack__.clear();
+					const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+					if (rootFrame->CanGoBack) {
+						rootFrame->GoBack();
+					}
+					rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
+					auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
+					page->Content = ref new Windows::UI::Xaml::Controls::Canvas();
+				} catch (Platform::Exception^ e) {
+					TITANIUM_LOG_ERROR("Window.close: failed to set content for the new Window");
+				}
 			} else if (is_top_window) {
 				ExitApp(get_context());
 			}

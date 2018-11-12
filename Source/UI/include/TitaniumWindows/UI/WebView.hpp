@@ -29,6 +29,7 @@ namespace TitaniumWindows
 		{
 		public:
 
+			TITANIUM_PROPERTY_UNIMPLEMENTED(data);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(scalesPageToFit);
 			TITANIUM_FUNCTION_UNIMPLEMENTED(setBasicAuthentication);
 

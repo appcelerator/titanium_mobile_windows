@@ -89,6 +89,7 @@ function copyResources(next) {
 		jsFiles = this.jsFiles = {},
 		jsFilesToEncrypt = this.jsFilesToEncrypt = [],
 		htmlJsFiles = this.htmlJsFiles = {},
+		jsBootstrapFiles = [],
 		_t = this;
 
 	function copyDir(opts, callback) {
@@ -428,6 +429,17 @@ function copyResources(next) {
 			}, cb);
 		},
 
+		// Copy all of the Titanium SDK's core JS files shared by all platforms.
+		function (cb) {
+			const src = path.join(this.titaniumSdkPath, 'common', 'Resources');
+			_t.logger.debug(__('Copying %s', src.cyan));
+			copyDir.call(this, {
+				src: src,
+				dest: this.buildTargetAssetsDir,
+				ignoreRootDirs: ti.availablePlatformsNames
+			}, cb);
+		},
+
 		// Next task is to copy all files in the Resources directory, but ignore
 		// any directory that is the name of a known platform
 		function (cb) {
@@ -521,9 +533,15 @@ function copyResources(next) {
 		});
 	});
 
-	// this.modules.forEach(function (module) {
-		// TODO: copy any module specific resources here
-	// }, this);
+	this.modules.forEach(function (module) {
+		// copy any module specific resources here
+		tasks.push(function (cb) {
+			copyDir.call(this, {
+				src: path.join(module.modulePath, 'platform', 'Assets'),
+				dest: path.join(this.buildTargetAssetsDir)
+			}, cb);
+		});
+	}, this);
 
 	var platformPaths = [];
 	// WARNING! This is pretty dangerous, but yes, we're intentionally copying
@@ -650,6 +668,13 @@ function copyResources(next) {
 					return copyFile.call(this, from, to, done);
 				}
 
+				// A JS file ending with "*.bootstrap.js" is to be loaded before the "app.js".
+				// Add it as a require() compatible string to bootstrap array if it's a match.
+				const bootstrapPath = id.substr(0, id.length - 3);  // Remove the ".js" extension.
+				if (bootstrapPath.endsWith('.bootstrap')) {
+					jsBootstrapFiles.push(bootstrapPath);
+				}
+
 				// we have a js file that may be minified or encrypted
 
 				// if we're encrypting the JavaScript, copy the files to the assets dir
@@ -740,6 +765,13 @@ function copyResources(next) {
 				JSON.stringify(appInfo)
 			);
 			this.encryptJS && jsFilesToEncrypt.push('_app_info_.json');
+
+			// Write the "bootstrap.json" file, even if the bootstrap array is empty.
+			// Note: An empty array indicates the app has no bootstrap files.
+			const bootstrapJsonRelativePath = path.join('ti.internal', 'bootstrap.json'),
+				bootstrapJsonAbsolutePath = path.join(this.buildTargetAssetsDir, bootstrapJsonRelativePath);
+			fs.writeFileSync(bootstrapJsonAbsolutePath, JSON.stringify({ scripts: jsBootstrapFiles }));
+			this.encryptJS && jsFilesToEncrypt.push(bootstrapJsonRelativePath);
 
 			if (!jsFilesToEncrypt.length) {
 				// nothing to encrypt, continue
