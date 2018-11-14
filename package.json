@@ -1,7 +1,7 @@
 {
 	"name": "titanium-mobile-windows",
 	"description": "Appcelerator Titanium Mobile Windows Platform",
-	"version": "__VERSION__",
+	"version": "0.0.0",
 	"keywords": [
 		"appcelerator",
 		"titanium",
@@ -12,7 +12,7 @@
 		"winstore"
 	],
 	"author": "Appcelerator, Inc. <info@appcelerator.com>",
-	"maintainers": [
+	"contributors": [
 		"Kota Iguchi <kiguchi@axway.com>",
 		"Chris Williams <cwilliams@axway.com>",
 		"Gary Mathews <gmathews@axway.com>",
@@ -21,6 +21,9 @@
 		"Pedro Enrique <penrique@appcelerator.com>",
 		"Chris Barber <cbarber@axway.com>"
 	],
+	"scripts": {
+		"docs": "node apidoc/ti_win_yaml.js"
+	},
 	"devDependencies": {
 		"eslint": "^5.9.0",
 		"eslint-config-axway": "^4.1.1",

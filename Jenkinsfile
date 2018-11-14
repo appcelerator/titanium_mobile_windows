@@ -45,15 +45,20 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 	unstash 'sources'
 	nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 		ensureNPM(npmVersion)
+		// bat 'npm ci'
+		// TODO Just run npm ci at root here!
+
 		def nodeHome = tool(name: "node ${nodeVersion}", type: 'nodejs')
 		echo nodeHome
 		bat "netsh advfirewall firewall add rule name=\"Node ${nodeVersion}\" program=\"${nodeHome}\\node.exe\" dir=in action=allow protocol=udp description=\"Firewall rule\""
 		bat "netsh advfirewall firewall add rule name=\"Node ${nodeVersion}\" program=\"${nodeHome}\\node.exe\" dir=in action=allow protocol=tcp description=\"Firewall rule\""
 
-		dir('Tools/Scripts/build') {
-			echo 'Setting up SDK'
+		dir('Tools/Scripts') {
 			bat 'npm ci'
-			bat "node setupSDK.js --branch ${branch}"
+			dir('build') {
+				echo 'Setting up SDK'
+				bat "node setupSDK.js --branch ${branch}"
+			}
 		}
 
 		// if our test suite already exists, delete it
@@ -145,9 +150,9 @@ timestamps {
 
 				dir('apidoc') {
 					if (isUnix()) {
-						sh 'node ti_win_yaml.js'
+						sh 'npm run docs'
 					} else {
-						bat 'node ti_win_yaml.js'
+						bat 'npm run docs'
 					}
 				}
 			}
