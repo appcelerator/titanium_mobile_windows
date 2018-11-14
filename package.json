@@ -33,7 +33,6 @@
 		"eslint-config-axway": "^4.1.1",
 		"eslint-plugin-mocha": "^5.2.0",
 		"fs-extra": "^7.0.1",
-		"klaw": "^3.0.0",
 		"klaw-sync": "^6.0.0",
 		"line-by-line": "^0.1.6",
 		"lodash.difference": "^4.5.0",
