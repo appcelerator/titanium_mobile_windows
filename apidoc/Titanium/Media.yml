@@ -262,15 +262,23 @@ methods:
     platforms: [windowsphone]
   - name: hideCamera
     platforms: [windowsphone]
+  - name: hideMusicLibrary
+    platforms: [windowsphone]
   - name: isMediaTypeSupported
     platforms: [windowsphone]
   - name: openMusicLibrary
     platforms: [windowsphone]
   - name: openPhotoGallery
     platforms: [windowsphone]
+  - name: previewImage
+    platforms: [windowsphone]
   - name: saveToPhotoGallery
     platforms: [windowsphone]
+  - name: setOverrideAudioRoute
+    platforms: [windowsphone]
   - name: showCamera
+    platforms: [windowsphone]
+  - name: queryMusicLibrary
     platforms: [windowsphone]
   - name: startMicrophoneMonitor
     platforms: [windowsphone]
@@ -281,6 +289,8 @@ methods:
   - name: startVideoCapture
     platforms: [windowsphone]
   - name: stopVideoCapture
+    platforms: [windowsphone]
+  - name: switchCamera
     platforms: [windowsphone]
   - name: takeScreenshot
     platforms: [windowsphone]

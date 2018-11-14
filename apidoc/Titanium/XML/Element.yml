@@ -3,12 +3,6 @@ platforms: [windowsphone]
 properties:
   - name: tagName
     platforms: [windowsphone]
-  - name: ownerDocument
-    platforms: [windowsphone]
-  - name: nodeName
-    platforms: [windowsphone]
-  - name: childNodes
-    platforms: [windowsphone]
 methods:
   - name: getAttribute
     platforms: [windowsphone]
