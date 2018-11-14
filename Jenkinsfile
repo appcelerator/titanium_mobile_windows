@@ -8,7 +8,7 @@ def gitCommit = ''
 // FIXME Using the nodejs jenkins plugin introduces complications that cause us not to properly connect to the Windows Phone emulator for logs
 // Likely need to modify the firewall rules to allow traffic from the new nodejs install like we do for system install!
 def nodeVersion = '8.11.1' // NOTE that changing this requires we set up the desired version on jenkins master first!
-def npmVersion = '5.8.0'
+def npmVersion = 'latest'
 
 def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion, npmVersion) {
 	unstash 'sources' // for build
@@ -19,8 +19,8 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion, npmV
 
 	nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 		ensureNPM(npmVersion)
+		bat 'npm ci'
 		dir('Tools/Scripts') {
-			bat 'npm ci'
 			echo "Installing JSC built for Windows ${sdkVersion}"
 			bat "node setup.js -s ${sdkVersion} --no-color --no-progress-bars"
 			dir('build') {
@@ -45,21 +45,16 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 	unstash 'sources'
 	nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 		ensureNPM(npmVersion)
-		// bat 'npm ci'
-		// TODO Just run npm ci at root here!
+		bat 'npm ci'
 
 		def nodeHome = tool(name: "node ${nodeVersion}", type: 'nodejs')
 		echo nodeHome
 		bat "netsh advfirewall firewall add rule name=\"Node ${nodeVersion}\" program=\"${nodeHome}\\node.exe\" dir=in action=allow protocol=udp description=\"Firewall rule\""
 		bat "netsh advfirewall firewall add rule name=\"Node ${nodeVersion}\" program=\"${nodeHome}\\node.exe\" dir=in action=allow protocol=tcp description=\"Firewall rule\""
 
-		dir('Tools/Scripts') {
-			bat 'npm ci'
-			dir('build') {
-				echo 'Setting up SDK'
-				bat "node setupSDK.js --branch ${branch}"
-			}
-		}
+		echo 'Setting up SDK'
+		// Downloads a pre-built SDK with iOS/Android, then merges in the built Windows SDK
+		bat "npm run combine-sdk -- --branch ${branch}"
 
 		// if our test suite already exists, delete it
 		bat 'if exist titanium-mobile-mocha-suite rmdir titanium-mobile-mocha-suite /Q /S'
@@ -144,16 +139,10 @@ timestamps {
 				ensureNPM(npmVersion)
 				if (isUnix()) {
 					sh 'npm ci'
+					sh 'npm run docs'
 				} else {
 					bat 'npm ci'
-				}
-
-				dir('apidoc') {
-					if (isUnix()) {
-						sh 'npm run docs'
-					} else {
-						bat 'npm run docs'
-					}
+					bat 'npm run docs'
 				}
 			}
 			echo 'copying generated docs to dist folder'

@@ -1,23 +1,27 @@
-var path = require('path'),
-	fs = require('fs'),
-	async = require('async'),
-	colors = require('colors'),
-	wrench = require('wrench'),
-	spawn = require('child_process').spawn,
-	exec = require('child_process').exec,
-	titanium = path.join(__dirname, 'node_modules', 'titanium', 'bin', 'titanium'),
-	DIST_DIR = path.join(__dirname, '..', '..', '..', 'dist'),
-	WINDOWS_DIST_DIR = path.join(DIST_DIR, 'windows'),
+/**
+ * This script downloads a pre-built SDK with iOS/Android, extracts it,
+ * copies the built Windows SDK portion into it, modifies some files to denote
+ * the Windows SDK was included and then zips it back up.
+ */
+const path = require('path');
+const fs = require('fs');
+const async = require('async');
+const colors = require('colors');
+const wrench = require('wrench');
+const spawn = require('child_process').spawn;
+const exec = require('child_process').exec;
+const titanium = path.join(__dirname, 'node_modules', 'titanium', 'bin', 'titanium');
+const DIST_DIR = path.join(__dirname, '..', '..', '..', 'dist');
+const WINDOWS_DIST_DIR = path.join(DIST_DIR, 'windows');
 	// Global vars
-	hadWindowsSDK = false;
-
+let hadWindowsSDK = false;
 
 /**
  * Installs the latest SDK from master branch remotely, sets it as the default
  * SDK. We'll be hacking it to add our locally built Windows SDK into it.
  *
- * @param barnch {String} branch name or URL of Titanium SDK to use
- * @param next {Function} callback function
+ * @param {string} branch branch name or URL of Titanium SDK to use
+ * @param {Function} next callback function
  **/
 function installSDK(branch, next) {
 	var prc = spawn('node', [titanium, 'sdk', 'install', '-b', branch, '-d', '--no-colors']),
@@ -66,8 +70,8 @@ function installSDK(branch, next) {
  * Look up the full path to the SDK we just installed (the SDK we'll be hacking
  * to add our locally built Windows SDK into).
  *
- * @param tiSDKVersion {String} The versionw e installed (if we know it)
- * @param next {Function} callback function
+ * @param {string} tiSDKVersion The version we installed (if we know it)
+ * @param {Function} next callback function
  **/
 function getSDKInstallDir(tiSDKVersion, next) {
 	var prc = exec('node "' + titanium + '" info -o json -t titanium', function (error, stdout, stderr) {
@@ -96,9 +100,9 @@ function getSDKInstallDir(tiSDKVersion, next) {
  * Adds 'windows' into the list of supported platforms for a given SDK we're
  * hacking.
  *
- * @param sdkPath {String} path to the Titanium SDK we'll be hacking to copy our
+ * @param {String} sdkPath path to the Titanium SDK we'll be hacking to copy our
  * 													locally built Windows SDK into
- * @param next {Function} callback function
+ * @param {Function} next callback function
  **/
 function copyWindowsIntoSDK(sdkPath, distDir, next) {
 	var dest = path.join(sdkPath, 'windows');
@@ -115,8 +119,8 @@ function copyWindowsIntoSDK(sdkPath, distDir, next) {
  * Adds 'windows' into the list of supported platforms for a given SDK we're
  * hacking.
  *
- * @param sdkPath {String} path to the Titanium SDK we'll be hacking
- * @param next {Function} callback function
+ * @param {String} sdkPath path to the Titanium SDK we'll be hacking
+ * @param {Function} next callback function
  **/
 function addWindowsToSDKManifest(sdkPath, next) {
 	var manifest = path.join(sdkPath, 'manifest.json');
