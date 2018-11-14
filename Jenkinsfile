@@ -23,22 +23,18 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion, npmV
 			bat 'npm ci'
 			echo "Installing JSC built for Windows ${sdkVersion}"
 			bat "node setup.js -s ${sdkVersion} --no-color --no-progress-bars"
-			bat 'rmdir node_modules /Q /S'
-		}
-
-		dir('Tools/Scripts/build') {
-			bat 'npm ci'
-
-			timeout(45) {
-				echo "Building for ${architecture} ${sdkVersion}"
-				def raw = bat(returnStdout: true, script: "echo %JavaScriptCore_${sdkVersion}_HOME%").trim()
-				def jscHome = raw.split('\n')[-1]
-				echo "Setting JavaScriptCore_HOME to ${jscHome}"
-				withEnv(["JavaScriptCore_HOME=${jscHome}"]) {
-					bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
-				}
-			} // timeout
-		} // dir Tool/Scripts/build
+			dir('build') {
+				timeout(45) {
+					echo "Building for ${architecture} ${sdkVersion}"
+					def raw = bat(returnStdout: true, script: "echo %JavaScriptCore_${sdkVersion}_HOME%").trim()
+					def jscHome = raw.split('\n')[-1]
+					echo "Setting JavaScriptCore_HOME to ${jscHome}"
+					withEnv(["JavaScriptCore_HOME=${jscHome}"]) {
+						bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
+					}
+				} // timeout
+			} // dir Tool/Scripts/build
+		} // dir Tool/Scripts
 	} // nodejs
 	archiveArtifacts artifacts: 'dist/**/*'
 } // def build
@@ -141,12 +137,16 @@ timestamps {
 
 			nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 				ensureNPM(npmVersion)
+				if (isUnix()) {
+					sh 'npm ci'
+				} else {
+					bat 'npm ci'
+				}
+
 				dir('apidoc') {
 					if (isUnix()) {
-						sh 'npm ci'
 						sh 'node ti_win_yaml.js'
 					} else {
-						bat 'npm ci'
 						bat 'node ti_win_yaml.js'
 					}
 				}

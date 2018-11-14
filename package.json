@@ -1,42 +1,52 @@
 {
 	"name": "titanium-mobile-windows",
-	"title": "Windows",
-	"description": "Appcelerator Titanium Windows Platform",
+	"description": "Appcelerator Titanium Mobile Windows Platform",
+	"version": "__VERSION__",
 	"keywords": [
 		"appcelerator",
 		"titanium",
 		"mobile",
-		"win8",
-		"wp8",
-		"winphone8",
 		"windows",
 		"windows phone",
 		"windows store",
 		"winstore"
 	],
-	"version": "__VERSION__",
 	"author": "Appcelerator, Inc. <info@appcelerator.com>",
 	"maintainers": [
+		"Kota Iguchi <kiguchi@axway.com>",
+		"Chris Williams <cwilliams@axway.com>",
+		"Gary Mathews <gmathews@axway.com>",
 		"Matt Langston <mlangston@appcelerator.com>",
 		"Russ McMahon <rmcmahon@appcelerator.com>",
 		"Pedro Enrique <penrique@appcelerator.com>",
-		"Chris Williams <cwilliams@appcelerator.com>",
-		"Chris Barber <cbarber@appcelerator.com>"
+		"Chris Barber <cbarber@axway.com>"
 	],
-	"vendorDependencies": {
-		"visual studio": ">=12.x <=14.x",
-		"windows phone sdk": "10.0",
-		"windows 10 sdk": ">=10.0.10240.0 <=10.0.17134.0",
-		"msbuild": ">=4.0",
-		"node": ">=0.10.0 <=0.12.x",
-		"java": ">=1.8.x"
-	},
-	"engines": {
-		"node": ">=0.10.13"
+	"devDependencies": {
+		"eslint": "^5.9.0",
+		"eslint-config-axway": "^4.1.1",
+		"eslint-plugin-mocha": "^5.2.0",
+		"fs-extra": "^7.0.1",
+		"klaw": "^3.0.0",
+		"klaw-sync": "^6.0.0",
+		"line-by-line": "^0.1.6",
+		"lodash.difference": "^4.5.0",
+		"lodash.union": "^4.6.0"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/appcelerator/titanium_mobile_windows.git"
 	},
-	"license": "Apache Public License v2"
+	"vendorDependencies": {
+		"visual studio": ">=12.x <=14.x",
+		"windows phone sdk": "10.0",
+		"windows 10 sdk": ">=10.0.10240.0 <=10.0.17134.0",
+		"msbuild": ">=4.0",
+		"node": ">=6.0.0 <=11.x",
+		"java": ">=1.8.x"
+	},
+	"engines": {
+		"node": ">=6.0.0"
+	},
+	"license": "Apache-2.0",
+	"dependencies": {}
 }
