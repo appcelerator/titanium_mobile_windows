@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
@@ -207,7 +207,7 @@ function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet, c
 		var p = spawn((process.env.comspec || 'cmd.exe'), ['/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ \(\)\&]/g, '^$&') +
 			' &&' + ' MSBuild' + (arch==='ARM' ? ' /p:Platform=' + arch : '') + (parallel ? ' /m' : '') + ' /nr:false /p:Configuration=Release ' + slnFile, '"'
 		], {windowsVerbatimArguments: true});
-		
+
 		p.stdout.on('data', function (data) {
 			var line = data.toString().trim();
 			if (line.indexOf('error ') >= 0) {
