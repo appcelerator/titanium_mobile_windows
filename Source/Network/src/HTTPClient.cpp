@@ -108,7 +108,7 @@ namespace TitaniumWindows
 			filter__ = ref new Windows::Web::Http::Filters::HttpBaseProtocolFilter();
 			httpClient__ = ref new Windows::Web::Http::HttpClient(filter__);
 			cancellationTokenSource__ = concurrency::cancellation_token_source();
-			filter__->AllowAutoRedirect = false;
+			filter__->AllowAutoRedirect = autoRedirect__;
 			filter__->CacheControl->ReadBehavior = Windows::Web::Http::Filters::HttpCacheReadBehavior::MostRecent;
 			responseHeaders__.clear();
 
@@ -193,7 +193,7 @@ namespace TitaniumWindows
 			send(postData);
 		}
 
-		void HTTPClient::send(Windows::Web::Http::IHttpContent^ content, const bool& redirect)
+		void HTTPClient::send(Windows::Web::Http::IHttpContent^ content)
 		{
 			readyState__ = Titanium::Network::RequestState::Unsent;
 
@@ -221,25 +221,15 @@ namespace TitaniumWindows
 			}
 			setRequestHeaders(request);
 
-			if (!redirect) {
-				// Startup a timer that will abort the request after the timeout period is reached.
-				startDispatcherTimer();
-				responseWaiter__.reset();
-				enableStreamEvents__ = true;
-			}
+			// Startup a timer that will abort the request after the timeout period is reached.
+			startDispatcherTimer();
+			responseWaiter__.reset();
+			enableStreamEvents__ = true;
 
 			// clang-format off
 			const auto token = cancellationTokenSource__.get_token();
 			create_task(httpClient__->SendRequestAsync(request), token)
 				.then([this, token, content](Windows::Web::Http::HttpResponseMessage^ response) {
-
-				const auto status = static_cast<std::uint32_t>(response->StatusCode);
-				const auto location = response->Headers->Location;
-				if (autoRedirect__ && location && status >= 300 && status <= 399) {
-					location__ = TitaniumWindows::Utility::ConvertString(location->AbsoluteUri);
-					send(content, true);
-					return;
-				}
 
 				interruption_point();
 				readyState__ = Titanium::Network::RequestState::Opened;
@@ -251,6 +241,10 @@ namespace TitaniumWindows
 				}
 
 				SerializeHeaders(response);
+
+				if (response->RequestMessage->RequestUri) {
+					location__ = TitaniumWindows::Utility::ConvertString(response->RequestMessage->RequestUri->AbsoluteUri);
+				}
 
 				create_task(response->Content->ReadAsInputStreamAsync(), token).then([this, token](Windows::Storage::Streams::IInputStream^ stream) {
 					interruption_point();
