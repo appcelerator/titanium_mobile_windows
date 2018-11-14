@@ -192,8 +192,10 @@ namespace TitaniumWindows
 			send(postData);
 		}
 
-		void HTTPClient::send(Windows::Web::Http::IHttpContent^ content)
+		void HTTPClient::send(Windows::Web::Http::IHttpContent^ content, const bool& redirect)
 		{
+			readyState__ = Titanium::Network::RequestState::Unsent;
+
 			auto uri = ref new Windows::Foundation::Uri(TitaniumWindows::Utility::ConvertString(location__));
 			
 			// Set up the request
@@ -218,10 +220,12 @@ namespace TitaniumWindows
 			}
 			setRequestHeaders(request);
 
-			// Startup a timer that will abort the request after the timeout period is reached.
-			startDispatcherTimer();
-			responseWaiter__.reset();
-			enableStreamEvents__ = true;
+			if (!redirect) {
+				// Startup a timer that will abort the request after the timeout period is reached.
+				startDispatcherTimer();
+				responseWaiter__.reset();
+				enableStreamEvents__ = true;
+			}
 
 			// clang-format off
 			const auto token = cancellationTokenSource__.get_token();
@@ -230,9 +234,9 @@ namespace TitaniumWindows
 
 				const auto status = static_cast<std::uint32_t>(response->StatusCode);
 				const auto location = response->Headers->Location;
-				if (enableStreamEvents__ && location && status >= 300 && status <= 399) {
+				if (location && status >= 300 && status <= 399) {
 					location__ = TitaniumWindows::Utility::ConvertString(location->AbsoluteUri);
-					send(content);
+					send(content, true);
 					return;
 				}
 
@@ -442,6 +446,7 @@ namespace TitaniumWindows
 					dispatcherTimer__->Interval = timeoutSpan__;
 					auto timeoutRegistrationToken__ = dispatcherTimer__->Tick += ref new Windows::Foundation::EventHandler<Platform::Object^>([this](Platform::Object^ sender, Platform::Object^ e) {
 						try {
+							readyState__ = Titanium::Network::RequestState::Done;
 							responseWaiter__.set();
 							cancellationTokenSource__.cancel();
 							dispatcherTimer__->Stop();
@@ -543,12 +548,13 @@ namespace TitaniumWindows
 		/*
 		 * This is a private API that is specifically designed for LiveView.
 		 * This suppresses some events such as onreadystatechange because this blocks UI thread.
-		 * This also suppresses auto URL redirection.
 		 */
 		void HTTPClient::_waitForResponse() TITANIUM_NOEXCEPT
 		{
-			enableStreamEvents__ = false;
-			responseWaiter__.wait();
+			if (readyState__ != Titanium::Network::RequestState::Done) {
+				enableStreamEvents__ = false;
+				responseWaiter__.wait();
+			}
 		}
 	}
 }

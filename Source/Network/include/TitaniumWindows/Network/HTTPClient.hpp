@@ -127,7 +127,7 @@ namespace TitaniumWindows
 			void setRequestHeaders(Windows::Web::Http::HttpRequestMessage^ request);
 			void addCookiesToRequest();
 
-			void send(Windows::Web::Http::IHttpContent^ content);
+			void send(Windows::Web::Http::IHttpContent^ content, const bool& redirect = false);
 		};
 	} // namespace Network
 } // namespace TitaniumWindows
