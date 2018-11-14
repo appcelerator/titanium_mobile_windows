@@ -3,8 +3,6 @@
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
-'use strict';
-
 const path = require('path');
 const fs = require('fs-extra');
 const walkSync = require('klaw-sync');
@@ -349,7 +347,7 @@ function exportYAMLFile(module_name) {
 
 	modulepath.pop();
 	// everything should be go to Titanium directory
-	if (modulepath[0] != 'Titanium') {
+	if (modulepath[0] !== 'Titanium') {
 		modulepath[0] = 'Titanium';
 	}
 	const outdir = path.join(__dirname, modulepath.join(path.sep));

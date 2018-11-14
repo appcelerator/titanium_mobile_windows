@@ -4,7 +4,7 @@
  * @module setup
  *
  * @copyright
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-Present by Appcelerator, Inc. All Rights Reserved.
  *
  * @license
  * Licensed under the terms of the Apache Public License
@@ -13,12 +13,12 @@
  * @requires node-appc
  */
 const fs = require('fs-extra');
-const spawn = require('child_process').spawn;
+const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
 const os = require('os');
 const http = require('http');
 const path = require('path');
 
-const colors = require('colors');
+const colors = require('colors'); // eslint-disable-line no-unused-vars
 const request = require('request');
 const temp = require('temp');
 const appc = require('node-appc');
@@ -107,7 +107,14 @@ function downloadURL(url) {
 	});
 }
 
-function extract(filename, installLocation, keepFiles, callback) {
+/**
+ * [extract description]
+ * @param  {string} filename        [description]
+ * @param  {string} installLocation [description]
+ * @param  {boolean} keepFiles       [description]
+ * @return {Promise}                 [description]
+ */
+function extract(filename, installLocation, keepFiles) {
 	return new Promise((resolve, reject) => {
 		console.log(`Extracting to ${installLocation.cyan}`);
 

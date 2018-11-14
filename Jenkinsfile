@@ -127,6 +127,13 @@ timestamps {
 			stash name: 'override-tests', includes: 'tests/'
 		} // Checkout stage
 
+		// TODO Lint stage!
+		// stage('Lint') {
+		//   sh 'npx eslint apidoc'
+		//   sh 'npx eslint Tools/Scripts'
+		//   sh 'npx eslint Tools/Scripts/build'
+		// }
+
 		stage('Docs') {
 			if (isUnix()) {
 				sh 'mkdir -p dist/windows/doc'
