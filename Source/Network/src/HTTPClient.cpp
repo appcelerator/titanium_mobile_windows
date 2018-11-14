@@ -13,6 +13,7 @@
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include <boost/algorithm/string.hpp>
 
 using namespace concurrency;
 using TitaniumWindows::Utility::RunOnUIThread;
@@ -75,7 +76,7 @@ namespace TitaniumWindows
 
 		std::string HTTPClient::getResponseHeader(const std::string& name) TITANIUM_NOEXCEPT
 		{
-			auto it = responseHeaders__.find(name.c_str());
+			auto it = responseHeaders__.find(boost::algorithm::to_lower_copy(name).c_str());
 			if (it != responseHeaders__.end()) {
 				return it->second;
 			} else {
@@ -234,7 +235,7 @@ namespace TitaniumWindows
 
 				const auto status = static_cast<std::uint32_t>(response->StatusCode);
 				const auto location = response->Headers->Location;
-				if (location && status >= 300 && status <= 399) {
+				if (autoRedirect__ && location && status >= 300 && status <= 399) {
 					location__ = TitaniumWindows::Utility::ConvertString(location->AbsoluteUri);
 					send(content, true);
 					return;
@@ -478,7 +479,7 @@ namespace TitaniumWindows
 			SerializeHeaderCollection(response->Content->Headers);
 
 			std::map<std::string, std::string>::iterator it;
-			it = responseHeaders__.find("Content-Length");
+			it = responseHeaders__.find("content-length");
 			if (it != responseHeaders__.end()) {
 				contentLength__ = atol(it->second.c_str());
 			} else {
@@ -497,7 +498,7 @@ namespace TitaniumWindows
 		{
 			for each(Windows::Foundation::Collections::IKeyValuePair<Platform::String^, Platform::String^>^ pair in headers)
 			{
-				responseHeaders__.insert(std::make_pair(TitaniumWindows::Utility::ConvertString(pair->Key), TitaniumWindows::Utility::ConvertString(pair->Value)));
+				responseHeaders__.insert(std::make_pair(boost::algorithm::to_lower_copy(TitaniumWindows::Utility::ConvertString(pair->Key)), TitaniumWindows::Utility::ConvertString(pair->Value)));
 			}
 		}
 

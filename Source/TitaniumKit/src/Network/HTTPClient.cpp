@@ -14,6 +14,7 @@ namespace Titanium
 	{
 		HTTPClient::HTTPClient(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: Module(js_context, "Ti.Network.HTTPClient")
+			, autoRedirect__(true)
 			, onload__(js_context.CreateNull())
 			, onerror__(js_context.CreateNull())
 			, ondatastream__(js_context.CreateNull())
