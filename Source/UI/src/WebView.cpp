@@ -300,6 +300,9 @@ namespace TitaniumWindows
 			beforeload_event__ = webview__->NavigationStarting += ref new Windows::Foundation::TypedEventHandler
 				<Controls::WebView^, Controls::WebViewNavigationStartingEventArgs^>([this](Controls::WebView^, Controls::WebViewNavigationStartingEventArgs^ e) {
 				try {
+					if (e->Uri == nullptr) {
+						return;
+					}
 					// blacklistedURLs
 					const auto uri = TitaniumWindows::Utility::ConvertUTF8String(e->Uri->AbsoluteUri);
 					const auto blacklisted = std::find(blacklistedURLs__.begin(), blacklistedURLs__.end(), uri);
