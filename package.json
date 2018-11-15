@@ -23,15 +23,18 @@
 	],
 	"scripts": {
 		"docs": "node apidoc/ti_win_yaml.js",
-		"combine-sdk": "node Tools/Scripts/build/setupSDK.js"
+		"combine-sdk": "node Tools/Scripts/build/setupSDK.js",
+		"test": "eslint \"apidoc/**/*.js\" \"Tools/**/*.js\""
 	},
 	"devDependencies": {
 		"colors": "^0.6.2",
 		"commander": "^2.9.0",
+		"ejs": "github:garymathews/ejs",
 		"eslint": "^5.9.0",
 		"eslint-config-axway": "^4.1.1",
 		"eslint-plugin-mocha": "^5.2.0",
 		"fs-extra": "^7.0.1",
+		"inquirer": "^0.8.5",
 		"klaw-sync": "^6.0.0",
 		"line-by-line": "^0.1.6",
 		"lodash.difference": "^4.5.0",

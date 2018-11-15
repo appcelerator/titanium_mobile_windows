@@ -127,39 +127,41 @@ timestamps {
 			stash name: 'override-tests', includes: 'tests/'
 		} // Checkout stage
 
-		// TODO Lint stage!
-		// stage('Lint') {
-		//   sh 'npx eslint apidoc'
-		//   sh 'npx eslint Tools/Scripts'
-		//   sh 'npx eslint Tools/Scripts/build'
-		// }
-
-		stage('Docs') {
-			if (isUnix()) {
-				sh 'mkdir -p dist/windows/doc'
-			} else {
-				bat 'mkdir dist\\\\windows\\\\doc'
-			}
-			echo 'Generating docs'
-
-			nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
+		nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
+			stage('Lint') {
 				ensureNPM(npmVersion)
 				if (isUnix()) {
 					sh 'npm ci'
-					sh 'npm run docs'
+					sh 'npm test'
 				} else {
 					bat 'npm ci'
+					bat 'npm test'
+				}
+			} // stage('Lint')
+
+			stage('Docs') {
+				if (isUnix()) {
+					sh 'mkdir -p dist/windows/doc'
+				} else {
+					bat 'mkdir dist\\\\windows\\\\doc'
+				}
+
+				echo 'Generating docs'
+				if (isUnix()) {
+					sh 'npm run docs'
+				} else {
 					bat 'npm run docs'
 				}
-			}
-			echo 'copying generated docs to dist folder'
-			if (isUnix()) {
-				sh 'mv apidoc/Titanium dist/windows/doc/Titanium'
-			} else {
-				bat '(robocopy apidoc\\\\Titanium dist\\\\windows\\\\doc\\\\Titanium /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0'
-			}
-			archiveArtifacts artifacts: 'dist/**/*'
-		} // stage('Docs')
+
+				echo 'copying generated docs to dist folder'
+				if (isUnix()) {
+					sh 'mv apidoc/Titanium dist/windows/doc/Titanium'
+				} else {
+					bat '(robocopy apidoc\\\\Titanium dist\\\\windows\\\\doc\\\\Titanium /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0'
+				}
+				archiveArtifacts artifacts: 'dist/**/*'
+			} // stage('Docs')
+		} //nodejs
 	} // node
 
 	// Are we on a PR/feature branch, or a "mainline" branch like master/6_2_X/7_0_X?
