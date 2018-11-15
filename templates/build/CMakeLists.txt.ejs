@@ -99,7 +99,7 @@ set(SOURCE_Assets
   )
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
-<% var key_filter = /[\.\/|\@]/g -%>
+<% var key_filter = /[\.\/|\@ ]/g -%>
 <% for(var key in sourceGroups) {%>
 <% if (key == '.') { continue; } -%>
 set(SOURCE_<%= key.replace(key_filter, '_') %>
