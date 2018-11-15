@@ -36,9 +36,10 @@
 		"line-by-line": "^0.1.6",
 		"lodash.difference": "^4.5.0",
 		"lodash.union": "^4.6.0",
-		"node-appc": "^0.2.21",
-		"request": "^2.27.0",
+		"node-appc": "^0.2.49",
+		"request": "^2.88.0",
 		"temp": "^0.6.0",
+		"titanium": "^5.2.0",
 		"windowslib": "^0.6.7"
 	},
 	"repository": {

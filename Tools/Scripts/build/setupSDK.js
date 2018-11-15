@@ -8,7 +8,7 @@ const fs = require('fs-extra');
 const colors = require('colors'); // eslint-disable-line no-unused-vars
 const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
 const exec = require('child_process').exec; // eslint-disable-line security/detect-child-process
-const titanium = path.join(__dirname, 'node_modules', 'titanium', 'bin', 'titanium');
+const titanium = path.join(require.resolve('titanium'), 'bin', 'titanium');
 const DIST_DIR = path.join(__dirname, '..', '..', '..', 'dist');
 const WINDOWS_DIST_DIR = path.join(DIST_DIR, 'windows');
 
