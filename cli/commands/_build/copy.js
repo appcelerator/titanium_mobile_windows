@@ -7,9 +7,6 @@ var appc = require('node-appc'),
 	path = require('path'),
 	ti = require('node-titanium-sdk'),
 	wrench = require('wrench'),
-	babylon = require('babylon'),
-	types = require('babel-types'),
-	traverse = require('babel-traverse').default,
 	__ = appc.i18n(__dirname).__;
 
 /*
@@ -597,71 +594,6 @@ function copyResources(next) {
 				var from = jsFiles[id],
 					to = path.join(this.buildTargetAssetsDir, id),
 					t_ = this;
-				t_.native_types  = t_.native_types  || {};
-				t_.native_events = t_.native_events || {};
-
-				// Look for native requires here
-				var fromContent = fs.readFileSync(from, {encoding: 'utf8'}),
-					ast;
-				try {
-					ast = babylon.parse(fromContent, { filename: from, sourceType: 'module' });
-				} catch (E) {
-					t_.logger.error(reportJSErrors(from, fromContent, E));
-					return next('Failed to parse JavaScript files.');
-				}
-
-				//
-				// Compatibility Mode
-				// Use 'built-in' type detection for older version of Hyperloop module (< 2.2.0)
-				//
-				if (!t_.useHyperloopBuilder) {
-					traverse(ast, {
-						CallExpression: {
-							enter: function(path) {
-
-								// if we're calling require with one string literal argument...
-								// FIXME What if it is a requires, but not a string? What if it is a dynamically built string?
-								if (types.isIdentifier(path.node.callee, { name: 'require' }) &&
-										path.node.arguments && path.node.arguments.length == 1 &&
-										types.isStringLiteral(path.node.arguments[0])) {
-									// check if the required type is "native"
-									var node_value = path.node.arguments[0].value;
-									if (hasWindowsAPI(node_value)) {
-										t_.logger.info("Detected native API reference: " + node_value);
-										t_.native_types[node_value] = {name: node_value};
-									}
-								} else if (types.isMemberExpression(path.node.callee) && // are we calling 'addEventListener'?
-										types.isIdentifier(path.node.callee.property, { name: 'addEventListener' }) &&
-										path.node.arguments && path.node.arguments.length > 0 && // with at least one argument
-										types.isStringLiteral(path.node.arguments[0]) && // first argument is a string literal
-										types.isIdentifier(path.node.callee.object) // on some variable
-										) {
-									var event_name = path.node.arguments[0].value,  // record the event name
-										binding = path.scope.getBinding(path.node.callee.object.name); // get binding for the receiver variable
-									if (binding && // if we got the initial binding for the variable
-											types.isVariableDeclarator(binding.path.node) && // and it declares the variable
-											types.isNewExpression(binding.path.node.init) && // and it's assigned from a 'new' expression
-											types.isIdentifier(binding.path.node.init.callee) // and the type is an identifier
-											) {
-										var ctor = path.scope.getBinding(binding.path.node.init.callee.name); // and it's the constructor variable
-										if (ctor && ctor.path.node.init && ctor.path.node.init.arguments && ctor.path.node.init.arguments.length > 0) {
-											var detectedConstructorType = ctor.path.node.init.arguments[0].value; // record the type of the constructor
-											if (hasWindowsAPI(detectedConstructorType)) {
-												var native_event = {
-													name: event_name,
-													type: detectedConstructorType,
-													signature: event_name + '_' + detectedConstructorType.replace(/\./g, '_')
-												};
-												t_.native_events[native_event.signature] = native_event;
-												t_.logger.info('Detected native API event: ' + native_event.name + ' for ' + detectedConstructorType);
-											}
-										}
-									}
-								}
-							}
-						}
-					});
-				}
 
 				if (htmlJsFiles[id]) {
 					// this js file is referenced from an html file, so don't minify or encrypt
@@ -685,7 +617,7 @@ function copyResources(next) {
 				}
 
 				try {
-					this.cli.createHook('build.windows.analyzeJsFile', this, function (from, to, ast, traverse, types, cb) {
+					this.cli.createHook('build.windows.analyzeJsFile', this, function (from, to, cb) {
 						this.cli.createHook('build.windows.copyResource', this, function (from, to, cb) {
 							// parse the AST
 							const originalContents = fs.readFileSync(from).toString();
@@ -717,7 +649,7 @@ function copyResources(next) {
 								}
 							})(r, from, to, cb);
 						})(from, to, cb);
-					})(from, to, ast, traverse, types, done);
+					})(from, to, done);
 				} catch (ex) {
 					ex.message.split('\n').forEach(this.logger.error);
 					this.logger.log();
