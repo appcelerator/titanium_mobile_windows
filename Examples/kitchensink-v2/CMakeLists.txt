@@ -36,6 +36,7 @@ get_filename_component(Utility_SOURCE_DIR       ${PROJECT_SOURCE_DIR}/../../Sour
 get_filename_component(UI_SOURCE_DIR            ${PROJECT_SOURCE_DIR}/../../Source/UI            ABSOLUTE)
 get_filename_component(TitaniumKit_SOURCE_DIR   ${PROJECT_SOURCE_DIR}/../../Source/TitaniumKit   ABSOLUTE)
 get_filename_component(HAL_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/HAL           ABSOLUTE)
+get_filename_component(Ti_CMAKE_MODULE_DIR      ${PROJECT_SOURCE_DIR}/../../Source/cmake         ABSOLUTE)
 
 if(NOT TARGET TitaniumWindows)
   add_subdirectory(${Titanium_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Titanium EXCLUDE_FROM_ALL)
@@ -85,6 +86,9 @@ if (NOT TARGET HAL)
   add_subdirectory(${HAL_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/HAL EXCLUDE_FROM_ALL)
 endif()
 
+list(INSERT CMAKE_MODULE_PATH 0 ${Ti_CMAKE_MODULE_DIR})
+find_package(JavaScriptCore REQUIRED)
+
 # No user-servicable parts below this line.
 
 # Variable naming the built executable.
@@ -124,6 +128,8 @@ set(SOURCE_Assets
   "src/Assets/titanium_settings.ini"
   "src/Assets/_app_info_.json"
   "src/Assets/_app_props_.json"
+  ${JavaScriptCore_LIBRARY_DIR}/Release/JavaScriptCore.dll
+  ${JavaScriptCore_LIBRARY_DIR}/Release/WTF.dll
   )
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
