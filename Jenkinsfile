@@ -162,7 +162,7 @@ timestamps {
 	} // node
 
 	// Are we on a PR/feature branch, or a "mainline" branch like master/6_2_X/7_0_X?
-	def isMainlineBranch = (env.BRANCH_NAME ==~ /master|\d_\d_(X|\d)/)
+	def isMainlineBranch = (env.BRANCH_NAME ==~ /master|next|\d_\d_(X|\d)/)
 	def targetBranch = env.CHANGE_TARGET // if it's a PR, use target merge branch as branch of SDK to install
 	if (isMainlineBranch) { // if it's a mainline branch, use the same branch for titanium_mobile
 		targetBranch = env.BRANCH_NAME

@@ -37,14 +37,22 @@ namespace Titanium
 		return base64decode(blob->get_text());
 	}
 
-	Blob_shared_ptr_t Utils::base64decode(const std::string& input) TITANIUM_NOEXCEPT
+	Blob_shared_ptr_t Utils::base64decode(const std::string& raw) TITANIUM_NOEXCEPT
 	{
 		using namespace boost::archive::iterators;
 
+		// trim line breaks
+		std::string input = boost::algorithm::replace_all_copy(raw, "\r\n", "");
+		boost::algorithm::replace_all(input, "\n", "");
+
 		std::stringstream out_stream;
 		typedef transform_width<binary_from_base64<std::string::const_iterator>, 8, 6> base64_text;
+		const auto padding = std::count(input.begin(), input.end(), '=');
+		std::replace(input.begin(), input.end(), '=', 'A');
+
 		std::copy(base64_text(input.begin()), base64_text(input.end()), ostream_iterator<char>(out_stream));
 		std::string result = out_stream.str();
+		result.erase(result.end() - padding, result.end());
 
 		auto blob = get_context().CreateObject(JSExport<Titanium::Blob>::Class()).CallAsConstructor();
 		auto blob_ptr = blob.GetPrivate<Titanium::Blob>();
@@ -68,7 +76,7 @@ namespace Titanium
 		using namespace boost::archive::iterators;
 
 		std::stringstream out_stream;
-		typedef insert_linebreaks<base64_from_binary<transform_width<std::string::const_iterator, 6, 8>>, 72> base64_text;
+		typedef base64_from_binary<transform_width<std::string::const_iterator, 6, 8>> base64_text;
 		std::copy(base64_text(input.begin()), base64_text(input.end()), ostream_iterator<char>(out_stream));
 		std::string result = out_stream.str().append((3-input.size()%3)%3, '=');
 

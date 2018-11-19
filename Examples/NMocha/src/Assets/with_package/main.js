@@ -1,3 +1,5 @@
 module.exports = {
-	name: 'main.js'
+	name: 'main.js',
+	filename: __filename,
+	dirname: __dirname
 };

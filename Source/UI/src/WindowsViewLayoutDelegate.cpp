@@ -66,14 +66,17 @@ namespace TitaniumWindows
 		WindowsViewLayoutDelegate::WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 			: ViewLayoutDelegate()
 		{
-			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::ctor ", this);
 			// Update physical pixels factor for the current display information
-			Titanium::LayoutEngine::PhysicalPixelsFactor = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+			static double RawPixelsPerViewPixel;
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				RawPixelsPerViewPixel = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+			});
+			Titanium::LayoutEngine::PhysicalPixelsFactor = RawPixelsPerViewPixel;
 		}
 
 		WindowsViewLayoutDelegate::~WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 		{
-			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::dtor ", this);
 			if (component__) {
 				component__->SizeChanged -= size_change_event__;
 				component__->Loaded -= loaded_event__;
@@ -148,9 +151,7 @@ namespace TitaniumWindows
 			auto nativeChildView = newView->getComponent();
 			if (nativeChildView != nullptr) {
 				Titanium::LayoutEngine::nodeRemoveChild(layout_node__, newView->getLayoutNode());
-				if (isLoaded()) {
-					requestLayout();
-				}
+				requestLayout();
 				try {
 					uint32_t index = 0;
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
@@ -199,9 +200,7 @@ namespace TitaniumWindows
 
 					TITANIUM_LOG_DEBUG("Titanium::LayoutEngine::nodeAddChild ", newView->getLayoutNode(), " for ", layout_node__ );
 					Titanium::LayoutEngine::nodeAddChild(layout_node__, newView->getLayoutNode());
-					if (isLoaded()) {
-						requestLayout();
-					}
+					requestLayout();
 				} catch (Platform::Exception^ e) {
 					detail::ThrowRuntimeError("add", Utility::ConvertString(e->Message));
 				}
@@ -223,9 +222,7 @@ namespace TitaniumWindows
 			auto nativeChildView = newView->getComponent();
 			if (nativeChildView != nullptr) {
 				Titanium::LayoutEngine::nodeInsertChildAt(layout_node__, newView->getLayoutNode(), params.position);
-				if (isLoaded()) {
-					requestLayout();
-				}
+				requestLayout();
 				try {
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
 					nativeView->Children->InsertAt(params.position, nativeChildView);
@@ -1302,9 +1299,7 @@ namespace TitaniumWindows
 				layout_node__->element.layoutType = Titanium::LayoutEngine::LayoutType::Composite;
 			}
 
-			if (isLoaded()) {
-				requestLayout();
-			}
+			requestLayout();
 		}
 
 		void WindowsViewLayoutDelegate::set_zIndex(const int32_t& zIndex) TITANIUM_NOEXCEPT
@@ -1834,6 +1829,9 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::requestLayout(const bool& fire_event)
 		{
+			if (!isLoaded()) {
+				return;
+			}
 			const auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
 			if (root) {
 				Titanium::LayoutEngine::nodeLayout(root);
@@ -1938,26 +1936,34 @@ namespace TitaniumWindows
 
 		double WindowsViewLayoutDelegate::ComputePPI(const Titanium::LayoutEngine::ValueName& name)
 		{
-			auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-			double ppi = info->LogicalDpi;
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+			static float LogicalDpi, RawDpiX, RawDpiY;
+			static double RawPixelsPerViewPixel;
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				const auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+				LogicalDpi = info->LogicalDpi;
+				RawDpiX = info->RawDpiX;
+				RawDpiY = info->RawDpiY;
+				RawPixelsPerViewPixel = info->RawPixelsPerViewPixel;
+			});
+
+			double ppi = LogicalDpi;
 			switch (name) {
 			case Titanium::LayoutEngine::ValueName::CenterX:
 			case Titanium::LayoutEngine::ValueName::Left:
 			case Titanium::LayoutEngine::ValueName::Right:
 			case Titanium::LayoutEngine::ValueName::Width:
 			case Titanium::LayoutEngine::ValueName::MinWidth:
-				ppi = info->RawDpiX / info->RawPixelsPerViewPixel;
+				ppi = RawDpiX / RawPixelsPerViewPixel;
 				break;
 			case Titanium::LayoutEngine::ValueName::CenterY:
 			case Titanium::LayoutEngine::ValueName::Top:
 			case Titanium::LayoutEngine::ValueName::Bottom:
 			case Titanium::LayoutEngine::ValueName::Height:
 			case Titanium::LayoutEngine::ValueName::MinHeight:
-				ppi = info->RawDpiY / info->RawPixelsPerViewPixel;
+				ppi = RawDpiY / RawPixelsPerViewPixel;
 				break;
 			}
-#endif
 			return ppi;
 		}
 
@@ -1974,7 +1980,6 @@ namespace TitaniumWindows
 				prop.value = "UI.FILL";
 			}
 
-			auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 			double ppi = ComputePPI(name);
 
 			// Get the default unit from ti.ui.defaultUnit
@@ -1983,9 +1988,7 @@ namespace TitaniumWindows
 			std::string defaultUnit = ViewLayoutDelegate::GetDefaultUnit(event_delegate->get_context());
 			Titanium::LayoutEngine::populateLayoutProperties(prop, properties ? properties.get() : &layout_node__->properties, ppi, defaultUnit);
 
-			if (isLoaded()) {
-				requestLayout();
-			}
+			requestLayout();
 		}
 
 		/////////// Color //////////////

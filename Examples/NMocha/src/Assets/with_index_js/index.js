@@ -1,3 +1,5 @@
 module.exports = {
-	name: 'index.js'
+	name: 'index.js',
+	filename: __filename,
+	dirname: __dirname
 };

@@ -29,17 +29,22 @@ function compileApp(next) {
 		cmakeProjectName = this.sanitizeProjectName(this.cli.tiapp.name),
 		slnFile = path.resolve(this.cmakeTargetDir, cmakeProjectName + '.sln'),
 		vcxproj = path.resolve(this.cmakeTargetDir, cmakeProjectName + '.vcxproj'),
-		nativeVcxProj = path.resolve(this.cmakeTargetDir, 'Native', 'TitaniumWindows_Native.vcxproj');
+		ZERO_CHECK = path.resolve(this.cmakeTargetDir, 'ZERO_CHECK.vcxproj'),
+		ALL_BUILD  = path.resolve(this.cmakeTargetDir, 'ALL_BUILD.vcxproj'),
+		nativeVcxProj = path.resolve(this.cmakeTargetDir, 'Native', 'TitaniumWindows_Native.vcxproj'),
+		nativeALL_BUILD = path.resolve(this.cmakeTargetDir, 'Native', 'ALL_BUILD.vcxproj');
 
 	this.logger.info(__('Targeting Windows SDK: %s', this.targetPlatformSdkVersion.cyan || this.wpsdk.cyan));
 	this.logger.info(__('Running MSBuild on solution: %s', slnFile.cyan));
 
+	var appxBundleParam = this.useAppxBundle ? 'Always' : 'Never';
+
 	// Modify the vcxproj to inject some properties, so we always bundle
 	var modified = fs.readFileSync(vcxproj, 'utf8');
-	fs.existsSync(vcxproj) && fs.renameSync(vcxproj, vcxproj + '.bak');
+	fs.unlinkSync(vcxproj);
 	// Only modify the one property group we care about!
 	modified = modified.replace(/<\/PropertyGroup>\s*<ItemDefinitionGroup/m,
-		'<AppxBundle>Always</AppxBundle>' +
+		'<AppxBundle>' + appxBundleParam + '</AppxBundle>' +
 		'<AppxBundlePlatforms>' + this.arch + '</AppxBundlePlatforms>' +
 		(
 			!/^ws-local|dist-winstore$/.test(this.target) && this.wpsdk != '10.0' ? '' :
@@ -49,12 +54,26 @@ function compileApp(next) {
 
 	// Fix quoted hint paths for native module winmd paths
 	modified = modified.replace(/<HintPath>"([^"]+?)"<\/HintPath>/, '<HintPath>$1<\/HintPath>');
+	modified = modified.replace(/<CustomBuild[\s\S]+<\/CustomBuild>/m, '');
 	fs.writeFileSync(vcxproj, modified);
+
+	modified = fs.readFileSync(ZERO_CHECK, 'utf8');
+	modified = modified.replace(/<CustomBuild[\s\S]+<\/CustomBuild>/m, '');
+	fs.writeFileSync(ZERO_CHECK, modified);
+
+	modified = fs.readFileSync(ALL_BUILD, 'utf8');
+	modified = modified.replace(/<CustomBuild[\s\S]+<\/CustomBuild>/m, '');
+	fs.writeFileSync(ALL_BUILD, modified);
+
+	modified = fs.readFileSync(nativeALL_BUILD, 'utf8');
+	modified = modified.replace(/<CustomBuild[\s\S]+<\/CustomBuild>/m, '');
+	fs.writeFileSync(nativeALL_BUILD, modified);
 
 	// Modify the Native vcxproj to fix quoted hint paths for module winmd paths
 	modified = fs.readFileSync(nativeVcxProj, 'utf8');
-	fs.existsSync(nativeVcxProj) && fs.renameSync(nativeVcxProj, nativeVcxProj + '.bak');
+	fs.unlinkSync(nativeVcxProj);
 	modified = modified.replace(/<HintPath>"([^"]+?)"<\/HintPath>/, '<HintPath>$1<\/HintPath>');
+	modified = modified.replace(/<CustomBuild[\s\S]+<\/CustomBuild>/m, '');
 	fs.writeFileSync(nativeVcxProj, modified);
 
 	// Use spawn directly so we can pipe output as we go

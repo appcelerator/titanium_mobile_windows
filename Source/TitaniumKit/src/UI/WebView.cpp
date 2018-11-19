@@ -16,6 +16,7 @@ namespace Titanium
 
 		WebView::WebView(const JSContext& js_context) TITANIUM_NOEXCEPT
 			: View(js_context, "Ti.UI.WebView")
+			, onlink__(js_context.CreateNull())
 		{
 		}
 
@@ -35,7 +36,7 @@ namespace Titanium
 		}
 
 		TITANIUM_PROPERTY_READWRITE(WebView, std::vector<std::uint8_t>, data)
-
+		TITANIUM_PROPERTY_READWRITE(WebView, std::vector<std::string>, blacklistedURLs)
 		TITANIUM_PROPERTY_READWRITE(WebView, std::string, html)
 
 		bool WebView::setHtml(const std::string& html, const std::unordered_map<std::string, std::string>& options) TITANIUM_NOEXCEPT
@@ -103,6 +104,8 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(WebView, loading);
 			TITANIUM_ADD_PROPERTY(WebView, scalesPageToFit);
 			TITANIUM_ADD_PROPERTY(WebView, url);
+			TITANIUM_ADD_PROPERTY(WebView, blacklistedURLs);
+			TITANIUM_ADD_PROPERTY(WebView, onlink);
 			TITANIUM_ADD_FUNCTION(WebView, canGoBack);
 			TITANIUM_ADD_FUNCTION(WebView, canGoForward);
 			TITANIUM_ADD_FUNCTION(WebView, evalJS);
@@ -111,6 +114,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(WebView, reload);
 			TITANIUM_ADD_FUNCTION(WebView, setBasicAuthentication);
 			TITANIUM_ADD_FUNCTION(WebView, stopLoading);
+			TITANIUM_ADD_FUNCTION(WebView, getBlacklistedURLs);
+			TITANIUM_ADD_FUNCTION(WebView, setBlacklistedURLs);
 			TITANIUM_ADD_FUNCTION(WebView, getData);
 			TITANIUM_ADD_FUNCTION(WebView, setData);
 			TITANIUM_ADD_FUNCTION(WebView, getHtml);
@@ -298,6 +303,22 @@ namespace Titanium
 			}
 			return get_context().CreateUndefined();
 		}
+
+		TITANIUM_PROPERTY_SETTER(WebView, onlink)
+		{
+			onlink__ = argument; // allow setting to null/undefined
+			return true;
+		}
+
+		TITANIUM_PROPERTY_GETTER(WebView, onlink)
+		{
+			return onlink__;
+		}
+
+		TITANIUM_PROPERTY_GETTER_STRING_ARRAY(WebView, blacklistedURLs);
+		TITANIUM_PROPERTY_SETTER_STRING_ARRAY(WebView, blacklistedURLs);
+		TITANIUM_FUNCTION_AS_GETTER(WebView, getBlacklistedURLs, blacklistedURLs);
+		TITANIUM_FUNCTION_AS_SETTER(WebView, setBlacklistedURLs, blacklistedURLs);
 
 		void WebView::_executeListener(const std::string& name, const std::string& data) TITANIUM_NOEXCEPT
 		{
