@@ -22,7 +22,7 @@ JSValue UI_property = Titanium.GetProperty("UI"); \
 TITANIUM_ASSERT(UI_property.IsObject()); \
 JSObject UI = static_cast<JSObject>(UI_property); \
 \
-JSValue TwoDMatrix_property = UI.GetProperty("2DMatrix"); \
+JSValue TwoDMatrix_property = UI.GetProperty("Matrix2D"); \
 TITANIUM_ASSERT(TwoDMatrix_property.IsObject()); \
 JSObject TwoDMatrix_Class = static_cast<JSObject>(TwoDMatrix_property); \
 \
@@ -36,7 +36,7 @@ namespace Titanium
 
 
 		TwoDMatrix::TwoDMatrix(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context, "Ti.UI.2DMatrix"),
+			: Module(js_context, "Ti.UI.Matrix2D"),
 			a__(1),
 			b__(0),
 			c__(0),

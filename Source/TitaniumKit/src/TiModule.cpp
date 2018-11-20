@@ -109,8 +109,9 @@ namespace Titanium
 		  clipboard__(JSExport<Titanium::UI::Clipboard>::Class()),
 		  textarea__(JSExport<Titanium::UI::TextArea>::Class()),
 		  notification__(JSExport<Titanium::UI::Notification>::Class()),
-		  twodmatrix__(JSExport<Titanium::UI::TwoDMatrix>::Class()),
 		  geolocation__(JSExport<Titanium::GeolocationModule>::Class()),
+		  matrix2d__(JSExport<Titanium::UI::TwoDMatrix>::Class()),
+		  matrix3d__(JSExport<Titanium::UI::ThreeDMatrix>::Class()),
 		  switch__(JSExport<Titanium::UI::Switch>::Class()),
 		  utils__(JSExport<Titanium::Utils>::Class()),
 		  animation__(JSExport<Titanium::UI::Animation>::Class()),
@@ -387,7 +388,8 @@ namespace Titanium
 			EmailDialogClass(emaildialog__).
 			AnimationClass(animation__).
 			SwitchClass(switch__).
-			TwoDMatrixClass(twodmatrix__).
+			Matrix2DClass(matrix2d__).
+			Matrix3DClass(matrix3d__).
 			NotificationClass(notification__).
 			TextAreaClass(textarea__).
 			ClipboardClass(clipboard__).
@@ -667,10 +669,15 @@ namespace Titanium
 		return *this;
 	}
 
-
-	TiModule& TiModule::TwoDMatrixClass(const JSClass& TwoDMatrix) TITANIUM_NOEXCEPT
+	TiModule& TiModule::Matrix2DClass(const JSClass& Matrix2D) TITANIUM_NOEXCEPT
 	{
-		twodmatrix__ = TwoDMatrix;
+		matrix2d__ = Matrix2D;
+		return *this;
+	}
+
+	TiModule& TiModule::Matrix3DClass(const JSClass& Matrix3D) TITANIUM_NOEXCEPT
+	{
+		matrix3d__ = Matrix3D;
 		return *this;
 	}
 

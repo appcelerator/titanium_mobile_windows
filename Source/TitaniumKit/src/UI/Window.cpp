@@ -38,6 +38,7 @@ namespace Titanium
 		      barColor__(""),
 		      exitOnClose__(false),
 		      extendEdges__({EXTEND_EDGE::NONE}),
+		      extendSafeArea__(false),
 		      fullscreen__(false),
 		      hideShadow__(false),
 		      modal__(false),
@@ -100,6 +101,9 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Window, std::shared_ptr<NavigationWindow>, navigationWindow)
 		TITANIUM_PROPERTY_READWRITE(Window, std::string, title)
 		TITANIUM_PROPERTY_READ(Window, std::string, titleid)
+		TITANIUM_PROPERTY_READWRITE(Window, bool, extendSafeArea)
+		TITANIUM_PROPERTY_READ(Window, ViewPadding, safeAreaPadding)
+
 		void Window::set_titleid(const std::string& titleid) TITANIUM_NOEXCEPT
 		{
 			titleid__ = titleid;
@@ -132,6 +136,8 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(Window, translucent);
 			TITANIUM_ADD_PROPERTY(Window, title);
 			TITANIUM_ADD_PROPERTY(Window, titleid);
+			TITANIUM_ADD_PROPERTY(Window, extendSafeArea);
+			TITANIUM_ADD_PROPERTY_READONLY(Window, safeAreaPadding);
 
 			// accessors
 			TITANIUM_ADD_FUNCTION(Window, getBarColor);
@@ -163,6 +169,9 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(Window, getTranslucent);
 			TITANIUM_ADD_FUNCTION(Window, setTranslucent);
 			TITANIUM_ADD_FUNCTION(Window, getNavigationWindow);
+			TITANIUM_ADD_FUNCTION(Window, getExtendSafeArea);
+			TITANIUM_ADD_FUNCTION(Window, setExtendSafeArea);
+			TITANIUM_ADD_FUNCTION(Window, getSafeAreaPadding);
 		}
 
 		TITANIUM_FUNCTION(Window, close)
@@ -401,6 +410,14 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER_OBJECT(Window, navigationWindow)
 		TITANIUM_FUNCTION_AS_GETTER(Window, getNavigationWindow, navigationWindow)
+
+		TITANIUM_PROPERTY_GETTER_BOOL(Window, extendSafeArea)
+		TITANIUM_PROPERTY_SETTER_BOOL(Window, extendSafeArea)
+		TITANIUM_FUNCTION_AS_GETTER(Window, getExtendSafeArea, extendSafeArea)
+		TITANIUM_FUNCTION_AS_SETTER(Window, setExtendSafeArea, extendSafeArea)
+
+		TITANIUM_PROPERTY_GETTER_STRUCT(Window, safeAreaPadding, ViewPadding)
+		TITANIUM_FUNCTION_AS_GETTER(Window, getSafeAreaPadding, safeAreaPadding)
 
 	} // namespace UI
 }  // namespace Titanium
