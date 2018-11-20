@@ -317,7 +317,7 @@ async function build(sha, msBuildVersion, buildType, targets, options = {}) {
 	timer = process.hrtime();
 
 	// copy JavaScriptCore
-	for (const configuration in targets) {
+	for (const configuration of targets) {
 		const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
 		console.log(`Copying JavaScriptCore for ${parts[1]}...`);
 		const newDir = path.join(DIST_LIB_DIR, 'JavaScriptCore', 'win10', parts[1]);
@@ -351,7 +351,7 @@ async function build(sha, msBuildVersion, buildType, targets, options = {}) {
 
 	// TODO: map and concat?
 	const include_TitaniumWindows = [ 'Filesystem', 'Global', 'Map', 'Media', 'Network', 'Sensors', 'Ti', 'UI' ];
-	for (const name in include_TitaniumWindows) {
+	for (const name of include_TitaniumWindows) {
 		tasks.push(fs.copy(path.join(ROOT_DIR, 'Source', name, 'include', 'TitaniumWindows'), path.join(DIST_LIB_DIR, 'TitaniumWindows_' + name, 'include', 'TitaniumWindows')));
 	}
 	await Promise.all(tasks);
