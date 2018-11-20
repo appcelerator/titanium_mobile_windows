@@ -93,7 +93,8 @@ namespace Titanium
 		TiModule& UtilsClass(const JSClass&) TITANIUM_NOEXCEPT;
 		TiModule& SwitchClass(const JSClass&) TITANIUM_NOEXCEPT;
 		TiModule& GeolocationClass(const JSClass&) TITANIUM_NOEXCEPT;
-		TiModule& TwoDMatrixClass(const JSClass&) TITANIUM_NOEXCEPT;
+		TiModule& Matrix2DClass(const JSClass&) TITANIUM_NOEXCEPT;
+		TiModule& Matrix3DClass(const JSClass&) TITANIUM_NOEXCEPT;
 		TiModule& NotificationClass(const JSClass&) TITANIUM_NOEXCEPT;
 		TiModule& TextAreaClass(const JSClass&) TITANIUM_NOEXCEPT;
 		TiModule& ClipboardClass(const JSClass&) TITANIUM_NOEXCEPT;
@@ -186,7 +187,8 @@ namespace Titanium
 		JSClass clipboard__;
 		JSClass textarea__;
 		JSClass notification__;
-		JSClass twodmatrix__;
+		JSClass matrix2d__;
+		JSClass matrix3d__;
 		JSClass geolocation__;
 		JSClass switch__;
 		JSClass utils__;
