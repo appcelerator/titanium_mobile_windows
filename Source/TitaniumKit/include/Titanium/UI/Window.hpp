@@ -12,6 +12,7 @@
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Constants.hpp"
 #include "Titanium/UI/TitleAttributesParams.hpp"
+#include "Titanium/UI/ViewPadding.hpp"
 
 namespace Titanium
 {
@@ -252,6 +253,26 @@ namespace Titanium
 			TITANIUM_PROPERTY_IMPL_DEF(std::shared_ptr<Tab>, tab);
 
 
+			/*!
+			  @method
+
+			  @abstract extendSafeArea : Boolean
+
+			  @discussion Specifies whether the content (subviews) of the window will render inside the safe-area or not.
+
+			  Default: false
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(bool, extendSafeArea);
+
+			/*!
+			  @method
+
+			  @abstract safeAreaPadding : ViewPadding
+
+			  @discussion The padding needed to safely display content without it being overlapped by the screen insets and notches.
+			*/
+			TITANIUM_PROPERTY_IMPL_READONLY_DEF(ViewPadding, safeAreaPadding);
+
 			Window(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~Window() TITANIUM_NOEXCEPT;  //= default;
@@ -325,6 +346,13 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getTranslucent);
 			TITANIUM_FUNCTION_DEF(setTranslucent);
 
+			TITANIUM_PROPERTY_DEF(extendSafeArea);
+			TITANIUM_FUNCTION_DEF(getExtendSafeArea);
+			TITANIUM_FUNCTION_DEF(setExtendSafeArea);
+
+			TITANIUM_PROPERTY_DEF(safeAreaPadding);
+			TITANIUM_FUNCTION_DEF(getSafeAreaPadding);
+
 		protected:
 // Silence 4251 on Windows since private member variables do not
 // need to be exported from a DLL.
@@ -348,6 +376,9 @@ namespace Titanium
 			bool translucent__;
 			JSObject openWindowParams_ctor__;
 			JSObject closeWindowParams_ctor__;
+
+			bool extendSafeArea__;
+			ViewPadding safeAreaPadding__;
 
 			std::shared_ptr<Tab> tab__;
 			bool is_opened__ { false }; // Indicates this window is already opened

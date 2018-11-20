@@ -318,6 +318,8 @@ set(SOURCE_UI
   src/UIModule.cpp
   include/Titanium/UI/View.hpp
   src/UI/View.cpp
+  include/Titanium/UI/ViewPadding.hpp
+  src/UI/ViewPadding.cpp
   include/Titanium/UI/ViewLayoutDelegate.hpp
   src/UI/ViewLayoutDelegate.cpp
   include/Titanium/UI/WebView.hpp
