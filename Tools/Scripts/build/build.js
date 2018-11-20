@@ -251,7 +251,7 @@ function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch)
 		// Copy the export header!
 		const header = lib.toLowerCase() + '_export.h';
 		fs.ensureDirSync(path.join(destDir, lib, 'include'));
-		fs.copySync(path.join(destDir, lib, 'include', header), path.join(sourceDir, platformAbbrev, arch, suffix, header));
+		fs.copySync(path.join(sourceDir, platformAbbrev, arch, suffix, header), path.join(destDir, lib, 'include', header));
 	}
 }
 
