@@ -25,7 +25,7 @@ def build(msBuildVersion, architecture, gitCommit, nodeVersion, npmVersion) {
 			bat "node setup.js --no-color --no-progress-bars"
 			dir('build') {
 				timeout(45) {
-					echo "Building for ${architecture} 10"
+					echo "Building for ${architecture} 10.0"
 					def raw = bat(returnStdout: true, script: "echo %JavaScriptCore_10.0_HOME%").trim()
 					def jscHome = raw.split('\n')[-1]
 					echo "Setting JavaScriptCore_HOME to ${jscHome}"

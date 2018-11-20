@@ -19,12 +19,12 @@ const VS_2015_GENERATOR = 'Visual Studio 14 2015';
 const VS_2017_GENERATOR = 'Visual Studio 15 2017';
 // paths
 
-const rootDir = path.join(__dirname, '..', '..', '..');
-const cmakeLocation = path.join(rootDir, 'cli', 'vendor', 'cmake', 'bin', 'cmake.exe');
-const titaniumWindowsSrc = path.join(rootDir, 'Source', 'Titanium');
-const buildRoot = path.join(rootDir, 'build');
-const distRoot = path.join(rootDir, 'dist', 'windows');
-const distLib = path.join(distRoot, 'lib');
+const ROOT_DIR = path.join(__dirname, '..', '..', '..');
+const CMAKE_BINARY = path.join(ROOT_DIR, 'cli', 'vendor', 'cmake', 'bin', 'cmake.exe');
+const SOURCE_TITANIUM_DIR = path.join(ROOT_DIR, 'Source', 'Titanium');
+const BUILD_DIR = path.join(ROOT_DIR, 'build');
+const DIST_DIR = path.join(ROOT_DIR, 'dist', 'windows');
+const DIST_LIB_DIR = path.join(DIST_DIR, 'lib');
 
 /**
  * @param {String} sourceDir The original source directory (in Source/)
@@ -135,7 +135,7 @@ function runCMake(sourceDir, buildDir, buildType, msBuildVersion, platform, arch
 		sourceDir
 	];
 
-	return spawnWithArgs('CMake', cmakeLocation, args, { cwd: buildDir }, quiet);
+	return spawnWithArgs('CMake', CMAKE_BINARY, args, { cwd: buildDir }, quiet);
 }
 
 /**
@@ -293,22 +293,21 @@ function spawnWithArgs(name, file, args, options, quiet) {
  * @param {Boolean} [options.quiet] Log stdout of processes?
  * @return {Promise}
  **/
-async function build(sha, msBuildVersion, buildType, targets, options) {
+async function build(sha, msBuildVersion, buildType, targets, options = {}) {
 	const overallTimer = process.hrtime();
 	let timer = process.hrtime();
-	options = options || {};
 
-	await updateBuildValuesInTitaniumModule(sha, path.join(rootDir, 'Source', 'Ti', 'src', 'TiModule.cpp'));
+	await updateBuildValuesInTitaniumModule(sha, path.join(ROOT_DIR, 'Source', 'Ti', 'src', 'TiModule.cpp'));
 
 	if (options.parallel) {
 		await Promise.all(targets.map(configuration => {
 			const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
-			return buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, buildType, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet);
+			return buildAndPackage(SOURCE_TITANIUM_DIR, BUILD_DIR, DIST_LIB_DIR, buildType, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet);
 		}));
 	} else {
-		for (const configuration in targets) {
+		for (const configuration of targets) {
 			const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
-			await buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, buildType, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet);
+			await buildAndPackage(SOURCE_TITANIUM_DIR, BUILD_DIR, DIST_LIB_DIR, buildType, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet);
 		}
 	}
 
@@ -321,7 +320,7 @@ async function build(sha, msBuildVersion, buildType, targets, options) {
 	for (const configuration in targets) {
 		const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
 		console.log(`Copying JavaScriptCore for ${parts[1]}...`);
-		const newDir = path.join(distLib, 'JavaScriptCore', 'win10', parts[1]);
+		const newDir = path.join(DIST_LIB_DIR, 'JavaScriptCore', 'win10', parts[1]);
 		const fromDir = path.join(process.env.JavaScriptCore_HOME, parts[1]);
 		await fs.ensureDir(newDir);
 		await fs.copy(path.join(fromDir, 'Release'), newDir);
@@ -330,30 +329,30 @@ async function build(sha, msBuildVersion, buildType, targets, options) {
 
 	// copyIncludedHeaders
 	console.log('Copying over include headers...');
-	const newDir = path.join(distLib, 'TitaniumKit', 'include', 'Titanium');
+	const newDir = path.join(DIST_LIB_DIR, 'TitaniumKit', 'include', 'Titanium');
 	await fs.ensureDir(newDir);
 
 	const tasks = [
-		fs.copy(path.join(rootDir, 'Source', 'HAL', 'include', 'HAL'), path.join(distLib, 'HAL', 'include', 'HAL')),
-		fs.copy(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'Titanium'), path.join(distLib, 'TitaniumKit', 'include', 'Titanium')),
-		fs.copy(path.join(process.env.JavaScriptCore_HOME, 'includes', 'JavaScriptCore'), path.join(distLib, 'HAL', 'include', 'JavaScriptCore')),
+		fs.copy(path.join(ROOT_DIR, 'Source', 'HAL', 'include', 'HAL'), path.join(DIST_LIB_DIR, 'HAL', 'include', 'HAL')),
+		fs.copy(path.join(ROOT_DIR, 'Source', 'TitaniumKit', 'include', 'Titanium'), path.join(DIST_LIB_DIR, 'TitaniumKit', 'include', 'Titanium')),
+		fs.copy(path.join(process.env.JavaScriptCore_HOME, 'includes', 'JavaScriptCore'), path.join(DIST_LIB_DIR, 'HAL', 'include', 'JavaScriptCore')),
 
-		fs.copy(path.join(rootDir, 'Source', 'Utility', 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows_Utility', 'include', 'TitaniumWindows')),
-		fs.copy(path.join(rootDir, 'Source', 'LayoutEngine', 'include', 'LayoutEngine'), path.join(distLib, 'LayoutEngine', 'include', 'LayoutEngine')),
-		fs.copy(path.join(rootDir, 'Source', 'Titanium', 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows', 'include', 'TitaniumWindows')),
+		fs.copy(path.join(ROOT_DIR, 'Source', 'Utility', 'include', 'TitaniumWindows'), path.join(DIST_LIB_DIR, 'TitaniumWindows_Utility', 'include', 'TitaniumWindows')),
+		fs.copy(path.join(ROOT_DIR, 'Source', 'LayoutEngine', 'include', 'LayoutEngine'), path.join(DIST_LIB_DIR, 'LayoutEngine', 'include', 'LayoutEngine')),
+		fs.copy(path.join(ROOT_DIR, 'Source', 'Titanium', 'include', 'TitaniumWindows'), path.join(DIST_LIB_DIR, 'TitaniumWindows', 'include', 'TitaniumWindows')),
 
-		fs.copy(path.join(rootDir, 'titanium_prep.win64.exe'), path.join(distRoot, 'titanium_prep.win64.exe')),
-		fs.copy(path.join(rootDir, 'titanium_prep.win32.exe'), path.join(distRoot, 'titanium_prep.win32.exe')),
-		fs.copy(path.join(rootDir, 'package.json'), path.join(distRoot, 'package.json')),
-		fs.copy(path.join(rootDir, 'templates'), path.join(distRoot, 'templates')),
+		fs.copy(path.join(ROOT_DIR, 'titanium_prep.win64.exe'), path.join(DIST_DIR, 'titanium_prep.win64.exe')),
+		fs.copy(path.join(ROOT_DIR, 'titanium_prep.win32.exe'), path.join(DIST_DIR, 'titanium_prep.win32.exe')),
+		fs.copy(path.join(ROOT_DIR, 'package.json'), path.join(DIST_DIR, 'package.json')),
+		fs.copy(path.join(ROOT_DIR, 'templates'), path.join(DIST_DIR, 'templates')),
 		// FIXME For some reason, locally this isn't copying all of cli/vendor/cmake/share (specifically cmake-3.1 subfolder)
-		fs.copy(path.join(rootDir, 'cli'), path.join(distRoot, 'cli'))
+		fs.copy(path.join(ROOT_DIR, 'cli'), path.join(DIST_DIR, 'cli'))
 	];
 
 	// TODO: map and concat?
 	const include_TitaniumWindows = [ 'Filesystem', 'Global', 'Map', 'Media', 'Network', 'Sensors', 'Ti', 'UI' ];
 	for (const name in include_TitaniumWindows) {
-		tasks.push(fs.copy(path.join(rootDir, 'Source', name, 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows_' + name, 'include', 'TitaniumWindows')));
+		tasks.push(fs.copy(path.join(ROOT_DIR, 'Source', name, 'include', 'TitaniumWindows'), path.join(DIST_LIB_DIR, 'TitaniumWindows_' + name, 'include', 'TitaniumWindows')));
 	}
 	await Promise.all(tasks);
 
