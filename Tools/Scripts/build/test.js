@@ -201,7 +201,7 @@ function addTiAppProperties(sdkVersion, next) {
 	fs.readFileSync(tiapp_xml).toString().split(/\r?\n/).forEach(function(line) {
 
 		// Fix ti.ui.defaultunit. We should use 'px' for it on Windows.
-		if (line.indexOf('<property name="ti.ui.defaultunit" type="string">dp</property>') >= 0) {
+		if (line.indexOf('<property name="ti.ui.defaultunit"') >= 0) {
 			content.push('\t<property name="ti.ui.defaultunit" type="string">px</property>');
 			return;
 		}
