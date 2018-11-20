@@ -54,7 +54,7 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 
 		echo 'Setting up SDK'
 		// Downloads a pre-built SDK with iOS/Android, then merges in the built Windows SDK
-		bat "npm run combine-sdk -- --branch ${branch}"
+		bat "npm run --scripts-prepend-node-path combine-sdk -- --branch ${branch}"
 
 		// if our test suite already exists, delete it
 		bat 'if exist titanium-mobile-mocha-suite rmdir titanium-mobile-mocha-suite /Q /S'
@@ -130,13 +130,8 @@ timestamps {
 		nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 			stage('Lint') {
 				ensureNPM(npmVersion)
-				if (isUnix()) {
-					sh 'npm ci'
-					sh 'npm test'
-				} else {
-					bat 'npm ci'
-					bat 'npm test'
-				}
+				command 'npm ci'
+				command 'npm test'
 			} // stage('Lint')
 
 			stage('Docs') {
@@ -147,11 +142,7 @@ timestamps {
 				}
 
 				echo 'Generating docs'
-				if (isUnix()) {
-					sh 'npm run docs'
-				} else {
-					bat 'npm run docs'
-				}
+				command 'npm run --scripts-prepend-node-path docs'
 
 				echo 'copying generated docs to dist folder'
 				if (isUnix()) {
