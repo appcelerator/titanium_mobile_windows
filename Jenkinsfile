@@ -10,7 +10,7 @@ def gitCommit = ''
 def nodeVersion = '8.11.1' // NOTE that changing this requires we set up the desired version on jenkins master first!
 def npmVersion = 'latest'
 
-def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion, npmVersion) {
+def build(msBuildVersion, architecture, gitCommit, nodeVersion, npmVersion) {
 	unstash 'sources' // for build
 	if (fileExists('dist/windows')) {
 		bat 'rmdir dist\\windows /Q /S'
@@ -21,16 +21,16 @@ def build(sdkVersion, msBuildVersion, architecture, gitCommit, nodeVersion, npmV
 		ensureNPM(npmVersion)
 		bat 'npm ci'
 		dir('Tools/Scripts') {
-			echo "Installing JSC built for Windows ${sdkVersion}"
-			bat "node setup.js -s ${sdkVersion} --no-color --no-progress-bars"
+			echo "Installing JSC built for Windows 10.0"
+			bat "node setup.js --no-color --no-progress-bars"
 			dir('build') {
 				timeout(45) {
-					echo "Building for ${architecture} ${sdkVersion}"
-					def raw = bat(returnStdout: true, script: "echo %JavaScriptCore_${sdkVersion}_HOME%").trim()
+					echo "Building for ${architecture} 10"
+					def raw = bat(returnStdout: true, script: "echo %JavaScriptCore_10.0_HOME%").trim()
 					def jscHome = raw.split('\n')[-1]
 					echo "Setting JavaScriptCore_HOME to ${jscHome}"
 					withEnv(["JavaScriptCore_HOME=${jscHome}"]) {
-						bat "node build.js -s ${sdkVersion} -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
+						bat "node build.js -m ${msBuildVersion} -o ${architecture} --sha ${gitCommit}"
 					}
 				} // timeout
 			} // dir Tool/Scripts/build
@@ -171,12 +171,12 @@ timestamps {
 		parallel(
 			'Windows 10 x86': {
 				node('msbuild-14 && vs2015 && windows-sdk-10 && cmake && jsc') {
-					build('10.0', '14.0', 'WindowsStore-x86', gitCommit, nodeVersion, npmVersion)
+					build('14.0', 'WindowsStore-x86', gitCommit, nodeVersion, npmVersion)
 				}
 			},
 			'Windows 10 ARM': {
 				node('msbuild-14 && vs2015 && windows-sdk-10 && cmake && jsc') {
-					build('10.0', '14.0', 'WindowsStore-ARM', gitCommit, nodeVersion, npmVersion)
+					build('14.0', 'WindowsStore-ARM', gitCommit, nodeVersion, npmVersion)
 				}
 			},
 			failFast: true
