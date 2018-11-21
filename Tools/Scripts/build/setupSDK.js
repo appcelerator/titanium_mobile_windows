@@ -8,7 +8,7 @@ const fs = require('fs-extra');
 const colors = require('colors'); // eslint-disable-line no-unused-vars
 const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
 const exec = require('child_process').exec; // eslint-disable-line security/detect-child-process
-const titanium = path.join(require.resolve('titanium'), 'bin', 'titanium');
+const TITANIUM = require.resolve('titanium');
 const DIST_DIR = path.join(__dirname, '..', '..', '..', 'dist');
 const WINDOWS_DIST_DIR = path.join(DIST_DIR, 'windows');
 
@@ -25,7 +25,7 @@ function installSDK(branch) {
 	return new Promise((resolve, reject) => {
 		console.log('Installing SDK from ' + branch + ' branch');
 		let sdkVersion;
-		const prc = spawn('node', [ titanium, 'sdk', 'install', '-b', branch, '-d', '--no-colors' ]);
+		const prc = spawn('node', [ TITANIUM, 'sdk', 'install', '-b', branch, '-d', '--no-colors' ]);
 		prc.stdout.on('data', data => {
 			const value = data.toString().trim();
 			let matches = value.match(regexp);
@@ -45,7 +45,7 @@ function installSDK(branch) {
 			}
 
 			console.log('Making sure ' + sdkVersion + ' is selected');
-			const selectPrc = spawn('node', [ titanium, 'sdk', 'select', sdkVersion ]);
+			const selectPrc = spawn('node', [ TITANIUM, 'sdk', 'select', sdkVersion ]);
 			selectPrc.stdout.on('data', data => console.log(data.toString()));
 			selectPrc.stderr.on('data', data => console.error(data.toString().trim()));
 			selectPrc.on('close', code => {
@@ -67,7 +67,7 @@ function installSDK(branch) {
  **/
 function getSDKInstallDir(tiSDKVersion) {
 	return new Promise((resolve, reject) => {
-		exec(`node "${titanium}" info -o json -t titanium`, (error, stdout) => {
+		exec(`node "${TITANIUM}" info -o json -t titanium`, (error, stdout) => {
 			if (error) {
 				return reject(`Failed to get SDK install dir: ${error}`);
 			}
