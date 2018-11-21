@@ -54,7 +54,7 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 
 		echo 'Setting up SDK'
 		// Downloads a pre-built SDK with iOS/Android, then merges in the built Windows SDK
-		bat "npm run --scripts-prepend-node-path combine-sdk -- --branch ${branch}"
+		bat "npm run combine-sdk --scripts-prepend-node-path=true -- --branch ${branch}"
 
 		// if our test suite already exists, delete it
 		bat 'if exist titanium-mobile-mocha-suite rmdir titanium-mobile-mocha-suite /Q /S'
@@ -142,7 +142,7 @@ timestamps {
 				}
 
 				echo 'Generating docs'
-				command 'npm run --scripts-prepend-node-path docs'
+				command 'npm run docs --scripts-prepend-node-path=true'
 
 				echo 'copying generated docs to dist folder'
 				if (isUnix()) {
