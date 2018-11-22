@@ -147,8 +147,11 @@ timestamps {
 				echo 'copying generated docs to dist folder'
 				if (isUnix()) {
 					sh 'mv apidoc/Titanium dist/windows/doc/Titanium'
+					sh 'mv apidoc/WindowsOnly dist/windows/doc/WindowsOnly'
+
 				} else {
 					bat '(robocopy apidoc\\\\Titanium dist\\\\windows\\\\doc\\\\Titanium /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0'
+					bat '(robocopy apidoc\\\\WindowsOnly dist\\\\windows\\\\doc\\\\WindowsOnly /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0'
 				}
 				archiveArtifacts artifacts: 'dist/**/*'
 			} // stage('Docs')
