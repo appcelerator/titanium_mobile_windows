@@ -80,7 +80,7 @@ async function updateBuildValuesInTitaniumModule(githash, tiModuleCPP) {
 	if (!githash) {
 		githash = await getGitHash(path.dirname(tiModuleCPP));
 	}
-	const contents = await fs.readFile(tiModuleCPP, 'utf8');
+	const contents = fs.readFileSync(tiModuleCPP, 'utf8');
 	const date = new Date();
 	const timestamp = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes();
 
