@@ -330,6 +330,8 @@ set(SOURCE_UI
   include/Titanium/UI/ViewInsertOrReplaceParams.hpp
   src/UI/ViewInsertOrReplaceParams.cpp
   include/Titanium/UI/ListModel.hpp
+  include/Titanium/UI/NavigationWindow.hpp
+  src/UI/NavigationWindow.cpp
   )
 
 set(SOURCE_TiLogger_detail

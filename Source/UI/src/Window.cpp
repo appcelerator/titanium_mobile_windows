@@ -49,6 +49,9 @@ namespace TitaniumWindows
 			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
 			rootFrame->Navigated += ref new Windows::UI::Xaml::Navigation::NavigatedEventHandler([this](Platform::Object^, Windows::UI::Xaml::Navigation::NavigationEventArgs^) {
 				try {
+					// Update window title based on top Window's title
+					updateWindowTitle();
+
 					// Resizing Window should be available only on Windows 10 Store App
 					if (!IS_WINDOWS_MOBILE) {
 						updateWindowSize();
@@ -113,16 +116,12 @@ namespace TitaniumWindows
 #endif
 		}
 
-#if !defined(IS_WINDOWS_PHONE)
-		void Window::set_title(const std::string& title) TITANIUM_NOEXCEPT
+		void Window::updateWindowTitle()
 		{
-			Titanium::UI::Window::set_title(title);
-			const auto view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
-			if (view) {
-				view->Title = TitaniumWindows::Utility::ConvertUTF8String(title);
+			if (TitaniumWindows::UI::Window::window_stack__.size() > 0) {
+				Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->Title = TitaniumWindows::Utility::ConvertUTF8String(TitaniumWindows::UI::Window::window_stack__.back()->get_title());
 			}
 		}
-#endif
 
 		void Window::updateWindowsCommandBar(const std::shared_ptr<TitaniumWindows::UI::WindowsXaml::CommandBar>& commandbar)
 		{
@@ -370,16 +369,6 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::Window::open(params);
 
-			if (tab__) {
-				const auto tab = std::dynamic_pointer_cast<Tab>(tab__);
-				tab->openWindow(get_object().GetPrivate<Window>());
-			} else {
-				auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
-				rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
-				auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
-				page->Content = canvas__;
-			}
-
 			if (params) {
 				set_fullscreen(params->get_fullscreen());
 			} else {
@@ -395,6 +384,16 @@ namespace TitaniumWindows
 				lastwin->disableEvents();
 			}
 
+			if (tab__) {
+				const auto tab = std::dynamic_pointer_cast<Tab>(tab__);
+				tab->openWindow(get_object().GetPrivate<Window>());
+			} else {
+				auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+				rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
+				auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
+				page->Content = canvas__;
+			}
+
 			// Tab.open should not increase window stack. Tab.focus event does it instead.
 			if (tab__ == nullptr) {
 				window_stack__.push_back(this->get_object().GetPrivate<Window>());
@@ -405,6 +404,9 @@ namespace TitaniumWindows
 #endif
 
 			TitaniumWindows::Utility::RunOnUIThread([this]() {
+				// Update Window title
+				updateWindowTitle();
+
 				// start accepting events
 				enableEvents();
 

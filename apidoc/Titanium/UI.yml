@@ -3,8 +3,6 @@ platforms: [windowsphone]
 properties:
   - name: currentTab
     platforms: [windowsphone]
-  - name: currentWindow
-    platforms: [windowsphone]
   - name: ANIMATION_CURVE_EASE_IN
     platforms: [windowsphone]
   - name: ANIMATION_CURVE_EASE_IN_OUT
@@ -373,7 +371,5 @@ methods:
   - name: getCurrentTab
     platforms: [windowsphone]
   - name: setCurrentTab
-    platforms: [windowsphone]
-  - name: getCurrentWindow
     platforms: [windowsphone]
 

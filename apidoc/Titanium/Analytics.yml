@@ -12,7 +12,8 @@ methods:
     platforms: [windowsphone]
   - name: getLastEvent
     platforms: [windowsphone]
-  - name: getOptedOut
-    platforms: [windowsphone]
   - name: setOptedOut
     platforms: [windowsphone]
+  - name: getOptedOut
+    platforms: [windowsphone]
+

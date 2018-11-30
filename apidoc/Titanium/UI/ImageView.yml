@@ -1,61 +1,5 @@
 name: Titanium.UI.ImageView
 platforms: [windowsphone]
-properties:
-  - name: animating
-    platforms: [windowsphone]
-  - name: defaultImage
-    platforms: [windowsphone]
-  - name: duration
-    platforms: [windowsphone]
-  - name: image
-    platforms: [windowsphone]
-  - name: images
-    platforms: [windowsphone]
-  - name: paused
-    platforms: [windowsphone]
-  - name: repeatCount
-    platforms: [windowsphone]
-  - name: reverse
-    platforms: [windowsphone]
-methods:
-  - name: pause
-    platforms: [windowsphone]
-  - name: resume
-    platforms: [windowsphone]
-  - name: start
-    platforms: [windowsphone]
-  - name: stop
-    platforms: [windowsphone]
-  - name: toBlob
-    platforms: [windowsphone]
-  - name: getAnimating
-    platforms: [windowsphone]
-  - name: getDefaultImage
-    platforms: [windowsphone]
-  - name: setDefaultImage
-    platforms: [windowsphone]
-  - name: getDuration
-    platforms: [windowsphone]
-  - name: setDuration
-    platforms: [windowsphone]
-  - name: getImage
-    platforms: [windowsphone]
-  - name: setImage
-    platforms: [windowsphone]
-  - name: getImages
-    platforms: [windowsphone]
-  - name: setImages
-    platforms: [windowsphone]
-  - name: getPaused
-    platforms: [windowsphone]
-  - name: getRepeatCount
-    platforms: [windowsphone]
-  - name: setRepeatCount
-    platforms: [windowsphone]
-  - name: getReverse
-    platforms: [windowsphone]
-  - name: setReverse
-    platforms: [windowsphone]
 events:
   - name: start
     platforms: [windowsphone]
@@ -63,3 +7,4 @@ events:
     platforms: [windowsphone]
   - name: stop
     platforms: [windowsphone]
+

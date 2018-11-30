@@ -11,6 +11,7 @@
 #include "Titanium/UI/Tab.hpp"
 #include "Titanium/UI/Window.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/UI/NavigationWindow.hpp"
 #include <sstream>
 
 #define CREATE_TITANIUM_UI(NAME) \
@@ -32,6 +33,7 @@ namespace Titanium
 
 	UIModule::UIModule(const JSContext& js_context) TITANIUM_NOEXCEPT
 	    : Module(js_context, "Ti.UI")
+		, navigationWindow__(JSExport<Titanium::UI::NavigationWindow>::Class())
 	{
 		TITANIUM_LOG_DEBUG("UIModule:: ctor ", this);
 	}
@@ -648,6 +650,7 @@ namespace Titanium
 		TITANIUM_ADD_FUNCTION(UIModule, createListItem);
 		TITANIUM_ADD_FUNCTION(UIModule, createListSection);
 		TITANIUM_ADD_FUNCTION(UIModule, createListView);
+		TITANIUM_ADD_FUNCTION(UIModule, createNavigationWindow);
 		TITANIUM_ADD_FUNCTION(UIModule, createNotification);
 		TITANIUM_ADD_FUNCTION(UIModule, createOptionDialog);
 		TITANIUM_ADD_FUNCTION(UIModule, createPicker);
@@ -837,6 +840,7 @@ namespace Titanium
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Label);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ListView);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ListSection);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, NavigationWindow);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, Notification);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, OptionDialog);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, ProgressBar);
@@ -928,6 +932,11 @@ namespace Titanium
 	TITANIUM_PROPERTY_GETTER(UIModule, ListSection)
 	{
 		return get_context().CreateObject(listsection__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(UIModule, NavigationWindow)
+	{
+		return get_context().CreateObject(navigationWindow__);
 	}
 
 	TITANIUM_PROPERTY_GETTER(UIModule, Notification)
@@ -1125,6 +1134,12 @@ namespace Titanium
 	{
 		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
 		CREATE_TITANIUM_UI(ListView);
+	}
+
+	TITANIUM_FUNCTION(UIModule, createNavigationWindow)
+	{
+		ENSURE_OPTIONAL_OBJECT_AT_INDEX(parameters, 0);
+		CREATE_TITANIUM_UI(NavigationWindow);
 	}
 
 	TITANIUM_FUNCTION(UIModule, createNotification)
@@ -1342,6 +1357,12 @@ namespace Titanium
 	UIModule& UIModule::Matrix3DClass(const JSClass& Matrix3D) TITANIUM_NOEXCEPT
 	{
 		matrix3d__ = Matrix3D;
+		return *this;
+	}
+
+	UIModule& UIModule::NavigationWindowClass(const JSClass& NavigationWindow) TITANIUM_NOEXCEPT
+	{
+		navigationWindow__ = NavigationWindow;
 		return *this;
 	}
 

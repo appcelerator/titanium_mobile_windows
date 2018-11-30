@@ -1,35 +1,28 @@
 /**
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
-var fs = require('fs'),
-	colors = require('colors'),
-	path = require('path'),
-	home = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA,
-	spawn = require('child_process').spawn,
-	os = require('os'),
-	program = require('commander'),
-	wrench = require('wrench'),
-	symbols = {
-	  ok: '✓',
-	  err: '✖',
-	  dot: '․'
-	},
-	// Constants
-	WIN_8_1 = '8.1',
-	WIN_10 = '10.0',
-	MSBUILD_12 = '12.0',
-	MSBUILD_14 = '14.0',
-	MSBUILD_15 = '15.0',
-	VS_2013_GENERATOR = 'Visual Studio 12 2013',
-	VS_2015_GENERATOR = 'Visual Studio 14 2015',
-	VS_2017_GENERATOR = 'Visual Studio 15 2017',
-	WINDOWS_STORE = 'WindowsStore',
-	WINDOWS_PHONE = 'WindowsPhone';
+const fs = require('fs-extra');
+const path = require('path');
+const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
+const os = require('os');
 
+const colors = require('colors'); // eslint-disable-line no-unused-vars
+
+// Constants
+const MSBUILD_14 = '14.0';
+const MSBUILD_15 = '15.0';
+const VS_2015_GENERATOR = 'Visual Studio 14 2015';
+const VS_2017_GENERATOR = 'Visual Studio 15 2017';
+const WINDOWS_STORE = 'WindowsStore';
+const symbols = {
+	ok: '✓',
+	err: '✖',
+	dot: '․'
+};
 // With node.js on Windows: use symbols available in terminal default fonts
-if ('win32' == os.platform()) {
+if (os.platform() === 'win32') {
 	symbols.ok = '\u221A';
 	symbols.err = '\u00D7';
 	symbols.dot = '.';
@@ -38,122 +31,106 @@ if ('win32' == os.platform()) {
 /**
  * Generates a VS solution and project to run/debug our Example apps manually.
  *
- * @param example_name {String} Name of the example app to generate from (See Examples folder)
- * @param dest {String} output location/folder
- * @param platform {String} 'WindowsStore'|'WindowsPhone'
- * @param sdkVersion {String} '8.1'|'10.0'
- * @param msdev {String} '12.0'|'14.0' MSBuild version to use
- * @param arch {String} 'ARM'|'Win32'
- * @param next {Function} callback function
+ * @param {String} example_name Name of the example app to generate from (See Examples folder)
+ * @param {String} dest output location/folder
+ * @param {String} platform 'WindowsStore'|'WindowsPhone'
+ * @param {String} sdkVersion '8.1'|'10.0'
+ * @param {String} msdev '12.0'|'14.0' MSBuild version to use
+ * @param {String} arch 'ARM'|'Win32'
+ * @return {Promise}
  **/
-function generateProject(example_name, dest, platform, sdkVersion, msdev, arch, next) {
-	var example_folder = path.join(__dirname, '..', '..', 'Examples', example_name),
-		generator,
-		prc,
-		out = '';
+function generateProject(example_name, dest, platform, sdkVersion, msdev, arch) {
+	return new Promise((resolve, reject) => {
+		// cmake generator name
+		let generator = (msdev === MSBUILD_14) ? VS_2015_GENERATOR : VS_2017_GENERATOR;
+		if (arch === 'ARM') {
+			generator += ' ARM';
+		}
 
-	// cmake generator name
-	generator = (msdev == MSBUILD_14) ? VS_2015_GENERATOR : VS_2017_GENERATOR;
-	if (arch == 'ARM') {
-		generator += ' ARM';
-	}
-
-	// Make sure our intended output dir exists!
-	if (!fs.existsSync(dest)) {
-		// Make the directory structure!
-		wrench.mkdirSyncRecursive(dest);
-	}
-	// Now let's generate the solution
-	prc = spawn('cmake', ['-G', generator,
-		'-DCMAKE_SYSTEM_NAME=' + platform,
-		'-DCMAKE_SYSTEM_VERSION=' + sdkVersion,
-		'-DTitaniumWindows_DISABLE_TESTS=ON',
-		'-DTitaniumWindows_Global_DISABLE_TESTS=ON',
-		'-DTitaniumWindows_Ti_DISABLE_TESTS=ON',
-		'-DTitaniumWindows_UI_DISABLE_TESTS=ON',
-		'-DTitaniumKit_DISABLE_TESTS=ON',
-		'-DHAL_DISABLE_TESTS=ON',
-		'-DHAL_RENAME_AXWAYHAL=ON',
-		example_folder
+		// Make sure our intended output dir exists!
+		if (!fs.existsSync(dest)) {
+			// Make the directory structure!
+			fs.ensureDirSync(dest);
+		}
+		// Now let's generate the solution
+		const prc = spawn('cmake', [
+			'-G', generator,
+			'-DCMAKE_SYSTEM_NAME=' + platform,
+			'-DCMAKE_SYSTEM_VERSION=' + sdkVersion,
+			'-DTitaniumWindows_DISABLE_TESTS=ON',
+			'-DTitaniumWindows_Global_DISABLE_TESTS=ON',
+			'-DTitaniumWindows_Ti_DISABLE_TESTS=ON',
+			'-DTitaniumWindows_UI_DISABLE_TESTS=ON',
+			'-DTitaniumKit_DISABLE_TESTS=ON',
+			'-DHAL_DISABLE_TESTS=ON',
+			'-DHAL_RENAME_AXWAYHAL=ON',
+			path.join(__dirname, '..', '..', 'Examples', example_name)
 		], {
 			cwd: dest
 		});
-	prc.stdout.on('data', function (data) {
-		console.log(data.toString());
-	});
-	prc.stderr.on('data', function (data) {
-		console.log(data.toString());
-	});
-	prc.on('close', function (code) {
-		var setProcess;
-		if (code != 0) {
-			next("Failed to generate project!");
-		} else {
-			next();
-		}
+		prc.stdout.on('data', data => console.log(data.toString()));
+		prc.stderr.on('data', data => console.log(data.toString()));
+		prc.on('close', function (code) {
+			if (code !== 0) {
+				return reject('Failed to generate project!');
+			}
+
+			resolve();
+		});
 	});
 }
 
 // API
 exports.generateProject = generateProject;
 
-
-////////////////////////////////////
-////////// MAIN EXECUTION //////////
-////////////////////////////////////
-if (module.id === ".") {
+// //////////////////////////////////
+// //////// MAIN EXECUTION //////////
+// //////////////////////////////////
+if (module.id === '.') {
 	(function () {
 		// Process command line input
+		const program = require('commander');
 		program
 			.description('Titanium Windows VS Solution Generator')
 			.usage('COMMAND [ARGS] [OPTIONS]')
 			.option('-a, --arch <arch>', '"ARM" (device) or "Win32" (emulator)', /^(ARM|Win32)$/, 'Win32')
-			.option('-o, --outputPath <outputPath>', 'Output path for generated code')
-			.option('-p, --platform <platform>', '"WindowsPhone" or "WindowsStore"', /^Windows(Phone|Store)$/, 'WindowsStore')
-			.option('-s, --sdk-version <version>', 'Target a specific Windows SDK version [version]', /^(8\.1|10\.0)$/, WIN_10)
-			.option('-m, --msbuild <msbuild>', '"14.0" (VS 2015) or "15.0" (VS 2017)', /^(14\.0|15\.0)$/, MSBUILD_15);
+			.option('-o, --outputPath <outputPath>', 'Output path for generated code');
+		// FIXME: Add back MSBuild/VS version selection!
 
-		program.command('new'.blue+' <example_name>'.white)
-				.description('	create a new project from the packaged examples'.grey);
+		program.command('new'.blue + ' <example_name>'.white)
+			.description('	create a new project from the packaged examples'.grey);
 
 		program.parse(process.argv);
 
 		Error.stackTraceLimit = Infinity;
 
-		if (program.args.length === 0)
-		{
-			var help = program.helpInformation();
-			help = help.replace('Usage: generate_project COMMAND [ARGS] [OPTIONS]','Usage: '+'generate_project'.blue+' COMMAND'.white+' [ARGS] [OPTIONS]'.grey);
+		if (program.args.length === 0) {
+			let help = program.helpInformation();
+			help = help.replace('Usage: generate_project COMMAND [ARGS] [OPTIONS]', 'Usage: ' + 'generate_project'.blue + ' COMMAND'.white + ' [ARGS] [OPTIONS]'.grey);
 			console.log(help);
 			process.exit(1);
 		}
 
 		// TODO USe command built-in API for new command!
 		// Validate the given command, only can be 'new' right now
-		var command = program.args[0];
-		if (command != 'new') {
+		const command = program.args[0];
+		if (command !== 'new') {
 			console.log('Unknown command: ' + command.red);
 			process.exit(1);
 		}
-		var example_name = program.args[1] || 'NG'; // The example from Examples dir to turn into a project
-		var abbrev = program.platform; // part of folder name for generated project
 
-		// Win 10 must be 'WindowsStore', VS 2015 and MSBuild 14.0
-		if (program.sdkVersion == WIN_10) {
-			program.msbuild = MSBUILD_15;
-			program.platform = WINDOWS_STORE;
-			abbrev = 'Windows10';
-		}
+		const example_name = program.args[1] || 'NG'; // The example from Examples dir to turn into a project
 
 		// output location
-		var dest = program.outputPath || path.join('.', example_name + '.' + abbrev + '.' + program.arch);
-
-		generateProject(example_name, dest, program.platform, program.sdkVersion, program.msbuild, program.arch, function (err) {
-			if (err) {
+		const dest = program.outputPath || path.join('.', example_name + '.Windows10.' + program.arch);
+		generateProject(example_name, dest, WINDOWS_STORE, program.sdkVersion, MSBUILD_15, program.arch)
+			.then(() => {
+				console.log((symbols.ok + ' Generated VS solution. Open ' + dest + '\\' + example_name + '.sln to begin development.').green);
+				process.exit(0);
+			})
+			.catch(err => {
 				console.error(err.toString().red);
 				process.exit(1);
-			}
-			console.log((symbols.ok + ' Generated VS solution. Open ' + dest + '\\' + example_name + '.sln to begin development.').green);
-		});
-	})();
+			});
+	}());
 }

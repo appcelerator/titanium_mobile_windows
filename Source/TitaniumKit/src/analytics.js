@@ -10,22 +10,22 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-var ANALYTICS_URL = 'https://api.appcelerator.com/p/v3/mobile-track/',
-	ANALYTICS_FILE = 'analytics.json',
-	SESSION_TIME_SEPARATION = 30,
-	RETRY_TIMEOUT = 3,
-	RETRY_COUNT = 3,
-	TIMEOUT = 3,
-	EVENT_APP_FEATURE = 'app.feature',
-	EVENT_APP_NAV = 'app.nav',
-	EVENT_APP_ENROLL = 'ti.enroll',
-	EVENT_APP_FOREGROUND = 'ti.foreground',
-	EVENT_APP_BACKGROUND = 'ti.background',
-	FEATURE_MAX_LEVELS = 5,
-	FEATURE_MAX_SIZE = 1000,
-	FEATURE_MAX_KEYS = 35,
-	FEATURE_MAX_KEY_LENGTH = 50,
-	OPTED_OUT_KEY = 'Ti.Analytics.optedOut';
+const ANALYTICS_URL = 'https://api.appcelerator.com/p/v3/mobile-track/',
+	  ANALYTICS_FILE = 'analytics.json',
+	  SESSION_TIME_SEPARATION = 1,
+	  RETRY_TIMEOUT = 3,
+	  RETRY_COUNT = 3,
+	  TIMEOUT = 3,
+	  EVENT_APP_FEATURE = 'app.feature',
+	  EVENT_APP_NAV = 'app.nav',
+	  EVENT_APP_INSTALL = 'app.install',
+	  EVENT_SESSION_START = 'session.start',
+	  EVENT_SESSION_END = 'session.end',
+	  FEATURE_MAX_LEVELS = 5,
+	  FEATURE_MAX_SIZE = 1000,
+	  FEATURE_MAX_KEYS = 35,
+	  FEATURE_MAX_KEY_LENGTH = 50,
+	  OPTED_OUT_KEY = 'Ti.Analytics.optedOut';
 
 /**
  * Creates the analytics object
@@ -48,13 +48,19 @@ function Analytics() {
 	this.optedOut = Ti.App.Properties.getBool(OPTED_OUT_KEY, false);
 }
 
-Analytics.prototype.loadEventQueue = function loadEventQueue() {
+/**
+ * Load queued events from local JSON
+ */
+Analytics.prototype.loadEventQueue = function () {
 	if (this.analyticsFile && this.analyticsFile.exists()) {
 		this.eventQueue = JSON.parse(this.analyticsFile.read().text) || [];
 	}
 };
 
-Analytics.prototype.saveEventQueue = function saveEventQueue() {
+/**
+ * Save queued events from local JSON
+ */
+Analytics.prototype.saveEventQueue = function () {
 	this.analyticsFile && this.analyticsFile.write(JSON.stringify(this.eventQueue));
 };
 
@@ -65,6 +71,58 @@ Analytics.prototype.saveEventQueue = function saveEventQueue() {
  */
 function toSimpleDateFormat(isoDateString) {
 	return isoDateString.replace('Z', '+0000');
+}
+
+/**
+ * Obtain first three segments of version string
+ * @param  {String} version Full version string
+ * @return {String} Trimmed version string
+ */
+function trimVersionQualifier(version) {
+	let parts = [];
+	// keep first three segments of the version number.
+	if (version && version.indexOf('.') != -1) {
+		parts = version.split('.');
+		return parts.slice(0, 3).join('.');
+	}
+	return version;
+}
+
+/**
+ * Construct comprehensive default event payload
+ * @return {Object} Payload JSON object
+ */
+function getDefaultPayload() {
+	return {
+		distribution: {
+			version: Ti.App.version,
+			environment: Ti.App.deployType
+		},
+		hardware: {
+			id: Ti.Platform.id,
+			arch: Ti.Platform.architecture,
+			name: Ti.Platform.model
+		},
+		os: {
+			name: Ti.Platform.name,
+			version: Ti.Platform.version
+		}
+	};
+}
+
+/**
+ * Merge source JSON object into destination JSON object
+ * @param  {Object} source JSON object
+ * @param  {Object} destination JSON object
+ */
+function mergeJSON(source, destination) {
+	for (let key in source) {
+		if (source[key] instanceof Object && destination[key]) {
+			mergeJSON(source[key], destination[key]);
+			continue;
+		}
+		destination[key] = source[key];
+	}
 }
 
 /**
@@ -86,7 +144,7 @@ function validateFeatureEvent(obj, level) {
 		Ti.API.warn('Feature event data object exceeds ' + FEATURE_MAX_KEYS + ' key limit.');
 		return false;
 	}
-	for (var k in obj) {
+	for (let k in obj) {
 		if (k.length > FEATURE_MAX_KEY_LENGTH) {
 			Ti.API.warn('Feature event data object key \'' + k + '\' exceeds ' + FEATURE_MAX_KEY_LENGTH + ' key length limit.');
 			return false;
@@ -100,89 +158,65 @@ function validateFeatureEvent(obj, level) {
 
 /**
  * Creates an event and adds it to the event queue
- * @param {String} eventType - event type (e.g: 'app.feature')
+ * @param {String} name - event name (e.g: 'app.feature')
  * @param {Object} data - JSON event data
+ * @param {Object} payload - JSON event payload
  * @private
  */
-Analytics.prototype.createEvent = function createEvent(eventType, data) {
-	data = data || {}; // ensure we always send a "data" property, empty object if null/undefined TIMOB-23402
-	var event = {
-		id: Ti.Platform.createUUID() + ':' + Ti.Platform.id,
-		sid: this.sessionId,
-		ts: toSimpleDateFormat(new Date().toISOString()),
-		event: eventType,
-		seq: this.sequence++,
-		mid: Ti.Platform.id,
-		ver: '3',
-		aguid: Ti.App.guid,
-		data: data
+Analytics.prototype.createEvent = function (name, data, payload) {
+	let event = {
+		id: Ti.Platform.createUUID(),
+		timestamp: new Date().getTime(),
+		event: name,
+		version: '4',
+		app: Ti.App.guid,
+		session: {
+			id: this.sessionId
+		}
 	};
+	if (payload) {
+		mergeJSON(payload, event);
+	}
+	if (data) {
+		event.data = data;
+	}
+
 	this.eventQueue.push(event);
 	this.lastEvent = event;
 };
 
-function trimVersionQualifier(version) {
-	var parts = [];
-	// keep first three segments of the version number.
-	if (version && version.indexOf('.') != -1) {
-		parts = version.split('.');
-		return parts.slice(0, 3).join('.');
-	}
-	return version;
-}
-
 /**
- * Creates a 'ti.enroll' event and adds it to the event queue
+ * Creates a 'app.install' event and adds it to the event queue
  * @private
  */
-Analytics.prototype.createEnrollEvent = function createAppEnrollEvent() {
-	this.createEvent(EVENT_APP_ENROLL, {
-		platform: Ti.Platform.name,
-		osarch: Ti.Platform.architecture,
-		model: Ti.Platform.model,
-		oscpu: Ti.Platform.processorCount,
-		ostype: Ti.Platform.ostype,
-		deploytype: Ti.App.deployType,
+Analytics.prototype.createEnrollEvent = function () {
+	this.createEvent(EVENT_APP_INSTALL, {
 		app_id: Ti.App.id,
 		app_name: Ti.App.name,
-		os: Ti.Platform.osname,
-		tz: - new Date().getTimezoneOffset(),
-		nettype: Ti.Network.networkTypeName,
-		app_version: Ti.App.version,
-		osver: Ti.Platform.version,
-		sdkver: "ti." + trimVersionQualifier(Ti.version)
-	});
+		timezone: - new Date().getTimezoneOffset(),
+		sdk_version: trimVersionQualifier(Ti.version)
+	}, getDefaultPayload());
 };
 
 /**
- * Creates a 'ti.foreground' event and adds it to the event queue
+ * Creates a 'session.start' event and adds it to the event queue
  * @private
  */
-Analytics.prototype.createForegroundEvent = function foregroundEvent() {
-	this.createEvent(EVENT_APP_FOREGROUND, {
-		platform: Ti.Platform.name,
-		osarch: Ti.Platform.architecture,
-		model: Ti.Platform.model,
-		oscpu: Ti.Platform.processorCount,
-		ostype: Ti.Platform.ostype,
-		deploytype: Ti.App.deployType,
+Analytics.prototype.createForegroundEvent = function () {
+	this.createEvent(EVENT_SESSION_START, {
 		app_id: Ti.App.id,
 		app_name: Ti.App.name,
-		os: Ti.Platform.osname,
-		tz: - new Date().getTimezoneOffset(),
-		nettype: Ti.Network.networkTypeName,
-		app_version: Ti.App.version,
-		osver: Ti.Platform.version,
-		sdkver: "ti." + trimVersionQualifier(Ti.version)
-	});
+		timezone: - new Date().getTimezoneOffset(),
+		sdk_version: trimVersionQualifier(Ti.version)
+	}, getDefaultPayload());
 };
 
 /**
- * Creates a 'ti.background' event and adds it to the event queue
+ * Creates a 'session.end' event and adds it to the event queue
  * @private
  */
-Analytics.prototype.createBackgroundEvent = function backgroundEvent() {
-	this.createEvent(EVENT_APP_BACKGROUND, null);
+Analytics.prototype.createBackgroundEvent = function () {
+	this.createEvent(EVENT_SESSION_END);
 };
 
 /**
@@ -191,7 +225,7 @@ Analytics.prototype.createBackgroundEvent = function backgroundEvent() {
  * @param {Object} data - JSON event data
  * @private
  */
-Analytics.prototype.createFeatureEvent = function featureEvent(name, data) {
+Analytics.prototype.createFeatureEvent = function (name, data) {
 	data = data || {};
 	if (validateFeatureEvent(data, 0)) {
 		data['eventName'] = name;
@@ -211,7 +245,7 @@ Analytics.prototype.createFeatureEvent = function featureEvent(name, data) {
  * @param {Object} data - JSON event data
  * @private
  */
-Analytics.prototype.createNavEvent = function navEvent(from, to, name, data) {
+Analytics.prototype.createNavEvent = function (from, to, name, data) {
 	data = data || {};
 	data['eventName'] = name;
 	data['from'] = from;
@@ -223,7 +257,7 @@ Analytics.prototype.createNavEvent = function navEvent(from, to, name, data) {
  * Send all events in the event queue
  * @private
  */
-Analytics.prototype.postEvents = function postEvents() {
+Analytics.prototype.postEvents = function () {
 	if (this.optedOut) {
 		// Clear all pending events
 		this.eventQueue = [];
@@ -233,7 +267,7 @@ Analytics.prototype.postEvents = function postEvents() {
 		return;
 	}
 	if (Ti.Network.online) {
-		var _t = this,
+		let _t = this,
 			retry = 0;
 		function post() {
 			if (_t.http == null) {
@@ -271,9 +305,9 @@ Analytics.prototype.postEvents = function postEvents() {
 };
 
 // create analytics
-var analytics = new Analytics();
+const analytics = new Analytics();
 // listen for 'resume' and 'pause' events
-Ti.App.addEventListener('resume', function resume(e) {
+Ti.App.addEventListener('resume', function (e) {
 	// generate a new sessionId if we have been suspeneded for over 30 seconds
 	if (analytics.timestamp && (new Date().getTime() - analytics.timestamp)/1000 > SESSION_TIME_SEPARATION) {
 		analytics.sessionId = Ti.Platform.createUUID();
@@ -283,7 +317,7 @@ Ti.App.addEventListener('resume', function resume(e) {
 	// send events
 	analytics.postEvents();
 });
-Ti.App.addEventListener('pause', function pause(e) {
+Ti.App.addEventListener('pause', function (e) {
 	// save suspend timestamp
 	analytics.timestamp = new Date().getTime();
 	//queue ti.background event
@@ -295,7 +329,7 @@ Ti.App.addEventListener('pause', function pause(e) {
 // set exports
 this.exports = {
 	featureEvent: function (name, data) {
-		var r = analytics.createFeatureEvent(name, data);
+		const r = analytics.createFeatureEvent(name, data);
 		analytics.postEvents();
 		return r;
 	},
@@ -312,7 +346,7 @@ this.exports = {
 	setReceivedResponse: function (value) {
 		analytics.receivedResponse = value;
 	},
-	startPostingEvents: function() {
+	startPostingEvents: function () {
 		Ti.API.debug('Start posting initial Ti.Analytics events');
 		// enroll on our first launch
 		if (!Ti.App.Properties.getBool('_firstLaunch', false)) {

@@ -34,6 +34,8 @@ methods:
     platforms: [windowsphone]
   - name: isExternalStoragePresent
     platforms: [windowsphone]
+  - name: openStream
+    platforms: [windowsphone]
   - name: getSeparator
     platforms: [windowsphone]
   - name: getLineEnding

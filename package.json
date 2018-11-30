@@ -1,42 +1,65 @@
 {
 	"name": "titanium-mobile-windows",
-	"title": "Windows",
-	"description": "Appcelerator Titanium Windows Platform",
+	"description": "Appcelerator Titanium Mobile Windows Platform",
+	"version": "0.0.0",
 	"keywords": [
 		"appcelerator",
 		"titanium",
 		"mobile",
-		"win8",
-		"wp8",
-		"winphone8",
 		"windows",
 		"windows phone",
 		"windows store",
 		"winstore"
 	],
-	"version": "__VERSION__",
 	"author": "Appcelerator, Inc. <info@appcelerator.com>",
-	"maintainers": [
+	"contributors": [
+		"Kota Iguchi <kiguchi@axway.com>",
+		"Chris Williams <cwilliams@axway.com>",
+		"Gary Mathews <gmathews@axway.com>",
 		"Matt Langston <mlangston@appcelerator.com>",
 		"Russ McMahon <rmcmahon@appcelerator.com>",
 		"Pedro Enrique <penrique@appcelerator.com>",
-		"Chris Williams <cwilliams@appcelerator.com>",
-		"Chris Barber <cbarber@appcelerator.com>"
+		"Chris Barber <cbarber@axway.com>"
 	],
-	"vendorDependencies": {
-		"visual studio": ">=12.x <=14.x",
-		"windows phone sdk": "10.0",
-		"windows 10 sdk": ">=10.0.10240.0 <=10.0.17134.0",
-		"msbuild": ">=4.0",
-		"node": ">=0.10.0 <=0.12.x",
-		"java": ">=1.8.x"
+	"scripts": {
+		"docs": "node apidoc/ti_win_yaml.js",
+		"combine-sdk": "node Tools/Scripts/build/setupSDK.js",
+		"test": "eslint \"apidoc/**/*.js\" \"Tools/**/*.js\""
 	},
-	"engines": {
-		"node": ">=0.10.13"
+	"devDependencies": {
+		"colors": "^0.6.2",
+		"commander": "^2.9.0",
+		"ejs": "github:garymathews/ejs",
+		"eslint": "^5.9.0",
+		"eslint-config-axway": "^4.1.1",
+		"eslint-plugin-mocha": "^5.2.0",
+		"fs-extra": "^7.0.1",
+		"inquirer": "^0.8.5",
+		"klaw-sync": "^6.0.0",
+		"line-by-line": "^0.1.6",
+		"lodash.difference": "^4.5.0",
+		"lodash.union": "^4.6.0",
+		"node-appc": "^0.2.49",
+		"request": "^2.88.0",
+		"temp": "^0.6.0",
+		"titanium": "^5.2.0",
+		"windowslib": "^0.6.7"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/appcelerator/titanium_mobile_windows.git"
 	},
-	"license": "Apache Public License v2"
+	"vendorDependencies": {
+		"visual studio": ">=12.x <=14.x",
+		"windows phone sdk": "10.0",
+		"windows 10 sdk": ">=10.0.10240.0 <=10.0.17134.0",
+		"msbuild": ">=4.0",
+		"node": ">=6.0.0 <=11.x",
+		"java": ">=1.8.x"
+	},
+	"engines": {
+		"node": ">=6.0.0"
+	},
+	"license": "Apache-2.0",
+	"dependencies": {}
 }
