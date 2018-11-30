@@ -8,6 +8,8 @@ properties:
   - name: currentLocale
     platforms: [windowsphone]
 methods:
+  - name: formatTelephoneNumber
+    platforms: [windowsphone]
   - name: getCurrencyCode
     platforms: [windowsphone]
   - name: getCurrencySymbol

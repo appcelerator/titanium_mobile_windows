@@ -12,6 +12,7 @@
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Constants.hpp"
 #include "Titanium/UI/TitleAttributesParams.hpp"
+#include "Titanium/UI/ViewPadding.hpp"
 
 namespace Titanium
 {
@@ -22,6 +23,7 @@ namespace Titanium
 		class OpenWindowParams;
 		class CloseWindowParams;
 		class Tab;
+		class NavigationWindow;
 
 		/*!
 		  @class
@@ -251,8 +253,36 @@ namespace Titanium
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(std::shared_ptr<Tab>, tab);
 
+			/*!
+			  @method
 
-			Window(const JSContext&) TITANIUM_NOEXCEPT;
+			  @abstract navigationWindow : Ti.UI.NavigationWindow
+
+			  @discussion Returns the navigation window that hosts this window.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::shared_ptr<NavigationWindow>, navigationWindow);
+
+			Window(const JSContext&, const std::string& apiName = "Ti.UI.Window") TITANIUM_NOEXCEPT;
+
+			/*!
+			  @method
+
+			  @abstract extendSafeArea : Boolean
+
+			  @discussion Specifies whether the content (subviews) of the window will render inside the safe-area or not.
+
+			  Default: false
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(bool, extendSafeArea);
+
+			/*!
+			  @method
+
+			  @abstract safeAreaPadding : ViewPadding
+
+			  @discussion The padding needed to safely display content without it being overlapped by the screen insets and notches.
+			*/
+			TITANIUM_PROPERTY_IMPL_READONLY_DEF(ViewPadding, safeAreaPadding);
 
 			virtual ~Window() TITANIUM_NOEXCEPT;  //= default;
 			Window(const Window&) = default;
@@ -325,6 +355,16 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getTranslucent);
 			TITANIUM_FUNCTION_DEF(setTranslucent);
 
+			TITANIUM_PROPERTY_READONLY_DEF(navigationWindow);
+			TITANIUM_FUNCTION_DEF(getNavigationWindow);
+
+			TITANIUM_PROPERTY_DEF(extendSafeArea);
+			TITANIUM_FUNCTION_DEF(getExtendSafeArea);
+			TITANIUM_FUNCTION_DEF(setExtendSafeArea);
+
+			TITANIUM_PROPERTY_DEF(safeAreaPadding);
+			TITANIUM_FUNCTION_DEF(getSafeAreaPadding);
+
 		protected:
 // Silence 4251 on Windows since private member variables do not
 // need to be exported from a DLL.
@@ -349,7 +389,11 @@ namespace Titanium
 			JSObject openWindowParams_ctor__;
 			JSObject closeWindowParams_ctor__;
 
+			bool extendSafeArea__;
+			ViewPadding safeAreaPadding__;
+
 			std::shared_ptr<Tab> tab__;
+			std::shared_ptr<NavigationWindow> navigationWindow__;
 			bool is_opened__ { false }; // Indicates this window is already opened
 #pragma warning(pop)
 		};

@@ -14,7 +14,7 @@ namespace Titanium
 	{
 
 		ThreeDMatrix::ThreeDMatrix(const JSContext& js_context) TITANIUM_NOEXCEPT
-			: Module(js_context),
+			: Module(js_context, "Ti.UI.Matrix3D"),
 			m11__(0),
 			m12__(0),
 			m13__(0),

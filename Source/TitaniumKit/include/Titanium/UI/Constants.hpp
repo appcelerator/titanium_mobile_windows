@@ -622,13 +622,16 @@ namespace Titanium
 		  @constant MM Unit constant representing units in millimeters.
 
 		  @constant PX Unit constant representing units in pixels.
+
+		  @constant PPX Unit constant representing units in pysical pixels.
 		*/
 		enum class TITANIUMKIT_EXPORT UNIT {
 			Cm,
 			Dip,
 			In,
 			Mm,
-			Px
+			Px,
+			Ppx
 		};
 
 		/*!
@@ -1246,7 +1249,7 @@ namespace Titanium
 			static std::underlying_type<GRADIENT_TYPE>::type to_underlying_type(const GRADIENT_TYPE&) TITANIUM_NOEXCEPT;
 
 			static std::string to_string(const UNIT&) TITANIUM_NOEXCEPT;
-			static UNIT to_UNIT(const std::string& textStyleName) TITANIUM_NOEXCEPT;
+			static UNIT to_UNIT(const std::string& name) TITANIUM_NOEXCEPT;
 			static UNIT to_UNIT(std::underlying_type<UNIT>::type) TITANIUM_NOEXCEPT;
 			static std::underlying_type<UNIT>::type to_underlying_type(const UNIT&) TITANIUM_NOEXCEPT;
 

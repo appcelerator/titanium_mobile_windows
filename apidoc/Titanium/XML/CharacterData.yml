@@ -5,8 +5,6 @@ methods:
     platforms: [windowsphone]
   - name: appendData
     platforms: [windowsphone]
-  - name: appendChild
-    platforms: [windowsphone]
   - name: insertData
     platforms: [windowsphone]
   - name: deleteData

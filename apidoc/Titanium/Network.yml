@@ -27,24 +27,68 @@ properties:
     platforms: [windowsphone]
   - name: PROGRESS_UNKNOWN
     platforms: [windowsphone]
+  - name: allHTTPCookies
+    platforms: [windowsphone]
   - name: networkType
     platforms: [windowsphone]
   - name: networkTypeName
     platforms: [windowsphone]
   - name: online
     platforms: [windowsphone]
+  - name: remoteDeviceUUID
+    platforms: [windowsphone]
+  - name: remoteNotificationTypes
+    platforms: [windowsphone]
+  - name: remoteNotificationsEnabled
+    platforms: [windowsphone]
   - name: httpURLFormatter
     platforms: [windowsphone]
 methods:
+  - name: addHTTPCookie
+    platforms: [windowsphone]
+  - name: addSystemCookie
+    platforms: [windowsphone]
+  - name: createBonjourBrowser
+    platforms: [windowsphone]
+  - name: createBonjourService
+    platforms: [windowsphone]
+  - name: getHTTPCookies
+    platforms: [windowsphone]
+  - name: getHTTPCookiesForDomain
+    platforms: [windowsphone]
+  - name: getSystemCookies
+    platforms: [windowsphone]
+  - name: removeAllHTTPCookies
+    platforms: [windowsphone]
+  - name: removeAllSystemCookies
+    platforms: [windowsphone]
+  - name: removeHTTPCookie
+    platforms: [windowsphone]
+  - name: removeHTTPCookiesForDomain
+    platforms: [windowsphone]
+  - name: removeSystemCookie
+    platforms: [windowsphone]
+  - name: registerForPushNotifications
+    platforms: [windowsphone]
+  - name: unregisterForPushNotifications
+    platforms: [windowsphone]
   - name: createCookie
     platforms: [windowsphone]
   - name: createHTTPClient
+    platforms: [windowsphone]
+  - name: getAllHTTPCookies
     platforms: [windowsphone]
   - name: getNetworkType
     platforms: [windowsphone]
   - name: getNetworkTypeName
     platforms: [windowsphone]
   - name: getOnline
+    platforms: [windowsphone]
+  - name: getRemoteDeviceUUID
+    platforms: [windowsphone]
+  - name: getRemoteNotificationTypes
+    platforms: [windowsphone]
+  - name: getRemoteNotificationsEnabled
     platforms: [windowsphone]
   - name: getHttpURLFormatter
     platforms: [windowsphone]

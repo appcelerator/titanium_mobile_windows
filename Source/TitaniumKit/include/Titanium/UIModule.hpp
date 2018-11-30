@@ -209,7 +209,8 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_HEAD);
 		TITANIUM_PROPERTY_READONLY_DEF(ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_TAIL);
 		TITANIUM_PROPERTY_READONLY_DEF(ATTRIBUTE_LINE_BREAK_BY_TRUNCATING_MIDDLE);
-		TITANIUM_PROPERTY_READONLY_DEF(2DMatrix);
+		TITANIUM_PROPERTY_READONLY_DEF(Matrix2D);
+		TITANIUM_PROPERTY_READONLY_DEF(Matrix3D);
 		TITANIUM_PROPERTY_READONLY_DEF(ActivityIndicator);
 		TITANIUM_PROPERTY_READONLY_DEF(ActivityIndicatorStyle);
 		TITANIUM_PROPERTY_READONLY_DEF(AlertDialog);
@@ -222,6 +223,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(Label);
 		TITANIUM_PROPERTY_READONLY_DEF(ListView);
 		TITANIUM_PROPERTY_READONLY_DEF(ListSection);
+		TITANIUM_PROPERTY_READONLY_DEF(NavigationWindow);
 		TITANIUM_PROPERTY_READONLY_DEF(Notification);
 		TITANIUM_PROPERTY_READONLY_DEF(OptionDialog);
 		TITANIUM_PROPERTY_READONLY_DEF(ProgressBar);
@@ -257,6 +259,9 @@ namespace Titanium
 		static void JSExportInitialize();
 
 		TITANIUM_FUNCTION_DEF(create2DMatrix);
+		TITANIUM_FUNCTION_DEF(create3DMatrix);
+		TITANIUM_FUNCTION_DEF(createMatrix2D);
+		TITANIUM_FUNCTION_DEF(createMatrix3D);
 		TITANIUM_FUNCTION_DEF(createActivityIndicator);
 		TITANIUM_FUNCTION_DEF(createAlertDialog);
 		TITANIUM_FUNCTION_DEF(createAnimation);
@@ -268,6 +273,7 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(createListItem);
 		TITANIUM_FUNCTION_DEF(createListSection);
 		TITANIUM_FUNCTION_DEF(createListView);
+		TITANIUM_FUNCTION_DEF(createNavigationWindow);
 		TITANIUM_FUNCTION_DEF(createNotification);
 		TITANIUM_FUNCTION_DEF(createOptionDialog);
 		TITANIUM_FUNCTION_DEF(createPicker);
@@ -302,7 +308,9 @@ namespace Titanium
 		UIModule& EmailDialogClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& AnimationClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& SwitchClass(const JSClass&) TITANIUM_NOEXCEPT;
-		UIModule& TwoDMatrixClass(const JSClass&) TITANIUM_NOEXCEPT;
+		UIModule& NavigationWindowClass(const JSClass&) TITANIUM_NOEXCEPT;
+		UIModule& Matrix2DClass(const JSClass&) TITANIUM_NOEXCEPT;
+		UIModule& Matrix3DClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& NotificationClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& TextAreaClass(const JSClass&) TITANIUM_NOEXCEPT;
 		UIModule& ClipboardClass(const JSClass&) TITANIUM_NOEXCEPT;
@@ -348,8 +356,10 @@ namespace Titanium
 		JSClass picker__;
 		JSClass clipboard__;
 		JSClass textarea__;
+		JSClass navigationWindow__;
 		JSClass notification__;
-		JSClass twodmatrix__;
+		JSClass matrix2d__;
+		JSClass matrix3d__;
 		JSClass switch__;
 		JSClass utils__;
 		JSClass animation__;

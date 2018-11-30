@@ -804,9 +804,13 @@ function copyModuleOverride(next) {
 			if (fs.existsSync(moduleSrc)) {
 				wrench.readdirSyncRecursive(moduleSrc).forEach(function(res) {
 					var from = path.join(moduleSrc, res), 
-						to   = path.join(_t.buildDir, res);
+						to   = path.join(_t.buildDir, res),
+						todir = path.dirname(to);
 					if (fs.statSync(from).isFile()) {
 						_t.logger.info('Module [' + module.manifest.moduleid + '] overrides ' + res);
+						if (!fs.existsSync(todir)) {
+							wrench.mkdirSyncRecursive(todir)
+						}
 						fs.createReadStream(from).pipe(fs.createWriteStream(to));
 					}
 				});

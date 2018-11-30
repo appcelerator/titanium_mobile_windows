@@ -1626,11 +1626,12 @@ namespace Titanium
 			static std::unordered_map<UNIT, std::string> map;
 			static std::once_flag of;
 			std::call_once(of, []() {
-      map[UNIT::Cm]  = "UNIT_CM";
-      map[UNIT::Dip] = "UNIT_DIP";
-      map[UNIT::In]  = "UNIT_IN";
-      map[UNIT::Mm]  = "UNIT_MM";
-      map[UNIT::Px]  = "UNIT_PX";
+      map[UNIT::Cm]  = "cm";
+      map[UNIT::Dip] = "dip";
+      map[UNIT::In]  = "in";
+      map[UNIT::Mm]  = "mm";
+      map[UNIT::Px]  = "px";
+      map[UNIT::Ppx] = "ppx";
 			});
 
 			std::string string = unknown_string;
@@ -1647,11 +1648,13 @@ namespace Titanium
 			static std::unordered_map<std::string, UNIT> map;
 			static std::once_flag of;
 			std::call_once(of, []() {
-      map["UNIT_CM"]  = UNIT::Cm;
-      map["UNIT_DIP"] = UNIT::Dip;
-      map["UNIT_IN"]  = UNIT::In;
-      map["UNIT_MM"]  = UNIT::Mm;
-      map["UNIT_PX"]  = UNIT::Px;
+      map["cm"]  = UNIT::Cm;
+      map["dip"] = UNIT::Dip;
+	  map["dp"]  = UNIT::Dip;
+	  map["in"]  = UNIT::In;
+      map["mm"]  = UNIT::Mm;
+      map["px"]  = UNIT::Px;
+      map["ppx"] = UNIT::Ppx;
 			});
 
 			UNIT unit = UNIT::Dip;
@@ -1675,6 +1678,7 @@ namespace Titanium
       map[static_cast<std::underlying_type<UNIT>::type>(UNIT::In)]  = UNIT::In;
       map[static_cast<std::underlying_type<UNIT>::type>(UNIT::Mm)]  = UNIT::Mm;
       map[static_cast<std::underlying_type<UNIT>::type>(UNIT::Px)]  = UNIT::Px;
+      map[static_cast<std::underlying_type<UNIT>::type>(UNIT::Ppx)] = UNIT::Ppx;
 			});
 
 			UNIT unit = UNIT::Dip;

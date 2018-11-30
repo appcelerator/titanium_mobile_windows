@@ -10,8 +10,6 @@ properties:
 methods:
   - name: createElement
     platforms: [windowsphone]
-  - name: createElementNS
-    platforms: [windowsphone]
   - name: createDocumentFragment
     platforms: [windowsphone]
   - name: createTextNode
@@ -24,15 +22,11 @@ methods:
     platforms: [windowsphone]
   - name: createAttribute
     platforms: [windowsphone]
-  - name: createAttributeNS
-    platforms: [windowsphone]
   - name: createEntityReference
     platforms: [windowsphone]
+  - name: getElementsByTagName
+    platforms: [windowsphone]
   - name: importNode
-    platforms: [windowsphone]
-  - name: insertBefore
-    platforms: [windowsphone]
-  - name: removeChild
     platforms: [windowsphone]
   - name: createElementNS
     platforms: [windowsphone]

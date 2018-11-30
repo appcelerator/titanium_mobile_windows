@@ -61,6 +61,8 @@ properties:
     platforms: [windowsphone]
   - name: accuracy
     platforms: [windowsphone]
+  - name: activityType
+    platforms: [windowsphone]
   - name: distanceFilter
     platforms: [windowsphone]
   - name: headingFilter

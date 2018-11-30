@@ -118,6 +118,16 @@ namespace TitaniumWindows
 			});
 			scroll_viewer__->Content = content->getComponent();
 
+			content->getComponent()->SizeChanged += ref new SizeChangedEventHandler([this](Platform::Object^ sender, SizeChangedEventArgs^ e) {
+				const auto SIZE = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
+				if (layoutDelegate__->get_width() == SIZE) {
+					layoutDelegate__->set_minWidth(std::to_string(e->NewSize.Width));
+				}
+				if (layoutDelegate__->get_height() == SIZE) {
+					layoutDelegate__->set_minHeight(std::to_string(e->NewSize.Height));
+				}
+			});
+
 			Titanium::UI::ScrollView::setLayoutDelegate<ScrollViewLayoutDelegate>(this, contentView__);
 
 			layoutDelegate__->set_defaultHeight(Titanium::UI::LAYOUT::FILL);

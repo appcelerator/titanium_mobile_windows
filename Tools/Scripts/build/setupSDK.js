@@ -1,64 +1,60 @@
-var path = require('path'),
-	fs = require('fs'),
-	async = require('async'),
-	colors = require('colors'),
-	wrench = require('wrench'),
-	spawn = require('child_process').spawn,
-	exec = require('child_process').exec,
-	titanium = path.join(__dirname, 'node_modules', 'titanium', 'bin', 'titanium'),
-	DIST_DIR = path.join(__dirname, '..', '..', '..', 'dist'),
-	WINDOWS_DIST_DIR = path.join(DIST_DIR, 'windows'),
-	// Global vars
-	hadWindowsSDK = false;
-
+/**
+ * This script downloads a pre-built SDK with iOS/Android, extracts it,
+ * copies the built Windows SDK portion into it, modifies some files to denote
+ * the Windows SDK was included and then zips it back up.
+ */
+const path = require('path');
+const fs = require('fs-extra');
+const colors = require('colors'); // eslint-disable-line no-unused-vars
+const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
+const exec = require('child_process').exec; // eslint-disable-line security/detect-child-process
+const TITANIUM = require.resolve('titanium');
+const DIST_DIR = path.join(__dirname, '..', '..', '..', 'dist');
+const WINDOWS_DIST_DIR = path.join(DIST_DIR, 'windows');
 
 /**
  * Installs the latest SDK from master branch remotely, sets it as the default
  * SDK. We'll be hacking it to add our locally built Windows SDK into it.
  *
- * @param barnch {String} branch name or URL of Titanium SDK to use
- * @param next {Function} callback function
+ * @param {string} branch branch name or URL of Titanium SDK to use
+ * @return {Promise<string>}
  **/
-function installSDK(branch, next) {
-	var prc = spawn('node', [titanium, 'sdk', 'install', '-b', branch, '-d', '--no-colors']),
-		sdkVersion;
-	prc.stdout.on('data', function (data) {
-		var value = data.toString().trim(),
-			regexp = /You're up\-to\-date\. Version (\d+\.\d+\.\d+\.v\d+)/, // when SDK is already installed
-			regexp2 = /Titanium SDK (\d+\.\d+\.\d+\.v\d+) successfully installed/, // when we installed the SDK
-			matches = value.match(regexp);
-		if (!matches) { // first regexp didn't find anything (check if normal successful install)
-			matches = value.match(regexp2);
-		}
-		if (matches) { // did either regexp get the sdk version?
-			sdkVersion = matches[1];
-		}
-		console.log(value);
-	});
-	prc.stderr.on('data', function (data) {
-		console.error(data.toString().trim());
-	});
+function installSDK(branch) {
+	const regexp = /You're up-to-date\. Version (\d+\.\d+\.\d+\.v\d+)/; // when SDK is already installed
+	const regexp2 = /Titanium SDK (\d+\.\d+\.\d+\.v\d+) successfully installed/; // when we installed the SDK
+	return new Promise((resolve, reject) => {
+		console.log('Installing SDK from ' + branch + ' branch');
+		let sdkVersion;
+		const prc = spawn('node', [ TITANIUM, 'sdk', 'install', '-b', branch, '-d', '--no-colors' ]);
+		prc.stdout.on('data', data => {
+			const value = data.toString().trim();
+			let matches = value.match(regexp);
+			if (!matches) { // first regexp didn't find anything (check if normal successful install)
+				matches = value.match(regexp2);
+			}
+			if (matches) { // did either regexp get the sdk version?
+				sdkVersion = matches[1];
+			}
+			console.log(value);
+		});
+		prc.stderr.on('data', data => console.error(data.toString().trim()));
 
-	prc.on('close', function (code) {
-		if (code != 0) {
-			next("Failed to install SDK. Exit code: " + code);
-		} else {
-			console.log("Making sure " + sdkVersion + " is selected");
-			var selectPrc = spawn('node', [titanium, 'sdk', 'select', sdkVersion]);
-			selectPrc.stdout.on('data', function (data) {
-				console.log(data.toString());
-			});
-			selectPrc.stderr.on('data', function (data) {
-				console.error(data.toString().trim());
-			});
-			selectPrc.on('close', function (code) {
-				if (code != 0) {
-					next("Failed to select SDK. Exit code: " + code);
-				} else {
-					next(null, sdkVersion);
+		prc.on('close', installCode => {
+			if (installCode !== 0) {
+				return reject(`Failed to install SDK. Exit code: ${installCode}`);
+			}
+
+			console.log('Making sure ' + sdkVersion + ' is selected');
+			const selectPrc = spawn('node', [ TITANIUM, 'sdk', 'select', sdkVersion ]);
+			selectPrc.stdout.on('data', data => console.log(data.toString()));
+			selectPrc.stderr.on('data', data => console.error(data.toString().trim()));
+			selectPrc.on('close', code => {
+				if (code !== 0) {
+					return reject(`Failed to select SDK. Exit code: ${code}`);
 				}
+				resolve(sdkVersion);
 			});
-		}
+		});
 	});
 }
 
@@ -66,120 +62,89 @@ function installSDK(branch, next) {
  * Look up the full path to the SDK we just installed (the SDK we'll be hacking
  * to add our locally built Windows SDK into).
  *
- * @param tiSDKVersion {String} The versionw e installed (if we know it)
- * @param next {Function} callback function
+ * @param {string} tiSDKVersion The version we installed (if we know it)
+ * @return {Promise<string>} path to the sdk
  **/
-function getSDKInstallDir(tiSDKVersion, next) {
-	var prc = exec('node "' + titanium + '" info -o json -t titanium', function (error, stdout, stderr) {
-		var out,
-			selectedSDK;
-		if (error !== null) {
-			return next('Failed to get SDK install dir: ' + error);
-		}
-
-		out = JSON.parse(stdout);
-		if (tiSDKVersion) {
-			console.log("Looks like the SDK was already installed: " + tiSDKVersion);
-			selectedSDK = tiSDKVersion;
-		} else {
-			selectedSDK = out['titaniumCLI']['selectedSDK'];
-		}
-		if (!selectedSDK) {
-			console.error("There is no selected SDK for the titanium CLI and we didn't sniff the version on install!");
-		}
-
-		next(null, out['titanium'][selectedSDK]['path']);
-	});
-}
-
-/**
- * Adds 'windows' into the list of supported platforms for a given SDK we're
- * hacking.
- *
- * @param sdkPath {String} path to the Titanium SDK we'll be hacking to copy our
- * 													locally built Windows SDK into
- * @param next {Function} callback function
- **/
-function copyWindowsIntoSDK(sdkPath, distDir, next) {
-	var dest = path.join(sdkPath, 'windows');
-	if (fs.existsSync(dest)) {
-		hadWindowsSDK = true;
-		wrench.rmdirSyncRecursive(dest);
-	}
-	// TODO Be smarter about copying to speed it up? Only copy diff?
-	wrench.copyDirSyncRecursive(distDir, dest);
-	next();
-}
-
-/**
- * Adds 'windows' into the list of supported platforms for a given SDK we're
- * hacking.
- *
- * @param sdkPath {String} path to the Titanium SDK we'll be hacking
- * @param next {Function} callback function
- **/
-function addWindowsToSDKManifest(sdkPath, next) {
-	var manifest = path.join(sdkPath, 'manifest.json');
-
-	fs.readFile(manifest, function (err, data) {
-		if (err) {
-			next(err);
-		}
-		// append 'windows' to platforms array
-		var json = JSON.parse(data);
-		json['platforms'].push('windows');
-		// Write new JSON back to file
-		fs.writeFile(manifest, JSON.stringify(json), function (err) {
-			if (err) {
-				next(err);
+function getSDKInstallDir(tiSDKVersion) {
+	return new Promise((resolve, reject) => {
+		exec(`node "${TITANIUM}" info -o json -t titanium`, (error, stdout) => {
+			if (error) {
+				return reject(`Failed to get SDK install dir: ${error}`);
 			}
-			next();
+
+			const out = JSON.parse(stdout);
+			let selectedSDK;
+			if (tiSDKVersion) {
+				console.log(`Looks like the SDK was already installed: ${tiSDKVersion}`);
+				selectedSDK = tiSDKVersion;
+			} else {
+				selectedSDK = out['titaniumCLI']['selectedSDK'];
+			}
+			if (!selectedSDK) {
+				return reject('There is no selected SDK for the titanium CLI and we didn\'t sniff the version on install!');
+			}
+
+			resolve(out['titanium'][selectedSDK]['path']);
 		});
 	});
 }
 
+/**
+ * Adds 'windows' into the list of supported platforms for a given SDK we're
+ * hacking.
+ *
+ * @param {String} sdkPath path to the Titanium SDK we'll be hacking to copy our
+ * 													locally built Windows SDK into
+ * @param {String} distDir path to the Windows SDK we'll be copying
+ * @return {Promise}
+ **/
+async function copyWindowsIntoSDK(sdkPath, distDir) {
+	console.log(`Copying built Windows SDK from ${distDir} into SDK at ${sdkPath}`);
+	const dest = path.join(sdkPath, 'windows');
+	const hadWindowsSDK = await fs.pathExists(dest);
+	if (hadWindowsSDK) {
+		await fs.remove(dest);
+	}
+	// TODO Be smarter about copying to speed it up? Only copy diff?
+	await fs.copy(distDir, dest);
+	if (!hadWindowsSDK) {
+		await addWindowsToSDKManifest(sdkPath);
+	}
+}
 
-function setupSDK(branch, location) {
+/**
+ * Adds 'windows' into the list of supported platforms for a given SDK we're
+ * hacking.
+ *
+ * @param {String} sdkPath path to the Titanium SDK we'll be hacking
+ * @return {Promise}
+ **/
+async function addWindowsToSDKManifest(sdkPath) {
+	const manifest = path.join(sdkPath, 'manifest.json');
+	const json = await fs.readJson(manifest);
+	// append 'windows' to platforms array
+	json['platforms'].push('windows');
+	// Write new JSON back to file
+	await fs.writeJSON(manifest, json);
+}
 
-	async.series([
-		function (next) {
-			// If this is already installed we don't re-install, thankfully
-			console.log("Installing SDK from " + branch + " branch");
-			installSDK(branch, function (err, version) {
-				if (err) {
-					return next(err);
-				}
-				tiSDKVersion = version;
-				next();
-			});
-		},
-		function (next) {
-			getSDKInstallDir(tiSDKVersion, function (err, installPath) {
-				if (err) {
-					return next(err);
-				}
-				sdkPath = installPath;
-				next();
-			});
-		},
-		function (next) {
-			console.log("Copying built Windows SDK from " + location + " into master SDK at " + sdkPath);
-			copyWindowsIntoSDK(sdkPath, location, next);
-		},
-		function (next) {
-			if (hadWindowsSDK) {
-				next();
-			} else {
-				addWindowsToSDKManifest(sdkPath, next);
-			}
-		}
-	]);
+/**
+ * [setupSDK description]
+ * @param  {string} branch   [description]
+ * @param  {string} location [description]
+ * @return {Promise}          [description]
+ */
+async function setupSDK(branch, location) {
+	// If this is already installed we don't re-install, thankfully
+	const sdkVersion = await installSDK(branch);
+	const sdkPath = await getSDKInstallDir(sdkVersion);
+	await copyWindowsIntoSDK(sdkPath, location);
 }
 
 // When run as single script.
-if (module.id === ".") {
+if (module.id === '.') {
 	(function () {
-		var program = require('commander');
+		const program = require('commander');
 
 		// TODO Allow specifying what device id?
 		program
@@ -188,13 +153,11 @@ if (module.id === ".") {
 			.option('-l --location [location]', 'Location of the Windows build dist to use', WINDOWS_DIST_DIR)
 			.parse(process.argv);
 
-		setupSDK(program.branch, program.location, function(err, results) {
-			if (err) {
+		setupSDK(program.branch, program.location)
+			.then(() => process.exit(0))
+			.catch(err => {
 				console.error(err.toString().red);
 				process.exit(1);
-			} else {
-				process.exit(0);
-			}
-		});
-	})();
+			});
+	}());
 }

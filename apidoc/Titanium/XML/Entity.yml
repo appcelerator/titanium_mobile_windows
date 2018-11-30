@@ -5,4 +5,6 @@ properties:
     platforms: [windowsphone]
   - name: systemId
     platforms: [windowsphone]
+  - name: notationName
+    platforms: [windowsphone]
 
