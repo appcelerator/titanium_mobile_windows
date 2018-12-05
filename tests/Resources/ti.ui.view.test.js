@@ -399,6 +399,28 @@ describe('Titanium.UI.View', function () {
 		win.open();
 	});
 
+	// TIMOB-24401: visible="false" should hide the view
+	it('TIMOB-24401: visible="false" should hide the view', function (finish) {
+		var view;
+		win = Ti.UI.createWindow({ backgroundColor: 'blue' });
+		view = Ti.UI.createView({ width: Ti.UI.FILL, height: Ti.UI.FILL });
+		win.add(view);
+
+		win.addEventListener('open', function () {
+			try {
+				should(view.visible).be.true;
+				view.visible = "false";
+				should(view.visible).be.Boolean;
+				should(view.visible).be.false;
+				finish();
+			} catch (err) {
+				finish(err);
+			}
+		});
+
+		win.open();
+	});
+
 	// FIXME: Windows 10 Store app fails for this...need to figure out why.
 	it.windowsDesktopBroken('animate (top)', function (finish) {
 		var view;
