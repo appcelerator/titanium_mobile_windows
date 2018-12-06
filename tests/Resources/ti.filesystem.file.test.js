@@ -545,42 +545,148 @@ describe('Titanium.Filesystem.File', function () {
 		}
 	});
 
-	// File.copy
-	it('#copy()', function () {
-		var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'app.js'),
-			newpath,
-			dest;
-		should(file.exists()).be.true;
-		newpath = Ti.Filesystem.applicationDataDirectory + Ti.Filesystem.separator + 'app.js';
-		should(file.copy(newpath)).be.true; // iOs gives: -[TiFilesystemFileProxy copyWithZone:]: unrecognized selector sent to instance 0x7fa06bf5bca0
-		dest = Ti.Filesystem.getFile(newpath);
-		should(dest.exists()).be.true;
-		should(dest.deleteFile()).be.true;
-		should(dest.exists()).be.false;
+	describe('#copy()', function () {
+		it('is a function', function () {
+			var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'app.js');
+			should(file.copy).be.a.Function;
+		});
+
+		it('copies File successfully to new path', function () {
+			var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'app.js'),
+				newpath,
+				dest;
+			should(file.exists()).be.true;
+			newpath = Ti.Filesystem.applicationDataDirectory + Ti.Filesystem.separator + 'app.js';
+			should(file.copy(newpath)).be.true;
+			dest = Ti.Filesystem.getFile(newpath);
+			should(dest.exists()).be.true;
+			should(dest.deleteFile()).be.true;
+			should(dest.exists()).be.false;
+		});
 	});
 
-	// File copy and move
-	it('#copy() and #move()', function () {
-		var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'app.js'),
-			dest1,
-			dest2,
-			copy,
-			move;
-		should(file.exists()).be.true;
+	describe('#move()', function () {
+		it('is a function', function () {
+			var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'app.js');
+			should(file.move).be.a.Function;
+		});
 
-		dest1 = Ti.Filesystem.applicationDataDirectory + Ti.Filesystem.separator + 'app.js';
-		dest2 = Ti.Filesystem.applicationDataDirectory + Ti.Filesystem.separator + 'appp.js';
+		it('moves file within same directory', function () {
+			// var appDataDir = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory);
+			// FIXME Move to a different directory!
+			var destPath = Ti.Filesystem.applicationDataDirectory + Ti.Filesystem.separator + 'moved.txt';
+			var dest = Ti.Filesystem.getFile(destPath);
+			var fileATxt = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'fileA.txt');
 
-		should(file.copy(dest1)).be.a.Boolean; // iOS gives -[TiFilesystemFileProxy copyWithZone:]: unrecognized selector sent to instance 0x7fa06bc28dc0
+			// ensure fileA.txt and moved.txt don't exist!
+			if (dest.exists()) {
+				dest.deleteFile();
+			}
+			if (fileATxt.exists()) {
+				fileATxt.deleteFile();
+			}
 
-		copy = Ti.Filesystem.getFile(dest1);
-		should(copy.exists()).be.true;
-		should(copy.move(dest2)).be.a.true;
-		should(copy.exists()).be.false;
-		move = Ti.Filesystem.getFile(dest2);
-		should(move.exists()).be.true;
-		should(move.deleteFile()).be.true;
-		should(move.exists()).be.false;
+			// write some initial contents
+			should(fileATxt.write('text initial ')).eql.true;
+			should(fileATxt.exists()).eql.true;
+
+			// Now move the file
+			should(fileATxt.move(destPath)).eql.true;
+
+			// Now verify that the original file doesn't exist and the new file does
+			should(fileATxt.exists()).eql.false;
+			should(dest.exists()).eql.true;
+		});
+
+		it('moves file to another directory', function () {
+			var subdir = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'subdir');
+			var dest = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'subdir', 'moved.txt');
+			var fileATxt = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'fileA.txt');
+
+			// ensure fileA.txt and moved.txt don't exist!
+			if (dest.exists()) {
+				dest.deleteFile();
+			}
+			if (fileATxt.exists()) {
+				fileATxt.deleteFile();
+			}
+
+			if (!subdir.exists()) {
+				should(subdir.createDirectory()).eql.true;
+			}
+
+			// write some initial contents
+			should(fileATxt.write('text initial ')).eql.true;
+			should(fileATxt.exists()).eql.true;
+
+			// Now move the file
+			should(fileATxt.move(dest.nativePath)).eql.true;
+
+			// Now verify that the original file doesn't exist and the new file does
+			should(fileATxt.exists()).eql.false;
+			should(dest.exists()).eql.true;
+		});
+	});
+
+	describe('#rename()', function () {
+		it('is a function', function () {
+			var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'app.js');
+			should(file.rename).be.a.Function;
+		});
+
+		it('renames file within same directory', function () {
+			var destPath = Ti.Filesystem.applicationDataDirectory + Ti.Filesystem.separator + 'renamed.txt';
+			var dest = Ti.Filesystem.getFile(destPath);
+			var fileATxt = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'fileA.txt');
+
+			// ensure fileA.txt and renamed.txt don't exist!
+			if (dest.exists()) {
+				dest.deleteFile();
+			}
+			if (fileATxt.exists()) {
+				fileATxt.deleteFile();
+			}
+
+			// write some initial contents
+			should(fileATxt.write('text initial ')).eql.true;
+			should(fileATxt.exists()).eql.true;
+
+			// Now rename the file
+			should(fileATxt.rename(destPath)).eql.true;
+
+			// Now verify that the original file doesn't exist and the new file does
+			should(fileATxt.exists()).eql.false;
+			should(dest.exists()).eql.true;
+		});
+
+		it('fails to rename file to another directory', function () {
+			var subdir = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'subdir');
+			var dest = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'subdir', 'renamed.txt');
+			var fileATxt = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'fileA.txt');
+
+			// ensure fileA.txt and renamed.txt don't exist!
+			if (dest.exists()) {
+				dest.deleteFile();
+			}
+			if (fileATxt.exists()) {
+				fileATxt.deleteFile();
+			}
+
+			if (!subdir.exists()) {
+				should(subdir.createDirectory()).eql.true;
+			}
+
+			// write some initial contents
+			should(fileATxt.write('text initial ')).eql.true;
+			should(fileATxt.exists()).eql.true;
+
+			// Now move the file
+			should(fileATxt.rename(dest.nativePath)).eql.false;
+
+			// Now verify that the original file still exists and the new file doesn't
+			should(fileATxt.exists()).eql.true;
+			should(dest.exists()).eql.false;
+		});
 	});
 
 	describe('#getDirectoryListing()', function () {
@@ -617,6 +723,7 @@ describe('Titanium.Filesystem.File', function () {
 			result.length.should.eql(0);
 		});
 
+		// FIXME Windows returns empty array
 		it('returns null for non-existent directory', function () {
 			var nonExistentDir = Ti.Filesystem.getFile('madeup');
 			var result = nonExistentDir.getDirectoryListing();
@@ -625,6 +732,7 @@ describe('Titanium.Filesystem.File', function () {
 			should(result).eql(null);
 		});
 
+		// FIXME Windows returns empty array
 		it('returns null for file', function () {
 			var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'app.js');
 			var result = file.getDirectoryListing();
@@ -632,6 +740,47 @@ describe('Titanium.Filesystem.File', function () {
 			should(file.exists()).eql(true);
 			should(file.isFile()).eql(true);
 			should(result).eql(null);
+		});
+
+		// Windows fails to find fixture directory. May be that it doesn't report trailing separator while other platforms do?
+		it('can access resource directory files', function () {
+			let rootDir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory),
+				rootPath,
+				filesFound = {};
+			should(rootDir.exists()).be.true;
+			should(rootDir.getDirectoryListing).be.a.Function;
+			should(rootDir.getDirectoryListing()).be.an.Array;
+
+			// Traverse entire Resources directory tree looking for files/directories in "filesFound".
+			rootPath = rootDir.nativePath;
+			filesFound[rootPath + 'app.js'] = false;
+			filesFound[rootPath + 'ti.ui.webview.test.html'] = false;
+			filesFound[rootPath + 'fixtures' + Ti.Filesystem.separator] = false; // Subdirectory containing only JS files.
+			filesFound[rootPath + 'fixtures' + Ti.Filesystem.separator + 'empty-double.js'] = false;
+			filesFound[rootPath + 'txtFiles' + Ti.Filesystem.separator] = false; // Subdirectory containing only assets.
+			filesFound[rootPath + 'txtFiles' + Ti.Filesystem.separator + 'text.txt'] = false;
+			function searchFileTree(file) {
+				if (file) {
+					let fileList = file.getDirectoryListing();
+					if (fileList) {
+						for (let index = 0; index < fileList.length; index++) {
+							let nextFile = Ti.Filesystem.getFile(file.nativePath, fileList[index]);
+							if (nextFile) {
+								let absolutePath = nextFile.nativePath;
+								if (absolutePath in filesFound) {
+									filesFound[absolutePath] = true;
+								}
+								searchFileTree(nextFile);
+							}
+						}
+					}
+				}
+			}
+			searchFileTree(rootDir);
+			for (let key in filesFound) {
+				Ti.API.info('Checking if found file: ' + key);
+				should(filesFound[key]).be.true;
+			}
 		});
 	});
 

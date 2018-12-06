@@ -271,6 +271,9 @@ namespace TitaniumWindows
 
 		std::string File::get_nativePath() const TITANIUM_NOEXCEPT
 		{
+			if (folder_) {
+				return path_ + (boost::algorithm::ends_with(path_, "\\") ? "" : "\\");
+			}
 			return path_;
 		}
 
