@@ -75,6 +75,7 @@ namespace Titanium
 		proximityState__(false),
 		publisher__("__PUBLISHER__"),
 		sessionId__("__SESSION_ID__"),
+		trackUserInteraction__(false),
 		url__("__URL__"),
 		version__("__VERSION__"),
 		_sdkVersion__("__TITANIUM_VERSION__") // FIXME This should live in TiModule!
@@ -221,6 +222,8 @@ namespace Titanium
 		return _sdkVersion__;
 	}
 
+	TITANIUM_PROPERTY_READWRITE(AppModule, bool, trackUserInteraction);
+
 	void AppModule::fireSystemEvent(const std::string& eventName, const JSObject& param) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("AppModule::fireSystemEvent: Unimplemented");
@@ -270,6 +273,7 @@ namespace Titanium
 		TITANIUM_ADD_PROPERTY_READONLY(AppModule, url);
 		TITANIUM_ADD_PROPERTY_READONLY(AppModule, version);
 		TITANIUM_ADD_PROPERTY_READONLY(AppModule, _sdkVersion);
+		TITANIUM_ADD_PROPERTY(AppModule, trackUserInteraction);
 
 		TITANIUM_ADD_FUNCTION(AppModule, fireSystemEvent);
 		TITANIUM_ADD_FUNCTION(AppModule, getAccessibilityEnabled);
@@ -430,6 +434,9 @@ namespace Titanium
 	{
 		return get_context().CreateString(_sdkVersion());
 	}
+
+	TITANIUM_PROPERTY_GETTER_BOOL(AppModule, trackUserInteraction);
+	TITANIUM_PROPERTY_SETTER_BOOL(AppModule, trackUserInteraction);
 
 	TITANIUM_FUNCTION(AppModule, fireSystemEvent)
 	{

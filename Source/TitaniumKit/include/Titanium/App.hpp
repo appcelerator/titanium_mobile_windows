@@ -159,6 +159,13 @@ namespace Titanium
 		virtual std::string _sdkVersion() const TITANIUM_NOEXCEPT;
 
 		/*!
+		  @property
+		  @abstract trackUserInteraction
+		  @discussion Indicates whether or not the user interaction shoud be tracked.
+		*/
+		TITANIUM_PROPERTY_IMPL_DEF(bool, trackUserInteraction);
+
+		/*!
 		  @method
 		  @abstract fireSystemEvent
 		  @discussion Fire a system-level event such as <Titanium.App.EVENT_ACCESSIBILITY_ANNOUNCEMENT>.
@@ -211,6 +218,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(version);
 		TITANIUM_PROPERTY_READONLY_DEF(_sdkVersion);
 		TITANIUM_PROPERTY_READONLY_DEF(Properties);
+		TITANIUM_PROPERTY_DEF(trackUserInteraction);
 
 		TITANIUM_FUNCTION_DEF(fireSystemEvent);
 		TITANIUM_FUNCTION_DEF(getAccessibilityEnabled);
@@ -262,6 +270,7 @@ namespace Titanium
 		std::string url__;
 		std::string version__;
 		std::string _sdkVersion__;
+		bool trackUserInteraction__;
 #pragma warning(pop)
 	};
 }
