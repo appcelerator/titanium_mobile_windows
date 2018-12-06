@@ -594,8 +594,6 @@ namespace TitaniumWindows
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
-			static double RawPixelsPerViewPixel__;
-
 			bool sourceTest(::Platform::Object ^ source, Windows::UI::Xaml::DependencyObject^ target);
 
 			Windows::UI::Xaml::Controls::Border^ border__    { nullptr };
