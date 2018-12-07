@@ -112,6 +112,7 @@ namespace TitaniumWindows
 			bool imageOpened__{ false };
 			std::vector<JSObject> to_image_queue__;
 
+			void fireLoadEvent(const bool& multiple);
 #pragma warning(pop)
 		};
 	} // namespace UI
