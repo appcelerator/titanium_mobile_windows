@@ -70,7 +70,11 @@ namespace TitaniumWindows
 
 			view->addEventListener("click", clickCallback__, contentView__);
 
-			requestLayout(false);
+			// TIMOB-26577: LayoutEngine needs to calculate ScrollViewer size before loaded.
+			const auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
+			if (root) {
+				Titanium::LayoutEngine::nodeLayout(root);
+			}
 		}
 
 		void ScrollViewLayoutDelegate::removeAllChildren() TITANIUM_NOEXCEPT

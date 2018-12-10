@@ -89,13 +89,13 @@ IN.HasProperty(#NAME) ? static_cast<TYPE>(IN.GetProperty(#NAME)) : DEFAULT_VALUE
 
 #define ENSURE_OPTIONAL_VALUE_AT_INDEX(OUT,INDEX) \
   JSValue OUT = this_object.get_context().CreateNull(); \
-  if (arguments.size() >= INDEX + 1) { \
+  if (arguments.size() > INDEX) { \
     OUT = arguments.at(INDEX); \
   }
 
 #define ENSURE_OPTIONAL_OBJECT_AT_INDEX(OUT,INDEX) \
   auto OUT = this_object.get_context().CreateObject(); \
-  if (arguments.size() >= INDEX + 1) { \
+  if (arguments.size() > INDEX) { \
     const auto _##INDEX = arguments.at(INDEX); \
     TITANIUM_ASSERT_AND_THROW(_##INDEX.IsObject(), "Expected Object at argument index " #INDEX); \
     OUT = static_cast<JSObject>(_##INDEX);\
@@ -103,7 +103,7 @@ IN.HasProperty(#NAME) ? static_cast<TYPE>(IN.GetProperty(#NAME)) : DEFAULT_VALUE
 
 #define ENSURE_OPTIONAL_BOOL_AT_INDEX(OUT,INDEX,VALUE) \
   auto OUT = VALUE; \
-  if (arguments.size() >= INDEX + 1) { \
+  if (arguments.size() > INDEX) { \
     const auto _##INDEX = arguments.at(INDEX); \
     TITANIUM_ASSERT_AND_THROW(_##INDEX.IsBoolean(), "Expected boolean at argument index " #INDEX); \
     OUT = static_cast<bool>(_##INDEX);\
@@ -111,7 +111,7 @@ IN.HasProperty(#NAME) ? static_cast<TYPE>(IN.GetProperty(#NAME)) : DEFAULT_VALUE
 
 #define ENSURE_OPTIONAL_STRING_AT_INDEX(OUT,INDEX,VALUE) \
   std::string OUT = VALUE; \
-  if (arguments.size() >= INDEX + 1) { \
+  if (arguments.size() > INDEX) { \
     const auto _##INDEX = arguments.at(INDEX); \
     if (!_##INDEX.IsUndefined() && !_##INDEX.IsNull()) { \
       OUT = static_cast<std::string>(_##INDEX); \
@@ -120,7 +120,7 @@ IN.HasProperty(#NAME) ? static_cast<TYPE>(IN.GetProperty(#NAME)) : DEFAULT_VALUE
 
 #define ENSURE_OPTIONAL_NUMBER_AT_INDEX(OUT,INDEX,VALUE,TYPE) \
   TYPE OUT = VALUE; \
-  if (arguments.size() >= INDEX + 1) { \
+  if (arguments.size() > INDEX) { \
     const auto _##INDEX = arguments.at(INDEX); \
     TITANIUM_ASSERT_AND_THROW(_##INDEX.IsNumber(), "Expected Number at argument index " #INDEX); \
     OUT = static_cast<TYPE>(_##INDEX);\
@@ -128,7 +128,7 @@ IN.HasProperty(#NAME) ? static_cast<TYPE>(IN.GetProperty(#NAME)) : DEFAULT_VALUE
 
 #define ENSURE_OPTIONAL_ARRAY_AT_INDEX(OUT,INDEX) \
   auto OUT = this_object.get_context().CreateArray(); \
-  if (arguments.size() >= INDEX + 1) { \
+  if (arguments.size() > INDEX) { \
     const auto _##INDEX = arguments.at(INDEX); \
     TITANIUM_ASSERT_AND_THROW(_##INDEX.IsObject(), "Expected Object at argument index " #INDEX); \
     const auto _obj_##INDEX = static_cast<JSObject>(_##INDEX); \
