@@ -245,6 +245,14 @@ namespace TitaniumWindows
 			}
 		}
 
+		void ImageView::fireLoadEvent(const bool& multiple)
+		{
+			const auto ctx = get_context();
+			auto eventArgs = ctx.CreateObject();
+			eventArgs.SetProperty("state", ctx.CreateString(multiple ? "images" : "image"));
+			fireEvent("load", eventArgs);
+		}
+
 		void ImageView::loadBitmaps()
 		{
 			bitmaps__->Clear();
@@ -258,7 +266,7 @@ namespace TitaniumWindows
 			}
 			if (images.size() > 0) {
 				bitmaps_loaded__ = true;
-				fireEvent("load");
+				fireLoadEvent(true);
 				return;
 			}
 
@@ -274,7 +282,7 @@ namespace TitaniumWindows
 						// do we load all images?
 						if (bitmaps_loaded_count__ >= blobs_count) {
 							bitmaps_loaded__ = true;
-							fireEvent("load");
+							fireLoadEvent(true);
 							// start animation when we held it off
 							if (bitmaps_waiting__) {
 								start();
@@ -301,7 +309,7 @@ namespace TitaniumWindows
 						// do we load all images?
 						if (bitmaps_loaded_count__ >= files_count) {
 							bitmaps_loaded__ = true;
-							fireEvent("load");
+							fireLoadEvent(true);
 							// start animation when we held it off
 							if (bitmaps_waiting__) {
 								start();
@@ -332,7 +340,7 @@ namespace TitaniumWindows
 				);
 			layout->onComponentSizeChange(rect);
 
-			this->fireEvent("load");
+			fireLoadEvent(false);
 		}
 
 		void ImageView::loadBitmap(std::vector<std::uint8_t>& data, SetBitmapImageCallback_t callback)
@@ -408,7 +416,8 @@ namespace TitaniumWindows
 			}
 
 			image__->Source = ref new BitmapImage(TitaniumWindows::Utility::GetUriFromPath(path));
-			fireEvent("load");
+
+			fireLoadEvent(false);
 		}
 
 		void ImageView::set_images(const std::vector<std::string>& images) TITANIUM_NOEXCEPT
