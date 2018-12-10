@@ -57,7 +57,7 @@ namespace TitaniumWindows
 			auto global = js_global.GetPrivate<TitaniumWindows::GlobalObject>();
 			TITANIUM_ASSERT(global != nullptr);
 			std::string contents = global->readRequiredModule(get_object(), path_);
-			auto buffer = CryptographicBuffer::ConvertStringToBinary(TitaniumWindows::Utility::ConvertString(contents), BinaryStringEncoding::Utf8);
+			auto buffer = CryptographicBuffer::ConvertStringToBinary(TitaniumWindows::Utility::ConvertUTF8String(contents), BinaryStringEncoding::Utf8);
 			data_ = TitaniumWindows::Utility::GetContentFromBuffer(buffer);
 		} else {
 			data_ = TitaniumWindows::Utility::GetContentFromFile(file);
@@ -171,6 +171,21 @@ namespace TitaniumWindows
 		blob_ptr->height_ = crop.height;
 
 		return blob_ptr;
+	}
+
+	std::string Blob::get_text() const TITANIUM_NOEXCEPT
+	{
+		if (type_ == Titanium::BlobModule::TYPE::IMAGE) {
+			return "";
+		} else {
+			std::vector<std::uint8_t> data = data_;
+
+			Platform::ArrayReference<std::uint8_t> data_ref(&data[0], data.size());
+			const auto buffer = CryptographicBuffer::CreateFromByteArray(data_ref);
+			const auto decoded = CryptographicBuffer::ConvertBinaryToString(BinaryStringEncoding::Utf8, buffer);
+
+			return TitaniumWindows::Utility::ConvertUTF8String(decoded);
+		}
 	}
 
 }  // namespace TitaniumWindows

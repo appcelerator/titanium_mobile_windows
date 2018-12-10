@@ -263,44 +263,68 @@ namespace TitaniumWindows
 					throw exception;
 				}
 				buffer->construct(data);
-				return totalBytesProcessed__ = count;
+
+				totalBytesProcessed__ += count;
+
+				return count;
 			}
 
 			void TCP::readAsync(const std::shared_ptr<Titanium::Buffer>& buffer, const std::uint32_t& offset, const std::uint32_t& length, const std::function<void(const Titanium::ErrorResponse&, const std::int32_t&)>& callback)
 			{
-				concurrency::create_task([=]() {
+				// end of stream
+				if (state__ != Titanium::Network::Socket::State::Connected) {
 					Titanium::ErrorResponse error;
-					std::int32_t count = -1;
-						do {
-							try {
-								count = read(buffer, offset, length);
-								if (count == -1) {
-									error.success = false;
-									error.code = -1;
-									error.error = "end of stream";
-								}
-							} catch (::Platform::Exception^ e) {
-								count = -1;
-								error.code = e->HResult;
-								error.error = Utility::ConvertUTF8String(e->Message);
-								error.success = false;
-							} catch (...) {
-								count = -1;
-								error.code = -1;
-								error.error = "Unknown error";
-								error.success = false;
-							}
-							TitaniumWindows::Utility::RunOnUIThread([=] {
-								try {
-									callback(error, count);
-								} catch (Platform::COMException^ e) {
-									TITANIUM_LOG_ERROR("TCP::readAsync: Failed to invoke callback: " + TitaniumWindows::Utility::ConvertString(e->Message));
-								} catch (...) {
-									TITANIUM_LOG_ERROR("TCP::readAsync: Failed to invoke callback");
-								}
-							});
-						} while (count >= 0);
-				}, concurrency::task_continuation_context::use_arbitrary());
+					callback(error, -1);
+					return;
+				}
+
+				const auto reader = ref new DataReader(socket__->InputStream);
+				reader->InputStreamOptions = Windows::Storage::Streams::InputStreamOptions::Partial;
+
+				concurrency::create_task(reader->LoadAsync(offset + length)).then(
+					[this, buffer, offset, length, callback, reader](concurrency::task<unsigned int> task) {
+					Titanium::ErrorResponse error;
+					try {
+						const auto count = static_cast<std::uint32_t>(task.get());
+
+						if (count == 0) {
+							callback(error, -1);
+							return;
+						}
+
+						if (offset + length < count) {
+							error.code = -1;
+							error.success = false;
+							error.error = "read input greater than buffer";
+							callback(error, count);
+							return;
+						}
+						std::vector<uint8_t> data;
+						totalBytesProcessed__ += count;
+						if (offset > 0) {
+							reader->ReadBuffer(offset);
+						}
+						data.resize(count);
+						reader->ReadBytes(::Platform::ArrayReference<std::uint8_t>(data.data(), count));
+						buffer->construct(data);
+
+						callback(error, count);
+					} catch (Platform::Exception^ e) {
+						// socket has closed
+						if (e->HResult == 0x80072746) {
+							close();
+						}
+						error.code = -1;
+						error.success = false;
+						error.error = Utility::ConvertUTF8String(e->Message);
+						callback(error, -1);
+					} catch (...) {
+						error.code = -1;
+						error.success = false;
+						error.error = "Unknown error";
+						callback(error, -1);
+					}
+				});
 			}
 
 			std::uint32_t TCP::write(const std::shared_ptr<Titanium::Buffer>& buffer, const std::uint32_t& offset, const std::uint32_t& length)
