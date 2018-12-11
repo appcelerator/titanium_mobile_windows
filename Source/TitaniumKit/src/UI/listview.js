@@ -76,11 +76,34 @@ function lookup(name) {
 		if (property in proxy) {
 			proxy = proxy[property];
 		} else {
-			return;
+			proxy = null;
+			break;
 		}
 	}
-	var proxyName = name.slice(lastDotIndex + 1);
-	return proxy['create' + proxyName];
+
+	// Handle Alloy or CommonJS module
+	if (proxy == null) {
+		var jsModule, jsModule_getView; 
+		try {
+			try {
+				jsModule = require('/alloy/widgets/' + name + '/controllers/widget');
+			} catch (E) {
+				jsModule = require(name);
+			}
+			if (jsModule) {
+				jsModule_getView = function(parameters) {
+					const obj = new jsModule(parameters);
+					return obj.getView();
+				};
+			}
+		} catch (E) {
+			Ti.API.error('Failed to load Alloy widget / CommonJS module ' + name + ' to be used as template');
+		}
+		return jsModule_getView;
+	} else {
+		var proxyName = name.slice(lastDotIndex + 1);
+		return proxy['create' + proxyName];
+	}
 }
 
 function ensureLoadTemplates(listview) {
