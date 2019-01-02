@@ -91,14 +91,7 @@ namespace Titanium
 	boost::optional<std::string> Locale::GetString(const JSContext& js_context, const std::string& key) TITANIUM_NOEXCEPT
 	{
 		const auto L = GetStaticObject(js_context);
-		auto getString = static_cast<JSObject>(L.GetProperty("getString"));
-		const std::vector<JSValue> args = { js_context.CreateString(key), js_context.CreateNull() };
-		const auto value = getString(args, L);
-		if (value.IsNull()) {
-			return boost::none;
-		} else {
-			return static_cast<std::string>(value);
-		}
+		return L.GetPrivate<Locale>()->getString(key);
 	}
 
 	//
@@ -179,9 +172,8 @@ namespace Titanium
 		const auto value = GetStaticObject(ctx).GetPrivate<Locale>()->getString(key);
 		if (value) {
 			return ctx.CreateString(EscapeJSCharacters(*value));
-		} else if (arguments.size() > 1){
-			// If there's a hint, let's return it.
-			// Note that this may return any JS value, according to Ti behavior on iOS.
+		} else if (arguments.size() > 1 && arguments.at(1).IsString()){
+			// If there's a hint and it is a string value, let's return it.
 			return arguments.at(1);
 		}
 		// If there's no hint and no entry, getString should return key.
