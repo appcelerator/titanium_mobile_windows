@@ -625,6 +625,7 @@ function copyResources(next) {
 								filename: from,
 								minify: this.minifyJS,
 								transpile: this.transpile,
+								sourceMap: this.sourceMaps || this.deployType === 'development',
 								targets: {
 									safari: this.packageJson.safari // use equivalent version of safari that we declare in package.json
 								},
