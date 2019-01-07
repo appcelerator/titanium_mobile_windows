@@ -28,6 +28,25 @@ namespace TitaniumWindows
 		using namespace Windows::UI::Xaml::Documents;
 		using namespace Windows::UI::Text;
 
+		// Calculate default height for the Label
+		double Label::GetDefaultHeight() TITANIUM_NOEXCEPT
+		{
+			static double defaultHeight = 26;
+
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				const auto label = ref new Windows::UI::Xaml::Controls::TextBlock();
+				label->FontSize = DefaultFontSize;
+
+				Windows::Foundation::Size desiredSize{ static_cast<float>(label->MaxWidth), static_cast<float>(label->MaxHeight) };
+				label->Measure(desiredSize);
+
+				defaultHeight = label->ActualHeight;
+			});
+
+			return defaultHeight;
+		}
+
 		Label::Label(const JSContext& js_context) TITANIUM_NOEXCEPT
 			  : Titanium::UI::Label(js_context)
 		{
@@ -111,7 +130,7 @@ namespace TitaniumWindows
 								}
 							}
 							
-							if (previousSize__.width != width || previousSize__.height != height) {
+							if (!skipResizing && (previousSize__.width != width || previousSize__.height != height)) {
 								need_measure__ = true;
 								previousSize__.width = width;
 								previousSize__.height = height;

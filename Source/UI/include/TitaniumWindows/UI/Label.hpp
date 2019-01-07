@@ -57,6 +57,8 @@ namespace TitaniumWindows
 
 			static const std::uint32_t DefaultFontSize = 20;
 
+			static double GetDefaultHeight() TITANIUM_NOEXCEPT;
+
 		private:
 			// Measure desired size based on current text.
 			void measureDesiredSize() TITANIUM_NOEXCEPT;
