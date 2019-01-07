@@ -625,8 +625,9 @@ function copyResources(next) {
 								filename: from,
 								minify: this.minifyJS,
 								transpile: this.transpile,
+								sourceMap: this.sourceMaps || this.deployType === 'development',
 								targets: {
-									safari: '10' // matches the version of jscore we use
+									safari: this.packageJson.safari // use equivalent version of safari that we declare in package.json
 								},
 								resourcesDir: this.buildTargetAssetsDir,
 								logger: t_.logger
