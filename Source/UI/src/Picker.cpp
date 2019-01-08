@@ -72,9 +72,9 @@ namespace TitaniumWindows
 			}
 		}
 
-		void WindowsPickerLayoutDelegate::onComponentSizeChange(const Titanium::LayoutEngine::Rect& rect)
+		void WindowsPickerLayoutDelegate::onComponentSizeChange(const Windows::Foundation::Size& size)
 		{
-			WindowsViewLayoutDelegate::onComponentSizeChange(rect);
+			WindowsViewLayoutDelegate::onComponentSizeChange(size);
 			const auto parent = dynamic_cast<Grid^>(component__);
 
 			// This should not happen but just in case
@@ -94,13 +94,13 @@ namespace TitaniumWindows
 						const auto child = dynamic_cast<ComboBox^>(children->GetAt(i));
 						if (child) {
 							// each child should have same width if picker has multiple columns
-							child->MinWidth = rect.width / children->Size;
+							child->MinWidth = size.Width / children->Size;
 						}
 					}
 				} else if (date) {
-					date->MinWidth = rect.width;
+					date->MinWidth = size.Width;
 				} else if (time) {
-					time->MinWidth = rect.width;
+					time->MinWidth = size.Width;
 				}
 			}
 		}

@@ -531,15 +531,15 @@ namespace TitaniumWindows
 			
 		}
 
-		void WindowLayoutDelegate::onComponentSizeChange(const Titanium::LayoutEngine::Rect& rect)
+		void WindowLayoutDelegate::onComponentSizeChange(const Windows::Foundation::Size& size)
 		{
 			if (layout_node__->parent) {
-				WindowsViewLayoutDelegate::onComponentSizeChange(rect);
+				WindowsViewLayoutDelegate::onComponentSizeChange(size);
 				return;
 			}
 
-			layout_node__->element.measuredHeight = rect.height;
-			layout_node__->element.measuredWidth = rect.width;
+			layout_node__->element.measuredHeight = size.Height;
+			layout_node__->element.measuredWidth = size.Width;
 
 			requestLayout(true);
 		}
