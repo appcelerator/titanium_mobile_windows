@@ -327,7 +327,7 @@ namespace Titanium
 			JSValue result = js_context.CreateUndefined();
 			if (boost::ends_with(module_path, ".json")){
 				result = js_context.CreateValueFromJSON(module_js);
-			} else if (js_context.JSCheckScriptSyntax(module_js, moduleId)) {
+			} else {
 				const std::string require_module_js = "(function(global) { var exports={},__OXP=exports,module={'exports':exports},__dirname='" + currentDir__ + "',__filename='"
 					+ module_path + "';try {" + module_js + R"JS(
 						if(module.exports !== __OXP){
@@ -344,9 +344,6 @@ namespace Titanium
 					})(this);
 					)JS";
 				result = js_context.JSEvaluateScript(require_module_js, js_context.get_global_object(), module_path);
-			} else {
-				currentDir__ = dirname; // Should ensure this gets reset on _EVERY_ code branch possible here. Would be nice if C++/CX had finally blocks
-				detail::ThrowRuntimeError("require", "Could not load module " + moduleId);
 			}
 			currentDir__ = dirname; // Should ensure this gets reset on _EVERY_ code branch possible here. Would be nice if C++/CX had finally blocks
 			if (!result.IsObject()) {
@@ -527,7 +524,7 @@ namespace Titanium
 
 	TITANIUM_PROPERTY_GETTER(GlobalObject, global)
 	{
-		return get_context().JSEvaluateScript("this;");
+		return get_context().get_global_object();
 	}
 
 	TITANIUM_FUNCTION(GlobalObject, require)

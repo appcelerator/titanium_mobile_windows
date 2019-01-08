@@ -25,24 +25,32 @@ namespace TitaniumWindows
 
 	double DisplayCaps::dpi() const TITANIUM_NOEXCEPT
 	{
-		auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-		if (display) {
-			return display->LogicalDpi;
-		}
-		return Titanium::Platform::DisplayCaps::dpi();
+		static double value;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			const auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+			if (display) {
+				value = display->LogicalDpi;
+			} else {
+				value = Titanium::Platform::DisplayCaps::dpi();
+			}
+		});
+		return value;
 	}
 
 	double DisplayCaps::logicalDensityFactor() const TITANIUM_NOEXCEPT
 	{
-		auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-		if (display) {
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			return display->RawPixelsPerViewPixel;
-#else
-			return static_cast<int>(display->ResolutionScale) / 100.0;
-#endif
-		}
-		return Titanium::Platform::DisplayCaps::logicalDensityFactor();
+		static double value;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			const auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+			if (display) {
+				value = display->RawPixelsPerViewPixel;
+			} else {
+				value = Titanium::Platform::DisplayCaps::logicalDensityFactor();
+			}
+		});
+		return value;
 	}
 
 	double DisplayCaps::platformHeight() const TITANIUM_NOEXCEPT
@@ -65,19 +73,31 @@ namespace TitaniumWindows
 
 	double DisplayCaps::xdpi() const TITANIUM_NOEXCEPT
 	{
-		auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-		if (display) {
-			return display->RawDpiX;
-		}
-		return Titanium::Platform::DisplayCaps::xdpi();
+		static double value;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			const auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+			if (display) {
+				value = display->RawDpiX;
+			} else {
+				value = Titanium::Platform::DisplayCaps::xdpi();
+			}
+		});
+		return value;
 	}
 
 	double DisplayCaps::ydpi() const TITANIUM_NOEXCEPT
 	{
-		auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-		if (display) {
-			return display->RawDpiY;
-		}
-		return Titanium::Platform::DisplayCaps::ydpi();
+		static double value;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			const auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+			if (display) {
+				value = display->RawDpiY;
+			} else {
+				value = Titanium::Platform::DisplayCaps::ydpi();
+			}
+		});
+		return value;
 	}
 }  // namespace TitaniumWindows

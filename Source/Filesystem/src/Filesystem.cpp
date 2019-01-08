@@ -44,34 +44,47 @@ namespace TitaniumWindows
 
 	std::string FilesystemModule::applicationCacheDirectory() const TITANIUM_NOEXCEPT
 	{
-		// Windows 10 and Windows 8.1 phone support LocalCacheFolder
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-		const auto value = Windows::Storage::ApplicationData::Current->LocalCacheFolder->Path;
-		return TitaniumWindows::Utility::ConvertString(value) + separator(); // FIXME Only append separator if not already there!
-#else
-		TITANIUM_MODULE_LOG_WARN("Filesystem.applicationCacheDirectory is not supported on Windows Store.");
-		return "";
-#endif
+		static std::string value;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			value = TitaniumWindows::Utility::ConvertString(Windows::Storage::ApplicationData::Current->LocalCacheFolder->Path);
+		});
+		return value + separator(); // FIXME Only append separator if not already there!
 	}
 
 	std::string FilesystemModule::applicationDataDirectory() const TITANIUM_NOEXCEPT
 	{
-		const auto value = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
-		return TitaniumWindows::Utility::ConvertString(value) + separator(); // FIXME Only append separator if not already there!
+		static std::string value;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			value = TitaniumWindows::Utility::ConvertString(Windows::Storage::ApplicationData::Current->LocalFolder->Path);
+		});
+
+		return value + separator(); // FIXME Only append separator if not already there!
 	}
 
 	std::string FilesystemModule::applicationDirectory() const TITANIUM_NOEXCEPT
 	{
-		const auto value = Windows::ApplicationModel::Package::Current->InstalledLocation->Path;
-		return TitaniumWindows::Utility::ConvertString(value) + separator(); // FIXME Only append separator if not already there!
+		static std::string value;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			value = TitaniumWindows::Utility::ConvertString(Windows::ApplicationModel::Package::Current->InstalledLocation->Path);
+		});
+
+		return value + separator(); // FIXME Only append separator if not already there!
 	}
 
 	std::string FilesystemModule::applicationSupportDirectory() const TITANIUM_NOEXCEPT
 	{
 		// Need to check exception here because this requires "Documents" capability
 		try {
-			const auto value = Windows::Storage::KnownFolders::DocumentsLibrary->Path;
-			return TitaniumWindows::Utility::ConvertString(value) + separator(); // FIXME Only append separator if not already there!
+			static std::string value;
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				value = TitaniumWindows::Utility::ConvertString(Windows::Storage::KnownFolders::DocumentsLibrary->Path);
+			});
+
+			return value + separator(); // FIXME Only append separator if not already there!
 		} catch (Platform::AccessDeniedException^ e) {
 			return "";
 		}
@@ -81,11 +94,15 @@ namespace TitaniumWindows
 	{
 		// Need to check exception here because this requires "Removable Storage" capability
 		try {
-			const auto value = Windows::Storage::KnownFolders::RemovableDevices->Path;
-			if (value->IsEmpty()) {
-				return "";
-			}
-			return TitaniumWindows::Utility::ConvertString(value) + separator(); // FIXME Only append separator if not already there!
+			static std::string value;
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				const auto path = Windows::Storage::KnownFolders::RemovableDevices->Path;
+				if (!path->IsEmpty()) {
+					value = TitaniumWindows::Utility::ConvertString(path);
+				}
+			});
+			return value + separator(); // FIXME Only append separator if not already there!
 		} catch (Platform::AccessDeniedException^ e) {
 			return "";
 		}
@@ -98,13 +115,21 @@ namespace TitaniumWindows
 
 	std::string FilesystemModule::resourcesDirectory() const TITANIUM_NOEXCEPT
 	{
-		const auto value = Windows::ApplicationModel::Package::Current->InstalledLocation->Path;
-		return TitaniumWindows::Utility::ConvertString(value) + separator(); // FIXME Only append separator if not already there!
+		static std::string value;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			value = TitaniumWindows::Utility::ConvertString(Windows::ApplicationModel::Package::Current->InstalledLocation->Path);
+		});
+		return value + separator(); // FIXME Only append separator if not already there!
 	}
 
 	std::string FilesystemModule::tempDirectory() const TITANIUM_NOEXCEPT
 	{
-		const auto value = Windows::Storage::ApplicationData::Current->TemporaryFolder->Path;
-		return TitaniumWindows::Utility::ConvertString(value) + separator(); // FIXME Only append separator if not already there!
+		static std::string value;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			value = TitaniumWindows::Utility::ConvertString(Windows::Storage::ApplicationData::Current->TemporaryFolder->Path);
+		});
+		return value + separator(); // FIXME Only append separator if not already there!
 	}
 }  // namespace TitaniumWindows
