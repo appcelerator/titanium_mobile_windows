@@ -62,13 +62,18 @@ namespace Titanium
 
 	JSObject Analytics::GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT
 	{
-		JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
-		TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-		JSObject Titanium = static_cast<JSObject>(Titanium_property);
+		static JSObject cached = js_context.CreateObject();
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
+			TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+			JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
-		JSValue Object_property = Titanium.GetProperty("Analytics");
-		TITANIUM_ASSERT(Object_property.IsObject());  // precondition
-		return static_cast<JSObject>(Object_property);
+			JSValue Object_property = Titanium.GetProperty("Analytics");
+			TITANIUM_ASSERT(Object_property.IsObject());  // precondition
+			cached = static_cast<JSObject>(Object_property);
+		});
+		return cached;
 	}
 
 	TITANIUM_PROPERTY_GETTER(Analytics, _receivedResponse)

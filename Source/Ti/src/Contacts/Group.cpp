@@ -141,17 +141,22 @@ namespace TitaniumWindows
 
 		JSObject Group::GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT
 		{
-			auto Titanium_property = js_context.get_global_object().GetProperty("Titanium");
-			TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-			auto Titanium = static_cast<JSObject>(Titanium_property);
+			static JSObject cached = js_context.CreateObject();
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				auto Titanium_property = js_context.get_global_object().GetProperty("Titanium");
+				TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+				auto Titanium = static_cast<JSObject>(Titanium_property);
 
-			auto Contacts_property = Titanium.GetProperty("Contacts");
-			TITANIUM_ASSERT(Contacts_property.IsObject());  // precondition
-			auto Contacts = static_cast<JSObject>(Contacts_property);
+				auto Contacts_property = Titanium.GetProperty("Contacts");
+				TITANIUM_ASSERT(Contacts_property.IsObject());  // precondition
+				auto Contacts = static_cast<JSObject>(Contacts_property);
 
-			auto Group_property = Contacts.GetProperty("Group");
-			TITANIUM_ASSERT(Group_property.IsObject());  // precondition
-			return static_cast<JSObject>(Group_property);
+				auto Group_property = Contacts.GetProperty("Group");
+				TITANIUM_ASSERT(Group_property.IsObject());  // precondition
+				cached = static_cast<JSObject>(Group_property);
+			});
+			return cached;
 		}
 
 		std::vector<std::shared_ptr<Titanium::Contacts::Group>> Group::getAllGroups(const JSContext& js_context) TITANIUM_NOEXCEPT

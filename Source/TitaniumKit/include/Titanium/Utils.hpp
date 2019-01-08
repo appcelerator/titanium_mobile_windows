@@ -86,7 +86,6 @@ namespace Titanium
 #endif
 
 		static void JSExportInitialize();
-		static JSObject GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT;
 
 		TITANIUM_FUNCTION_DEF(base64decode);
 		TITANIUM_FUNCTION_DEF(base64encode);

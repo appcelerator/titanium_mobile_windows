@@ -103,8 +103,8 @@ namespace TitaniumWindows
 
 			// if this path is relative path, let's use application installed location path
 			if (name.find(":\\") == std::string::npos) {
-				const auto location = Windows::ApplicationModel::Package::Current->InstalledLocation->Path;
-				path_ = TitaniumWindows::Utility::ConvertUTF8String(location) + "\\" + name;
+				static const auto location = TitaniumWindows::Utility::ConvertUTF8String(Windows::ApplicationModel::Package::Current->InstalledLocation->Path);
+				path_ = location + "\\" + name;
 			} else {
 				path_ = name;
 			}
@@ -282,17 +282,21 @@ namespace TitaniumWindows
 			const std::string path = path_;
 			const std::string parent = path.substr(0, path.find_last_of("\\"));
 
-			JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
-			TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-			JSObject Titanium = static_cast<JSObject>(Titanium_property);
+			static JSObject File = get_context().CreateObject();
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				JSValue Titanium_property = get_context().get_global_object().GetProperty("Titanium");
+				TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+				JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
-			JSValue FS_property = Titanium.GetProperty("Filesystem");
-			TITANIUM_ASSERT(FS_property.IsObject());  // precondition
-			JSObject FS = static_cast<JSObject>(FS_property);
+				JSValue FS_property = Titanium.GetProperty("Filesystem");
+				TITANIUM_ASSERT(FS_property.IsObject());  // precondition
+				JSObject FS = static_cast<JSObject>(FS_property);
 
-			JSValue File_property = FS.GetProperty("File");
-			TITANIUM_ASSERT(File_property.IsObject());  // precondition
-			JSObject File = static_cast<JSObject>(File_property);
+				JSValue File_property = FS.GetProperty("File");
+				TITANIUM_ASSERT(File_property.IsObject());  // precondition
+				File = static_cast<JSObject>(File_property);
+			});
 
 			return File.CallAsConstructor(parent).GetPrivate<Titanium::Filesystem::File>();
 		}

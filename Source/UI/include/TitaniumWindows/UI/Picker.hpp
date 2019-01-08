@@ -24,7 +24,7 @@ namespace TitaniumWindows
 			WindowsPickerLayoutDelegate() TITANIUM_NOEXCEPT : WindowsViewLayoutDelegate() { };
 			virtual ~WindowsPickerLayoutDelegate() = default;
 
-			virtual void onComponentSizeChange(const Titanium::LayoutEngine::Rect&) override;
+			virtual void onComponentSizeChange(const Windows::Foundation::Size& size) override;
 			virtual void updateTouchEnabled(const bool& enabled) override;
 		};
 

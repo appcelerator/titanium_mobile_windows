@@ -41,17 +41,20 @@ namespace Titanium
 			if (valueType == Percent) {
 				return atof(value.c_str()) / 100;
 			} else if (valueType == Fixed) {
-				if ((value.find("mm") != std::string::npos) || (value.find("cm") != std::string::npos) ||
-				    (value.find("em") != std::string::npos) || (value.find("pt") != std::string::npos) ||
-				    (value.find("pc") != std::string::npos) || (value.find("ppx") != std::string::npos) ||
-				    (value.find("in") != std::string::npos) || (value.find("px") != std::string::npos) ||
-				    (value.find("dp") != std::string::npos) || (value.find("dip") != std::string::npos)) {
-					if ((value.find("dip") != std::string::npos) || (value.find("ppx") != std::string::npos)) {
-						units = value.substr(value.size() - 3, 3);
-						parsedValue = atof(value.substr(0, value.size() - 3).c_str());
+				const auto value_size = value.size();
+				const auto units2 = value_size > 2 ? value.substr(value_size - 2, 2) : value;
+				const auto units3 = value_size > 3 ? value.substr(value_size - 3, 3) : value;
+				if ((units2 == "mm") || (units2 == "cm")  ||
+				    (units2 == "em") || (units2 == "pt")  ||
+				    (units2 == "pc") || (units3 == "ppx") ||
+				    (units2 == "in") || (units2 == "px")  ||
+				    (units2 == "dp") || (units3 == "dip")) {
+					if ((units3 == "dip") || (units3 == "ppx")) {
+						units = units3;
+						parsedValue = atof(value.substr(0, value_size - 3).c_str());
 					} else {
-						units = value.substr(value.size() - 2, 2);
-						parsedValue = atof(value.substr(0, value.size() - 2).c_str());
+						units = units2;
+						parsedValue = atof(value.substr(0, value_size - 2).c_str());
 					}
 				} else {
 					parsedValue = atof(value.c_str());
