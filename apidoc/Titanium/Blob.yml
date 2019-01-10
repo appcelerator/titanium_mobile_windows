@@ -44,4 +44,10 @@ methods:
     platforms: [windowsphone]
   - name: imageAsThumbnail
     platforms: [windowsphone]
+  - name: imageWithAlpha
+    platforms: [windowsphone]
+  - name: imageWithRoundedCorner
+    platforms: [windowsphone]
+  - name: imageWithTransparentBorder
+    platforms: [windowsphone]
 

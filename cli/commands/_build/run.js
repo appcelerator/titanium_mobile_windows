@@ -128,7 +128,7 @@ function runCmake(next) {
 		_t.logger.error(err);
 	});
 	p.stdout.on('data', function (data) {
-		_t.logger.info(data.toString().trim());
+		_t.logger.debug(data.toString().trim());
 	});
 	p.stderr.on('data', function (data) {
 		_t.logger.warn(data.toString().trim());

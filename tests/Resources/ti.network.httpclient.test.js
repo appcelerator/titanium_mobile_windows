@@ -20,7 +20,7 @@ describe('Titanium.Network.HTTPClient', function () {
 	});
 
 	// FIXME iOS gives us an ELEMENT_NODE, not DOCUMENT_NODE
-	it.iosAndWindowsBroken('responseXML', function (finish) {
+	it.iosBroken('responseXML', function (finish) {
 		var xhr = Ti.Network.createHTTPClient(),
 			attempts = 3;
 		xhr.setTimeout(6e4);
@@ -179,14 +179,14 @@ describe('Titanium.Network.HTTPClient', function () {
 
 	// https://appcelerator.lighthouseapp.com/projects/32238/tickets/2339
 	// Timing out on Windows Phone
-	it.windowsBroken('responseHeadersBug', function (finish) {
+	it('responseHeadersBug', function (finish) {
 		var xhr = Ti.Network.createHTTPClient(),
 			attempts = 3;
 		xhr.setTimeout(3e4);
 		xhr.onload = function () {
 			var allHeaders = xhr.getAllResponseHeaders(),
 				header;
-			should(allHeaders.indexOf('Server:')).be.within(0, 1 / 0);
+			should(allHeaders.toLowerCase().indexOf('server:')).be.within(0, 1 / 0);
 			header = xhr.getResponseHeader('Server');
 			should(header.length).be.greaterThan(0);
 			finish();
@@ -263,7 +263,7 @@ describe('Titanium.Network.HTTPClient', function () {
 
 	// Confirms that only the selected cookie is deleted
 	// FIXME Windows hangs on this test! Maybe due to setTimeout in onload?
-	it.windowsBroken('clearCookiePositiveTest', function (finish) {
+	it.allBroken('clearCookiePositiveTest', function (finish) {
 		var xhr = Ti.Network.createHTTPClient(),
 			cookie_string;
 		function second_cookie_fn() {
@@ -275,21 +275,21 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.setTimeout(3e4);
 		xhr.onload = function () {
 			cookie_string = this.getResponseHeader('Set-Cookie').split(';')[0];
-			xhr.clearCookies('https://my.appcelerator.com');
+			xhr.clearCookies('https://www.google.com');
 			xhr.onload = second_cookie_fn;
 			// Have to do this on delay for Android, or else the open and send get cancelled due to:
 			// [WARN]  TiHTTPClient: (main) [2547,14552] open cancelled, a request is already pending for response.
 			// [WARN]  TiHTTPClient: (main) [1,14553] send cancelled, a request is already pending for response.
 			// FIXME We should file a bug to handle this better! Can't we "queue" up the open/send calls to occur as soon as this callback finishes?
 			setTimeout(function () {
-				xhr.open('GET', 'https://my.appcelerator.com/auth/login');
+				xhr.open('GET', 'https://www.google.com');
 				xhr.send();
 			}, 5000);
 		};
 		xhr.onerror = function (e) {
 			should(e).should.be.type('undefined');
 		};
-		xhr.open('GET', 'https://my.appcelerator.com/auth/login');
+		xhr.open('GET', 'https://www.google.com');
 		xhr.send();
 	});
 
@@ -315,14 +315,14 @@ describe('Titanium.Network.HTTPClient', function () {
 			// [WARN]  TiHTTPClient: (main) [1,14553] send cancelled, a request is already pending for response.
 			// FIXME We should file a bug to handle this better! Can't we "queue" up the open/send calls to occur as soon as this callback finishes?
 			setTimeout(function () {
-				xhr.open('GET', 'https://my.appcelerator.com/auth/login');
+				xhr.open('GET', 'https://www.google.com');
 				xhr.send();
 			}, 5000);
 		};
 		xhr.onerror = function (e) {
 			should(e).should.be.type('undefined');
 		};
-		xhr.open('GET', 'https://my.appcelerator.com/auth/login');
+		xhr.open('GET', 'https://www.google.com');
 		xhr.send();
 	});
 
@@ -512,20 +512,115 @@ describe('Titanium.Network.HTTPClient', function () {
 		xhr.send(form);
 	});
 
-	it('TIMOB-25696', function (finish) {
-		var xhr = Ti.Network.createHTTPClient();
+	it.ios('basic-auth success', function (finish) {
+		var xhr = Ti.Network.createHTTPClient({
+				username: 'user',
+				password: 'passwd'
+			}),
+			attempts = 3;
 		xhr.setTimeout(6e4);
 
 		xhr.onload = function () {
-			// This should cause runtime error but should not crash app
-            Ti.API.info('Connected to server at port ' + port);
+			try {
+				should(this.responseText).be.a.string;
+				finish();
+			} catch (err) {
+				finish(err);
+			}
+		};
+		xhr.onerror = function (e) {
+			if (attempts-- > 0) {
+				Ti.API.warn('failed, attempting to retry request...');
+				xhr.send();
+			} else {
+				Ti.API.debug(JSON.stringify(e, null, 2));
+				finish(new Error('failed to authenticate: ' + e));
+			}
 		};
 
-		setTimeout(function() {
-			finish();
-		}, 1500);
-
-		xhr.open('GET', 'http://www.appcelerator.com/');
+		xhr.open('GET', 'http://httpbin.org/basic-auth/user/passwd');
+		xhr.send();
 	});
 
+	it.ios('basic-auth failure', function (finish) {
+		var xhr = Ti.Network.createHTTPClient({
+			username: 'user',
+			password: 'wrong_password',
+		});
+		xhr.setTimeout(6e4);
+
+		xhr.onload = function (e) {
+			finish(new Error('Authenticating with wrong password: ' + JSON.stringify(e, null, 1)));
+		};
+		xhr.onerror = function () {
+			// This request should fail as password is wrong.
+			finish();
+		};
+
+		xhr.open('GET', 'http://httpbin.org/basic-auth/user/passwd');
+		xhr.send();
+	});
+
+	it.android('save response data to temp directory', function (finish) {
+		var xhr = Ti.Network.createHTTPClient(),
+			attempts = 3;
+		xhr.setTimeout(6e4);
+
+		xhr.onload = function (e) {
+			try {
+				should(e.source.responseData.nativePath).be.a.string;
+				if (e.source.responseData.nativePath.includes('cache/_tmp') !== -1) {
+					finish();
+				} else {
+					finish(new Error('not saving response data to temp directory'));
+				}
+			} catch (err) {
+				finish(err);
+			}
+		};
+		xhr.onerror = function (e) {
+			if (attempts-- > 0) {
+				Ti.API.warn('failed, attempting to retry request...');
+				xhr.send();
+			} else {
+				Ti.API.debug(JSON.stringify(e, null, 2));
+				finish(new Error('failed to authenticate: ' + e));
+			}
+		};
+
+		xhr.open('GET', 'https://www.nasa.gov/sites/default/files/thumbnails/image/sun_0.jpg');
+		xhr.send();
+	});
+
+	// FIXME: Windows 'source' is missing on onload
+	it.windowsMissing('send on response', function (finish) {
+		var xhr = Ti.Network.createHTTPClient({}),
+			count = 0;
+
+		this.timeout(6e4);
+		xhr.setTimeout(6e4);
+
+		xhr.onload = function (e) {
+			try {
+				const response = e.source.responseDictionary ? e.source.responseDictionary.json : null;
+
+				if (response !== undefined) {
+					if (response && response.count <= 8) {
+						return xhr.send(JSON.stringify({ count: ++count }));
+					}
+					return finish();
+				}
+				finish(new Error('invalid json response!\n\n' + JSON.stringify(response, null, 1)));
+			} catch (err) {
+				finish(err);
+			}
+		};
+		xhr.onerror = function (e) {
+			finish(e);
+		};
+
+		xhr.open('POST', 'http://httpbin.org/post');
+		xhr.setRequestHeader('Content-Type', 'application/json; charset=utf8');
+		xhr.send(JSON.stringify({ count: count }));
+	});
 });

@@ -525,8 +525,8 @@ namespace Titanium
 
 		std::string ViewLayoutDelegate::GetDefaultUnit(const JSContext& js_context) TITANIUM_NOEXCEPT
 		{
-			// IMPORTANT: We do not support "dp" for now!
-			// Supporting "dp" in ti.ui.defaultunit will introduce breaking change for most apps.
+			// IMPORTANT: We start supporting "dp" in ti.ui.defaultunit as of 8.0.0.
+			// This will introduce breaking change for most apps.
 			// See TIMOB-25582 for details.
 			if (DefaultUnit__.empty()) {
 				JSObject App = Titanium::AppModule::GetStaticObject(js_context);
@@ -549,7 +549,7 @@ namespace Titanium
 				if (DefaultUnit__ != "mm" && DefaultUnit__ != "cm" &&
 					DefaultUnit__ != "em" && DefaultUnit__ != "pt" &&
 					DefaultUnit__ != "pc" && DefaultUnit__ != "in" &&
-					DefaultUnit__ != "px" && /* DefaultUnit__ != "dp" && */
+					DefaultUnit__ != "px" && DefaultUnit__ != "dp" &&
 					DefaultUnit__ != "dip" && DefaultUnit__ != "ppx")
 				{
 					DefaultUnit__ = "px";

@@ -72,6 +72,13 @@ namespace Titanium
 			TITANIUM_PROPERTY_IMPL_DEF(std::string, url);
 
 			/*!
+			  @property
+			  @abstract blacklistedURLs
+			  @discussion An array of url strings to blacklist.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::vector<std::string>, blacklistedURLs);
+
+			/*!
 			  @method
 			  @abstract canGoBack
 			  @discussion Returns `true` if the web view can go back in its history list.
@@ -147,6 +154,8 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(loading);
 			TITANIUM_PROPERTY_DEF(scalesPageToFit);
 			TITANIUM_PROPERTY_DEF(url);
+			TITANIUM_PROPERTY_DEF(blacklistedURLs);
+			TITANIUM_PROPERTY_DEF(onlink);
 			TITANIUM_FUNCTION_DEF(canGoBack);
 			TITANIUM_FUNCTION_DEF(canGoForward);
 			TITANIUM_FUNCTION_DEF(evalJS);
@@ -165,6 +174,8 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setScalesPageToFit);
 			TITANIUM_FUNCTION_DEF(getUrl);
 			TITANIUM_FUNCTION_DEF(setUrl);
+			TITANIUM_FUNCTION_DEF(getBlacklistedURLs);
+			TITANIUM_FUNCTION_DEF(setBlacklistedURLs);
 
 			virtual void _executeListener(const std::string& name, const std::string& data) TITANIUM_NOEXCEPT;
 			TITANIUM_FUNCTION_DEF(_executeListener);
@@ -177,6 +188,8 @@ namespace Titanium
 				std::string url__;
 				std::vector<std::uint8_t> data__;
 				std::string html__;
+				std::vector<std::string> blacklistedURLs__;
+				JSValue onlink__;
 #pragma warning(pop)
 
 		};

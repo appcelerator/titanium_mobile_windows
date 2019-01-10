@@ -581,6 +581,10 @@ namespace TitaniumWindows
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBitmapImage(Windows::UI::Xaml::Media::Imaging::BitmapImage^ image);
 			static Windows::UI::Xaml::Media::ImageBrush^ CreateImageBrushFromBlob(const std::shared_ptr<Titanium::Blob>& blob);
 			static double ComputePPI(const Titanium::LayoutEngine::ValueName& name);
+			static double ComputeUnits(const Titanium::UI::UNIT& units, float value);
+
+			// Convert Windows effective pixels to default unit value
+			static double pxToUnitsValue(const Titanium::LayoutEngine::ValueName& valueName, const float& value, const JSContext& ctx);
 
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -590,6 +594,8 @@ namespace TitaniumWindows
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
+			bool sourceTest(::Platform::Object ^ source, Windows::UI::Xaml::DependencyObject^ target);
+
 			Windows::UI::Xaml::Controls::Border^ border__    { nullptr };
 			Windows::UI::Xaml::FrameworkElement^ component__ { nullptr };
 			Windows::UI::Xaml::Controls::Control^ underlying_control__ { nullptr };

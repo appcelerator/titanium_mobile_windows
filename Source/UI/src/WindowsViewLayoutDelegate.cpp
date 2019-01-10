@@ -66,14 +66,11 @@ namespace TitaniumWindows
 		WindowsViewLayoutDelegate::WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 			: ViewLayoutDelegate()
 		{
-			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::ctor ", this);
-			// Update physical pixels factor for the current display information
 			Titanium::LayoutEngine::PhysicalPixelsFactor = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
 		}
 
 		WindowsViewLayoutDelegate::~WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 		{
-			TITANIUM_LOG_DEBUG("WindowsViewLayoutDelegate::dtor ", this);
 			if (component__) {
 				component__->SizeChanged -= size_change_event__;
 				component__->Loaded -= loaded_event__;
@@ -148,9 +145,7 @@ namespace TitaniumWindows
 			auto nativeChildView = newView->getComponent();
 			if (nativeChildView != nullptr) {
 				Titanium::LayoutEngine::nodeRemoveChild(layout_node__, newView->getLayoutNode());
-				if (isLoaded()) {
-					requestLayout();
-				}
+				requestLayout();
 				try {
 					uint32_t index = 0;
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
@@ -199,9 +194,7 @@ namespace TitaniumWindows
 
 					TITANIUM_LOG_DEBUG("Titanium::LayoutEngine::nodeAddChild ", newView->getLayoutNode(), " for ", layout_node__ );
 					Titanium::LayoutEngine::nodeAddChild(layout_node__, newView->getLayoutNode());
-					if (isLoaded()) {
-						requestLayout();
-					}
+					requestLayout();
 				} catch (Platform::Exception^ e) {
 					detail::ThrowRuntimeError("add", Utility::ConvertString(e->Message));
 				}
@@ -223,9 +216,7 @@ namespace TitaniumWindows
 			auto nativeChildView = newView->getComponent();
 			if (nativeChildView != nullptr) {
 				Titanium::LayoutEngine::nodeInsertChildAt(layout_node__, newView->getLayoutNode(), params.position);
-				if (isLoaded()) {
-					requestLayout();
-				}
+				requestLayout();
 				try {
 					auto nativeView = dynamic_cast<Controls::Panel^>(component__);
 					nativeView->Children->InsertAt(params.position, nativeChildView);
@@ -874,10 +865,17 @@ namespace TitaniumWindows
 				backgroundLinearGradientBrush__ = ref new LinearGradientBrush();
 				backgroundLinearGradientBrush__->StartPoint = startPoint;
 				backgroundLinearGradientBrush__->EndPoint = endPoint;
-				for (auto color : backgroundGradient__.colors) {
+				const auto numberOfColors = backgroundGradient__.colors.size();
+				const double offset = numberOfColors == 1 ? 1.0 : (1.0 / (numberOfColors - 1));
+				for (unsigned int i = 0; i < numberOfColors; i++) {
+					const auto color = backgroundGradient__.colors.at(i);
 					auto stop = ref new GradientStop();
 					stop->Color = ColorForName(color.color);
-					stop->Offset = color.offset;
+					if (color.offset >= 0) {
+						stop->Offset = color.offset;
+					} else {
+						stop->Offset = offset * i; // offsets are equally divided by default
+					}
 					backgroundLinearGradientBrush__->GradientStops->Append(stop);
 				}
 				updateBackground(backgroundLinearGradientBrush__);
@@ -1295,9 +1293,7 @@ namespace TitaniumWindows
 				layout_node__->element.layoutType = Titanium::LayoutEngine::LayoutType::Composite;
 			}
 
-			if (isLoaded()) {
-				requestLayout();
-			}
+			requestLayout();
 		}
 
 		void WindowsViewLayoutDelegate::set_zIndex(const int32_t& zIndex) TITANIUM_NOEXCEPT
@@ -1361,11 +1357,29 @@ namespace TitaniumWindows
 			}
 		}
 
+		bool WindowsViewLayoutDelegate::sourceTest(::Platform::Object ^ source, Windows::UI::Xaml::DependencyObject^ target)
+		{
+			const auto count = VisualTreeHelper::GetChildrenCount(target);
+			for (int i = 0; i < count; i++) {
+				const auto child = VisualTreeHelper::GetChild(target, i);
+				if (source->Equals(child) || sourceTest(source, child)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		std::shared_ptr<Titanium::UI::View> WindowsViewLayoutDelegate::sourceTest(::Platform::Object^ source, const std::shared_ptr<Titanium::UI::View>& root)
 		{
 			if (source->Equals(component__) || source->Equals(border__) || source->Equals(underlying_control__) || source->Equals(styling_component__)) {
 				return root;
 			}
+
+			if (underlying_control__ && sourceTest(source, underlying_control__))
+			{
+				return root;
+			}
+
 			for (const auto child : get_children()) {
 				const auto sender = child->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->sourceTest(source, child);
 				if (sender) {
@@ -1375,6 +1389,36 @@ namespace TitaniumWindows
 			return nullptr;
 		}
 
+		double WindowsViewLayoutDelegate::pxToUnitsValue(const Titanium::LayoutEngine::ValueName& valueName, const float& convertFromValue, const JSContext& ctx)
+		{
+			static double RawPixelsPerViewPixel;
+
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				RawPixelsPerViewPixel = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+			});
+
+			const auto ppi = ComputePPI(valueName);
+			const auto value = Titanium::LayoutEngine::parseUnitValue(std::to_string(convertFromValue), Titanium::LayoutEngine::ValueType::Fixed, ppi, "px");
+			const auto convertToUnits = Titanium::UI::Constants::to_UNIT(ViewLayoutDelegate::GetDefaultUnit(ctx));
+
+			if (convertToUnits == Titanium::UI::UNIT::Mm) {   // 1 mm = 0.0393701 in, 1 in = 25.4 mm
+				 return (value * 25.4) / ppi;                        // px = (mm / 25.4) * px/in
+			} else if (convertToUnits == Titanium::UI::UNIT::Cm) {  // 1 cm = .393700787 in, 1 in = 2.54 cm
+				 return (value * 2.54) / ppi;                        // px = (cm / 2.54) * px/in
+			} else if (convertToUnits == Titanium::UI::UNIT::In) {
+				 return value / ppi;  // px = inches * pixels/inch
+			} else if (convertToUnits == Titanium::UI::UNIT::Px) {
+				 return value;  // px is our base value
+			} else if (convertToUnits == Titanium::UI::UNIT::Dip) {
+				 return (value / ppi) * 160.0;  // px = device independent pixels * pixels/inch / 160, see https://www.google.com/design/spec/layout/units-measurements.html#units-measurements-designing-layouts-for-dp
+			} else if (convertToUnits == Titanium::UI::UNIT::Ppx) {
+				 return value * RawPixelsPerViewPixel;
+			}
+
+			return value;
+		}
+
 		void WindowsViewLayoutDelegate::fireSimplePositionEvent(const std::string& event_name, Windows::Foundation::Point position, Platform::Object^ originalSource)
 		{
 			const auto event_delegate = event_delegate__.lock();
@@ -1382,8 +1426,8 @@ namespace TitaniumWindows
 			const auto ctx = event_delegate->get_context();
 
 			JSObject  eventArgs = ctx.CreateObject();
-			eventArgs.SetProperty("x", ctx.CreateNumber(position.X));
-			eventArgs.SetProperty("y", ctx.CreateNumber(position.Y));
+			eventArgs.SetProperty("x", ctx.CreateNumber(pxToUnitsValue(Titanium::LayoutEngine::ValueName::Width,  position.X, ctx)));
+			eventArgs.SetProperty("y", ctx.CreateNumber(pxToUnitsValue(Titanium::LayoutEngine::ValueName::Height, position.Y, ctx)));
 
 			const auto source = sourceTest(originalSource);
 			if (source) {
@@ -1407,12 +1451,12 @@ namespace TitaniumWindows
 					const auto event_delegate = event_delegate__.lock();
 					auto ctx = event_delegate->get_context();
 					JSObject  delta = ctx.CreateObject();
-					delta.SetProperty("x", ctx.CreateNumber(e->Delta.Translation.X));
-					delta.SetProperty("y", ctx.CreateNumber(e->Delta.Translation.Y));
+					delta.SetProperty("x", ctx.CreateNumber(pxToUnitsValue(Titanium::LayoutEngine::ValueName::Width,  e->Delta.Translation.X, ctx)));
+					delta.SetProperty("y", ctx.CreateNumber(pxToUnitsValue(Titanium::LayoutEngine::ValueName::Height, e->Delta.Translation.Y, ctx)));
 
 					JSObject  eventArgs = ctx.CreateObject();
-					eventArgs.SetProperty("x", ctx.CreateNumber(e->Position.X));
-					eventArgs.SetProperty("y", ctx.CreateNumber(e->Position.Y));
+					eventArgs.SetProperty("x", ctx.CreateNumber(pxToUnitsValue(Titanium::LayoutEngine::ValueName::Width, e->Delta.Translation.X, ctx)));
+					eventArgs.SetProperty("y", ctx.CreateNumber(pxToUnitsValue(Titanium::LayoutEngine::ValueName::Height, e->Delta.Translation.Y, ctx)));
 					eventArgs.SetProperty("delta", delta);
 
 					const auto source = sourceTest(e->OriginalSource);
@@ -1476,7 +1520,16 @@ namespace TitaniumWindows
 				 	if (event_delegate != nullptr) {
 					 	JSContext js_context = event_delegate->get_context();
 						JSObject eventArgs = js_context.CreateObject();
-						eventArgs.SetProperty("source", event_delegate->get_object());
+						const auto source = sourceTest(e->OriginalSource);
+						if (source) {
+							// focus should not bubble
+							if (source->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent() != getComponent()) {
+								return;
+							}
+							eventArgs.SetProperty("source", source->get_object());
+						}
+
+						eventArgs.SetProperty("bubbles", js_context.CreateBoolean(false));
 						event_delegate->fireEvent("focus", eventArgs);
 				 	}
 				});
@@ -1486,7 +1539,15 @@ namespace TitaniumWindows
 					if (event_delegate != nullptr) {
 						JSContext js_context = event_delegate->get_context();
 						JSObject eventArgs = js_context.CreateObject();
-						eventArgs.SetProperty("source", event_delegate->get_object());
+						const auto source = sourceTest(e->OriginalSource);
+						if (source) {
+							// blur should not bubble
+							if (source->getViewLayoutDelegate<WindowsViewLayoutDelegate>()->getComponent() != getComponent()) {
+								return;
+							}
+							eventArgs.SetProperty("source", source->get_object());
+						}
+						eventArgs.SetProperty("bubbles", js_context.CreateBoolean(false));
 						event_delegate->fireEvent("blur", eventArgs);
 					}
 				});
@@ -1657,6 +1718,35 @@ namespace TitaniumWindows
 			} else if (get_defaultHeight() == Titanium::UI::LAYOUT::FILL) {
 				layout_node__->properties.defaultHeightType = Titanium::LayoutEngine::ValueType::Fill;
 			}
+
+			// prepare for userinteraction event
+			static std::shared_ptr<Titanium::AppModule> appModule;
+			static std::once_flag of;
+			std::call_once(of, [this] {
+				const auto event_delegate = event_delegate__.lock();
+				const auto Titanium = static_cast<JSObject>(event_delegate->get_context().get_global_object().GetProperty("Titanium"));
+				appModule = static_cast<JSObject>(Titanium.GetProperty("App")).GetPrivate<Titanium::AppModule>();
+				assert(appModule != nullptr);
+			});
+			if (appModule->get_trackUserInteraction()) {
+				if (is_button__) {
+					// Attach Tapped event only for Button because it reacts to PointerPressed too.
+					component__->Tapped += ref new TappedEventHandler([](Platform::Object^, TappedRoutedEventArgs^) {
+						appModule->fireEvent("userinteraction");
+					});
+				} else {
+					component__->PointerPressed += ref new PointerEventHandler([this](Platform::Object^, PointerRoutedEventArgs^) {
+						appModule->fireEvent("userinteraction");
+					});
+				}
+				component__->GotFocus += ref new RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+					appModule->fireEvent("userinteraction");
+				});
+				component__->KeyDown += ref new KeyEventHandler([](Platform::Object^, KeyRoutedEventArgs^) {
+					appModule->fireEvent("userinteraction");
+				});
+			}
+
 		}
 
 		void WindowsViewLayoutDelegate::fixWidth(const double& width) TITANIUM_NOEXCEPT
@@ -1792,6 +1882,9 @@ namespace TitaniumWindows
 
 		void WindowsViewLayoutDelegate::requestLayout(const bool& fire_event)
 		{
+			if (!isLoaded()) {
+				return;
+			}
 			const auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
 			if (root) {
 				Titanium::LayoutEngine::nodeLayout(root);
@@ -1896,26 +1989,34 @@ namespace TitaniumWindows
 
 		double WindowsViewLayoutDelegate::ComputePPI(const Titanium::LayoutEngine::ValueName& name)
 		{
-			auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-			double ppi = info->LogicalDpi;
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
+			static float LogicalDpi, RawDpiX, RawDpiY;
+			static double RawPixelsPerViewPixel;
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				const auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+				LogicalDpi = info->LogicalDpi;
+				RawDpiX = info->RawDpiX;
+				RawDpiY = info->RawDpiY;
+				RawPixelsPerViewPixel = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+			});
+
+			double ppi = LogicalDpi;
 			switch (name) {
 			case Titanium::LayoutEngine::ValueName::CenterX:
 			case Titanium::LayoutEngine::ValueName::Left:
 			case Titanium::LayoutEngine::ValueName::Right:
 			case Titanium::LayoutEngine::ValueName::Width:
 			case Titanium::LayoutEngine::ValueName::MinWidth:
-				ppi = info->RawDpiX / info->RawPixelsPerViewPixel;
+				ppi = RawDpiX / RawPixelsPerViewPixel;
 				break;
 			case Titanium::LayoutEngine::ValueName::CenterY:
 			case Titanium::LayoutEngine::ValueName::Top:
 			case Titanium::LayoutEngine::ValueName::Bottom:
 			case Titanium::LayoutEngine::ValueName::Height:
 			case Titanium::LayoutEngine::ValueName::MinHeight:
-				ppi = info->RawDpiY / info->RawPixelsPerViewPixel;
+				ppi = RawDpiY / RawPixelsPerViewPixel;
 				break;
 			}
-#endif
 			return ppi;
 		}
 
@@ -1932,7 +2033,6 @@ namespace TitaniumWindows
 				prop.value = "UI.FILL";
 			}
 
-			auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 			double ppi = ComputePPI(name);
 
 			// Get the default unit from ti.ui.defaultUnit
@@ -1941,9 +2041,7 @@ namespace TitaniumWindows
 			std::string defaultUnit = ViewLayoutDelegate::GetDefaultUnit(event_delegate->get_context());
 			Titanium::LayoutEngine::populateLayoutProperties(prop, properties ? properties.get() : &layout_node__->properties, ppi, defaultUnit);
 
-			if (isLoaded()) {
-				requestLayout();
-			}
+			requestLayout();
 		}
 
 		/////////// Color //////////////

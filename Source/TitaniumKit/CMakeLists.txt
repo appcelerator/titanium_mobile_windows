@@ -55,7 +55,6 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.55.0 REQUIRED)
 
 set(SOURCE_TitaniumKit
-  include/Titanium/Titanium.hpp
   include/Titanium/Application.hpp
   src/Application.cpp
   include/Titanium/GlobalObject.hpp
@@ -319,6 +318,8 @@ set(SOURCE_UI
   src/UIModule.cpp
   include/Titanium/UI/View.hpp
   src/UI/View.cpp
+  include/Titanium/UI/ViewPadding.hpp
+  src/UI/ViewPadding.cpp
   include/Titanium/UI/ViewLayoutDelegate.hpp
   src/UI/ViewLayoutDelegate.cpp
   include/Titanium/UI/WebView.hpp
@@ -329,6 +330,8 @@ set(SOURCE_UI
   include/Titanium/UI/ViewInsertOrReplaceParams.hpp
   src/UI/ViewInsertOrReplaceParams.cpp
   include/Titanium/UI/ListModel.hpp
+  include/Titanium/UI/NavigationWindow.hpp
+  src/UI/NavigationWindow.cpp
   )
 
 set(SOURCE_TiLogger_detail

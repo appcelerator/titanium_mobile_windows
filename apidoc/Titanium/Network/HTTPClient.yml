@@ -1,18 +1,6 @@
 name: Titanium.Network.HTTPClient
 platforms: [windowsphone]
 properties:
-  - name: autoEncodeUrl
-    platforms: [windowsphone]
-  - name: autoRedirect
-    platforms: [windowsphone]
-  - name: cache
-    platforms: [windowsphone]
-  - name: domain
-    platforms: [windowsphone]
-  - name: enableKeepAlive
-    platforms: [windowsphone]
-  - name: file
-    platforms: [windowsphone]
   - name: ondatastream
     platforms: [windowsphone]
   - name: onerror
@@ -25,17 +13,9 @@ properties:
     platforms: [windowsphone]
   - name: password
     platforms: [windowsphone]
-  - name: securityManager
-    platforms: [windowsphone]
   - name: timeout
     platforms: [windowsphone]
-  - name: tlsVersion
-    platforms: [windowsphone]
   - name: username
-    platforms: [windowsphone]
-  - name: validatesSecureCertificate
-    platforms: [windowsphone]
-  - name: withCredentials
     platforms: [windowsphone]
   - name: DONE
     platforms: [windowsphone]
@@ -48,10 +28,6 @@ properties:
   - name: UNSENT
     platforms: [windowsphone]
   - name: allResponseHeaders
-    platforms: [windowsphone]
-  - name: connected
-    platforms: [windowsphone]
-  - name: connectionType
     platforms: [windowsphone]
   - name: location
     platforms: [windowsphone]
@@ -73,22 +49,6 @@ methods:
   - name: clearCookies
     platforms: [windowsphone]
   - name: getAllResponseHeaders
-    platforms: [windowsphone]
-  - name: getAutoEncodeUrl
-    platforms: [windowsphone]
-  - name: getAutoRedirect
-    platforms: [windowsphone]
-  - name: getCache
-    platforms: [windowsphone]
-  - name: getConnected
-    platforms: [windowsphone]
-  - name: getConnectionType
-    platforms: [windowsphone]
-  - name: getDomain
-    platforms: [windowsphone]
-  - name: getEnableKeepAlive
-    platforms: [windowsphone]
-  - name: getFile
     platforms: [windowsphone]
   - name: getLocation
     platforms: [windowsphone]
@@ -114,37 +74,15 @@ methods:
     platforms: [windowsphone]
   - name: getResponseXML
     platforms: [windowsphone]
-  - name: getSecurityManager
-    platforms: [windowsphone]
   - name: getStatus
     platforms: [windowsphone]
   - name: getStatusText
     platforms: [windowsphone]
-  - name: getTimeout
-    platforms: [windowsphone]
-  - name: getTlsVersion
-    platforms: [windowsphone]
   - name: getUsername
-    platforms: [windowsphone]
-  - name: getValidatesSecureCertificate
-    platforms: [windowsphone]
-  - name: getWithCredentials
     platforms: [windowsphone]
   - name: open
     platforms: [windowsphone]
   - name: send
-    platforms: [windowsphone]
-  - name: setAutoEncodeUrl
-    platforms: [windowsphone]
-  - name: setAutoRedirect
-    platforms: [windowsphone]
-  - name: setCache
-    platforms: [windowsphone]
-  - name: setDomain
-    platforms: [windowsphone]
-  - name: setEnableKeepAlive
-    platforms: [windowsphone]
-  - name: setFile
     platforms: [windowsphone]
   - name: setOndatastream
     platforms: [windowsphone]
@@ -160,16 +98,6 @@ methods:
     platforms: [windowsphone]
   - name: setRequestHeader
     platforms: [windowsphone]
-  - name: setSecurityManager
-    platforms: [windowsphone]
-  - name: setTimeout
-    platforms: [windowsphone]
-  - name: setTlsVersion
-    platforms: [windowsphone]
   - name: setUsername
-    platforms: [windowsphone]
-  - name: setValidatesSecureCertificate
-    platforms: [windowsphone]
-  - name: setWithCredentials
     platforms: [windowsphone]
 

@@ -263,7 +263,7 @@ namespace TitaniumWindows
 
 			// Place the frame in the current Window.
 			Windows::UI::Xaml::Window::Current->Content = rootFrame;
-			application__->Run("/app");
+			application__->Run("/ti.main");
 		}
 
 		// Ensure the current Window is active.

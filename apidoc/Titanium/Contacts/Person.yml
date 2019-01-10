@@ -3,11 +3,7 @@ platforms: [windowsphone]
 properties:
   - name: address
     platforms: [windowsphone]
-  - name: alternateBirthday
-    platforms: [windowsphone]
   - name: birthday
-    platforms: [windowsphone]
-  - name: created
     platforms: [windowsphone]
   - name: date
     platforms: [windowsphone]
@@ -21,27 +17,17 @@ properties:
     platforms: [windowsphone]
   - name: fullName
     platforms: [windowsphone]
-  - name: id
-    platforms: [windowsphone]
   - name: identifier
-    platforms: [windowsphone]
-  - name: image
     platforms: [windowsphone]
   - name: instantMessage
     platforms: [windowsphone]
   - name: jobTitle
-    platforms: [windowsphone]
-  - name: kind
     platforms: [windowsphone]
   - name: lastName
     platforms: [windowsphone]
   - name: lastPhonetic
     platforms: [windowsphone]
   - name: middleName
-    platforms: [windowsphone]
-  - name: middlePhonetic
-    platforms: [windowsphone]
-  - name: modified
     platforms: [windowsphone]
   - name: nickname
     platforms: [windowsphone]
@@ -52,8 +38,6 @@ properties:
   - name: phone
     platforms: [windowsphone]
   - name: prefix
-    platforms: [windowsphone]
-  - name: recordId
     platforms: [windowsphone]
   - name: relatedNames
     platforms: [windowsphone]
@@ -67,10 +51,6 @@ methods:
   - name: getAddress
     platforms: [windowsphone]
   - name: setAddress
-    platforms: [windowsphone]
-  - name: getAlternateBirthday
-    platforms: [windowsphone]
-  - name: setAlternateBirthday
     platforms: [windowsphone]
   - name: getBirthday
     platforms: [windowsphone]
@@ -100,15 +80,7 @@ methods:
     platforms: [windowsphone]
   - name: getFullName
     platforms: [windowsphone]
-  - name: setFullName
-    platforms: [windowsphone]
-  - name: getId
-    platforms: [windowsphone]
   - name: getIdentifier
-    platforms: [windowsphone]
-  - name: getImage
-    platforms: [windowsphone]
-  - name: setImage
     platforms: [windowsphone]
   - name: getInstantMessage
     platforms: [windowsphone]
@@ -117,10 +89,6 @@ methods:
   - name: getJobTitle
     platforms: [windowsphone]
   - name: setJobTitle
-    platforms: [windowsphone]
-  - name: getKind
-    platforms: [windowsphone]
-  - name: setKind
     platforms: [windowsphone]
   - name: getLastName
     platforms: [windowsphone]
@@ -133,12 +101,6 @@ methods:
   - name: getMiddleName
     platforms: [windowsphone]
   - name: setMiddleName
-    platforms: [windowsphone]
-  - name: getMiddlePhonetic
-    platforms: [windowsphone]
-  - name: setMiddlePhonetic
-    platforms: [windowsphone]
-  - name: getModified
     platforms: [windowsphone]
   - name: getNickname
     platforms: [windowsphone]
@@ -159,10 +121,6 @@ methods:
   - name: getPrefix
     platforms: [windowsphone]
   - name: setPrefix
-    platforms: [windowsphone]
-  - name: getRecordId
-    platforms: [windowsphone]
-  - name: setRecordId
     platforms: [windowsphone]
   - name: getRelatedNames
     platforms: [windowsphone]

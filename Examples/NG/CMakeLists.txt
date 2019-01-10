@@ -125,6 +125,7 @@ set(SOURCE_Assets
   ${CMAKE_CURRENT_BINARY_DIR}/${APP_MANIFEST_NAME}
   src/Assets/titanium_settings.ini
   src/Assets/app.js
+  src/Assets/ti.main.js
   src/Assets/Logo.png
   src/Assets/SmallLogo.png
   src/Assets/SplashScreen.png
@@ -134,8 +135,6 @@ set(SOURCE_Assets
   src/Assets/Square71x71Logo.png
   src/Assets/Square44x44Logo.png
   src/Assets/cricket.wav
-  src/Assets/WebViewIndexPage.htm
-  src/Assets/WebViewNextPage.htm
   src/Assets/sample.jpg
   src/Assets/require_test.js
   src/Assets/Styles.xaml
@@ -144,6 +143,24 @@ set(SOURCE_Assets
   )
 
 set_property(SOURCE ${SOURCE_Assets} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+set(SOURCE_internal
+      "src/Assets/ti.internal/bootstrap.loader.js"
+  )
+source_group("ti.internal" FILES
+      "src/Assets/ti.internal/bootstrap.loader.js"
+  )
+set_property(SOURCE ${SOURCE_internal} PROPERTY VS_DEPLOYMENT_LOCATION "ti.internal")
+set_property(SOURCE ${SOURCE_internal} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+
+set(SOURCE_internal_extensions
+      "src/Assets/ti.internal/extensions/Error.js"
+  )
+source_group("ti.internal\\extensions" FILES
+      "src/Assets/ti.internal/extensions/Error.js"
+  )
+set_property(SOURCE ${SOURCE_internal_extensions} PROPERTY VS_DEPLOYMENT_LOCATION "ti.internal\\extensions")
+set_property(SOURCE ${SOURCE_internal_extensions} PROPERTY VS_DEPLOYMENT_CONTENT 1)
 
 set(SOURCE_fonts
       "src/Assets/fonts/icomoon.ttf"
@@ -179,6 +196,8 @@ add_executable(${EXE_NAME} WIN32
   include/OutputDebugStringBuf.hpp
   include/pch.h
   ${SOURCE_Assets}
+  ${SOURCE_internal}
+  ${SOURCE_internal_extensions}
   ${SOURCE_fonts}
   ${SOURCE_Strings_en}
   ${SOURCE_Strings_es}

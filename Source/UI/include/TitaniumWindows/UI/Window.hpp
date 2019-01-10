@@ -58,10 +58,6 @@ namespace TitaniumWindows
 			virtual void focus() override;
 			virtual void set_orientationModes(const std::vector<Titanium::UI::ORIENTATION>& modes) TITANIUM_NOEXCEPT override final;
 
-#if !defined(IS_WINDOWS_PHONE)
-			virtual void set_title(const std::string& title) TITANIUM_NOEXCEPT override final;
-#endif
-
 			Window(const JSContext&) TITANIUM_NOEXCEPT;
 
 			virtual ~Window();
@@ -94,6 +90,7 @@ namespace TitaniumWindows
 			virtual std::shared_ptr<TitaniumWindows::UI::WindowsXaml::CommandBar> getBottomAppBar() TITANIUM_NOEXCEPT;
 
 			void updateWindowsCommandBar(const std::shared_ptr<TitaniumWindows::UI::WindowsXaml::CommandBar>& commandbar);
+			void updateWindowTitle();
 
 #if defined(IS_WINDOWS_10)
 			void updateWindowSize() TITANIUM_NOEXCEPT;

@@ -1,151 +1,126 @@
 /**
- * Copyright (c) 2015 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2015-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
 // modules
-var path = require('path'),
-	fs = require('fs'),
-	async = require('async'),
-	colors = require('colors'),
-	wrench = require('wrench'),
-	exec = require('child_process').exec,
-	spawn = require('child_process').spawn,
-	windowslib = require('windowslib'),
-	// Constants
-	WIN_8_1 = '8.1',
-	WIN_10 = '10.0',
-	MSBUILD_12 = '12.0',
-	MSBUILD_14 = '14.0',
-	MSBUILD_15 = '15.0',
-	VS_2013_GENERATOR = 'Visual Studio 12 2013',
-	VS_2015_GENERATOR = 'Visual Studio 14 2015',
-	VS_2017_GENERATOR = 'Visual Studio 15 2017',
-	// paths
-	rootDir = path.join(__dirname, '..', '..', '..'),
-	cmakeLocation = path.join(rootDir, 'cli', 'vendor', 'cmake', 'bin', 'cmake.exe'),
-	titaniumWindowsSrc = path.join(rootDir, 'Source', 'Titanium'),
-	buildRoot = path.join(rootDir, 'build'),
-	distRoot = path.join(rootDir, 'dist', 'windows'),
-	distLib = path.join(distRoot, 'lib');
+const path = require('path');
+const fs = require('fs-extra');
+const colors = require('colors'); // eslint-disable-line no-unused-vars
+const exec = require('child_process').exec; // eslint-disable-line security/detect-child-process
+const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
+const windowslib = require('windowslib');
+
+// Constants
+const WIN_10 = '10.0';
+const MSBUILD_14 = '14.0';
+const MSBUILD_15 = '15.0';
+const VS_2015_GENERATOR = 'Visual Studio 14 2015';
+const VS_2017_GENERATOR = 'Visual Studio 15 2017';
+// paths
+
+const ROOT_DIR = path.join(__dirname, '..', '..', '..');
+const CMAKE_BINARY = path.join(ROOT_DIR, 'cli', 'vendor', 'cmake', 'bin', 'cmake.exe');
+const SOURCE_TITANIUM_DIR = path.join(ROOT_DIR, 'Source', 'Titanium');
+const BUILD_DIR = path.join(ROOT_DIR, 'build');
+const DIST_DIR = path.join(ROOT_DIR, 'dist', 'windows');
+const DIST_LIB_DIR = path.join(DIST_DIR, 'lib');
 
 /**
- * @param sourceDir {String} The original source directory (in Source/)
- * @param buildDir {String} Where to build the modules temporarily
- * @param destDir {String} The top-level destination directory where we copy the built libraries
- * @param buildType {String} 'Release' || 'Debug'
- * @param sdkVersion {String} '8.1' || '10.0'
- * @param msBuildVersion {String} '12.0' || '14.0' || '15.0'
- * @param platform {String} 'WindowsPhone' || 'WindowsStore'
- * @param arch {String} 'x86' || 'ARM'
- * @param parallel {Boolean} should we run MSBuild in parallel?
- * @param quiet {Boolean} log stdout of processes?
- * @param callback {Function} what to invoke when done/errored
+ * @param {String} sourceDir The original source directory (in Source/)
+ * @param {String} buildDir Where to build the modules temporarily
+ * @param {String} destDir The top-level destination directory where we copy the built libraries
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {String} msBuildVersion '14.0' || '15.0'
+ * @param {String} platform 'WindowsPhone' || 'WindowsStore'
+ * @param {String} arch 'x86' || 'ARM'
+ * @param {Boolean} parallel should we run MSBuild in parallel?
+ * @param {Boolean} quiet log stdout of processes?
+ * @return {Promise}
  */
-function buildAndPackage(sourceDir, buildDir, destDir, buildType, sdkVersion, msBuildVersion, platform, arch, parallel, quiet, callback) {
-	var platformAbbrev = "win10";
-	if (sdkVersion == "8.1") {
-		platformAbbrev = (platform == 'WindowsPhone') ? 'phone' : 'store';
-	}
+async function buildAndPackage(sourceDir, buildDir, destDir, buildType, msBuildVersion, platform, arch, parallel, quiet) {
+	const platformAbbrev = 'win10';
 
-	console.log('Building ' + platform + ' ' + sdkVersion + ' ' + arch + ': ' + buildType);
-	async.series([
-		function (next) {
-			runCMake(sourceDir, path.join(buildDir, platformAbbrev, arch), buildType, sdkVersion, msBuildVersion, platform, arch, quiet, next);
-		},
-		function(next) {
-			runNuGet(path.join(buildDir, platformAbbrev, arch, 'TitaniumWindows.sln'), quiet, next);
-		},
-		function (next) {
-			runMSBuild(msBuildVersion, path.join(buildDir, platformAbbrev, arch, 'TitaniumWindows.sln'), buildType, arch, parallel, quiet, next);
-		},
-		function (next) {
-			copyToDistribution(buildDir, destDir, buildType, platformAbbrev, arch, next);
-		}
-	], function (err, results) {
-		if (err) {
-			callback(err);
-		} else {
-			// Wipe the build dir if everything went well. Don't remove top-level build root, because previous build steps may have added results we care about there (i.e. CTest)
-			wrench.rmdirSyncRecursive(path.join(buildDir, platformAbbrev, arch));
-			callback();
-		}
+	console.log(`Building ${platform} 10.0 ${arch}: ${buildType}`);
+	const archDir = path.join(buildDir, platformAbbrev, arch);
+	const slnFile = path.join(archDir, 'TitaniumWindows.sln');
+
+	await runCMake(sourceDir, archDir, buildType, msBuildVersion, platform, arch, quiet);
+	await runNuGet(slnFile, quiet);
+	await runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet);
+	await copyToDistribution(buildDir, destDir, buildType, platformAbbrev, arch);
+
+	// Wipe the build dir if everything went well. Don't remove top-level build root, because previous build steps may have added results we care about there (i.e. CTest)
+	await fs.remove(archDir);
+}
+
+/**
+ * [getGitHash description]
+ * @param {String} dir cwd to run in
+ * @return {Promise<string>} [description]
+ */
+function getGitHash(dir) {
+	return new Promise((resolve, reject) => {
+		exec('git rev-parse --short --no-color HEAD', { cwd: dir }, (error, stdout) => {
+			if (error) {
+				return reject(`Failed to get Git HASH: ${error}`);
+			}
+
+			resolve(stdout.trim());
+		});
 	});
 }
 
 /**
- * @param githash SHA1 to use for Ti.buildHash, computed if not supplied
- * @param tiModuleCPP the file to update
- * @param callback what to invoke when done/errored
+ * @param {String} githash SHA1 to use for Ti.buildHash, computed if not supplied
+ * @param {String} tiModuleCPP the file to update
+ * @return {Promise}
  */
-function updateBuildValuesInTitaniumModule(githash, tiModuleCPP, callback) {
-	async.series([
-		function getGitHash(next) {
-			if (githash) {
-				return next();
-			}
-			exec('git rev-parse --short --no-color HEAD', {cwd: path.dirname(tiModuleCPP)}, function (error, stdout, stderr) {
-				if (error) {
-					return next('Failed to get Git HASH: ' + error);
-				}
+async function updateBuildValuesInTitaniumModule(githash, tiModuleCPP) {
+	if (!githash) {
+		githash = await getGitHash(path.dirname(tiModuleCPP));
+	}
+	const contents = await fs.readFile(tiModuleCPP, 'utf8');
+	const date = new Date();
+	const timestamp = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes();
 
-				githash = stdout.trim(); // drop leading 'commit ', just take 7-character sha
-				return next();
-			});
-		},
-		function updateTiModule(next) {
-			fs.readFile(tiModuleCPP, function (err, data) {
-				var contents,
-					timestamp,
-					date;
-				if (err) {
-					return callback('Failed to get contents of TiModule.cpp to replace hard-coded values: ' + error);
-				}
-				date = new Date();
-				timestamp = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
-
-				contents = data.toString();
-				// FIXME How can we set the version? It doesn't get set until later _after_ we've built! We'll need to pull it in from some file!
-				contents = contents.replace(/__TITANIUM_BUILD_DATE__/, timestamp).replace(/__TITANIUM_BUILD_HASH__/, githash);
-				fs.writeFile(tiModuleCPP, contents, callback);
-			});
-		}
-	], callback);
+	// FIXME How can we set the version? It doesn't get set until later _after_ we've built! We'll need to pull it in from some file!
+	const modified = contents.replace(/__TITANIUM_BUILD_DATE__/, timestamp).replace(/__TITANIUM_BUILD_HASH__/, githash);
+	await fs.writeFile(tiModuleCPP, modified);
 }
 
 /**
- * @param sourceDir {String} Where the source is
- * @param buildDir {String} Where to build the project
- * @param buildType {String} 'Release' || 'Debug'
- * @param platform {String} 'WindowsPhone' || 'WindowsStore'
- * @param arch {String} 'x86' || 'ARM'
- * @param quiet {Boolean} log stdout of process?
- * @param callback {Function} what to invoke when done/errored
+ * @param {String} sourceDir Where the source is
+ * @param {String} buildDir Where to build the project
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {String} msBuildVersion '14.0' || '15.0'
+ * @param {String} platform  'WindowsPhone' || 'WindowsStore'
+ * @param {String} arch 'x86' || 'ARM'
+ * @param {Boolean} quiet log stdout of process?
+ * @return {Promise}
  */
-function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, platform, arch, quiet, callback) {
-	var generator = VS_2013_GENERATOR;
-
-	if (msBuildVersion == MSBUILD_14) {
-		generator = VS_2015_GENERATOR;
-	} else if (msBuildVersion == MSBUILD_15) {
+async function runCMake(sourceDir, buildDir, buildType, msBuildVersion, platform, arch, quiet) {
+	let generator = VS_2015_GENERATOR;
+	if (msBuildVersion === MSBUILD_15) {
 		generator = VS_2017_GENERATOR;
 	}
 
 	// If the buildDir already exists, wipe it
-	if (fs.existsSync(buildDir)) {
-		wrench.rmdirSyncRecursive(buildDir);
+	const exists = await fs.pathExists(buildDir);
+	if (exists) {
+		await fs.remove(buildDir);
 	}
-	wrench.mkdirSyncRecursive(buildDir);
+	await fs.ensureDir(buildDir);
 
-	if ('ARM' == arch) {
+	if (arch === 'ARM') {
 		generator += ' ARM';
 	}
 
-	var args = [
+	const args = [
 		'-G', generator,
 		'-DCMAKE_SYSTEM_NAME=' + platform,
 		'-DCMAKE_BUILD_TYPE=' + buildType,
-		'-DCMAKE_SYSTEM_VERSION=' + sdkVersion,
+		'-DCMAKE_SYSTEM_VERSION=' + WIN_10,
 		'-DTitaniumWindows_DISABLE_TESTS=ON',
 		'-DTitaniumWindows_Ti_DISABLE_TESTS=ON',
 		'-DTitaniumWindows_Global_DISABLE_TESTS=ON',
@@ -161,138 +136,125 @@ function runCMake(sourceDir, buildDir, buildType, sdkVersion, msBuildVersion, pl
 		sourceDir
 	];
 
-	var options = {cwd: buildDir};
-	spawnWithArgs('CMake', cmakeLocation, args, options, quiet, callback);
+	await spawnWithArgs('CMake', CMAKE_BINARY, args, { cwd: buildDir }, quiet);
 }
 
 /**
- * @param slnFile {String} The VS solution file to build.
- * @param quiet {Boolean} log stdout of process?
- * @param callback {Function} what to invoke when done/errored
+ * @param {String} slnFile The VS solution file to build.
+ * @param {Boolean} quiet log stdout of process?
+ * @return {Promise}
  */
-function runNuGet(slnFile, quiet, callback) {
-	spawnWithArgs('NuGet', path.join(__dirname,'..','..','..','cli','vendor','nuget','nuget.exe'), ['restore',slnFile], {}, quiet, callback);
+function runNuGet(slnFile, quiet) {
+	return spawnWithArgs('NuGet', path.join(__dirname, '..', '..', '..', 'cli', 'vendor', 'nuget', 'nuget.exe'), [ 'restore', slnFile ], {}, quiet);
 }
 
 /**
- * @param msBuildVersion {String} The version of MSBuild to run: '12.0' || '14.0' || '15.0'
- * @param slnFile {String} The VS solution file to build.
- * @param buildType {String} 'Release' || 'Debug'
- * @param arch {String} 'x86' || 'ARM'
- * @param parallel {Boolean} Run msbuild in parallel? (/m option)
- * @param quiet {Boolean} log stdout of process?
- * @param callback {Function} what to invoke when done/errored
+ * @param {String} msBuildVersion The version of MSBuild to run: '14.0' || '15.0'
+ * @param {String} slnFile The VS solution file to build.
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {String} arch 'x86' || 'ARM'
+ * @param {Boolean} parallel Run msbuild in parallel? (/m option)
+ * @param {Boolean} quiet log stdout of process?
+ * @return {Promise}
  */
-function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet, callback) {
+function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet) {
+	return new Promise((resolve, reject) => {
+		windowslib.detect({}, (err, results) => {
 
-	windowslib.detect({}, function(err, results) {
-
-		var vsInfo = results.visualstudio[msBuildVersion];
-		if (vsInfo == undefined && msBuildVersion == '15.0') {
-			for (var key in results.visualstudio) {
-				// If you can't decide which VS2017 to select, use first one
-				if (key.endsWith(' 2017')) {
-					vsInfo = results.visualstudio[key];
-					break;
+			let vsInfo = results.visualstudio[msBuildVersion];
+			if (vsInfo === undefined && msBuildVersion === '15.0') {
+				for (var key in results.visualstudio) {
+					// If you can't decide which VS2017 to select, use first one
+					if (key.endsWith(' 2017')) {
+						vsInfo = results.visualstudio[key];
+						break;
+					}
 				}
 			}
-		}
 
-		if (!vsInfo) {
-			console.log('Unable to find a supported Visual Studio installation');
-			process.exit(1);
-		}
+			if (!vsInfo) {
+				return reject('Unable to find a supported Visual Studio installation');
+			}
 
-		// Use spawn directly so we can pipe output as we go
-		var p = spawn((process.env.comspec || 'cmd.exe'), ['/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ \(\)\&]/g, '^$&') +
-			' &&' + ' MSBuild' + (arch==='ARM' ? ' /p:Platform=' + arch : '') + (parallel ? ' /m' : '') + ' /nr:false /p:Configuration=Release ' + slnFile, '"'
-		], {windowsVerbatimArguments: true});
-		
-		p.stdout.on('data', function (data) {
-			var line = data.toString().trim();
-			if (line.indexOf('error ') >= 0) {
-				console.log(line);
-			} else if (line.indexOf('warning ') >= 0) {
-				console.log(line);
-			} else {
-				quiet || console.log(line);
-			}
-		});
-		p.stderr.on('data', function (data) {
-			console.log(data.toString().trim());
-		});
-		p.on('close', function (code) {
-			if (code != 0) {
-				process.exit(1);
-			}
-			callback();
+			// Use spawn directly so we can pipe output as we go
+			const p = spawn((process.env.comspec || 'cmd.exe'), [ '/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ ()&]/g, '^$&')
+				+ ' && MSBuild' + (arch === 'ARM' ? ' /p:Platform=' + arch : '') + (parallel ? ' /m' : '') + ' /nr:false /p:Configuration=Release ' + slnFile, '"'
+			], { windowsVerbatimArguments: true });
+
+			p.stdout.on('data', data => {
+				const line = data.toString().trim();
+				if (line.indexOf('error ') >= 0) {
+					console.log(line);
+				} else if (line.indexOf('warning ') >= 0) {
+					console.log(line);
+				} else {
+					quiet || console.log(line);
+				}
+			});
+			p.stderr.on('data', data => console.log(data.toString().trim()));
+			p.on('close', code => {
+				if (code !== 0) {
+					return reject('MSBuild return non-zero exit code');
+				}
+				resolve();
+			});
 		});
 	});
-
 }
 
 /**
- * @param sourceDir The top-level folder containing all the built libraries from the sln
- * @param destDir The top-level destination directory where we copy the built libraries
- * @param buildType 'Release' || 'Debug'
- * @param platformAbbrev 'phone' || 'store' || 'win10'
- * @param arch 'x86' || 'ARM'
- * @param callback what to invoke when done/errored
+ * @param {String} sourceDir The top-level folder containing all the built libraries from the sln
+ * @param {String} destDir The top-level destination directory where we copy the built libraries
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {String} platformAbbrev 'phone' || 'store' || 'win10'
+ * @param {String} arch 'x86' || 'ARM'
  */
-function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch, callback) {
-	var libs = {
-			// Library full name : output location
-			'TitaniumWindows_Sensors': 'Sensors',
-			'TitaniumWindows_Filesystem': 'Filesystem',
-			'TitaniumWindows_Global': 'Global',
-			'HAL': 'Filesystem\\TitaniumKit\\HAL',
-			'LayoutEngine': 'LayoutEngine',
-			'TitaniumWindows_Map': 'Map',
-			'TitaniumWindows_Media': 'Media',
-			'TitaniumWindows_Network': 'Network',
-			'TitaniumWindows_Ti': 'Ti',
-			'TitaniumWindows': '',
-			'TitaniumKit': 'Filesystem\\TitaniumKit',
-			'TitaniumWindows_UI': 'Map\\UI',
-			'TitaniumWindows_Utility': 'Filesystem\\Utility',
-		},
-		libDestDir,
-		libSrcDir,
-		suffix,
-		lib,
-		header;
+async function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch) {
+	const libs = {
+		// Library full name : output location
+		TitaniumWindows_Sensors: 'Sensors',
+		TitaniumWindows_Filesystem: 'Filesystem',
+		TitaniumWindows_Global: 'Global',
+		HAL: 'Filesystem\\TitaniumKit\\HAL',
+		LayoutEngine: 'LayoutEngine',
+		TitaniumWindows_Map: 'Map',
+		TitaniumWindows_Media: 'Media',
+		TitaniumWindows_Network: 'Network',
+		TitaniumWindows_Ti: 'Ti',
+		TitaniumWindows: '',
+		TitaniumKit: 'Filesystem\\TitaniumKit',
+		TitaniumWindows_UI: 'Map\\UI',
+		TitaniumWindows_Utility: 'Filesystem\\Utility',
+	};
 
 	// For each lib, copy the output files!
-	for (var key in libs) {
+	for (const key in libs) {
 		if (!libs.hasOwnProperty(key)) {
 			continue;
 		}
-		lib = key; // full name of the built lib files
-		suffix = libs[key]; // relative path of built libs in build folder
+		const lib = key; // full name of the built lib files
+		const suffix = libs[key]; // relative path of built libs in build folder
 
-		libSrcDir = path.join(sourceDir, platformAbbrev, arch, suffix, buildType);
-		libDestDir = path.join(destDir, lib, platformAbbrev, arch);
+		const libSrcDir = path.join(sourceDir, platformAbbrev, arch, suffix, buildType);
+		const libDestDir = path.join(destDir, lib, platformAbbrev, arch);
 
 		// Make the destination folder
-		if (fs.existsSync(libDestDir)) {
-			wrench.rmdirSyncRecursive(libDestDir);
+		const exists = await fs.pathExists(libDestDir);
+		if (exists) {
+			await fs.remove(libDestDir);
 		}
-		wrench.mkdirSyncRecursive(libDestDir);
+		await fs.ensureDir(libDestDir);
 
 		// Copy the build artifacts
 		// TODO Only copy dll/winmd/lib? Do we need anything else? pri?
-		wrench.copyDirSyncRecursive(libSrcDir, libDestDir, {
-			forceDelete: true, // Whether to overwrite existing directory or not
+		await fs.copy(libSrcDir, libDestDir, {
 			preserveTimestamps: true, // Preserve the mtime and atime when copying files
-			// FIXME This seems to be copying over everything for TitaniumWindows artifacts, but not sub-libraries
-			include: new RegExp(lib + '\.*') // Include the library's artifacts regardless of file extension
 		});
 		// Copy the export header!
-		header = lib.toLowerCase() + '_export.h';
-		wrench.mkdirSyncRecursive(path.join(destDir, lib, 'include'));
-		fs.writeFileSync(path.join(destDir, lib, 'include', header), fs.readFileSync(path.join(sourceDir, platformAbbrev, arch, suffix, header)));
+		const header = lib.toLowerCase() + '_export.h';
+		await fs.ensureDir(path.join(destDir, lib, 'include'));
+		await fs.copy(path.join(sourceDir, platformAbbrev, arch, suffix, header), path.join(destDir, lib, 'include', header));
 	}
-	callback();
 }
 
 /*
@@ -301,165 +263,122 @@ function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch,
 
 /**
  * Spawns the specified file with its args, logging its output, and executing the callback when it has finished.
- * @param name {String} Name to use for log messages
- * @param file {String} Filepath to execute
- * @param args {Array} args to pass to spawn
- * @param options {Object} options ot pass to spawn
- * @param quiet {Boolean} Should we log stdout?
- * @param callback {Function} callback function when finished
+ * @param {String} name Name to use for log messages
+ * @param {String} file Filepath to execute
+ * @param {String} args args to pass to spawn
+ * @param {Object} options options ot pass to spawn
+ * @param {Boolean} quiet Should we log stdout?
+ * @return {Promise}
  */
-function spawnWithArgs(name, file, args, options, quiet, callback) {
-	var child = spawn(file, args, options);
-	child.stdout.on('data', function (data) {
-		quiet || console.log(data.toString().trim());
-	});
-	child.stderr.on('data', function (data) {
-		console.log(data.toString().trim().red);
-	});
-	child.on('close', function (code) {
-		if (code != 0) {
-			callback('Failed to run ' + name);
-		} else {
-			callback();
-		}
-	});
-}
+function spawnWithArgs(name, file, args, options, quiet) {
+	return new Promise((resolve, reject) => {
+		const child = spawn(file, args, options);
+		child.stdout.on('data', data => quiet || console.log(data.toString().trim()));
+		child.stderr.on('data', data => console.log(data.toString().trim().red));
+		child.on('close', code => {
+			if (code !== 0) {
+				return reject(`Failed to run ${name}`);
+			}
 
-/**
- * Recursively copies a directory.
- * @param from
- * @param to
- */
-function copyDir(from, to) {
-	return function (next) {
-		wrench.copyDirRecursive(from, to, {forceDelete: true}, function (err) {
-			if (err) {
-				next(err);
-			}
-			else {
-				next();
-			}
+			resolve();
 		});
-	};
+	});
 }
 
 /**
- * Copies a file.
- * @param from
- * @param to
- */
-function copyFile(from, to) {
-	return function (next) {
-		fs.createReadStream(from).pipe(fs.createWriteStream(to)).on('finish', function (err) {
-			if (err) {
-				next(err);
-			}
-			else {
-				next();
-			}
-		});
-	};
-}
-
-/**
- * @param sdkVersion {String} '8.1' || '10.0'
- * @param sha {String} sha1 to use for Ti.buildHash, computed if not provided
- * @param msBuildVersion {String} '12.0' || '14.0' || '15.0'
- * @param buildType {String} 'Release' || 'Debug'
- * @param targets {Array[String]}
- * @param options {Object}
- * @param options.parallel {Boolean} Run builds in parallel?
- * @param options.quiet {Boolean} Log stdout of processes?
- * @param finished {Function} callback
+ * @param {String} sha sha1 to use for Ti.buildHash, computed if not provided
+ * @param {String} msBuildVersion '14.0' || '15.0'
+ * @param {String} buildType 'Release' || 'Debug'
+ * @param {string[]} targets (WindowsStore|WindowsPhone)-(ARM|x86)
+ * @param {Object} [options] options
+ * @param {Boolean} [options.parallel] Run builds in parallel?
+ * @param {Boolean} [options.quiet] Log stdout of processes?
+ * @return {Promise}
  **/
-function build(sdkVersion, sha, msBuildVersion, buildType, targets, options, finished) {
-	var overallTimer = process.hrtime(),
-		timer = process.hrtime(),
-		options = options || {};
+async function build(sha, msBuildVersion, buildType, targets, options = {}) {
+	const overallTimer = process.hrtime();
+	let timer = process.hrtime();
 
-	async.series([
-		function updateBuildValues(next) {
-			updateBuildValuesInTitaniumModule(sha, path.join(rootDir, 'Source', 'Ti', 'src', 'TiModule.cpp'), next);
-		},
-		function buildAndPackageAll(next) {
-			(options.parallel ? async.each : async.eachSeries)(targets, function (configuration, next) {
-				var parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
-				buildAndPackage(titaniumWindowsSrc, buildRoot, distLib, buildType, sdkVersion, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet, next);
-			}, next);
-		},
-		function measureTimeElapsed(next) {
-			var elapsed = process.hrtime(timer);
-			console.info('Build and Package Time: %ds %dms', elapsed[0], elapsed[1] / 1000000);
-			timer = process.hrtime();
-			next();
-		},
-		function copyJavaScriptCore(next) {
-			async.eachSeries(targets, function (configuration, next) {
-				var parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
-				console.log('Copying JavaScriptCore for ' + parts[1] + '...');
-				var newDir = path.join(distLib, 'JavaScriptCore', 'win10', parts[1]);
-				var fromDir = path.join(process.env.JavaScriptCore_HOME, parts[1]);
-				wrench.mkdirSyncRecursive(newDir);
-				wrench.copyDirSyncRecursive(path.join(fromDir, 'Release'), newDir, {forceDelete: true});
-				fs.createReadStream(path.join(fromDir, 'JavaScriptCore-Release.lib')).pipe(fs.createWriteStream(path.join(newDir, 'JavaScriptCore.lib'))).on('finish', next);
-			}, next);
-		},
-		function copyIncludedHeaders(next) {
-			console.log('Copying over include headers...');
-			var newDir = path.join(distLib, 'TitaniumKit', 'include', 'Titanium');
-			wrench.mkdirSyncRecursive(newDir);
+	await updateBuildValuesInTitaniumModule(sha, path.join(ROOT_DIR, 'Source', 'Ti', 'src', 'TiModule.cpp'));
 
-			var tasks = [
-				copyDir(path.join(rootDir, 'Source', 'HAL', 'include', 'HAL'), path.join(distLib, 'HAL', 'include', 'HAL')),
-				copyDir(path.join(rootDir, 'Source', 'TitaniumKit', 'include', 'Titanium'), path.join(distLib, 'TitaniumKit', 'include', 'Titanium')),
-				copyDir(path.join(process.env.JavaScriptCore_HOME, 'includes', 'JavaScriptCore'), path.join(distLib, 'HAL', 'include', 'JavaScriptCore')),
-
-				copyDir(path.join(rootDir, 'Source', 'Utility', 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows_Utility', 'include', 'TitaniumWindows')),
-				copyDir(path.join(rootDir, 'Source', 'LayoutEngine', 'include', 'LayoutEngine'), path.join(distLib, 'LayoutEngine', 'include', 'LayoutEngine')),
-				copyDir(path.join(rootDir, 'Source', 'Titanium', 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows', 'include', 'TitaniumWindows')),
-
-				copyFile(path.join(rootDir, 'titanium_prep.win64.exe'), path.join(distRoot, 'titanium_prep.win64.exe')),
-				copyFile(path.join(rootDir, 'titanium_prep.win32.exe'), path.join(distRoot, 'titanium_prep.win32.exe')),
-				copyFile(path.join(rootDir, 'package.json'), path.join(distRoot, 'package.json')),
-				copyDir(path.join(rootDir, 'templates'), path.join(distRoot, 'templates')),
-				// FIXME For some reason, locally this isn't copying all of cli/vendor/cmake/share (specifically cmake-3.1 subfolder)
-				copyDir(path.join(rootDir, 'cli'), path.join(distRoot, 'cli'))
-			];
-
-			var include_TitaniumWindows = ['Filesystem', 'Global', 'Map', 'Media', 'Network', 'Sensors', 'Ti', 'UI'];
-			for (var i = 0; i < include_TitaniumWindows.length; i++) {
-				tasks.push(copyDir(path.join(rootDir, 'Source', include_TitaniumWindows[i], 'include', 'TitaniumWindows'), path.join(distLib, 'TitaniumWindows_' + include_TitaniumWindows[i], 'include', 'TitaniumWindows')));
-			}
-
-			async.parallel(tasks, next);
-		},
-		function measureTimeElapsed(next) {
-			var elapsed = process.hrtime(timer);
-			console.info('Header Copy Time: %ds %dms', elapsed[0], elapsed[1] / 1000000);
-			elapsed = process.hrtime(overallTimer);
-			console.info('Total Time: %ds %dms', elapsed[0], elapsed[1] / 1000000);
-			next();
+	if (options.parallel) {
+		await Promise.all(targets.map(configuration => {
+			const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
+			return buildAndPackage(SOURCE_TITANIUM_DIR, BUILD_DIR, DIST_LIB_DIR, buildType, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet);
+		}));
+	} else {
+		for (const configuration of targets) {
+			const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
+			await buildAndPackage(SOURCE_TITANIUM_DIR, BUILD_DIR, DIST_LIB_DIR, buildType, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet);
 		}
-		// TODO Generate docs and copy them over! We should start integrating together all these disparate node scripts into a cohesive set!
-	], finished);
+	}
+
+	// measureTimeElapsed
+	let elapsed = process.hrtime(timer);
+	console.info('Build and Package Time: %ds %dms', elapsed[0], elapsed[1] / 1000000);
+	timer = process.hrtime();
+
+	// copy JavaScriptCore
+	for (const configuration of targets) {
+		const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
+		console.log(`Copying JavaScriptCore for ${parts[1]}...`);
+		const newDir = path.join(DIST_LIB_DIR, 'JavaScriptCore', 'win10', parts[1]);
+		const fromDir = path.join(process.env.JavaScriptCore_HOME, parts[1]);
+		await fs.ensureDir(newDir);
+		await fs.copy(path.join(fromDir, 'Release'), newDir);
+		await fs.copy(path.join(fromDir, 'JavaScriptCore-Release.lib'), path.join(newDir, 'JavaScriptCore.lib'));
+	}
+
+	// copyIncludedHeaders
+	console.log('Copying over include headers...');
+	const newDir = path.join(DIST_LIB_DIR, 'TitaniumKit', 'include', 'Titanium');
+	await fs.ensureDir(newDir);
+
+	const tasks = [
+		fs.copy(path.join(ROOT_DIR, 'Source', 'HAL', 'include', 'HAL'), path.join(DIST_LIB_DIR, 'HAL', 'include', 'HAL')),
+		fs.copy(path.join(ROOT_DIR, 'Source', 'TitaniumKit', 'include', 'Titanium'), path.join(DIST_LIB_DIR, 'TitaniumKit', 'include', 'Titanium')),
+		fs.copy(path.join(process.env.JavaScriptCore_HOME, 'includes', 'JavaScriptCore'), path.join(DIST_LIB_DIR, 'HAL', 'include', 'JavaScriptCore')),
+
+		fs.copy(path.join(ROOT_DIR, 'Source', 'Utility', 'include', 'TitaniumWindows'), path.join(DIST_LIB_DIR, 'TitaniumWindows_Utility', 'include', 'TitaniumWindows')),
+		fs.copy(path.join(ROOT_DIR, 'Source', 'LayoutEngine', 'include', 'LayoutEngine'), path.join(DIST_LIB_DIR, 'LayoutEngine', 'include', 'LayoutEngine')),
+		fs.copy(path.join(ROOT_DIR, 'Source', 'Titanium', 'include', 'TitaniumWindows'), path.join(DIST_LIB_DIR, 'TitaniumWindows', 'include', 'TitaniumWindows')),
+
+		fs.copy(path.join(ROOT_DIR, 'titanium_prep.win64.exe'), path.join(DIST_DIR, 'titanium_prep.win64.exe')),
+		fs.copy(path.join(ROOT_DIR, 'titanium_prep.win32.exe'), path.join(DIST_DIR, 'titanium_prep.win32.exe')),
+		fs.copy(path.join(ROOT_DIR, 'package.json'), path.join(DIST_DIR, 'package.json')),
+		fs.copy(path.join(ROOT_DIR, 'templates'), path.join(DIST_DIR, 'templates')),
+		// FIXME For some reason, locally this isn't copying all of cli/vendor/cmake/share (specifically cmake-3.1 subfolder)
+		fs.copy(path.join(ROOT_DIR, 'cli'), path.join(DIST_DIR, 'cli'))
+	];
+
+	// TODO: map and concat?
+	const include_TitaniumWindows = [ 'Filesystem', 'Global', 'Map', 'Media', 'Network', 'Sensors', 'Ti', 'UI' ];
+	for (const name of include_TitaniumWindows) {
+		tasks.push(fs.copy(path.join(ROOT_DIR, 'Source', name, 'include', 'TitaniumWindows'), path.join(DIST_LIB_DIR, 'TitaniumWindows_' + name, 'include', 'TitaniumWindows')));
+	}
+	await Promise.all(tasks);
+
+	// measureTimeElapsed
+	elapsed = process.hrtime(timer);
+	console.info('Header Copy Time: %ds %dms', elapsed[0], elapsed[1] / 1000000);
+	elapsed = process.hrtime(overallTimer);
+	console.info('Total Time: %ds %dms', elapsed[0], elapsed[1] / 1000000);
+
+	// TODO Generate docs and copy them over! We should start integrating together all these disparate node scripts into a cohesive set!
 }
 
 // public API
 exports.build = build;
 
 // When run as script
-if (module.id === ".") {
+if (module.id === '.') {
 	(function () {
-		var program = require('commander'),
-			// default platform/arch targets
-			arches = [
-				'WindowsPhone-x86',
-				'WindowsPhone-ARM',
-				'WindowsStore-x86'
-			];
+		const program = require('commander');
+		// default platform/arch targets
+		const arches = [ 'WindowsPhone-x86', 'WindowsPhone-ARM', 'WindowsStore-x86' ];
 
 		function collectArches(val, memo) {
-			var m = /^Windows(Store|Phone)\-(x86|ARM)$/.exec(val);
+			const m = /^Windows(Store|Phone)-(x86|ARM)$/.exec(val);
 			if (m) {
 				memo.push(val);
 			}
@@ -472,28 +391,19 @@ if (module.id === ".") {
 			.option('-c, --configuration [config]', 'Specify configuration to build (i.e. Release or Debug)', /^(Release|Debug)$/, 'Release')
 			.option('-q, --quiet', 'Be quiet')
 			.option('-p, --parallel', 'Run builds in parallel')
-			.option('-m, --msbuild [version]', 'Use a specific version of MSBuild', /^(12\.0|14\.0|15\.0)$/, MSBUILD_12)
-			.option('-s, --sdk-version [version]', 'Target a specific Windows SDK version [version]', /^(8\.1|10\.0)$/, WIN_8_1)
+			.option('-m, --msbuild [version]', 'Use a specific version of MSBuild', /^(14\.0|15\.0)$/, MSBUILD_14)
 			.option('--sha [sha1]', 'sha1 to use for Ti.buildHash, computed if not provided')
 			.parse(process.argv);
 
-		// When doing win 10, it has to use msbuild 14
-		if (program.sdkVersion == WIN_10 && program.msbuild == MSBUILD_12) {
-			// TODO Log warning if they used msbuild 12!
-			program.msbuild = MSBUILD_14;
-		}
-
-		build(program.sdkVersion, program.sha, program.msbuild, program.configuration, (program.only && program.only.length > 0) ? program.only : arches,
+		build(program.sha, program.msbuild, program.configuration, (program.only && program.only.length > 0) ? program.only : arches,
 			{
 				parallel: program.parallel,
 				quiet: program.quiet
-			},
-			function (err, results) {
-				if (err) {
-					console.error(err.toString().red);
-					process.exit(1);
-				}
-				process.exit(0);
-		});
-	})();
+			})
+			.then(() => process.exit(0))
+			.catch(err => {
+				console.error(err.toString().red);
+				process.exit(1);
+			});
+	}());
 }

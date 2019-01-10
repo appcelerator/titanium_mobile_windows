@@ -70,7 +70,11 @@ namespace TitaniumWindows
 
 			view->addEventListener("click", clickCallback__, contentView__);
 
-			requestLayout(false);
+			// TIMOB-26577: LayoutEngine needs to calculate ScrollViewer size before loaded.
+			const auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node__);
+			if (root) {
+				Titanium::LayoutEngine::nodeLayout(root);
+			}
 		}
 
 		void ScrollViewLayoutDelegate::removeAllChildren() TITANIUM_NOEXCEPT
@@ -101,7 +105,7 @@ namespace TitaniumWindows
 			scroll_viewer__ = ref new Windows::UI::Xaml::Controls::ScrollViewer();
 
 			scroll_viewer__->HorizontalScrollBarVisibility = ScrollBarVisibility::Auto;
-			scroll_viewer__->VerticalScrollBarVisibility = ScrollBarVisibility::Auto;
+			scroll_viewer__->VerticalScrollBarVisibility = ScrollBarVisibility::Visible;
 			scroll_viewer__->HorizontalScrollMode = ScrollMode::Enabled;
 			scroll_viewer__->VerticalScrollMode = ScrollMode::Enabled;
 
@@ -117,6 +121,16 @@ namespace TitaniumWindows
 				component->MinWidth  = e->NewSize.Width;
 			});
 			scroll_viewer__->Content = content->getComponent();
+
+			content->getComponent()->SizeChanged += ref new SizeChangedEventHandler([this](Platform::Object^ sender, SizeChangedEventArgs^ e) {
+				const auto SIZE = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
+				if (layoutDelegate__->get_width() == SIZE) {
+					layoutDelegate__->set_minWidth(std::to_string(e->NewSize.Width));
+				}
+				if (layoutDelegate__->get_height() == SIZE) {
+					layoutDelegate__->set_minHeight(std::to_string(e->NewSize.Height));
+				}
+			});
 
 			Titanium::UI::ScrollView::setLayoutDelegate<ScrollViewLayoutDelegate>(this, contentView__);
 

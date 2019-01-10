@@ -228,10 +228,19 @@ namespace TitaniumWindows
 			label__->Measure(desiredSize);
 
 			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
+			const auto layout_node = layout->getLayoutNode();
+
+			// Calculate the label size when label is not loaded yet. This effectively updates node element properties.
+			if (!layout->isLoaded()) {
+				const auto root = Titanium::LayoutEngine::nodeRequestLayout(layout_node);
+				if (root) {
+					Titanium::LayoutEngine::nodeLayout(root);
+				}
+			}
 
 			// minimumFontSize decreases the fontsize of the text to fit the width. This enables single-line mode. Only works with minimumFontSize > 0
 			const auto minimumFontSize = get_minimumFontSize();
-			const auto measuredWidth = layout->getLayoutNode()->element.measuredWidth;
+			const auto measuredWidth = layout_node->element.measuredWidth;
 			if (minimumFontSize > 0 && measuredWidth > 0) {
 				auto previousFontSize = label__->FontSize;
 				while (previousFontSize > minimumFontSize && minimumFontSize > 1.0 && measuredWidth < label__->ActualWidth) {
