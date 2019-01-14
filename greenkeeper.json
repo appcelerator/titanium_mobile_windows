@@ -2,8 +2,6 @@
   "groups": {
     "default": {
       "packages": [
-        "Examples/NG/modules/commonjs/commonjs.legacy.package/1.0.0/package.json",
-        "Examples/NMocha/src/Assets/with_package/package.json",
         "package.json"
       ]
     }
