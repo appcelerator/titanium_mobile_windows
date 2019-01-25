@@ -98,6 +98,7 @@ namespace TitaniumWindows
 
 			static void SetActiveTabWindow(const std::shared_ptr<TitaniumWindows::UI::Window>& window);
 			static void ExitApp(const JSContext& js_context);
+			static void NavigateBack();
 		private:
 #pragma warning(push)
 #pragma warning(disable : 4251)

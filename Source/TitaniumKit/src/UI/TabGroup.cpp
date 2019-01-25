@@ -31,6 +31,10 @@ namespace Titanium
 			}
 			activeTab__ = activeTab;
 
+			if (activeTab__ == nullptr) {
+				return;
+			}
+
 			if (!activeTabBackgroundColor__.empty()) {
 				activeTab__->set_backgroundColor(activeTabBackgroundColor__);
 			}
