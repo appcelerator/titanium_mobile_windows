@@ -92,7 +92,7 @@ describe('Titanium.UI.TabGroup', () => {
 		should(tabGroup.tabsTranslucent).eql(false);
 	});
 
-	it.windowsBroken('#setTabs()', () => {
+	it('#setTabs()', () => {
 		const winA = Ti.UI.createWindow(),
 			tabA = Ti.UI.createTab({
 				title: 'Tab A',

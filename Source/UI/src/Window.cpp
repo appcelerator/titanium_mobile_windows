@@ -227,6 +227,11 @@ namespace TitaniumWindows
 				tab_closing = true;
 			}
 
+			// This means close is called while no window is opened. Just return here in that case
+			if (window_stack__.empty()) {
+				return;
+			}
+
 			const auto top_window = window_stack__.back();
 			const auto is_top_window = (top_window.get() == this); // check if window.close has been issued onto the top window
 			const auto exitOnClose = get_exitOnClose();
