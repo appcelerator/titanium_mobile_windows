@@ -203,7 +203,7 @@ exports.init = function (logger, config, cli) {
 					opts = appc.util.mix({
 						forceUnInstall: cli.argv.hasOwnProperty('forceUnInstall'),
 						killIfRunning: false,
-						timeout: config.get('windows.log.timeout', 60000),
+						timeout: config.get('windows.log.timeout', 120000),
 						wpsdk: builder.wpsdk
 					}, builder.windowslibOptions),
 					// Options for dependencies
