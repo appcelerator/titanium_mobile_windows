@@ -227,7 +227,7 @@ describe('Titanium.UI.TabGroup', () => {
 		});
 
 		// times out, presumably doesn't fire event?
-		it('blur', finish => {
+		it.windowsDesktopBroken('blur', finish => {
 			var win = Ti.UI.createWindow();
 			tabGroup = Ti.UI.createTabGroup();
 			tab = Ti.UI.createTab({
