@@ -595,6 +595,7 @@ namespace TitaniumWindows
 #pragma warning(push)
 #pragma warning(disable : 4251)
 			static std::unordered_map<std::string, Windows::UI::Color> colorForHexCode__;
+			static Windows::Graphics::Display::DisplayInformation^ GetDisplayInformation();
 
 			bool sourceTest(::Platform::Object ^ source, Windows::UI::Xaml::DependencyObject^ target);
 

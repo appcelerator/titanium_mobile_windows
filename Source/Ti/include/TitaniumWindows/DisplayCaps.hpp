@@ -43,7 +43,7 @@ namespace TitaniumWindows
 #endif
 
 		static void JSExportInitialize();
-
+		static Windows::Graphics::Display::DisplayInformation^ GetDisplayInformation();
 	protected:
 	private:
 	};
