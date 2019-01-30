@@ -13,6 +13,7 @@
 #include "TitaniumWindows/LogForwarder.hpp"
 #include <iostream>
 #include <objbase.h>
+#include <boost/algorithm/string/predicate.hpp>
 
 namespace TitaniumWindows
 {
@@ -49,8 +50,11 @@ namespace TitaniumWindows
 		static std::once_flag of;
 		std::call_once(of, [=] {
 			value = TitaniumWindows::Utility::ConvertString(Windows::Storage::ApplicationData::Current->LocalCacheFolder->Path);
+			if (!boost::ends_with(value, "\\")) {
+				value = value + "\\";
+			}
 		});
-		return value + separator(); // FIXME Only append separator if not already there!
+		return value;
 	}
 
 	std::string FilesystemModule::applicationDataDirectory() const TITANIUM_NOEXCEPT
@@ -59,9 +63,11 @@ namespace TitaniumWindows
 		static std::once_flag of;
 		std::call_once(of, [=] {
 			value = TitaniumWindows::Utility::ConvertString(Windows::Storage::ApplicationData::Current->LocalFolder->Path);
+			if (!boost::ends_with(value, "\\")) {
+				value = value + "\\";
+			}
 		});
-
-		return value + separator(); // FIXME Only append separator if not already there!
+		return value;
 	}
 
 	std::string FilesystemModule::applicationDirectory() const TITANIUM_NOEXCEPT
@@ -70,9 +76,12 @@ namespace TitaniumWindows
 		static std::once_flag of;
 		std::call_once(of, [=] {
 			value = TitaniumWindows::Utility::ConvertString(Windows::ApplicationModel::Package::Current->InstalledLocation->Path);
+			if (!boost::ends_with(value, "\\")) {
+				value = value + "\\";
+			}
 		});
 
-		return value + separator(); // FIXME Only append separator if not already there!
+		return value;
 	}
 
 	std::string FilesystemModule::applicationSupportDirectory() const TITANIUM_NOEXCEPT
@@ -83,9 +92,12 @@ namespace TitaniumWindows
 			static std::once_flag of;
 			std::call_once(of, [=] {
 				value = TitaniumWindows::Utility::ConvertString(Windows::Storage::KnownFolders::DocumentsLibrary->Path);
+				if (!boost::ends_with(value, "\\")) {
+					value = value + "\\";
+				}
 			});
 
-			return value + separator(); // FIXME Only append separator if not already there!
+			return value;
 		} catch (Platform::AccessDeniedException^ e) {
 			return "";
 		}
@@ -102,8 +114,11 @@ namespace TitaniumWindows
 				if (!path->IsEmpty()) {
 					value = TitaniumWindows::Utility::ConvertString(path);
 				}
+				if (!boost::ends_with(value, "\\")) {
+					value = value + "\\";
+				}
 			});
-			return value + separator(); // FIXME Only append separator if not already there!
+			return value;
 		} catch (Platform::AccessDeniedException^ e) {
 			return "";
 		}
@@ -120,8 +135,11 @@ namespace TitaniumWindows
 		static std::once_flag of;
 		std::call_once(of, [=] {
 			value = TitaniumWindows::Utility::ConvertString(Windows::ApplicationModel::Package::Current->InstalledLocation->Path);
+			if (!boost::ends_with(value, "\\")) {
+				value = value + "\\";
+			}
 		});
-		return value + separator(); // FIXME Only append separator if not already there!
+		return value;
 	}
 
 	std::string FilesystemModule::tempDirectory() const TITANIUM_NOEXCEPT
@@ -130,7 +148,10 @@ namespace TitaniumWindows
 		static std::once_flag of;
 		std::call_once(of, [=] {
 			value = TitaniumWindows::Utility::ConvertString(Windows::Storage::ApplicationData::Current->TemporaryFolder->Path);
+			if (!boost::ends_with(value, "\\")) {
+				value = value + "\\";
+			}
 		});
-		return value + separator(); // FIXME Only append separator if not already there!
+		return value;
 	}
 }  // namespace TitaniumWindows
