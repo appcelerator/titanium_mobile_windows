@@ -24,17 +24,22 @@ namespace TitaniumWindows
 		JSExport<DisplayCaps>::SetParent(JSExport<Titanium::Platform::DisplayCaps>::Class());
 	}
 
+	Windows::Graphics::Display::DisplayInformation^ DisplayCaps::GetDisplayInformation()
+	{
+		static Windows::Graphics::Display::DisplayInformation^ display;
+		static std::once_flag of;
+		std::call_once(of, [=] {
+			display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+		});
+		return display;
+	}
+
 	double DisplayCaps::dpi() const TITANIUM_NOEXCEPT
 	{
 		static double value;
 		static std::once_flag of;
 		std::call_once(of, [=] {
-			const auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-			if (display) {
-				value = display->LogicalDpi;
-			} else {
-				value = Titanium::Platform::DisplayCaps::dpi();
-			}
+			value = GetDisplayInformation()->LogicalDpi;
 		});
 		return value;
 	}
@@ -44,12 +49,7 @@ namespace TitaniumWindows
 		static double value;
 		static std::once_flag of;
 		std::call_once(of, [=] {
-			const auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-			if (display) {
-				value = display->RawPixelsPerViewPixel;
-			} else {
-				value = Titanium::Platform::DisplayCaps::logicalDensityFactor();
-			}
+			value = GetDisplayInformation()->RawPixelsPerViewPixel;
 		});
 		return value;
 	}
@@ -77,12 +77,7 @@ namespace TitaniumWindows
 		static double value;
 		static std::once_flag of;
 		std::call_once(of, [=] {
-			const auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-			if (display) {
-				value = display->RawDpiX;
-			} else {
-				value = Titanium::Platform::DisplayCaps::xdpi();
-			}
+			value = GetDisplayInformation()->RawDpiX;
 		});
 		return value;
 	}
@@ -92,12 +87,7 @@ namespace TitaniumWindows
 		static double value;
 		static std::once_flag of;
 		std::call_once(of, [=] {
-			const auto display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
-			if (display) {
-				value = display->RawDpiY;
-			} else {
-				value = Titanium::Platform::DisplayCaps::ydpi();
-			}
+			value = GetDisplayInformation()->RawDpiY;
 		});
 		return value;
 	}

@@ -66,13 +66,7 @@ namespace TitaniumWindows
 		WindowsViewLayoutDelegate::WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 			: ViewLayoutDelegate()
 		{
-			static double PhysicalPixelsFactor = 1.0;
-			static std::once_flag of;
-			std::call_once(of, [=] {
-				PhysicalPixelsFactor = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
-			});
-
-			Titanium::LayoutEngine::PhysicalPixelsFactor = PhysicalPixelsFactor;
+			Titanium::LayoutEngine::PhysicalPixelsFactor = GetDisplayInformation()->RawPixelsPerViewPixel;
 		}
 
 		WindowsViewLayoutDelegate::~WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
@@ -88,6 +82,16 @@ namespace TitaniumWindows
 			}
 			// make sure it is deleted from parent node, otherwise LayoutEngine crashes!
 			delete layout_node__;
+		}
+
+		Windows::Graphics::Display::DisplayInformation^ WindowsViewLayoutDelegate::GetDisplayInformation()
+		{
+			static Windows::Graphics::Display::DisplayInformation^ display;
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+			});
+			return display;
 		}
 
 		std::shared_ptr<Titanium::UI::View> WindowsViewLayoutDelegate::rescueGetView(const JSObject& view) TITANIUM_NOEXCEPT
@@ -1401,7 +1405,7 @@ namespace TitaniumWindows
 
 			static std::once_flag of;
 			std::call_once(of, [=] {
-				RawPixelsPerViewPixel = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+				RawPixelsPerViewPixel = GetDisplayInformation()->RawPixelsPerViewPixel;
 			});
 
 			const auto ppi = ComputePPI(valueName);
@@ -1986,11 +1990,11 @@ namespace TitaniumWindows
 			static double RawPixelsPerViewPixel;
 			static std::once_flag of;
 			std::call_once(of, [=] {
-				const auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+				const auto info = GetDisplayInformation();
 				LogicalDpi = info->LogicalDpi;
 				RawDpiX = info->RawDpiX;
 				RawDpiY = info->RawDpiY;
-				RawPixelsPerViewPixel = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+				RawPixelsPerViewPixel = info->RawPixelsPerViewPixel;
 			});
 
 			double ppi = LogicalDpi;
