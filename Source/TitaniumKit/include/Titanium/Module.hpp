@@ -240,8 +240,6 @@ namespace Titanium
 		// Save constructor arguments so module can make copy of itself later on
 		JSObject ctorProperties__;
 #pragma warning(pop)
-	private:
-		static unsigned eventListenerIndex(const std::vector<JSObject>& event_listener_list, const std::string& name, JSObject& callback) TITANIUM_NOEXCEPT;
 	};
 }  // namespace Titanium
 
