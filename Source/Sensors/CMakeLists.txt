@@ -3,47 +3,13 @@
 # Please see the LICENSE included with this distribution for details.
 cmake_minimum_required(VERSION 3.0.0)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
-  set(PLATFORM wp)
-  add_definitions("-DPHONE")
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
-  set(PLATFORM store)
-else()
-  message(FATAL_ERROR "This app supports Store / Phone only.")
-endif()
-
-project(TitaniumWindows_Sensors)
-
-set(TitaniumWindows_Sensors_VERSION 0.1.0)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+project(TitaniumWindows_Sensors VERSION 0.1.0 LANGUAGES CXX)
 
 option(TitaniumWindows_Sensors_DISABLE_TESTS "Disable compiling the tests" OFF)
 
-# Use solution folders.
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-get_filename_component(APPCELERATOR_CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake ABSOLUTE)
-
-# Define helper functions and macros.
-include(${APPCELERATOR_CMAKE_MODULE_PATH}/internal_utils.cmake)
-
-# Defined in internal_utils.cmake.
-config_compiler_and_linker()
-
-# Allow "make test" to work.
-enable_testing()
-
-if(NOT TARGET TitaniumKit)
-	get_filename_component(TitaniumKit_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../TitaniumKit ABSOLUTE)
-	add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Utility)
-  get_filename_component(Utility_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../Utility ABSOLUTE)
-  add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
-endif()
+# necessary to provide <LIBRARY>_EXPORT.h downstream
+set(CMAKE_INCLUDE_CURRENT_DIR ON)		
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 set(SOURCE_Sensors
   include/TitaniumWindows/Accelerometer.hpp
@@ -55,31 +21,36 @@ set(SOURCE_Sensors
   src/Geolocation.cpp
   src/ShakeGestureHelper.cpp
   src/TitaniumEntryPoint.cpp
-  )
+)
 
 source_group(Titanium\\Sensors FILES ${SOURCE_Sensors})
 
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+# Turn on precompiled headers
+include(precompiled_header)
+enable_precompiled_headers(src/stdafx.h SOURCE_Sensors)
 
 add_library(TitaniumWindows_Sensors SHARED
   ${SOURCE_Sensors}
-  )
+)
 
 include(GenerateExportHeader)
 generate_export_header(TitaniumWindows_Sensors)
 target_compile_definitions(TitaniumWindows_Sensors PRIVATE TitaniumWindows_Sensors_EXPORTS)
 
-target_include_directories(TitaniumWindows_Sensors PUBLIC
-  ${PROJECT_SOURCE_DIR}/include
-  $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
-  )
+target_include_directories(TitaniumWindows_Sensors
+  PUBLIC 
+      $<INSTALL_INTERFACE:include>    
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+      src
+)
 
 target_link_libraries(TitaniumWindows_Sensors
-  TitaniumKit
-  TitaniumWindows_Utility
-  )
+  PUBLIC
+    TitaniumKit
+  PRIVATE
+    TitaniumWindows_Utility
+)
 
 set_target_properties(TitaniumWindows_Sensors PROPERTIES VS_WINRT_COMPONENT TRUE)
 
@@ -132,14 +103,15 @@ set_property(TARGET TitaniumWindows_Sensors PROPERTY SOVERSION 0)
 set_property(TARGET TitaniumWindows_Sensors PROPERTY INTERFACE_TitaniumWindows_Sensors_MAJOR_VERSION 0)
 set_property(TARGET TitaniumWindows_Sensors APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING TitaniumWindows_Sensors_MAJOR_VERSION
-  )
+)
 
-install(TARGETS TitaniumWindows_Sensors EXPORT TitaniumWindows_Sensors_Targets
+install(TARGETS TitaniumWindows_Sensors
+  EXPORT TitaniumWindows_Sensors_Targets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
-  )
+)
 
 export(EXPORT TitaniumWindows_Sensors_Targets
   FILE "${CMAKE_BINARY_DIR}/TitaniumWindows_Sensors_Targets.cmake"
@@ -148,14 +120,14 @@ export(EXPORT TitaniumWindows_Sensors_Targets
 configure_file(cmake/TitaniumWindows_Sensors_Config.cmake
   "${CMAKE_BINARY_DIR}/TitaniumWindows_Sensors_Config.cmake"
   COPYONLY
-  )
+)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${CMAKE_BINARY_DIR}/TitaniumWindows_Sensors_ConfigVersion.cmake"
   VERSION ${TitaniumWindows_Sensors_VERSION}
   COMPATIBILITY AnyNewerVersion
-  )
+)
 
 # Store the current build directory in the CMake user package registry
 # so that find_package(TitaniumWindows_Sensors) works.

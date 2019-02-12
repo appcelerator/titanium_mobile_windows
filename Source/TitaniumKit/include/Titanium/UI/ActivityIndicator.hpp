@@ -9,7 +9,6 @@
 #ifndef _TITANIUM_ACTIVITYINDICATOR_HPP_
 #define _TITANIUM_ACTIVITYINDICATOR_HPP_
 
-#include "Titanium/Module.hpp"
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Font.hpp"
 #include "Titanium/UI/ActivityIndicatorStyle.hpp"

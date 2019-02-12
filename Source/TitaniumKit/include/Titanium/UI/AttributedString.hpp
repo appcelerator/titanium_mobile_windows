@@ -11,7 +11,6 @@
 
 #include "Titanium/Module.hpp"
 #include "Titanium/UI/Constants.hpp"
-#include "Titanium/UI/Font.hpp"
 #include <vector>
 #include <unordered_set>
 

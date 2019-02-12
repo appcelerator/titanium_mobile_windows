@@ -8,7 +8,6 @@
 #include "TitaniumWindows/App/BackgroundServiceTask.hpp"
 #include "TitaniumWindows/App/BackgroundService.hpp"
 #include "Titanium/GeolocationModule.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include <ppltasks.h>
 
 namespace TitaniumWindows

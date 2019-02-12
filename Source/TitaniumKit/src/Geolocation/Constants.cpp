@@ -116,7 +116,7 @@ namespace Titanium
 			static std::once_flag of;
 			std::call_once(of, []() {
 				map[PROVIDER::GPS] = "PROVIDER_GPS";
-				map[PROVIDER::NETOWORK] = "PROVIDER_NETWORK";
+				map[PROVIDER::NETWORK] = "PROVIDER_NETWORK";
 				map[PROVIDER::PASSIVE] = "PROVIDER_PASSIVE";
 			});
 
@@ -233,7 +233,7 @@ namespace Titanium
 			static std::once_flag of;
 			std::call_once(of, []() {
 				map["PROVIDER_GPS"] = PROVIDER::GPS;
-				map["PROVIDER_NETOWORK"] = PROVIDER::NETOWORK;
+				map["PROVIDER_NETWORK"] = PROVIDER::NETWORK;
 				map["PROVIDER_PASSIVE"] = PROVIDER::PASSIVE;
 			});
 
@@ -351,7 +351,7 @@ namespace Titanium
 			static std::once_flag of;
 			std::call_once(of, []() {
 				map[static_cast<std::underlying_type<PROVIDER>::type>(PROVIDER::GPS)] = PROVIDER::GPS;
-				map[static_cast<std::underlying_type<PROVIDER>::type>(PROVIDER::NETOWORK)] = PROVIDER::NETOWORK;
+				map[static_cast<std::underlying_type<PROVIDER>::type>(PROVIDER::NETWORK)] = PROVIDER::NETWORK;
 				map[static_cast<std::underlying_type<PROVIDER>::type>(PROVIDER::PASSIVE)] = PROVIDER::PASSIVE;
 			});
 

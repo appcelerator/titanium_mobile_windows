@@ -6,8 +6,9 @@
 * Please see the LICENSE included with this distribution for details.
 */
 
+#include <algorithm>
+
 #include "TitaniumWindows/App/Properties.hpp"
-#include "Titanium/detail/TiLogger.hpp"
 #include "TitaniumWindows/Utility.hpp"
 
 namespace TitaniumWindows
@@ -186,7 +187,7 @@ namespace TitaniumWindows
 			if (value.size() > limit) {
 				std::uint32_t array_size = 0;
 				for (std::string::const_iterator it(value.begin()); it != value.end();) {
-					const auto sc = std::min(limit, std::distance(it, value.end()));
+					const auto sc = (std::min)(limit, std::distance(it, value.end()));
 					const auto newvalue = std::string(it, it + sc);
 
 					// store original string in different place.

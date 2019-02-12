@@ -10,9 +10,8 @@
 #define _TITANIUM_UI_LISTVIEW_HPP_
 
 #include "Titanium/UI/View.hpp"
-#include "Titanium/UI/ListSection.hpp"
-#include "Titanium/UI/ListViewMarkerProps.hpp"
 #include "Titanium/UI/ListModel.hpp"
+#include "Titanium/UI/ListViewMarkerProps.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include <vector>
 #include <unordered_map>
@@ -24,6 +23,7 @@ namespace Titanium
 	{
 		using namespace HAL;
 
+		class ListSection;
 		class ListViewAnimationProperties;
 		class SearchBar;
 

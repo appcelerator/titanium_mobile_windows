@@ -12,6 +12,7 @@
 #include "Titanium/Blob.hpp"
 #include "Titanium/BufferStream.hpp"
 #include "Titanium/BlobStream.hpp"
+#include "Titanium/ErrorResponse.hpp"
 
 #define CREATE_TITANIUM_BUFFER(NAME) \
   const auto NAME##_ctor = get_context().JSEvaluateScript("Ti.Buffer"); \

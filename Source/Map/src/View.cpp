@@ -11,8 +11,6 @@
 #include "TitaniumWindows/Map/Annotation.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/App/Properties.hpp"
-#include "Titanium/detail/TiLogger.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)

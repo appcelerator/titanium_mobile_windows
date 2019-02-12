@@ -16,7 +16,7 @@ const
 	async = require('async'),
 	windowslib = require('windowslib'),
 	__ = appc.i18n(__dirname).__,
-	CMAKE_TEMP_KEY = path.join(__dirname, '..', 'vendor', 'cmake', 'share', 'cmake-3.8', 'Templates', 'Windows', 'Windows_TemporaryKey.pfx');
+	CMAKE_TEMP_KEY = path.join(__dirname, '..', 'vendor', 'cmake', 'share', 'cmake-3.14', 'Templates', 'Windows', 'Windows_TemporaryKey.pfx');
 
 exports.cliVersion = '>=3.2';
 

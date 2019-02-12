@@ -11,7 +11,6 @@
 
 #include "TitaniumWindows_Map_EXPORT.h"
 #include "Titanium/Map/View.hpp"
-#include "Titanium/detail/TiBase.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 
 namespace TitaniumWindows
@@ -20,9 +19,9 @@ namespace TitaniumWindows
 	{
 		using namespace HAL;
 
-		using Annotation_shared_ptr_t = std::shared_ptr<Titanium::Map::Annotation>;
-
 		class Annotation;
+
+		using Annotation_shared_ptr_t = std::shared_ptr<Titanium::Map::Annotation>;
 
 		/*!
 		  @class View

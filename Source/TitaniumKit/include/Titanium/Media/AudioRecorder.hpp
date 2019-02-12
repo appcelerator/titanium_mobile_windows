@@ -11,10 +11,14 @@
 
 #include "Titanium/Module.hpp"
 #include "Titanium/Media/Constants.hpp"
-#include "Titanium/Filesystem/File.hpp"
 
 namespace Titanium
 {
+	namespace Filesystem
+	{
+		class File;
+	}
+
 	namespace Media
 	{
 		using namespace HAL;

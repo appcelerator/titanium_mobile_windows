@@ -5,52 +5,13 @@
 # Please see the LICENSE included with this distribution for details.
 cmake_minimum_required(VERSION 3.0.0)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
-  set(PLATFORM wp)
-  add_definitions("-DPHONE")
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
-  set(PLATFORM store)
-else()
-  message(FATAL_ERROR "This app supports Store / Phone only.")
-endif()
-
-project(TitaniumWindows_Map)
-
-set(TitaniumWindows_Map_VERSION 0.1.0)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+project(TitaniumWindows_Map VERSION 0.1.0 LANGUAGES CXX)
 
 option(TitaniumWindows_Map_DISABLE_TESTS "Disable compiling the tests" OFF)
 
-# Use solution folders.
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-get_filename_component(APPCELERATOR_CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake ABSOLUTE)
-
-# Define helper functions and macros.
-include(${APPCELERATOR_CMAKE_MODULE_PATH}/internal_utils.cmake)
-
-# Defined in internal_utils.cmake.
-config_compiler_and_linker()
-
-# Allow "make test" to work.
-enable_testing()
-
-if(NOT TARGET TitaniumKit)
-	get_filename_component(TitaniumKit_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../TitaniumKit ABSOLUTE)
-	add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Utility)
-  get_filename_component(Utility_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../Utility ABSOLUTE)
-  add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_UI)
-  get_filename_component(UI_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../UI ABSOLUTE)
-  add_subdirectory(${UI_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/UI EXCLUDE_FROM_ALL)
-endif()
+# necessary to provide <LIBRARY>_EXPORT.h downstream
+set(CMAKE_INCLUDE_CURRENT_DIR ON)		
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 set(SOURCE_Map
   include/TitaniumWindows/Map/View.hpp
@@ -59,35 +20,38 @@ set(SOURCE_Map
   include/TitaniumWindows/Map/Annotation.hpp
   src/Annotation.cpp
   src/TitaniumEntryPoint.cpp
-  )
+)
 
 source_group(Titanium\\Map FILES ${SOURCE_Map})
 
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+# Turn on precompiled headers
+include(precompiled_header)
+enable_precompiled_headers(src/stdafx.h SOURCE_Map)
 
 add_library(TitaniumWindows_Map SHARED
   ${SOURCE_Map}
-  )
+)
 
 include(GenerateExportHeader)
 generate_export_header(TitaniumWindows_Map)
 target_compile_definitions(TitaniumWindows_Map PRIVATE TitaniumWindows_Map_EXPORTS)
 
-target_include_directories(TitaniumWindows_Map PUBLIC
-  ${PROJECT_SOURCE_DIR}/include
-  $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:TitaniumWindows_UI,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:TitaniumWindows_Ti,INTERFACE_INCLUDE_DIRECTORIES>
-  )
+target_include_directories(TitaniumWindows_Map
+  PUBLIC 
+      $<INSTALL_INTERFACE:include>    
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+      src
+)
 
 target_link_libraries(TitaniumWindows_Map
-  TitaniumKit
-  TitaniumWindows_Utility
-  TitaniumWindows_UI
-  TitaniumWindows_Ti
-  )
+  PUBLIC
+    TitaniumKit
+    TitaniumWindows_Utility
+  PRIVATE
+    TitaniumWindows_UI
+    TitaniumWindows_Ti
+)
 
 set_target_properties(TitaniumWindows_Map PROPERTIES VS_WINRT_COMPONENT TRUE)
 
@@ -137,14 +101,15 @@ set_property(TARGET TitaniumWindows_Map PROPERTY SOVERSION 0)
 set_property(TARGET TitaniumWindows_Map PROPERTY INTERFACE_TitaniumWindows_Map_MAJOR_VERSION 0)
 set_property(TARGET TitaniumWindows_Map APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING TitaniumWindows_Map_MAJOR_VERSION
-  )
+)
 
-install(TARGETS TitaniumWindows_Map EXPORT TitaniumWindows_Map_Targets
+install(TARGETS TitaniumWindows_Map
+  EXPORT TitaniumWindows_Map_Targets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
-  )
+)
 
 export(EXPORT TitaniumWindows_Map_Targets
   FILE "${CMAKE_BINARY_DIR}/TitaniumWindows_Map_Targets.cmake"
@@ -153,14 +118,14 @@ export(EXPORT TitaniumWindows_Map_Targets
 configure_file(cmake/TitaniumWindows_Map_Config.cmake
   "${CMAKE_BINARY_DIR}/TitaniumWindows_Map_Config.cmake"
   COPYONLY
-  )
+)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${CMAKE_BINARY_DIR}/TitaniumWindows_Map_ConfigVersion.cmake"
   VERSION ${TitaniumWindows_Map_VERSION}
   COMPATIBILITY AnyNewerVersion
-  )
+)
 
 # Store the current build directory in the CMake user package registry
 # so that find_package(TitaniumWindows_Map) works.

@@ -6,7 +6,6 @@
 * Please see the LICENSE included with this distribution for details.
 */
 #include "TitaniumWindows/UI/Windows/AppBarButton.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 
 namespace TitaniumWindows
 {

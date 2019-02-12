@@ -10,9 +10,10 @@
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Animation.hpp"
 #include "Titanium/UI/2DMatrix.hpp"
+#include "Titanium/UI/Dimension.hpp"
 #include "Titanium/UI/Point.hpp"
 #include "Titanium/UI/MatrixCreationDict.hpp"
-#include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/UI/ViewInsertOrReplaceParams.hpp"
 #include "Titanium/App.hpp"
 #include "Titanium/Blob.hpp"
 #include <string>

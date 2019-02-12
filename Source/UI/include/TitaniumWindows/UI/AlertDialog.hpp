@@ -11,7 +11,6 @@
 
 #include "TitaniumWindows_UI_EXPORT.h"
 #include "Titanium/UI/AlertDialog.hpp"
-#include "Titanium/detail/TiBase.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include <functional>
 #include <agile.h>

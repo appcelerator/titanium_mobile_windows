@@ -9,7 +9,6 @@
 
 #include "Titanium/Module.hpp"
 #include "Titanium/Filesystem/Constants.hpp"
-#include "Titanium/ErrorResponse.hpp"
 #include <chrono>
 #include <vector>
 #include <functional>
@@ -17,6 +16,7 @@
 namespace Titanium
 {
 	class Blob;
+	struct ErrorResponse;
 
 	namespace Filesystem
 	{

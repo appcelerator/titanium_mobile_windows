@@ -12,6 +12,7 @@
 #include "Titanium/detail/TiBase.hpp"
 #include "Titanium/UI/Point.hpp"
 
+// TODO: Move into 2DMatrix.hpp, move impl into 2DMatrix.cpp
 namespace Titanium
 {
 	namespace UI

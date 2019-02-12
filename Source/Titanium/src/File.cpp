@@ -6,7 +6,6 @@
 
 #include "TitaniumWindows/File.hpp"
 #include "TitaniumWindows/Blob.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include <ppltasks.h>
 #include <concrt.h>
 #include <collection.h>

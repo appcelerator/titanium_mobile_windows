@@ -3,52 +3,13 @@
 # Please see the LICENSE included with this distribution for details.
 cmake_minimum_required(VERSION 3.0.0)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
-  set(PLATFORM wp)
-  add_definitions("-DPHONE")
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
-  set(PLATFORM store)
-else()
-  message(FATAL_ERROR "This app supports Store / Phone only.")
-endif()
-
-project(TitaniumWindows_Media)
-
-set(TitaniumWindows_Media_VERSION 0.1.0)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+project(TitaniumWindows_Media VERSION 0.1.0 LANGUAGES CXX)
 
 option(TitaniumWindows_Media_DISABLE_TESTS "Disable compiling the tests" OFF)
 
-# Use solution folders.
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-get_filename_component(APPCELERATOR_CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake ABSOLUTE)
-
-# Define helper functions and macros.
-include(${APPCELERATOR_CMAKE_MODULE_PATH}/internal_utils.cmake)
-
-# Defined in internal_utils.cmake.
-config_compiler_and_linker()
-
-# Allow "make test" to work.
-enable_testing()
-
-if(NOT TARGET TitaniumKit)
-	get_filename_component(TitaniumKit_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../TitaniumKit ABSOLUTE)
-	add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Utility)
-  get_filename_component(Utility_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../Utility ABSOLUTE)
-  add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_UI)
-  get_filename_component(UI_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../UI ABSOLUTE)
-  add_subdirectory(${UI_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/UI EXCLUDE_FROM_ALL)
-endif()
+# necessary to provide <LIBRARY>_EXPORT.h downstream
+set(CMAKE_INCLUDE_CURRENT_DIR ON)		
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 set(SOURCE_Media
   include/TitaniumWindows/Media.hpp
@@ -72,29 +33,33 @@ set(SOURCE_Media
 
 source_group(Titanium\\Media FILES ${SOURCE_Media})
 
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+# Turn on precompiled headers
+include(precompiled_header)
+enable_precompiled_headers(src/stdafx.h SOURCE_Media)
 
 add_library(TitaniumWindows_Media SHARED
   ${SOURCE_Media}
-  )
+)
 
 include(GenerateExportHeader)
 generate_export_header(TitaniumWindows_Media)
 target_compile_definitions(TitaniumWindows_Media PRIVATE TitaniumWindows_Media_EXPORTS)
 
-target_include_directories(TitaniumWindows_Media PUBLIC
-  ${PROJECT_SOURCE_DIR}/include
-  $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:TitaniumWindows_UI,INTERFACE_INCLUDE_DIRECTORIES>
-  )
+target_include_directories(TitaniumWindows_Media
+  PUBLIC 
+      $<INSTALL_INTERFACE:include>    
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+      src
+)
 
 target_link_libraries(TitaniumWindows_Media
-  TitaniumKit
-  TitaniumWindows_Utility
-  TitaniumWindows_UI
-  )
+  PUBLIC
+    TitaniumKit
+  PRIVATE
+    TitaniumWindows_Utility
+    TitaniumWindows_UI
+)
 
 set_target_properties(TitaniumWindows_Media PROPERTIES VS_WINRT_COMPONENT TRUE)
 
@@ -144,14 +109,15 @@ set_property(TARGET TitaniumWindows_Media PROPERTY SOVERSION 0)
 set_property(TARGET TitaniumWindows_Media PROPERTY INTERFACE_TitaniumWindows_Media_MAJOR_VERSION 0)
 set_property(TARGET TitaniumWindows_Media APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING TitaniumWindows_Media_MAJOR_VERSION
-  )
+)
 
-install(TARGETS TitaniumWindows_Media EXPORT TitaniumWindows_Media_Targets
+install(TARGETS TitaniumWindows_Media
+  EXPORT TitaniumWindows_Media_Targets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
-  )
+)
 
 export(EXPORT TitaniumWindows_Media_Targets
   FILE "${CMAKE_BINARY_DIR}/TitaniumWindows_Media_Targets.cmake"
@@ -160,14 +126,14 @@ export(EXPORT TitaniumWindows_Media_Targets
 configure_file(cmake/TitaniumWindows_Media_Config.cmake
   "${CMAKE_BINARY_DIR}/TitaniumWindows_Media_Config.cmake"
   COPYONLY
-  )
+)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${CMAKE_BINARY_DIR}/TitaniumWindows_Media_ConfigVersion.cmake"
   VERSION ${TitaniumWindows_Media_VERSION}
   COMPATIBILITY AnyNewerVersion
-  )
+)
 
 # Store the current build directory in the CMake user package registry
 # so that find_package(TitaniumWindows_Media) works.

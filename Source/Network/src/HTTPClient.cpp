@@ -7,6 +7,7 @@
 #include <windows.h>
 #include "TitaniumWindows/Network/HTTPClient.hpp"
 #include "Titanium/detail/TiLogger.hpp"
+#include "Titanium/Blob.hpp"
 
 #include <collection.h>
 #include <ppl.h>
