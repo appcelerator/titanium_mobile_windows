@@ -10,7 +10,7 @@
 #include <concrt.h>
 #include "TitaniumWindows/LogForwarder.hpp"
 #include "TitaniumWindows/Utility.hpp"
-#include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/Filesystem/File.hpp"
 
 namespace TitaniumWindows
 {

@@ -5,7 +5,6 @@
  */
 
 #include "TitaniumWindows/Codec.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/Buffer.hpp"
 #include <windows.h>
 #include <ppltasks.h>

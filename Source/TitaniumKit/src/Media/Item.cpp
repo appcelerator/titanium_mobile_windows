@@ -7,6 +7,7 @@
  */
 
 #include "Titanium/Media/Item.hpp"
+#include "Titanium/Blob.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 
 namespace Titanium

@@ -8,10 +8,15 @@
 
 #include "Titanium/UI/View.hpp"
 #include "Titanium/UI/Animation.hpp"
+#include "Titanium/UI/ViewLayoutDelegate.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/Blob.hpp"
 #include "Titanium/UI/2DMatrix.hpp"
 #include "Titanium/UI/3DMatrix.hpp"
+#include "Titanium/UI/Point.hpp"
+#include "Titanium/UI/Gradient.hpp"
+#include "Titanium/UI/Dimension.hpp"
+#include "Titanium/UI/ViewInsertOrReplaceParams.hpp"
 
 #define CHECK_UI_DELEGATE_GETTER if (!layoutDelegate__) return get_context().CreateUndefined();
 #define CHECK_UI_DELEGATE_SETTER if (!layoutDelegate__) return false;

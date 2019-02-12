@@ -8,7 +8,6 @@
 
 #include "TitaniumWindows/UI/Notification.hpp"
 #include "TitaniumWindows/Utility.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 
 namespace TitaniumWindows

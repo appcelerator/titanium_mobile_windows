@@ -6,7 +6,6 @@
 
 #include "TitaniumWindows/Accelerometer.hpp"
 #include "TitaniumWindows/WindowsTiImpl.hpp"
-#include "Titanium/detail/TiLogger.hpp"
 #include <iostream>
 #include <objbase.h>
 

@@ -6,7 +6,6 @@
 * Please see the LICENSE included with this distribution for details.
 */
 #include "TitaniumWindows/UI/Windows/Style.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UI/View.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/UI/Windows/ViewHelper.hpp"

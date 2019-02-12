@@ -7,7 +7,6 @@
 */
 #include "TitaniumWindows/App/WindowsModule.hpp"
 #include "TitaniumWindows/App/BackgroundService.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include <ppltasks.h>
 
 #define CREATE_TITANIUM_APP_WINDOWS(NAME) \
