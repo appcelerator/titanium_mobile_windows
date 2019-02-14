@@ -8,6 +8,7 @@
 
 #include "Titanium/IOStream.hpp"
 #include "Titanium/Buffer.hpp"
+#include "Titanium/ErrorResponse.hpp"
 
 namespace Titanium
 {

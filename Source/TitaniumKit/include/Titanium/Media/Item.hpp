@@ -10,12 +10,13 @@
 #define _TITANIUM_MEDIA_ITEM_HPP_
 
 #include "Titanium/Module.hpp"
-#include "Titanium/Blob.hpp"
 #include "Titanium/Media/Constants.hpp"
 #include <chrono>
 
 namespace Titanium
 {
+	class Blob;
+
 	namespace Media
 	{
 		using namespace HAL;

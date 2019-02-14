@@ -5,47 +5,13 @@
 # Please see the LICENSE included with this distribution for details.
 cmake_minimum_required(VERSION 3.0.0)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
-  set(PLATFORM wp)
-  add_definitions("-DPHONE")
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
-  set(PLATFORM store)
-else()
-  message(FATAL_ERROR "This app supports Store / Phone only.")
-endif()
-
-project(TitaniumWindows_UI)
-
-set(TitaniumWindows_UI_VERSION 0.1.0)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+project(TitaniumWindows_UI VERSION 0.1.0 LANGUAGES CXX)
 
 option(TitaniumWindows_UI_DISABLE_TESTS "Disable compiling the tests" OFF)
 
-# Use solution folders.
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-get_filename_component(APPCELERATOR_CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake ABSOLUTE)
-
-# Define helper functions and macros.
-include(${APPCELERATOR_CMAKE_MODULE_PATH}/internal_utils.cmake)
-
-# Defined in internal_utils.cmake.
-config_compiler_and_linker()
-
-# Allow "make test" to work.
-enable_testing()
-
-if(NOT TARGET TitaniumKit)
-	get_filename_component(TitaniumKit_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../TitaniumKit ABSOLUTE)
-	add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Utility)
-  get_filename_component(Utility_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../Utility ABSOLUTE)
-  add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
-endif()
+# necessary to provide <LIBRARY>_EXPORT.h downstream
+set(CMAKE_INCLUDE_CURRENT_DIR ON)		
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 set(SOURCE_UI
   include/TitaniumWindows/UI/Clipboard.hpp
@@ -111,7 +77,7 @@ set(SOURCE_UI
   include/TitaniumWindows/UI/UIElement.hpp
   src/UIElement.cpp
   src/TitaniumEntryPoint.cpp
-  )
+)
 
 source_group(Titanium\\UI FILES ${SOURCE_UI})
 
@@ -134,35 +100,41 @@ set(SOURCE_UI_Windows
   src/Windows/Style.cpp
   include/TitaniumWindows/UI/Windows/ListViewScrollPosition.hpp
   src/Windows/ListViewScrollPosition.cpp
-  )
+)
 
 source_group(Titanium\\UI\\Windows FILES ${SOURCE_UI_Windows})
 
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
-
-add_library(TitaniumWindows_UI SHARED
+set(SOURCE_ALL
   ${SOURCE_UI}
   ${SOURCE_UI_Windows}
-  )
+)
+
+# Turn on precompiled headers
+include(precompiled_header)
+enable_precompiled_headers(src/stdafx.h SOURCE_ALL)
+
+add_library(TitaniumWindows_UI SHARED
+  ${SOURCE_ALL}
+)
 
 include(GenerateExportHeader)
 generate_export_header(TitaniumWindows_UI)
 target_compile_definitions(TitaniumWindows_UI PRIVATE TitaniumWindows_UI_EXPORTS)
 
-target_include_directories(TitaniumWindows_UI PUBLIC
-  ${PROJECT_SOURCE_DIR}/include
-  $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:TitaniumWindows,INTERFACE_INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:LayoutEngine,INTERFACE_INCLUDE_DIRECTORIES>
-  )
+target_include_directories(TitaniumWindows_UI
+  PUBLIC 
+      $<INSTALL_INTERFACE:include>    
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+      src
+)
 
 target_link_libraries(TitaniumWindows_UI
-  TitaniumKit
-  LayoutEngine
-  TitaniumWindows_Utility
-  )
+  PUBLIC
+    TitaniumKit
+    LayoutEngine
+    TitaniumWindows_Utility
+)
 
 set_target_properties(TitaniumWindows_UI PROPERTIES VS_WINRT_COMPONENT TRUE)
 
@@ -215,14 +187,15 @@ set_property(TARGET TitaniumWindows_UI PROPERTY SOVERSION 0)
 set_property(TARGET TitaniumWindows_UI PROPERTY INTERFACE_TitaniumWindows_UI_MAJOR_VERSION 0)
 set_property(TARGET TitaniumWindows_UI APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING TitaniumWindows_UI_MAJOR_VERSION
-  )
+)
 
-install(TARGETS TitaniumWindows_UI EXPORT TitaniumWindows_UI_Targets
+install(TARGETS TitaniumWindows_UI
+  EXPORT TitaniumWindows_UI_Targets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
-  )
+)
 
 export(EXPORT TitaniumWindows_UI_Targets
   FILE "${CMAKE_BINARY_DIR}/TitaniumWindows_UI_Targets.cmake"
@@ -231,14 +204,14 @@ export(EXPORT TitaniumWindows_UI_Targets
 configure_file(cmake/TitaniumWindows_UI_Config.cmake
   "${CMAKE_BINARY_DIR}/TitaniumWindows_UI_Config.cmake"
   COPYONLY
-  )
+)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${CMAKE_BINARY_DIR}/TitaniumWindows_UI_ConfigVersion.cmake"
   VERSION ${TitaniumWindows_UI_VERSION}
   COMPATIBILITY AnyNewerVersion
-  )
+)
 
 # Store the current build directory in the CMake user package registry
 # so that find_package(TitaniumWindows_UI) works.

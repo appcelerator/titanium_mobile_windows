@@ -11,7 +11,6 @@
 
 #include "TitaniumWindows_Map_EXPORT.h"
 #include "Titanium/Map/Annotation.hpp"
-#include "Titanium/detail/TiBase.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 
 namespace TitaniumWindows

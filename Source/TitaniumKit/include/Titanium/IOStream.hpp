@@ -11,13 +11,13 @@
 
 #include "Titanium/Module.hpp"
 #include "Titanium/Filesystem/Constants.hpp"
-#include "Titanium/ErrorResponse.hpp"
 
 namespace Titanium
 {
 	using namespace HAL;
 
 	class Buffer;
+	struct ErrorResponse;
 
 	/*!
 	  @class

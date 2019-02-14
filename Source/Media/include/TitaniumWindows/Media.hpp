@@ -12,9 +12,6 @@
 #include "Titanium/Media/CameraOptionsType.hpp"
 #include "Titanium/Media/PhotoGalleryOptionsType.hpp"
 #include "Titanium/Media/MusicLibraryOptionsType.hpp"
-#include "Titanium/detail/TiBase.hpp"
-#include "Titanium/UI/View.hpp"
-#include "TitaniumWindows/WindowsMacros.hpp"
 #include <agile.h>
 #include <collection.h>
 

@@ -5,7 +5,6 @@
  */
 
 #include "TitaniumWindows/Media/Item.hpp"
-#include "Titanium/detail/TiLogger.hpp"
 
 namespace TitaniumWindows
 {

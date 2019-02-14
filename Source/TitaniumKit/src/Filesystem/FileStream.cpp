@@ -9,6 +9,7 @@
 #include "Titanium/Filesystem/FileStream.hpp"
 #include "Titanium/Filesystem/File.hpp"
 #include "Titanium/Buffer.hpp"
+#include "Titanium/ErrorResponse.hpp"
 
 namespace Titanium
 {

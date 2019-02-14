@@ -11,9 +11,8 @@
 
 #include "TitaniumWindows_UI_EXPORT.h"
 #include "Titanium/UI/EmailDialog.hpp"
-#include "Titanium/detail/TiBase.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
-#include <Windows.h>
+#include <windows.h>
 
 namespace TitaniumWindows
 {

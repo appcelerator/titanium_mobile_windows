@@ -7,7 +7,6 @@
  */
 
 #include "TitaniumWindows/UI/WebView.hpp"
-#include "Titanium/detail/TiBase.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>

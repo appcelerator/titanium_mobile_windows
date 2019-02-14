@@ -8,6 +8,7 @@
 
 #include "Titanium/UI/ListView.hpp"
 #include "Titanium/UI/ListViewAnimationProperties.hpp"
+#include "Titanium/UI/ListSection.hpp"
 #include "Titanium/UI/SearchBar.hpp"
 #include "Titanium/UI/listview_js.hpp"
 #include <boost/algorithm/string.hpp>

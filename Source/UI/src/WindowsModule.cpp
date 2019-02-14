@@ -13,7 +13,6 @@
 #include "TitaniumWindows/UI/Windows/SystemIcon.hpp"
 #include "TitaniumWindows/UI/Windows/Style.hpp"
 #include "TitaniumWindows/UI/Windows/ListViewScrollPosition.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 
 #define CREATE_TITANIUM_UI_WINDOWS(NAME) \
   JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium"); \

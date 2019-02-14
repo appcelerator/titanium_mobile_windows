@@ -8,8 +8,6 @@
 
 #include "TitaniumWindows/Map/Annotation.hpp"
 #include "TitaniumWindows/Utility.hpp"
-#include "Titanium/detail/TiLogger.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include "TitaniumWindows/WindowsTiImpl.hpp"
 #include "TitaniumWindows/Map/View.hpp"

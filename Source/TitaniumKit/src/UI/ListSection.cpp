@@ -9,6 +9,7 @@
 #include "Titanium/UI/ListSection.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UI/ListView.hpp"
+#include "Titanium/UI/ListViewAnimationProperties.hpp"
 #include <boost/algorithm/string.hpp>
 
 namespace Titanium
