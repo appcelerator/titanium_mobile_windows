@@ -5,8 +5,6 @@
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
-
-#include "Titanium/detail/TiBase.hpp"
 #include "Titanium/ErrorResponse.hpp"
 #include "Titanium/Contacts/ShowContactsParams.hpp"
 #include "TitaniumWindows/Contacts.hpp"

@@ -9,7 +9,6 @@
 
 #include "TitaniumWindows_Network_EXPORT.h"
 #include "Titanium/Network/Socket/UDP.hpp"
-#include "Titanium/Buffer.hpp"
 
 namespace TitaniumWindows
 {

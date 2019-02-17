@@ -7,7 +7,6 @@
 */
 
 #include "TitaniumWindows/UI/PickerColumn.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/UI/PickerRow.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include "TitaniumWindows/UI/Windows/ViewHelper.hpp"

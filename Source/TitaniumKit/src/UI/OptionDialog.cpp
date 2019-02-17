@@ -10,6 +10,8 @@
 #include "Titanium/UI/View.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/Locale.hpp"
+#include "Titanium/UI/OptionDialogShowParams.hpp"
+#include "Titanium/UI/OptionDialogHideParams.hpp"
 
 namespace Titanium
 {

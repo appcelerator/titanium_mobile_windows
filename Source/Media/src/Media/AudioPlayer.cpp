@@ -5,9 +5,7 @@
  */
 
 #include "TitaniumWindows/Media/AudioPlayer.hpp"
-#include "Titanium/detail/TiLogger.hpp"
 #include "TitaniumWindows/Utility.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 
 using namespace Windows::UI::Xaml;

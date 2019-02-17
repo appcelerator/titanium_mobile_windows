@@ -6,6 +6,7 @@
 
 #include "TitaniumWindows/Network.hpp"
 #include "Titanium/detail/TiLogger.hpp"
+#include "Titanium/Network/Cookie.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include <boost/format.hpp>
 #include <boost/algorithm/string/replace.hpp>

@@ -16,7 +16,6 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
 #include "TitaniumWindows/WindowsTiImpl.hpp"

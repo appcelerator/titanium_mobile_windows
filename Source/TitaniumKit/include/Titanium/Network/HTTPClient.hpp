@@ -8,7 +8,6 @@
 #define _TITANIUM_NETWORK_HTTPCLIENT_HPP_
 
 #include "Titanium/Module.hpp"
-#include "Titanium/Blob.hpp"
 #include "Titanium/Network/Constants.hpp"
 
 #define BOOST_BIND_NO_PLACEHOLDERS

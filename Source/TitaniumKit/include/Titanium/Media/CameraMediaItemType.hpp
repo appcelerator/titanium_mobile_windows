@@ -15,8 +15,6 @@
 
 namespace Titanium
 {
-	class Blob;
-
 	namespace Media
 	{
 		using namespace HAL;

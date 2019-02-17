@@ -6,6 +6,8 @@
 
 #include "TitaniumWindows/Network/Socket/TCP.hpp"
 #include "TitaniumWindows/Utility.hpp"
+#include "Titanium/Buffer.hpp"
+#include "Titanium/ErrorResponse.hpp"
 
 #include <ppl.h>
 

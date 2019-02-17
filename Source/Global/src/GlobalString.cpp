@@ -8,7 +8,6 @@
 
 #include "TitaniumWindows/GlobalString.hpp"
 #include "TitaniumWindows/Utility.hpp"
-#include "Titanium/detail/TiLogger.hpp"
 
 namespace TitaniumWindows
 {

@@ -10,7 +10,12 @@
 #include "Titanium/UI/View.hpp"
 #include "Titanium/detail/TiLogger.hpp"
 #include "Titanium/App.hpp"
+#include "Titanium/Blob.hpp"
 #include "Titanium/App/Properties.hpp"
+#include "Titanium/UI/2DMatrix.hpp"
+#include "Titanium/UI/3DMatrix.hpp"
+#include "Titanium/UI/Dimension.hpp"
+#include "Titanium/UI/ViewInsertOrReplaceParams.hpp"
 
 namespace Titanium
 {
