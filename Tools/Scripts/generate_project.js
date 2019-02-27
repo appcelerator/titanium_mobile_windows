@@ -62,6 +62,7 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch) 
 			'-DTitaniumWindows_Ti_DISABLE_TESTS=ON',
 			'-DTitaniumWindows_UI_DISABLE_TESTS=ON',
 			'-DTitaniumKit_DISABLE_TESTS=ON',
+			'-DLayoutEngine_DISABLE_TESTS=ON',
 			'-DHAL_DISABLE_TESTS=ON',
 			'-DHAL_RENAME_AXWAYHAL=ON',
 			path.join(__dirname, '..', '..', 'Examples', example_name)
