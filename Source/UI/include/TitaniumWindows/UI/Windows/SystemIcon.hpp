@@ -40,8 +40,6 @@ namespace TitaniumWindows
 
 				static void JSExportInitialize();
 
-				virtual void postInitialize(JSObject& js_object) override;
-
 				TITANIUM_PROPERTY_READONLY_DEF(PREVIOUS);
 				TITANIUM_PROPERTY_READONLY_DEF(NEXT);
 				TITANIUM_PROPERTY_READONLY_DEF(PLAY);

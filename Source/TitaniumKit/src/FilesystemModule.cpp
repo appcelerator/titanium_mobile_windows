@@ -31,7 +31,7 @@ namespace Titanium
 				throw new Error('Unable to open stream for MODE_READ');
 			}
 		)JS";
-		return js_context.CreateFunction(script, { "mode" });
+		return js_context.CreateFunction(script, { JSString("mode") });
 	}
 
 	FilesystemModule::FilesystemModule(const JSContext& js_context) TITANIUM_NOEXCEPT

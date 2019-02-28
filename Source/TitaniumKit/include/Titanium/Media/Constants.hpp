@@ -10,6 +10,7 @@
 #define _TITANIUM_MEDIA_CONSTANTS_HPP_
 
 #include "Titanium/detail/TiBase.hpp"
+#include <unordered_set>
 
 namespace Titanium
 {

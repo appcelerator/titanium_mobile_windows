@@ -29,7 +29,7 @@ namespace TitaniumWindows
 			const std::string script = R"JS(
                  this._ti_scrollview_click_event_source_ = e.source;
             )JS";
-			return contentView.get_context().CreateFunction(script, {"e"});
+			return contentView.get_context().CreateFunction(script, {JSString("e")});
 		}
 
 		void ScrollViewLayoutDelegate::requestLayout(const bool& fire_event)

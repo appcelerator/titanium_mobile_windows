@@ -36,11 +36,6 @@ namespace Titanium
 			TITANIUM_LOG_DEBUG("View::dtor ", this);
 		}
 
-		void View::postInitialize(JSObject& this_object)
-		{
-			Titanium::Module::postInitialize(this_object);
-		}
-
 		void View::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
 		{
 			Titanium::Module::postCallAsConstructor(js_context, arguments);

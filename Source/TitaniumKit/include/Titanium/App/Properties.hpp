@@ -129,7 +129,6 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(_loadAppProperties);
 
 			Properties(const JSContext&) TITANIUM_NOEXCEPT;
-			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 			virtual ~Properties() = default;
 			Properties(const Properties&) = default;

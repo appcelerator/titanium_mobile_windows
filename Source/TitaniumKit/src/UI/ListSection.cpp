@@ -29,9 +29,12 @@ namespace Titanium
 			}
 			item.templateId = static_cast<std::string>(object.GetProperty("template"));
 
+			const auto reserved1 = JSString("properties");
+			const auto reserved2 = JSString("templates");
+
 			// collect all binding properties
 			for (const auto& name : static_cast<std::vector<JSString>>(object.GetPropertyNames())) {
-				if (name == "properties" || name == "templates") {
+				if (name == reserved1 || name == reserved1) {
 					continue;
 				}
 				item.bindings.emplace(name, object.GetProperty(name));

@@ -11,6 +11,7 @@
 
 #include "TitaniumWindows_Global_EXPORT.h"
 #include "Titanium/GlobalObject.hpp"
+#include <unordered_set>
 
 namespace TitaniumWindows
 {

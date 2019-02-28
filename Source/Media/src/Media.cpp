@@ -52,7 +52,7 @@ namespace TitaniumWindows
 		return js_context.CreateFunction(R"JS(
 			Ti.App.removeEventListener('windows.fileOpenFromPicker', this);
 			Ti.Media._postOpenPhotoGallery(e.files);
-		)JS", { "e" });
+		)JS", { JSString("e") });
 	}
 
 	JSFunction MediaModule::createFileOpenForMusicLibraryFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT
@@ -60,7 +60,7 @@ namespace TitaniumWindows
 		return js_context.CreateFunction(R"JS(
 			Ti.App.removeEventListener('windows.fileOpenFromPicker', this);
 			Ti.Media._postOpenMusicLibrary(e.files);
-		)JS", { "e" });
+		)JS", { JSString("e") });
 	}
 
 	JSFunction MediaModule::createBeepFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT

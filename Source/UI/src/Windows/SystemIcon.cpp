@@ -215,11 +215,6 @@ namespace TitaniumWindows
 				TITANIUM_LOG_DEBUG("SystemIcon::ctor Initialize");
 			}
 
-			void SystemIcon::postInitialize(JSObject& js_object)
-			{
-				TITANIUM_LOG_DEBUG("SystemIcon::postInitialize");
-			}
-
 			void SystemIcon::JSExportInitialize()
 			{
 				JSExport<SystemIcon>::SetClassVersion(1);

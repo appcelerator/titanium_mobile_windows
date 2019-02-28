@@ -34,6 +34,7 @@ namespace TitaniumWindows
 
 	void API::postInitialize(JSObject& this_object) 
 	{
+		Titanium::API::postInitialize(this_object);
 		logger__->connect();
 	}
 
