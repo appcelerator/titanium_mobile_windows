@@ -69,14 +69,11 @@ namespace Titanium
 			autocorrect__(false),
 			autoLink__({AUTOLINK::NONE}),
 			clearOnEdit__(false),
-			color__(""),
 			editable__(true),
 			ellipsize__(false),
 			enableReturnKey__(false),
-			hintText__(""),
 			handleLinks__(false),
 			keyboardToolbar__(js_context.CreateUndefined()),
-			keyboardToolbarColor__(""),
 			keyboardToolbarHeight__(0),
 			keyboardType__(KEYBOARD::DEFAULT),
 			maxLength__(-1),
@@ -85,7 +82,6 @@ namespace Titanium
 			suppressReturn__(false),
 			scrollable__(true),
 			textAlign__(TEXT_ALIGNMENT::LEFT),
-			value__(""),
 			verticalAlign__(TEXT_VERTICAL_ALIGNMENT::CENTER)
 		{
 		}
@@ -101,6 +97,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(TextArea, bool, enableReturnKey)
 		TITANIUM_PROPERTY_READWRITE(TextArea, Font, font)
 		TITANIUM_PROPERTY_READWRITE(TextArea, std::string, hintText)
+		TITANIUM_PROPERTY_READWRITE(TextArea, std::string, hintTextColor)
 		TITANIUM_PROPERTY_READWRITE(TextArea, bool, handleLinks)
 		TITANIUM_PROPERTY_READWRITE(TextArea, JSValue, keyboardToolbar)
 		TITANIUM_PROPERTY_READWRITE(TextArea, std::string, keyboardToolbarColor)
@@ -157,6 +154,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(TextArea, enableReturnKey);
 			TITANIUM_ADD_PROPERTY(TextArea, font);
 			TITANIUM_ADD_PROPERTY(TextArea, hintText);
+			TITANIUM_ADD_PROPERTY(TextArea, hintTextColor);
 			TITANIUM_ADD_PROPERTY(TextArea, handleLinks);
 			TITANIUM_ADD_PROPERTY(TextArea, keyboardToolbar);
 			TITANIUM_ADD_PROPERTY(TextArea, keyboardToolbarColor);
@@ -200,6 +198,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(TextArea, setFont);
 			TITANIUM_ADD_FUNCTION(TextArea, getHintText);
 			TITANIUM_ADD_FUNCTION(TextArea, setHintText);
+			TITANIUM_ADD_FUNCTION(TextArea, getHintTextColor);
+			TITANIUM_ADD_FUNCTION(TextArea, setHintTextColor);
 			TITANIUM_ADD_FUNCTION(TextArea, getHandleLinks);
 			TITANIUM_ADD_FUNCTION(TextArea, setHandleLinks);
 			TITANIUM_ADD_FUNCTION(TextArea, getKeyboardToolbar);
@@ -299,6 +299,9 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER_STRING(TextArea, hintText)
 		TITANIUM_PROPERTY_SETTER_STRING(TextArea, hintText)
+
+		TITANIUM_PROPERTY_GETTER_STRING(TextArea, hintTextColor)
+		TITANIUM_PROPERTY_SETTER_STRING(TextArea, hintTextColor)
 
 		TITANIUM_PROPERTY_GETTER_BOOL(TextArea, handleLinks)
 		TITANIUM_PROPERTY_SETTER_BOOL(TextArea, handleLinks)
@@ -461,6 +464,9 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_AS_GETTER(TextArea, getHintText, hintText)
 		TITANIUM_FUNCTION_AS_SETTER(TextArea, setHintText, hintText)
+
+		TITANIUM_FUNCTION_AS_GETTER(TextArea, getHintTextColor, hintTextColor)
+		TITANIUM_FUNCTION_AS_SETTER(TextArea, setHintTextColor, hintTextColor)
 
 		TITANIUM_FUNCTION_AS_GETTER(TextArea, getHandleLinks, handleLinks)
 		TITANIUM_FUNCTION_AS_SETTER(TextArea, setHandleLinks, handleLinks)

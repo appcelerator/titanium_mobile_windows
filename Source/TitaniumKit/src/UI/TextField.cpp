@@ -50,18 +50,15 @@ namespace Titanium
 		      autocapitalization__(TEXT_AUTOCAPITALIZATION::NONE),
 		      borderStyle__(INPUT_BORDERSTYLE::NONE),
 		      clearButtonMode__(INPUT_BUTTONMODE::NEVER),
-			  color__(js_context.CreateString()),
-			  editable__(js_context.CreateBoolean(true)),
-			  ellipsize__(js_context.CreateBoolean(false)),
-			  hintText__(js_context.CreateString()),
-		      leftButtonMode__(INPUT_BUTTONMODE::NEVER),
-			  maxLength__(js_context.CreateNumber(-1)),
-			  passwordMask__(js_context.CreateBoolean(false)),
+			  editable__(true),
+			  ellipsize__(false),
+			  leftButtonMode__(INPUT_BUTTONMODE::NEVER),
+			  maxLength__(-1),
+			  passwordMask__(false),
 		      returnKeyType__(RETURNKEY::DEFAULT),
 		      rightButtonMode__(INPUT_BUTTONMODE::NEVER),
-			  suppressReturn__(js_context.CreateBoolean(false)),
+			  suppressReturn__(false),
 		      textAlign__(TEXT_ALIGNMENT::LEFT),
-			  value__(js_context.CreateString()),
 		      verticalAlign__(TEXT_VERTICAL_ALIGNMENT::CENTER)
 		{
 		}
@@ -75,6 +72,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(TextField, bool, enableReturnKey)
 		TITANIUM_PROPERTY_READWRITE(TextField, Font, font)
 		TITANIUM_PROPERTY_READWRITE(TextField, std::string, hintText)
+		TITANIUM_PROPERTY_READWRITE(TextField, std::string, hintTextColor)
 		TITANIUM_PROPERTY_READWRITE(TextField, KEYBOARD, keyboardType)
 		TITANIUM_PROPERTY_READWRITE(TextField, INPUT_BUTTONMODE, leftButtonMode)
 		TITANIUM_PROPERTY_READWRITE(TextField, int32_t, maxLength)
@@ -127,6 +125,7 @@ namespace Titanium
 			TITANIUM_ADD_PROPERTY(TextField, font);
 			TITANIUM_ADD_PROPERTY(TextField, hinttextid);
 			TITANIUM_ADD_PROPERTY(TextField, hintText);
+			TITANIUM_ADD_PROPERTY(TextField, hintTextColor);
 			TITANIUM_ADD_PROPERTY(TextField, keyboardType);
 			TITANIUM_ADD_PROPERTY(TextField, leftButtonMode);
 			TITANIUM_ADD_PROPERTY(TextField, maxLength);
@@ -168,6 +167,8 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(TextField, setHinttextid);
 			TITANIUM_ADD_FUNCTION(TextField, getHintText);
 			TITANIUM_ADD_FUNCTION(TextField, setHintText);
+			TITANIUM_ADD_FUNCTION(TextField, getHintTextColor);
+			TITANIUM_ADD_FUNCTION(TextField, setHintTextColor);
 			TITANIUM_ADD_FUNCTION(TextField, getKeyboardType);
 			TITANIUM_ADD_FUNCTION(TextField, setKeyboardType);
 			TITANIUM_ADD_FUNCTION(TextField, getLeftButtonMode);
@@ -306,6 +307,12 @@ namespace Titanium
 
 		TITANIUM_FUNCTION_AS_GETTER(TextField, getHintText, hintText)
 		TITANIUM_FUNCTION_AS_SETTER(TextField, setHintText, hintText)
+
+		TITANIUM_PROPERTY_GETTER_STRING(TextField, hintTextColor)
+		TITANIUM_PROPERTY_SETTER_STRING(TextField, hintTextColor)
+
+		TITANIUM_FUNCTION_AS_GETTER(TextField, getHintTextColor, hintTextColor)
+		TITANIUM_FUNCTION_AS_SETTER(TextField, setHintTextColor, hintTextColor)
 
 		TITANIUM_PROPERTY_GETTER(TextField, keyboardType)
 		{

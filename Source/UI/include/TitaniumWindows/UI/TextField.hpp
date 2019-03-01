@@ -62,6 +62,7 @@ namespace TitaniumWindows
 //			virtual void set_enableReturnKey(const bool& enableReturnKey) TITANIUM_NOEXCEPT override final;
 			virtual void set_font(const Titanium::UI::Font& font) TITANIUM_NOEXCEPT override final;
 			virtual void set_hintText(const std::string& hintText) TITANIUM_NOEXCEPT override final;
+			virtual void set_hintTextColor(const std::string& color) TITANIUM_NOEXCEPT override final;
 			virtual void set_keyboardType(const Titanium::UI::KEYBOARD& keyboardType) TITANIUM_NOEXCEPT override final;
 //			virtual void set_leftButtonMode(const Titanium::UI::INPUT_BUTTONMODE& leftButtonMode) TITANIUM_NOEXCEPT override final;
 			virtual void set_maxLength(const int32_t& maxLength) TITANIUM_NOEXCEPT override final;
@@ -87,11 +88,14 @@ namespace TitaniumWindows
 		private:
 			void initTextComponent();
 			void updateClearButtonVisibility(const bool& hasFocus = true) TITANIUM_NOEXCEPT;
+			// Update pointers of internal UI elements such as delete button.
+			void loadTextComponent();
 
 			Windows::UI::Xaml::Controls::Border^ border__{ nullptr };
 			Windows::UI::Xaml::Controls::TextBox^ text_box__{ nullptr };
 			Windows::UI::Xaml::Controls::PasswordBox^ password_box__{ nullptr };
 			Windows::UI::Xaml::Controls::Button^ delete_button__{ nullptr };
+			Windows::UI::Xaml::Controls::TextBlock^ hint_text_box__{ nullptr };
 
 			// Event handlers
 			Windows::Foundation::EventRegistrationToken change_event__;

@@ -150,6 +150,13 @@ namespace Titanium
 
 			/*!
 			  @property
+			  @abstract hintTextColor
+			  @discussion Color of hint text that displays when field is empty.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, hintTextColor);
+
+			/*!
+			  @property
 			  @abstract handleLinks
 			  @discussion Specifies if the text area should allow user interaction with the given URL in the given range of text.
 			*/
@@ -300,6 +307,7 @@ namespace Titanium
 			TITANIUM_PROPERTY_DEF(enableReturnKey);
 			TITANIUM_PROPERTY_DEF(font);
 			TITANIUM_PROPERTY_DEF(hintText);
+			TITANIUM_PROPERTY_DEF(hintTextColor);
 			TITANIUM_PROPERTY_DEF(handleLinks);
 			TITANIUM_PROPERTY_DEF(keyboardToolbar);
 			TITANIUM_PROPERTY_DEF(keyboardToolbarColor);
@@ -344,6 +352,8 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(setFont);
 			TITANIUM_FUNCTION_DEF(getHintText);
 			TITANIUM_FUNCTION_DEF(setHintText);
+			TITANIUM_FUNCTION_DEF(getHintTextColor);
+			TITANIUM_FUNCTION_DEF(setHintTextColor);
 			TITANIUM_FUNCTION_DEF(getHandleLinks);
 			TITANIUM_FUNCTION_DEF(setHandleLinks);
 			TITANIUM_FUNCTION_DEF(getKeyboardToolbar);
@@ -389,6 +399,7 @@ namespace Titanium
 			bool enableReturnKey__;
 			Font font__;
 			std::string hintText__;
+			std::string hintTextColor__;
 			bool handleLinks__;
 			JSValue keyboardToolbar__;
 			std::string keyboardToolbarColor__;

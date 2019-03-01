@@ -40,45 +40,54 @@ namespace TitaniumWindows
 			text_box__->AcceptsReturn = false;
 			text_box__->IsSpellCheckEnabled = true;
 
-			// VisualTreeHelper is only available after Loaded event is fired
-			text_box__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
-				if (Media::VisualTreeHelper::GetChildrenCount(text_box__) > 0) {
-					//
-					// assuming the first component appeared in the TextBox is Grid that includes the button
-					//
-					const auto grid = dynamic_cast<Controls::Grid^>(Media::VisualTreeHelper::GetChild(text_box__, 0));
-					if (grid) {
-						const auto count = Media::VisualTreeHelper::GetChildrenCount(grid);
-						for (auto i = 0; i < count; i++) {
-							//
-							// assuming the first button appeared in the Grid is the "DeleteButton"
-							//
-							const auto button = dynamic_cast<Controls::Button^>(Media::VisualTreeHelper::GetChild(grid, i));
-							if (button) {
-								delete_button__ = button;
-								return;
-							}
-						}
-					}
-				}
-			});
-
-			text_box__->TextChanged += ref new Controls::TextChangedEventHandler([this](Platform::Object^ sender, Controls::TextChangedEventArgs^) {
-				updateClearButtonVisibility();
-			});				
-			text_box__->LostFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
-				updateClearButtonVisibility(false);
-			});
-			text_box__->GotFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
-				updateClearButtonVisibility(true);
-			});
-
 			border__->Child = text_box__;
 
 			const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 			layout->setComponent(border__, nullptr, border__);
 			layout->setStyleComponent(text_box__);
 			initTextComponent();
+		}
+
+		void TextField::loadTextComponent()
+		{
+			delete_button__ = nullptr;
+			hint_text_box__ = nullptr;
+
+			FrameworkElement^ target = nullptr;
+			if (text_box__) {
+				target = text_box__;
+			} else if (password_box__) {
+			 	target = password_box__;
+			} else {
+				TITANIUM_LOG_WARN("Unable to process TextField Loaded event");
+				return;
+			}
+
+			// VisualTreeHelper is only available after Loaded event is fired
+			if (Media::VisualTreeHelper::GetChildrenCount(target) > 0) {
+				//
+				// assuming the first component appeared in the TextBox is Grid that includes the button
+				//
+				const auto grid = dynamic_cast<Controls::Grid^>(Media::VisualTreeHelper::GetChild(target, 0));
+				if (grid) {
+					const auto count = Media::VisualTreeHelper::GetChildrenCount(grid);
+					for (auto i = 0; i < count; i++) {
+						const auto child = Media::VisualTreeHelper::GetChild(grid, i);
+						//
+						// assuming the first button appeared in the Grid is the "DeleteButton"
+						//
+						const auto button = dynamic_cast<Controls::Button^>(child);
+						if (button && delete_button__) {
+							delete_button__ = button;
+						}
+						const auto textblock = dynamic_cast<Controls::TextBlock^>(child);
+						const auto name = dynamic_cast<Platform::String^>(child->GetValue(FrameworkElement::NameProperty));
+						if (textblock && name && name->Equals("PlaceholderTextContentPresenter")) {
+							hint_text_box__ = textblock;
+						}
+					}
+				}
+			}
 		}
 
 		void TextField::updateClearButtonVisibility(const bool& hasFocus) TITANIUM_NOEXCEPT
@@ -101,13 +110,31 @@ namespace TitaniumWindows
 
 		void TextField::initTextComponent()
 		{
-			// TIMOB-19143: reset MinWidth to fix size issues
 			if (text_box__) {
+				// TIMOB-19143: reset MinWidth to fix size issues
 				text_box__->MinWidth = 0;
+				// Update components to access hint text and the "clear button"
+				text_box__->Loaded += ref new RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+					loadTextComponent();
+				});
+				// Update clear button visibility
+				text_box__->TextChanged += ref new Controls::TextChangedEventHandler([this](Platform::Object^ sender, Controls::TextChangedEventArgs^) {
+					updateClearButtonVisibility();
+				});
+				text_box__->LostFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+					updateClearButtonVisibility(false);
+				});
+				text_box__->GotFocus += ref new Windows::UI::Xaml::RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+					updateClearButtonVisibility(true);
+				});
 			} else if (password_box__) {
+				// TIMOB-19143: reset MinWidth to fix size issues
 				password_box__->MinWidth = 0;
+				// Update components to access hint text
+				password_box__->Loaded += ref new RoutedEventHandler([this](Platform::Object^, RoutedEventArgs^) {
+					loadTextComponent();
+				});
 			}
-
 		}
 
 		void TextField::JSExportInitialize()
@@ -218,6 +245,14 @@ namespace TitaniumWindows
 				text_box__->PlaceholderText = TitaniumWindows::Utility::ConvertUTF8String(hintText);
 			} else if (password_box__) {
 				password_box__->PlaceholderText = TitaniumWindows::Utility::ConvertUTF8String(hintText);
+			}
+		}
+
+		void TextField::set_hintTextColor(const std::string& color) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::TextField::set_hintTextColor(color);
+			if (hint_text_box__) {
+				hint_text_box__->Foreground = ref new Media::SolidColorBrush(WindowsViewLayoutDelegate::ColorForName(color));
 			}
 		}
 

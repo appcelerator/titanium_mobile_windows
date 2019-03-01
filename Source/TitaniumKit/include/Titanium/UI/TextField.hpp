@@ -141,26 +141,25 @@ namespace Titanium
 			TITANIUM_PROPERTY_IMPL_DEF(Font, font);
 
 			/*!
-			@method
-
-			@abstract hinttextid : String
-
-			@discussion Key identifying a string from the locale file to use for the TextField hintText.
-
+			  @method
+			  @abstract hinttextid : String
+			  @discussion Key identifying a string from the locale file to use for the TextField hintText.
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(std::string, hinttextid);
 
 			/*!
 			  @method
+			  @abstract hintTextColor : String
+			  @discussion Hint text color to display when the field is empty.
+			*/
+			TITANIUM_PROPERTY_IMPL_DEF(std::string, hintTextColor);
 
+			/*!
+			  @method
 			  @abstract hintText : String
-
 			  @discussion Hint text to display when the field is empty.
-
 			  Hint text is hidden when the user enters text into this text field.
-
 			  Use the backslash and letter n line feed character combination, ie \n, to force a new line.
-
 			  Use unicode characters, such as those included in (but not limited to) the Unicode List of Useful Symbols section of wikipedia, to insert special characters and symbols.
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(std::string, hintText);
@@ -364,6 +363,10 @@ namespace Titanium
 			TITANIUM_FUNCTION_DEF(getHintText);
 			TITANIUM_FUNCTION_DEF(setHintText);
 
+			TITANIUM_PROPERTY_DEF(hintTextColor);
+			TITANIUM_FUNCTION_DEF(getHintTextColor);
+			TITANIUM_FUNCTION_DEF(setHintTextColor);
+
 			TITANIUM_PROPERTY_DEF(keyboardType);
 			TITANIUM_FUNCTION_DEF(getKeyboardType);
 			TITANIUM_FUNCTION_DEF(setKeyboardType);
@@ -429,6 +432,7 @@ namespace Titanium
 			Font font__;
 			std::string hinttextid__;
 			std::string hintText__;
+			std::string hintTextColor__;
 			KEYBOARD keyboardType__;
 			INPUT_BUTTONMODE leftButtonMode__;
 			int32_t maxLength__;
