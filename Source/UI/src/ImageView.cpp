@@ -314,7 +314,7 @@ namespace TitaniumWindows
 		{
 			const auto layout = getViewLayoutDelegate<WindowsImageViewLayoutDelegate>();
 
-			if (layout->get_borderRadius() > 0) {
+			if (!layout->get_borderRadius().empty()) {
 				this->border__->Background = WindowsImageViewLayoutDelegate::CreateImageBrushFromBitmapImage(bitmap);
 			} else {
 				this->image__->Source = bitmap;

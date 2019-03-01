@@ -88,10 +88,6 @@ namespace Titanium
 			TITANIUM_LOG_DEBUG("ListSection:: ctor ", this);
 		}
 
-		void ListSection::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
-			HAL_LOG_DEBUG("ListSection:: postCallAsConstructor ", this);
-		}
-
 		ListSection::~ListSection() 
 		{
 			TITANIUM_LOG_DEBUG("ListSection:: dtor ", this);

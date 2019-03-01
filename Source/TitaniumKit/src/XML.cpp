@@ -41,10 +41,6 @@ this.exports.serializeToString = function(_xml) {
 		TITANIUM_LOG_DEBUG("XML:: ctor ", this);
 	}
 
-	void XML::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
-		HAL_LOG_DEBUG("XML:: postCallAsConstructor ", this);
-	}
-
 	void XML::JSExportInitialize()
 	{
 		JSExport<XML>::SetClassVersion(1);

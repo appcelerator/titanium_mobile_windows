@@ -31,7 +31,6 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(FIELD_TYPE_STRING);
 
 		DatabaseModule(const JSContext&) TITANIUM_NOEXCEPT;
-		virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 		virtual ~DatabaseModule() TITANIUM_NOEXCEPT;  //= default;
 		DatabaseModule(const DatabaseModule&) = default;

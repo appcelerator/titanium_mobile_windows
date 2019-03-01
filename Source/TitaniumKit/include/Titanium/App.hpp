@@ -184,7 +184,6 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(_loadAppInfo);
 
 		AppModule(const JSContext&) TITANIUM_NOEXCEPT;
-		virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 		virtual ~AppModule() = default;
 		AppModule(const AppModule&) = default;

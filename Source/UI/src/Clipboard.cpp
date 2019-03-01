@@ -107,7 +107,7 @@ namespace TitaniumWindows
 		{
 #if WINAPI_FAMILY == WINAPI_FAMILY_PC_APP
 			auto json = static_cast<JSValue>(data).ToJSONString();
-			setText(json);
+			setText(static_cast<std::string>(json));
 #endif
 		}
 

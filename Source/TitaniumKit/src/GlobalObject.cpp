@@ -31,10 +31,6 @@ namespace Titanium
 		TITANIUM_LOG_DEBUG("GlobalObject:: ctor ", this);
 	}
 
-	void GlobalObject::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
-		HAL_LOG_DEBUG("GlobalObject:: postCallAsConstructor ", this);
-	}
-
 	GlobalObject::~GlobalObject() TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_DEBUG("GlobalObject:: dtor ", this);
