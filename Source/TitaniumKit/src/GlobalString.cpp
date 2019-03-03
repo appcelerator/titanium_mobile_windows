@@ -26,6 +26,10 @@ namespace Titanium
 
 		// Create cross-platform String.format
 		auto stringObject = static_cast<JSObject>(ctx.get_global_object().GetProperty("String"));
+
+		// Global String object is not able to hold private data. We should care private data in this case too.
+		JSObject::RegisterPrivateData(static_cast<JSObjectRef>(stringObject), this);
+
 		auto formatObject = ctx.CreateObject();
 		ctx.JSEvaluateScript(sprintf_js, formatObject);
 		stringObject.SetProperty("format", ctx.JSEvaluateScript("sprintf;", formatObject));
@@ -33,7 +37,7 @@ namespace Titanium
 
 	GlobalString::~GlobalString() TITANIUM_NOEXCEPT
 	{
-		TITANIUM_LOG_DEBUG("GlobalString:: dtor ", this);
+		JSObject::UnRegisterPrivateData(js_object_ref__);
 	}
 
 	std::string GlobalString::formatCurrency(double value) TITANIUM_NOEXCEPT
