@@ -1,0 +1,50 @@
+name: Titanium.UI.Matrix2D
+platforms: [windowsphone]
+properties:
+  - name: a
+    platforms: [windowsphone]
+  - name: b
+    platforms: [windowsphone]
+  - name: c
+    platforms: [windowsphone]
+  - name: d
+    platforms: [windowsphone]
+  - name: tx
+    platforms: [windowsphone]
+  - name: ty
+    platforms: [windowsphone]
+methods:
+  - name: invert
+    platforms: [windowsphone]
+  - name: multiply
+    platforms: [windowsphone]
+  - name: rotate
+    platforms: [windowsphone]
+  - name: scale
+    platforms: [windowsphone]
+  - name: translate
+    platforms: [windowsphone]
+  - name: getA
+    platforms: [windowsphone]
+  - name: setA
+    platforms: [windowsphone]
+  - name: getB
+    platforms: [windowsphone]
+  - name: setB
+    platforms: [windowsphone]
+  - name: getC
+    platforms: [windowsphone]
+  - name: setC
+    platforms: [windowsphone]
+  - name: getD
+    platforms: [windowsphone]
+  - name: setD
+    platforms: [windowsphone]
+  - name: getTx
+    platforms: [windowsphone]
+  - name: setTx
+    platforms: [windowsphone]
+  - name: getTy
+    platforms: [windowsphone]
+  - name: setTy
+    platforms: [windowsphone]

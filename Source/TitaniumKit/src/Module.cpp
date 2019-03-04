@@ -50,24 +50,15 @@ namespace Titanium
 			event_listener_list = event_listener_map__.at(name);
 		}
 
-		JSObject callback_payload = get_context().CreateObject();
-		callback_payload.SetProperty("callback", callback);
-		callback_payload.SetProperty("this_object", this_object);
-
-		// Precondition
-		const auto event_listener_index = eventListenerIndex(event_listener_list, name, callback_payload);
-		if (event_listener_index > 0) {
-			TITANIUM_LOG_WARN(apiName__, " addEventListener: event listener already added at index ", event_listener_index, " for event '", name, "'");
-		} else {
-			const auto callback_list_index = event_listener_list.size();
-			if (callback_list_index == 0) {
-				// This is the first event listener for this event name, so signal
-				// module subclasses that callbacks have been registered for this event.
-				enableEvent(name);
-			}
-			TITANIUM_LOG_DEBUG(apiName__, " addEventListener: add listener at index ", callback_list_index, " for event '", name, "' for ", this);
-			event_listener_list.push_back(callback_payload);
+		const auto callback_list_index = event_listener_list.size();
+		if (callback_list_index == 0) {
+			// This is the first event listener for this event name, so signal
+			// module subclasses that callbacks have been registered for this event.
+			enableEvent(name);
 		}
+		TITANIUM_LOG_DEBUG(apiName__, " addEventListener: add listener at index ", callback_list_index, " for event '", name, "' for ", this);
+		event_listener_list.push_back(callback);
+
 		event_listener_map__[name] = event_listener_list;
 	}
 
@@ -84,34 +75,14 @@ namespace Titanium
 		}
 
 		std::vector<JSObject> event_listener_list = event_listener_map__.at(name);
-
-		JSObject callback_payload = get_context().CreateObject();
-		callback_payload.SetProperty("callback", callback);
-		callback_payload.SetProperty("this_object", this_object);
-
-		const auto event_listener_count = event_listener_list.size();
-		if (event_listener_count > 0) {
-			const auto event_listener_index = eventListenerIndex(event_listener_list, name, callback_payload);
-
-			if (event_listener_count == 1) {
-				// This is the last event listener for this event name, and it is about
-				// to be removed, so signal module subclasses that there are no more
-				// callbacks registered for this event.
-				disableEvent(name);
-			}
-
-			TITANIUM_LOG_DEBUG(apiName__, " removeEventListener: remove listener at index ", event_listener_index, " for event '", name, "' for ", this);
-
-			// postcondition
-			event_listener_list.erase(event_listener_list.begin() +  event_listener_index);
-			//if (!deleted) {
-				// This is a TitaniumKit logic error.
-				//TITANIUM_LOG_ERROR(apiName__, " removeEventListener: event listener at index ", event_listener_index, " for event '", name, "' was not removed");
-				//TITANIUM_ASSERT(deleted);
-			//}
-		} else {
-			TITANIUM_LOG_WARN(apiName__, " removeEventListener: listener does not exist for event '", name, "'");
+		if (event_listener_list.size() == 1) {
+			// This is the last event listener for this event name, and it is about
+			// to be removed, so signal module subclasses that there are no more
+			// callbacks registered for this event.
+			disableEvent(name);
 		}
+		event_listener_list.erase(std::remove_if(event_listener_list.begin(), event_listener_list.end(), [callback](JSObject o) { return(o == callback); }), event_listener_list.end());
+
 		event_listener_map__[name] = event_listener_list;
 	}
 
@@ -207,10 +178,12 @@ namespace Titanium
 			}
 		}
 
+		const auto this_object = get_object();
+
 		// if this module does not listen to it
 		if (event_listener_map__.find(name) == event_listener_map__.end()) {
 			// bubbleParent=true and parent listens to it? then invoke parent event
-			const auto parent = get_object().GetProperty("parent");
+			const auto parent = this_object.GetProperty("parent");
 			if (propagate && get_bubbleParent() && parent.IsObject()) {
 				const auto parentObj = static_cast<JSObject>(parent).GetPrivate<Module>();
 				if (parentObj) {
@@ -230,7 +203,7 @@ namespace Titanium
 
 		auto event_copy = event;
 		if (!event_copy.HasProperty("source")) {
-			event_copy.SetProperty("source", get_object());
+			event_copy.SetProperty("source", this_object);
 		}
 		if (!event_copy.HasProperty("bubbles")) {
 			event_copy.SetProperty("bubbles", get_context().CreateBoolean(get_bubbleParent()));
@@ -240,23 +213,10 @@ namespace Titanium
 
 		TITANIUM_EXCEPTION_CATCH_START {
 			for (size_t i = 0; i < event_listener_count; ++i) {
-				JSObject callback_payload = event_listener_list.at(i);
-
-				JSValue callback_property = callback_payload.GetProperty("callback");
-
-				// Precondition
-				TITANIUM_ASSERT(callback_property.IsObject());
-				JSObject callback = static_cast<JSObject>(callback_property);
+				JSObject callback = event_listener_list.at(i);
 
 				// Precondition
 				TITANIUM_ASSERT(callback.IsFunction());
-
-				JSValue this_object_property = callback_payload.GetProperty("this_object");
-
-				// Precondition
-				TITANIUM_ASSERT(this_object_property.IsObject());
-				JSObject this_object = static_cast<JSObject>(this_object_property);
-
 				TITANIUM_LOG_DEBUG(apiName__, " fireEvent: name = '", name, "' for listener at index ", i, " for ", this);
 
 				//
@@ -276,32 +236,6 @@ namespace Titanium
 	void Module::disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN(apiName__, " disableEvent: Unimplemented (event name '", event_name, "' for ", this);
-	}
-
-	unsigned Module::eventListenerIndex(const std::vector<JSObject>& event_listener_list, const std::string& name, JSObject& callback) TITANIUM_NOEXCEPT
-	{
-		unsigned index = 0;
-		bool found = false;
-		const auto event_listener_count = event_listener_list.size();
-		for (unsigned i = 0; i < event_listener_count; ++i) {
-			JSObject callback_payload = event_listener_list.at(i);
-
-			JSValue callback_property = callback_payload.GetProperty("callback");
-			if (callback == callback_property) {
-				// precondition
-				if (found) {
-					// This is a TitaniumKit logic error.
-					TITANIUM_LOG_ERROR("Module::eventListenerIndex: multiple identical listeners found for event = '", name, "'");
-				}
-
-				index = i;
-				found = true;
-				break;
-			}
-		}
-
-		TITANIUM_LOG_DEBUG("Module::eventListenerIndex: index = ", index, " for event '", name, "'");
-		return index;
 	}
 
 	void Module::JSExportInitialize()

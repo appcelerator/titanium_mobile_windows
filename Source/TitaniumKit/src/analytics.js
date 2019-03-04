@@ -10,7 +10,7 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-const ANALYTICS_URL = 'https://api.appcelerator.com/p/v3/mobile-track/',
+const ANALYTICS_URL = 'https://api.appcelerator.com/p/v4/mobile-track/',
 	  ANALYTICS_FILE = 'analytics.json',
 	  SESSION_TIME_SEPARATION = 1,
 	  RETRY_TIMEOUT = 3,
@@ -172,13 +172,19 @@ Analytics.prototype.createEvent = function (name, data, payload) {
 		app: Ti.App.guid,
 		session: {
 			id: this.sessionId
+		},
+		data: {
+			app_id: Ti.App.id,
+			app_name: Ti.App.name,
+			timezone: -(new Date().getTimezoneOffset()),
+			sdk_version: Ti.version
 		}
 	};
 	if (payload) {
 		mergeJSON(payload, event);
 	}
 	if (data) {
-		event.data = data;
+		mergeJSON(data, event.data);
 	}
 
 	this.eventQueue.push(event);
@@ -216,7 +222,7 @@ Analytics.prototype.createForegroundEvent = function () {
  * @private
  */
 Analytics.prototype.createBackgroundEvent = function () {
-	this.createEvent(EVENT_SESSION_END);
+	this.createEvent(EVENT_SESSION_END, null, getDefaultPayload());
 };
 
 /**
@@ -228,8 +234,7 @@ Analytics.prototype.createBackgroundEvent = function () {
 Analytics.prototype.createFeatureEvent = function (name, data) {
 	data = data || {};
 	if (validateFeatureEvent(data, 0)) {
-		data['eventName'] = name;
-		this.createEvent(EVENT_APP_FEATURE, data);
+		this.createEvent(name, data, getDefaultPayload());
 	} else {
 	    Ti.API.error('Feature event \'' + name + '\' not conforming to recommended usage.');
 	    return -1;
@@ -250,7 +255,7 @@ Analytics.prototype.createNavEvent = function (from, to, name, data) {
 	data['eventName'] = name;
 	data['from'] = from;
 	data['to'] = to;
-	this.createEvent(EVENT_APP_NAV, data);
+	this.createEvent(EVENT_APP_NAV, data, getDefaultPayload());
 };
 
 /**
