@@ -85,7 +85,8 @@ function validate(logger, config, cli) {
 			this.buildConfiguration = 'Release';
 	}
 
-	this.transpile = this.cli.tiapp.transpile === true;
+	this.transpile = this.cli.tiapp.transpile !== false;  // Transpiling is an opt-out process now
+	this.sourceMaps = this.cli.tiapp['source-maps'] === true; // opt-in to generate inline source maps
 
 	if (cli.argv['skip-js-minify']) {
 		this.minifyJS = false;
