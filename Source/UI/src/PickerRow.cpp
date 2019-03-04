@@ -7,6 +7,7 @@
 */
 
 #include "TitaniumWindows/UI/PickerRow.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
 #include "TitaniumWindows/Utility.hpp"

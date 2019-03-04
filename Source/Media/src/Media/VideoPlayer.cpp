@@ -5,6 +5,7 @@
  */
 
 #include "TitaniumWindows/Media/VideoPlayer.hpp"
+#include "Titanium/detail/TiLogger.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 

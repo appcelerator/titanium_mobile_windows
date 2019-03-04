@@ -7,6 +7,7 @@
 */
 #include "TitaniumWindows/UI/Windows/SystemIcon.hpp"
 #include "TitaniumWindows/UI/Windows/CommandBar.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 
 namespace TitaniumWindows
 {

@@ -7,6 +7,7 @@
 */
 
 #include "TitaniumWindows/UI/TextField.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include <windows.h>
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"

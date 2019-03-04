@@ -9,7 +9,6 @@
 #include "Titanium/BlobStream.hpp"
 #include "Titanium/Blob.hpp"
 #include "Titanium/Buffer.hpp"
-#include "Titanium/ErrorResponse.hpp"
 
 namespace Titanium
 {

@@ -7,6 +7,7 @@
  */
 
 #include "TitaniumWindows/Contacts/Person.hpp"
+#include "Titanium/detail/TiBase.hpp"
 #include "Titanium/Blob.hpp"
 #include <windows.h>
 #include <ppltasks.h>

@@ -16,7 +16,6 @@ namespace Titanium
 	using namespace HAL;
 
 	class Buffer;
-	struct ErrorResponse;
 
 	/*!
 	  @class

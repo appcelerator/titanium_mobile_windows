@@ -12,8 +12,9 @@
 #include "Titanium/Module.hpp"
 #include <vector>
 #include <memory>
-// TODO: Remove this include, forward declare and move the implementation of the methods referencing into the cpp.
 #include "Titanium/UI/ViewLayoutDelegate.hpp"
+#include "Titanium/UI/Point.hpp"
+#include "Titanium/UI/Gradient.hpp"
 
 namespace Titanium
 {
@@ -25,7 +26,6 @@ namespace Titanium
 
 		class View;
 		class Animation;
-		struct Point;
 
 		/*!
 		  @class

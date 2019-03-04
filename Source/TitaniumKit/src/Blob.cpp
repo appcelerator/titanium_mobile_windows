@@ -105,6 +105,11 @@ namespace Titanium
 		return path_;
 	}
 
+	void Blob::set_nativePath(const std::string& nativePath) TITANIUM_NOEXCEPT
+	{
+		path_ = nativePath;
+	}
+
 	uint32_t Blob::get_size() const TITANIUM_NOEXCEPT
 	{
 		if (type_ == Titanium::BlobModule::TYPE::IMAGE) {

@@ -6,6 +6,6 @@
 # Please see the LICENSE included with this distribution for details.
 
 include(CMakeFindDependencyMacro)
-find_dependency(TitaniumKit REQUIRED)
+find_dependency(TitaniumKit)
 
 include("${CMAKE_BINARY_DIR}/TitaniumWindows_Utility_Targets.cmake")
