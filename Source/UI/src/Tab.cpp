@@ -9,6 +9,7 @@
 #include "TitaniumWindows/UI/Tab.hpp"
 #include "TitaniumWindows/UI/Window.hpp"
 #include "TitaniumWindows/Utility.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 
 namespace TitaniumWindows

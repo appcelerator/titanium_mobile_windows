@@ -6,13 +6,27 @@
 # Please see the LICENSE included with this distribution for details.
 cmake_minimum_required(VERSION 3.0.0)
 
-project(LayoutEngine VERSION 0.5.0 LANGUAGES CXX)
+project(LayoutEngine)
+
+set(LayoutEngine_VERSION 0.5.0)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 option(LayoutEngine_DISABLE_TESTS "Disable compiling the tests" OFF)
 
-# necessary to provide <LIBRARY>_EXPORT.h downstream
-set(CMAKE_INCLUDE_CURRENT_DIR ON)		
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+# Define helper functions and macros.
+include(${PROJECT_SOURCE_DIR}/cmake/internal_utils.cmake)
+
+# Defined in internal_utils.cmake.
+config_compiler_and_linker()
+#config_cmake_system_framework_path(macosx)
+
+# Allow "make test" to work.
+enable_testing()
+
+# We have a custom finder for LayoutEngine.
+list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake)
 
 set(SOURCE_LayoutEngine
   include/LayoutEngine/LayoutEngine.hpp
@@ -23,29 +37,21 @@ set(SOURCE_LayoutEngine
   src/Node.cpp
   src/ParseProperty.cpp
   src/Vertical.cpp
-)
+  )
 
 source_group(LayoutEngine FILES ${SOURCE_LayoutEngine})
 
-# Turn on precompiled headers
-include(precompiled_header)
-enable_precompiled_headers(src/stdafx.h SOURCE_LayoutEngine)
-
 add_library(LayoutEngine STATIC
   ${SOURCE_LayoutEngine}
-)
+  )
 
 include(GenerateExportHeader)
 generate_export_header(LayoutEngine)
 target_compile_definitions(LayoutEngine PRIVATE LayoutEngine_EXPORTS)
 
-target_include_directories(LayoutEngine
-  PUBLIC 
-      $<INSTALL_INTERFACE:include>    
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  PRIVATE
-      src
-)
+target_include_directories(LayoutEngine PUBLIC
+  ${PROJECT_SOURCE_DIR}/include
+  )
 
 if (WIN32)
   # Silence this warning when lnking with the JavaScriptCore static
@@ -77,7 +83,7 @@ if (WIN32)
   # we should not disable SAFESEH otherwise Windows App Certification will fail.
   # 
   if (NOT CMAKE_SYSTEM_NAME MATCHES "^Windows(Phone|Store)$")
-    include(${APPCELERATOR_CMAKE_MODULE_PATH}/TargetArch.cmake)
+    include(${PROJECT_SOURCE_DIR}/cmake/TargetArch.cmake)
     target_architecture(target_architecture)
     if (${target_architecture} STREQUAL i386)
       set_property(TARGET HAL APPEND_STRING PROPERTY LINK_FLAGS " /SAFESEH:NO")
@@ -131,15 +137,14 @@ set_property(TARGET LayoutEngine PROPERTY SOVERSION 0)
 set_property(TARGET LayoutEngine PROPERTY INTERFACE_LayoutEngine_MAJOR_VERSION 0)
 set_property(TARGET LayoutEngine APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING LayoutEngine_MAJOR_VERSION
-)
+  )
 
-install(TARGETS LayoutEngine
-  EXPORT LayoutEngineTargets
+install(TARGETS LayoutEngine EXPORT LayoutEngineTargets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
-)
+  )
 
 export(EXPORT LayoutEngineTargets
   FILE "${CMAKE_BINARY_DIR}/LayoutEngineTargets.cmake"
@@ -148,14 +153,14 @@ export(EXPORT LayoutEngineTargets
 configure_file(cmake/LayoutEngineConfig.cmake
   "${CMAKE_BINARY_DIR}/LayoutEngineConfig.cmake"
   COPYONLY
-)
+  )
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${CMAKE_BINARY_DIR}/LayoutEngineConfigVersion.cmake"
   VERSION ${LayoutEngine_VERSION}
   COMPATIBILITY AnyNewerVersion
-)
+  )
 
 # Store the current build directory in the CMake user package registry
 # so that find_package(LayoutEngine) works.
@@ -167,12 +172,13 @@ export(PACKAGE LayoutEngine)
 set(ConfigPackageLocation lib/cmake/LayoutEngine)
 install(EXPORT LayoutEngineTargets
   DESTINATION ${ConfigPackageLocation}
-)
+  )
 
-install(FILES
+install(
+  FILES
   "${CMAKE_CURRENT_BINARY_DIR}/LayoutEngineConfig.cmake"
   "${CMAKE_CURRENT_BINARY_DIR}/LayoutEngineConfigVersion.cmake"
   DESTINATION ${ConfigPackageLocation}
   COMPONENT Devel
-)
-#]]
+  )
+]]

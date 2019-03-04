@@ -6,6 +6,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/UI/TableViewRow.hpp"
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/Label.hpp"

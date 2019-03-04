@@ -5,13 +5,37 @@
 # Please see the LICENSE included with this distribution for details.
 cmake_minimum_required(VERSION 3.0.0)
 
-project(TitaniumKit VERSION 0.1.0 LANGUAGES CXX)
+project(TitaniumKit)
+
+set(TitaniumKit_VERSION 0.1.0)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 option(TitaniumKit_DISABLE_TESTS "Disable compiling the tests" OFF)
 
-# necessary to provide TitaniumKit_EXPORT.h downstream
-set(CMAKE_INCLUDE_CURRENT_DIR ON)		
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+# Define helper functions and macros.
+include(${PROJECT_SOURCE_DIR}/cmake/internal_utils.cmake)
+
+# Defined in internal_utils.cmake.
+config_compiler_and_linker()
+#config_cmake_system_framework_path(macosx)
+
+# Allow "make test" to work.
+enable_testing()
+
+if (NOT TARGET HAL)
+  get_filename_component(HAL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../HAL ABSOLUTE)
+  add_subdirectory(${HAL_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/HAL EXCLUDE_FROM_ALL)
+  target_compile_definitions(HAL PUBLIC HAL_USE_SINGLE_CONTEXT=1)
+endif()
+
+# find_package(HAL REQUIRED)
+
+get_filename_component(APPCELERATOR_CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake ABSOLUTE)
+list(INSERT CMAKE_MODULE_PATH 0 ${APPCELERATOR_CMAKE_MODULE_PATH})
+
+include(precompiled_header)
 
 # Convert analytics.js into a c string in an hpp that we can include
 include(GenerateCPPHeaderFile)
@@ -23,8 +47,8 @@ generate_cpp_header_file(resource_xml_sax_js_hpp ${PROJECT_SOURCE_DIR}/src/XML/s
 generate_cpp_header_file(resource_global_sprintf_js_hpp ${PROJECT_SOURCE_DIR}/src/Global/sprintf.js ${PROJECT_SOURCE_DIR}/include/Titanium/Global/sprintf_js.hpp)
 generate_cpp_header_file(resource_webview_js_hpp ${PROJECT_SOURCE_DIR}/src/UI/webview.js ${PROJECT_SOURCE_DIR}/include/Titanium/UI/webview_js.hpp)
 
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_LIBS ON )
+set(Boost_USE_MULTITHREADED ON )
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 # Travis only supports Boost 1.55, which is good enough for now.
@@ -44,7 +68,7 @@ set(SOURCE_TitaniumKit
   src/Gesture.cpp
   include/Titanium/ErrorResponse.hpp
   src/ErrorResponse.cpp
-)
+  )
 
 set(SOURCE_TitaniumKit_detail
   include/Titanium/detail/TiBase.hpp
@@ -53,22 +77,22 @@ set(SOURCE_TitaniumKit_detail
   include/Titanium/detail/HashUtilities.hpp
   include/Titanium/detail/TiUtil.hpp
   src/detail/TiUtil.cpp
-)
+  )
 
 set(SOURCE_Ti
   include/Titanium/TiModule.hpp
   src/TiModule.cpp
-)
+  )
 
 set(SOURCE_API
   include/Titanium/API.hpp
   src/API.cpp
-)
+  )
 
 set(SOURCE_Locale
   include/Titanium/Locale.hpp
   src/Locale.cpp
-)
+  )
 
 set(SOURCE_Database
   include/Titanium/DatabaseModule.hpp
@@ -88,17 +112,17 @@ set(SOURCE_Platform
   include/Titanium/Platform/DisplayCaps.hpp
   src/PlatformModule.cpp
   src/Platform/DisplayCaps.cpp
-)
+  )
 
 set(SOURCE_Accelerometer
   include/Titanium/Accelerometer.hpp
   src/Accelerometer.cpp
-)
+  )
 
 set(SOURCE_Gesture
   include/Titanium/Gesture.hpp
   src/Gesture.cpp
-)
+  )
 
 set(SOURCE_Stream
   include/Titanium/Stream.hpp
@@ -111,12 +135,12 @@ set(SOURCE_Stream
   src/BufferStream.cpp
   include/Titanium/Filesystem/FileStream.hpp
   src/Filesystem/FileStream.cpp
-)
+  )
 
 set(SOURCE_Blob
   include/Titanium/Blob.hpp
   src/Blob.cpp
-)
+  )
 
 set(SOURCE_Buffer
   include/Titanium/Codec/Constants.hpp
@@ -125,7 +149,7 @@ set(SOURCE_Buffer
   src/Codec.cpp
   include/Titanium/Buffer.hpp
   src/Buffer.cpp
-)
+  )
 
 set(SOURCE_Filesystem
   include/Titanium/FilesystemModule.hpp
@@ -134,7 +158,7 @@ set(SOURCE_Filesystem
   src/Filesystem/File.cpp
   include/Titanium/Filesystem/Constants.hpp
   src/Filesystem/Constants.cpp
-)
+  )
 
 set(SOURCE_Media
   include/Titanium/MediaModule.hpp
@@ -171,7 +195,7 @@ set(SOURCE_Media
   src/Media/MusicPlayer.cpp
   include/Titanium/Media/VideoPlayer.hpp
   src/Media/VideoPlayer.cpp
-)
+  )
 
 set(SOURCE_Network
   include/Titanium/NetworkModule.hpp
@@ -192,7 +216,7 @@ set(SOURCE_Network
   src/Network/Socket/UDP.cpp
   include/Titanium/Network/Socket/AcceptDict.hpp
   src/Network/Socket/AcceptDict.cpp
-)
+  )
 
 set(SOURCE_UI
   include/Titanium/UI/Clipboard.hpp
@@ -308,7 +332,7 @@ set(SOURCE_UI
   include/Titanium/UI/ListModel.hpp
   include/Titanium/UI/NavigationWindow.hpp
   src/UI/NavigationWindow.cpp
-)
+  )
 
 set(SOURCE_TiLogger_detail
   include/Titanium/detail/TiLogger.hpp
@@ -317,7 +341,7 @@ set(SOURCE_TiLogger_detail
   include/Titanium/detail/TiLoggerPolicyFile.hpp
   include/Titanium/detail/TiLoggerPolicyAPI.hpp
   src/detail/TiLoggerPolicyAPI.cpp
-)
+  )
 
 set(SOURCE_App
   include/Titanium/App.hpp
@@ -432,8 +456,10 @@ source_group(TitaniumKit\\Contacts         FILES ${SOURCE_Contacts})
 source_group(TitaniumKit\\UI               FILES ${SOURCE_UI})
 source_group(TitaniumKit\\TiLogger\\detail FILES ${SOURCE_TiLogger_detail})
 
+#set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+#set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+
 # Turn on precompiled headers
-include(precompiled_header)
 set(SOURCE_ALL_EXCEPT_DATABASE
   ${SOURCE_TitaniumKit}
   ${SOURCE_TitaniumKit_detail}
@@ -461,15 +487,12 @@ set(SOURCE_ALL_EXCEPT_DATABASE
   ${SOURCE_Geolocation}
   ${SOURCE_TiLogger_detail}
 )
-set(SOURCE_ALL
-  ${SOURCE_ALL_EXCEPT_DATABASE}
-  ${SOURCE_Database}
-)
-enable_precompiled_headers(src/stdafx.h SOURCE_ALL)
+enable_precompiled_headers(include/stdafx.h SOURCE_ALL_EXCEPT_DATABASE)
 
 add_library(TitaniumKit SHARED
-  ${SOURCE_ALL}
-)
+  ${SOURCE_ALL_EXCEPT_DATABASE}
+  ${SOURCE_Database}
+  )
 
 add_dependencies(TitaniumKit resource_analytics_js_hpp)
 add_dependencies(TitaniumKit resource_listview_js_hpp)
@@ -482,20 +505,22 @@ add_dependencies(TitaniumKit resource_global_sprintf_js_hpp)
 include(GenerateExportHeader)
 generate_export_header(TitaniumKit)
 target_compile_definitions(TitaniumKit PRIVATE TitaniumKit_EXPORTS)
+#target_compile_definitions(TitaniumKit PUBLIC TitaniumKit_STATIC_DEFINE)
 
-target_include_directories(TitaniumKit
-  PUBLIC 
-      $<INSTALL_INTERFACE:include>    
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  PRIVATE
-      src
-)
+# target_compile_definitions(TitaniumKit PUBLIC
+#   $<TARGET_PROPERTY:HAL,INTERFACE_COMPILE_DEFINITIONS>
+#   )
+
+target_include_directories(TitaniumKit PUBLIC
+  ${PROJECT_SOURCE_DIR}/include
+  $<TARGET_PROPERTY:HAL,INTERFACE_INCLUDE_DIRECTORIES>
+  ${Boost_INCLUDE_DIRS}
+  )
 
 target_link_libraries(TitaniumKit
-  PUBLIC
-    HAL
-    Boost::boost
-)
+  HAL
+  ${Boost_LIBRARIES}
+  )
 
 if (WIN32)
   # Silence this warning when lnking the Debug configuration:
@@ -582,15 +607,14 @@ set_property(TARGET TitaniumKit PROPERTY SOVERSION 0)
 set_property(TARGET TitaniumKit PROPERTY INTERFACE_TitaniumKit_MAJOR_VERSION 0)
 set_property(TARGET TitaniumKit APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING TitaniumKit_MAJOR_VERSION
-)
+  )
 
-install(TARGETS TitaniumKit
-  EXPORT TitaniumKitTargets
+install(TARGETS TitaniumKit EXPORT TitaniumKitTargets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
-)
+  )
 
 export(EXPORT TitaniumKitTargets
   FILE "${CMAKE_BINARY_DIR}/TitaniumKitTargets.cmake"
@@ -599,14 +623,14 @@ export(EXPORT TitaniumKitTargets
 configure_file(cmake/TitaniumKitConfig.cmake
   "${CMAKE_BINARY_DIR}/TitaniumKitConfig.cmake"
   COPYONLY
-)
+  )
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${CMAKE_BINARY_DIR}/TitaniumKitConfigVersion.cmake"
   VERSION ${TitaniumKit_VERSION}
   COMPATIBILITY AnyNewerVersion
-)
+  )
 
 # Store the current build directory in the CMake user package registry
 # so that find_package(TitaniumKit) works.

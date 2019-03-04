@@ -3,13 +3,50 @@
 # Please see the LICENSE included with this distribution for details.
 cmake_minimum_required(VERSION 3.0.0)
 
-project(TitaniumWindows_Ti VERSION 0.1.0 LANGUAGES CXX)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
+  set(PLATFORM wp)
+  add_definitions("-DPHONE")
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
+  set(PLATFORM store)
+else()
+  message(FATAL_ERROR "This app supports Store / Phone only.")
+endif()
+
+project(TitaniumWindows_Ti)
+
+set(TitaniumWindows_Ti_VERSION 0.1.0)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 option(TitaniumWindows_Ti_DISABLE_TESTS "Disable compiling the tests" OFF)
 
-# necessary to provide <LIBRARY>_EXPORT.h downstream
-set(CMAKE_INCLUDE_CURRENT_DIR ON)		
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+# Use solution folders.
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+get_filename_component(APPCELERATOR_CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake ABSOLUTE)
+list(INSERT CMAKE_MODULE_PATH 0 ${APPCELERATOR_CMAKE_MODULE_PATH})
+
+# Define helper functions and macros.
+include(${APPCELERATOR_CMAKE_MODULE_PATH}/internal_utils.cmake)
+
+# Defined in internal_utils.cmake.
+config_compiler_and_linker()
+
+# Allow "make test" to work.
+enable_testing()
+
+if(NOT TARGET TitaniumKit)
+	get_filename_component(TitaniumKit_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../TitaniumKit ABSOLUTE)
+	add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
+endif()
+
+if(NOT TARGET TitaniumWindows_Utility)
+  get_filename_component(Utility_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../Utility ABSOLUTE)
+  add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
+endif()
+
+include(precompiled_header)
 
 # Convert group.js into a c string in an hpp that we can include
 include(GenerateCPPHeaderFile)
@@ -19,22 +56,22 @@ set(SOURCE_Ti
   include/TitaniumWindows/TiModule.hpp
   src/TiModule.cpp
   src/TitaniumEntryPoint.cpp
-)
+  )
 
 set(SOURCE_Codec
   include/TitaniumWindows/Codec.hpp
   src/Codec.cpp
-)
+  )
 
 set(SOURCE_API
   include/TitaniumWindows/API.hpp
   src/API.cpp
-)
+  )
 
 set(SOURCE_Locale
   include/TitaniumWindows/Locale.hpp
   src/Locale.cpp
-)
+  )
 
 set(SOURCE_App
   include/TitaniumWindows/App/Properties.hpp
@@ -48,14 +85,14 @@ set(SOURCE_App
   src/App/BackgroundService.cpp
   include/TitaniumWindows/App/BackgroundServiceTask.hpp
   src/App/BackgroundServiceTask.cpp
-)
+  )
 
 set(SOURCE_Platform
   include/TitaniumWindows/Platform.hpp
   include/TitaniumWindows/DisplayCaps.hpp
   src/Platform.cpp
   src/DisplayCaps.cpp
-)
+  )
 
 set(SOURCE_Contacts
   include/TitaniumWindows/Contacts.hpp
@@ -66,12 +103,12 @@ set(SOURCE_Contacts
   src/Contacts/Person.cpp
   src/Contacts/Group.cpp
   src/Contacts/group.js
-)
+  )
 
 set(SOURCE_Utils
   include/TitaniumWindows/Utils.hpp
   src/Utils.cpp
-)
+  )
 
 source_group(Titanium\\Ti FILES ${SOURCE_Ti})
 source_group(Titanium\\Codec FILES ${SOURCE_Codec})
@@ -82,7 +119,10 @@ source_group(Titanium\\Platform FILES ${SOURCE_Platform})
 source_group(Titanium\\Contacts FILES ${SOURCE_Contacts})
 source_group(Titanium\\Utils FILES ${SOURCE_Utils})
 
-set(SOURCE_ALL
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+
+add_library(TitaniumWindows_Ti SHARED
   ${SOURCE_Ti}
   ${SOURCE_Codec}
   ${SOURCE_API}
@@ -91,33 +131,22 @@ set(SOURCE_ALL
   ${SOURCE_Platform}
   ${SOURCE_Contacts}
   ${SOURCE_Utils}
-)
-
-# Turn on precompiled headers
-include(precompiled_header)
-enable_precompiled_headers(src/stdafx.h SOURCE_ALL)
-
-add_library(TitaniumWindows_Ti SHARED
-  ${SOURCE_ALL}
-)
+  )
 
 include(GenerateExportHeader)
 generate_export_header(TitaniumWindows_Ti)
 target_compile_definitions(TitaniumWindows_Ti PRIVATE TitaniumWindows_Ti_EXPORTS)
 
-target_include_directories(TitaniumWindows_Ti
-  PUBLIC 
-      $<INSTALL_INTERFACE:include>    
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  PRIVATE
-      src
-)
+target_include_directories(TitaniumWindows_Ti PUBLIC
+  ${PROJECT_SOURCE_DIR}/include
+  $<TARGET_PROPERTY:TitaniumKit,INTERFACE_INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:TitaniumWindows_Utility,INTERFACE_INCLUDE_DIRECTORIES>
+  )
 
 target_link_libraries(TitaniumWindows_Ti
-  PUBLIC
-    TitaniumKit
-    TitaniumWindows_Utility
-)
+  TitaniumKit
+  TitaniumWindows_Utility
+  )
 
 set_target_properties(TitaniumWindows_Ti PROPERTIES VS_WINRT_COMPONENT TRUE)
 
@@ -167,15 +196,14 @@ set_property(TARGET TitaniumWindows_Ti PROPERTY SOVERSION 0)
 set_property(TARGET TitaniumWindows_Ti PROPERTY INTERFACE_TitaniumWindows_Ti_MAJOR_VERSION 0)
 set_property(TARGET TitaniumWindows_Ti APPEND PROPERTY
   COMPATIBLE_INTERFACE_STRING TitaniumWindows_Ti_MAJOR_VERSION
-)
+  )
 
-install(TARGETS TitaniumWindows_Ti
-  EXPORT TitaniumWindows_Ti_Targets
+install(TARGETS TitaniumWindows_Ti EXPORT TitaniumWindows_Ti_Targets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
-)
+  )
 
 export(EXPORT TitaniumWindows_Ti_Targets
   FILE "${CMAKE_BINARY_DIR}/TitaniumWindows_Ti_Targets.cmake"
@@ -184,14 +212,14 @@ export(EXPORT TitaniumWindows_Ti_Targets
 configure_file(cmake/TitaniumWindows_Ti_Config.cmake
   "${CMAKE_BINARY_DIR}/TitaniumWindows_Ti_Config.cmake"
   COPYONLY
-)
+  )
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${CMAKE_BINARY_DIR}/TitaniumWindows_Ti_ConfigVersion.cmake"
   VERSION ${TitaniumWindows_Ti_VERSION}
   COMPATIBILITY AnyNewerVersion
-)
+  )
 
 # Store the current build directory in the CMake user package registry
 # so that find_package(TitaniumWindows_Ti) works.

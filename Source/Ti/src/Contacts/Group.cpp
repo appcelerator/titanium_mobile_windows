@@ -9,6 +9,7 @@
 #include "TitaniumWindows/Contacts.hpp"
 #include <memory>
 #include <windows.h>
+#include <memory>
 #include "TitaniumWindows/Contacts/Group.hpp"
 #include "TitaniumWindows/Contacts/Person.hpp"
 #include "TitaniumWindows/Contacts/group_js.hpp"

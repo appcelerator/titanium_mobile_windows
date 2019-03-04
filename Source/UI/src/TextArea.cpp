@@ -9,6 +9,7 @@
 #include "TitaniumWindows/UI/TextArea.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
 
 namespace TitaniumWindows

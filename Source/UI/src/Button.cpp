@@ -11,6 +11,7 @@
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/UI/TableViewRow.hpp"
 #include "Titanium/UI/TableViewSection.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
 
 namespace TitaniumWindows

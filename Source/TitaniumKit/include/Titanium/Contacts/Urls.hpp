@@ -11,7 +11,6 @@
 
 #include "Titanium/detail/TiBase.hpp"
 
-// TODO: inline into Person.hpp
 namespace Titanium
 {
 	namespace Contacts

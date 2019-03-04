@@ -9,16 +9,16 @@
 
 #include "Titanium/Module.hpp"
 #include "Titanium/Network/Constants.hpp"
+#include "Titanium/Network/Cookie.hpp"
+#include "Titanium/Network/HTTPClient.hpp"
+#include "Titanium/Network/Socket.hpp"
+#include "Titanium/Network/Socket/TCP.hpp"
+#include "Titanium/Network/Socket/UDP.hpp"
 #include "Titanium/Network/PushNotificationConfig.hpp"
 
 namespace Titanium
 {
 	using namespace HAL;
-
-	namespace Network
-	{
-		class Cookie;
-	}
 
 	/*!
       @class

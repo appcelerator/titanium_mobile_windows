@@ -10,6 +10,7 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UI/AttributedString.hpp"
 #include "Titanium/UI/Font.hpp"
 #include <unordered_map>

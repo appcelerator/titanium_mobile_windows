@@ -9,17 +9,13 @@
 
 #include "TitaniumWindows_Network_EXPORT.h"
 #include "Titanium/Network/Socket/TCP.hpp"
+#include "Titanium/Buffer.hpp"
 
 using Windows::Networking::Sockets::StreamSocket;
 using Windows::Networking::Sockets::StreamSocketListener;
 using Windows::Networking::HostName;
 using Windows::Storage::Streams::DataReader;
 using Windows::Storage::Streams::DataWriter;
-
-namespace Titanium
-{
-	class Buffer;
-}
 
 namespace TitaniumWindows
 {

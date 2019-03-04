@@ -5,6 +5,7 @@
  */
 
 #include "TitaniumWindows/TiModule.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 
 namespace TitaniumWindows
 {

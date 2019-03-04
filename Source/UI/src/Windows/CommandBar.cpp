@@ -9,6 +9,7 @@
 #include "TitaniumWindows/UI/Windows/AppBarButton.hpp"
 #include "TitaniumWindows/UI/Windows/AppBarToggleButton.hpp"
 #include "TitaniumWindows/UI/Windows/AppBarSeparator.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 
 namespace TitaniumWindows
 {

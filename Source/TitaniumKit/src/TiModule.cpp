@@ -19,7 +19,6 @@
 #include "Titanium/UI/TextArea.hpp"
 #include "Titanium/UI/Notification.hpp"
 #include "Titanium/UI/2DMatrix.hpp"
-#include "Titanium/UI/3DMatrix.hpp"
 #include "Titanium/GeolocationModule.hpp"
 #include "Titanium/UI/Switch.hpp"
 #include "Titanium/Utils.hpp"

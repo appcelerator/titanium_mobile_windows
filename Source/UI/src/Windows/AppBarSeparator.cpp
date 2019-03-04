@@ -6,6 +6,7 @@
 * Please see the LICENSE included with this distribution for details.
 */
 #include "TitaniumWindows/UI/Windows/AppBarSeparator.hpp"
+#include "Titanium/detail/TiLogger.hpp"
 
 namespace TitaniumWindows
 {

@@ -10,6 +10,7 @@
 #define _TITANIUM_SOCKET_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 
 namespace Titanium
 {

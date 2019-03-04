@@ -42,11 +42,6 @@ namespace Titanium
 			WHEN_IN_USE
 		};
 
-#ifdef ERROR
-#pragma push_macro("ERROR")
-#undef ERROR
-#define _restore_ERROR_
-#endif
 		enum class TITANIUMKIT_EXPORT ERROR {
 			DENIED,
 			HEADING_FAILIURE,
@@ -60,7 +55,7 @@ namespace Titanium
 
 		enum class TITANIUMKIT_EXPORT PROVIDER {
 			GPS,
-			NETWORK,
+			NETOWORK,
 			PASSIVE
 		};
 
@@ -180,10 +175,5 @@ namespace Titanium
 		};
 	} // namespace Geolocation
 }  // namespace Titanium
-
-#ifdef _restore_ERROR_
-#pragma pop_macro("ERROR")
-#undef _restore_ERROR_
-#endif
 
 #endif  // _TITANIUM_GEOLOCATION_CONSTANTS_HPP_
