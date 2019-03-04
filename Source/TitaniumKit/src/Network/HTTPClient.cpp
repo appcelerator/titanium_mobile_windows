@@ -347,11 +347,15 @@ namespace Titanium
 
 		TITANIUM_PROPERTY_GETTER(HTTPClient, responseData)
 		{
-			auto Blob = get_context().CreateObject(JSExport<Titanium::Blob>::Class());
+			const auto Titanium = static_cast<JSObject>(get_context().get_global_object().GetProperty("Titanium"));
+			auto Blob = static_cast<JSObject>(Titanium.GetProperty("Blob"));
 			auto blob = Blob.CallAsConstructor();
 			auto blob_ptr = blob.GetPrivate<Titanium::Blob>();
 
 			blob_ptr->construct(get_responseData());
+			if (!file__.empty()) {
+				blob_ptr->set_nativePath(file__);
+			}
 
 			return blob;
 		}

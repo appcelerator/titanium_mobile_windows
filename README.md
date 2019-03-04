@@ -2,7 +2,7 @@
 
 > Titanium Mobile Windows is the Titanium platform support for the Microsoft Windows 8.1 Store and Phone platforms.
 
-[![Build Status](https://jenkins.appcelerator.org/buildStatus/icon?job=titanium-sdk/titanium_mobile_windows/master)](https://jenkins.appcelerator.org/job/titanium-sdk/job/titanium_mobile_windows/job/master/)
+[![Build Status](https://jenkins.appcelerator.org/buildStatus/icon?job=titanium-sdk/titanium_mobile_windows/master)](https://jenkins.appcelerator.org/job/titanium-sdk/job/titanium_mobile_windows/job/master/) [![Greenkeeper badge](https://badges.greenkeeper.io/appcelerator/titanium_mobile_windows.svg)](https://greenkeeper.io/)
 
 Table of Contents
 =================
