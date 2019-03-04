@@ -25,7 +25,7 @@ namespace Titanium
 				dict.rect = js_to_Dimension(static_cast<JSObject>(object.GetProperty("rect")));
 			}
 			if (object.HasProperty("view")) {
-				dict.view = static_cast<JSObject>(object.GetProperty("rect")).GetPrivate<Titanium::UI::View>();
+				dict.view = static_cast<JSObject>(object.GetProperty("view")).GetPrivate<Titanium::UI::View>();
 			}
 			return dict;
 		};
