@@ -5,6 +5,7 @@
  */
 
 #include "TitaniumWindows/Locale.hpp"
+#include "Titanium/detail/TiLogger.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include <collection.h>
 #include <algorithm>

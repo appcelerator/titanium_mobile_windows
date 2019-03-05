@@ -19,6 +19,8 @@ properties:
     platforms: [windowsphone]
   - name: attributedString
     platforms: [windowsphone]
+  - name: ellipsize
+    platforms: [windowsphone]
 methods:
   - name: getAutoLink
     platforms: [windowsphone]
@@ -55,5 +57,9 @@ methods:
   - name: getAttributedString
     platforms: [windowsphone]
   - name: setAttributedString
+    platforms: [windowsphone]
+  - name: getEllipsize
+    platforms: [windowsphone]
+  - name: setEllipsize
     platforms: [windowsphone]
 

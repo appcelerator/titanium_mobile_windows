@@ -7,6 +7,8 @@
  */
 
 #include "TitaniumWindows/UI/EmailDialog.hpp"
+#include "Titanium/detail/TiLogger.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include <windows.h>
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"

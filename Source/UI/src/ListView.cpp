@@ -12,8 +12,8 @@
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/WindowsTiImpl.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UI/SearchBar.hpp"
-#include "Titanium/UI/ListViewAnimationProperties.hpp"
 #include "TitaniumWindows/UI/SearchBar.hpp"
 #include "TitaniumWindows/UI/Windows/ListViewScrollPosition.hpp"
 

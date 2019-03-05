@@ -10,6 +10,7 @@
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/WindowsTiImpl.hpp"
 #include "Titanium/API.hpp"
+#include "Titanium/detail/TiLogger.hpp"
 #include <ppltasks.h>
 
 namespace TitaniumWindows

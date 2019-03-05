@@ -1,0 +1,10 @@
+name: Titanium.UI.NavigationWindow
+platforms: [windowsphone]
+properties:
+  - name: window
+    platforms: [windowsphone]
+methods:
+  - name: closeWindow
+    platforms: [windowsphone]
+  - name: openWindow
+    platforms: [windowsphone]

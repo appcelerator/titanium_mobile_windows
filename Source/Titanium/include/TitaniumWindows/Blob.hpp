@@ -41,6 +41,8 @@ namespace TitaniumWindows
 		*/
 		virtual std::shared_ptr<Titanium::Blob> transformImage(const std::uint32_t& scaledWidth, const std::uint32_t scaledHeight, const Titanium::UI::Dimension& crop) TITANIUM_NOEXCEPT override;
 
+		virtual std::string get_text() const TITANIUM_NOEXCEPT override;
+
 		Blob(const JSContext&) TITANIUM_NOEXCEPT;
 		virtual ~Blob();
 		Blob(const Blob&) = default;

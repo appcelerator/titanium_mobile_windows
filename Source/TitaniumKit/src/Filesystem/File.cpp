@@ -9,7 +9,6 @@
 #include "Titanium/Filesystem/FileStream.hpp"
 #include "Titanium/FilesystemModule.hpp"
 #include "Titanium/Blob.hpp"
-#include "Titanium/ErrorResponse.hpp"
 #include <type_traits>
 
 namespace Titanium

@@ -7,7 +7,6 @@
  */
 
 #include "Titanium/MediaModule.hpp"
-#include "Titanium/Blob.hpp"
 #include "Titanium/Filesystem/File.hpp"
 #include "Titanium/Media/Item.hpp"
 #include "Titanium/Media/MusicLibraryOptionsType.hpp"

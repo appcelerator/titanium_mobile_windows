@@ -5,9 +5,6 @@
 # Please see the LICENSE included with this distribution for details.
 
 include(CMakeFindDependencyMacro)
-find_dependency(HAL REQUIRED)
-find_dependency(Boost 1.55 REQUIRED)
+find_dependency(HAL)
 
-if(NOT TARGET TitaniumKit)
-	include("${CMAKE_BINARY_DIR}/TitaniumKitTargets.cmake")
-endif()
+include("${CMAKE_BINARY_DIR}/TitaniumKitTargets.cmake")

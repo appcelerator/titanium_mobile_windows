@@ -10,6 +10,7 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/UI/Windows/ViewHelper.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/UI/AttributedString.hpp"
 #include "Titanium/UI/Font.hpp"
 #include <unordered_map>
@@ -26,6 +27,25 @@ namespace TitaniumWindows
 		using namespace Windows::UI::Xaml;
 		using namespace Windows::UI::Xaml::Documents;
 		using namespace Windows::UI::Text;
+
+		// Calculate default height for the Label
+		double Label::GetDefaultHeight() TITANIUM_NOEXCEPT
+		{
+			static double defaultHeight = 26;
+
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				const auto label = ref new Windows::UI::Xaml::Controls::TextBlock();
+				label->FontSize = DefaultFontSize;
+
+				Windows::Foundation::Size desiredSize{ static_cast<float>(label->MaxWidth), static_cast<float>(label->MaxHeight) };
+				label->Measure(desiredSize);
+
+				defaultHeight = label->ActualHeight;
+			});
+
+			return defaultHeight;
+		}
 
 		Label::Label(const JSContext& js_context) TITANIUM_NOEXCEPT
 			  : Titanium::UI::Label(js_context)
@@ -55,7 +75,7 @@ namespace TitaniumWindows
 			Titanium::UI::Label::setLayoutDelegate<WindowsViewLayoutDelegate>();
 
 			label__->TextWrapping = Windows::UI::Xaml::TextWrapping::Wrap;
-			label__->TextTrimming = Windows::UI::Xaml::TextTrimming::None;
+			label__->TextTrimming = Windows::UI::Xaml::TextTrimming::CharacterEllipsis;
 			label__->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
 			label__->FontSize = DefaultFontSize;
 
@@ -110,7 +130,7 @@ namespace TitaniumWindows
 								}
 							}
 							
-							if (previousSize__.width != width || previousSize__.height != height) {
+							if (!skipResizing && (previousSize__.width != width || previousSize__.height != height)) {
 								need_measure__ = true;
 								previousSize__.width = width;
 								previousSize__.height = height;
@@ -262,6 +282,22 @@ namespace TitaniumWindows
 			}
 
 			need_measure__ = false;
+		}
+
+		void Label::set_ellipsize(const Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE& ellipsize) TITANIUM_NOEXCEPT
+		{
+			Titanium::UI::Label::set_ellipsize(ellipsize);
+			if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::NONE) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::None;
+			} else if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::CHAR_WRAP) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::CharacterEllipsis;
+			} else if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::END) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::CharacterEllipsis;
+			} else if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::WORD_WRAP) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::WordEllipsis;
+			} else if (ellipsize == Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE::CLIP) {
+				label__->TextTrimming = Windows::UI::Xaml::TextTrimming::Clip;
+			}
 		}
 
 		void Label::set_textAlign(const Titanium::UI::TEXT_ALIGNMENT& textAlign) TITANIUM_NOEXCEPT

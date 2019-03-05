@@ -8,6 +8,7 @@
 #include "TitaniumWindows/App/BackgroundService.hpp"
 #include "TitaniumWindows/App/BackgroundServiceTask.hpp"
 #include "Titanium/GeolocationModule.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include <boost/algorithm/string/predicate.hpp>
 

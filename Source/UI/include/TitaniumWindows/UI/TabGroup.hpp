@@ -11,6 +11,7 @@
 
 #include "TitaniumWindows_UI_EXPORT.h"
 #include "Titanium/UI/TabGroup.hpp"
+#include "Titanium/detail/TiBase.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
 #include <collection.h>
 

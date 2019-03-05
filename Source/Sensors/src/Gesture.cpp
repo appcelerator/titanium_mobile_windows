@@ -5,6 +5,8 @@
  */
 
 #include "TitaniumWindows/Gesture.hpp"
+#include "Titanium/detail/TiLogger.hpp"
+#include "TitaniumWindows/WindowsTiImpl.hpp"
 #include <iostream>
 #include <objbase.h>
 

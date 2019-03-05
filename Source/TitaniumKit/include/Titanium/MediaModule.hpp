@@ -10,6 +10,7 @@
 #define _TITANIUM_MEDIA_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/Blob.hpp"
 #include "Titanium/Media/Constants.hpp"
 #include "Titanium/Media/RouteDescription.hpp"
 #include <unordered_map>
@@ -18,8 +19,6 @@
 namespace Titanium
 {
 	using namespace HAL;
-
-	class Blob;
 
 	namespace Filesystem
 	{

@@ -9,6 +9,8 @@
 
 #include "TitaniumWindows_Media_EXPORT.h"
 #include "Titanium/Media/AudioPlayer.hpp"
+#include "Titanium/detail/TiBase.hpp"
+#include "TitaniumWindows/WindowsMacros.hpp"
 
 namespace TitaniumWindows
 {

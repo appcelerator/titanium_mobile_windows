@@ -19,7 +19,7 @@ namespace Titanium
 		    : View(js_context, "Ti.UI.Label"),
 		      autoLink__({AUTOLINK::NONE}),
 		      color__(js_context.CreateString()),
-		      ellipsize__(false),
+		      ellipsize__(TEXT_ELLIPSIZE_TRUNCATE::END),
 		      text__(js_context.CreateString()),
 		      textAlign__(TEXT_ALIGNMENT::LEFT),
 		      verticalAlign__(TEXT_VERTICAL_ALIGNMENT::CENTER),
@@ -35,7 +35,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READWRITE(Label, TEXT_VERTICAL_ALIGNMENT, verticalAlign)
 		TITANIUM_PROPERTY_READWRITE(Label, bool, wordWrap)
 		TITANIUM_PROPERTY_READWRITE(Label, std::string, color)
-		TITANIUM_PROPERTY_READWRITE(Label, bool, ellipsize)
+		TITANIUM_PROPERTY_READWRITE(Label, TEXT_ELLIPSIZE_TRUNCATE, ellipsize)
 		TITANIUM_PROPERTY_READWRITE(Label, Font, font)
 		TITANIUM_PROPERTY_READWRITE(Label, std::shared_ptr<AttributedString>, attributedString)
 		TITANIUM_PROPERTY_READWRITE(Label, double, minimumFontSize)
@@ -113,8 +113,8 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER_STRING(Label, color)
 		TITANIUM_PROPERTY_SETTER_STRING(Label, color)
 
-		TITANIUM_PROPERTY_GETTER_BOOL(Label, ellipsize)
-		TITANIUM_PROPERTY_SETTER_BOOL(Label, ellipsize)
+		TITANIUM_PROPERTY_GETTER_ENUM(Label, ellipsize)
+		TITANIUM_PROPERTY_SETTER_ENUM(Label, ellipsize, TEXT_ELLIPSIZE_TRUNCATE)
 
 		TITANIUM_PROPERTY_GETTER(Label, font)
 		{

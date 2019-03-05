@@ -13,8 +13,6 @@
 
 namespace Titanium
 {
-	struct ErrorResponse;
-
 	namespace Filesystem
 	{
 		using namespace HAL;

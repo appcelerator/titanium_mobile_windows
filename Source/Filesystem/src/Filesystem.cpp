@@ -6,6 +6,7 @@
 
 #include "TitaniumWindows/Filesystem.hpp"
 #include "Titanium/Filesystem/FileStream.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include <windows.h>
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"

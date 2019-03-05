@@ -11,6 +11,7 @@
 
 #include "Titanium/Module.hpp"
 #include "Titanium/UI/View.hpp"
+#include "Titanium/UI/ListViewAnimationProperties.hpp"
 
 namespace Titanium
 {
@@ -20,7 +21,6 @@ namespace Titanium
 		using namespace HAL;
 
 		class ListView;
-		class ListViewAnimationProperties;
 
 		/*!
 		  @struct

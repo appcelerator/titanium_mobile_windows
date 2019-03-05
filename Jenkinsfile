@@ -10,24 +10,9 @@ def gitCommit = ''
 def nodeVersion = '8.11.1' // NOTE that changing this requires we set up the desired version on jenkins master first!
 def npmVersion = 'latest'
 
-def shallowCheckout() {
-	// checkout scm
-	// Hack for JENKINS-37658 - see https://support.cloudbees.com/hc/en-us/articles/226122247-How-to-Customize-Checkout-for-Pipeline-Multibranch
-	checkout([
-		$class: 'GitSCM',
-		branches: scm.branches,
-		extensions: scm.extensions + [
-			[$class: 'CleanBeforeCheckout'],
-			[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false],
-			[$class: 'CloneOption', depth: 30, honorRefspec: true, noTags: true, reference: '', shallow: true]
-		],
-		userRemoteConfigs: scm.userRemoteConfigs
-	])
-}
-
 def build(msBuildVersion, architecture, gitCommit, nodeVersion, npmVersion) {
 	try {
-		shallowCheckout() // rather than stash/unstash (which takes like 4.5 minutes each way), just do a fresh shallow clone again (~30s)
+		unstash 'sources' // for build
 		if (fileExists('dist/windows')) {
 			bat 'rmdir dist\\windows /Q /S'
 		}
@@ -62,7 +47,7 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 	try {
 		def defaultEmulatorID = '10-0-1'
 		unarchive mapping: ['dist/' : '.'] // copy in built SDK from dist/ folder (from Build stage)
-		unstash 'tests'
+		unstash 'sources'
 		nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
 			ensureNPM(npmVersion)
 			bat 'npm ci'
@@ -84,6 +69,7 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 				// TODO Do a shallow clone, using same credentials as from scm object
 				git changelog: false, poll: false, credentialsId: 'd05dad3c-d7f9-4c65-9cb6-19fef98fc440', url: 'https://github.com/appcelerator/titanium-mobile-mocha-suite.git', branch: testSuiteBranch
 			}
+			unstash 'override-tests'
 			bat '(robocopy tests titanium-mobile-mocha-suite /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0'
 			dir('titanium-mobile-mocha-suite') {
 				bat 'npm ci'
@@ -104,7 +90,7 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 						bat 'mkdir crash_reports'
 						dir ('crash_reports') {
 							// move command doesn't grok wildcards, so we hack it: https://serverfault.com/questions/374997/move-directory-in-dos-batch-file-without-knowing-full-directory-name
-							bat "FOR /d %%i IN (C:\\\\ProgramData\\\\Microsoft\\\\Windows\\\\WER\\\\ReportArchive\\\\App*_com.appcelerator_*) DO move %%i ."
+							bat "FOR /d %i IN (C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_com.appcelerator_*) DO move %i ."
 						}
 						archiveArtifacts 'crash_reports/**/*'
 						bat 'rmdir crash_reports /Q /S'
@@ -121,9 +107,8 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 				} // dir 'scripts'
 			} // dir 'titanium-mobile-mocha-suite'
 		} // nodejs
-		deleteDir()
 	} finally {
-		//deleteDir()
+		deleteDir()
 	}
 } // def unitTests
 
@@ -131,11 +116,23 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 timestamps {
 	node('git') {
 		stage('Checkout') {
-			shallowCheckout()
+			// checkout scm
+			// Hack for JENKINS-37658 - see https://support.cloudbees.com/hc/en-us/articles/226122247-How-to-Customize-Checkout-for-Pipeline-Multibranch
+			checkout([
+				$class: 'GitSCM',
+				branches: scm.branches,
+				extensions: scm.extensions + [
+					[$class: 'CleanBeforeCheckout'],
+					[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false],
+					[$class: 'CloneOption', depth: 30, honorRefspec: true, noTags: true, reference: '', shallow: true]
+				],
+				userRemoteConfigs: scm.userRemoteConfigs
+			])
 			// FIXME: Workaround for missing env.GIT_COMMIT: http://stackoverflow.com/questions/36304208/jenkins-workflow-checkout-accessing-branch-name-and-git-commit
 			gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-			// stash small portions of source to use in unit test suite
-			stash name: 'tests', includes: 'Tools/Scripts/build/,package.json,package-lock.json,tests/'
+			// Stash our source code/scripts so we don't need to checkout again?
+			stash name: 'sources', includes: '**', excludes: 'apidoc/**,test/**,Examples/**'
+			stash name: 'override-tests', includes: 'tests/'
 		} // Checkout stage
 
 		nodejs(nodeJSInstallationName: "node ${nodeVersion}") {
@@ -184,12 +181,12 @@ timestamps {
 	stage('Build') {
 		parallel(
 			'Windows 10 x86': {
-				node('msbuild-14 && vs2015 && windows-sdk-10 && jsc') {
+				node('msbuild-14 && vs2015 && windows-sdk-10 && cmake && jsc') {
 					build('14.0', 'WindowsStore-x86', gitCommit, nodeVersion, npmVersion)
 				}
 			},
 			'Windows 10 ARM': {
-				node('msbuild-14 && vs2015 && windows-sdk-10 && jsc') {
+				node('msbuild-14 && vs2015 && windows-sdk-10 && cmake && jsc') {
 					build('14.0', 'WindowsStore-ARM', gitCommit, nodeVersion, npmVersion)
 				}
 			},
@@ -201,12 +198,12 @@ timestamps {
 		def testSuiteBranch = targetBranch
 		parallel(
 			'ws-local': {
-				node('msbuild-14 && vs2015 && windows-sdk-10') {
+				node('msbuild-14 && vs2015 && windows-sdk-10 && cmake') {
 					unitTests('ws-local', targetBranch, testSuiteBranch, nodeVersion, npmVersion)
 				}
 			},
 			'wp-emulator': {
-				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10') {
+				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10 && cmake') {
 					unitTests('wp-emulator', targetBranch, testSuiteBranch, nodeVersion, npmVersion)
 				}
 			}

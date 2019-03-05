@@ -9,6 +9,7 @@
 #ifndef _TITANIUM_UI_LISTVIEWANIMATIONPROPERTIES_HPP_
 #define _TITANIUM_UI_LISTVIEWANIMATIONPROPERTIES_HPP_
 
+#include "Titanium/detail/TiBase.hpp"
 #include "Titanium/Module.hpp"
 
 namespace Titanium
