@@ -58,31 +58,31 @@ namespace TitaniumWindows
 			// use stack panel because ProgressBar needs label & bar
 			panel__ = ref new Windows::UI::Xaml::Controls::StackPanel();
 			panel__->Orientation = Windows::UI::Xaml::Controls::Orientation::Vertical;
+			panel__->VerticalAlignment = VerticalAlignment::Center;
+			panel__->HorizontalAlignment = HorizontalAlignment::Stretch;
 
 			bar__ = ref new Windows::UI::Xaml::Controls::ProgressBar();
 			bar__->Background = ref new Windows::UI::Xaml::Media::SolidColorBrush(Windows::UI::Colors::Gray);
 
 			sizechanged_event__ = panel__->SizeChanged += ref new SizeChangedEventHandler([this](Platform::Object^ sender, SizeChangedEventArgs^ e) {
 				try {
-					const auto fill = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::FILL);
+					const auto SIZE = Titanium::UI::Constants::to_string(Titanium::UI::LAYOUT::SIZE);
 					const auto layout = getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 
 					layout->setStyleComponent(bar__);
 
-					if (layout->get_height() != fill) {
+					const auto layoutHeight = layout->get_height();
+					if (layoutHeight.empty() || layoutHeight == SIZE) {
+						layout->set_height(std::to_string(e->NewSize.Height));
 						// relative position from container should start from top & left
 						panel__->VerticalAlignment = VerticalAlignment::Top;
-						layout->set_height(std::to_string(e->NewSize.Height));
-					} else {
-						panel__->VerticalAlignment = VerticalAlignment::Stretch;
 					}
 
-					if (layout->get_width() != fill) {
+					const auto layoutWidth = layout->get_width();
+					if (layoutWidth.empty() || layoutWidth == SIZE) {
+						layout->set_width(std::to_string(e->NewSize.Width));
 						// relative position from container should start from top & left
 						panel__->HorizontalAlignment = HorizontalAlignment::Left;
-						layout->set_width(std::to_string(e->NewSize.Width));
-					} else {
-						panel__->HorizontalAlignment = HorizontalAlignment::Stretch;
 					}
 				} catch (...) {
 					TITANIUM_LOG_DEBUG("Error while ProgressBar::SizeChanged");

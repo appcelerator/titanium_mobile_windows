@@ -7,6 +7,7 @@
  */
 
 #include "TitaniumWindows/GlobalObject.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include <ratio>
 #include <sstream>
 #include <concrt.h>

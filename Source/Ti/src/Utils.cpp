@@ -8,6 +8,8 @@
 
 #include "TitaniumWindows/Utils.hpp"
 #include "Titanium/Blob.hpp"
+#include "Titanium/detail/TiImpl.hpp"
+
 #include "TitaniumWindows/Utility.hpp"
 
 namespace TitaniumWindows

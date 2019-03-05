@@ -230,7 +230,7 @@ namespace Titanium
 
 	TITANIUM_PROPERTY_GETTER(GeolocationModule, PROVIDER_NETWORK)
 	{
-		return get_context().CreateNumber(Titanium::Geolocation::Constants::to_underlying_type(Titanium::Geolocation::PROVIDER::NETWORK));
+		return get_context().CreateNumber(Titanium::Geolocation::Constants::to_underlying_type(Titanium::Geolocation::PROVIDER::NETOWORK));
 	}
 
 	TITANIUM_PROPERTY_GETTER(GeolocationModule, PROVIDER_PASSIVE)
@@ -516,7 +516,7 @@ namespace Titanium
 
 	TITANIUM_PROPERTY_GETTER(GeolocationModule, lastGeolocation)
 	{
-		return get_lastGeolocation();
+		return get_context().CreateString(static_cast<std::string>(static_cast<JSValue>(get_lastGeolocation()).ToJSONString()));
 	}
 
 	TITANIUM_FUNCTION(GeolocationModule, forwardGeocoder)

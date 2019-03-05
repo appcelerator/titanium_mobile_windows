@@ -73,6 +73,8 @@ namespace Titanium
 		  @discussion If this blob represents a File, this is the file URL that represents it.
 		*/
 		virtual std::string get_nativePath() const TITANIUM_NOEXCEPT;
+		virtual void set_nativePath(const std::string& nativePath) TITANIUM_NOEXCEPT;
+
 		/*!
 		  @method
 		  @abstract get_size

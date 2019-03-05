@@ -8,6 +8,7 @@
 
 #include "TitaniumWindows/AppModule.hpp"
 #include "TitaniumWindows/App/WindowsModule.hpp"
+#include "Titanium/detail/TiLogger.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/WindowsTiImpl.hpp"
 #include <concrt.h>

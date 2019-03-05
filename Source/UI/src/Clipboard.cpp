@@ -7,6 +7,7 @@
  */
 
 #include "TitaniumWindows/UI/Clipboard.hpp"
+#include "Titanium/detail/TiBase.hpp"
 #include "TitaniumWindows/Utility.hpp"
 
 #include <boost/algorithm/string.hpp>

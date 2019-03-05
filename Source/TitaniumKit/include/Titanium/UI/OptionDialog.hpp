@@ -10,6 +10,8 @@
 #define _TITANIUM_UI_OPTIONDIALOG_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/UI/OptionDialogShowParams.hpp"
+#include "Titanium/UI/OptionDialogHideParams.hpp"
 
 namespace Titanium
 {
@@ -17,10 +19,6 @@ namespace Titanium
 	{
 
 		using namespace HAL;
-
-		class View;
-		struct OptionDialogShowParams;
-		struct OptionDialogHideParams;
 
 		/*!
 		  @class

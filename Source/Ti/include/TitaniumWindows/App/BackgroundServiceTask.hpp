@@ -10,6 +10,7 @@
 
 #include "TitaniumWindows_Ti_EXPORT.h"
 #include "Titanium/Module.hpp"
+#include "Titanium/detail/TiBase.hpp"
 
 using namespace Windows::ApplicationModel::Background;
 using namespace HAL;

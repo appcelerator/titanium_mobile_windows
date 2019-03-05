@@ -5,21 +5,34 @@
  */
 
 #include "TitaniumWindows/Media.hpp"
-#include "Titanium/Blob.hpp"
-#include "Titanium/FilesystemModule.hpp"
+#include "TitaniumWindows/Filesystem.hpp"
 #include "Titanium/Filesystem/File.hpp"
 #include "Titanium/Media/Constants.hpp"
 #include "Titanium/Media/Item.hpp"
-#include "Titanium/UIModule.hpp"
-#include "Titanium/UI/Window.hpp"
+#include "Titanium/Media/CameraOptionsType.hpp"
+#include "Titanium/Media/MediaQueryType.hpp"
+#include "Titanium/UI/OpenWindowParams.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include <windows.h>
 #include <ppltasks.h>
 #include <collection.h>
 #include <concrt.h>
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
+#include "TitaniumWindows/AppModule.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include "TitaniumWindows/Blob.hpp"
+#include "TitaniumWindows/UIModule.hpp"
+#include "TitaniumWindows/UI/Window.hpp"
 
+#define GET_TITANIUM_APP(VARNAME) \
+  const auto ctx = get_context(); \
+  JSValue Titanium_property = ctx.get_global_object().GetProperty("Titanium"); \
+  TITANIUM_ASSERT(Titanium_property.IsObject()); \
+  JSObject Titanium = static_cast<JSObject>(Titanium_property); \
+  JSValue App_property = Titanium.GetProperty("App"); \
+  TITANIUM_ASSERT(App_property.IsObject()); \
+  std::shared_ptr<TitaniumWindows::AppModule> VARNAME = static_cast<JSObject>(App_property).GetPrivate<TitaniumWindows::AppModule>();
 
 #define GENERATE_TI_ERROR_RESPONSE(MESSAGE, VARNAME) \
 Titanium::ErrorResponse VARNAME; \

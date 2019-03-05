@@ -13,20 +13,19 @@
 #include "Titanium/detail/TiLogger.hpp"
 #include "Titanium/UI/Constants.hpp"
 #include "Titanium/UI/Point.hpp"
+#include "Titanium/UI/Dimension.hpp"
 #include "Titanium/UI/Gradient.hpp"
+#include "Titanium/UI/2DMatrix.hpp"
+#include "Titanium/UI/3DMatrix.hpp"
+#include "Titanium/UI/ViewInsertOrReplaceParams.hpp"
+#include "Titanium/Blob.hpp"
 
 namespace Titanium
 {
-	class Blob;
-
 	namespace UI
 	{
 		class View;
 		class Animation;
-		class TwoDMatrix;
-		class ThreeDMatrix;
-		struct Dimension;
-		struct ViewInsertOrReplaceParams;
 
 		using namespace HAL;
 

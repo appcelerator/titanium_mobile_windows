@@ -9,8 +9,9 @@
 #include "TitaniumWindows/UI/View.hpp"
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
 #include "TitaniumWindows/Utility.hpp"
-#include "Titanium/FilesystemModule.hpp"
-#include "Titanium/Filesystem/File.hpp"
+#include "TitaniumWindows/Filesystem.hpp"
+#include "TitaniumWindows/File.hpp"
+#include "Titanium/Blob.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/case_conv.hpp>

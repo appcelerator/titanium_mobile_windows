@@ -70,9 +70,10 @@
 #include "TitaniumWindows/GlobalObject.hpp"
 #include "TitaniumWindows/GlobalString.hpp"
 #include "TitaniumWindows/Utility.hpp"
+#include "Titanium/detail/TiImpl.hpp"
 #include "LayoutEngine/LayoutEngine.hpp"
 
-#include <windows.h>
+#include <Windows.h>
 #include <collection.h>
 #include <vector>
 

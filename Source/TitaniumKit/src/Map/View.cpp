@@ -10,8 +10,6 @@
 #include "Titanium/Map/Annotation.hpp"
 #include "Titanium/Map/Route.hpp"
 #include "Titanium/Map/Camera.hpp"
-#include "Titanium/Map/MapLocationTypev2.hpp"
-#include "Titanium/Map/CameraAnimationParams.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 
 namespace Titanium

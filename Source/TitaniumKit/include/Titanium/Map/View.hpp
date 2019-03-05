@@ -12,6 +12,8 @@
 #include "Titanium/UI/View.hpp"
 #include "Titanium/Map/Constants.hpp"
 #include "Titanium/Map/MapRegionTypev2.hpp"
+#include "Titanium/Map/MapLocationTypev2.hpp"
+#include "Titanium/Map/CameraAnimationParams.hpp"
 
 #include <vector>
 
@@ -23,9 +25,6 @@ namespace Titanium
 
 		class Annotation;
 		class Route;
-		class Camera;
-		struct MapLocationTypev2;
-		struct CameraAnimationParams;
 
 		using Annotation_shared_ptr_t = std::shared_ptr<Annotation>;
 		using Route_shared_ptr_t = std::shared_ptr<Route>;
