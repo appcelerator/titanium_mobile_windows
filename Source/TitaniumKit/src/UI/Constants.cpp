@@ -1349,6 +1349,90 @@ namespace Titanium
 			return static_cast<std::underlying_type<LAYOUT>::type>(layout);
 		}
 
+		std::string Constants::to_string(const TEXT_ELLIPSIZE_TRUNCATE& ellipsize) TITANIUM_NOEXCEPT
+		{
+			static std::string unknown_string = "TEXT_ELLIPSIZE_TRUNCATE::NONE";
+			static std::unordered_map<TEXT_ELLIPSIZE_TRUNCATE, std::string> map;
+			static std::once_flag of;
+			std::call_once(of, []() {
+				map[TEXT_ELLIPSIZE_TRUNCATE::NONE] = "TEXT_ELLIPSIZE_TRUNCATE_NONE";
+				map[TEXT_ELLIPSIZE_TRUNCATE::CHAR_WRAP] = "TEXT_ELLIPSIZE_TRUNCATE_CHAR_WRAP";
+				map[TEXT_ELLIPSIZE_TRUNCATE::WORD_WRAP] = "TEXT_ELLIPSIZE_TRUNCATE_WORD_WRAP";
+				map[TEXT_ELLIPSIZE_TRUNCATE::CLIP] = "TEXT_ELLIPSIZE_TRUNCATE_CLIP";
+				map[TEXT_ELLIPSIZE_TRUNCATE::START] = "TEXT_ELLIPSIZE_TRUNCATE_START";
+				map[TEXT_ELLIPSIZE_TRUNCATE::MIDDLE] = "TEXT_ELLIPSIZE_TRUNCATE_MIDDLE";
+				map[TEXT_ELLIPSIZE_TRUNCATE::END] = "TEXT_ELLIPSIZE_TRUNCATE_END";
+				map[TEXT_ELLIPSIZE_TRUNCATE::MARQUEE] = "TEXT_ELLIPSIZE_TRUNCATE_MARQUEE";
+			});
+
+			std::string string = unknown_string;
+			const auto position = map.find(ellipsize);
+			if (position != map.end()) {
+				string = position->second;
+			}
+
+			return string;
+		}
+
+		TEXT_ELLIPSIZE_TRUNCATE Constants::to_TEXT_ELLIPSIZE_TRUNCATE(const std::string& name) TITANIUM_NOEXCEPT
+		{
+			static std::unordered_map<std::string, TEXT_ELLIPSIZE_TRUNCATE> map;
+			static std::once_flag of;
+			std::call_once(of, []() {
+				map["TEXT_ELLIPSIZE_TRUNCATE_NONE"] = TEXT_ELLIPSIZE_TRUNCATE::NONE;
+				map["TEXT_ELLIPSIZE_TRUNCATE_CHAR_WRAP"] = TEXT_ELLIPSIZE_TRUNCATE::CHAR_WRAP;
+				map["TEXT_ELLIPSIZE_TRUNCATE_WORD_WRAP"] = TEXT_ELLIPSIZE_TRUNCATE::WORD_WRAP;
+				map["TEXT_ELLIPSIZE_TRUNCATE_CLIP"] = TEXT_ELLIPSIZE_TRUNCATE::CLIP;
+				map["TEXT_ELLIPSIZE_TRUNCATE_START"] = TEXT_ELLIPSIZE_TRUNCATE::START;
+				map["TEXT_ELLIPSIZE_TRUNCATE_MIDDLE"] = TEXT_ELLIPSIZE_TRUNCATE::MIDDLE;
+				map["TEXT_ELLIPSIZE_TRUNCATE_END"] = TEXT_ELLIPSIZE_TRUNCATE::END;
+				map["TEXT_ELLIPSIZE_TRUNCATE_MARQUEE"] = TEXT_ELLIPSIZE_TRUNCATE::MARQUEE;
+			});
+
+			TEXT_ELLIPSIZE_TRUNCATE ellipsize = TEXT_ELLIPSIZE_TRUNCATE::NONE;
+			const auto position = map.find(name);
+			if (position != map.end()) {
+				ellipsize = position->second;
+			}
+			else {
+				TITANIUM_LOG_WARN("Constants::to_TEXT_ELLIPSIZE_TRUNCATE: Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE with name '", name, "' does not exist");
+			}
+
+			return ellipsize;
+		}
+
+		TEXT_ELLIPSIZE_TRUNCATE Constants::to_TEXT_ELLIPSIZE_TRUNCATE(std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type ellipsize_underlying_type) TITANIUM_NOEXCEPT
+		{
+			static std::unordered_map<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type, TEXT_ELLIPSIZE_TRUNCATE> map;
+			static std::once_flag of;
+			std::call_once(of, []() {
+				map[static_cast<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type>(TEXT_ELLIPSIZE_TRUNCATE::NONE)] = TEXT_ELLIPSIZE_TRUNCATE::NONE;
+				map[static_cast<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type>(TEXT_ELLIPSIZE_TRUNCATE::CHAR_WRAP)] = TEXT_ELLIPSIZE_TRUNCATE::CHAR_WRAP;
+				map[static_cast<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type>(TEXT_ELLIPSIZE_TRUNCATE::WORD_WRAP)] = TEXT_ELLIPSIZE_TRUNCATE::WORD_WRAP;
+				map[static_cast<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type>(TEXT_ELLIPSIZE_TRUNCATE::CLIP)] = TEXT_ELLIPSIZE_TRUNCATE::CLIP;
+				map[static_cast<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type>(TEXT_ELLIPSIZE_TRUNCATE::START)] = TEXT_ELLIPSIZE_TRUNCATE::CLIP;
+				map[static_cast<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type>(TEXT_ELLIPSIZE_TRUNCATE::MIDDLE)] = TEXT_ELLIPSIZE_TRUNCATE::CLIP;
+				map[static_cast<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type>(TEXT_ELLIPSIZE_TRUNCATE::END)] = TEXT_ELLIPSIZE_TRUNCATE::CLIP;
+				map[static_cast<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type>(TEXT_ELLIPSIZE_TRUNCATE::MARQUEE)] = TEXT_ELLIPSIZE_TRUNCATE::CLIP;
+			});
+
+			TEXT_ELLIPSIZE_TRUNCATE ellipsize = TEXT_ELLIPSIZE_TRUNCATE::NONE;
+			const auto position = map.find(ellipsize_underlying_type);
+			if (position != map.end()) {
+				ellipsize = position->second;
+			}
+			else {
+				TITANIUM_LOG_WARN("Constants::to_TEXT_ELLIPSIZE_TRUNCATE: Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE with value '", ellipsize_underlying_type, "' does not exist");
+			}
+
+			return ellipsize;
+		}
+
+		std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type Constants::to_underlying_type(const TEXT_ELLIPSIZE_TRUNCATE& ellipsize) TITANIUM_NOEXCEPT
+		{
+			return static_cast<std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type>(ellipsize);
+		}
+
 		std::string Constants::to_string(const TEXT_STYLE& textStyle) TITANIUM_NOEXCEPT
 		{
 			static std::string unknown_string = "TEXT_STYLE::Unknown";

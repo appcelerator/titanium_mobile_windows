@@ -157,6 +157,16 @@ properties:
     platforms: [windowsphone]
   - name: TEXT_AUTOCAPITALIZATION_WORDS
     platforms: [windowsphone]
+  - name: TEXT_ELLIPSIZE_TRUNCATE_NONE
+    platforms: [windowsphone]
+  - name: TEXT_ELLIPSIZE_TRUNCATE_WORD_WRAP
+    platforms: [windowsphone]
+  - name: TEXT_ELLIPSIZE_TRUNCATE_CHAR_WRAP
+    platforms: [windowsphone]
+  - name: TEXT_ELLIPSIZE_TRUNCATE_END
+    platforms: [windowsphone]
+  - name: TEXT_ELLIPSIZE_TRUNCATE_CLIP
+    platforms: [windowsphone]
   - name: TEXT_STYLE_BODY
     platforms: [windowsphone]
   - name: TEXT_STYLE_CAPTION1

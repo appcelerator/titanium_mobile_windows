@@ -22,13 +22,27 @@ namespace TitaniumWindows
 			element->MaxWidth = Windows::UI::Xaml::Window::Current->Bounds.Width - 30;
 		}
 
+		static void EnsureRowComponentHeight(Windows::UI::Xaml::FrameworkElement^ element) TITANIUM_NOEXCEPT
+		{
+			// Set default height if height is not set
+			if (isnan(element->Height)) {
+				element->Height = TitaniumWindows::UI::Label::GetDefaultHeight();
+			}
+		}
+
 		void WindowsTableViewRowLayoutDelegate::add(const std::shared_ptr<Titanium::UI::View>& view) TITANIUM_NOEXCEPT
 		{
+			//
+			// Workarounds:
 			// TIMOB-24130: TableViewRow needs more margin for Label
+			// TIMOB-26689: TableViewRow sets wrong height for Label
+			//
 			const auto layout = view->getViewLayoutDelegate<WindowsViewLayoutDelegate>();
 			const auto label = std::dynamic_pointer_cast<Titanium::UI::Label>(view);
-			if (layout && label) {
-				EnsureRowComponentWidth(layout->getComponent());
+			const auto child = layout->getComponent();
+			if (label) {
+				EnsureRowComponentWidth(child);
+				EnsureRowComponentHeight(child);
 			}
 
 			// TIMOB-24856: Child view needs where to delegate its events

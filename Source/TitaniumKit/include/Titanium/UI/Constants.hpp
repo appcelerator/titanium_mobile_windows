@@ -464,6 +464,39 @@ namespace Titanium
 		  @enum
 
 		  @abstract These constants are for use with the
+		  Titanium.UI.Label.ellipsize property.
+
+		  @constant NONE Disables ellipsizing of the label. The text will be cut off if it is too long.
+
+		  @constant CHAR_WRAP Add ellipses before the first character that doesnt fit.
+
+		  @constant WORD_WRAP Add ellipses at word boundaries, unless the word itself doesn't fit on a single line.
+
+		  @constant CLIP Lines are simply not drawn past the edge of the text container.
+
+		  @constant START Add ellipses at the beginning of the label if the text is too large to fit.
+
+		  @constant MIDDLE Add ellipses in the middle of the label if the text is too large to fit.
+
+		  @constant END Add ellipses at the end of the label if the text is too large to fit.
+
+		  @constant MARQUEE Turns on a marquee effect of the label if the text is too large to fit. 
+		*/
+		enum class TITANIUMKIT_EXPORT TEXT_ELLIPSIZE_TRUNCATE {
+			NONE,
+			CHAR_WRAP,
+			WORD_WRAP,
+			CLIP,
+			START,
+			MIDDLE,
+			END,
+			MARQUEE
+		};
+
+		/*!
+		  @enum
+
+		  @abstract These constants are for use with the
 		  Titanium.UI.TextField.verticalAlign and
 		  Titanium.UI.TextArea.verticalAlign properties.
 
@@ -978,6 +1011,21 @@ namespace std
 		}
 	};
 
+	using Titanium::UI::TEXT_ELLIPSIZE_TRUNCATE;
+	template <>
+	struct hash<TEXT_ELLIPSIZE_TRUNCATE>
+	{
+		using argument_type = TEXT_ELLIPSIZE_TRUNCATE;
+		using result_type = std::size_t;
+		using underlying_type = std::underlying_type<argument_type>::type;
+		std::hash<underlying_type> hash_function = std::hash<underlying_type>();
+
+		result_type operator()(const argument_type& property_attribute) const
+		{
+			return hash_function(static_cast<underlying_type>(property_attribute));
+		}
+	};
+
 	using Titanium::UI::TEXT_VERTICAL_ALIGNMENT;
 	template <>
 	struct hash<TEXT_VERTICAL_ALIGNMENT>
@@ -1212,6 +1260,11 @@ namespace Titanium
 			static TEXT_AUTOCAPITALIZATION to_TEXT_AUTOCAPITALIZATION(const std::string& textAutoCapitalizationName) TITANIUM_NOEXCEPT;
 			static TEXT_AUTOCAPITALIZATION to_TEXT_AUTOCAPITALIZATION(std::underlying_type<TEXT_AUTOCAPITALIZATION>::type) TITANIUM_NOEXCEPT;
 			static std::underlying_type<TEXT_AUTOCAPITALIZATION>::type to_underlying_type(const TEXT_AUTOCAPITALIZATION&) TITANIUM_NOEXCEPT;
+
+			static std::string to_string(const TEXT_ELLIPSIZE_TRUNCATE&) TITANIUM_NOEXCEPT;
+			static TEXT_ELLIPSIZE_TRUNCATE to_TEXT_ELLIPSIZE_TRUNCATE(const std::string& name) TITANIUM_NOEXCEPT;
+			static TEXT_ELLIPSIZE_TRUNCATE to_TEXT_ELLIPSIZE_TRUNCATE(std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type) TITANIUM_NOEXCEPT;
+			static std::underlying_type<TEXT_ELLIPSIZE_TRUNCATE>::type to_underlying_type(const TEXT_ELLIPSIZE_TRUNCATE&) TITANIUM_NOEXCEPT;
 
 			static std::string to_string(const TEXT_VERTICAL_ALIGNMENT&) TITANIUM_NOEXCEPT;
 			static TEXT_VERTICAL_ALIGNMENT to_TEXT_VERTICAL_ALIGNMENT(const std::string& textVerticalAlignmentName) TITANIUM_NOEXCEPT;

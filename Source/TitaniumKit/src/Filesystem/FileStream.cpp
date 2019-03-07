@@ -33,9 +33,9 @@ namespace Titanium
 				return -1;
 			}
 
-			const auto buffer_ctor = get_context().JSEvaluateScript("Ti.Buffer"); \
+			const auto buffer_ctor = write_buffer->get_object().GetProperty("constructor");
 			const auto buffer_object = static_cast<JSObject>(buffer_ctor).CallAsConstructor();
-			auto source_buffer = buffer_object.GetPrivate<Buffer>();
+			const auto source_buffer = buffer_object.GetPrivate<Buffer>();
 			source_buffer->construct(data);
 
 			const auto bytesToRead = getAvailableBytesToRead(source_buffer, write_buffer, 0, write_offset, length);
@@ -50,12 +50,20 @@ namespace Titanium
 
 		void FileStream::readAsync(const std::shared_ptr<Buffer>& write_buffer, const std::uint32_t& offset, const std::uint32_t& length, const std::function<void(const ErrorResponse&, const std::int32_t&)>& callback)
 		{
-			file__->readBytesAsync(totalBytesProcessed__, length, [this, callback](const Titanium::ErrorResponse& error, const std::vector<std::uint8_t>& data){
+			file__->readBytesAsync(totalBytesProcessed__, length, [=](const Titanium::ErrorResponse& error, const std::vector<std::uint8_t>& data){
+
 				const auto bytesToRead = data.size();
 				totalBytesProcessed__ += bytesToRead;
 				if (bytesToRead == 0) {
 					callback(error, -1);
 				} else {
+					const auto buffer_ctor = write_buffer->get_object().GetProperty("constructor");
+					const auto buffer_object = static_cast<JSObject>(buffer_ctor).CallAsConstructor();
+					const auto source_buffer = buffer_object.GetPrivate<Buffer>();
+					source_buffer->construct(data);
+
+					write_buffer->copy(source_buffer, offset, 0, bytesToRead);
+
 					callback(error, static_cast<std::uint32_t>(bytesToRead));
 				}
 			});

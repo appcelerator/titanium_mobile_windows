@@ -95,25 +95,113 @@ namespace Titanium
 	TITANIUM_FUNCTION(IOStream, read)
 	{
 		ENSURE_OBJECT_AT_INDEX(buffer_object, 0);
-		ENSURE_OPTIONAL_UINT_AT_INDEX(offset, 1, 0);
 		const auto buffer = buffer_object.GetPrivate<Buffer>();
 		if (buffer == nullptr) {
 			HAL::detail::ThrowRuntimeError("Titanium::IOStream::read", "Titanium::IOStream::read: Invalid arguments");
+			return get_context().CreateNumber(0);
 		}
-		ENSURE_OPTIONAL_UINT_AT_INDEX(length, 2, buffer->get_length());
-		return get_context().CreateNumber(read(buffer, offset, length));
+
+		const auto ctx = get_context();
+
+		//
+		// read() supports optional arguments
+		//
+		// read(buffer);
+		// read(buffer, offset, length, callback)
+		// read(buffer, callback)
+		//
+		std::uint32_t offset = 0;
+		std::uint32_t length = buffer->get_length();
+		auto callback  = ctx.CreateObject();
+
+		if (arguments.size() > 1) {
+			auto _1 = arguments.at(1);
+			if (_1.IsObject()) {
+				callback = static_cast<JSObject>(_1);
+			} else {
+				offset = static_cast<std::uint32_t>(_1);
+			}
+		} 
+		if (arguments.size() > 2) {
+			length = static_cast<std::uint32_t>(arguments.at(2));
+		}
+		if (arguments.size() > 3) {
+			callback = static_cast<JSObject>(arguments.at(3));
+		}
+
+		if (callback.IsFunction()) {
+			readAsync(buffer, offset, length, [this, callback](const ErrorResponse& error, const std::int32_t& bytesRead) {
+				JSObject e = get_context().CreateObject();
+				e.SetProperty("bytesProcessed", get_context().CreateNumber(bytesRead));
+				e.SetProperty("success", get_context().CreateBoolean(error.success));
+				e.SetProperty("code", get_context().CreateNumber(error.code));
+				e.SetProperty("error", get_context().CreateString(error.error));
+				e.SetProperty("source", get_object());
+
+				const std::vector<JSValue> args{ e };
+				static_cast<JSObject>(callback)(args, get_object());
+			});
+		} else {
+			return ctx.CreateNumber(read(buffer, offset, length));
+		}
+
+		// Returns zero when read() runs with callback
+		return ctx.CreateNumber(0);
 	}
 
 	TITANIUM_FUNCTION(IOStream, write)
 	{
 		ENSURE_OBJECT_AT_INDEX(buffer_object, 0);
-		ENSURE_OPTIONAL_UINT_AT_INDEX(offset, 1, 0);
 		const auto buffer = buffer_object.GetPrivate<Buffer>();
 		if (buffer == nullptr) {
 			HAL::detail::ThrowRuntimeError("Titanium::IOStream::read", "Titanium::IOStream::read: Invalid arguments");
+			return get_context().CreateNumber(0);
 		}
-		ENSURE_OPTIONAL_UINT_AT_INDEX(length, 2, buffer->get_length());
-		return get_context().CreateNumber(write(buffer, offset, length));
+
+		const auto ctx = get_context();
+
+		//
+		// write() supports optional arguments
+		//
+		// write(buffer);
+		// write(buffer, offset, length, callback)
+		// write(buffer, callback)
+		//
+		std::uint32_t offset = 0;
+		std::uint32_t length = buffer->get_length();
+		auto callback = ctx.CreateObject();
+
+		if (arguments.size() > 1) {
+			auto _1 = arguments.at(1);
+			if (_1.IsObject()) {
+				callback = static_cast<JSObject>(_1);
+			} else {
+				offset = static_cast<std::uint32_t>(_1);
+			}
+		}
+		if (arguments.size() > 2) {
+			length = static_cast<std::uint32_t>(arguments.at(2));
+		}
+		if (arguments.size() > 3) {
+			callback = static_cast<JSObject>(arguments.at(3));
+		}
+
+		if (callback.IsFunction()) {
+			writeAsync(buffer, offset, length, [this, callback](const ErrorResponse& error, const std::int32_t& bytesWritten) {
+				JSObject e = get_context().CreateObject();
+				e.SetProperty("bytesProcessed", get_context().CreateNumber(bytesWritten));
+				e.SetProperty("success", get_context().CreateBoolean(error.success));
+				e.SetProperty("code", get_context().CreateNumber(error.code));
+				e.SetProperty("error", get_context().CreateString(error.error));
+
+				const std::vector<JSValue> args{ e };
+				static_cast<JSObject>(callback)(args, get_object());
+			});
+		} else {
+			return get_context().CreateNumber(write(buffer, offset, length));
+		}
+		// Returns zero when write() runs with callback
+		return ctx.CreateNumber(0);
 	}
 
 	TITANIUM_FUNCTION(IOStream, isWritable)
