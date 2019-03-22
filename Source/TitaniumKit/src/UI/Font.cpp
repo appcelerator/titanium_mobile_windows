@@ -54,10 +54,17 @@ namespace Titanium
 		{
 			auto object = js_context.CreateObject();
 			object.SetProperty("fontFamily", js_context.CreateString(font.fontFamily));
-			object.SetProperty("fontSize",   js_context.CreateString(font.fontSize));
 			object.SetProperty("fontStyle",  js_context.CreateNumber(static_cast<std::underlying_type<FONT_STYLE>::type>(font.fontStyle)));
 			object.SetProperty("fontWeight", js_context.CreateNumber(static_cast<std::underlying_type<FONT_WEIGHT>::type>(font.fontWeight)));
 			object.SetProperty("textStyle",  js_context.CreateNumber(static_cast<std::underlying_type<TEXT_STYLE>::type>(font.textStyle)));
+
+			const auto fontSize = font.fontSize;
+			if (std::all_of(fontSize.begin(), fontSize.end(), isdigit)) {
+				object.SetProperty("fontSize", js_context.CreateNumber(atof(fontSize.c_str())));
+			} else {
+				object.SetProperty("fontSize", js_context.CreateString(fontSize));
+			}
+
 			return object;
 		}
 	} // namespace UI
