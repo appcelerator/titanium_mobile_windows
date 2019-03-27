@@ -130,7 +130,7 @@ namespace TitaniumWindows
 				return getFileFromPathSync(TitaniumWindows::Utility::ConvertUTF8String(filename));
 			}
 
-			Windows::Storage::Streams::IBuffer^ getBufferFromBytes(std::uint8_t* data, std::size_t size, bool append, Windows::Storage::StorageFile^ appendingFile) {
+			Windows::Storage::Streams::IBuffer^ getBufferFromBytes(std::uint8_t* data, std::uint32_t size, bool append, Windows::Storage::StorageFile^ appendingFile) {
 				using namespace Windows::Storage;
 				const auto writer = ref new Streams::DataWriter(ref new Streams::InMemoryRandomAccessStream());
 				if (append) {
@@ -150,13 +150,13 @@ namespace TitaniumWindows
 				return writer->DetachBuffer();
 			}
 
-			std::size_t writeContentFromFile(Windows::Storage::Streams::DataWriter^ writer, Windows::Storage::StorageFile^ file)
+			std::uint32_t writeContentFromFile(Windows::Storage::Streams::DataWriter^ writer, Windows::Storage::StorageFile^ file)
 			{
 				auto content = TitaniumWindows::Utility::GetContentFromFile(file);
 				if (content.size() > 0) {
-					writer->WriteBytes(::Platform::ArrayReference<std::uint8_t>(&content[0], content.size()));
+					writer->WriteBytes(::Platform::ArrayReference<std::uint8_t>(&content[0], static_cast<std::uint32_t>(content.size())));
 				}
-				return content.size();
+				return static_cast<std::uint32_t>(content.size());
 			}
 
 #pragma warning(push)

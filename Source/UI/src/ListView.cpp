@@ -162,8 +162,8 @@ namespace TitaniumWindows
 		{
 			const auto itemsSize = listview__->Items->Size;
 			const auto itemHeight = scrollview__->ExtentHeight / itemsSize;
-			const auto visibleItemIndex = static_cast<std::size_t>(scrollview__->VerticalOffset / itemHeight);
-			const auto visibleItemCount = static_cast<std::size_t>(scrollview__->ViewportHeight / itemHeight);
+			const auto visibleItemIndex = static_cast<std::uint32_t>(scrollview__->VerticalOffset / itemHeight);
+			const auto visibleItemCount = static_cast<std::uint32_t>(scrollview__->ViewportHeight / itemHeight);
 
 			const auto rowInfo = model__->searchRowBySelectedIndex(visibleItemIndex);
 
@@ -182,14 +182,14 @@ namespace TitaniumWindows
 
 		void ListView::checkMarkers()
 		{
-			const auto itemsSize = listview__->Items->Size;
+			const auto itemsSize = static_cast<std::uint32_t>(listview__->Items->Size);
 			const auto itemHeight = scrollview__->ExtentHeight / itemsSize;
-			const auto visibleItemIndex = static_cast<std::size_t>(scrollview__->VerticalOffset / itemHeight);
-			const auto visibleItemCount = static_cast<std::size_t>(scrollview__->ViewportHeight / itemHeight);
+			const auto visibleItemIndex = static_cast<std::uint32_t>(scrollview__->VerticalOffset / itemHeight);
+			const auto visibleItemCount = static_cast<std::uint32_t>(scrollview__->ViewportHeight / itemHeight);
 
-			for (std::size_t i = visibleItemIndex; i < visibleItemIndex + visibleItemCount; i++) {
+			for (std::uint32_t i = visibleItemIndex; i < visibleItemIndex + visibleItemCount; i++) {
 				const auto row = model__->searchRowBySelectedIndex(i);
-				for (std::size_t m = 0; m < markers__.size(); m++) {
+				for (std::uint32_t m = 0; m < markers__.size(); m++) {
 					auto marker = markers__.at(m);
 					if (!marker.fired && marker.sectionIndex == row.sectionIndex && marker.itemIndex == row.rowIndex) {
 						const auto ctx = get_context();
@@ -456,7 +456,7 @@ namespace TitaniumWindows
 			const auto items = listview__->Items;
 			const auto sections = model__->get_sections();
 
-			std::size_t index = 0;
+			std::uint32_t index = 0;
 			for (std::uint32_t i = 0; i < sections.size(); i++) {
 				const auto section = sections.at(i);
 				index += (section->hasHeader() ? 1 : 0);

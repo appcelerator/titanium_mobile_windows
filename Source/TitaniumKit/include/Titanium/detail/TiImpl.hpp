@@ -238,7 +238,7 @@ auto js_##OUT = static_cast<JSArray>(js_##IN); \
 const auto js_##OUT##_len = js_##OUT.GetLength(); \
 std::vector<TYPE> OUT; \
 OUT.reserve(js_##OUT##_len); \
-for (std::size_t i = 0; i < js_##OUT##_len; i++) { \
+for (std::uint32_t i = 0; i < js_##OUT##_len; i++) { \
 	OUT.push_back(static_cast<TYPE>(js_##OUT.GetProperty(i))); \
 }
 
@@ -252,7 +252,7 @@ auto js_##OUT = static_cast<JSArray>(js_##IN); \
 const auto js_##OUT##_len = js_##OUT.GetLength(); \
 std::vector<std::shared_ptr<TYPE>> OUT; \
 OUT.reserve(js_##OUT##_len); \
-for (std::size_t i = 0; i < js_##OUT##_len; i++) { \
+for (std::uint32_t i = 0; i < js_##OUT##_len; i++) { \
 	OUT.push_back(static_cast<JSObject>(js_##OUT.GetProperty(i)).GetPrivate<TYPE>()); \
 }
 
@@ -390,7 +390,7 @@ TITANIUM_PROPERTY_SETTER(MODULE, NAME) { \
   const auto js_values_len = js_values.GetLength(); \
   std::vector<STRUCT_NAME> values; \
   values.reserve(js_values_len); \
-  for (std::size_t i = 0; i < js_values_len; i++) { \
+  for (std::uint32_t i = 0; i < js_values_len; i++) { \
     values.push_back(js_to_##STRUCT_NAME(static_cast<JSObject>(js_values.GetProperty(i)))); \
   } \
   set_##NAME(values); \

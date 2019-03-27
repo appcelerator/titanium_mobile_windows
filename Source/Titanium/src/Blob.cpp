@@ -119,7 +119,7 @@ namespace TitaniumWindows
 		const auto writer = ref new DataWriter(instream);
 		const auto reader = ref new DataReader(outstream->GetInputStreamAt(0));
 
-		writer->WriteBytes(Platform::ArrayReference<std::uint8_t>(&data_[0], data_.size()));
+		writer->WriteBytes(Platform::ArrayReference<std::uint8_t>(&data_[0], static_cast<std::uint32_t>(data_.size())));
 
 		concurrency::event evt;
 		concurrency::create_task(writer->StoreAsync()).then([writer](std::uint32_t) {
@@ -160,7 +160,7 @@ namespace TitaniumWindows
 		if (data.empty()) {
 			return nullptr;
 		} else {
-			reader->ReadBytes(::Platform::ArrayReference<std::uint8_t>(&data[0], data.size()));
+			reader->ReadBytes(::Platform::ArrayReference<std::uint8_t>(&data[0], static_cast<std::uint32_t>(data.size())));
 		}
 
 		auto Blob = get_context().CreateObject(JSExport<TitaniumWindows::Blob>::Class());
@@ -180,7 +180,7 @@ namespace TitaniumWindows
 		} else {
 			std::vector<std::uint8_t> data = data_;
 
-			Platform::ArrayReference<std::uint8_t> data_ref(&data[0], data.size());
+			Platform::ArrayReference<std::uint8_t> data_ref(&data[0], static_cast<std::uint32_t>(data.size()));
 			const auto buffer = CryptographicBuffer::CreateFromByteArray(data_ref);
 			const auto decoded = CryptographicBuffer::ConvertBinaryToString(BinaryStringEncoding::Utf8, buffer);
 

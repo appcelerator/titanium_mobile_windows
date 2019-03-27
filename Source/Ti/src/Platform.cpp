@@ -36,12 +36,14 @@ namespace TitaniumWindows
 
 	std::string Platform::createUUID() TITANIUM_NOEXCEPT
 	{
-		TITANIUM_LOG_DEBUG("Platform::createUUID");
 		GUID gdn;
 		CoCreateGuid(&gdn);
 		::Platform::Guid guid(gdn);
-		auto guid_str = guid.ToString();
-		return std::string((guid_str->Begin()) + 1, (guid_str->End()) - 1);
+		const auto guid_str = TitaniumWindows::Utility::ConvertString(guid.ToString());
+		if (guid_str.length() > 2) {
+			return guid_str.substr(1, guid_str.length() - 2);
+		}
+		return "";
 	}
 
 	std::string Platform::address() const TITANIUM_NOEXCEPT

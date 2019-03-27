@@ -156,8 +156,9 @@ exports.init = function (logger, config, cli) {
 				var tiapp = builder.tiapp,
 					appId = tiapp.windows.id || tiapp.id,
 					sanitizedName = builder.sanitizeProjectName(tiapp.name),
+					packageArch = builder.arch === 'x86' ? 'Win32' : builder.arch, // x86 -> Win32, x64 -> x64, ARM -> ARM
 					// name of the directory holding appx and dependencies subfolder
-					dirName = sanitizedName + '_' + builder.buildVersion + (builder.useAppxBundle ? '' : ('_' + builder.cmakeArch)) + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test'),
+					dirName = sanitizedName + '_' + builder.buildVersion + (builder.useAppxBundle ? '' : ('_' + packageArch)) + ((builder.buildConfiguration == 'Debug') ? '_Debug_Test' : '_Test'),
 					projectDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
 					// Options for installing and launching app
 					opts = appc.util.mix({

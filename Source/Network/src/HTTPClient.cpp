@@ -452,7 +452,7 @@ namespace TitaniumWindows
 		Windows::Storage::Streams::IBuffer^ HTTPClient::charVecToBuffer(std::vector<std::uint8_t> char_vector)
 		{
 			using namespace Windows::Storage;
-			int size = char_vector.size();
+			const auto size = static_cast<std::uint32_t>(char_vector.size());
 			const auto writer = ref new Streams::DataWriter(ref new Streams::InMemoryRandomAccessStream());
 			writer->WriteBytes(::Platform::ArrayReference<std::uint8_t>(&char_vector[0], size));
 			return writer->DetachBuffer();

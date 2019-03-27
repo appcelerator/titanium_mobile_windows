@@ -9,3 +9,4 @@ exports.configOptionProductID = require('./wpProductId');
 exports.configOptionSDK = require('./wpSDK');
 exports.configOptionCert = require('./wsCert');
 exports.configOptionVisualStudioTarget = require('./vstarget');
+exports.configOptionTargetArchitecture = require('./architecture');

@@ -26,7 +26,7 @@ const appc = require('node-appc');
 // Constants
 const HOME = process.env.HOME || process.env.USERPROFILE || process.env.APPDATA;
 const WIN_10 = '10.0';
-const JSC_10_URL = 'http://timobile.appcelerator.com.s3.amazonaws.com/jscore/dist/JavaScriptCore-Windows-1508145738839-win10.zip';
+const JSC_10_URL = 'http://timobile.appcelerator.com.s3.amazonaws.com/jscore/dist/JavaScriptCore-Windows-1526620853-win10.zip';
 const JSC_DIR = 'JavaScriptCore'; // directory inside zipfile
 const GTEST_URL = (os.platform() === 'win32') ? 'http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-windows.zip' : 'http://timobile.appcelerator.com.s3.amazonaws.com/gtest-1.7.0-osx.zip';
 const GTEST_DIR = (os.platform() === 'win32') ? 'gtest-1.7.0-windows' : 'gtest-1.7.0'; // directory inside zipfile

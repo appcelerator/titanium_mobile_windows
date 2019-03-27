@@ -60,7 +60,7 @@ namespace TitaniumWindows
 									const auto reader = e->GetDataReader();
 									std::vector<std::uint8_t> data(reader->UnconsumedBufferLength);
 									if (!data.empty()) {
-										auto data_ref = Platform::ArrayReference<std::uint8_t>(&data[0], data.size());
+										auto data_ref = Platform::ArrayReference<std::uint8_t>(&data[0], static_cast<std::uint32_t>(data.size()));
 										reader->ReadBytes(data_ref);
 
 										const auto buffer = CryptographicBuffer::CreateFromByteArray(data_ref);
@@ -171,7 +171,7 @@ namespace TitaniumWindows
 
 							const auto writer = ref new DataWriter(socket__->OutputStream);
 							std::vector<std::uint8_t> read_data = const_cast<std::vector<std::uint8_t>&>(data);
-							writer->WriteBytes(::Platform::ArrayReference<std::uint8_t>(&read_data[0], read_data.size()));
+							writer->WriteBytes(::Platform::ArrayReference<std::uint8_t>(&read_data[0], static_cast<std::uint32_t>(read_data.size())));
 							concurrency::create_task(writer->StoreAsync()).then([this, writer](concurrency::task<unsigned int> task) {
 								try {
 									task.get();

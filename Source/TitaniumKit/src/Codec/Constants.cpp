@@ -344,7 +344,7 @@ namespace Titanium
 			}
 			if (object.HasProperty("source")) {
 				dict.source = static_cast<std::string>(object.GetProperty("source"));
-				dict.sourceLength = dict.source.length();
+				dict.sourceLength = static_cast<std::uint32_t>(dict.source.length());
 			}
 			if (object.HasProperty("sourceLength")) {
 				dict.sourceLength = static_cast<std::uint32_t>(object.GetProperty("sourceLength"));

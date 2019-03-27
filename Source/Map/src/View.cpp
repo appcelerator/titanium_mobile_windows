@@ -188,7 +188,7 @@ namespace TitaniumWindows
 			Titanium::Map::View::removeAnnotation(annotation);
 
 #if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
-			for (size_t i = 0; i < mapview__->Children->Size; i++) {
+			for (std::uint32_t i = 0; i < mapview__->Children->Size; i++) {
 				auto element = mapview__->Children->GetAt(i);
 				Windows::UI::Xaml::Controls::Grid^ icon = dynamic_cast<Windows::UI::Xaml::Controls::Grid^>(element);
 				if (icon == nullptr) {

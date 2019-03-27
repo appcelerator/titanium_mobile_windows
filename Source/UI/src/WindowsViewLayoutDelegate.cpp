@@ -921,7 +921,7 @@ namespace TitaniumWindows
 
 			const auto stream = ref new InMemoryRandomAccessStream();
 			const auto writer = ref new DataWriter(stream);
-			writer->WriteBytes(Platform::ArrayReference<std::uint8_t>(&data[0], data.size()));
+			writer->WriteBytes(Platform::ArrayReference<std::uint8_t>(&data[0], static_cast<std::uint32_t>(data.size())));
 
 			concurrency::event event;
 			concurrency::create_task(writer->StoreAsync()).then([writer, &event](std::uint32_t) {
@@ -2063,7 +2063,7 @@ namespace TitaniumWindows
 				return found->second;
 			}
 
-			unsigned length = hexCode.size();
+			auto length = static_cast<std::uint32_t>(hexCode.size());
 			unsigned char alpha = 255;
 			if ((length != 3) && (length != 4) && (length != 6) && (length != 7) && (length != 8)) {
 				TITANIUM_LOG_WARN("View::ColorForHexCode: invalid hexCode = ", hexCode);
@@ -2071,7 +2071,7 @@ namespace TitaniumWindows
 			}
 			unsigned value = 0;
 
-			for (size_t i = 0; i < length; ++i) {
+			for (std::uint32_t i = 0; i < length; ++i) {
 				unsigned char thisChar = hexCode[i];
 				if (thisChar == '#')
 					continue;

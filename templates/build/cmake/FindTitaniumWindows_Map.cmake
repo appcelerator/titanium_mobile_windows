@@ -19,8 +19,10 @@ else()
 endif()
 
 set(TitaniumWindows_Map_ARCH "x86")
-if(CMAKE_GENERATOR MATCHES "^Visual Studio .+ ARM$")
+if (CMAKE_GENERATOR MATCHES "^Visual Studio .+ ARM$" OR CMAKE_VS_PLATFORM_NAME STREQUAL "ARM")
   set(TitaniumWindows_Map_ARCH "arm")
+elseif(CMAKE_GENERATOR MATCHES "^Visual Studio .+ Win64$" OR CMAKE_VS_PLATFORM_NAME STREQUAL "x64")
+  set(TitaniumWindows_Map_ARCH "x64")
 endif()
 
 # Taken and slightly modified from build's TitaniumWindows_Map_Targets.cmake file

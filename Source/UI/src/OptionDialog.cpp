@@ -55,7 +55,7 @@ namespace TitaniumWindows
 				native_api->error("Number of buttons exceeds platform maximum (" + std::to_string(MaxButtonCount) + "), list will be truncated.");
 				maxButtons = MaxButtonCount;
 			}
-			for (size_t i = 0; i < maxButtons; i++) {
+			for (std::uint32_t i = 0; i < maxButtons; i++) {
 				dialog->Commands->Append(ref new Windows::UI::Popups::UICommand(TitaniumWindows::Utility::ConvertUTF8String(options__[i]), nullptr, PropertyValue::CreateInt32(i)));
 			}
 

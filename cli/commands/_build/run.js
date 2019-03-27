@@ -95,31 +95,29 @@ function runCmake(next) {
 	this.logger.info(__('Running cmake at %s in directory %s', this.cmake.cyan, this.cmakeTargetDir.cyan));
 	var _t = this,
 		generatorName = this.cmakeGeneratorName,
-		p;
-
-	if (this.cmakeArch == 'ARM') {
-		generatorName += ' ARM';
-	}
-
-	this.logger.debug(this.cmake + ' ' +
-		JSON.stringify([
+		p,
+		cmakeArgs = [
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
 			'-DCMAKE_SYSTEM_VERSION=' + this.targetPlatformSdkVersion,
 			'-DHAL_RENAME_AXWAYHAL=ON',
 			this.buildDir
-		], null, 2));
+		];
+
+	if (this.cmakeArch == 'ARM') {
+		cmakeArgs.push('-A', 'ARM');
+	} else if (this.cmakeArch == 'x64') {
+		cmakeArgs.push('-A', 'x64');
+	} else {
+		cmakeArgs.push('-A', 'Win32');
+	}
+
+	this.logger.debug(this.cmake + ' ' + JSON.stringify(cmakeArgs, null, 2));
 	fs.existsSync(this.cmakeTargetDir) || wrench.mkdirSyncRecursive(this.cmakeTargetDir);
 	// Use spawn directly so we can pipe output as we go
 	var cmake = this.cmake;
-	p = spawn(cmake,
-		[
-			'-G', generatorName,
-			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
-			'-DCMAKE_SYSTEM_VERSION=' + this.targetPlatformSdkVersion,
-			'-DHAL_RENAME_AXWAYHAL=ON',
-			this.buildDir
-		],
+	p = spawn(cmake, 
+		cmakeArgs,
 		{
 			cwd: this.cmakeTargetDir
 		});

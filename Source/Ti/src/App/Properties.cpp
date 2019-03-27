@@ -182,11 +182,11 @@ namespace TitaniumWindows
 
 			// Note: If string is too large (> 2048), we split them into array of strings.
 			// In that case we stores "array size" here, and value type is Int32
-			const int limit = 2048;
+			const std::uint32_t limit = 2048;
 			if (value.size() > limit) {
 				std::uint32_t array_size = 0;
 				for (std::string::const_iterator it(value.begin()); it != value.end();) {
-					const auto sc = std::min(limit, std::distance(it, value.end()));
+					const auto sc = (std::min)(limit, static_cast<std::uint32_t>(std::distance(it, value.end())));
 					const auto newvalue = std::string(it, it + sc);
 
 					// store original string in different place.

@@ -39,8 +39,10 @@ namespace TitaniumWindows
 		GUID gdn;
 		CoCreateGuid(&gdn);
 		::Platform::Guid guid(gdn);
-		auto guid_str = guid.ToString();
-		sessionId__ = std::string((guid_str->Begin()) + 1, (guid_str->End()) - 1);
+		const auto guid_str = TitaniumWindows::Utility::ConvertString(guid.ToString());
+		if (guid_str.length() > 2) {
+			sessionId__ = guid_str.substr(1, guid_str.length() - 2);
+		}
 	}
 
 	TITANIUM_PROPERTY_GETTER(AppModule, Windows)

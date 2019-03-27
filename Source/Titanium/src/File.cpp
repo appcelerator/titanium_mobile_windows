@@ -703,7 +703,7 @@ namespace TitaniumWindows
 
 			auto content = data->getContent();
 			if (content.size() > 0) {
-				return write(getBufferFromBytes(&content[0], content.size(), append, file_));
+				return write(getBufferFromBytes(&content[0], static_cast<std::uint32_t>(content.size()), append, file_));
 			} else {
 				return write(ref new Streams::Buffer(0));
 			}

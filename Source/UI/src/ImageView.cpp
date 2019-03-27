@@ -171,8 +171,8 @@ namespace TitaniumWindows
 			}
 			
 			const bool reverse = get_reverse();
-			for (size_t i = 0; i < image_count; i++) {
-				size_t index = reverse ? (image_count - 1) - i : i;
+			for (std::uint32_t i = 0; i < image_count; i++) {
+				std::uint32_t index = reverse ? (image_count - 1) - i : i;
 
 				const auto bitmap = bitmaps__->GetAt(index);
 				auto keyFrame = ref new Windows::UI::Xaml::Media::Animation::DiscreteObjectKeyFrame();
@@ -260,7 +260,7 @@ namespace TitaniumWindows
 
 			const auto blobs = get_imagesAsBlob();
 			const auto blobs_count = blobs.size();
-			for (std::size_t i = 0; i < blobs_count; i++) {
+			for (std::uint32_t i = 0; i < blobs_count; i++) {
 				bitmaps__->Append(nullptr);
 				const auto blob = blobs.at(i);
 				loadBitmap(blob->getData(), [this, blobs_count, i](BitmapImage^ bitmap){
@@ -287,7 +287,7 @@ namespace TitaniumWindows
 
 			const auto files = get_imagesAsFile();
 			const auto files_count = files.size();
-			for (std::size_t i = 0; i < files_count; i++) {
+			for (std::uint32_t i = 0; i < files_count; i++) {
 				bitmaps__->Append(nullptr);
 				const auto file = files.at(i);
 				loadBitmap(file->read()->getData(), [this, files_count, i](BitmapImage^ bitmap){
@@ -335,7 +335,7 @@ namespace TitaniumWindows
 			const auto stream = ref new InMemoryRandomAccessStream();
 			const auto writer = ref new DataWriter(stream);
 
-			writer->WriteBytes(Platform::ArrayReference<std::uint8_t>(&data[0], data.size()));
+			writer->WriteBytes(Platform::ArrayReference<std::uint8_t>(&data[0], static_cast<std::uint32_t>(data.size())));
 
 			concurrency::create_task(writer->StoreAsync()).then([this, stream, writer, callback](concurrency::task<std::uint32_t> task) {
 				TITANIUM_EXCEPTION_CATCH_START{

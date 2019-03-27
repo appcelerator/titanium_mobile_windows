@@ -37,7 +37,7 @@ namespace Titanium
 			double measuredTop = 0;
 			std::vector<struct Element*> deferredLeftCalculations;
 			std::vector<struct Element*> deferredTopCalculations;
-			int len = children.size();
+			std::size_t len = children.size();
 
 			// Calculate size and position for the children
 			for (i = 0; i < len; i++) {

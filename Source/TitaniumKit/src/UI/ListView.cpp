@@ -122,11 +122,11 @@ namespace Titanium
 			const auto caseInsensitive = get_caseInsensitiveSearch();
 			const auto normalizedQuery = caseInsensitive ? boost::algorithm::to_lower_copy(query) : query;
 			const auto saved_sections = model__->get_saved_sections();
-			std::vector<std::tuple<size_t, size_t>> saved_position;
+			std::vector<std::tuple<std::uint32_t, std::uint32_t>> saved_position;
 			std::vector<ListDataItem> items;
-			for (size_t sectionIndex = 0; sectionIndex < saved_sections.size(); sectionIndex++) {
+			for (std::uint32_t sectionIndex = 0; sectionIndex < saved_sections.size(); sectionIndex++) {
 				const auto savedItems = saved_sections.at(sectionIndex)->get_items();
-				for (size_t itemIndex = 0; itemIndex < savedItems.size(); itemIndex++) {
+				for (std::uint32_t itemIndex = 0; itemIndex < savedItems.size(); itemIndex++) {
 					const auto item = savedItems.at(itemIndex);
 					if (ListDataItem_contains(item, normalizedQuery, caseInsensitive)) {
 						// Save "original" position so we can search it easily later on

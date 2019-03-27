@@ -27,7 +27,7 @@ namespace TitaniumWindows
 	}
 
 	std::string Utils::generateHash(Platform::String^ hashName, std::vector<std::uint8_t> data) {
-		Platform::ArrayReference<std::uint8_t> parray(data.data(), data.size());
+		Platform::ArrayReference<std::uint8_t> parray(data.data(), static_cast<std::uint32_t>(data.size()));
 		IBuffer^ buffer = CryptographicBuffer::CreateFromByteArray(parray);
 
 		HashAlgorithmProvider^ hashProvider = HashAlgorithmProvider::OpenAlgorithm(hashName);

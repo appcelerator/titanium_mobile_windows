@@ -106,7 +106,7 @@ namespace TitaniumWindows
 		std::copy(source_data.begin(), source_data.end(), dest_data.begin() + options.position);
 		options.dest->set_data(dest_data);
 
-		return options.position + source_data.size();
+		return options.position + static_cast<std::uint32_t>(source_data.size());
 	}
 
 	double Codec::decodeNumber(const DecodeNumberDict& options) TITANIUM_NOEXCEPT
@@ -132,7 +132,7 @@ namespace TitaniumWindows
 		}
 
 		auto source_data = options.source->get_data(options.position, length);
-		Platform::ArrayReference<std::uint8_t> data_ref(&source_data[0], source_data.size());
+		Platform::ArrayReference<std::uint8_t> data_ref(&source_data[0], static_cast<std::uint32_t>(source_data.size()));
 		const auto buffer = CryptographicBuffer::CreateFromByteArray(data_ref);
 		const auto reader = DataReader::FromBuffer(buffer);
 		reader->ByteOrder = GetWindowsByteOrder(options.byteOrder);
@@ -194,7 +194,7 @@ namespace TitaniumWindows
 		std::copy(source_data.begin(), source_data.end(), dest_data.begin() + options.destPosition);
 		options.dest->set_data(dest_data);
 
-		return source_data.size();
+		return static_cast<std::uint32_t>(source_data.size());
 	}
 
 	std::string Codec::decodeString(const DecodeStringDict& options) TITANIUM_NOEXCEPT
@@ -219,7 +219,7 @@ namespace TitaniumWindows
 		const auto charset = GetWindowsEncoding(options.charset, byteOrder);
 		const auto offset = GetBOMOffsetForUnicode(source_data, options.position, options.charset, byteOrder);
 
-		Platform::ArrayReference<std::uint8_t> data_ref(&source_data[offset], source_data.size() - offset);
+		Platform::ArrayReference<std::uint8_t> data_ref(&source_data[offset], static_cast<std::uint32_t>(source_data.size()) - offset);
 		const auto buffer = CryptographicBuffer::CreateFromByteArray(data_ref);
 		const auto decoded = CryptographicBuffer::ConvertBinaryToString(charset, buffer);
 

@@ -13,10 +13,11 @@ const windowslib = require('windowslib');
 
 // Constants
 const WIN_10 = '10.0';
-const MSBUILD_14 = '14.0';
 const MSBUILD_15 = '15.0';
+const MSBUILD_16 = '16.0';
 const VS_2015_GENERATOR = 'Visual Studio 14 2015';
 const VS_2017_GENERATOR = 'Visual Studio 15 2017';
+const VS_2019_GENERATOR = 'Visual Studio 16 2019';
 // paths
 
 const ROOT_DIR = path.join(__dirname, '..', '..', '..');
@@ -31,9 +32,9 @@ const DIST_LIB_DIR = path.join(DIST_DIR, 'lib');
  * @param {String} buildDir Where to build the modules temporarily
  * @param {String} destDir The top-level destination directory where we copy the built libraries
  * @param {String} buildType 'Release' || 'Debug'
- * @param {String} msBuildVersion '14.0' || '15.0'
+ * @param {String} msBuildVersion '14.0' || '15.0' || '16.0'
  * @param {String} platform 'WindowsPhone' || 'WindowsStore'
- * @param {String} arch 'x86' || 'ARM'
+ * @param {String} arch 'x86' || 'ARM' || 'x64'
  * @param {Boolean} parallel should we run MSBuild in parallel?
  * @param {Boolean} quiet log stdout of processes?
  * @return {Promise}
@@ -93,9 +94,9 @@ async function updateBuildValuesInTitaniumModule(githash, tiModuleCPP) {
  * @param {String} sourceDir Where the source is
  * @param {String} buildDir Where to build the project
  * @param {String} buildType 'Release' || 'Debug'
- * @param {String} msBuildVersion '14.0' || '15.0'
+ * @param {String} msBuildVersion '14.0' || '15.0' || '16.0'
  * @param {String} platform  'WindowsPhone' || 'WindowsStore'
- * @param {String} arch 'x86' || 'ARM'
+ * @param {String} arch 'x86' || 'ARM' || 'x64'
  * @param {Boolean} quiet log stdout of process?
  * @return {Promise}
  */
@@ -103,6 +104,8 @@ async function runCMake(sourceDir, buildDir, buildType, msBuildVersion, platform
 	let generator = VS_2015_GENERATOR;
 	if (msBuildVersion === MSBUILD_15) {
 		generator = VS_2017_GENERATOR;
+	} else if (msBuildVersion === MSBUILD_16) {
+		generator = VS_2019_GENERATOR;
 	}
 
 	// If the buildDir already exists, wipe it
@@ -111,10 +114,6 @@ async function runCMake(sourceDir, buildDir, buildType, msBuildVersion, platform
 		await fs.remove(buildDir);
 	}
 	await fs.ensureDir(buildDir);
-
-	if (arch === 'ARM') {
-		generator += ' ARM';
-	}
 
 	const args = [
 		'-G', generator,
@@ -136,6 +135,14 @@ async function runCMake(sourceDir, buildDir, buildType, msBuildVersion, platform
 		sourceDir
 	];
 
+	if (arch === 'ARM') {
+		args.push('-A', 'ARM');
+	} else if (arch === 'x64') {
+		args.push('-A', 'x64');
+	} else {
+		args.push('-A', 'Win32');
+	}
+
 	await spawnWithArgs('CMake', CMAKE_BINARY, args, { cwd: buildDir }, quiet);
 }
 
@@ -152,7 +159,7 @@ function runNuGet(slnFile, quiet) {
  * @param {String} msBuildVersion The version of MSBuild to run: '14.0' || '15.0'
  * @param {String} slnFile The VS solution file to build.
  * @param {String} buildType 'Release' || 'Debug'
- * @param {String} arch 'x86' || 'ARM'
+ * @param {String} arch 'x86' || 'ARM' || 'x64'
  * @param {Boolean} parallel Run msbuild in parallel? (/m option)
  * @param {Boolean} quiet log stdout of process?
  * @return {Promise}
@@ -162,10 +169,13 @@ function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet) {
 		windowslib.detect({}, (err, results) => {
 
 			let vsInfo = results.visualstudio[msBuildVersion];
-			if (vsInfo === undefined && msBuildVersion === '15.0') {
+			if (vsInfo === undefined) {
 				for (var key in results.visualstudio) {
 					// If you can't decide which VS2017 to select, use first one
-					if (key.endsWith(' 2017')) {
+					if (msBuildVersion === '15.0' && key.endsWith(' 2017')) {
+						vsInfo = results.visualstudio[key];
+						break;
+					} else if (msBuildVersion === '16.0' && key.endsWith(' 2019')) {
 						vsInfo = results.visualstudio[key];
 						break;
 					}
@@ -207,7 +217,7 @@ function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet) {
  * @param {String} destDir The top-level destination directory where we copy the built libraries
  * @param {String} buildType 'Release' || 'Debug'
  * @param {String} platformAbbrev 'phone' || 'store' || 'win10'
- * @param {String} arch 'x86' || 'ARM'
+ * @param {String} arch 'x86' || 'ARM' || 'x64'
  */
 async function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev, arch) {
 	const libs = {
@@ -287,9 +297,9 @@ function spawnWithArgs(name, file, args, options, quiet) {
 
 /**
  * @param {String} sha sha1 to use for Ti.buildHash, computed if not provided
- * @param {String} msBuildVersion '14.0' || '15.0'
+ * @param {String} msBuildVersion '14.0' || '15.0' || '16.0'
  * @param {String} buildType 'Release' || 'Debug'
- * @param {string[]} targets (WindowsStore|WindowsPhone)-(ARM|x86)
+ * @param {string[]} targets (WindowsStore|WindowsPhone)-(ARM|x86|x64)
  * @param {Object} [options] options
  * @param {Boolean} [options.parallel] Run builds in parallel?
  * @param {Boolean} [options.quiet] Log stdout of processes?
@@ -303,12 +313,12 @@ async function build(sha, msBuildVersion, buildType, targets, options = {}) {
 
 	if (options.parallel) {
 		await Promise.all(targets.map(configuration => {
-			const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
+			const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86|x64)
 			return buildAndPackage(SOURCE_TITANIUM_DIR, BUILD_DIR, DIST_LIB_DIR, buildType, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet);
 		}));
 	} else {
 		for (const configuration of targets) {
-			const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
+			const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86|x64)
 			await buildAndPackage(SOURCE_TITANIUM_DIR, BUILD_DIR, DIST_LIB_DIR, buildType, msBuildVersion, parts[0], parts[1], options.parallel, options.quiet);
 		}
 	}
@@ -320,7 +330,7 @@ async function build(sha, msBuildVersion, buildType, targets, options = {}) {
 
 	// copy JavaScriptCore
 	for (const configuration of targets) {
-		const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86)
+		const parts = configuration.split('-'); // target platform(WindowsStore|WindowsPhone)-arch(ARM|x86|x64)
 		console.log(`Copying JavaScriptCore for ${parts[1]}...`);
 		const newDir = path.join(DIST_LIB_DIR, 'JavaScriptCore', 'win10', parts[1]);
 		const fromDir = path.join(process.env.JavaScriptCore_HOME, parts[1]);
@@ -375,10 +385,10 @@ if (module.id === '.') {
 	(function () {
 		const program = require('commander');
 		// default platform/arch targets
-		const arches = [ 'WindowsPhone-x86', 'WindowsPhone-ARM', 'WindowsStore-x86' ];
+		const arches = [ 'WindowsStore-ARM', 'WindowsStore-x86', 'WindowsStore-x64' ];
 
 		function collectArches(val, memo) {
-			const m = /^Windows(Store|Phone)-(x86|ARM)$/.exec(val);
+			const m = /^Windows(Store|Phone)-(x86|ARM|x64)$/.exec(val);
 			if (m) {
 				memo.push(val);
 			}
@@ -391,7 +401,7 @@ if (module.id === '.') {
 			.option('-c, --configuration [config]', 'Specify configuration to build (i.e. Release or Debug)', /^(Release|Debug)$/, 'Release')
 			.option('-q, --quiet', 'Be quiet')
 			.option('-p, --parallel', 'Run builds in parallel')
-			.option('-m, --msbuild [version]', 'Use a specific version of MSBuild', /^(14\.0|15\.0)$/, MSBUILD_14)
+			.option('-m, --msbuild [version]', 'Use a specific version of MSBuild', /^(14\.0|15\.0|16\.0)$/, MSBUILD_16)
 			.option('--sha [sha1]', 'sha1 to use for Ti.buildHash, computed if not provided')
 			.parse(process.argv);
 

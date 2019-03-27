@@ -46,8 +46,8 @@ namespace Titanium
 			double rowHeight = 0;
 			std::vector<struct Element*> deferredTopCalculations;
 			double verticalAlignmentOffset = 0;
-			unsigned int len = children.size();
-			unsigned int rowLen = 0;
+			std::size_t len = children.size();
+			std::size_t rowLen = 0;
 			unsigned int rowsLen = (len > 0) ? 1 : 0;
 			bool percentageFix = false;
 

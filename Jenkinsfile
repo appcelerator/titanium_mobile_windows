@@ -58,7 +58,7 @@ def build(msBuildVersion, architecture, gitCommit, nodeVersion, npmVersion) {
 	}
 } // def build
 
-def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
+def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion, targetArch) {
 	try {
 		def defaultEmulatorID = '10-0-1'
 		unarchive mapping: ['dist/' : '.'] // copy in built SDK from dist/ folder (from Build stage)
@@ -91,7 +91,9 @@ def unitTests(target, branch, testSuiteBranch, nodeVersion, npmVersion) {
 				dir('scripts') {
 					try {
 						timeout(30) {
-							if ('ws-local'.equals(target)) {
+							if ('ws-local'.equals(target) && 'x64'.equals(targetArch)) {
+								bat "node test.js -p windows -T ${target} -a x64 --skip-sdk-install --cleanup"
+							} else if ('ws-local'.equals(target)) {
 								bat "node test.js -p windows -T ${target} --skip-sdk-install --cleanup"
 							} else if ('wp-emulator'.equals(target)) {
 								bat "node test.js -p windows -T ${target} -C ${defaultEmulatorID} --skip-sdk-install --cleanup"
@@ -193,6 +195,11 @@ timestamps {
 					build('14.0', 'WindowsStore-ARM', gitCommit, nodeVersion, npmVersion)
 				}
 			},
+			'Windows 10 x64': {
+				node('msbuild-14 && vs2015 && windows-sdk-10 && jsc') {
+					build('14.0', 'WindowsStore-x64', gitCommit, nodeVersion, npmVersion)
+				}
+			},
 			failFast: true
 		)
 	} // Stage build
@@ -202,14 +209,19 @@ timestamps {
 		parallel(
 			'ws-local': {
 				node('msbuild-14 && vs2015 && windows-sdk-10') {
-					unitTests('ws-local', targetBranch, testSuiteBranch, nodeVersion, npmVersion)
+					unitTests('ws-local', targetBranch, testSuiteBranch, nodeVersion, npmVersion, 'x86')
 				}
 			},
 			'wp-emulator': {
 				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10') {
-					unitTests('wp-emulator', targetBranch, testSuiteBranch, nodeVersion, npmVersion)
+					unitTests('wp-emulator', targetBranch, testSuiteBranch, nodeVersion, npmVersion, 'x86')
 				}
-			}
+			},
+			'ws-local-x64': {
+				node('msbuild-14 && vs2015 && windows-sdk-10') {
+					unitTests('ws-local', targetBranch, testSuiteBranch, nodeVersion, npmVersion, 'x64')
+				}
+			},
 		)
 	} // stage Test
 

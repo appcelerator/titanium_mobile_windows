@@ -46,7 +46,7 @@ namespace TitaniumWindows
 
 				if (plain) {
 					const auto children = plain->Children;
-					for (std::size_t i = 0; i < children->Size; i++) {
+					for (std::uint32_t i = 0; i < children->Size; i++) {
 						const auto child = dynamic_cast<ComboBox^>(children->GetAt(i));
 						if (child) {
 							child->IsEnabled = enabled;
@@ -90,7 +90,7 @@ namespace TitaniumWindows
 
 				if (plain) {
 					const auto children = plain->Children;
-					for (std::size_t i = 0; i < children->Size; i++) {
+					for (std::uint32_t i = 0; i < children->Size; i++) {
 						const auto child = dynamic_cast<ComboBox^>(children->GetAt(i));
 						if (child) {
 							// each child should have same width if picker has multiple columns

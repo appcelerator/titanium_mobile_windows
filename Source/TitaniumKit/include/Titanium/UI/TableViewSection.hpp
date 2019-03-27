@@ -122,7 +122,7 @@ namespace Titanium
 			{
 				const auto pos = std::find(rows__.begin(), rows__.end(), row);
 				if (pos != rows__.end()) {
-					return std::distance(rows__.begin(), pos);
+					return static_cast<std::uint32_t>(std::distance(rows__.begin(), pos));
 				}
 				return -1;
 			}

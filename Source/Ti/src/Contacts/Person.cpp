@@ -54,7 +54,7 @@ namespace TitaniumWindows
 
 			CONTACT_VALUE_GUARD(addresses)
 
-			for (size_t i = 0; i < contact__->Addresses->Size; i++) {
+			for (std::uint32_t i = 0; i < contact__->Addresses->Size; i++) {
 				auto win_address = contact__->Addresses->GetAt(i);
 
 				Titanium::Contacts::Address address;
@@ -135,7 +135,7 @@ namespace TitaniumWindows
 		std::string Person::get_birthday() const TITANIUM_NOEXCEPT
 		{
 			CONTACT_STRING_GUARD
-			for (size_t i = 0; i < contact__->ImportantDates->Size; i++) {
+			for (std::uint32_t i = 0; i < contact__->ImportantDates->Size; i++) {
 				auto date = contact__->ImportantDates->GetAt(i);
 				if (date->Kind == ContactDateKind::Birthday) {
 					return dateToString(date);
@@ -150,15 +150,15 @@ namespace TitaniumWindows
 			CONTACT_VOID_GUARD
 			// Loop through ImportantDates and Remove birthday entries?
 			// keep track of which entries are birthdays...
-			std::vector<size_t> to_erase;
-			for (size_t i = 0; i < contact__->ImportantDates->Size; i++) {
+			std::vector<std::uint32_t> to_erase;
+			for (std::uint32_t i = 0; i < contact__->ImportantDates->Size; i++) {
 				auto date = contact__->ImportantDates->GetAt(i);
 				if (ContactDateKind::Birthday == date->Kind) {
 					to_erase.push_back(i);
 				}
 			}
 			// Then remove them from back to front (to avoid having to deal with indices changing)
-			for (size_t i = to_erase.size(); i >= 0; i--) {
+			for (std::uint32_t i = static_cast<std::uint32_t>(to_erase.size()); i >= 0; i--) {
 				contact__->ImportantDates->RemoveAt(to_erase.at(i));
 			}
 
@@ -170,9 +170,9 @@ namespace TitaniumWindows
 		{
 			Titanium::Contacts::Dates dates = Titanium::Contacts::create_empty_Dates(get_context());
 			CONTACT_VALUE_GUARD(dates)
-			// Only add anniversaries and other, not birthdays
-			std::vector<size_t> to_erase;
-			for (size_t i = 0; i < contact__->ImportantDates->Size; i++) {
+				// Only add anniversaries and other, not birthdays
+			std::vector <std::uint32_t> to_erase;
+			for (std::uint32_t i = 0; i < contact__->ImportantDates->Size; i++) {
 				auto date = contact__->ImportantDates->GetAt(i);
 				const auto str = dateToString(date);
 				switch (date->Kind) {
@@ -195,15 +195,15 @@ namespace TitaniumWindows
 			CONTACT_VOID_GUARD
 			// Loop through ImportantDates and Remove non-birthday entries?
 			// keep track of which entries are not birthdays...
-			std::vector<size_t> to_erase;
-			for (size_t i = 0; i < contact__->ImportantDates->Size; i++) {
+			std::vector<std::uint32_t> to_erase;
+			for (std::uint32_t i = 0; i < contact__->ImportantDates->Size; i++) {
 				auto date = contact__->ImportantDates->GetAt(i);
 				if (ContactDateKind::Birthday != date->Kind) {
 					to_erase.push_back(i);
 				}
 			}
 			// Then remove them from back to front (to avoid having to deal with indices changing)
-			for (size_t i = to_erase.size(); i >= 0; i--) {
+			for (std::uint32_t i = static_cast<std::uint32_t>(to_erase.size()); i >= 0; i--) {
 				contact__->ImportantDates->RemoveAt(to_erase.at(i));
 			}
 
@@ -274,7 +274,7 @@ namespace TitaniumWindows
 		{
 			Titanium::Contacts::Emails emails = Titanium::Contacts::create_empty_Emails(get_context());
 			CONTACT_VALUE_GUARD(emails)
-			for (size_t i = 0; i < contact__->Emails->Size; i++) {
+			for (std::uint32_t i = 0; i < contact__->Emails->Size; i++) {
 				auto email = contact__->Emails->GetAt(i);
 				auto address = TitaniumWindows::Utility::ConvertUTF8String(email->Address);
 				switch (email->Kind) {
@@ -387,7 +387,7 @@ namespace TitaniumWindows
 			// FIXME How do we differentiate between socialprofile and instantMessages?
 			// Should we do some filtering based on the service name?
 			// AIM, Facebook, GaduGadu, GoogleTalk, ICQ, Jabber, MSN, QQ, Skype, or Yahoo for IM
-			for (size_t i = 0; i < contact__->ConnectedServiceAccounts->Size; i++) {
+			for (std::uint32_t i = 0; i < contact__->ConnectedServiceAccounts->Size; i++) {
 				auto account = contact__->ConnectedServiceAccounts->GetAt(i);
 				Titanium::Contacts::InstantMessage im;
 				im.username = TitaniumWindows::Utility::ConvertUTF8String(account->Id);
@@ -579,7 +579,7 @@ namespace TitaniumWindows
 		{
 			Titanium::Contacts::Phones phones = Titanium::Contacts::create_empty_Phones(get_context());
 			CONTACT_VALUE_GUARD(phones)
-			for (size_t i = 0; i < contact__->Phones->Size; i++) {
+			for (std::uint32_t i = 0; i < contact__->Phones->Size; i++) {
 				auto phone = contact__->Phones->GetAt(i);
 				auto number = TitaniumWindows::Utility::ConvertUTF8String(phone->Number);
 
@@ -730,7 +730,7 @@ namespace TitaniumWindows
 		{
 			Titanium::Contacts::RelatedNames names = Titanium::Contacts::create_empty_RelatedNames(get_context());
 			CONTACT_VALUE_GUARD(names)
-			for (size_t i = 0; i < contact__->SignificantOthers->Size; i++) {
+			for (std::uint32_t i = 0; i < contact__->SignificantOthers->Size; i++) {
 				auto so = contact__->SignificantOthers->GetAt(i);
 				auto name = TitaniumWindows::Utility::ConvertUTF8String(so->Name);
 
@@ -879,7 +879,7 @@ namespace TitaniumWindows
 			// FIXME How do we differentiate between socialprofile and instantMessages?
 			// Should we do some filtering based on the service name?
 			// twitter, sinaweibo, gamecenter, facebook, myspace, linkedin, or flickr for socialProfile
-			for (size_t i = 0; i < contact__->ConnectedServiceAccounts->Size; i++) {
+			for (std::uint32_t i = 0; i < contact__->ConnectedServiceAccounts->Size; i++) {
 				auto account = contact__->ConnectedServiceAccounts->GetAt(i);
 				Titanium::Contacts::InstantMessage im;
 				im.username = TitaniumWindows::Utility::ConvertUTF8String(account->Id);
@@ -928,7 +928,7 @@ namespace TitaniumWindows
 		{
 			Titanium::Contacts::Urls urls = Titanium::Contacts::create_empty_Urls(get_context());
 			CONTACT_VALUE_GUARD(urls)
-			for (size_t i = 0; i < contact__->Websites->Size; i++) {
+			for (std::uint32_t i = 0; i < contact__->Websites->Size; i++) {
 				auto website = contact__->Websites->GetAt(i);
 				auto url = TitaniumWindows::Utility::ConvertUTF8String(website->Uri->AbsoluteUri);
 				auto category = TitaniumWindows::Utility::ConvertUTF8String(website->Description);

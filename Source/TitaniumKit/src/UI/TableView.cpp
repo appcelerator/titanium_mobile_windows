@@ -145,7 +145,7 @@ namespace Titanium
 			}
 
 			std::vector<std::shared_ptr<TableViewSection>> sections;
-			std::vector<std::tuple<size_t, size_t>> saved_position;
+			std::vector<std::tuple<std::uint32_t, std::uint32_t>> saved_position;
 
 			// Create new section to show the result
 			JSObject param = get_context().CreateObject();
@@ -155,9 +155,9 @@ namespace Titanium
 			const auto filterAnchored = get_filterAnchored();
 			const auto filterCaseInsensitive = get_filterCaseInsensitive();
 			const auto filterAttribute = get_filterAttribute();
-			for (size_t sectionIndex = 0; sectionIndex < saved_sections.size(); sectionIndex++) {
+			for (std::uint32_t sectionIndex = 0; sectionIndex < saved_sections.size(); sectionIndex++) {
 				const auto savedItems = saved_sections.at(sectionIndex)->get_rows();
-				for (size_t itemIndex = 0; itemIndex < savedItems.size(); itemIndex++) {
+				for (std::uint32_t itemIndex = 0; itemIndex < savedItems.size(); itemIndex++) {
 					const auto row = savedItems.at(itemIndex);
 					if (row->contains(query, filterAnchored, filterCaseInsensitive, filterAttribute)) {
 						// Save "original" position so we can search it easily later on
@@ -434,7 +434,7 @@ namespace Titanium
 			const auto length = data.GetLength();
 			std::vector<JSObject> tableObjects;
 			tableObjects.reserve(length);
-			for (std::size_t i = 0; i < length; i++) {
+			for (std::uint32_t i = 0; i < length; i++) {
 				tableObjects.push_back(static_cast<JSObject>(data.GetProperty(i)));
 			}
 			set_data(tableObjects);

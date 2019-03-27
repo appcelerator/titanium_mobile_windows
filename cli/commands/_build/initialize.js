@@ -29,6 +29,8 @@ function initialize(next) {
 	this.debugHost = this.allowDebugging && argv['debug-host'];
 	this.profilerHost = this.allowProfiling && argv['profiler-host'];
 	this.deviceId = argv['device-id'];
+	this.arm = argv['architecture'] === 'arm';
+	this.x64 = argv['architecture'] === 'x64';
 
 	// cmake
 	this.cmakeDir = path.resolve(__dirname, '..', '..', 'vendor', 'cmake');
@@ -37,12 +39,12 @@ function initialize(next) {
 		if (this.target == 'wp-device' || this.target == 'dist-phonestore') {
 			this.cmakeArch = 'ARM';
 		} else {
-			this.cmakeArch = 'Win32';
+			this.cmakeArch = this.arm ? 'ARM' : 'Win32';
 		}
 		this.cmakePlatform = 'WindowsPhone';
 		this.cmakePlatformAbbrev = 'phone';
 	} else {
-		this.cmakeArch = 'Win32';
+		this.cmakeArch = this.arm ? 'ARM' : this.x64 ? 'x64' : 'Win32';
 		this.cmakePlatform = 'WindowsStore';
 		this.cmakePlatformAbbrev = 'store';
 	}
@@ -59,6 +61,7 @@ function initialize(next) {
 		'12.0': 'Visual Studio 12 2013',
 		'14.0': 'Visual Studio 14 2015',
 		'15.0': 'Visual Studio 15 2017',
+		'16.0': 'Visual Studio 16 2019',
 	};
 
 	var vstarget = argv['vs-target'];
@@ -66,6 +69,10 @@ function initialize(next) {
 	// As of Visual Studio 2017, multiple editions can coexist.
 	if (/^Visual Studio \w+ 2017/.test(vstarget)) {
 		vstarget = '15.0';
+	} else if (/^Visual Studio \w+ 2019/.test(vstarget)) {
+		vstarget = '16.0';
+		// FIXME: CMake 3.14 only accepts 10.0 for some reason.
+		this.targetPlatformSdkVersion = '10.0';
 	}
 
 	this.cmakeGeneratorName = supportedCMakeGenerators[vstarget];

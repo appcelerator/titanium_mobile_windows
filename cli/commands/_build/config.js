@@ -119,6 +119,7 @@ function config(logger, config, cli) {
 						},
 						'target': this.configOptionTarget(110),
 						'vs-target': this.configOptionVisualStudioTarget(120),
+						'architecture': this.configOptionTargetArchitecture(200),
 						'win-publisher-id': this.configOptionWindowsPublisherID(210),
 						'wp-publisher-guid': this.configOptionWPPublisherGUID(220),
 						'wp-product-guid': this.configOptionProductID(230),

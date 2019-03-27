@@ -473,14 +473,14 @@ namespace TitaniumWindows
 			separatorBrush__ = ref new Windows::UI::Xaml::Media::SolidColorBrush(getViewLayoutDelegate<WindowsViewLayoutDelegate>()->ColorForName(color));
 
 			unbindCollectionViewSource();
-			for (size_t g = 0; g < collectionViewItems__->Size; g++) {
+			for (std::uint32_t g = 0; g < collectionViewItems__->Size; g++) {
 				const auto group = reinterpret_cast<Vector<UIElement^>^>(collectionViewItems__->GetAt(g));
 				if (group->Size == 0) {
 					continue;
 				}
 				const auto section = model__->getSectionAtIndex(g);
 				const auto startIndex = section->hasHeader() ? 1 : 0;
-				for (size_t i = startIndex; i < group->Size - 1; i++) {
+				for (std::uint32_t i = startIndex; i < group->Size - 1; i++) {
 					const auto panel = reinterpret_cast<Windows::UI::Xaml::Controls::StackPanel^>(group->GetAt(i));
 					const auto line = reinterpret_cast<Windows::UI::Xaml::Shapes::Line^>(panel->Children->GetAt(1));
 					line->Stroke = separatorBrush__;

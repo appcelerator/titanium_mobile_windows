@@ -35,7 +35,7 @@ namespace Titanium
 			std::string pixelUnits = "px";
 			std::vector<struct Element*> deferredLeftCalculations;
 			double runningHeight = 0;
-			int len = children.size();
+			std::size_t len = children.size();
 
 			// Calculate size and position for the children
 			for (i = 0; i < len; i++) {

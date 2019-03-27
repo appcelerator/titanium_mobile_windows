@@ -198,7 +198,7 @@ exports.init = function (logger, config, cli) {
 					// path to folder holding appx
 					appxDir = path.resolve(builder.cmakeTargetDir, 'AppPackages', sanitizedName, dirName),
 					// path to folder holding depencies of the app
-					dependenciesDir = path.resolve(appxDir, 'Dependencies', (builder.cmakeArch == 'Win32') ? 'x86' : builder.cmakeArch),
+					dependenciesDir = path.resolve(appxDir, 'Dependencies', builder.arch),
 					// Options for installing app
 					opts = appc.util.mix({
 						forceUnInstall: cli.argv.hasOwnProperty('forceUnInstall'),

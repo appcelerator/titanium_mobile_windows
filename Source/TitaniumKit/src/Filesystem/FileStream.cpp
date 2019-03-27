@@ -52,7 +52,7 @@ namespace Titanium
 		{
 			file__->readBytesAsync(totalBytesProcessed__, length, [=](const Titanium::ErrorResponse& error, const std::vector<std::uint8_t>& data){
 
-				const auto bytesToRead = data.size();
+				const auto bytesToRead = static_cast<std::uint32_t>(data.size()); // possible los of data...but do we read the data that is bigger than 4GB at once?
 				totalBytesProcessed__ += bytesToRead;
 				if (bytesToRead == 0) {
 					callback(error, -1);

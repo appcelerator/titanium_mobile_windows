@@ -136,7 +136,7 @@ namespace Titanium
 			  @discussion Save original position for filtered items
 			  @param saved_positions Maps filtered index to original position: row index -> (section index, row index)
 			*/
-			void save_positions(const std::vector<std::tuple<size_t, size_t>> saved_positions) TITANIUM_NOEXCEPT
+			void save_positions(const std::vector<std::tuple<std::uint32_t, std::uint32_t>> saved_positions) TITANIUM_NOEXCEPT
 			{
 				saved_positions__ = saved_positions;
 			}
@@ -240,7 +240,7 @@ namespace Titanium
 			  @abstract get_saved_position
 			  @discussion Get saved position
 			*/
-			std::vector<std::tuple<size_t, size_t>> get_saved_positions() const TITANIUM_NOEXCEPT
+			std::vector<std::tuple<std::uint32_t, std::uint32_t>> get_saved_positions() const TITANIUM_NOEXCEPT
 			{
 				return saved_positions__;
 			}
@@ -374,7 +374,7 @@ namespace Titanium
 				if (pos == sections__.end()) {
 					return -1;
 				}
-				return std::distance(sections__.begin(), pos);
+				return static_cast<std::uint32_t>(std::distance(sections__.begin(), pos));
 			}
 
 			/*!
@@ -394,7 +394,7 @@ namespace Titanium
 			bool hasHeader__;
 
 			// For storing original position for filtered items
-			std::vector<std::tuple<size_t, size_t>> saved_positions__;
+			std::vector<std::tuple<std::uint32_t, std::uint32_t>> saved_positions__;
 		};
  	} // namespace UI
 } // namespace Titanium

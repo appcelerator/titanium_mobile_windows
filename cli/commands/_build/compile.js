@@ -89,7 +89,7 @@ function compileApp(next) {
 
 	// Use spawn directly so we can pipe output as we go
 	p = spawn((process.env.comspec || 'cmd.exe'), ['/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ \(\)\&]/g, '^$&') +
-		' &&' + ' MSBuild' + ' /p:Platform=' + _t.cmakeArch + ' /p:Configuration=' + _t.buildConfiguration + ' ' + slnFile, '"'
+		' &&' + ' MSBuild' + ' /p:Platform=' + (_t.arch === 'x86' ? 'Win32' : _t.arch) + ' /p:Configuration=' + _t.buildConfiguration + ' ' + slnFile, '"'
 	], {windowsVerbatimArguments: true});
 	
 	p.stdout.on('data', function (data) {

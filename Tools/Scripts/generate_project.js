@@ -11,9 +11,7 @@ const os = require('os');
 const colors = require('colors'); // eslint-disable-line no-unused-vars
 
 // Constants
-const MSBUILD_14 = '14.0';
 const MSBUILD_15 = '15.0';
-const VS_2015_GENERATOR = 'Visual Studio 14 2015';
 const VS_2017_GENERATOR = 'Visual Studio 15 2017';
 const WINDOWS_STORE = 'WindowsStore';
 const symbols = {
@@ -42,18 +40,17 @@ if (os.platform() === 'win32') {
 function generateProject(example_name, dest, platform, sdkVersion, msdev, arch) {
 	return new Promise((resolve, reject) => {
 		// cmake generator name
-		let generator = (msdev === MSBUILD_14) ? VS_2015_GENERATOR : VS_2017_GENERATOR;
-		if (arch === 'ARM') {
-			generator += ' ARM';
-		}
+		let generator = VS_2017_GENERATOR;
+
+		sdkVersion = '10.0';
 
 		// Make sure our intended output dir exists!
 		if (!fs.existsSync(dest)) {
 			// Make the directory structure!
 			fs.ensureDirSync(dest);
 		}
-		// Now let's generate the solution
-		const prc = spawn('cmake', [
+
+		var cmakeArgs = [
 			'-G', generator,
 			'-DCMAKE_SYSTEM_NAME=' + platform,
 			'-DCMAKE_SYSTEM_VERSION=' + sdkVersion,
@@ -65,9 +62,23 @@ function generateProject(example_name, dest, platform, sdkVersion, msdev, arch) 
 			'-DHAL_DISABLE_TESTS=ON',
 			'-DHAL_RENAME_AXWAYHAL=ON',
 			path.join(__dirname, '..', '..', 'Examples', example_name)
-		], {
-			cwd: dest
-		});
+		];
+
+		if (arch === 'ARM') {
+			cmakeArgs.push('-A', 'ARM');
+		} else if (arch === 'x64') {
+			cmakeArgs.push('-A', 'x64');
+		} else {
+			cmakeArgs.push('-A', 'Win32');
+		}
+
+		console.log(JSON.stringify(cmakeArgs, null, 2));
+
+		// Now let's generate the solution
+		const prc = spawn('cmake', cmakeArgs,
+			{
+				cwd: dest
+			});
 		prc.stdout.on('data', data => console.log(data.toString()));
 		prc.stderr.on('data', data => console.log(data.toString()));
 		prc.on('close', function (code) {

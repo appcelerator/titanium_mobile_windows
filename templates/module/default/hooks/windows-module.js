@@ -30,14 +30,15 @@ function chooseCMakeVSgenerator(logger, callback) {
 	var generators = {
 	    '12.0':'Visual Studio 12 2013',
 	    '14.0':'Visual Studio 14 2015',
-	    '15.0':'Visual Studio 15 2017'
+	    '15.0':'Visual Studio 15 2017',
+	    '16.0':'Visual Studio 16 2019'
 	};
 
 	windowslib.detect(function (err, results) {
 		if (err) {
 			logger.err(err);
 		}
-		var generator = generators['12.0'],
+		var generator = generators['16.0'],
 			sdks = {
 				windows: results.windows,
 				windowsphone: results.windowsphone
@@ -45,6 +46,8 @@ function chooseCMakeVSgenerator(logger, callback) {
 		if (results.selectedVisualStudio) {
 			if (/^Visual Studio \w+ 2017/.test(results.selectedVisualStudio.version)) {
 				generator = generators['15.0'];
+			} else if (/^Visual Studio \w+ 2019/.test(results.selectedVisualStudio.version)) {
+				generator = generators['16.0'];
 			} else {
 				generator = generators[results.selectedVisualStudio.version];
 			}
@@ -74,22 +77,16 @@ exports.init = function (logger, config, cli) {
 						next();
 					},
 					function(next) {
-						if (sdks.windows.hasOwnProperty('10.0')) {
-							logger.info('Generating Windows 10 Win32 project');
-							runCMake(logger, cmake, projectDir, 'Windows10', 'Win32', generator, next);
-						} else {
-							logger.info('Skipping Windows 10 Win32 project as Windows 10.0 SDK is not installed');
-							next();
-						}
+						logger.info('Generating Windows 10 Win32 project');
+						runCMake(logger, cmake, projectDir, 'Windows10', 'Win32', generator, next);
 					},
 					function(next) {
-						if (sdks.windowsphone.hasOwnProperty('10.0')) {
-							logger.info('Generating Windows 10 ARM project');
-							runCMake(logger, cmake, projectDir, 'Windows10', 'ARM', generator, next);
-						} else {
-							logger.info('Skipping Windows 10 ARM project as Windows 10.0 SDK is not installed');
-							next();
-						}
+						logger.info('Generating Windows 10 ARM project');
+						runCMake(logger, cmake, projectDir, 'Windows10', 'ARM', generator, next);
+					},
+					function(next) {
+						logger.info('Generating Windows 10 x64 project');
+						runCMake(logger, cmake, projectDir, 'Windows10', 'x64', generator, next);
 					}
 				], function(err, result) {
 					if (err) {
@@ -104,7 +101,7 @@ exports.init = function (logger, config, cli) {
 
 function runCMake(logger, cmake, projectDir, targetEnv, targetArch, targetGenerator, callback){
 	var targetDir = path.join(projectDir, targetEnv+'.'+targetArch),
-		generatorName =  targetGenerator+(targetArch === 'ARM' ? ' ARM' : ''),
+		generatorName =  targetGenerator,
 		p,
 		originalTargetDir,
 		targetPlatform = (targetEnv == 'Windows10') ? 'WindowsStore' : targetEnv;
@@ -136,14 +133,23 @@ function runCMake(logger, cmake, projectDir, targetEnv, targetArch, targetGenera
 		originalTargetDir = null;
 	}
 
-	p = spawn(cmake,
-		[
+	var cmakeArgs = [
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + targetPlatform,
 			'-DCMAKE_SYSTEM_VERSION=' + targetVersion,
 			'-DHAL_RENAME_AXWAYHAL=ON',
 			path.join(projectDir)
-		],
+		];
+
+		if (targetArch === 'ARM') {
+			cmakeArgs.push('-A', 'ARM');
+		} else if (targetArch === 'ARM64') {
+			cmakeArgs.push('-A', 'ARM64');
+		} else if (targetArch === 'x64') {
+			cmakeArgs.push('-A', 'x64');
+		}
+
+	p = spawn(cmake, cmakeArgs,
 		{
 			cwd: targetDir
 		});

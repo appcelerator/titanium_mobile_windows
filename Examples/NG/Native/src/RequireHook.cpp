@@ -52,7 +52,7 @@ namespace TitaniumWindows_Native
 	}
 
 	// This should return collections of supported name module names such as Windows.UI.Xaml.Controls.Button etc.
-	Windows::Foundation::Collections::IVector<Platform::String^>^ RequireHook::OnTitaniumModuleNames(int js_context_ref)
+	Windows::Foundation::Collections::IVector<Platform::String^>^ RequireHook::OnTitaniumModuleNames(std::intptr_t js_context_ref)
 	{
 		auto names = ref new ::Platform::Collections::Vector<::Platform::String^>();
 
