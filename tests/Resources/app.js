@@ -54,6 +54,7 @@ require('./global.test');
 require('./require.test');
 require('./string.test');
 require('./timers.test');
+if (!utilities.isWindows()) {
 // ES6 syntax/compatability tests
 require('./es6.arrows.test');
 require('./es6.async.await.test');
@@ -63,6 +64,7 @@ require('./es6.import.test');
 require('./es6.rest.args.test');
 require('./es6.spread.args.test');
 require('./es6.string.interpolation.test');
+}
 // node-compat core modules
 require('./assert.test');
 require('./os.test');
@@ -158,13 +160,15 @@ require('./ti.ui.textarea.test');
 require('./ti.ui.textfield.test');
 require('./ti.ui.toolbar.test');
 require('./ti.ui.view.test');
-if (!utilities.isWindows()) { // Temporary disabling this because Jenkins fails for this.
+if (!utilities.isWindows()) {
   require('./ti.ui.webview.test');
 }
 require('./ti.ui.window.test');
 require('./ti.ui.windows.commandbar.test');
 require('./ti.utils.test');
+if (!utilities.isWindows()) {
 require('./ti.xml.test');
+}
 
 // Load in any of the files added to the test/Resources folder of the SDK repos
 
