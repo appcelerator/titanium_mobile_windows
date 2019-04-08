@@ -192,6 +192,9 @@ namespace TitaniumWindows
 
 		void HTTPClient::send(Windows::Web::Http::IHttpContent^ content)
 		{
+			// Save this instance to make sure HttpClient is not garbage-collected before its callback is fired.
+			JSValueProtect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
+
 			readyState__ = Titanium::Network::RequestState::Unsent;
 
 			auto uri = ref new Windows::Foundation::Uri(TitaniumWindows::Utility::ConvertString(location__));
@@ -317,6 +320,7 @@ namespace TitaniumWindows
 						});
 					}
 				}
+				JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 			}, CONTINUATION_CONTEXT());
 			// clang-format on
 		}
