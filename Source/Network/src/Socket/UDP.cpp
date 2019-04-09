@@ -106,6 +106,7 @@ namespace TitaniumWindows
 							hostname = hostnames->GetAt(0)->CanonicalName;
 						}
 					}
+					JSValueProtect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 					concurrency::create_task(socket__->BindEndpointAsync(ref new HostName(hostname), portname)).then([this, hostname, port](concurrency::task<void> task) {
 						try {
 							task.get();
@@ -120,12 +121,15 @@ namespace TitaniumWindows
 										args.SetProperty("port", ctx.CreateNumber(port));
 										callback({ args }, get_object());
 									}
+									JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 								});
 							}
 						} catch (Platform::COMException^ e) {
 							error(TitaniumWindows::Utility::ConvertUTF8String(e->Message));
+							JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 						} catch (...) {
 							error("Ti.Network.UDP.start: Unknown error");
+							JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 						}
 					});
 				}
@@ -165,6 +169,7 @@ namespace TitaniumWindows
 					const auto hostname = ref new HostName(TitaniumWindows::Utility::ConvertString(host));
 					const auto portname = TitaniumWindows::Utility::ConvertString(std::to_string(port));
 
+					JSValueProtect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 					concurrency::create_task(socket__->ConnectAsync(hostname, portname)).then([this, data](concurrency::task<void> task) {
 						try {
 							task.get();
@@ -189,11 +194,14 @@ namespace TitaniumWindows
 								} catch (...) {
 									error("Ti.Network.UDP.sendByte: Unknown error");
 								}
+								JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 							});
 						} catch (Platform::COMException^ e) {
 							error(TitaniumWindows::Utility::ConvertUTF8String(e->Message));
+							JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 						} catch (...) {
 							error("Ti.Network.UDP.sendByte: Unknown error");
+							JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 						}
 					});
 				}
