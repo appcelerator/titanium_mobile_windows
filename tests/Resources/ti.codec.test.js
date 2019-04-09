@@ -387,7 +387,7 @@ describe('Titanium.Codec', function () {
 		});
 	});
 
-	describe('#decodeNumber', function () {
+	describe.windowsBroken('#decodeNumber', function () {
 		it('should throw Error when "source" not specified', function () {
 			should(function () {
 				var buffer = Ti.createBuffer({
