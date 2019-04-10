@@ -1,7 +1,7 @@
 var appc = require('node-appc'),
 	async = require('async'),
 	cleanCSS = require('clean-css'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	crypto = require('crypto'),
 	jsanalyze = require('node-titanium-sdk/lib/jsanalyze'),
 	path = require('path'),
@@ -703,6 +703,7 @@ function copyResources(next) {
 			// Note: An empty array indicates the app has no bootstrap files.
 			const bootstrapJsonRelativePath = path.join('ti.internal', 'bootstrap.json'),
 				bootstrapJsonAbsolutePath = path.join(this.buildTargetAssetsDir, bootstrapJsonRelativePath);
+			fs.ensureDirSync(path.dirname(bootstrapJsonAbsolutePath));
 			fs.writeFileSync(bootstrapJsonAbsolutePath, JSON.stringify({ scripts: jsBootstrapFiles }));
 			this.encryptJS && jsFilesToEncrypt.push(bootstrapJsonRelativePath);
 
