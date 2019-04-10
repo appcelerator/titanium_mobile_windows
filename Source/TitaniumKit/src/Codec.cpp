@@ -194,7 +194,7 @@ namespace Titanium
 		TITANIUM_FUNCTION(CodecModule, decodeNumber)
 		{
 			ENSURE_OBJECT_AT_INDEX(options, 0);
-			if (!options.HasProperty("source") || !options.HasProperty("dest") || !options.HasProperty("type")) {
+			if (!options.HasProperty("source") || !options.HasProperty("type")) {
 				HAL::detail::ThrowRuntimeError("Codec", "Invalid type passed to function");
 				return get_context().CreateUndefined();
 			}
