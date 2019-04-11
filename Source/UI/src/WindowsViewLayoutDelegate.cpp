@@ -66,7 +66,7 @@ namespace TitaniumWindows
 		WindowsViewLayoutDelegate::WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
 			: ViewLayoutDelegate()
 		{
-			Titanium::LayoutEngine::PhysicalPixelsFactor = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+			Titanium::LayoutEngine::PhysicalPixelsFactor = GetDisplayInformation()->RawPixelsPerViewPixel;
 		}
 
 		WindowsViewLayoutDelegate::~WindowsViewLayoutDelegate() TITANIUM_NOEXCEPT
@@ -82,6 +82,16 @@ namespace TitaniumWindows
 			}
 			// make sure it is deleted from parent node, otherwise LayoutEngine crashes!
 			delete layout_node__;
+		}
+
+		Windows::Graphics::Display::DisplayInformation^ WindowsViewLayoutDelegate::GetDisplayInformation()
+		{
+			static Windows::Graphics::Display::DisplayInformation^ display;
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				display = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+			});
+			return display;
 		}
 
 		std::shared_ptr<Titanium::UI::View> WindowsViewLayoutDelegate::rescueGetView(const JSObject& view) TITANIUM_NOEXCEPT
@@ -1395,7 +1405,7 @@ namespace TitaniumWindows
 
 			static std::once_flag of;
 			std::call_once(of, [=] {
-				RawPixelsPerViewPixel = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+				RawPixelsPerViewPixel = GetDisplayInformation()->RawPixelsPerViewPixel;
 			});
 
 			const auto ppi = ComputePPI(valueName);
@@ -1626,27 +1636,11 @@ namespace TitaniumWindows
 			is_button__  = dynamic_cast<Controls::Button^>(underlying_control__) != nullptr;
 
 			loaded_event__ = component__->Loaded += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
-				auto component = getComponent();
-				auto rect = Titanium::LayoutEngine::RectMake(
-					Canvas::GetLeft(component),
-					Canvas::GetTop(component),
-					component->ActualWidth,
-					component->ActualHeight
-				);
-
-				onComponentLoaded(rect);
+				onComponentLoaded();
 			});
 
 			size_change_event__ = component__->SizeChanged += ref new SizeChangedEventHandler([this](Platform::Object^ sender, SizeChangedEventArgs^ e) {
-				auto component = getComponent();
-				auto rect = Titanium::LayoutEngine::RectMake(
-					Canvas::GetLeft(component),
-					Canvas::GetTop(component),
-					e->NewSize.Width,
-					e->NewSize.Height
-				);
-
-				onComponentSizeChange(rect);
+				onComponentSizeChange(e->NewSize);
 			});
 
 			update_background_event__ = component__->GotFocus += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
@@ -1930,7 +1924,7 @@ namespace TitaniumWindows
 			}
 		}
 
-		void WindowsViewLayoutDelegate::onComponentLoaded(const Titanium::LayoutEngine::Rect& rect)
+		void WindowsViewLayoutDelegate::onComponentLoaded()
 		{
 			is_loaded__ = true;
 			requestLayout(true);
@@ -1942,7 +1936,7 @@ namespace TitaniumWindows
 			animate_queue__.clear();
 		}
 
-		Titanium::LayoutEngine::Rect WindowsViewLayoutDelegate::computeRelativeSize(const double& x, const double& y, const double& baseWidth, const double& baseHeight) {
+		Windows::Foundation::Size WindowsViewLayoutDelegate::computeRelativeSize(const double& baseWidth, const double& baseHeight) {
 			auto width  = baseWidth;
 			auto height = baseHeight;
 
@@ -1960,28 +1954,31 @@ namespace TitaniumWindows
 				}
 			}
 
-			return Titanium::LayoutEngine::RectMake(x, y, width, height);
+			// Convert double to float. Assuming it's safe because Windows actually returns float value on SizeChanged event.
+			return Windows::Foundation::Size(static_cast<float>(width), static_cast<float>(height));
 		}
 
-		void WindowsViewLayoutDelegate::onComponentSizeChange(const Titanium::LayoutEngine::Rect& rect)
+		void WindowsViewLayoutDelegate::onComponentSizeChange(const Windows::Foundation::Size& size)
 		{
 			bool needsLayout = false;
 
+			const auto loaded = isLoaded();
+
 			if (is_default_width_size__ && (is_grid__ || is_border__ || !is_panel__)) {
-				layout_node__->properties.width.value = rect.width;
+				layout_node__->properties.width.value = size.Width;
 				layout_node__->properties.width.valueType = Titanium::LayoutEngine::Fixed;
-				needsLayout = isLoaded() && !is_border__;
+				needsLayout = loaded && !is_border__;
 			}
 
 			if (is_default_height_size__ && (is_grid__ || is_border__ || !is_panel__)) {
-				layout_node__->properties.height.value = rect.height;
+				layout_node__->properties.height.value = size.Height;
 				layout_node__->properties.height.valueType = Titanium::LayoutEngine::Fixed;
-				needsLayout = isLoaded() && !is_border__;
+				needsLayout = loaded && !is_border__;
 			}
 
 			if (needsLayout) {
 				requestLayout(true);
-			} else if (isLoaded()) {
+			} else if (loaded) {
 				firePostLayoutEvent();
 			}
 
@@ -1993,11 +1990,11 @@ namespace TitaniumWindows
 			static double RawPixelsPerViewPixel;
 			static std::once_flag of;
 			std::call_once(of, [=] {
-				const auto info = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+				const auto info = GetDisplayInformation();
 				LogicalDpi = info->LogicalDpi;
 				RawDpiX = info->RawDpiX;
 				RawDpiY = info->RawDpiY;
-				RawPixelsPerViewPixel = Windows::Graphics::Display::DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+				RawPixelsPerViewPixel = info->RawPixelsPerViewPixel;
 			});
 
 			double ppi = LogicalDpi;
@@ -2056,8 +2053,16 @@ namespace TitaniumWindows
 			return (c & 0xF) + (c < 'A' ? 0 : 9);
 		}
 
+		std::unordered_map<std::string, Windows::UI::Color> WindowsViewLayoutDelegate::colorForHexCode__;
+
 		Windows::UI::Color WindowsViewLayoutDelegate::ColorForHexCode(const std::string& hexCode)
 		{
+			// Search for hexCode-to-color cache
+			const auto found = colorForHexCode__.find(hexCode);
+			if (found != colorForHexCode__.end()) {
+				return found->second;
+			}
+
 			unsigned length = hexCode.size();
 			unsigned char alpha = 255;
 			if ((length != 3) && (length != 4) && (length != 6) && (length != 7) && (length != 8)) {
@@ -2092,7 +2097,10 @@ namespace TitaniumWindows
 			int red = (value >> 16) & 0xFF;
 			int green = (value >> 8) & 0xFF;
 			int blue = value & 0xFF;
-			return Windows::UI::ColorHelper::FromArgb(alpha, red, green, blue);
+
+			const auto color = Windows::UI::ColorHelper::FromArgb(alpha, red, green, blue);
+			colorForHexCode__.emplace(hexCode, color);
+			return color;
 		}
 
 #if defined(INSERT_WINDOWS_UI_COLOR)

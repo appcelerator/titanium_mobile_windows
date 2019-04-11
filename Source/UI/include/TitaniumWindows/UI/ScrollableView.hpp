@@ -27,7 +27,7 @@ namespace TitaniumWindows
 			ScrollableViewLayoutDelegate(ScrollableView*) TITANIUM_NOEXCEPT;
 			virtual ~ScrollableViewLayoutDelegate() = default;
 
-			virtual void onComponentSizeChange(const Titanium::LayoutEngine::Rect& rect) override;
+			virtual void onComponentSizeChange(const Windows::Foundation::Size& size) override;
 		protected:
 
 #pragma warning(push)

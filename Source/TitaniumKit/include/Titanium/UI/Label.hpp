@@ -123,6 +123,7 @@ namespace Titanium
 			    textArea.autoLink = AUTOLINK_MAP_ADDRESSES|AUTOLINK_PHONE_NUMBERS;
 			*/
 			TITANIUM_PROPERTY_IMPL_DEF(std::unordered_set<AUTOLINK>, autoLink);
+			TITANIUM_PROPERTY_IMPL_READONLY_DEF(bool, autoLink_enabled);
 
 			/*!
 			  @property
@@ -213,6 +214,7 @@ namespace Titanium
 			std::unordered_set<AUTOLINK> autoLink__;
 			double minimumFontSize__;
 			std::uint32_t maxLines__;
+			bool autoLink_enabled__;
 #pragma warning(pop)
 		};
 	} // namespace UI

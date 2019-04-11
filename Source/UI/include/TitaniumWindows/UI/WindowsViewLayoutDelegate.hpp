@@ -465,8 +465,8 @@ namespace TitaniumWindows
 			//
 			// Windows-specific layout functions
 			//
-			virtual void onComponentLoaded(const Titanium::LayoutEngine::Rect&);
-			virtual void onComponentSizeChange(const Titanium::LayoutEngine::Rect&);
+			virtual void onComponentLoaded();
+			virtual void onComponentSizeChange(const Windows::Foundation::Size& size);
 			virtual void onLayoutEngineCallback(Titanium::LayoutEngine::Rect rect, const std::string& name);
 			virtual void updateBackgroundGradient();
 
@@ -557,7 +557,7 @@ namespace TitaniumWindows
 			virtual void requestLayout(const bool& fire_event = false);
 
 			// compute its fixed size when either width or height (not both) is Ti.UI.SIZE
-			virtual Titanium::LayoutEngine::Rect computeRelativeSize(const double& x, const double& y,  const double& baseWidth, const double& baseHeight);
+			virtual Windows::Foundation::Size computeRelativeSize(const double& baseWidth, const double& baseHeight);
 
 			static Windows::UI::Color ColorForName(const std::string& colorName, const Windows::UI::Color defaultColor = Windows::UI::Colors::Transparent);
 			static Windows::UI::Color ColorForHexCode(const std::string& hexCode);
@@ -594,6 +594,9 @@ namespace TitaniumWindows
 		protected:
 #pragma warning(push)
 #pragma warning(disable : 4251)
+			static std::unordered_map<std::string, Windows::UI::Color> colorForHexCode__;
+			static Windows::Graphics::Display::DisplayInformation^ GetDisplayInformation();
+
 			bool sourceTest(::Platform::Object ^ source, Windows::UI::Xaml::DependencyObject^ target);
 
 			Windows::UI::Xaml::Controls::Border^ border__    { nullptr };

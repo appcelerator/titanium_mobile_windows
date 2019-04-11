@@ -17,6 +17,9 @@
 #include "Titanium/detail/TiImpl.hpp"
 
 #define CREATE_TITANIUM_MEDIA(NAME) \
+  static auto NAME##_ctor = this_object; \
+  static std::once_flag of; \
+  std::call_once(of, [=] {\
   JSValue Titanium_property = this_object.get_context().get_global_object().GetProperty("Titanium"); \
   TITANIUM_ASSERT(Titanium_property.IsObject()); \
   JSObject Titanium = static_cast<JSObject>(Titanium_property); \
@@ -25,8 +28,9 @@
   JSObject Media = static_cast<JSObject>(Media_property); \
   JSValue NAME##_property = Media.GetProperty(#NAME); \
   TITANIUM_ASSERT(NAME##_property.IsObject()); \
-  JSObject NAME = static_cast<JSObject>(NAME##_property); \
-  auto NAME##_obj = NAME.CallAsConstructor(parameters); \
+  NAME##_ctor = static_cast<JSObject>(NAME##_property); \
+  }); \
+  auto NAME##_obj = NAME##_ctor.CallAsConstructor(); \
   Titanium::Module::applyProperties(parameters, NAME##_obj); \
   return NAME##_obj;
 

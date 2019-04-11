@@ -21,16 +21,6 @@ namespace Titanium
 	{
 	}
 
-	void Module::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
-		if (arguments.size() >= 1) {
-			const auto _0 = arguments.at(0);
-			if (_0.IsObject()) {
-				JSObject properties = static_cast<JSObject>(_0);
-				TITANIUM_LOG_DEBUG(apiName__, " ctor has ", properties.GetPropertyNames().GetCount(), " properties for ", this);
-			}
-		}
-	}
-
 	Module::~Module() TITANIUM_NOEXCEPT
 	{
 	}

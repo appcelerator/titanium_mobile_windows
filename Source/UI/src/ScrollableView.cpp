@@ -22,9 +22,9 @@ namespace TitaniumWindows
 
 		}
 
-		void ScrollableViewLayoutDelegate::onComponentSizeChange(const Titanium::LayoutEngine::Rect& rect)
+		void ScrollableViewLayoutDelegate::onComponentSizeChange(const Windows::Foundation::Size& size)
 		{
-			WindowsViewLayoutDelegate::onComponentSizeChange(rect);
+			WindowsViewLayoutDelegate::onComponentSizeChange(size);
 
 			const auto contentLayout = scrollable_view__->getContentViewLayoutDelegate();
 			const auto content = contentLayout->getComponent();

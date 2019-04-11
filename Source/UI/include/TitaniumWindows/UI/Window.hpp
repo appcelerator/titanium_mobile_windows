@@ -114,7 +114,7 @@ namespace TitaniumWindows
 			WindowLayoutDelegate() TITANIUM_NOEXCEPT;
 			virtual ~WindowLayoutDelegate() = default;
 
-			virtual void onComponentSizeChange(const Titanium::LayoutEngine::Rect&) override;
+			virtual void onComponentSizeChange(const Windows::Foundation::Size& size) override;
 			virtual void onLayoutEngineCallback(Titanium::LayoutEngine::Rect rect, const std::string& name) override;
 		};
 	} // namespace UI

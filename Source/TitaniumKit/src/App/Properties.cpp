@@ -222,17 +222,22 @@ namespace Titanium
 
 		JSObject Properties::GetStaticObject(const JSContext& js_context) TITANIUM_NOEXCEPT
 		{
-			JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
-			TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
-			JSObject Titanium = static_cast<JSObject>(Titanium_property);
+			static JSObject cached = js_context.CreateObject();
+			static std::once_flag of;
+			std::call_once(of, [=] {
+				JSValue Titanium_property = js_context.get_global_object().GetProperty("Titanium");
+				TITANIUM_ASSERT(Titanium_property.IsObject());  // precondition
+				JSObject Titanium = static_cast<JSObject>(Titanium_property);
 
-			JSValue App_property = Titanium.GetProperty("App");
-			TITANIUM_ASSERT(App_property.IsObject());  // precondition
-			JSObject App = static_cast<JSObject>(App_property);
+				JSValue App_property = Titanium.GetProperty("App");
+				TITANIUM_ASSERT(App_property.IsObject());  // precondition
+				JSObject App = static_cast<JSObject>(App_property);
 
-			JSValue Object_property = App.GetProperty("Properties");
-			TITANIUM_ASSERT(Object_property.IsObject());  // precondition
-			return static_cast<JSObject>(Object_property);
+				JSValue Object_property = App.GetProperty("Properties");
+				TITANIUM_ASSERT(Object_property.IsObject());  // precondition
+				cached = static_cast<JSObject>(Object_property);
+			});
+			return cached;
 		}
 
 		TITANIUM_FUNCTION(Properties, _loadAppProperties)

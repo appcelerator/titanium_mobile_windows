@@ -79,13 +79,7 @@ namespace TitaniumWindows
 						return;
 					}
 					const auto layout = getViewLayoutDelegate<WindowsImageViewLayoutDelegate>();
-					const auto rect = layout->computeRelativeSize(
-						Canvas::GetLeft(image__),
-						Canvas::GetTop(image__),
-						this->image__->ActualWidth,
-						this->image__->ActualHeight
-					);
-					layout->onComponentSizeChange(rect);
+					layout->onComponentSizeChange(layout->computeRelativeSize(image__->ActualWidth, image__->ActualHeight));
 					sizeChanged__ = false;
 				} catch (...) {
 					TITANIUM_LOG_DEBUG("Unknown error while ImageView::SizeChanged");
@@ -95,13 +89,7 @@ namespace TitaniumWindows
 			image__->ImageOpened += ref new RoutedEventHandler([this](Platform::Object^ sender, RoutedEventArgs^ e) {
 				try {
 					const auto layout = getViewLayoutDelegate<WindowsImageViewLayoutDelegate>();
-					const auto rect = layout->computeRelativeSize(
-						Canvas::GetLeft(image__),
-						Canvas::GetTop(image__),
-						this->image__->ActualWidth,
-						this->image__->ActualHeight
-						);
-					layout->onComponentSizeChange(rect);
+					layout->onComponentSizeChange(layout->computeRelativeSize(image__->ActualWidth, image__->ActualHeight));
 
 					// image loaded, empty toImage queue
 					if (!imageOpened__) {
@@ -332,13 +320,7 @@ namespace TitaniumWindows
 				this->image__->Source = bitmap;
 			}
 
-			auto rect = layout->computeRelativeSize(
-				Canvas::GetLeft(this->image__),
-				Canvas::GetTop(this->image__),
-				bitmap->PixelWidth,
-				bitmap->PixelHeight
-				);
-			layout->onComponentSizeChange(rect);
+			layout->onComponentSizeChange(layout->computeRelativeSize(bitmap->PixelWidth, bitmap->PixelHeight));
 
 			fireLoadEvent(false);
 		}
