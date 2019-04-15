@@ -47,7 +47,7 @@ namespace TitaniumWindows
 
 #if defined(IS_WINDOWS_10)
 			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
-			rootFrame->Navigated += ref new Windows::UI::Xaml::Navigation::NavigatedEventHandler([this](Platform::Object^, Windows::UI::Xaml::Navigation::NavigationEventArgs^) {
+			navigated_event__ = rootFrame->Navigated += ref new Windows::UI::Xaml::Navigation::NavigatedEventHandler([this](Platform::Object^, Windows::UI::Xaml::Navigation::NavigationEventArgs^) {
 				try {
 					// Update window title based on top Window's title
 					updateWindowTitle();
@@ -60,7 +60,7 @@ namespace TitaniumWindows
 					TITANIUM_LOG_DEBUG("Error at root frame Navigated");
 				}
 			});
-			rootFrame->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler([this](Platform::Object^, Windows::UI::Xaml::SizeChangedEventArgs^) {
+			sizechanged_event__ = rootFrame->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler([this](Platform::Object^, Windows::UI::Xaml::SizeChangedEventArgs^) {
 				try {
 					if (!IS_WINDOWS_MOBILE) {
 						const auto children = get_children();
@@ -208,6 +208,12 @@ namespace TitaniumWindows
 
 		void Window::close(const std::shared_ptr<Titanium::UI::CloseWindowParams>& params) TITANIUM_NOEXCEPT
 		{
+			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+			if (rootFrame) {
+				rootFrame->Navigated -= navigated_event__;
+				rootFrame->SizeChanged -= sizechanged_event__;
+			}
+
 			if (!restarting__) {
 				// Fire blur & close event on this window
 				blur();
