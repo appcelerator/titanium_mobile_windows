@@ -107,7 +107,6 @@ namespace TitaniumWindows
 			Windows::Foundation::EventRegistrationToken backpressed_event__;
 			bool is_tabgroup_container__ { false };
 			Windows::Foundation::EventRegistrationToken navigated_event__;
-			Windows::Foundation::EventRegistrationToken sizechanged_event__;
 
 #pragma warning(pop)
 		};
