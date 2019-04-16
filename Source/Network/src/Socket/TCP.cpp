@@ -47,6 +47,7 @@ namespace TitaniumWindows
 					hostname__ = ref new HostName(TitaniumWindows::Utility::ConvertString(host__));
 					const auto port = TitaniumWindows::Utility::ConvertString(std::to_string(port__));
 
+					JSValueProtect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 					concurrency::create_task(socket__->ConnectAsync(hostname__, port)).then(
 						[this](concurrency::task<void> task) {
 							try {
@@ -81,13 +82,16 @@ namespace TitaniumWindows
 											}
 										}
 									}
+									JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 								});
 							} catch(Platform::Exception^ e) {
 								TITANIUM_LOG_ERROR("TCP::connect: Titanium::Network::Socket::TCP: Could not connect: ", TitaniumWindows::Utility::ConvertString(e->Message));
 								error("could not connect");
+								JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 							} catch (...) {
 								TITANIUM_LOG_ERROR("TCP::connect: Titanium::Network::Socket::TCP: Could not connect");
 								error("could not connect");
+								JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 							}
 						}
 					);

@@ -195,6 +195,17 @@ namespace TitaniumWindows
 			}
 		}
 
+		void Window::NavigateBack()
+		{
+			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+			if (rootFrame->CanGoBack) {
+				rootFrame->GoBack();
+			}
+			rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
+			auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
+			page->Content = ref new Windows::UI::Xaml::Controls::Canvas();
+		}
+
 		void Window::close(const std::shared_ptr<Titanium::UI::CloseWindowParams>& params) TITANIUM_NOEXCEPT
 		{
 			if (!restarting__) {
@@ -206,12 +217,19 @@ namespace TitaniumWindows
 			// disable all events further because it doesn't make sense.
 			disableEvents();
 
+			bool tab_closing = false;
 			bool is_last_window = false;
 			if (tab__) {
 				const auto tab = std::dynamic_pointer_cast<Tab>(tab__);
 				tab->closeWindow(get_object().GetPrivate<Window>());
 				is_last_window = tab->isLastWindow();
 				tab__ = nullptr;
+				tab_closing = true;
+			}
+
+			// This means close is called while no window is opened. Just return here in that case
+			if (window_stack__.empty()) {
+				return;
 			}
 
 			const auto top_window = window_stack__.back();
@@ -252,17 +270,13 @@ namespace TitaniumWindows
 						tab->open(nullptr);
 					}
 
-					if (is_last_window) {
+					// Closing last tab doesn't exit the app according to Titanium-iOS behavior
+					if (is_last_window && !tab_closing) {
 						ExitApp(get_context());
 						return;
 					} else {
-						const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
-						rootFrame->GoBack();
-
 						try {
-							rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
-							auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
-							page->Content = next_window->getComponent();
+							NavigateBack();
 						} catch (Platform::Exception^ e) {
 							// This may happen when current window is not actually opened yet. In this case we just can skip it.
 							// TODO: Is there any way to avoid this exception by checking if page content is valid?
@@ -270,9 +284,8 @@ namespace TitaniumWindows
 						}
 					}
 
-#if defined(IS_WINDOWS_10)
 					SystemNavigationManager::GetForCurrentView()->AppViewBackButtonVisibility = window_stack__.size() > 1 ? AppViewBackButtonVisibility::Visible : AppViewBackButtonVisibility::Collapsed;
-#endif
+
 					// start accepting events for the new Window
 					next_window->enableEvents();
 					next_window->focus();
@@ -284,13 +297,7 @@ namespace TitaniumWindows
 				// If this is the last Window and exitOnClose equals false, don't close the app.
 				try {
 					window_stack__.clear();
-					const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
-					if (rootFrame->CanGoBack) {
-						rootFrame->GoBack();
-					}
-					rootFrame->Navigate(Windows::UI::Xaml::Controls::Page::typeid);
-					auto page = dynamic_cast<Windows::UI::Xaml::Controls::Page^>(rootFrame->Content);
-					page->Content = ref new Windows::UI::Xaml::Controls::Canvas();
+					NavigateBack();
 				} catch (Platform::Exception^ e) {
 					TITANIUM_LOG_ERROR("Window.close: failed to set content for the new Window");
 				}

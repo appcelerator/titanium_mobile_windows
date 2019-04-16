@@ -42,8 +42,18 @@ namespace Titanium
 		JSObject Point_to_js(const JSContext& js_context, const Point& point)
 		{
 			auto object = js_context.CreateObject();
-			object.SetProperty("x", js_context.CreateString(point.x));
-			object.SetProperty("y", js_context.CreateString(point.y));
+			const auto x = point.x;
+			const auto y = point.y;
+			if (std::all_of(x.begin(), x.end(), isdigit)) {
+				object.SetProperty("x", js_context.CreateNumber(atof(x.c_str())));
+			} else {
+				object.SetProperty("x", js_context.CreateString(x));
+			}
+			if (std::all_of(y.begin(), y.end(), isdigit)) {
+				object.SetProperty("y", js_context.CreateNumber(atof(y.c_str())));
+			} else {
+				object.SetProperty("y", js_context.CreateString(y));
+			}
 			return object;
 		};
 	} // namespace UI
