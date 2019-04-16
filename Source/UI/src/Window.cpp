@@ -194,7 +194,7 @@ namespace TitaniumWindows
 		void Window::close(const std::shared_ptr<Titanium::UI::CloseWindowParams>& params) TITANIUM_NOEXCEPT
 		{
 			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
-			if (rootFrame) {
+			if (rootFrame && navigated_event__.Value > 0) {
 				rootFrame->Navigated -= navigated_event__;
 			}
 
