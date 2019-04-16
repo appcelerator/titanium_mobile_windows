@@ -45,21 +45,7 @@ namespace TitaniumWindows
 			// Don't set Border to Xaml Frame content, otherwise you'll see runtime exception.
 			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(canvas__, nullptr, false);
 
-#if defined(IS_WINDOWS_10)
 			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
-			rootFrame->Navigated += ref new Windows::UI::Xaml::Navigation::NavigatedEventHandler([this](Platform::Object^, Windows::UI::Xaml::Navigation::NavigationEventArgs^) {
-				try {
-					// Update window title based on top Window's title
-					updateWindowTitle();
-
-					// Resizing Window should be available only on Windows 10 Store App
-					if (!IS_WINDOWS_MOBILE) {
-						updateWindowSize();
-					}
-				} catch (...) {
-					TITANIUM_LOG_DEBUG("Error at root frame Navigated");
-				}
-			});
 			rootFrame->SizeChanged += ref new Windows::UI::Xaml::SizeChangedEventHandler([this](Platform::Object^, Windows::UI::Xaml::SizeChangedEventArgs^) {
 				try {
 					if (!IS_WINDOWS_MOBILE) {
@@ -75,7 +61,6 @@ namespace TitaniumWindows
 					TITANIUM_LOG_DEBUG("Error at root frame SizeChanged");
 				}
 			});
-#endif
 
 #if defined(IS_WINDOWS_10) || defined(IS_WINDOWS_PHONE)
 			// Setup back button press event
@@ -208,6 +193,11 @@ namespace TitaniumWindows
 
 		void Window::close(const std::shared_ptr<Titanium::UI::CloseWindowParams>& params) TITANIUM_NOEXCEPT
 		{
+			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+			if (rootFrame && navigated_event__.Value > 0) {
+				rootFrame->Navigated -= navigated_event__;
+			}
+
 			if (!restarting__) {
 				// Fire blur & close event on this window
 				blur();
@@ -375,6 +365,21 @@ namespace TitaniumWindows
 		void Window::open(const std::shared_ptr<Titanium::UI::OpenWindowParams>& params) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::Window::open(params);
+
+			const auto rootFrame = dynamic_cast<Windows::UI::Xaml::Controls::Frame^>(Windows::UI::Xaml::Window::Current->Content);
+			navigated_event__ = rootFrame->Navigated += ref new Windows::UI::Xaml::Navigation::NavigatedEventHandler([this](Platform::Object^, Windows::UI::Xaml::Navigation::NavigationEventArgs^) {
+				try {
+					// Update window title based on top Window's title
+					updateWindowTitle();
+
+					// Resizing Window should be available only on Windows 10 Store App
+					if (!IS_WINDOWS_MOBILE) {
+						updateWindowSize();
+					}
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Error at root frame Navigated");
+				}
+			});
 
 			if (params) {
 				set_fullscreen(params->get_fullscreen());
