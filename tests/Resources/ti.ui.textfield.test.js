@@ -42,8 +42,7 @@ describe('Titanium.UI.TextField', function () {
 		should(textfield.getValue()).eql('other text');
 	});
 
-	// Skip on Windows Phone since not available, yet
-	it.windowsMissing('padding', function () {
+	it('padding', function () {
 		var textfield = Ti.UI.createTextField({
 			value: 'this is some text',
 			padding: {

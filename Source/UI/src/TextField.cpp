@@ -290,6 +290,8 @@ namespace TitaniumWindows
 
 		void TextField::set_padding(const Titanium::UI::TextFieldPadding& padding) TITANIUM_NOEXCEPT
 		{
+			Titanium::UI::TextField::set_padding(padding);
+
 			Thickness thickness;
 			thickness.Bottom = padding.bottom;
 			thickness.Top    = padding.top;
