@@ -79,11 +79,7 @@ namespace TitaniumWindows
 #pragma warning(push)
 #pragma warning(disable : 4251)
 			std::vector<std::shared_ptr<Window>> window_stack__;
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			Windows::UI::Xaml::Controls::PivotItem^ pivotItem__;
-#else
-			Windows::UI::Xaml::Controls::Grid^  grid__;
-#endif
 #pragma warning(pop)
 		};
 	}  // namespace UI

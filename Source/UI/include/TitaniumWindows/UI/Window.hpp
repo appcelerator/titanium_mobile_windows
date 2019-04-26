@@ -98,6 +98,7 @@ namespace TitaniumWindows
 
 			static void SetActiveTabWindow(const std::shared_ptr<TitaniumWindows::UI::Window>& window);
 			static void ExitApp(const JSContext& js_context);
+			static void NavigateBack();
 		private:
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -105,6 +106,8 @@ namespace TitaniumWindows
 			std::shared_ptr<TitaniumWindows::UI::WindowsXaml::CommandBar> bottomAppBar__;
 			Windows::Foundation::EventRegistrationToken backpressed_event__;
 			bool is_tabgroup_container__ { false };
+			Windows::Foundation::EventRegistrationToken navigated_event__;
+
 #pragma warning(pop)
 		};
 
