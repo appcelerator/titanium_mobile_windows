@@ -81,20 +81,7 @@ namespace TitaniumWindows
 #pragma warning(disable : 4251)
 			std::shared_ptr<TitaniumWindows::UI::Window> window__;
 			Windows::UI::Xaml::Controls::Grid^  grid__;
-
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			Windows::UI::Xaml::Controls::Pivot^ pivot__;
-#else
-			//
-			// We're going to use ListView for tab navigation because there's no Pivot for Windows Store app.
-			// On Windows 10 we might want to use SplitView instead.
-			// http://igrali.com/2015/04/12/getting-started-with-splitview-control-in-universal-apps/
-			//
-			Windows::UI::Xaml::Controls::ListView^ sectionView__;
-			Windows::UI::Xaml::Data::CollectionViewSource^ sectionViewSource__;
-			Windows::Foundation::Collections::IObservableVector<::Platform::String^>^ sectionViewItems__;
-#endif
-
 #pragma warning(pop)
 
 		};

@@ -205,6 +205,8 @@ namespace TitaniumWindows
 			auto args = ref new Platform::Collections::Vector<Platform::String^>();
 			args->Append(TitaniumWindows::Utility::ConvertUTF8String(code));
 
+			JSValueProtect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
+
 			concurrency::task<Platform::String^>(webview__->InvokeScriptAsync("eval", args)).then([this, callback](concurrency::task<Platform::String^> task){
 				try {
 					const auto result = task.get();
@@ -217,6 +219,7 @@ namespace TitaniumWindows
 				} catch (...) {
 					TITANIUM_LOG_WARN("Unknown error at WebView.evalJS");
 				}
+				JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 			});
 
 			// Always return empty string because WebView.InvokeScriptAsync only works with async on Windows
@@ -306,6 +309,8 @@ namespace TitaniumWindows
 						obj.SetProperty("code", get_context().CreateString(Titanium::UI::Constants::to_string(getUrlError(e->WebErrorStatus))));
 						fireEvent("error", obj);
 					}
+
+					JSValueUnprotect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 				} catch (...) {
 					TITANIUM_LOG_DEBUG("Erorr at WebView.load");
 				}
@@ -341,6 +346,9 @@ namespace TitaniumWindows
 							}
 						}
 					}
+
+					// Save this instance to make sure WebView is not garbage-collected before load callback is fired.
+					JSValueProtect(static_cast<JSContextRef>(get_context()), static_cast<JSValueRef>(get_object()));
 
 					loading__ = true;
 					if (beforeload_event_enabled__) {

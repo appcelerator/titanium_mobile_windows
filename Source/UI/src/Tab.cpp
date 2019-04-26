@@ -29,28 +29,18 @@ namespace TitaniumWindows
 		{
 			Titanium::UI::Tab::postCallAsConstructor(js_context, arguments);
 
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			pivotItem__ = ref new PivotItem();
 
 			Titanium::UI::Tab::setLayoutDelegate<WindowsViewLayoutDelegate>();
 			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(pivotItem__, nullptr, false);
-#else
-			grid__ = ref new Grid();
-			Titanium::UI::Tab::setLayoutDelegate<WindowsViewLayoutDelegate>();
-			getViewLayoutDelegate<WindowsViewLayoutDelegate>()->setComponent(grid__, nullptr, false);
-#endif
 		}
 
 		void Tab::set_title(const std::string& title) TITANIUM_NOEXCEPT
 		{
 			Titanium::UI::Tab::set_title(title);
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			const auto textBlock = ref new TextBlock();
 			textBlock->Text = TitaniumWindows::Utility::ConvertUTF8String(title);
 			pivotItem__->Header = textBlock;
-#else
-
-#endif
 		}
 
 		void Tab::openWindow(const std::shared_ptr<Window>& window)
@@ -87,16 +77,7 @@ namespace TitaniumWindows
 			if (window != window__) {
 				const auto windows_window = dynamic_cast<TitaniumWindows::UI::Window*>(window.get());
 				const auto view = windows_window->getComponent();
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 				pivotItem__->Content = view;
-#else
-				if (grid__->Children->Size > 0) {
-					grid__->Children->RemoveAt(0);
-				}
-				grid__->Children->Append(view);
-				grid__->SetColumn(view, 0);
-				grid__->SetRow(view, 0);
-#endif
 			}
 
 			Titanium::UI::Tab::set_window(window);
@@ -129,7 +110,6 @@ namespace TitaniumWindows
 			} else {
 				colorName = Titanium::UI::Tab::get_titleColor();
 			}
-#if defined(IS_WINDOWS_PHONE) || defined(IS_WINDOWS_10)
 			const auto textBlock = safe_cast<Controls::TextBlock^>(pivotItem__->Header);
 			if (colorName.empty()) {
 				// if no color specified, try to get "default color" from current theme.
@@ -148,9 +128,6 @@ namespace TitaniumWindows
 				const auto color_obj = WindowsViewLayoutDelegate::ColorForName(colorName);
 				textBlock->Foreground = ref new Windows::UI::Xaml::Media::SolidColorBrush(color_obj);
 			}
-#else
-			// FIXME What do we do for Win 8.1 store?
-#endif
 		}
 
 		void Tab::set_activeTitleColor(const std::string& colorName) TITANIUM_NOEXCEPT
