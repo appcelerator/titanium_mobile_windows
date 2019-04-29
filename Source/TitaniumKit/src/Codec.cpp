@@ -183,12 +183,21 @@ namespace Titanium
 		TITANIUM_FUNCTION(CodecModule, encodeNumber)
 		{
 			ENSURE_OBJECT_AT_INDEX(options, 0);
+			if (!options.HasProperty("source") || !options.HasProperty("dest") || !options.HasProperty("type")) {
+				HAL::detail::ThrowRuntimeError("Codec", "Invalid type passed to function");
+				return get_context().CreateUndefined();
+			}
+
 			return get_context().CreateNumber(encodeNumber(js_to_EncodeNumberDict(options)));
 		}
 
 		TITANIUM_FUNCTION(CodecModule, decodeNumber)
 		{
 			ENSURE_OBJECT_AT_INDEX(options, 0);
+			if (!options.HasProperty("source") || !options.HasProperty("type")) {
+				HAL::detail::ThrowRuntimeError("Codec", "Invalid type passed to function");
+				return get_context().CreateUndefined();
+			}
 			return get_context().CreateNumber(decodeNumber(js_to_DecodeNumberDict(options)));
 		}
 
