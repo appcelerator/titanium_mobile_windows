@@ -34,7 +34,7 @@ namespace Titanium
 			  @abstract data
 			  @discussion Web content to load.
 			*/
-			TITANIUM_PROPERTY_IMPL_DEF(std::vector<std::uint8_t>, data);
+			TITANIUM_PROPERTY_IMPL_DEF(std::shared_ptr<Titanium::Blob>, data);
 
 			/*!
 			  @property
@@ -149,7 +149,7 @@ namespace Titanium
 			static void JSExportInitialize();
 			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
-			TITANIUM_PROPERTY_READONLY_DEF(data);
+			TITANIUM_PROPERTY_DEF(data);
 			TITANIUM_PROPERTY_DEF(html);
 			TITANIUM_PROPERTY_DEF(loading);
 			TITANIUM_PROPERTY_DEF(scalesPageToFit);
@@ -185,8 +185,8 @@ namespace Titanium
 #pragma warning(disable : 4251)
 				bool loading__ { false };
 				bool scalesPageToFit__ { false };
+				std::shared_ptr<Titanium::Blob> data__;
 				std::string url__;
-				std::vector<std::uint8_t> data__;
 				std::string html__;
 				std::vector<std::string> blacklistedURLs__;
 				JSValue onlink__;
