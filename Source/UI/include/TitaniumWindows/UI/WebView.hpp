@@ -29,7 +29,6 @@ namespace TitaniumWindows
 		{
 		public:
 
-			TITANIUM_PROPERTY_UNIMPLEMENTED(data);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(scalesPageToFit);
 			TITANIUM_FUNCTION_UNIMPLEMENTED(setBasicAuthentication);
 
@@ -63,6 +62,7 @@ namespace TitaniumWindows
 			virtual std::string get_url() const TITANIUM_NOEXCEPT override;
 			virtual void set_url(const std::string& url) TITANIUM_NOEXCEPT override;
 			virtual bool setHtml(const std::string& html, const std::unordered_map<std::string, std::string>& options) TITANIUM_NOEXCEPT override;
+			virtual std::shared_ptr<Titanium::Blob> get_data() const TITANIUM_NOEXCEPT override;
 
 			virtual bool canGoBack() TITANIUM_NOEXCEPT override;
 			virtual bool canGoForward() TITANIUM_NOEXCEPT override;

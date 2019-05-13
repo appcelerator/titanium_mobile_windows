@@ -15,6 +15,7 @@
 #include <ppltasks.h>
 #include <concrt.h>
 #include "TitaniumWindows/UI/WindowsViewLayoutDelegate.hpp"
+#include "TitaniumWindows/Blob.hpp"
 #include "Titanium/UI/webview_js.hpp"
 
 using namespace Windows::UI::Xaml;
@@ -510,6 +511,27 @@ namespace TitaniumWindows
 			} else {
 				webview__->Navigate(uri);
 			}
+		}
+
+		std::shared_ptr<Titanium::Blob> WebView::get_data() const TITANIUM_NOEXCEPT {
+			using Windows::Security::Cryptography::CryptographicBuffer;
+			using Windows::Security::Cryptography::BinaryStringEncoding;
+
+			if (!html__.empty()) {
+				const auto buffer = CryptographicBuffer::ConvertStringToBinary(TitaniumWindows::Utility::ConvertUTF8String(html__), BinaryStringEncoding::Utf8);
+				const auto data = TitaniumWindows::Utility::GetContentFromBuffer(buffer);
+				const auto Titanium = static_cast<JSObject>(get_context().get_global_object().GetProperty("Titanium"));
+				auto Blob = static_cast<JSObject>(Titanium.GetProperty("Blob"));
+				auto blob = Blob.CallAsConstructor();
+				auto blob_ptr = blob.GetPrivate<Titanium::Blob>();
+				blob_ptr->construct(data);
+				return blob_ptr;
+			} else if (data__) {
+				// return original blob object when it's not a HTML content
+				return data__;
+			}
+
+			return nullptr;
 		}
 
 		bool WebView::canGoBack() TITANIUM_NOEXCEPT
