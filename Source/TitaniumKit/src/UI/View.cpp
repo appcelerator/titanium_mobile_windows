@@ -787,7 +787,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER(View, borderWidth)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			return get_context().CreateString(layoutDelegate__->get_borderWidth());
+			RETURN_NUMGER_OR_STRING(borderWidth)
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, borderWidth)
