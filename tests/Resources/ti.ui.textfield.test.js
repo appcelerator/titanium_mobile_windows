@@ -186,7 +186,7 @@ describe('Titanium.UI.TextField', function () {
 			backgroundColor: '#ddd'
 		});
 		win.add(textfield);
-		win.addEventListener('focus', function () {
+		win.addEventListener('postlayout', function () {
 			try {
 				should(win.rect.width).be.greaterThan(100);
 				should(textfield.rect.width).not.be.greaterThan(win.rect.width);
