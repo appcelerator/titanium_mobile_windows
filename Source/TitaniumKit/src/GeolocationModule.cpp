@@ -230,7 +230,7 @@ namespace Titanium
 
 	TITANIUM_PROPERTY_GETTER(GeolocationModule, PROVIDER_NETWORK)
 	{
-		return get_context().CreateNumber(Titanium::Geolocation::Constants::to_underlying_type(Titanium::Geolocation::PROVIDER::NETOWORK));
+		return get_context().CreateNumber(Titanium::Geolocation::Constants::to_underlying_type(Titanium::Geolocation::PROVIDER::NETWORK));
 	}
 
 	TITANIUM_PROPERTY_GETTER(GeolocationModule, PROVIDER_PASSIVE)

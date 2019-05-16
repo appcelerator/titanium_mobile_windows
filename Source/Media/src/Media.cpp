@@ -5,25 +5,20 @@
  */
 
 #include "TitaniumWindows/Media.hpp"
-#include "TitaniumWindows/Filesystem.hpp"
+#include "Titanium/Blob.hpp"
+#include "Titanium/FilesystemModule.hpp"
 #include "Titanium/Filesystem/File.hpp"
 #include "Titanium/Media/Constants.hpp"
 #include "Titanium/Media/Item.hpp"
-#include "Titanium/Media/CameraOptionsType.hpp"
-#include "Titanium/Media/MediaQueryType.hpp"
-#include "Titanium/UI/OpenWindowParams.hpp"
-#include "Titanium/detail/TiImpl.hpp"
 #include <windows.h>
 #include <ppltasks.h>
 #include <collection.h>
 #include <concrt.h>
+#include "Titanium/UIModule.hpp"
+#include "Titanium/UI/Window.hpp"
 #include "TitaniumWindows/Utility.hpp"
 #include "TitaniumWindows/LogForwarder.hpp"
-#include "TitaniumWindows/AppModule.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
-#include "TitaniumWindows/Blob.hpp"
-#include "TitaniumWindows/UIModule.hpp"
-#include "TitaniumWindows/UI/Window.hpp"
 
 #define GET_TITANIUM_APP(VARNAME) \
   const auto ctx = get_context(); \

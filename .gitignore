@@ -102,6 +102,9 @@ ipch/
 *.vsp
 *.vspx
 
+# Visual Studio Code
+.vscode/
+
 # TFS 2012 Local Workspace
 $tf/
 
@@ -183,6 +186,7 @@ ClientBin/
 *.dbmdl
 *.dbproj.schemaview
 *.pfx
+!/cli/vendor/cmake/**/*.pfx
 *.publishsettings
 node_modules/
 .idea

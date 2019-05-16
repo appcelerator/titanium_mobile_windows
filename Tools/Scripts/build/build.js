@@ -6,22 +6,21 @@
 // modules
 const path = require('path');
 const fs = require('fs-extra');
+const os = require('os');
 const colors = require('colors'); // eslint-disable-line no-unused-vars
 const exec = require('child_process').exec; // eslint-disable-line security/detect-child-process
 const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
-const windowslib = require('windowslib');
 
 // Constants
-const WIN_10 = '10.0';
 const MSBUILD_14 = '14.0';
 const MSBUILD_15 = '15.0';
 const VS_2015_GENERATOR = 'Visual Studio 14 2015';
 const VS_2017_GENERATOR = 'Visual Studio 15 2017';
-// paths
 
+// paths
 const ROOT_DIR = path.join(__dirname, '..', '..', '..');
 const CMAKE_BINARY = path.join(ROOT_DIR, 'cli', 'vendor', 'cmake', 'bin', 'cmake.exe');
-const SOURCE_TITANIUM_DIR = path.join(ROOT_DIR, 'Source', 'Titanium');
+const SOURCE_TITANIUM_DIR = path.join(ROOT_DIR, 'Source');
 const BUILD_DIR = path.join(ROOT_DIR, 'build');
 const DIST_DIR = path.join(ROOT_DIR, 'dist', 'windows');
 const DIST_LIB_DIR = path.join(DIST_DIR, 'lib');
@@ -43,11 +42,11 @@ async function buildAndPackage(sourceDir, buildDir, destDir, buildType, msBuildV
 
 	console.log(`Building ${platform} 10.0 ${arch}: ${buildType}`);
 	const archDir = path.join(buildDir, platformAbbrev, arch);
-	const slnFile = path.join(archDir, 'TitaniumWindows.sln');
+	const slnFile = path.join(archDir, 'Windows.sln');
 
-	await runCMake(sourceDir, archDir, buildType, msBuildVersion, platform, arch, quiet);
+	await runCMake(sourceDir, archDir, msBuildVersion, platform, arch, quiet);
 	await runNuGet(slnFile, quiet);
-	await runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet);
+	await runMSBuild(archDir, buildType, parallel, quiet);
 	await copyToDistribution(buildDir, destDir, buildType, platformAbbrev, arch);
 
 	// Wipe the build dir if everything went well. Don't remove top-level build root, because previous build steps may have added results we care about there (i.e. CTest)
@@ -92,14 +91,13 @@ async function updateBuildValuesInTitaniumModule(githash, tiModuleCPP) {
 /**
  * @param {String} sourceDir Where the source is
  * @param {String} buildDir Where to build the project
- * @param {String} buildType 'Release' || 'Debug'
  * @param {String} msBuildVersion '14.0' || '15.0'
  * @param {String} platform  'WindowsPhone' || 'WindowsStore'
  * @param {String} arch 'x86' || 'ARM'
  * @param {Boolean} quiet log stdout of process?
  * @return {Promise}
  */
-async function runCMake(sourceDir, buildDir, buildType, msBuildVersion, platform, arch, quiet) {
+async function runCMake(sourceDir, buildDir, msBuildVersion, platform, arch, quiet) {
 	let generator = VS_2015_GENERATOR;
 	if (msBuildVersion === MSBUILD_15) {
 		generator = VS_2017_GENERATOR;
@@ -112,29 +110,32 @@ async function runCMake(sourceDir, buildDir, buildType, msBuildVersion, platform
 	}
 	await fs.ensureDir(buildDir);
 
-	if (arch === 'ARM') {
-		generator += ' ARM';
-	}
-
 	const args = [
-		'-G', generator,
+		'-G', generator
+	];
+	if (arch === 'ARM') {
+		args.push('-A', 'ARM');
+	}
+	args.push(
 		'-DCMAKE_SYSTEM_NAME=' + platform,
-		'-DCMAKE_BUILD_TYPE=' + buildType,
-		'-DCMAKE_SYSTEM_VERSION=' + WIN_10,
-		'-DTitaniumWindows_DISABLE_TESTS=ON',
-		'-DTitaniumWindows_Ti_DISABLE_TESTS=ON',
+		'-DCMAKE_SYSTEM_VERSION=10.0',
+		'-DTitaniumWindows_Filesystem_DISABLE_TESTS=ON',
 		'-DTitaniumWindows_Global_DISABLE_TESTS=ON',
-		'-DTitaniumWindows_Sensors_DISABLE_TESTS=ON',
-		'-DTitaniumWindows_UI_DISABLE_TESTS=ON',
-		'-DTitaniumWindows_Utility_DISABLE_TESTS=ON',
+		'-DHAL_DISABLE_TESTS=ON',
+		'-DLayoutEngine_DISABLE_TESTS=ON',
 		'-DTitaniumWindows_Map_DISABLE_TESTS=ON',
 		'-DTitaniumWindows_Media_DISABLE_TESTS=ON',
-		'-DHAL_DISABLE_TESTS=ON',
+		'-DTitaniumWindows_Network_DISABLE_TESTS=ON',
+		'-DTitaniumWindows_Sensors_DISABLE_TESTS=ON',
+		'-DTitaniumWindows_Ti_DISABLE_TESTS=ON',
+		'-DTitaniumWindows_DISABLE_TESTS=ON',
 		'-DTitaniumKit_DISABLE_TESTS=ON',
+		'-DTitaniumWindows_UI_DISABLE_TESTS=ON',
+		'-DTitaniumWindows_Utility_DISABLE_TESTS=ON',
 		'-DHAL_RENAME_AXWAYHAL=ON',
 		'-Wno-dev',
 		sourceDir
-	];
+	);
 
 	await spawnWithArgs('CMake', CMAKE_BINARY, args, { cwd: buildDir }, quiet);
 }
@@ -149,57 +150,41 @@ function runNuGet(slnFile, quiet) {
 }
 
 /**
- * @param {String} msBuildVersion The version of MSBuild to run: '14.0' || '15.0'
- * @param {String} slnFile The VS solution file to build.
+ * @param {String} buildDir The path to the directory we're building
  * @param {String} buildType 'Release' || 'Debug'
- * @param {String} arch 'x86' || 'ARM'
  * @param {Boolean} parallel Run msbuild in parallel? (/m option)
  * @param {Boolean} quiet log stdout of process?
  * @return {Promise}
  */
-function runMSBuild(msBuildVersion, slnFile, buildType, arch, parallel, quiet) {
-	return new Promise((resolve, reject) => {
-		windowslib.detect({}, (err, results) => {
+function runMSBuild(buildDir, buildType, parallel, quiet) {
+	// Drive via cmake!
+	const args = [
+		'--build',
+		buildDir,
+		'--config',
+		buildType,
+	];
 
-			let vsInfo = results.visualstudio[msBuildVersion];
-			if (vsInfo === undefined && msBuildVersion === '15.0') {
-				for (var key in results.visualstudio) {
-					// If you can't decide which VS2017 to select, use first one
-					if (key.endsWith(' 2017')) {
-						vsInfo = results.visualstudio[key];
-						break;
-					}
-				}
-			}
+	const msBuildArgs = [
+		'/nr:false' // don't keep msbuild processes around locking files!
+	];
 
-			if (!vsInfo) {
-				return reject('Unable to find a supported Visual Studio installation');
-			}
+	// When running in parallel, "save" 1 cpu for node/jenkins
+	if (parallel) {
+		console.log(`Parallel flag on, grabbing logical cpu count: ${os.cpus().length}`);
+		let cpus = os.cpus().length - 1;
+		if (cpus <= 0) {
+			cpus = 1;
+		}
+		console.log(`setting cpu count to: ${cpus}`);
+		args.push('--parallel', cpus); // Use cmake's flag (for number of projects in parallel?)
+		msBuildArgs.push(`/p:CL_MPCount=${cpus}`); // this controls how many clCompiles run in parallel
+	}
+	// Now pass through args to msbuild
+	args.push('--');
+	args.push(...msBuildArgs);
 
-			// Use spawn directly so we can pipe output as we go
-			const p = spawn((process.env.comspec || 'cmd.exe'), [ '/S', '/C', '"', vsInfo.vsDevCmd.replace(/[ ()&]/g, '^$&')
-				+ ' && MSBuild' + (arch === 'ARM' ? ' /p:Platform=' + arch : '') + (parallel ? ' /m' : '') + ' /nr:false /p:Configuration=Release ' + slnFile, '"'
-			], { windowsVerbatimArguments: true });
-
-			p.stdout.on('data', data => {
-				const line = data.toString().trim();
-				if (line.indexOf('error ') >= 0) {
-					console.log(line);
-				} else if (line.indexOf('warning ') >= 0) {
-					console.log(line);
-				} else {
-					quiet || console.log(line);
-				}
-			});
-			p.stderr.on('data', data => console.log(data.toString().trim()));
-			p.on('close', code => {
-				if (code !== 0) {
-					return reject('MSBuild return non-zero exit code');
-				}
-				resolve();
-			});
-		});
-	});
+	return spawnWithArgs('CMake --build', CMAKE_BINARY, args, { cwd: buildDir }, quiet);
 }
 
 /**
@@ -215,16 +200,16 @@ async function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev,
 		TitaniumWindows_Sensors: 'Sensors',
 		TitaniumWindows_Filesystem: 'Filesystem',
 		TitaniumWindows_Global: 'Global',
-		HAL: 'Filesystem\\TitaniumKit\\HAL',
+		HAL: 'HAL',
 		LayoutEngine: 'LayoutEngine',
 		TitaniumWindows_Map: 'Map',
 		TitaniumWindows_Media: 'Media',
 		TitaniumWindows_Network: 'Network',
 		TitaniumWindows_Ti: 'Ti',
-		TitaniumWindows: '',
-		TitaniumKit: 'Filesystem\\TitaniumKit',
-		TitaniumWindows_UI: 'Map\\UI',
-		TitaniumWindows_Utility: 'Filesystem\\Utility',
+		TitaniumWindows: 'Titanium',
+		TitaniumKit: 'TitaniumKit',
+		TitaniumWindows_UI: 'UI',
+		TitaniumWindows_Utility: 'Utility',
 	};
 
 	// For each lib, copy the output files!
@@ -266,12 +251,13 @@ async function copyToDistribution(sourceDir, destDir, buildType, platformAbbrev,
  * @param {String} name Name to use for log messages
  * @param {String} file Filepath to execute
  * @param {String} args args to pass to spawn
- * @param {Object} options options ot pass to spawn
+ * @param {Object} options options to pass to spawn
  * @param {Boolean} quiet Should we log stdout?
  * @return {Promise}
  */
 function spawnWithArgs(name, file, args, options, quiet) {
 	return new Promise((resolve, reject) => {
+		console.log(`Running cmd: ${file} ${args.join(' ')}`);
 		const child = spawn(file, args, options);
 		child.stdout.on('data', data => quiet || console.log(data.toString().trim()));
 		child.stderr.on('data', data => console.log(data.toString().trim().red));
@@ -397,7 +383,7 @@ if (module.id === '.') {
 
 		build(program.sha, program.msbuild, program.configuration, (program.only && program.only.length > 0) ? program.only : arches,
 			{
-				parallel: program.parallel,
+				parallel: true,
 				quiet: program.quiet
 			})
 			.then(() => process.exit(0))

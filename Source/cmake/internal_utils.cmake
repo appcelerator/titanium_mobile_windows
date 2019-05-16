@@ -25,6 +25,9 @@
 # these definitions to suit your needs.  A variable's value is empty
 # before it's explicitly assigned to.
 macro(config_compiler_and_linker)
+
+  #set(CMAKE_CXX_FLAGS "/Bt ${CMAKE_CXX_FLAGS}")
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /showIncludes")
   
   if(APPLE)
     include(CheckCXXCompilerFlag)
@@ -36,10 +39,10 @@ macro(config_compiler_and_linker)
     endif()
     
     CHECK_CXX_COMPILER_FLAG("-stdlib=libc++" COMPILER_SUPPORTS_LIBCXX)
-    if(COMPILER_SUPPORTS_CXX11)
+    if(COMPILER_SUPPORTS_LIBCXX)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     else()
-      message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+      message(STATUS "The compiler ${COMPILER_SUPPORTS_LIBCXX} has no libc++ support. Please use a different C++ compiler.")
     endif()
   endif()
   

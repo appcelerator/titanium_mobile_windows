@@ -26,6 +26,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 # Use solution folders.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+get_filename_component(LayoutEngine_SOURCE_DIR  ${PROJECT_SOURCE_DIR}/../../Source/LayoutEngine  ABSOLUTE)
 get_filename_component(Titanium_SOURCE_DIR      ${PROJECT_SOURCE_DIR}/../../Source/Titanium      ABSOLUTE)
 get_filename_component(Global_SOURCE_DIR        ${PROJECT_SOURCE_DIR}/../../Source/Global        ABSOLUTE)
 get_filename_component(Ti_SOURCE_DIR            ${PROJECT_SOURCE_DIR}/../../Source/Ti            ABSOLUTE)
@@ -39,65 +40,31 @@ get_filename_component(UI_SOURCE_DIR            ${PROJECT_SOURCE_DIR}/../../Sour
 get_filename_component(TitaniumKit_SOURCE_DIR   ${PROJECT_SOURCE_DIR}/../../Source/TitaniumKit   ABSOLUTE)
 get_filename_component(HAL_SOURCE_DIR           ${PROJECT_SOURCE_DIR}/../../Source/HAL           ABSOLUTE)
 get_filename_component(Ti_CMAKE_MODULE_DIR      ${PROJECT_SOURCE_DIR}/../../Source/cmake         ABSOLUTE)
+get_filename_component(HAL_CMAKE_MODULE_DIR     ${PROJECT_SOURCE_DIR}/../../Source/HAL/cmake     ABSOLUTE)
+
+list(INSERT CMAKE_MODULE_PATH 0 ${Ti_CMAKE_MODULE_DIR} ${HAL_CMAKE_MODULE_DIR})
 
 include_external_msproject(
     TitaniumWindows_Hyperloop ${PROJECT_SOURCE_DIR}/TitaniumWindows_Hyperloop/TitaniumWindows_Hyperloop.csproj
     TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC)
 
-if(NOT TARGET TitaniumWindows)
-  add_subdirectory(${Titanium_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Titanium EXCLUDE_FROM_ALL)
-endif()
+add_subdirectory(${Titanium_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Titanium)
+add_subdirectory(${Global_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Global)
+add_subdirectory(${Ti_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Ti)
+add_subdirectory(${Sensors_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Sensors)
+add_subdirectory(${Map_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Map)
+add_subdirectory(${Media_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Media)
+add_subdirectory(${Network_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Network)
+add_subdirectory(${Filesystem_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Filesystem)
+add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility)
+add_subdirectory(${UI_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/UI)
+add_subdirectory(${LayoutEngine_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/LayoutEngine)
+add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit)
+add_subdirectory(${HAL_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/HAL)
 
-if(NOT TARGET TitaniumWindows_Global)
-  add_subdirectory(${Global_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Global EXCLUDE_FROM_ALL)
-endif()
+get_filename_component(Native_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Native ABSOLUTE)
+add_subdirectory(${Native_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Native EXCLUDE_FROM_ALL)
 
-if(NOT TARGET TitaniumWindows_Ti)
-  add_subdirectory(${Ti_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Ti EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Sensors)
-  add_subdirectory(${Sensors_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Sensors EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Map)
-  add_subdirectory(${Map_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Map EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Media)
-  add_subdirectory(${Media_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Media EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Network)
-  add_subdirectory(${Network_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Network EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Filesystem)
-  add_subdirectory(${Filesystem_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Filesystem EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Utility)
-  add_subdirectory(${Utility_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Utility EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_UI)
-  add_subdirectory(${UI_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/UI EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumKit)
-  add_subdirectory(${TitaniumKit_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/TitaniumKit EXCLUDE_FROM_ALL)
-endif()
-
-if (NOT TARGET HAL)
-  add_subdirectory(${HAL_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/HAL EXCLUDE_FROM_ALL)
-endif()
-
-if(NOT TARGET TitaniumWindows_Native)
-  get_filename_component(Native_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Native ABSOLUTE)
-  add_subdirectory(${Native_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/Native EXCLUDE_FROM_ALL)
-endif()
-
-list(INSERT CMAKE_MODULE_PATH 0 ${Ti_CMAKE_MODULE_DIR})
 find_package(JavaScriptCore REQUIRED)
 
 # No user-servicable parts below this line.
@@ -206,7 +173,22 @@ add_executable(${EXE_NAME} WIN32
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
-target_link_libraries(${EXE_NAME} TitaniumWindows TitaniumWindows_Native)
+
+target_link_libraries(${EXE_NAME}
+    HAL
+    TitaniumKit
+    LayoutEngine
+    TitaniumWindows_Utility
+    TitaniumWindows_Global
+    TitaniumWindows_Filesystem
+    TitaniumWindows_Map
+    TitaniumWindows_Media
+    TitaniumWindows_Network
+    TitaniumWindows_Sensors
+    TitaniumWindows_Ti
+    TitaniumWindows_UI
+    TitaniumWindows TitaniumWindows_Native
+)
 
 target_include_directories(${EXE_NAME} PUBLIC
   ${PROJECT_SOURCE_DIR}/include
