@@ -5,6 +5,8 @@
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
+'use strict';
+
 // FIXME: This script needs lots of love to work right again! We've changed our sources quite a bit since it was written!
 const fs = require('fs-extra');
 const ejs = require('ejs');

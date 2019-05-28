@@ -3,6 +3,8 @@
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
+'use strict';
+
 const path = require('path');
 const fs = require('fs-extra');
 const walkSync = require('klaw-sync');

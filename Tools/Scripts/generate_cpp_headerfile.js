@@ -3,6 +3,7 @@
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
+'use strict';
 
 /*
  * Simple utility to convert JS files into C++ header files

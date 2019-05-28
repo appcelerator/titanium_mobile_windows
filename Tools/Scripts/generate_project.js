@@ -3,6 +3,8 @@
  * Licensed under the terms of the Apache Public License.
  * Please see the LICENSE included with this distribution for details.
  */
+'use strict';
+
 const fs = require('fs-extra');
 const path = require('path');
 const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
