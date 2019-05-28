@@ -1,16 +1,16 @@
-var appc = require('node-appc'),
-	nativeModuleGenerator = require('../../lib/stub'),
-	DOMParser = require('xmldom').DOMParser,
-	fs = require('fs'),
-	i18n = require('node-titanium-sdk/lib/i18n'),
-	os = require('os'),
-	ejs = require('ejs'),
-	path = require('path'),
-	ti = require('node-titanium-sdk'),
-	wrench = require('wrench'),
-	defaultsdeep = require('lodash.defaultsdeep'),
-	spawn = require('child_process').spawn,
-	__ = appc.i18n(__dirname).__;
+'use strict';
+
+const appc = require('node-appc');
+const nativeModuleGenerator = require('../../lib/stub');
+const DOMParser = require('xmldom').DOMParser;
+const fs = require('fs-extra');
+const i18n = require('node-titanium-sdk/lib/i18n');
+const ejs = require('ejs');
+const path = require('path');
+const defaultsdeep = require('lodash.defaultsdeep');
+const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
+const walkSync = require('klaw-sync');
+const __ = appc.i18n(__dirname).__;
 
 /*
  Public API.
@@ -120,15 +120,15 @@ function generateI18N(next) {
 			addString(name, data[locale].strings[name]);
 		});
 
-		this.i18nVSResources.push({file:dest.replace(/\\/g, '/'), locale:locale});
+		this.i18nVSResources.push({ file: dest.replace(/\\/g, '/'), locale: locale });
 
 		this.logger.debug(__('Writing %s strings => %s', locale.cyan, dest.cyan));
-		fs.existsSync(destDir) || wrench.mkdirSyncRecursive(destDir);
+		fs.ensureDirSync(destDir);
 		fs.writeFileSync(dest, '<?xml version="1.0" encoding="UTF-8"?>\n' + dom.documentElement.toString());
 	}, this);
 
 	next();
-};
+}
 
 /**
  * Generates the native type wrappers and adds them to the Visual Studio project.
@@ -141,11 +141,11 @@ function generateNativeTypes(next) {
 	var defaultTargetPlatformVersion,
 		defaultTargetPlatformMinVersion;
 
-	if (this.wpsdk.startsWith('10.0') &&
-		this.windowsInfo.windowsphone['10.0'] &&
-		this.windowsInfo.windowsphone['10.0'].sdks &&
-		this.windowsInfo.windowsphone['10.0'].sdks.length > 0) {
-		
+	if (this.wpsdk.startsWith('10.0')
+		&& this.windowsInfo.windowsphone['10.0']
+		&& this.windowsInfo.windowsphone['10.0'].sdks
+		&& this.windowsInfo.windowsphone['10.0'].sdks.length > 0) {
+
 		var supportedSdkVersions = this.windowslibOptions.supportedWindows10SDKVersions.replace(/(\d+\.\d+\.\d+)\.\d+/g, '$1'),
 			sdks = this.windowsInfo.windowsphone['10.0'].sdks;
 
@@ -178,7 +178,7 @@ function generateNativeTypes(next) {
 	this.logger.debug(__('targetPlatformSdkMinVersion: %s', this.targetPlatformSdkMinVersion));
 
 	nativeModuleGenerator.generate(this, next);
-};
+}
 
 /**
  * Generates finders for cmake to find a native module DLL/winmd.
@@ -197,12 +197,12 @@ function generateModuleFinder(next) {
 		if (module.manifest.platform == 'windows') {
 			var dest = path.join(this.cmakeFinderDir, 'Find' + projectname + '.cmake');
 			this.logger.info(__('Writing CMake module finder %s', dest));
-			fs.writeFileSync(dest, ejs.render(template, {module: module}, {}));
+			fs.writeFileSync(dest, ejs.render(template, { module: module }, {}));
 		}
 	}
 
 	next();
-};
+}
 
 /**
  * Generates a cmakelist to define what cmake is doing to generate the VS project.
@@ -244,8 +244,6 @@ function generateCmakeList(next) {
 		return 'Assets/' + filename;  // cmake likes unix separators
 	});
 
-	var isBuildForWindowsStore = (this.cmakePlatform == 'WindowsStore');
-
 	// Generate source groups!
 	// go through the asset list, and basically generate a group for each folder
 	assetList.forEach(function (filepath) {
@@ -277,11 +275,11 @@ function generateCmakeList(next) {
 	}
 
 	this.cli.createHook('build.windows.writeCMakeLists', this, function (manifest, cb) {
-		fs.existsSync(this.buildDir) || wrench.mkdirSyncRecursive(this.buildDir)
+		fs.ensureDirSync(this.buildDir);
 
 		if (fs.existsSync(this.cmakeListFile)) {
 			if (manifest == fs.readFileSync(this.cmakeListFile).toString()) {
-				this.logger.info("CmakeLists.txt contents unchanged, retaining existing file.");
+				this.logger.info('CmakeLists.txt contents unchanged, retaining existing file.');
 				cb();
 				return;
 			}
@@ -311,7 +309,7 @@ function generateCmakeList(next) {
 			vsSdkReferences: this.vsSdkReferences || []
 		}
 	), next);
-};
+}
 
 /**
  * Generates capabilities based on API usage
@@ -323,48 +321,48 @@ function generateCmakeList(next) {
 function generateCapabilities(target, capabilities, deviceCapabilities) {
 	var apis = {
 			// Titanium.Contacts
-			'Contacts': {
-				uapCapability: ['contacts']
+			Contacts: {
+				uapCapability: [ 'contacts' ]
 			},
 			// Titanium.Filesystem
 			'Filesystem.externalStorageDirectory': {
-				uapCapability: ['removableStorage']
+				uapCapability: [ 'removableStorage' ]
 			},
 			// Titanium.Geolocation.*
-			'Geolocation': {
-				deviceCapability: ['location']
+			Geolocation: {
+				deviceCapability: [ 'location' ]
 			},
 			// Titanium.Media
 			'Media.openPhotoGallery': {
-				uapCapability: ['picturesLibrary']
+				uapCapability: [ 'picturesLibrary' ]
 			},
 			'Media.startVideoCapture': {
-				uapCapability: ['videosLibrary']
+				uapCapability: [ 'videosLibrary' ]
 			},
 			'Media.takeScreenshotToFile': {
-				uapCapability: ['picturesLibrary']
+				uapCapability: [ 'picturesLibrary' ]
 			},
 			'Media.showCamera': {
-				deviceCapability: ['microphone', 'webcam']
+				deviceCapability: [ 'microphone', 'webcam' ]
 			},
 			'Media.takePicture': {
-				uapCapability: ['picturesLibrary', 'videosLibrary']
+				uapCapability: [ 'picturesLibrary', 'videosLibrary' ]
 			},
 			// Titanium.Media.AudioRecorder.*
 			'Media.AudioRecorder': {
-				uapCapability: ['musicLibrary'],
-				deviceCapability: ['microphone', 'webcam']
+				uapCapability: [ 'musicLibrary' ],
+				deviceCapability: [ 'microphone', 'webcam' ]
 			},
 			// Titanium.Network.*
-			'Network': {
-				capability: ['internetClient']
+			Network: {
+				capability: [ 'internetClient' ]
 			},
 			// Titanium.App.proximityDetection
 			'App.proximityDetection': {
-				deviceCapability: ['proximity']
+				deviceCapability: [ 'proximity' ]
 			},
 			'App.setProximityDetection': {
-				deviceCapability: ['proximity']
+				deviceCapability: [ 'proximity' ]
 			}
 		},
 		uapCapabilities = [],
@@ -376,25 +374,25 @@ function generateCapabilities(target, capabilities, deviceCapabilities) {
 				}
 			}
 			return false;
-		}.bind(this);
+		};
 
 	Object.keys(this.jsFiles).forEach(function (id) {
-		var js = fs.readFileSync(this.jsFiles[id], {encoding: 'utf8'});
+		var js = fs.readFileSync(this.jsFiles[id], { encoding: 'utf8' });
 
 		// always include internetClient for analytics
 		if (!hasCapability(capabilities, 'internetClient')) {
-			capabilities.push('<Capability Name=\"internetClient\" />');
+			capabilities.push('<Capability Name="internetClient" />');
 		}
-		for (api in apis) {
-			var reg = new RegExp('(Ti|Titanium)\\.(' + api.replace('.', '\\.') +')', 'g');
+		for (const api in apis) {
+			var reg = new RegExp('(Ti|Titanium)\\.(' + api.replace('.', '\\.') + ')', 'g');
 			if (reg.test(js)) {
-				apis[api].capability && apis[api].capability.forEach(function(name) {
+				apis[api].capability && apis[api].capability.forEach(function (name) {
 					var entry = '<Capability Name="' + name + '" />';
 					if (!hasCapability(capabilities, name)) {
 						capabilities.push(entry);
 					}
 				});
-				apis[api].uapCapability && apis[api].uapCapability.forEach(function(name) {
+				apis[api].uapCapability && apis[api].uapCapability.forEach(function (name) {
 					var tag = target == 'win10' ? 'uap:' : (name == 'contacts' ? 'm3:' : ''),
 						entry = '<' + tag + 'Capability Name="' + name + '" />';
 
@@ -406,7 +404,7 @@ function generateCapabilities(target, capabilities, deviceCapabilities) {
 						uapCapabilities.push(entry);
 					}
 				});
-				apis[api].deviceCapability && apis[api].deviceCapability.forEach(function(name) {
+				apis[api].deviceCapability && apis[api].deviceCapability.forEach(function (name) {
 					var entry = '<DeviceCapability Name="' + name + '" />';
 					if (!hasCapability(deviceCapabilities, name)) {
 						deviceCapabilities.push(entry);
@@ -417,7 +415,7 @@ function generateCapabilities(target, capabilities, deviceCapabilities) {
 	}.bind(this));
 
 	return capabilities.concat(uapCapabilities).concat(deviceCapabilities);
-};
+}
 
 /**
  * Write appxmanifest.in according to manifest properties
@@ -466,12 +464,6 @@ function generateAppxManifestForPlatform(target, properties) {
 			'voipCall',
 			'chat'
 		],
-		win81DeviceCapabilities = [
-			'webcam',
-			'proximity',
-			'microphone',
-			'location'
-		],
 		capabilities = [],
 		deviceCapabilities = [],
 		_t = this;
@@ -487,22 +479,20 @@ function generateAppxManifestForPlatform(target, properties) {
 			var name;
 			if (node.tagName == 'Capability') {
 				// grab name of capability, determine if we include or filter, which namespace to use for tag
-				name = appc.xml.getAttr(node, "Name");
+				name = appc.xml.getAttr(node, 'Name');
 				if (target == 'win10') { // Windows 10 universal
-					if (win10UAPCapabilities.indexOf(name) != -1) {
+					if (win10UAPCapabilities.indexOf(name) !== -1) {
 						var cap = '<uap:Capability Name="' + name + '" />';
-						if (capabilities.indexOf(cap) == -1) {
+						if (capabilities.indexOf(cap) === -1) {
 							capabilities.push(cap);
 						}
-					} else if (win10BaseCapabilities.indexOf(name) != -1) {
+					} else if (win10BaseCapabilities.indexOf(name) !== -1) {
 						var cap = '<Capability Name="' + name + '" />';
-						if (capabilities.indexOf(cap) == -1) {
+						if (capabilities.indexOf(cap) === -1) {
 							capabilities.push(cap);
 						}
 					}
-				}
-				else {
-					if (win81BaseCapabilities.indexOf(name) != -1) {
+				} else if (win81BaseCapabilities.indexOf(name) != -1) {
 						var cap = '<Capability Name="' + name + '" />';
 						if (capabilities.indexOf(cap) == -1) {
 							capabilities.push(cap);
@@ -513,20 +503,18 @@ function generateAppxManifestForPlatform(target, properties) {
 							capabilities.push(cap);
 						}
 					}
-				}
-			}
-			else {
+			} else {
 				// Just write the XML out as is
 				// TODO Do some validation of DeviceCapability name?
 				if (node.tagName == 'DeviceCapability') {
 					// Capability should have Name property only
-					var cap = '<' + node.tagName + ' Name="' +  appc.xml.getAttr(node, "Name") + '" />';
+					var cap = '<' + node.tagName + ' Name="' +  appc.xml.getAttr(node, 'Name') + '" />';
 					if (deviceCapabilities.indexOf(cap) == -1) {
 						deviceCapabilities.push(cap);
 					}
 				} else {
 					// Capability should have Name property only
-					var cap = '<' + node.tagName + ' Name="' +  appc.xml.getAttr(node, "Name") + '" />';
+					var cap = '<' + node.tagName + ' Name="' +  appc.xml.getAttr(node, 'Name') + '" />';
 					if (capabilities.indexOf(cap) == -1) {
 						capabilities.push(cap);
 					}
@@ -556,7 +544,7 @@ function generateAppxManifestForPlatform(target, properties) {
 				obj[elm.tagName] = xmlToObject(elm);
 			});
 			return obj;
-		};
+		}
 		applications['Application'] = xmlToObject(properties.Applications[0]);
 	}
 	// now merge with our default colors
@@ -609,8 +597,8 @@ function generateAppxManifestForPlatform(target, properties) {
 		}
 	});
 	if (requiresBadgeLogo) {
-		defaultApplications.Application.VisualElements.LockScreen = 
-		{
+		defaultApplications.Application.VisualElements.LockScreen
+		= {
 			Notification: 'badge',
 			BadgeLogo: 'Square24x24Logo.png'
 		};
@@ -621,7 +609,7 @@ function generateAppxManifestForPlatform(target, properties) {
 	this.vsSdkReferences = [];
 	properties.SDKReferences.forEach(function (node) {
 		if (node.tagName == 'SDKReference') {
-			_t.vsSdkReferences.push(appc.xml.getAttr(node, "Include"));
+			_t.vsSdkReferences.push(appc.xml.getAttr(node, 'Include'));
 		}
 	});
 
@@ -688,8 +676,8 @@ function generateAppxManifest(next) {
 	this.mergeAppxManifestForModule();
 
 	var xprops = {
-			phone: { '8.1': {}, '10.0': {} },
-			store: { '8.1': {}, '10.0': {} }
+			phone: { 8.1: {}, '10.0': {} },
+			store: { 8.1: {}, '10.0': {} }
 		},
 		domParser = new DOMParser();
 
@@ -701,8 +689,8 @@ function generateAppxManifest(next) {
 
 			var dom = domParser.parseFromString(manifest, 'text/xml'),
 				root = dom.documentElement,
-				target = appc.xml.getAttr(root, "target"),
-				version = appc.xml.getAttr(root, "version");
+				target = appc.xml.getAttr(root, 'target'),
+				version = appc.xml.getAttr(root, 'version');
 
 			appc.xml.forEachElement(root, function (node) {
 				var key = node.tagName,
@@ -723,9 +711,9 @@ function generateAppxManifest(next) {
 
 				// If version is 8.1 or not defined, check target to determine phone[8.1] and/or store[8.1]
 				if (version == '8.1' || !version) {
-					if (target == "phone") {
+					if (target == 'phone') {
 						xprops.phone['8.1'][key] = xprops.phone['8.1'][key].concat(xprops.phone['8.1'][key].concat(elements));
-					} else if (target == "store") {
+					} else if (target == 'store') {
 						xprops.store['8.1'][key] = xprops.store['8.1'][key].concat(xprops.store['8.1'][key].concat(elements));
 					} else {
 						xprops.phone['8.1'][key] = xprops.phone['8.1'][key].concat(xprops.phone['8.1'][key].concat(elements));
@@ -738,12 +726,12 @@ function generateAppxManifest(next) {
 
 	// TODO Only generate the manifest for the target we're building for!
 	// TODO Write them out in parallel
-	this.generateAppxManifestForPlatform("store", xprops.store['8.1']);
-	this.generateAppxManifestForPlatform("phone", xprops.phone['8.1']);
-	this.generateAppxManifestForPlatform("win10", xprops.store['10.0']);
+	this.generateAppxManifestForPlatform('store', xprops.store['8.1']);
+	this.generateAppxManifestForPlatform('phone', xprops.phone['8.1']);
+	this.generateAppxManifestForPlatform('win10', xprops.store['10.0']);
 
 	next();
-};
+}
 
 /**
  * Updates the Visual Studio project to fix configuration for C# project
@@ -767,7 +755,7 @@ function fixCSharpConfiguration(next) {
 
 	// Make sure project dependencies are installed via NuGet
 	var nuget = path.resolve(__dirname, '..', '..', 'vendor', 'nuget', 'nuget.exe');
-	var p = spawn(nuget, ['restore', sln]);
+	var p = spawn(nuget, [ 'restore', sln ]);
 	p.stdout.on('data', function (data) {
 		var line = data.toString().trim();
 		if (line.indexOf('error ') >= 0) {
@@ -784,7 +772,7 @@ function fixCSharpConfiguration(next) {
 		_t.logger.warn(data.toString().trim());
 	});
 	p.on('close', function (code) {
-		if (code != 0) {
+		if (code !== 0) {
 			process.exit(1); // Exit with code from nuget?
 		}
 		next();
@@ -795,28 +783,26 @@ function fixCSharpConfiguration(next) {
  * Each modules have 'platform' folder that is meant to replace existing files under build folder just before the build
  */
 function copyModuleOverride(next) {
-
 	var _t = this;
-	for (var i = 0; i < this.modules.length; i++) {
-		if (this.modules[i].manifest.platform == 'windows') {
-			var module = this.modules[i],
-				moduleSrc = path.join(module.modulePath, 'platform');
-			if (fs.existsSync(moduleSrc)) {
-				wrench.readdirSyncRecursive(moduleSrc).forEach(function(res) {
-					var from = path.join(moduleSrc, res), 
-						to   = path.join(_t.buildDir, res),
-						todir = path.dirname(to);
-					if (fs.statSync(from).isFile()) {
-						_t.logger.info('Module [' + module.manifest.moduleid + '] overrides ' + res);
-						if (!fs.existsSync(todir)) {
-							wrench.mkdirSyncRecursive(todir)
-						}
-						fs.createReadStream(from).pipe(fs.createWriteStream(to));
-					}
-				});
-			}
+	const windowsModules = this.modules.filter(m => m.manifest.platform == 'windows');
+	windowsModules.forEach(module => {
+		const moduleSrc = path.join(module.modulePath, 'platform');
+		if (!fs.existsSync(moduleSrc)) {
+			return;
 		}
-	}
+		walkSync(moduleSrc).forEach(res => {
+			const from = path.join(moduleSrc, res);
+			if (!fs.statSync(from).isFile()) {
+				return;
+			}
+
+			_t.logger.info('Module [' + module.manifest.moduleid + '] overrides ' + res);
+			const to = path.join(_t.buildDir, res);
+			const todir = path.dirname(to);
+			fs.ensureDirSync(todir);
+			fs.createReadStream(from).pipe(fs.createWriteStream(to));
+		});
+	});
 
 	next();
 }

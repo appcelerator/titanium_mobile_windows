@@ -8,13 +8,12 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
+'use strict';
 
-const
-	appc = require('node-appc'),
-	fs = require('fs'),
-	path = require('path'),
-	wrench = require('wrench'),
-	__ = appc.i18n(__dirname).__;
+const appc = require('node-appc');
+const fs = require('fs-extra');
+const path = require('path');
+const __ = appc.i18n(__dirname).__;
 
 exports.cliVersion = '>=3.2';
 
@@ -27,7 +26,7 @@ exports.init = function (logger, config, cli) {
 
 			logger.debug(__('Deleting %s', tempBuildDir.cyan));
 			if (fs.existsSync(tempBuildDir) && fs.lstatSync(tempBuildDir).isDirectory()) {
-				wrench.rmdirSyncRecursive(tempBuildDir);
+				fs.removeSync(tempBuildDir);
 			}
 			finished();
 		}

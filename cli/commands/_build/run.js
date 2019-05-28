@@ -1,9 +1,10 @@
-var appc = require('node-appc'),
-	spawn = require('child_process').spawn,
-	fs = require('fs'),
-	wrench = require('wrench'),
-	Builder = require('node-titanium-sdk/lib/builder'),
-	__ = appc.i18n(__dirname).__;
+'use strict';
+
+const appc = require('node-appc');
+const spawn = require('child_process').spawn;
+const fs = require('fs-extra');
+const Builder = require('node-titanium-sdk/lib/builder');
+const __ = appc.i18n(__dirname).__;
 
 /*
  Public API.
@@ -109,7 +110,7 @@ function runCmake(next) {
 			'-DHAL_RENAME_AXWAYHAL=ON',
 			this.buildDir
 		], null, 2));
-	fs.existsSync(this.cmakeTargetDir) || wrench.mkdirSyncRecursive(this.cmakeTargetDir);
+	fs.ensureDirSync(this.cmakeTargetDir);
 	// Use spawn directly so we can pipe output as we go
 	var cmake = this.cmake;
 	p = spawn(cmake,

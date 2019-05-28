@@ -1,13 +1,14 @@
-var appc = require('node-appc'),
-	async = require('async'),
-	cleanCSS = require('clean-css'),
-	fs = require('fs-extra'),
-	crypto = require('crypto'),
-	jsanalyze = require('node-titanium-sdk/lib/jsanalyze'),
-	path = require('path'),
-	ti = require('node-titanium-sdk'),
-	wrench = require('wrench'),
-	__ = appc.i18n(__dirname).__;
+'use strict';
+
+const appc = require('node-appc');
+const async = require('async');
+const cleanCSS = require('clean-css');
+const fs = require('fs-extra');
+const crypto = require('crypto');
+const jsanalyze = require('node-titanium-sdk/lib/jsanalyze');
+const path = require('path');
+const ti = require('node-titanium-sdk');
+const __ = appc.i18n(__dirname).__;
 
 /*
  Public API.
@@ -31,13 +32,11 @@ function mixin(WindowsBuilder) {
 function copyResultsToProject(next) {
 	if (this.originalBuildDir) {
 		this.logger.info(__('Copying results back to project build directory'));
-		// if already exists, wipe it
-		fs.existsSync(this.originalBuildDir) && wrench.rmdirSyncRecursive(this.originalBuildDir);
-		// make sure destination exists
-		fs.existsSync(this.originalBuildDir) || wrench.mkdirSyncRecursive(this.originalBuildDir);
+		// if already exists, wipe it. ensure it exists
+		fs.emptyDirSync(this.originalBuildDir);
 		// Now copy this.buildDir into this.originalBuildDir
-		wrench.copyDirSyncRecursive(this.buildDir, this.originalBuildDir, {
-			forceDelete: true
+		fs.copySync(this.buildDir, this.originalBuildDir, {
+			overwrite: true
 		});
 	}
 	next();
