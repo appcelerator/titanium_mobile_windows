@@ -213,7 +213,7 @@ function checkIfNeedToRecompile(next) {
 	fs.existsSync(this.buildManifestFile) && fs.unlinkSync(this.buildManifestFile);
 
 	next();
-};
+}
 
 /**
  * Checks that the app.js exists. This has to be done after the "build.pre.compile" event
