@@ -75,7 +75,7 @@ namespace Titanium
 					return get_context().CreateString(text);
 				}
 				case SQLITE_INTEGER:{
-					return get_context().CreateNumber(static_cast<double>(sqlite3_column_int(statement__, index)));
+					return get_context().CreateNumber(static_cast<double>(sqlite3_column_int64(statement__, index)));
 				}
 				case SQLITE_FLOAT:{
 					return get_context().CreateNumber(static_cast<double>(sqlite3_column_double(statement__, index)));
@@ -103,7 +103,7 @@ namespace Titanium
 					return get_context().CreateString(text);
 				}
 				case FIELD_TYPE::INT:{
-					return get_context().CreateNumber(static_cast<double>(sqlite3_column_int(statement__, index)));
+					return get_context().CreateNumber(static_cast<double>(sqlite3_column_int64(statement__, index)));
 				}
 				case FIELD_TYPE::DOUBLE:
 				case FIELD_TYPE::FLOAT:{
