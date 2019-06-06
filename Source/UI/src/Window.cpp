@@ -553,6 +553,8 @@ namespace TitaniumWindows
 			layout_node__->element.measuredHeight = size.Height;
 			layout_node__->element.measuredWidth = size.Width;
 
+			oldRect__ = Titanium::LayoutEngine::RectMake(0, 0, size.Width, size.Height);
+
 			requestLayout(true);
 		}
 
