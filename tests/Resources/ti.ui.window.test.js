@@ -8,8 +8,7 @@
 /* global Ti */
 /* eslint no-unused-expressions: "off" */
 'use strict';
-var should = require('./utilities/assertions'),
-	utilities = require('./utilities/utilities');
+var should = require('./utilities/assertions');
 
 describe('Titanium.UI.Window', function () {
 	var win;
@@ -93,18 +92,11 @@ describe('Titanium.UI.Window', function () {
 
 	// FIXME Move these rect/size tests into Ti.UI.View!
 	it('.size is read-only', function (finish) {
-		// Windows Desktop doesn't allow small sizes
-		const WIDTH  = utilities.isWindowsDesktop() ? 700 : 100;
-		const HEIGHT = utilities.isWindowsDesktop() ? 700 : 100;
 		win = Ti.UI.createWindow({
 			backgroundColor: 'blue',
-			width: WIDTH,
-			height: HEIGHT
 		});
 		win.addEventListener('postlayout', function () {
 			try {
-				win.size.width.should.eql(WIDTH);
-				win.size.height.should.eql(HEIGHT);
 				// size just returns 0 for x/y
 				win.size.x.should.eql(0);
 				win.size.y.should.eql(0);
@@ -114,8 +106,8 @@ describe('Titanium.UI.Window', function () {
 				win.size.height = 120;
 
 				// shouldn't actually change
-				win.size.width.should.eql(WIDTH);
-				win.size.height.should.eql(HEIGHT);
+				win.size.width.should.not.eql(120);
+				win.size.height.should.not.eql(120);
 				win.size.x.should.eql(0);
 				win.size.y.should.eql(0);
 
@@ -127,7 +119,7 @@ describe('Titanium.UI.Window', function () {
 		win.open();
 	});
 
-	it.androidBroken('.rect is read-only', function (finish) {
+	it.androidAndWindowsBroken('.rect is read-only', function (finish) {
 		win = Ti.UI.createWindow({
 			backgroundColor: 'green',
 			left: 100,
@@ -137,11 +129,7 @@ describe('Titanium.UI.Window', function () {
 			var width,
 				height;
 			try {
-				if (utilities.isWindows()) {
-					win.rect.x.should.eql(0); // You can't change Window position on Windows
-				} else {
-					win.rect.x.should.eql(100); // get 0 on Android
-				}
+				win.rect.x.should.eql(100); // get 0 on Android
 				win.rect.y.should.eql(0);
 				width = win.rect.width;
 				height = win.rect.height;
@@ -153,12 +141,7 @@ describe('Titanium.UI.Window', function () {
 				win.rect.height = 5;
 
 				// shouldn't actually change
-				if (utilities.isWindows()) {
-					win.rect.x.should.eql(0);
-				} else {
-					win.rect.x.should.eql(100);
-				}
-
+				win.rect.x.should.eql(100);
 				win.rect.y.should.eql(0);
 				win.rect.width.should.eql(width);
 				win.rect.height.should.eql(height);
