@@ -93,15 +93,18 @@ describe('Titanium.UI.Window', function () {
 
 	// FIXME Move these rect/size tests into Ti.UI.View!
 	it('.size is read-only', function (finish) {
+		// Windows Desktop doesn't allow small sizes
+		const WIDTH  = utilities.isWindowsDesktop() ? 700 : 100;
+		const HEIGHT = utilities.isWindowsDesktop() ? 700 : 100;
 		win = Ti.UI.createWindow({
 			backgroundColor: 'blue',
-			width: 100,
-			height: 100
+			width: WIDTH,
+			height: HEIGHT
 		});
 		win.addEventListener('postlayout', function () {
 			try {
-				win.size.width.should.eql(100);
-				win.size.height.should.eql(100);
+				win.size.width.should.eql(WIDTH);
+				win.size.height.should.eql(HEIGHT);
 				// size just returns 0 for x/y
 				win.size.x.should.eql(0);
 				win.size.y.should.eql(0);
@@ -111,8 +114,8 @@ describe('Titanium.UI.Window', function () {
 				win.size.height = 120;
 
 				// shouldn't actually change
-				win.size.width.should.eql(100);
-				win.size.height.should.eql(100);
+				win.size.width.should.eql(WIDTH);
+				win.size.height.should.eql(HEIGHT);
 				win.size.x.should.eql(0);
 				win.size.y.should.eql(0);
 
