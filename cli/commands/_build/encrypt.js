@@ -1,12 +1,9 @@
-var appc = require('node-appc'),
-	async = require('async'),
-	cleanCSS = require('clean-css'),
-	fs = require('fs'),
-	os = require('os'),
-	path = require('path'),
-	ti = require('node-titanium-sdk'),
-	wrench = require('wrench'),
-	__ = appc.i18n(__dirname).__;
+'use strict';
+
+const appc = require('node-appc');
+const fs = require('fs-extra');
+const path = require('path');
+const __ = appc.i18n(__dirname).__;
 
 /*
  Public API.

@@ -1,13 +1,14 @@
-var appc = require('node-appc'),
-	async = require('async'),
-	cleanCSS = require('clean-css'),
-	fs = require('fs-extra'),
-	crypto = require('crypto'),
-	jsanalyze = require('node-titanium-sdk/lib/jsanalyze'),
-	path = require('path'),
-	ti = require('node-titanium-sdk'),
-	wrench = require('wrench'),
-	__ = appc.i18n(__dirname).__;
+'use strict';
+
+const appc = require('node-appc');
+const async = require('async');
+const cleanCSS = require('clean-css');
+const fs = require('fs-extra');
+const crypto = require('crypto');
+const jsanalyze = require('node-titanium-sdk/lib/jsanalyze');
+const path = require('path');
+const ti = require('node-titanium-sdk');
+const __ = appc.i18n(__dirname).__;
 
 /*
  Public API.
@@ -31,13 +32,11 @@ function mixin(WindowsBuilder) {
 function copyResultsToProject(next) {
 	if (this.originalBuildDir) {
 		this.logger.info(__('Copying results back to project build directory'));
-		// if already exists, wipe it
-		fs.existsSync(this.originalBuildDir) && wrench.rmdirSyncRecursive(this.originalBuildDir);
-		// make sure destination exists
-		fs.existsSync(this.originalBuildDir) || wrench.mkdirSyncRecursive(this.originalBuildDir);
+		// if already exists, wipe it. ensure it exists
+		fs.emptyDirSync(this.originalBuildDir);
 		// Now copy this.buildDir into this.originalBuildDir
-		wrench.copyDirSyncRecursive(this.buildDir, this.originalBuildDir, {
-			forceDelete: true
+		fs.copySync(this.buildDir, this.originalBuildDir, {
+			overwrite: true
 		});
 	}
 	next();
@@ -101,7 +100,7 @@ function copyResources(next) {
 
 	function copyFile(from, to, next) {
 		var d = path.dirname(to);
-		fs.existsSync(d) || wrench.mkdirSyncRecursive(d);
+		fs.ensureDirSync(d);
 
 		if (fs.existsSync(to)) {
 			// Don't overwrite C++ source files because it causes unnecessary recompile
@@ -126,36 +125,6 @@ function copyResources(next) {
 		} else {
 			fs.writeFileSync(to, fs.readFileSync(from));
 		}
-	}
-
-	/*
-	 * Check JS syntax and report errors. Mostly copied from jsanalyze
-	 */
-	function reportJSErrors(filename, contents, ex) {
-		var errmsg = [__('Failed to parse %s', filename)];
-		if (ex.line) {
-			errmsg.push(__('%s [line %s, column %s]', ex.message, ex.line, ex.col));
-		} else {
-			errmsg.push(ex.message);
-		}
-		try {
-			contents = contents.split('\n');
-			if (ex.line && ex.line <= contents.length) {
-				errmsg.push('');
-				errmsg.push('    ' + contents[ex.line - 1].replace(/\t/g, ' '));
-				if (ex.col) {
-					var i = 0,
-						len = ex.col,
-						buffer = '    ';
-					for (; i < len; i++) {
-						buffer += '-';
-					}
-					errmsg.push(buffer + '^');
-				}
-				errmsg.push('');
-			}
-		} catch (ex2) {}
-		return errmsg.join('\n');
 	}
 
 	function recursivelyCopy(src, dest, ignoreRootDirs, opts, done) {
@@ -200,7 +169,7 @@ function copyResources(next) {
 				// we have a file, now we need to see what sort of file
 
 				// if the destination directory does not exists, create it
-				fs.existsSync(destDir) || wrench.mkdirSyncRecursive(destDir);
+				fs.ensureDirSync(destDir);
 
 				var ext = filename.match(extRegExp);
 
@@ -270,86 +239,84 @@ function copyResources(next) {
 	function createAppIconSet(next) {
 		var appIconSetDir = path.join(this.buildDir, 'Assets'),
 			missingIcons = [
+				// Square24x24Logo
+				{
+					description: 'Square24x24Logo.png - Used for badge',
+					file: path.join(appIconSetDir, 'Square24x24Logo.png'),
+					width: 24,
+					height: 24,
+					required: true
+				},
 
-			// Square24x24Logo
-			{
-				description: 'Square24x24Logo.png - Used for badge',
-				file: path.join(appIconSetDir, 'Square24x24Logo.png'),
-				width: 24,
-				height: 24,
-				required: true
-			},
+				// Square44x44Logo
+				{
+					description: 'Square44x44Logo.png - Used for logo',
+					file: path.join(appIconSetDir, 'Square44x44Logo.png'),
+					width: 44,
+					height: 44,
+					required: true
+				},
 
-			// Square44x44Logo
-			{
-				description: 'Square44x44Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square44x44Logo.png'),
-				width: 44,
-				height: 44,
-				required: true
-			},
+				// Square71x71Logo
+				{
+					description: 'Square71x71Logo.png - Used for logo',
+					file: path.join(appIconSetDir, 'Square71x71Logo.png'),
+					width: 71,
+					height: 71,
+					required: true
+				},
 
-			// Square71x71Logo
-			{
-				description: 'Square71x71Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square71x71Logo.png'),
-				width: 71,
-				height: 71,
-				required: true
-			},
+				// Square150x150Logo
+				{
+					description: 'Square150x150Logo.png - Used for logo',
+					file: path.join(appIconSetDir, 'Square150x150Logo.png'),
+					width: 150,
+					height: 150,
+					required: true
+				},
 
-			// Square150x150Logo
-			{
-				description: 'Square150x150Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square150x150Logo.png'),
-				width: 150,
-				height: 150,
-				required: true
-			},
+				// Square310x310Logo
+				{
+					description: 'Square310x310Logo.png - Used for logo',
+					file: path.join(appIconSetDir, 'Square310x310Logo.png'),
+					width: 310,
+					height: 310,
+					required: true
+				},
 
-			// Square310x310Logo
-			{
-				description: 'Square310x310Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Square310x310Logo.png'),
-				width: 310,
-				height: 310,
-				required: true
-			},
+				// Logo.png
+				{
+					description: 'Logo.png - Used for logo',
+					file: path.join(appIconSetDir, 'Logo.png'),
+					width: 150,
+					height: 150,
+					required: true
+				},
 
-			// Logo.png
-			{
-				description: 'Logo.png - Used for logo',
-				file: path.join(appIconSetDir, 'Logo.png'),
-				width: 150,
-				height: 150,
-				required: true
-			},
+				// StoreLogo.png
+				{
+					description: 'StoreLogo.png - Used for logo',
+					file: path.join(appIconSetDir, 'StoreLogo.png'),
+					width: 50,
+					height: 50,
+					required: true
+				},
 
-			// StoreLogo.png
-			{
-				description: 'StoreLogo.png - Used for logo',
-				file: path.join(appIconSetDir, 'StoreLogo.png'),
-				width: 50,
-				height: 50,
-				required: true
-			},
-
-			// SmallLogo.png
-			{
-				description: 'SmallLogo.png - Used for logo',
-				file: path.join(appIconSetDir, 'SmallLogo.png'),
-				width: 30,
-				height: 30,
-				required: true
-			}
-
-		],
-		md5 = function (file) {
-			return crypto
-				.createHash('md5')
-				.update(fs.readFileSync(file), 'binary')
-				.digest('hex')
-		};
+				// SmallLogo.png
+				{
+					description: 'SmallLogo.png - Used for logo',
+					file: path.join(appIconSetDir, 'SmallLogo.png'),
+					width: 30,
+					height: 30,
+					required: true
+				}
+			],
+			md5 = function (file) {
+				return crypto
+					.createHash('md5')
+					.update(fs.readFileSync(file), 'binary')
+					.digest('hex');
+			};
 
 		/*
 		 * Look for basename.png, if it does not exist then look for .scale-100.png because it should have same dimension
@@ -368,7 +335,7 @@ function copyResources(next) {
 		// if it does not exist in project root then generate the missing icon
 		for (var i = missingIcons.length - 1; i >= 0; i--) {
 
-			// if file does not exist then look for .scale-100.png 
+			// if file does not exist then look for .scale-100.png
 			// because it should have same dimension
 			missingIcons[i].file = windowsScaledPNGAssetSelect(missingIcons[i].file);
 
@@ -390,17 +357,15 @@ function copyResources(next) {
 					copyFile.call(this, alloyPlatformResourceIcon, icon.file);
 				}
 				missingIcons.splice(i, 1);
-			} else {
-				if (fs.existsSync(resourceIcon)) {
-					if (fs.existsSync(icon.file) && md5(icon.file) === md5(resourceIcon)) {
-						this.logger.debug(__('%s already exists, skipping...', icon.file));
-					} else {
-						copyFile.call(this, resourceIcon, icon.file);
-					}
-					missingIcons.splice(i, 1);
+			} else if (fs.existsSync(resourceIcon)) {
+				if (fs.existsSync(icon.file) && md5(icon.file) === md5(resourceIcon)) {
+					this.logger.debug(__('%s already exists, skipping...', icon.file));
 				} else {
-					this.logger.debug(__('%s missing, generating...', icon.file));
+					copyFile.call(this, resourceIcon, icon.file);
 				}
+				missingIcons.splice(i, 1);
+			} else {
+				this.logger.debug(__('%s missing, generating...', icon.file));
 			}
 		}
 
@@ -486,21 +451,23 @@ function copyResources(next) {
 		createAppIconSet,
 
 		// Remove SplashScreen.png if scaled assets (.scale-100.png) exists.
-		function(cb) {
+		function (cb) {
 			var basename    = 'SplashScreen.scale-100.png',
-				candidates = [path.join(this.projectDir, 'Resources', 'Windows', basename),
-							  path.join(this.projectDir, 'app', 'assets', 'windows', basename),
-							  path.join(this.projectDir, 'Resources', basename) ],
-		 		splashAsset = path.join(this.buildDir, 'Assets', 'SplashScreen.png');
+				candidates = [
+					path.join(this.projectDir, 'Resources', 'Windows', basename),
+					path.join(this.projectDir, 'app', 'assets', 'windows', basename),
+					path.join(this.projectDir, 'Resources', basename)
+				],
+				splashAsset = path.join(this.buildDir, 'Assets', 'SplashScreen.png');
 
-		 	for (var i = 0; i < candidates.length; i++) {
+			for (var i = 0; i < candidates.length; i++) {
 				if (fs.existsSync(candidates[i]) && fs.existsSync(splashAsset)) {
 					this.logger.debug('Removing SplashScreen.png as scaled-100 asset found.');
-					fs.unlinkSync(splashAsset)
+					fs.unlinkSync(splashAsset);
 					break;
 				}
-		 	}
-		 	cb();
+			}
+			cb();
 		}
 	];
 
@@ -577,16 +544,6 @@ function copyResources(next) {
 			copyFile.call(this, path.join(templateDir, 'appicon.png'), destIcon);
 		}
 
-		var thirdpartyLibraries = this.hyperloopConfig.windows.thirdparty && Object.keys(this.hyperloopConfig.windows.thirdparty) || [];
-		function hasWindowsAPI(node_value) {
-			for (var i = 0; i < thirdpartyLibraries.length; i++) {
-				if (node_value.indexOf(thirdpartyLibraries[i] + '.') === 0) {
-					return true;
-				}
-			}
-			return (node_value.indexOf('Windows.') === 0 || node_value.indexOf('System.') === 0);
-		}
-
 		// copy js files into assets directory and minify if needed
 		this.logger.info(__('Processing JavaScript files'));
 		appc.async.series(this, Object.keys(jsFiles).map(function (id) {
@@ -639,7 +596,7 @@ function copyResources(next) {
 
 							this.cli.createHook('build.windows.compileJsFile', this, function (r, from, to, cb2) {
 								const dir = path.dirname(to);
-								fs.existsSync(dir) || wrench.mkdirSyncRecursive(dir);
+								fs.ensureDirSync(dir);
 
 								if (newContents === originalContents) {
 									copyFile.call(this, from, to, cb2);
@@ -679,8 +636,8 @@ function copyResources(next) {
 
 			// write the app info file
 			var appInfoFile = path.join(this.buildTargetAssetsDir, '_app_info_.json'),
-				appInfo =
-				{
+				appInfo
+				= {
 					deployType: this.deployType,
 					name: this.tiapp.name,
 					id: this.tiapp.id,

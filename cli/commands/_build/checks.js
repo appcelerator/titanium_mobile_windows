@@ -1,10 +1,9 @@
-var appc = require('node-appc'),
-	fs = require('fs'),
-	os = require('os'),
-	path = require('path'),
-	ti = require('node-titanium-sdk'),
-	wrench = require('wrench'),
-	__ = appc.i18n(__dirname).__;
+'use strict';
+
+const appc = require('node-appc');
+const fs = require('fs-extra');
+const ti = require('node-titanium-sdk');
+const __ = appc.i18n(__dirname).__;
 
 /*
  Public API.
@@ -203,8 +202,10 @@ function checkIfNeedToRecompile(next) {
 	// check if we need to do a rebuild
 	this.forceRebuild = this.checkIfShouldForceRebuild();
 
-	if (this.forceRebuild && fs.existsSync(this.buildDir)) {
-		wrench.rmdirSyncRecursive(this.buildDir);
+	if (this.forceRebuild) {
+		fs.emptyDirSync(this.buildDir);
+	} else {
+		fs.ensureDirSync(this.buildDir);
 	}
 
 	// now that we've read the build manifest, delete it so if this build
@@ -212,7 +213,7 @@ function checkIfNeedToRecompile(next) {
 	fs.existsSync(this.buildManifestFile) && fs.unlinkSync(this.buildManifestFile);
 
 	next();
-};
+}
 
 /**
  * Checks that the app.js exists. This has to be done after the "build.pre.compile" event

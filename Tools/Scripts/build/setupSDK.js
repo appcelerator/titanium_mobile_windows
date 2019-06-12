@@ -3,6 +3,8 @@
  * copies the built Windows SDK portion into it, modifies some files to denote
  * the Windows SDK was included and then zips it back up.
  */
+'use strict';
+
 const path = require('path');
 const fs = require('fs-extra');
 const colors = require('colors'); // eslint-disable-line no-unused-vars
