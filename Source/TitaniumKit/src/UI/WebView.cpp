@@ -8,6 +8,7 @@
 
 #include "Titanium/UI/WebView.hpp"
 #include "Titanium/detail/TiImpl.hpp"
+#include "Titanium/Filesystem/File.hpp"
 
 namespace Titanium
 {
@@ -35,7 +36,16 @@ namespace Titanium
 			executeListener.SetProperty("webview", get_object());
 		}
 
-		TITANIUM_PROPERTY_READWRITE(WebView, std::vector<std::uint8_t>, data)
+		void WebView::set_data(const std::shared_ptr<Titanium::Blob>& data) TITANIUM_NOEXCEPT {
+			data__ = data;
+			set_html(data->get_text());
+		}
+
+		std::shared_ptr<Titanium::Blob> WebView::get_data() const TITANIUM_NOEXCEPT {
+			TITANIUM_LOG_WARN("WebView::get_data: Not Implemented");
+			return nullptr;
+		}
+
 		TITANIUM_PROPERTY_READWRITE(WebView, std::vector<std::string>, blacklistedURLs)
 		TITANIUM_PROPERTY_READWRITE(WebView, std::string, html)
 
@@ -99,7 +109,7 @@ namespace Titanium
 			JSExport<WebView>::SetClassVersion(1);
 			JSExport<WebView>::SetParent(JSExport<View>::Class());
 
-			TITANIUM_ADD_PROPERTY_READONLY(WebView, data);
+			TITANIUM_ADD_PROPERTY(WebView, data);
 			TITANIUM_ADD_PROPERTY(WebView, html);
 			TITANIUM_ADD_PROPERTY(WebView, loading);
 			TITANIUM_ADD_PROPERTY(WebView, scalesPageToFit);
@@ -129,11 +139,31 @@ namespace Titanium
 			TITANIUM_ADD_FUNCTION(WebView, _executeListener);
 		}
 
+		TITANIUM_PROPERTY_SETTER(WebView, data)
+		{
+			const auto data = static_cast<JSObject>(argument);
+			const auto blob_ptr = data.GetPrivate<Titanium::Blob>();
+			if (blob_ptr) {
+				set_data(blob_ptr);
+			} else {
+				const auto file_ptr = data.GetPrivate<Titanium::Filesystem::File>();
+				if (file_ptr) {
+					const auto blob_ptr = file_ptr->read();
+					if (blob_ptr) {
+						set_data(blob_ptr);
+					}
+				}
+			}
+			return true;
+		}
+
 		TITANIUM_PROPERTY_GETTER(WebView, data)
 		{
-			// TODO Convert std::vector<unstd::uint8_t> to JSObject (Ti.Blob)
-			TITANIUM_LOG_WARN("WebView.data is not implemented yet");
-			return get_context().CreateUndefined();
+			const auto data = get_data();
+			if (data) {
+				return data->get_object();
+			}
+			return get_context().CreateNull();
 		}
 
 		TITANIUM_PROPERTY_GETTER(WebView, html)
@@ -287,22 +317,8 @@ namespace Titanium
 			return get_context().CreateUndefined();
 		}
 
-		TITANIUM_FUNCTION(WebView, getData)
-		{
-			return js_get_data();
-		}
-
-		TITANIUM_FUNCTION(WebView, setData)
-		{
-			if (arguments.size() >= 1) {
-				const auto _0 = arguments.at(0);
-				TITANIUM_ASSERT(_0.IsObject());
-				const auto data = _0;
-				// TODO Convert JSObject(Ti.Blob or Ti.File) to std::vector<std::uint8_t>
-				// setData(data);
-			}
-			return get_context().CreateUndefined();
-		}
+		TITANIUM_FUNCTION_AS_GETTER(WebView, getData, data);
+		TITANIUM_FUNCTION_AS_SETTER(WebView, setData, data);
 
 		TITANIUM_PROPERTY_SETTER(WebView, onlink)
 		{

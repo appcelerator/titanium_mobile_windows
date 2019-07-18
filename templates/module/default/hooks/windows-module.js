@@ -8,18 +8,15 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
+'use strict';
 
-const
-	fs = require('fs'),
-	path = require('path'),
-	appc = require('node-appc'),
-	os = require('os'),
-	wrench = require('wrench'),
-	async = require('async'),
-	ejs = require('ejs'),
-	spawn = require('child_process').spawn,
-	windowslib = require('windowslib'),
-	__ = appc.i18n(__dirname).__;
+const fs = require('fs-extra');
+const path = require('path');
+const appc = require('node-appc');
+const async = require('async');
+const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
+const windowslib = require('windowslib');
+const __ = appc.i18n(__dirname).__;
 
 exports.cliVersion = '>=3.2';
 
@@ -27,11 +24,11 @@ exports.cliVersion = '>=3.2';
 // Choose CMake generator based on selected Visual Studio
 //
 function chooseCMakeVSgenerator(logger, callback) {
-	var generators = {
-	    '12.0':'Visual Studio 12 2013',
-	    '14.0':'Visual Studio 14 2015',
-	    '15.0':'Visual Studio 15 2017',
-	    '16.0':'Visual Studio 16 2019'
+	const generators = {
+		'12.0': 'Visual Studio 12 2013',
+		'14.0': 'Visual Studio 14 2015',
+		'15.0': 'Visual Studio 15 2017',
+		'16.0': 'Visual Studio 16 2019',
 	};
 
 	windowslib.detect(function (err, results) {
@@ -62,33 +59,33 @@ exports.init = function (logger, config, cli) {
 			var cmakeDir = path.resolve(data.sdk.path, 'windows', 'cli', 'vendor', 'cmake'),
 				cmake = path.join(cmakeDir, 'bin', 'cmake.exe'),
 				projectDir = path.join(data.projectDir, 'windows'),
-				cmakeFinds = ['HAL', 'JavascriptCore', 'TitaniumKit', 'TitaniumWindows_Utility'],
+				cmakeFinds = [ 'HAL', 'JavascriptCore', 'TitaniumKit', 'TitaniumWindows_Utility' ],
 				cmakeFindDirSrc = path.join(data.sdk.path, 'windows', 'templates', 'build', 'cmake'),
 				cmakeFindDirDst = path.join(projectDir, 'cmake');
 
-			chooseCMakeVSgenerator(logger, function(generator, sdks) {
+			chooseCMakeVSgenerator(logger, function (generator, sdks) {
 				async.series([
-					function(next) {
+					function (next) {
 						logger.info('Copying CMake package finders');
-						wrench.mkdirSyncRecursive(path.join(cmakeFindDirDst));
-						cmakeFinds.forEach(function(pkg) {
-							fs.writeFileSync(path.join(cmakeFindDirDst, 'Find'+pkg+'.cmake'), fs.readFileSync(path.join(cmakeFindDirSrc, 'Find'+pkg+'.cmake')));
+						fs.ensureDirSync(path.join(cmakeFindDirDst));
+						cmakeFinds.forEach(function (pkg) {
+							fs.writeFileSync(path.join(cmakeFindDirDst, 'Find' + pkg + '.cmake'), fs.readFileSync(path.join(cmakeFindDirSrc, 'Find' + pkg + '.cmake')));
 						});
 						next();
 					},
-					function(next) {
+					function (next) {
 						logger.info('Generating Windows 10 Win32 project');
 						runCMake(logger, cmake, projectDir, 'Windows10', 'Win32', generator, next);
 					},
-					function(next) {
+					function (next) {
 						logger.info('Generating Windows 10 ARM project');
 						runCMake(logger, cmake, projectDir, 'Windows10', 'ARM', generator, next);
 					},
-					function(next) {
+					function (next) {
 						logger.info('Generating Windows 10 x64 project');
 						runCMake(logger, cmake, projectDir, 'Windows10', 'x64', generator, next);
 					}
-				], function(err, result) {
+				], function (err, result) {
 					if (err) {
 						logger.error(err);
 					}
@@ -99,13 +96,13 @@ exports.init = function (logger, config, cli) {
 	});
 };
 
-function runCMake(logger, cmake, projectDir, targetEnv, targetArch, targetGenerator, callback){
-	var targetDir = path.join(projectDir, targetEnv+'.'+targetArch),
+function runCMake(logger, cmake, projectDir, targetEnv, targetArch, targetGenerator, callback) {
+	var targetDir = path.join(projectDir, targetEnv + '.' + targetArch),
 		generatorName =  targetGenerator,
 		p,
 		originalTargetDir,
-		targetPlatform = (targetEnv == 'Windows10') ? 'WindowsStore' : targetEnv;
-		targetVersion  = (targetEnv == 'Windows10') ? '10.0' : '8.1';
+		targetPlatform = (targetEnv === 'Windows10') ? 'WindowsStore' : targetEnv;
+	const targetVersion  = (targetEnv === 'Windows10') ? '10.0' : '8.1';
 
 	// check that the build directory is writeable
 	// try to build under temp if the path is shorter and we have write access
@@ -124,16 +121,13 @@ function runCMake(logger, cmake, projectDir, targetEnv, targetArch, targetGenera
 		originalTargetDir = targetDir;
 		targetDir = path.join(tempBuildDir, path.basename(path.dirname(projectDir)), path.basename(targetDir));
 		logger.info(__('Generating solution under vsbuild directory to avoid path length issues...'));
-       	// if already exists, wipe it
-		if (fs.existsSync(targetDir)) {
-        	wrench.rmdirSyncRecursive(targetDir);
-		}
-		wrench.mkdirSyncRecursive(targetDir);
+		// if already exists, wipe it
+		fs.emptyDirSync(targetDir);
 	} else {
 		originalTargetDir = null;
 	}
 
-	var cmakeArgs = [
+	var cmakeArgs =	[
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + targetPlatform,
 			'-DCMAKE_SYSTEM_VERSION=' + targetVersion,
@@ -141,13 +135,13 @@ function runCMake(logger, cmake, projectDir, targetEnv, targetArch, targetGenera
 			path.join(projectDir)
 		];
 
-		if (targetArch === 'ARM') {
-			cmakeArgs.push('-A', 'ARM');
-		} else if (targetArch === 'ARM64') {
-			cmakeArgs.push('-A', 'ARM64');
-		} else if (targetArch === 'x64') {
-			cmakeArgs.push('-A', 'x64');
-		}
+	if (targetArch === 'ARM') {
+		cmakeArgs.push('-A', 'ARM');
+	} else if (targetArch === 'ARM64') {
+		cmakeArgs.push('-A', 'ARM64');
+	} else if (targetArch === 'x64') {
+		cmakeArgs.push('-A', 'x64');
+	}
 
 	p = spawn(cmake, cmakeArgs,
 		{
@@ -161,19 +155,17 @@ function runCMake(logger, cmake, projectDir, targetEnv, targetArch, targetGenera
 		logger.warn(data.toString().trim());
 	});
 	p.on('close', function (code) {
-		if (code != 0) {
+		if (code !== 0) {
 			process.exit(1);
 		}
 		if (originalTargetDir) {
 			// Copy stuff back to original dir!
 			logger.info(__('Copying solution back to module from temp directory...'));
-			// if already exists, wipe it
-			fs.existsSync(originalTargetDir) && wrench.rmdirSyncRecursive(originalTargetDir);
-			// make sure destination exists
-			fs.existsSync(originalTargetDir) || wrench.mkdirSyncRecursive(originalTargetDir);
+			// if already exists, wipe it -make sure destination exists
+			fs.emptyDirSync(originalTargetDir);
 			// Now copy back to original location
-			wrench.copyDirSyncRecursive(targetDir, originalTargetDir, {
-				forceDelete: true
+			fs.copySync(targetDir, originalTargetDir, {
+				overwrite: true
 			});
 		}
 		callback();

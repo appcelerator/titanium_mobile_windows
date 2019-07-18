@@ -29,7 +29,6 @@ namespace TitaniumWindows
 		{
 		public:
 
-			TITANIUM_PROPERTY_UNIMPLEMENTED(data);
 			TITANIUM_PROPERTY_UNIMPLEMENTED(scalesPageToFit);
 			TITANIUM_FUNCTION_UNIMPLEMENTED(setBasicAuthentication);
 
@@ -62,6 +61,8 @@ namespace TitaniumWindows
 			virtual void set_html(const std::string& html) TITANIUM_NOEXCEPT override;
 			virtual std::string get_url() const TITANIUM_NOEXCEPT override;
 			virtual void set_url(const std::string& url) TITANIUM_NOEXCEPT override;
+			virtual bool setHtml(const std::string& html, const std::unordered_map<std::string, std::string>& options) TITANIUM_NOEXCEPT override;
+			virtual std::shared_ptr<Titanium::Blob> get_data() const TITANIUM_NOEXCEPT override;
 
 			virtual bool canGoBack() TITANIUM_NOEXCEPT override;
 			virtual bool canGoForward() TITANIUM_NOEXCEPT override;
@@ -71,10 +72,13 @@ namespace TitaniumWindows
 			virtual void stopLoading(const bool& hardStop) TITANIUM_NOEXCEPT override;
 
 			void getInnerHTML() TITANIUM_NOEXCEPT;
+			void handleBaseURL() TITANIUM_NOEXCEPT;
 
 			bool error_event_enabled__ { false };
 			bool load_event_enabled__  { false };
 			bool beforeload_event_enabled__  { false };
+
+			bool baseURL_loading__{ false };
 
 			Windows::UI::Xaml::Controls::WebView^ webview__ { nullptr };
 

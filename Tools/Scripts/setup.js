@@ -12,6 +12,8 @@
  *
  * @requires node-appc
  */
+'use strict';
+
 const fs = require('fs-extra');
 const spawn = require('child_process').spawn; // eslint-disable-line security/detect-child-process
 const os = require('os');

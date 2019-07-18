@@ -25,9 +25,11 @@ namespace Titanium
  */
 function Titanium_RedScreenOfDeath(e) {
 
-    // We don't want to show RSOD in production mode. re-throw.
+    Ti.App.fireEvent('uncaughtException', e);
+
+    // We don't want to show RSOD in production mode.
     if (Ti.App.deployType == 'production') {
-        throw e;
+        return;
     }
 
     try {
