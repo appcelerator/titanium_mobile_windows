@@ -1,5 +1,32 @@
 name: Titanium.UI.Window
 platforms: [windowsphone]
+events:
+  - name: touchmove
+    platforms: [windowsphone]
+  - name: touchstart
+    platforms: [windowsphone]
+  - name: touchcancel
+    platforms: [windowsphone]
+  - name: touchend
+    platforms: [windowsphone]
+  - name: click
+    platforms: [windowsphone]
+  - name: dblclick
+    platforms: [windowsphone]
+  - name: singletap
+    platforms: [windowsphone]
+  - name: doubletap
+    platforms: [windowsphone]
+  - name: longpress
+    platforms: [windowsphone]
+  - name: focus
+    platforms: [windowsphone]
+  - name: blur
+    platforms: [windowsphone]
+  - name: postlayout
+    platforms: [windowsphone]
+  - name: keypressed
+    platforms: [windowsphone]
 properties:
   - name: exitOnClose
     platforms: [windowsphone]
