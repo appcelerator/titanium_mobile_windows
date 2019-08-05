@@ -161,7 +161,7 @@ describe('Titanium.Map', function () {
 		should(Map).have.constant('TERRAIN_TYPE').which.is.a.Number;
 	});
 
-	it.windowsBroken('#createAnnotation()', function () {
+	it('#createAnnotation()', function () {
 		should(Map.createAnnotation).be.a.Function;
 
 		win = Ti.UI.createWindow();
