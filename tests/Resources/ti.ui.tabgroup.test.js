@@ -462,7 +462,7 @@ describe('Titanium.UI.TabGroup', function () {
 		});
 	});
 
-	it.windowsBroken('icon-only tabs - default style', (finish) => { // https://jira.appcelerator.org/browse/TIMOB-27264
+	it('icon-only tabs - default style', (finish) => { // https://jira.appcelerator.org/browse/TIMOB-27264
 		this.timeout(5000);
 		tabGroup = Ti.UI.createTabGroup({
 			tabs: [
