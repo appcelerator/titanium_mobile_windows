@@ -111,6 +111,9 @@ namespace TitaniumWindows
 				colorName = Titanium::UI::Tab::get_titleColor();
 			}
 			const auto textBlock = safe_cast<Controls::TextBlock^>(pivotItem__->Header);
+			if (textBlock == nullptr) {
+				return;
+			}
 			if (colorName.empty()) {
 				// if no color specified, try to get "default color" from current theme.
 				if (is_active) {
