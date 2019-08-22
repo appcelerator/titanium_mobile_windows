@@ -14,7 +14,7 @@ const spawn = require('child_process').spawn; // eslint-disable-line security/de
 const windowslib = require('windowslib');
 
 // Constants
-const WIN_10 = '10.0';
+const WIN_10_0_14393 = '10.0.14393.0';
 const MSBUILD_14 = '14.0';
 const MSBUILD_15 = '15.0';
 const VS_2015_GENERATOR = 'Visual Studio 14 2015';
@@ -122,7 +122,7 @@ async function runCMake(sourceDir, buildDir, buildType, msBuildVersion, platform
 		'-G', generator,
 		'-DCMAKE_SYSTEM_NAME=' + platform,
 		'-DCMAKE_BUILD_TYPE=' + buildType,
-		'-DCMAKE_SYSTEM_VERSION=' + WIN_10,
+		'-DCMAKE_SYSTEM_VERSION=' + WIN_10_0_14393,
 		'-DTitaniumWindows_DISABLE_TESTS=ON',
 		'-DTitaniumWindows_Ti_DISABLE_TESTS=ON',
 		'-DTitaniumWindows_Global_DISABLE_TESTS=ON',
