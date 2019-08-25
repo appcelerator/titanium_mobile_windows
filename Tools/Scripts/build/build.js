@@ -138,6 +138,8 @@ async function runCMake(sourceDir, buildDir, buildType, msBuildVersion, platform
 		sourceDir
 	];
 
+	console.log(CMAKE_BINARY + ' ' + JSON.stringify(args, null, 2));
+
 	await spawnWithArgs('CMake', CMAKE_BINARY, args, { cwd: buildDir }, quiet);
 }
 
