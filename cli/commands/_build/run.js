@@ -106,7 +106,7 @@ function runCmake(next) {
 		+ JSON.stringify([
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
-			'-DCMAKE_SYSTEM_VERSION=' + this.targetPlatformSdkVersion,
+			'-DCMAKE_SYSTEM_VERSION=10.0',
 			'-DHAL_RENAME_AXWAYHAL=ON',
 			this.buildDir
 		], null, 2));
@@ -117,7 +117,7 @@ function runCmake(next) {
 		[
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
-			'-DCMAKE_SYSTEM_VERSION=' + this.targetPlatformSdkVersion,
+			'-DCMAKE_SYSTEM_VERSION=10.0',
 			'-DHAL_RENAME_AXWAYHAL=ON',
 			this.buildDir
 		],
