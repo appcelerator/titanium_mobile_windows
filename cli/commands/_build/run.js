@@ -102,7 +102,7 @@ function runCmake(next) {
 		generatorName += ' ARM';
 	}
 
-	this.logger.debug(this.cmake + ' '
+	this.logger.info(this.cmake + ' '
 		+ JSON.stringify([
 			'-G', generatorName,
 			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
