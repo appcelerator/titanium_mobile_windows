@@ -105,8 +105,9 @@ function runCmake(next) {
 	this.logger.info(this.cmake + ' '
 		+ JSON.stringify([
 			'-G', generatorName,
+			'-DCMAKE_BUILD_TYPE=Release',
 			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
-			'-DCMAKE_SYSTEM_VERSION=10.0',
+			'-DCMAKE_SYSTEM_VERSION=' + this.targetPlatformSdkVersion,
 			'-DHAL_RENAME_AXWAYHAL=ON',
 			this.buildDir
 		], null, 2));
@@ -116,8 +117,9 @@ function runCmake(next) {
 	p = spawn(cmake,
 		[
 			'-G', generatorName,
+			'-DCMAKE_BUILD_TYPE=Release',
 			'-DCMAKE_SYSTEM_NAME=' + this.cmakePlatform,
-			'-DCMAKE_SYSTEM_VERSION=10.0',
+			'-DCMAKE_SYSTEM_VERSION=' + this.targetPlatformSdkVersion,
 			'-DHAL_RENAME_AXWAYHAL=ON',
 			this.buildDir
 		],
