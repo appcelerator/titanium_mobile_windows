@@ -165,7 +165,7 @@ describe('Titanium.Filesystem.FileStream', function () {
 		instream.close();
 	});
 
-	it('fileStreamPumpTest', function (finish) {
+	it.skip('fileStreamPumpTest', function (finish) {
 		this.timeout(5000);
 		var pumpInputFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'stream_test_in.txt');
 		should(pumpInputFile).be.an.Object;
@@ -186,7 +186,6 @@ describe('Titanium.Filesystem.FileStream', function () {
 				finish();
 			}
 		}
-		this.pumpCallback = pumpCallback;
 		var pumpStream = pumpInputFile.open(Ti.Filesystem.MODE_READ);
 		should(pumpStream).be.an.Object;
 		Ti.Stream.pump(pumpStream, pumpCallback, step);
