@@ -25,11 +25,12 @@ const spawn = require('child_process').spawn; // eslint-disable-line security/de
 const EventEmitter = require('events').EventEmitter;
 
 const defaultTypes = [ 'WindowsPhone', 'WindowsStore', 'Windows10' ];
-const types = defaultTypes.slice(0);
-const typesMin = [ 'phone', 'store', 'win10' ];
 const configuration = 'Release';
 const vs_architectures = { ARM: 'ARM', x86: 'Win32' }; // x86 -> Win32 mapping
 const __ = appc.i18n(__dirname).__;
+
+let types = defaultTypes.slice(0);
+let typesMin = [ 'phone', 'store', 'win10' ];
 
 function WindowsModuleBuilder() {
 	Builder.apply(this, arguments);

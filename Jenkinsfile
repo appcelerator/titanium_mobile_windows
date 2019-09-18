@@ -7,7 +7,7 @@ def gitCommit = ''
 // Variables we can change
 // FIXME Using the nodejs jenkins plugin introduces complications that cause us not to properly connect to the Windows Phone emulator for logs
 // Likely need to modify the firewall rules to allow traffic from the new nodejs install like we do for system install!
-def nodeVersion = '8.11.1' // NOTE that changing this requires we set up the desired version on jenkins master first!
+def nodeVersion = '8.16.0' // NOTE that changing this requires we set up the desired version on jenkins master first!
 def npmVersion = 'latest'
 
 def shallowCheckout() {
