@@ -13,8 +13,8 @@ const os = require('os');
 const colors = require('colors'); // eslint-disable-line no-unused-vars
 
 // Constants
-const MSBUILD_15 = '15.0';
-const VS_2017_GENERATOR = 'Visual Studio 15 2017';
+const MSBUILD_16 = '16.0';
+const VS_2019_GENERATOR = 'Visual Studio 16 2019';
 const WINDOWS_STORE = 'WindowsStore';
 const symbols = {
 	ok: '✓',
@@ -42,7 +42,7 @@ if (os.platform() === 'win32') {
 function generateProject(example_name, dest, platform, sdkVersion, msdev, arch) {
 	return new Promise((resolve, reject) => {
 		// cmake generator name
-		let generator = VS_2017_GENERATOR;
+		let generator = VS_2019_GENERATOR;
 
 		sdkVersion = '10.0';
 
@@ -136,7 +136,7 @@ if (module.id === '.') {
 
 		// output location
 		const dest = program.outputPath || path.join('.', example_name + '.Windows10.' + program.arch);
-		generateProject(example_name, dest, WINDOWS_STORE, program.sdkVersion, MSBUILD_15, program.arch)
+		generateProject(example_name, dest, WINDOWS_STORE, program.sdkVersion, MSBUILD_16, program.arch)
 			.then(() => {
 				console.log((symbols.ok + ' Generated VS solution. Open ' + dest + '\\' + example_name + '.sln to begin development.').green);
 				process.exit(0);
