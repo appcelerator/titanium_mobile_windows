@@ -40,6 +40,7 @@ include(precompiled_header)
 # Convert analytics.js into a c string in an hpp that we can include
 include(GenerateCPPHeaderFile)
 generate_cpp_header_file(resource_analytics_js_hpp ${PROJECT_SOURCE_DIR}/src/analytics.js ${PROJECT_SOURCE_DIR}/include/Titanium/analytics_js.hpp)
+generate_cpp_header_file(resource_nodeutil_js_hpp ${PROJECT_SOURCE_DIR}/src/nodeutil.js ${PROJECT_SOURCE_DIR}/include/Titanium/nodeutil_js.hpp)
 generate_cpp_header_file(resource_listview_js_hpp ${PROJECT_SOURCE_DIR}/src/UI/listview.js ${PROJECT_SOURCE_DIR}/include/Titanium/UI/listview_js.hpp)
 generate_cpp_header_file(resource_xml_dom_js_hpp ${PROJECT_SOURCE_DIR}/src/XML/dom.js ${PROJECT_SOURCE_DIR}/include/Titanium/XML/dom_js.hpp)
 generate_cpp_header_file(resource_xml_dom_parser_js_hpp ${PROJECT_SOURCE_DIR}/src/XML/dom-parser.js ${PROJECT_SOURCE_DIR}/include/Titanium/XML/dom_parser_js.hpp)
@@ -82,6 +83,7 @@ set(SOURCE_TitaniumKit_detail
 set(SOURCE_Ti
   include/Titanium/TiModule.hpp
   src/TiModule.cpp
+  include/Titanium/nodeutil_js.hpp
   )
 
 set(SOURCE_API
@@ -495,6 +497,7 @@ add_library(TitaniumKit SHARED
   )
 
 add_dependencies(TitaniumKit resource_analytics_js_hpp)
+add_dependencies(TitaniumKit resource_nodeutil_js_hpp)
 add_dependencies(TitaniumKit resource_listview_js_hpp)
 add_dependencies(TitaniumKit resource_webview_js_hpp)
 add_dependencies(TitaniumKit resource_xml_dom_js_hpp)
