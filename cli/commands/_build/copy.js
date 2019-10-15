@@ -393,7 +393,7 @@ function copyResources(next) {
 
 		// Copy all of the Titanium SDK's core JS files shared by all platforms.
 		function (cb) {
-			const src = path.join(this.titaniumSdkPath, 'common', 'Resources');
+			const src = path.join(this.titaniumSdkPath, 'common', 'Resources', 'windows');
 			_t.logger.debug(__('Copying %s', src.cyan));
 			copyDir.call(this, {
 				src: src,
