@@ -10,6 +10,9 @@
 #include "Titanium/Application.hpp"
 #include "TitaniumWindows/TiModule.hpp"
 #include "TitaniumWindows/UIModule.hpp"
+#include "TitaniumWindows/Calendar.hpp"
+#include "TitaniumWindows/Calendar/Event.hpp"
+#include "TitaniumWindows/Calendar/UserCalendar.hpp"
 #include "TitaniumWindows/Contacts/Person.hpp"
 #include "TitaniumWindows/Contacts/Group.hpp"
 #include "TitaniumWindows/Contacts.hpp"
@@ -171,7 +174,11 @@ namespace TitaniumWindows
 			.AudioRecorderClass(JSExport<TitaniumWindows::Media::AudioRecorder>::Class())
 			.SoundClass(JSExport<TitaniumWindows::Media::Sound>::Class())
 			.MusicPlayerClass(JSExport<TitaniumWindows::Media::MusicPlayer>::Class())
-			.VideoPlayerClass(JSExport<TitaniumWindows::Media::VideoPlayer>::Class()).build();
+			.VideoPlayerClass(JSExport<TitaniumWindows::Media::VideoPlayer>::Class())
+			.CalendarClass(JSExport<TitaniumWindows::CalendarModule>::Class())
+			.CalendarEventClass(JSExport<TitaniumWindows::Calendar::Event>::Class())
+			.CalendarCalendarClass(JSExport<TitaniumWindows::Calendar::UserCalendar>::Class())
+			.build();
 
 		application__ = std::make_shared<Titanium::Application>(js_context__);
 

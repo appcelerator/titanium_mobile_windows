@@ -1,0 +1,74 @@
+---
+name: Titanium.Calendar.Event
+platforms: [windowsphone]
+
+methods:
+  - name: createAlert
+    platforms: [windowsphone]
+
+  - name: createReminder
+    platforms: [windowsphone]
+
+  - name: createRecurrenceRule
+    platforms: [windowsphone]
+
+  - name: save
+    platforms: [windowsphone]
+
+  - name: remove
+    platforms: [windowsphone]
+
+  - name: refresh
+    platforms: [windowsphone]
+
+  - name: addRecurrenceRule
+    platforms: [windowsphone]
+
+  - name: removeRecurrenceRule
+    platforms: [windowsphone]
+
+properties:
+  - name: alerts
+    platforms: [windowsphone]
+
+  - name: allDay
+    platforms: [windowsphone]
+
+  - name: begin
+    platforms: [windowsphone]
+
+  - name: description
+    platforms: [windowsphone]
+
+  - name: end
+    platforms: [windowsphone]
+
+  - name: hasAlarm
+    platforms: [windowsphone]
+
+  - name: id
+    platforms: [windowsphone]
+
+  - name: location
+    platforms: [windowsphone]
+
+  - name: reminders
+    platforms: [windowsphone]
+
+  - name: status
+    platforms: [windowsphone]
+
+  - name: availability
+    platforms: [windowsphone]
+
+  - name: title
+    platforms: [windowsphone]
+
+  - name: recurrenceRules
+    platforms: [windowsphone]
+
+  - name: visibility
+    platforms: [windowsphone]
+
+  - name: attendees
+    platforms: [windowsphone]

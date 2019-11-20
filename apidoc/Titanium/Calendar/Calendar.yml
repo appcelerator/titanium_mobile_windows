@@ -1,0 +1,177 @@
+---
+name: Titanium.Calendar
+platforms: [windowsphone]
+
+methods:
+  - name: getCalendarById
+    platforms: [windowsphone]
+  - name: hasCalendarPermissions
+    platforms: [windowsphone]
+  - name: requestCalendarPermissions
+    platforms: [windowsphone]
+
+properties:
+  - name: METHOD_ALERT
+    platforms: [windowsphone]
+
+  - name: METHOD_DEFAULT
+    platforms: [windowsphone]
+
+  - name: METHOD_EMAIL
+    platforms: [windowsphone]
+
+  - name: METHOD_SMS
+    platforms: [windowsphone]
+
+  - name: STATUS_NONE
+    platforms: [windowsphone]
+
+  - name: STATUS_CANCELLED
+    platforms: [windowsphone]
+
+  - name: STATUS_CANCELED
+    platforms: [windowsphone]
+
+  - name: STATUS_CONFIRMED
+    platforms: [windowsphone]
+
+  - name: STATUS_TENTATIVE
+    platforms: [windowsphone]
+
+  - name: AVAILABILITY_NOTSUPPORTED
+    platforms: [windowsphone]
+
+  - name: AVAILABILITY_BUSY
+    platforms: [windowsphone]
+
+  - name: AVAILABILITY_FREE
+    platforms: [windowsphone]
+
+  - name: AVAILABILITY_TENTATIVE
+    platforms: [windowsphone]
+
+  - name: AVAILABILITY_UNAVAILABLE
+    platforms: [windowsphone]
+
+  - name: AUTHORIZATION_AUTHORIZED
+    platforms: [windowsphone]
+
+  - name: AUTHORIZATION_DENIED
+    platforms: [windowsphone]
+
+  - name: AUTHORIZATION_RESTRICTED
+    platforms: [windowsphone]
+
+  - name: AUTHORIZATION_UNKNOWN
+    platforms: [windowsphone]
+
+  - name: SPAN_THISEVENT
+    platforms: [windowsphone]
+
+  - name: SPAN_FUTUREEVENTS
+    platforms: [windowsphone]
+
+  - name: RECURRENCEFREQUENCY_DAILY
+    platforms: [windowsphone]
+
+  - name: RECURRENCEFREQUENCY_WEEKLY
+    platforms: [windowsphone]
+
+  - name: RECURRENCEFREQUENCY_MONTHLY
+    platforms: [windowsphone]
+
+  - name: RECURRENCEFREQUENCY_YEARLY
+    platforms: [windowsphone]
+
+  - name: VISIBILITY_CONFIDENTIAL
+    platforms: [windowsphone]
+
+  - name: VISIBILITY_DEFAULT
+    platforms: [windowsphone]
+
+  - name: VISIBILITY_PRIVATE
+    platforms: [windowsphone]
+
+  - name: VISIBILITY_PUBLIC
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_STATUS_UNKNOWN
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_STATUS_PENDING
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_STATUS_ACCEPTED
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_STATUS_DECLINED
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_STATUS_TENTATIVE
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_STATUS_INVITED
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_STATUS_NONE
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_STATUS_DELEGATED
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_STATUS_IN_PROCESS
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_ROLE_UNKNOWN
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_ROLE_OPTIONAL
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_ROLE_REQUIRED
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_ROLE_CHAIR
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_ROLE_NON_PARTICIPANT
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_TYPE_UNKNOWN
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_TYPE_PERSON
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_TYPE_ROOM
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_TYPE_RESOURCE
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_TYPE_NONE
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_TYPE_REQUIRED
+    platforms: [windowsphone]
+
+  - name: ATTENDEE_TYPE_GROUP
+    platforms: [windowsphone]
+
+  - name: calendarAuthorization
+    platforms: [windowsphone]
+
+  - name: allAlerts
+    platforms: [windowsphone]
+
+  - name: allCalendars
+    platforms: [windowsphone]
+
+  - name: allEditableCalendars
+    platforms: [windowsphone]
+
+  - name: selectableCalendars
+    platforms: [windowsphone]
+
+  - name: defaultCalendar
+    platforms: [windowsphone]

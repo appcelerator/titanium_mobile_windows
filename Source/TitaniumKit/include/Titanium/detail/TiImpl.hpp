@@ -373,6 +373,30 @@ TITANIUM_PROPERTY_SETTER(MODULE, NAME) { \
 #define TITANIUM_PROPERTY_SETTER_BOOL(MODULE, NAME) \
 	TITANIUM_PROPERTY_SETTER_TYPE(MODULE, NAME, bool, Boolean)
 
+#define TITANIUM_PROPERTY_SETTER_NUMBER_ARRAY(MODULE, NAME, TYPE) \
+TITANIUM_PROPERTY_SETTER(MODULE, NAME) { \
+  ENSURE_ARRAY(argument, js_array); \
+  auto js_values = static_cast<JSArray>(js_array); \
+  const auto js_values_len = js_values.GetLength(); \
+  std::vector<TYPE> values; \
+  values.reserve(js_values_len); \
+  for (std::uint32_t i = 0; i < js_values_len; i++) { \
+    values.push_back(static_cast<TYPE>(static_cast<std::int32_t>(js_values.GetProperty(i)))); \
+  } \
+  set_##NAME(values); \
+  return true; \
+}
+
+#define TITANIUM_PROPERTY_GETTER_TYPE_ARRAY(MODULE, NAME, TYPE, CHECK) \
+TITANIUM_PROPERTY_GETTER(MODULE, NAME) { \
+  const auto ctx = get_context(); \
+  std::vector<JSValue> values; \
+  for (auto value : get_##NAME()) { \
+    values.push_back(ctx.Create##CHECK(static_cast<TYPE>(value))); \
+  } \
+  return get_context().CreateArray(values); \
+}
+
 #define TITANIUM_PROPERTY_GETTER_STRUCT_ARRAY(MODULE, NAME, STRUCT_NAME) \
 TITANIUM_PROPERTY_GETTER(MODULE, NAME) { \
   const auto ctx = get_context(); \

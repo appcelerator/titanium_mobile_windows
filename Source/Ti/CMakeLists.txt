@@ -58,6 +58,15 @@ set(SOURCE_Ti
   src/TitaniumEntryPoint.cpp
   )
 
+set(SOURCE_Calendar
+  include/TitaniumWindows/Calendar.hpp
+  src/Calendar.cpp
+  include/TitaniumWindows/Calendar/UserCalendar.hpp
+  src/Calendar/UserCalendar.cpp
+  include/TitaniumWindows/Calendar/Event.hpp
+  src/Calendar/Event.cpp
+  )
+
 set(SOURCE_Codec
   include/TitaniumWindows/Codec.hpp
   src/Codec.cpp
@@ -111,6 +120,7 @@ set(SOURCE_Utils
   )
 
 source_group(Titanium\\Ti FILES ${SOURCE_Ti})
+source_group(Titanium\\Calendar FILES ${SOURCE_Calendar})
 source_group(Titanium\\Codec FILES ${SOURCE_Codec})
 source_group(Titanium\\API FILES ${SOURCE_API})
 source_group(Titanium\\App FILES ${SOURCE_App})
@@ -124,6 +134,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 add_library(TitaniumWindows_Ti SHARED
   ${SOURCE_Ti}
+  ${SOURCE_Calendar}
   ${SOURCE_Codec}
   ${SOURCE_API}
   ${SOURCE_App}

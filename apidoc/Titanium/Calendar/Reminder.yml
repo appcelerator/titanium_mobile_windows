@@ -1,0 +1,9 @@
+---
+name: Titanium.Calendar.Reminder
+platforms: [windowsphone]
+
+properties:
+  - name: id
+    platforms: [windowsphone]
+  - name: minutes
+    platforms: [windowsphone]

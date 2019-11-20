@@ -1,0 +1,23 @@
+---
+name: Titanium.Calendar.RecurrenceRule
+platforms: [windowsphone]
+
+properties:
+
+  - name: calendarID
+    platforms: [windowsphone]
+
+  - name: frequency
+    platforms: [windowsphone]
+
+  - name: interval
+    platforms: [windowsphone]
+
+  - name: daysOfTheWeek
+    platforms: [windowsphone]
+
+  - name: daysOfTheMonth
+    platforms: [windowsphone]
+
+  - name: end
+    platforms: [windowsphone]

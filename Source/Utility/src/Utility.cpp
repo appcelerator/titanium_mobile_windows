@@ -179,6 +179,11 @@ namespace TitaniumWindows
 			return std::chrono::duration_cast<std::chrono::seconds>(GetMSec(t));
 		}
 
+		std::chrono::minutes GetMinutes(const Windows::Foundation::TimeSpan& t)
+		{
+			return std::chrono::duration_cast<std::chrono::minutes>(GetMSec(t));
+		}
+
 		Windows::Foundation::Uri^ GetUriFromPath(const std::string& path) 
 		{
 			std::string modified = path;

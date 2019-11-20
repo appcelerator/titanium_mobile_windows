@@ -51,6 +51,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(BlobStream);
 		TITANIUM_PROPERTY_READONLY_DEF(Buffer);
 		TITANIUM_PROPERTY_READONLY_DEF(BufferStream);
+		TITANIUM_PROPERTY_READONLY_DEF(Calendar);
 		TITANIUM_PROPERTY_READONLY_DEF(Codec);
 		TITANIUM_PROPERTY_READONLY_DEF(Contacts);
 		TITANIUM_PROPERTY_READONLY_DEF(Database);
@@ -158,6 +159,13 @@ namespace Titanium
 		TiModule& ScrollableViewClass(const JSClass&) TITANIUM_NOEXCEPT;
 		TiModule& SearchBarClass(const JSClass&) TITANIUM_NOEXCEPT;
 		TiModule& AttributedStringClass(const JSClass&) TITANIUM_NOEXCEPT;
+		TiModule& CalendarClass(const JSClass&) TITANIUM_NOEXCEPT;
+		TiModule& CalendarEventClass(const JSClass&) TITANIUM_NOEXCEPT;
+		TiModule& CalendarAlertClass(const JSClass&) TITANIUM_NOEXCEPT;
+		TiModule& CalendarAttendeeClass(const JSClass&) TITANIUM_NOEXCEPT;
+		TiModule& CalendarRecurrenceRuleClass(const JSClass&) TITANIUM_NOEXCEPT;
+		TiModule& CalendarReminderClass(const JSClass&) TITANIUM_NOEXCEPT;
+		TiModule& CalendarCalendarClass(const JSClass&) TITANIUM_NOEXCEPT;
 
 		void build() TITANIUM_NOEXCEPT;
 	protected:
@@ -245,6 +253,13 @@ namespace Titanium
 		JSClass scrollableView__;
 		JSClass searchBar__;
 		JSClass attributedString__;
+		JSClass calendar__;
+		JSClass calendarAlert__;
+		JSClass calendarAttendee__;
+		JSClass calendarEvent__;
+		JSClass calendarRecurrenceRule__;
+		JSClass calendarReminder__;
+		JSClass calendarCalendar__;
 
 #pragma warning(pop)
 

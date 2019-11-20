@@ -119,6 +119,7 @@ namespace TitaniumWindows
 		//
 		TITANIUMWINDOWS_UTILITY_EXPORT std::chrono::milliseconds GetMSec(const Windows::Foundation::TimeSpan& t);
 		TITANIUMWINDOWS_UTILITY_EXPORT std::chrono::seconds GetSec(const Windows::Foundation::TimeSpan& t);
+		TITANIUMWINDOWS_UTILITY_EXPORT std::chrono::minutes GetMinutes(const Windows::Foundation::TimeSpan& t);
 
 		//
 		// Get Uri from path

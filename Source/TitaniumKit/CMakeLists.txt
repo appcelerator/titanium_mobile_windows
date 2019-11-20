@@ -401,6 +401,25 @@ set(SOURCE_Geolocation
   src/Geolocation/Constants.cpp
 )
 
+set(SOURCE_Calendar
+  include/Titanium/Calendar.hpp
+  src/Calendar.cpp
+  include/Titanium/Calendar/Constants.hpp
+  src/Calendar/Constants.cpp
+  include/Titanium/Calendar/UserCalendar.hpp
+  src/Calendar/UserCalendar.cpp
+  include/Titanium/Calendar/Alert.hpp
+  src/Calendar/Alert.cpp
+  include/Titanium/Calendar/Attendee.hpp
+  src/Calendar/Attendee.cpp
+  include/Titanium/Calendar/Event.hpp
+  src/Calendar/Event.cpp
+  include/Titanium/Calendar/RecurrenceRule.hpp
+  src/Calendar/RecurrenceRule.cpp
+  include/Titanium/Calendar/Reminder.hpp
+  src/Calendar/Reminder.cpp
+)
+
 set(SOURCE_Contacts
   include/Titanium/Contacts.hpp
   src/Contacts.cpp
@@ -452,6 +471,7 @@ source_group(TitaniumKit\\XML              FILES ${SOURCE_XML})
 source_group(TitaniumKit\\Map              FILES ${SOURCE_Map})
 source_group(TitaniumKit\\Utils            FILES ${SOURCE_Utils})
 source_group(TitaniumKit\\Geolocation      FILES ${SOURCE_Geolocation})
+source_group(TitaniumKit\\Calendar         FILES ${SOURCE_Calendar})
 source_group(TitaniumKit\\Contacts         FILES ${SOURCE_Contacts})
 source_group(TitaniumKit\\UI               FILES ${SOURCE_UI})
 source_group(TitaniumKit\\TiLogger\\detail FILES ${SOURCE_TiLogger_detail})
@@ -481,6 +501,7 @@ set(SOURCE_ALL_EXCEPT_DATABASE
   ${SOURCE_XML}
   ${SOURCE_Utils}
   ${SOURCE_Switch}
+  ${SOURCE_Calendar}
   ${SOURCE_Contacts}
   ${SOURCE_UI}
   ${SOURCE_Map}

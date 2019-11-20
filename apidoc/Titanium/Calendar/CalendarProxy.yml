@@ -1,0 +1,19 @@
+---
+name: Titanium.Calendar.Calendar
+platforms: [windowsphone]
+
+methods:
+  - name: createEvent
+    platforms: [windowsphone]
+  - name: getEventById
+    platforms: [windowsphone]
+  - name: getEventsBetweenDates
+    platforms: [windowsphone]
+
+properties:
+  - name: hidden
+    platforms: [windowsphone]
+  - name: id
+    platforms: [windowsphone]
+  - name: name
+    platforms: [windowsphone]

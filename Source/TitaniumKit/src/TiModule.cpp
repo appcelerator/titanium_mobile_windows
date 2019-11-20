@@ -8,6 +8,13 @@
 #include "Titanium/detail/TiImpl.hpp"
 #include "Titanium/GlobalString.hpp"
 #include "Titanium/UIModule.hpp"
+#include "Titanium/Calendar.hpp"
+#include "Titanium/Calendar/Alert.hpp"
+#include "Titanium/Calendar/Attendee.hpp"
+#include "Titanium/Calendar/Event.hpp"
+#include "Titanium/Calendar/RecurrenceRule.hpp"
+#include "Titanium/Calendar/Reminder.hpp"
+#include "Titanium/Calendar/UserCalendar.hpp"
 #include "Titanium/Codec.hpp"
 #include "Titanium/Contacts/Person.hpp"
 #include "Titanium/Contacts/Group.hpp"
@@ -102,6 +109,13 @@ namespace Titanium
 		  stream__(JSExport<Titanium::Stream>::Class()),
 		  locale__(JSExport<Titanium::Locale>::Class()),
 		  view__(JSExport<Titanium::UI::View>::Class()),
+		  calendar__(JSExport<Titanium::CalendarModule>::Class()),
+		  calendarAlert__(JSExport<Titanium::Calendar::Alert>::Class()),
+		  calendarAttendee__(JSExport<Titanium::Calendar::Attendee>::Class()),
+		  calendarEvent__(JSExport<Titanium::Calendar::Event>::Class()),
+		  calendarRecurrenceRule__(JSExport<Titanium::Calendar::RecurrenceRule>::Class()),
+		  calendarReminder__(JSExport<Titanium::Calendar::Reminder>::Class()),
+		  calendarCalendar__(JSExport<Titanium::Calendar::UserCalendar>::Class()),
 		  codec__(JSExport<Titanium::Codec::CodecModule>::Class()),
 	      person__(JSExport<Titanium::Contacts::Person>::Class()),
 	      group__(JSExport<Titanium::Contacts::Group>::Class()),
@@ -197,6 +211,7 @@ namespace Titanium
 		TITANIUM_ADD_CONSTANT_PROPERTY(TiModule, BlobStream);
 		TITANIUM_ADD_CONSTANT_PROPERTY(TiModule, Buffer);
 		TITANIUM_ADD_CONSTANT_PROPERTY(TiModule, BufferStream);
+		TITANIUM_ADD_CONSTANT_PROPERTY(TiModule, Calendar);
 		TITANIUM_ADD_CONSTANT_PROPERTY(TiModule, Codec);
 		TITANIUM_ADD_CONSTANT_PROPERTY(TiModule, Contacts);
 		TITANIUM_ADD_CONSTANT_PROPERTY(TiModule, Database);
@@ -282,6 +297,22 @@ namespace Titanium
 	TITANIUM_PROPERTY_GETTER(TiModule, BufferStream)
 	{
 		return get_context().CreateObject(bufferstream__);
+	}
+
+	TITANIUM_PROPERTY_GETTER(TiModule, Calendar)
+	{
+		auto calendar = get_context().CreateObject(calendar__);
+		auto calendar_ptr = calendar.GetPrivate<Titanium::CalendarModule>();
+
+		calendar_ptr->
+			AlertClass(calendarAlert__).
+			AttendeeClass(calendarAttendee__).
+			EventClass(calendarEvent__).
+			RecurrenceRuleClass(calendarRecurrenceRule__).
+			ReminderClass(calendarReminder__).
+			CalendarClass(calendarCalendar__);
+
+		return calendar;
 	}
 
 	TITANIUM_PROPERTY_GETTER(TiModule, Codec)
@@ -701,6 +732,48 @@ namespace Titanium
 	TiModule& TiModule::ClipboardClass(const JSClass& Clipboard) TITANIUM_NOEXCEPT
 	{
 		clipboard__ = Clipboard;
+		return *this;
+	}
+
+	TiModule& TiModule::CalendarClass(const JSClass& calendar) TITANIUM_NOEXCEPT
+	{
+		calendar__ = calendar;
+		return *this;
+	}
+
+	TiModule& TiModule::CalendarCalendarClass(const JSClass& calendar) TITANIUM_NOEXCEPT
+	{
+		calendarCalendar__ = calendar;
+		return *this;
+	}
+
+	TiModule& TiModule::CalendarAlertClass(const JSClass& alert) TITANIUM_NOEXCEPT
+	{
+		calendarAlert__ = alert;
+		return *this;
+	}
+
+	TiModule& TiModule::CalendarAttendeeClass(const JSClass& attendee) TITANIUM_NOEXCEPT
+	{
+		calendarAttendee__ = attendee;
+		return *this;
+	}
+
+	TiModule& TiModule::CalendarRecurrenceRuleClass(const JSClass& rule) TITANIUM_NOEXCEPT
+	{
+		calendarRecurrenceRule__ = rule;
+		return *this;
+	}
+
+	TiModule& TiModule::CalendarReminderClass(const JSClass& reminder) TITANIUM_NOEXCEPT
+	{
+		calendarReminder__ = reminder;
+		return *this;
+	}
+
+	TiModule& TiModule::CalendarEventClass(const JSClass& calendarEvent) TITANIUM_NOEXCEPT
+	{
+		calendarEvent__ = calendarEvent;
 		return *this;
 	}
 
