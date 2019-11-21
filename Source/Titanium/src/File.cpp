@@ -146,14 +146,14 @@ namespace TitaniumWindows
 				const auto folder = getFolderFromPathSync(parent);
 				bool result = false;
 				concurrency::event event;
-				task<StorageFolder^>(folder->CreateFolderAsync(TitaniumWindows::Utility::ConvertUTF8String(desiredName))).then([&result, &event](task<StorageFolder^> task) {
+				task<StorageFolder^>(folder->CreateFolderAsync(TitaniumWindows::Utility::ConvertUTF8String(desiredName))).then([&result, &event, this](task<StorageFolder^> task) {
 						try {
 							task.get();
 							result = true;
 						} catch (Platform::Exception^ ex) {
-							TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+							TITANIUM_API_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
 						} catch (...) {
-							TITANIUM_LOG_DEBUG("Unknown error while createDirectory");
+							TITANIUM_API_LOG_WARN("Unknown error while createDirectory");
 						}
 						event.set();
 					},
@@ -162,11 +162,11 @@ namespace TitaniumWindows
 
 				return result;
 			} catch (Platform::AccessDeniedException^ e) {
-				TITANIUM_LOG_DEBUG("createDirectory: Denied access to parent folder");
+				TITANIUM_API_LOG_WARN("createDirectory: Denied access to parent folder");
 			} catch (Platform::Exception^ ex) {
-				TITANIUM_LOG_DEBUG(TitaniumWindows::Utility::ConvertString(ex->Message));
+				TITANIUM_API_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
 			} catch (...) {
-				TITANIUM_LOG_DEBUG("Unknown error while createDirectory");
+				TITANIUM_API_LOG_WARN("Unknown error while createDirectory");
 			}
 			return false;
 		}

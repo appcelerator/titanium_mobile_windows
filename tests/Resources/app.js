@@ -49,13 +49,17 @@ function loadTests() {
 	// ============================================================================
 	// Add the tests here using "require"
 	// node-compat core modules
+	/*
 	require('./assert.test');
 	require('./buffer.test');
+	*/
 	require('./fs.test');
+	/*
 	require('./os.test');
 	require('./path.test');
 	require('./string_decoder.test');
 	require('./util.test');
+	*/
 	// Titanium APIs
 	require('./ti.accelerometer.test');
 	require('./ti.analytics.test');
