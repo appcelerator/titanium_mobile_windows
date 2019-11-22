@@ -162,7 +162,7 @@ namespace TitaniumWindows
 
 				return result;
 			} catch (Platform::AccessDeniedException^ e) {
-				TITANIUM_API_LOG_WARN("createDirectory: Denied access to parent folder");
+				TITANIUM_API_LOG_WARN("createDirectory: Denied access to parent folder ", parent);
 			} catch (Platform::Exception^ ex) {
 				TITANIUM_API_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
 			} catch (...) {
