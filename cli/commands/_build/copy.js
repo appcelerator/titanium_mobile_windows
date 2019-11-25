@@ -9,6 +9,7 @@ const jsanalyze = require('node-titanium-sdk/lib/jsanalyze');
 const path = require('path');
 const ti = require('node-titanium-sdk');
 const __ = appc.i18n(__dirname).__;
+const ProcessJsTask = require('../../../../cli/lib/tasks/process-js-task');
 
 /*
  Public API.
@@ -543,133 +544,119 @@ function copyResources(next) {
 		if (!fs.existsSync(destIcon)) {
 			copyFile.call(this, path.join(templateDir, 'appicon.png'), destIcon);
 		}
+		const inputFiles = [];
+		const copyUnmodified = [];
+		Object.keys(jsFiles).forEach(relPath => {
+			const from = jsFiles[relPath];
+			if (htmlJsFiles[relPath]) {
+				// this js file is referenced from an html file, so don't minify or encrypt
+				copyUnmodified.push(relPath);
+			} else {
+				inputFiles.push(from);
+			}
+		});
 
 		// copy js files into assets directory and minify if needed
 		this.logger.info(__('Processing JavaScript files'));
-		appc.async.series(this, Object.keys(jsFiles).map(function (id) {
-			return function (done) {
-				var from = jsFiles[id],
-					to = path.join(this.buildTargetAssetsDir, id),
-					t_ = this;
-
-				if (htmlJsFiles[id]) {
-					// this js file is referenced from an html file, so don't minify or encrypt
-					return copyFile.call(this, from, to, done);
-				}
-
-				// A JS file ending with "*.bootstrap.js" is to be loaded before the "app.js".
-				// Add it as a require() compatible string to bootstrap array if it's a match.
-				const bootstrapPath = id.substr(0, id.length - 3);  // Remove the ".js" extension.
-				if (bootstrapPath.endsWith('.bootstrap')) {
-					jsBootstrapFiles.push(bootstrapPath);
-				}
-
-				// we have a js file that may be minified or encrypted
-
-				// if we're encrypting the JavaScript, copy the files to the assets dir
-				// for processing later
-				if (this.encryptJS) {
-					to = path.join(this.buildTargetAssetsDir, id);
-					jsFilesToEncrypt.push(id);
-				}
-
-				try {
-					this.cli.createHook('build.windows.analyzeJsFile', this, function (from, to, cb) {
-						this.cli.createHook('build.windows.copyResource', this, function (from, to, cb) {
-							// parse the AST
-							const originalContents = fs.readFileSync(from).toString();
-							const r = jsanalyze.analyzeJs(originalContents, {
-								filename: from,
-								minify: this.minifyJS,
-								transpile: this.transpile,
-								sourceMap: this.sourceMaps || this.deployType === 'development',
-								targets: {
-									safari: this.packageJson.safari // use equivalent version of safari that we declare in package.json
-								},
-								resourcesDir: this.buildTargetAssetsDir,
-								logger: t_.logger
-							});
-							const newContents = r.contents;
-
-							// we want to sort by the "to" filename so that we correctly handle file overwriting
-							this.tiSymbols[to] = r.symbols;
-
-							this.cli.createHook('build.windows.compileJsFile', this, function (r, from, to, cb2) {
-								const dir = path.dirname(to);
-								fs.ensureDirSync(dir);
-
-								if (newContents === originalContents) {
-									copyFile.call(this, from, to, cb2);
-								} else {
-									// we've already read in the file, so just write the original contents
-									this.logger.debug(__('Copying %s => %s', from.cyan, to.cyan));
-									fs.writeFile(to, newContents, cb2);
-								}
-							})(r, from, to, cb);
-						})(from, to, cb);
-					})(from, to, done);
-				} catch (ex) {
-					ex.message.split('\n').forEach(this.logger.error);
-					this.logger.log();
-					process.exit(1);
-				}
-			};
-		}), function () {
-
-			// write the properties file
-			var appPropsFile = path.join(this.buildTargetAssetsDir, '_app_props_.json'),
-				props = {};
-			Object.keys(this.tiapp.properties).forEach(function (prop) {
-				props[prop] = this.tiapp.properties[prop].value;
-			}, this);
-			this.tiapp.windows && Object.keys(this.tiapp.windows).forEach(function (prop) {
-				// ignore appxmanifest
-				if (prop !== 'manifest') {
-					props[prop] = this.tiapp.windows[prop];
-				}
-			}, this);
-			fs.writeFileSync(
-				appPropsFile,
-				JSON.stringify(props)
-			);
-			this.encryptJS && jsFilesToEncrypt.push('_app_props_.json');
-
-			// write the app info file
-			var appInfoFile = path.join(this.buildTargetAssetsDir, '_app_info_.json'),
-				appInfo
-				= {
-					deployType: this.deployType,
-					name: this.tiapp.name,
-					id: this.tiapp.id,
-					analytics: this.tiapp.analytics,
-					publisher: this.tiapp.publisher,
-					url: this.tiapp.url,
-					version: this.buildVersion,
-					description: this.tiapp.description,
-					copyright: this.tiapp.copyright,
-					guid: this.tiapp.guid,
-					sdkVersion: this.cli && this.cli.sdk && this.cli.sdk.name
+		const sdkCommonFolder = path.join(this.titaniumSdkPath, 'common', 'Resources', 'windows');
+		const task = new ProcessJsTask({
+			inputFiles,
+			incrementalDirectory: path.join(this.buildDir, 'incremental', 'process-js'),
+			logger: this.logger,
+			builder: this,
+			jsFiles: Object.keys(jsFiles).reduce((jsFilesInfo, relPath) => {
+				jsFilesInfo[relPath] = {
+					src: jsFiles[relPath],
+					dest: path.join(this.buildTargetAssetsDir, relPath)
 				};
-			fs.writeFileSync(
-				appInfoFile,
-				JSON.stringify(appInfo)
-			);
-			this.encryptJS && jsFilesToEncrypt.push('_app_info_.json');
-
-			// Write the "bootstrap.json" file, even if the bootstrap array is empty.
-			// Note: An empty array indicates the app has no bootstrap files.
-			const bootstrapJsonRelativePath = path.join('ti.internal', 'bootstrap.json'),
-				bootstrapJsonAbsolutePath = path.join(this.buildTargetAssetsDir, bootstrapJsonRelativePath);
-			fs.ensureDirSync(path.dirname(bootstrapJsonAbsolutePath));
-			fs.writeFileSync(bootstrapJsonAbsolutePath, JSON.stringify({ scripts: jsBootstrapFiles }));
-			this.encryptJS && jsFilesToEncrypt.push(bootstrapJsonRelativePath);
-
-			if (!jsFilesToEncrypt.length) {
-				// nothing to encrypt, continue
-				return next();
+				return jsFilesInfo;
+			}, {}),
+			jsBootstrapFiles,
+			sdkCommonFolder,
+			defaultAnalyzeOptions: {
+				minify: this.minifyJS,
+				transpile: this.transpile,
+				sourceMaps: this.sourceMaps,
+				resourcesDir: this.buildTargetAssetsDir,
+				logger: this.logger,
+				targets: {
+					safari: this.packageJson.safari
+				}
 			}
-
-			this.processEncryption(next);
 		});
+
+		task.run()
+			.then(() => {
+
+				const tasks = copyUnmodified.map(relPath => {
+					return next => {
+						const from = jsFiles[relPath];
+						const to = path.join(this.buildTargetAssetsDir, relPath);
+						copyFile.call(this, from, to, next);
+					}
+				});
+
+				appc.async.parallel(this, tasks, () => {
+					this.tiSymbols = task.data.tiSymbols;
+					// write the properties file
+					var appPropsFile = path.join(this.buildTargetAssetsDir, '_app_props_.json'),
+						props = {};
+					Object.keys(this.tiapp.properties).forEach(function (prop) {
+						props[prop] = this.tiapp.properties[prop].value;
+					}, this);
+					this.tiapp.windows && Object.keys(this.tiapp.windows).forEach(function (prop) {
+						// ignore appxmanifest
+						if (prop !== 'manifest') {
+							props[prop] = this.tiapp.windows[prop];
+						}
+					}, this);
+					fs.writeFileSync(
+						appPropsFile,
+						JSON.stringify(props)
+					);
+					this.encryptJS && jsFilesToEncrypt.push('_app_props_.json');
+
+					// write the app info file
+					var appInfoFile = path.join(this.buildTargetAssetsDir, '_app_info_.json'),
+						appInfo
+						= {
+							deployType: this.deployType,
+							name: this.tiapp.name,
+							id: this.tiapp.id,
+							analytics: this.tiapp.analytics,
+							publisher: this.tiapp.publisher,
+							url: this.tiapp.url,
+							version: this.buildVersion,
+							description: this.tiapp.description,
+							copyright: this.tiapp.copyright,
+							guid: this.tiapp.guid,
+							sdkVersion: this.cli && this.cli.sdk && this.cli.sdk.name
+						};
+					fs.writeFileSync(
+						appInfoFile,
+						JSON.stringify(appInfo)
+					);
+					this.encryptJS && jsFilesToEncrypt.push('_app_info_.json');
+
+					// Write the "bootstrap.json" file, even if the bootstrap array is empty.
+					// Note: An empty array indicates the app has no bootstrap files.
+					const bootstrapJsonRelativePath = path.join('ti.internal', 'bootstrap.json'),
+						bootstrapJsonAbsolutePath = path.join(this.buildTargetAssetsDir, bootstrapJsonRelativePath);
+					fs.ensureDirSync(path.dirname(bootstrapJsonAbsolutePath));
+					fs.writeFileSync(bootstrapJsonAbsolutePath, JSON.stringify({ scripts: jsBootstrapFiles }));
+					this.encryptJS && jsFilesToEncrypt.push(bootstrapJsonRelativePath);
+
+					if (!jsFilesToEncrypt.length) {
+						// nothing to encrypt, continue
+						return next();
+					}
+
+					this.processEncryption(next);
+				});
+			})
+			.catch(e => {
+				this.logger.error(e);
+				process.exit(1);
+			});
 	});
 }
