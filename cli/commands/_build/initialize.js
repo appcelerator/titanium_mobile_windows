@@ -87,6 +87,7 @@ function initialize(next) {
 	this.buildSrcDir = path.join(this.buildDir, 'src'); // Where the src files go
 	this.cmakeTargetDir = path.join(this.buildDir, this.cmakeTarget); // where cmake generates the VS solution
 	this.buildTargetAssetsDir = path.join(this.buildDir, 'Assets');
+	this.buildAssetsDir = this.buildTargetAssetsDir; // This property is used by the ProcessJSTask so just alias it to the one Windows CLI uses
 	this.buildTargetStringsDir = path.join(this.buildDir, 'Strings');
 
 	// files
