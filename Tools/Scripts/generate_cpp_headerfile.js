@@ -19,6 +19,10 @@ const include_dir = path.resolve(TitaniumKitDir, 'include', 'Titanium');
 
 const files_to_process = [
 	{
+		from: path.join(source_dir,  'nodeutil.js'),
+		to:   path.join(include_dir, 'nodeutil_js.hpp')
+	},
+	{
 		from: path.join(source_dir,  'analytics.js'),
 		to:   path.join(include_dir, 'analytics_js.hpp')
 	},
