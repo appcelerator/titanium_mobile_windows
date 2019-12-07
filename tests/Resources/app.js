@@ -69,11 +69,11 @@ function loadTests() {
 	require('./ti.geolocation.test');
 	require('./ti.gesture.test');
 	require('./ti.locale.test');
-	require('./ti.map.test');
-	require('./ti.media.test');
+	//require('./ti.map.test');
+	//require('./ti.media.test');
 	require('./ti.media.audioplayer.test');
-	require('./ti.media.sound.test');
-	require('./ti.media.videoplayer.test');
+	//require('./ti.media.sound.test');
+	//require('./ti.media.videoplayer.test');
 	//require('./ti.network.test');
 	//require('./ti.network.cookie.test');
 	//require('./ti.network.httpclient.test');
@@ -84,7 +84,7 @@ function loadTests() {
 	require('./ti.proxy.test');
 	require('./ti.stream.test');
 	require('./ti.test');
-	require('./ti.ui.test');
+	//require('./ti.ui.test');
 	require('./ti.ui.2dmatrix.test');
 	require('./ti.ui.matrix2d.test');
 	require('./ti.ui.activityindicator.test');

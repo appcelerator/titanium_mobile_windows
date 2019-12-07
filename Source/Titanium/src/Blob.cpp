@@ -50,7 +50,8 @@ namespace TitaniumWindows
 		height_ = 0;
 
 		path_ = TitaniumWindows::Utility::ConvertString(file->Path);
-		if (boost::ends_with(path_, ".js") || boost::ends_with(path_, ".json")){
+		const auto is_js = boost::ends_with(path_, ".js");
+		if (is_js || boost::ends_with(path_, ".json")){
 			// TODO: We should refactor to get the IBuffer back directly, rather than converting the contents multiple times.
 
 			auto js_global = get_context().get_global_object();
@@ -64,7 +65,7 @@ namespace TitaniumWindows
 		}
 
 		mimetype_ = TitaniumWindows::Utility::ConvertString(file->ContentType);
-		if (mimetype_ == "application/x-javascript" || mimetype_ == "application/javascript") { // handle special cases to match other platforms
+		if (is_js || mimetype_ == "application/x-javascript" || mimetype_ == "application/javascript") { // handle special cases to match other platforms
 			mimetype_ = "text/javascript";
 		}
 		if (boost::starts_with(mimetype_, "image/")) {
@@ -85,9 +86,10 @@ namespace TitaniumWindows
 				}, task_continuation_context::use_arbitrary()
 			);
 			event.wait();
+			type_ = Titanium::BlobModule::TYPE::IMAGE;
+		} else {
+			type_ = Titanium::BlobModule::TYPE::FILE;
 		}
-
-		this->type_ = Titanium::BlobModule::TYPE::FILE;
 	}
 
 	::Platform::Guid Blob::getImageEncoder()
