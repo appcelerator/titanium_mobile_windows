@@ -65,5 +65,25 @@ namespace Titanium
 			return static_cast<std::underlying_type<MusicMediaType>::type>(musicMediaType);
 		}
 		
+		std::string Constants::to_string(const VideoScaling& scaling) TITANIUM_NOEXCEPT
+		{
+			static std::string unknown_string = "VIDEO_SCALING_NONE";
+			static std::unordered_map<VideoScaling, std::string> map;
+			static std::once_flag of;
+			std::call_once(of, []() {
+				map[VideoScaling::Resize] = "VIDEO_SCALING_RESIZE";
+				map[VideoScaling::ResizeAspect] = "VIDEO_SCALING_RESIZE_ASPECT";
+				map[VideoScaling::ResizeAspectFill] = "VIDEO_SCALING_RESIZE_ASPECT_FILL";
+			});
+
+			std::string string = unknown_string;
+			const auto position = map.find(scaling);
+			if (position != map.end()) {
+				string = position->second;
+			}
+
+			return string;
+		}
+
 	} // namespace Media
 } // namespace Titanium

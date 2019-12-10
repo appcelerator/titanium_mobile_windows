@@ -63,9 +63,9 @@ function loadTests() {
 	require('./ti.contacts.group.test');
 	require('./ti.contacts.person.test');
 	require('./ti.database.test');
-	require('./ti.filesystem.test');
-	require('./ti.filesystem.file.test');
-	require('./ti.filesystem.filestream.test');
+	//require('./ti.filesystem.test');
+	//require('./ti.filesystem.file.test');
+	//require('./ti.filesystem.filestream.test');
 	require('./ti.geolocation.test');
 	require('./ti.gesture.test');
 	require('./ti.locale.test');
