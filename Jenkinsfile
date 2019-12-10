@@ -204,11 +204,6 @@ timestamps {
 				node('msbuild-14 && vs2015 && windows-sdk-10') {
 					unitTests('ws-local', targetBranch, testSuiteBranch, nodeVersion, npmVersion)
 				}
-			},
-			'wp-emulator': {
-				node('msbuild-14 && vs2015 && hyper-v && windows-sdk-10') {
-					unitTests('wp-emulator', targetBranch, testSuiteBranch, nodeVersion, npmVersion)
-				}
 			}
 		)
 	} // stage Test
