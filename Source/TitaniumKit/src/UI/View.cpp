@@ -15,7 +15,7 @@
 
 #define CHECK_UI_DELEGATE_GETTER if (!layoutDelegate__) return get_context().CreateUndefined();
 #define CHECK_UI_DELEGATE_SETTER if (!layoutDelegate__) return false;
-#define RETURN_NUMGER_OR_STRING(X) \
+#define RETURN_NUMBER_OR_STRING(X) \
 const auto X = layoutDelegate__->get_##X(); \
 if (std::all_of(X.begin(), X.end(), isdigit)) { \
 	return get_context().CreateNumber(atof(X.c_str())); \
@@ -787,7 +787,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER(View, borderWidth)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			return get_context().CreateString(layoutDelegate__->get_borderWidth());
+			RETURN_NUMBER_OR_STRING(borderWidth)
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, borderWidth)
@@ -801,7 +801,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER(View, bottom)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			RETURN_NUMGER_OR_STRING(bottom)
+			RETURN_NUMBER_OR_STRING(bottom)
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, bottom)
@@ -840,7 +840,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER(View, height)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			RETURN_NUMGER_OR_STRING(height)
+			RETURN_NUMBER_OR_STRING(height)
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, height)
@@ -868,7 +868,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER(View, left)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			RETURN_NUMGER_OR_STRING(left)
+			RETURN_NUMBER_OR_STRING(left)
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, left)
@@ -903,7 +903,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER(View, right)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			RETURN_NUMGER_OR_STRING(right)
+			RETURN_NUMBER_OR_STRING(right)
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, right)
@@ -937,7 +937,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER(View, top)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			RETURN_NUMGER_OR_STRING(top)
+			RETURN_NUMBER_OR_STRING(top)
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, top)
@@ -983,7 +983,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_GETTER(View, width)
 		{
 			CHECK_UI_DELEGATE_GETTER
-			RETURN_NUMGER_OR_STRING(width)
+			RETURN_NUMBER_OR_STRING(width)
 		}
 
 		TITANIUM_PROPERTY_SETTER(View, width)

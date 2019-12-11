@@ -213,7 +213,10 @@ namespace Titanium
 			AspectFill,
 			AspectFit,
 			ModeFill,
-			None
+			None,
+			Resize,
+			ResizeAspect,
+			ResizeAspectFill
 		};
 		
 		enum class VideoSourceType
@@ -262,6 +265,9 @@ namespace Titanium
 			static std::unordered_set<MusicMediaType> to_MusicMediaType(std::underlying_type<MusicMediaType>::type) TITANIUM_NOEXCEPT;
 			static std::underlying_type<MusicMediaType>::type to_underlying_type(const std::unordered_set<MusicMediaType>&) TITANIUM_NOEXCEPT;
 			static std::underlying_type<MusicMediaType>::type to_underlying_type(const MusicMediaType&) TITANIUM_NOEXCEPT;
+
+			static std::string to_string(const VideoScaling&) TITANIUM_NOEXCEPT;
+
 		};
 
 

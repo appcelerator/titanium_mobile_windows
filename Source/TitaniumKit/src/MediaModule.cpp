@@ -301,6 +301,9 @@ namespace Titanium
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_ASPECT_FIT);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_MODE_FILL);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_NONE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_RESIZE);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_RESIZE_ASPECT);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SCALING_RESIZE_ASPECT_FILL);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SOURCE_TYPE_FILE);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SOURCE_TYPE_STREAMING);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_SOURCE_TYPE_UNKNOWN);
@@ -898,6 +901,21 @@ namespace Titanium
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SCALING_NONE)
 	{
 		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::VideoScaling::None));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SCALING_RESIZE)
+	{
+		return get_context().CreateString(Media::Constants::to_string(Media::VideoScaling::Resize));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SCALING_RESIZE_ASPECT)
+	{
+		return get_context().CreateString(Media::Constants::to_string(Media::VideoScaling::ResizeAspect));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SCALING_RESIZE_ASPECT_FILL)
+	{
+		return get_context().CreateString(Media::Constants::to_string(Media::VideoScaling::ResizeAspectFill));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, VIDEO_SOURCE_TYPE_FILE)

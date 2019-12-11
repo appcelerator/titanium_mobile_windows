@@ -85,6 +85,7 @@
 #include "Titanium/UI/ScrollableView.hpp"
 #include "Titanium/UI/SearchBar.hpp"
 #include "Titanium/UI/AttributedString.hpp"
+#include "Titanium/nodeutil_js.hpp"
 #include <unordered_map>
 #include <sstream>
 
@@ -497,11 +498,6 @@ namespace Titanium
 			try {
 				console = {};
 				console._times = {};
-				console.log   = Ti.API.info;
-				console.info  = Ti.API.info;
-				console.warn  = Ti.API.warn;
-				console.error = Ti.API.error;
-				console.debug = Ti.API.debug;
 				console.time = function (label = 'default') {
 					if (console._times[label]) {
 						console.warn(`Label ${label} already exists`);
@@ -564,6 +560,24 @@ namespace Titanium
 			)js";
 
 		get_context().JSEvaluateScript(builtin_functions_script);
+
+		auto nodeutil = ctx.CreateObject();
+		ctx.JSEvaluateScript(nodeutil_js, nodeutil);
+		TITANIUM_ASSERT(nodeutil.HasProperty("exports"));
+		auto util_exports = static_cast<JSObject>(nodeutil.GetProperty("exports"));
+
+		auto consoleObj = static_cast<JSObject>(global_object.GetProperty("console"));
+
+		TITANIUM_ASSERT(util_exports.HasProperty("log"));
+		consoleObj.SetProperty("log", util_exports.GetProperty("log"));
+		TITANIUM_ASSERT(util_exports.HasProperty("info"));
+		consoleObj.SetProperty("info", util_exports.GetProperty("info"));
+		TITANIUM_ASSERT(util_exports.HasProperty("debug"));
+		consoleObj.SetProperty("debug", util_exports.GetProperty("debug"));
+		TITANIUM_ASSERT(util_exports.HasProperty("warn"));
+		consoleObj.SetProperty("warn", util_exports.GetProperty("warn"));
+		TITANIUM_ASSERT(util_exports.HasProperty("error"));
+		consoleObj.SetProperty("error", util_exports.GetProperty("error"));
 	}
 
 	TiModule& TiModule::GlobalString(const JSClass& global_string) TITANIUM_NOEXCEPT

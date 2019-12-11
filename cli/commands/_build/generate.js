@@ -171,8 +171,21 @@ function generateNativeTypes(next) {
 			}
 		}
 	}
-	this.targetPlatformSdkVersion = this.targetPlatformSdkVersion || this.tiapp.windows['TargetPlatformVersion'] || defaultTargetPlatformVersion || this.wpsdk;
-	this.targetPlatformSdkMinVersion = this.targetPlatformSdkMinVersion || this.tiapp.windows['TargetPlatformMinVersion'] || defaultTargetPlatformMinVersion || this.targetPlatformSdkVersion;
+
+	var targetVersionSpecified    = this.tiapp.windows['TargetPlatformVersion'];
+	var targetMinVersionSpecified = this.tiapp.windows['TargetPlatformMinVersion'];
+
+	// target version number should have minor version
+	if (targetVersionSpecified && targetVersionSpecified.toString().split('.').length < 2) {
+		targetVersionSpecified = null;
+	}
+	// minimum version number should have minor version
+	if (targetMinVersionSpecified && targetMinVersionSpecified.toString().split('.').length < 2) {
+		targetMinVersionSpecified = null;
+	}
+
+	this.targetPlatformSdkVersion = this.targetPlatformSdkVersion || targetVersionSpecified || defaultTargetPlatformVersion || this.wpsdk;
+	this.targetPlatformSdkMinVersion = this.targetPlatformSdkMinVersion || targetMinVersionSpecified|| defaultTargetPlatformMinVersion || this.targetPlatformSdkVersion;
 
 	this.logger.debug(__('targetPlatformSdkVersion: %s', this.targetPlatformSdkVersion));
 	this.logger.debug(__('targetPlatformSdkMinVersion: %s', this.targetPlatformSdkMinVersion));
