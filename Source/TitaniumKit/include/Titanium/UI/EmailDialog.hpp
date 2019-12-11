@@ -132,7 +132,6 @@ namespace Titanium
 			virtual void open(const bool& animated) TITANIUM_NOEXCEPT;
 
 			EmailDialog(const JSContext&) TITANIUM_NOEXCEPT;
-			virtual void postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) override;
 
 			virtual ~EmailDialog() = default;
 			EmailDialog(const EmailDialog&) = default;

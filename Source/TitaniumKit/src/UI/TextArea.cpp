@@ -137,8 +137,7 @@ namespace Titanium
 
 		bool TextArea::hasText() TITANIUM_NOEXCEPT
 		{
-			auto value = get_value();
-			return value != nullptr && value.size() > 0;
+			return !get_value().empty();
 		}
 
 		void TextArea::JSExportInitialize() {

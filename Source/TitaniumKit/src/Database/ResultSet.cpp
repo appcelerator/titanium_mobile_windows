@@ -25,11 +25,6 @@ namespace Titanium
 			close();
 		}
 
-		void ResultSet::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
-		{
-			HAL_LOG_DEBUG("ResultSet:: postCallAsConstructor ", this);
-		}
-
 		uint32_t ResultSet::get_fieldCount() const TITANIUM_NOEXCEPT
 		{
 			return static_cast<uint32_t>(column_names__.size());
@@ -260,7 +255,7 @@ namespace Titanium
 			ENSURE_UINT_AT_INDEX(index, 0);
 
 			const std::string result = getFieldName(index);
-			if (result == nullptr) {
+			if (result.empty()) {
 				return get_context().CreateNull();
 			}
 			return get_context().CreateString(result);

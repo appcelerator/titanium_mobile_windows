@@ -198,7 +198,7 @@ namespace TitaniumWindows
 			const auto loaded = group->loadJS();
 			if (loaded) {
 				auto getGroupByIdentifier_func = group->getTiObject().GetProperty("getGroupByIdentifier");
-				auto js_group = static_cast<JSObject>(getGroupByIdentifier_func)(id, js_context.get_global_object());
+				auto js_group = static_cast<JSObject>(getGroupByIdentifier_func)(js_context.CreateString(id), js_context.get_global_object());
 				if (js_group.IsNull() || js_group.IsUndefined()) {
 					return nullptr;
 				}

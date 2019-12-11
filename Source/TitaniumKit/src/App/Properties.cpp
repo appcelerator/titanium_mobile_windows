@@ -15,7 +15,7 @@ namespace Titanium
 	{
 		JSFunction Properties::createStringifyFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT
 		{
-			return get_context().CreateFunction("return JSON.stringify(value);", { "value" });
+			return get_context().CreateFunction("return JSON.stringify(value);", { JSString("value") });
 		}
 
 		Properties::Properties(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -24,10 +24,6 @@ namespace Titanium
 			  app_properties__(js_context.CreateObject())
 		{
 			TITANIUM_LOG_DEBUG("Properties:: ctor ", this);
-		}
-
-		void Properties::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
-			HAL_LOG_DEBUG("Properties:: postCallAsConstructor ", this);
 		}
 
 		void Properties::loadAppProperties() TITANIUM_NOEXCEPT
@@ -42,7 +38,7 @@ namespace Titanium
 			static JSFunction readJson = get_context().CreateFunction(
 				"if (json != undefined && property in json) return json[property];"
 				"return null;",
-				{ "json", "property" }
+				{ JSString("json"), JSString("property") }
 			);
 
 			// Load _app_props_.json

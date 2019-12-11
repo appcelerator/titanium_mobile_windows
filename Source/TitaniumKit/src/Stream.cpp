@@ -69,7 +69,7 @@ namespace Titanium
 				new Promise(function(resolve){ resolve(value); }).then(callback);
 			};
 		)JS";
-		return js_context.CreateFunction(script, { "callback" });
+		return js_context.CreateFunction(script, { JSString("callback") });
 	}
 
 	Stream::Stream(const JSContext& js_context) TITANIUM_NOEXCEPT

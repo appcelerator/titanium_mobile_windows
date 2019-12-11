@@ -28,9 +28,12 @@ namespace Titanium
 			}
 			item.templateId = static_cast<std::string>(object.GetProperty("template"));
 
+			const auto reserved1 = JSString("properties");
+			const auto reserved2 = JSString("templates");
+
 			// collect all binding properties
 			for (const auto& name : static_cast<std::vector<JSString>>(object.GetPropertyNames())) {
-				if (name == "properties" || name == "templates") {
+				if (name == reserved1 || name == reserved2) {
 					continue;
 				}
 				item.bindings.emplace(name, object.GetProperty(name));
@@ -82,10 +85,6 @@ namespace Titanium
 			headerTitle__("")
 		{
 			TITANIUM_LOG_DEBUG("ListSection:: ctor ", this);
-		}
-
-		void ListSection::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
-			HAL_LOG_DEBUG("ListSection:: postCallAsConstructor ", this);
 		}
 
 		ListSection::~ListSection() 

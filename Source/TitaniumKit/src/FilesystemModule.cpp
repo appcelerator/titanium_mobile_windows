@@ -31,7 +31,7 @@ namespace Titanium
 				throw new Error('Unable to open stream for MODE_READ');
 			}
 		)JS";
-		return js_context.CreateFunction(script, { "mode" });
+		return js_context.CreateFunction(script, { JSString("mode") });
 	}
 
 	FilesystemModule::FilesystemModule(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -68,7 +68,7 @@ namespace Titanium
 		TITANIUM_ASSERT(File_property.IsObject());  // precondition
 		JSObject File = static_cast<JSObject>(File_property);
 
-		return File.CallAsConstructor(path).GetPrivate<Titanium::Filesystem::File>();
+		return File.CallAsConstructor(get_context().CreateString(path)).GetPrivate<Titanium::Filesystem::File>();
 	}
 
 	File_shared_ptr_t FilesystemModule::createTempDirectory(const JSContext& js_context) TITANIUM_NOEXCEPT

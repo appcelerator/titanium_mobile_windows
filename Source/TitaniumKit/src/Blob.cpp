@@ -85,7 +85,7 @@ namespace Titanium
 			TITANIUM_ASSERT(File_property.IsObject());  // precondition
 			JSObject File = static_cast<JSObject>(File_property);
 
-			return File.CallAsConstructor(get_nativePath()).GetPrivate<Filesystem::File>();
+			return File.CallAsConstructor(get_context().CreateString(get_nativePath())).GetPrivate<Filesystem::File>();
 		}
 		return nullptr;
 	}

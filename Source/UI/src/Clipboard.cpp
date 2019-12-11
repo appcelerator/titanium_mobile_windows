@@ -107,7 +107,7 @@ namespace TitaniumWindows
 		void Clipboard::setData(const std::string& type, JSObject data) TITANIUM_NOEXCEPT
 		{
 #if WINAPI_FAMILY == WINAPI_FAMILY_PC_APP
-			auto json = static_cast<JSValue>(data).ToJSONString();
+			auto json = static_cast<std::string>(static_cast<JSValue>(data).ToJSONString());
 			setText(json);
 #endif
 		}

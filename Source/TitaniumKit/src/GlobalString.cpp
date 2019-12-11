@@ -20,8 +20,6 @@ namespace Titanium
 
 	void GlobalString::postInitialize(JSObject& this_object) 
 	{
-		HAL_LOG_DEBUG("GlobalString:: postInitialize ", this);
-
 		const auto ctx = this_object.get_context();
 
 		// Create cross-platform String.format

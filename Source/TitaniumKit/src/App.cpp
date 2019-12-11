@@ -31,7 +31,7 @@ namespace Titanium
 		static JSFunction readJson = get_context().CreateFunction(
 			"if (json != undefined && property in json) return json[property];"
 			"return null;",
-			{"json", "property"}
+			{JSString("json"), JSString("property")}
 		);
 
 		// Load _app_info_.json
@@ -81,10 +81,6 @@ namespace Titanium
 		_sdkVersion__("__TITANIUM_VERSION__") // FIXME This should live in TiModule!
 	{
 		TITANIUM_LOG_DEBUG("AppModule:: ctor ", this);
-	}
-
-	void AppModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments) {
-		HAL_LOG_DEBUG("AppModule:: postCallAsConstructor ", this);
 	}
 
 	void AppModule::loadAppInfo() TITANIUM_NOEXCEPT

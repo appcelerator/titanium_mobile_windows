@@ -177,11 +177,6 @@ namespace Titanium
 		TITANIUM_LOG_DEBUG("TiModule:: ctor ", this);
 	}
 
-	void TiModule::postCallAsConstructor(const JSContext& js_context, const std::vector<JSValue>& arguments)
-	{
-		HAL_LOG_DEBUG("TiModule:: postCallAsConstructor ", this);
-	}
-
 	void TiModule::JSExportInitialize()
 	{
 		JSExport<TiModule>::SetClassVersion(1);
@@ -494,7 +489,7 @@ namespace Titanium
 		// Titanium.String keeps a reference to Global.String module
 		titanium.SetProperty("String", global_string, { JSPropertyAttribute::ReadOnly, JSPropertyAttribute::DontDelete });
 
-		JSString builtin_functions_script = R"js(
+		std::string builtin_functions_script = R"js(
 			try {
 				console = {};
 				console._times = {};

@@ -298,7 +298,7 @@ namespace TitaniumWindows
 				File = static_cast<JSObject>(File_property);
 			});
 
-			return File.CallAsConstructor(parent).GetPrivate<Titanium::Filesystem::File>();
+			return File.CallAsConstructor(get_context().CreateString(parent)).GetPrivate<Titanium::Filesystem::File>();
 		}
 
 		bool File::get_readonly() const TITANIUM_NOEXCEPT

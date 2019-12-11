@@ -260,7 +260,7 @@ namespace TitaniumWindows
 						const auto Titanium = static_cast<JSObject>(get_context().get_global_object().GetProperty("Titanium"));
 						const auto Filesystem = static_cast<JSObject>(Titanium.GetProperty("Filesystem"));
 						auto File = static_cast<JSObject>(Filesystem.GetProperty("File"));
-						const auto file = File.CallAsConstructor(file__);
+						const auto file = File.CallAsConstructor(get_context().CreateString(file__));
 						const auto file_ptr = file.GetPrivate<Titanium::Filesystem::File>();
 						TITANIUM_ASSERT(file_ptr->write(responseData__, 0, responseDataLen__, false));
 
