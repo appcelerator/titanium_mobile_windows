@@ -141,6 +141,8 @@ function runCMake(logger, cmake, projectDir, targetEnv, targetArch, targetGenera
 		cmakeArgs.push('-A', 'ARM64');
 	} else if (targetArch === 'x64') {
 		cmakeArgs.push('-A', 'x64');
+	} else if (targetArch === 'Win32') {
+		cmakeArgs.push('-A', 'Win32');
 	}
 
 	p = spawn(cmake, cmakeArgs,
