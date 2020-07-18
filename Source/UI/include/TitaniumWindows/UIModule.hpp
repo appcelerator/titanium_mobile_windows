@@ -37,6 +37,7 @@ namespace TitaniumWindows
 		TITANIUM_PROPERTY_READONLY_DEF(Windows);
 
 		virtual void set_backgroundColor(const std::string& color) TITANIUM_NOEXCEPT final override;
+		virtual double convertUnits(const std::string& convertFromValue, const Titanium::UI::UNIT& convertToUnits) TITANIUM_NOEXCEPT final override;
 
 		UIModule(const JSContext&) TITANIUM_NOEXCEPT;
 

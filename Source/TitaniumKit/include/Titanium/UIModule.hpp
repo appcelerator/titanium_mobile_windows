@@ -10,6 +10,7 @@
 #define _TITANIUM_UI_HPP_
 
 #include "Titanium/Module.hpp"
+#include "Titanium/UI/Constants.hpp"
 
 namespace Titanium
 {
@@ -31,6 +32,13 @@ namespace Titanium
 	class TITANIUMKIT_EXPORT UIModule : public Module, public JSExport<UIModule>
 	{
 	public:
+
+		/*!
+		 @method
+		 @abstract convertUnits
+		 @discussion Converts one type of unit to another using the metrics of the main display.
+		*/
+		virtual double convertUnits(const std::string& convertFromValue, const Titanium::UI::UNIT& convertToUnits) TITANIUM_NOEXCEPT;
 
 		/*!
 		@property
@@ -163,6 +171,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(UNIT_IN);
 		TITANIUM_PROPERTY_READONLY_DEF(UNIT_MM);
 		TITANIUM_PROPERTY_READONLY_DEF(UNIT_PX);
+		TITANIUM_PROPERTY_READONLY_DEF(UNIT_PPX);
 		TITANIUM_PROPERTY_READONLY_DEF(UNKNOWN);
 		TITANIUM_PROPERTY_READONLY_DEF(UPSIDE_PORTRAIT);
 		TITANIUM_PROPERTY_READONLY_DEF(URL_ERROR_AUTHENTICATION);
@@ -265,6 +274,7 @@ namespace Titanium
 
 		static void JSExportInitialize();
 
+		TITANIUM_FUNCTION_DEF(convertUnits);
 		TITANIUM_FUNCTION_DEF(create2DMatrix);
 		TITANIUM_FUNCTION_DEF(create3DMatrix);
 		TITANIUM_FUNCTION_DEF(createMatrix2D);

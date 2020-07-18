@@ -448,6 +448,10 @@ namespace Titanium
 	{
 		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::Px));
 	}
+	TITANIUM_PROPERTY_GETTER(UIModule, UNIT_PPX)
+	{
+		return get_context().CreateString(Titanium::UI::Constants::to_string(Titanium::UI::UNIT::Ppx));
+	}
 	TITANIUM_PROPERTY_GETTER(UIModule, UNKNOWN)
 	{
 		return get_context().CreateNumber(Titanium::UI::Constants::to_underlying_type(Titanium::UI::ORIENTATION::UNKNOWN));
@@ -667,6 +671,7 @@ namespace Titanium
 		JSExport<UIModule>::SetClassVersion(1);
 		JSExport<UIModule>::SetParent(JSExport<Module>::Class());
 
+		TITANIUM_ADD_FUNCTION(UIModule, convertUnits);
 		TITANIUM_ADD_FUNCTION(UIModule, create2DMatrix);
 		TITANIUM_ADD_FUNCTION(UIModule, create3DMatrix);
 		TITANIUM_ADD_FUNCTION(UIModule, createMatrix2D);
@@ -812,6 +817,7 @@ namespace Titanium
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNIT_IN);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNIT_MM);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNIT_PX);
+		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNIT_PPX);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UNKNOWN);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, UPSIDE_PORTRAIT);
 		TITANIUM_ADD_CONSTANT_PROPERTY(UIModule, URL_ERROR_AUTHENTICATION);
@@ -1081,6 +1087,13 @@ namespace Titanium
 	TITANIUM_PROPERTY_GETTER(UIModule, Window)
 	{
 		return get_context().CreateObject(window__);
+	}
+
+	TITANIUM_FUNCTION(UIModule, convertUnits)
+	{
+		ENSURE_STRING_AT_INDEX(convertFromValue, 0);
+		ENSURE_STRING_AT_INDEX(units, 1);
+		return get_context().CreateNumber(convertUnits(convertFromValue, Titanium::UI::Constants::to_UNIT(units)));
 	}
 
 	TITANIUM_FUNCTION(UIModule, create2DMatrix)
@@ -1573,4 +1586,9 @@ namespace Titanium
 		return *this;
 	}
 
+	double UIModule::convertUnits(const std::string& convertFromValue, const Titanium::UI::UNIT& convertToUnits) TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_WARN("Ti.UI.convertUnits is not implemented");
+		return 0;
+	}
 }  // namespace Titanium
