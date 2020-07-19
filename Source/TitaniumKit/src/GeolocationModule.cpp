@@ -326,10 +326,10 @@ namespace Titanium
 								length = response.places.length;
 								for (i = 0; i < length; i++) {
 									response.places[i].countryCode = response.places[i].country_code;
-									response.places[i].postalCode = response.places[i].zipcode;
+									response.places[i].postalCode  = response.places[i].zipcode;
+									delete response.places[i].country_code;
+									delete response.places[i].zipcode;
 								}
-								Ti.API.warn("GeocodedAddress properties country_code and zipcode are deprecated in SDK 8.0.0 and will be removed in 9.0.0");
-								Ti.API.warn("Please replace usage with the respective properties: countryCode and postalCode");
 							}
 						} else {
 							response.code = -1;
