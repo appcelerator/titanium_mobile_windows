@@ -1998,6 +1998,12 @@ namespace TitaniumWindows
 			});
 
 			double ppi = LogicalDpi;
+
+			// raw dpi can be zero when the monitor doesn't provide physical dimensions
+			if (RawDpiX == 0 || RawDpiY == 0) {
+				return ppi;
+			}
+
 			switch (name) {
 			case Titanium::LayoutEngine::ValueName::CenterX:
 			case Titanium::LayoutEngine::ValueName::Left:
