@@ -78,6 +78,11 @@ namespace TitaniumWindows
 				const auto windows_window = dynamic_cast<TitaniumWindows::UI::Window*>(window.get());
 				const auto view = windows_window->getComponent();
 				pivotItem__->Content = view;
+
+				const auto js_context = window->get_context();
+				static auto WindowEventHandler = js_context.CreateFunction("return function(e) {x.fireEvent(e.type, e);};", { "x" });
+				auto handler = static_cast<JSObject>(WindowEventHandler({ get_object() }, js_context.get_global_object()));
+				window->addEventListener("windowsback", handler, window->get_object());
 			}
 
 			Titanium::UI::Tab::set_window(window);

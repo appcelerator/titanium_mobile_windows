@@ -62,26 +62,24 @@ namespace TitaniumWindows
 				}
 			});
 
-#if defined(IS_WINDOWS_10) || defined(IS_WINDOWS_PHONE)
 			// Setup back button press event
 			static std::once_flag of;
 			std::call_once(of, [this]() {
-#if defined(IS_WINDOWS_10)
 				SystemNavigationManager::GetForCurrentView()->BackRequested += ref new EventHandler<BackRequestedEventArgs^>([](Platform::Object^ sender, BackRequestedEventArgs^ e) {
-#elif defined(IS_WINDOWS_PHONE)
-				using namespace Windows::Phone::UI::Input;
-				backpressed_event__ = HardwareButtons::BackPressed += ref new EventHandler<BackPressedEventArgs^>([](Platform::Object ^sender, BackPressedEventArgs ^e) {
-#endif
 					try {
 						if (TitaniumWindows::UI::Window::window_stack__.size() > 0) {
 							// Issue back event on the top window
 							const auto top_window = TitaniumWindows::UI::Window::window_stack__.back();
 
-							// For backward complatibility, we fires "windows:back" as well as "back".
-							top_window->fireEvent("windows:back");
-							top_window->fireEvent("back");
-
-							top_window->close(nullptr);
+							if (top_window->hasEventListener("windowsback")) {
+								// windowsback gives listener a chance to confirm before closing window
+								// listener should be manually closing the window when necessary
+								top_window->fireEvent("windowsback");
+							} else {
+								//  we support "back" event in order to keep backward compatibility
+								top_window->fireEvent("back");
+								top_window->close(nullptr);
+							}
 						}
 						e->Handled = true;
 					} catch (...) {
@@ -89,7 +87,6 @@ namespace TitaniumWindows
 					}
 				});
 			});	
-#endif
 	}
 
 		Window::~Window() 
