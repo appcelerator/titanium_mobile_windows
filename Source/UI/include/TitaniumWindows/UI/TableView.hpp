@@ -107,6 +107,7 @@ namespace TitaniumWindows
 
 			void registerScrollEvent();
 			void registerScrollendEvent();
+			void fireScrollendEvent();
 
 			Windows::UI::Xaml::Controls::Grid^ parent__;
 			Windows::UI::Xaml::Controls::ListView^ tableview__;
@@ -120,10 +121,15 @@ namespace TitaniumWindows
 			Windows::Foundation::EventRegistrationToken loaded_event__;
 			Windows::Foundation::EventRegistrationToken scroll_event__;
 			Windows::Foundation::EventRegistrationToken scrollend_event__;
+			Windows::Foundation::EventRegistrationToken scrollend_release_event__;
+			Windows::Foundation::EventRegistrationToken scrollend_cancel_event__;
+			Windows::Foundation::EventRegistrationToken scrollend_lost_event__;
 			Windows::Foundation::EventRegistrationToken touchmove_event__;
-			
+
 			double oldScrollPosX__ { -1 };
 			double oldScrollPosY__ { -1 };
+
+			bool scrollend__{ false };
 #pragma warning(push)
 #pragma warning(disable : 4251)
 

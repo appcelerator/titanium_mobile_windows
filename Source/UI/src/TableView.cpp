@@ -636,6 +636,9 @@ namespace TitaniumWindows
 			} else if (event_name == "scrollend") {
 				if (scrollview__) {
 					scrollview__->ViewChanged -= scrollend_event__;
+					scrollview__->PointerReleased -= scrollend_release_event__;
+					scrollview__->PointerCanceled -= scrollend_cancel_event__;
+					scrollview__->PointerCaptureLost -= scrollend_lost_event__;
 				}
 			} else if (event_name == "touchmove") {
 				tableview__->PointerMoved -= touchmove_event__;
@@ -654,6 +657,16 @@ namespace TitaniumWindows
 					size.SetProperty("height", ctx.CreateNumber(scrollview__->ViewportHeight));
 					eventArgs.SetProperty("size", size);
 
+					auto contentSize = ctx.CreateObject();
+					contentSize.SetProperty("width", ctx.CreateNumber(scrollview__->ActualWidth));
+					contentSize.SetProperty("height", ctx.CreateNumber(scrollview__->ActualHeight));
+					eventArgs.SetProperty("contentSize", contentSize);
+
+					auto offset = ctx.CreateObject();
+					offset.SetProperty("x", ctx.CreateNumber(scrollview__->HorizontalOffset));
+					offset.SetProperty("y", ctx.CreateNumber(scrollview__->VerticalOffset));
+					eventArgs.SetProperty("contentOffset", offset);
+
 					eventArgs.SetProperty("totalItemCount", ctx.CreateNumber(tableview__->Items->Size));
 
 					fireEvent("scroll", eventArgs);
@@ -663,27 +676,53 @@ namespace TitaniumWindows
 			});
 		}
 
+		void TableView::fireScrollendEvent()
+		{
+			try {
+				// Stop firing event when ScrollView didn't actually move
+				if (scrollend__ && oldScrollPosX__ != scrollview__->VerticalOffset || oldScrollPosY__ != scrollview__->HorizontalOffset) {
+					const auto ctx = get_context();
+					auto eventArgs = ctx.CreateObject();
+
+					auto size = ctx.CreateObject();
+					size.SetProperty("width", ctx.CreateNumber(scrollview__->ViewportWidth));
+					size.SetProperty("height", ctx.CreateNumber(scrollview__->ViewportHeight));
+					eventArgs.SetProperty("size", size);
+
+					auto contentSize = ctx.CreateObject();
+					contentSize.SetProperty("width", ctx.CreateNumber(scrollview__->ActualWidth));
+					contentSize.SetProperty("height", ctx.CreateNumber(scrollview__->ActualHeight));
+					eventArgs.SetProperty("contentSize", contentSize);
+
+					auto offset = ctx.CreateObject();
+					offset.SetProperty("x", ctx.CreateNumber(scrollview__->HorizontalOffset));
+					offset.SetProperty("y", ctx.CreateNumber(scrollview__->VerticalOffset));
+					eventArgs.SetProperty("contentOffset", offset);
+
+					fireEvent("scrollend", eventArgs);
+
+					oldScrollPosX__ = scrollview__->VerticalOffset;
+					oldScrollPosY__ = scrollview__->HorizontalOffset;
+
+					scrollend__ = false;
+				}
+			} catch (...) {
+				TITANIUM_LOG_DEBUG("Error at TableView.scrollend");
+			}
+		}
+
 		void TableView::registerScrollendEvent()
 		{
+			const auto cancel_handler = ref new Input::PointerEventHandler([this](Platform::Object^ sender, Input::PointerRoutedEventArgs^ e) {
+				fireScrollendEvent();
+			});
+			scrollend_release_event__ = scrollview__->PointerReleased += cancel_handler;
+			scrollend_cancel_event__  = scrollview__->PointerCanceled += cancel_handler;
+			scrollend_lost_event__    = scrollview__->PointerCaptureLost += cancel_handler;
+
 			scrollend_event__ = scrollview__->ViewChanged += ref new EventHandler<Controls::ScrollViewerViewChangedEventArgs ^>([this](Platform::Object^ sender, Controls::ScrollViewerViewChangedEventArgs^ e) {
-				try {
-					// Stop firing event when ScrollView didn't actually move
-					if (oldScrollPosX__ != scrollview__->VerticalOffset || oldScrollPosY__ != scrollview__->HorizontalOffset) {
-						const auto ctx = get_context();
-						auto eventArgs = ctx.CreateObject();
-
-						auto size = ctx.CreateObject();
-						size.SetProperty("width", ctx.CreateNumber(scrollview__->ViewportWidth));
-						size.SetProperty("height", ctx.CreateNumber(scrollview__->ViewportHeight));
-						eventArgs.SetProperty("size", size);
-
-						fireEvent("scrollend", eventArgs);
-
-						oldScrollPosX__ = scrollview__->VerticalOffset;
-						oldScrollPosY__ = scrollview__->HorizontalOffset;
-					}
-				} catch (...) {
-					TITANIUM_LOG_DEBUG("Error at TableView.scrollend");
+				if (!e->IsIntermediate) {
+					scrollend__ = true;
 				}
 			});
 		}
