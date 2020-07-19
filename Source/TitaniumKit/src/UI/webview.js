@@ -12,7 +12,13 @@
 			},
 			error: function (str) {
 				log('ERROR', str);
-			}
+			},
+			warn: function (str) {
+				log('WARN', str);
+			},
+			log: function (level, str) {
+				log(level, str);
+			},
 		},
 		App: {
 			_event_listeners: [],

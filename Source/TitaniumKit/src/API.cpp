@@ -117,7 +117,7 @@ namespace Titanium
 		});
 
 		LogSeverityLevel log_severity_level = LogSeverityLevel::API_UNKNOWN;
-		const auto position = log_severity_level_map.find(level);
+		const auto position = log_severity_level_map.find(boost::to_lower_copy(level));
 
 		if (position != log_severity_level_map.end()) {
 			log_severity_level = position->second;
