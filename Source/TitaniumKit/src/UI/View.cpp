@@ -17,7 +17,9 @@
 #define CHECK_UI_DELEGATE_SETTER if (!layoutDelegate__) return false;
 #define RETURN_NUMBER_OR_STRING(X) \
 const auto X = layoutDelegate__->get_##X(); \
-if (std::all_of(X.begin(), X.end(), isdigit)) { \
+if (X.empty()) { \
+    return get_context().CreateUndefined(); \
+} else if (std::all_of(X.begin(), X.end(), isdigit)) { \
 	return get_context().CreateNumber(atof(X.c_str())); \
 } \
 return get_context().CreateString(X);
