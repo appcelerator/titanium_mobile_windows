@@ -5,8 +5,6 @@ properties:
     platforms: [windowsphone]
   - name: EVENT_ACCESSIBILITY_CHANGED
     platforms: [windowsphone]
-  - name: accessibilityEnabled
-    platforms: [windowsphone]
   - name: analytics
     platforms: [windowsphone]
   - name: copyright
@@ -15,17 +13,11 @@ properties:
     platforms: [windowsphone]
   - name: description
     platforms: [windowsphone]
-  - name: disableNetworkActivityIndicator
-    platforms: [windowsphone]
-  - name: forceSplashAsSnapshot
-    platforms: [windowsphone]
   - name: guid
     platforms: [windowsphone]
   - name: id
     platforms: [windowsphone]
   - name: installId
-    platforms: [windowsphone]
-  - name: idleTimerDisabled
     platforms: [windowsphone]
   - name: keyboardVisible
     platforms: [windowsphone]
@@ -44,10 +36,6 @@ properties:
   - name: version
     platforms: [windowsphone]
 methods:
-  - name: fireSystemEvent
-    platforms: [windowsphone]
-  - name: getAccessibilityEnabled
-    platforms: [windowsphone]
   - name: getAnalytics
     platforms: [windowsphone]
   - name: getCopyright
@@ -56,15 +44,9 @@ methods:
     platforms: [windowsphone]
   - name: getDescription
     platforms: [windowsphone]
-  - name: getDisableNetworkActivityIndicator
-    platforms: [windowsphone]
-  - name: getForceSplashAsSnapshot
-    platforms: [windowsphone]
   - name: getGuid
     platforms: [windowsphone]
   - name: getId
-    platforms: [windowsphone]
-  - name: getIdleTimerDisabled
     platforms: [windowsphone]
   - name: getInstallId
     platforms: [windowsphone]

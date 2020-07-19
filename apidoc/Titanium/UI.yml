@@ -3,6 +3,8 @@ platforms: [windowsphone]
 properties:
   - name: currentTab
     platforms: [windowsphone]
+  - name: currentWindow
+    platforms: [windowsphone]
   - name: ANIMATION_CURVE_EASE_IN
     platforms: [windowsphone]
   - name: ANIMATION_CURVE_EASE_IN_OUT
@@ -61,25 +63,27 @@ properties:
     platforms: [windowsphone]
   - name: INPUT_BUTTONMODE_ONFOCUS
     platforms: [windowsphone]
+  - name: KEYBOARD_APPEARANCE_ALERT
+    platforms: [windowsphone]
   - name: KEYBOARD_APPEARANCE_DEFAULT
     platforms: [windowsphone]
-  - name: KEYBOARD_TYPE_ASCII
+  - name: KEYBOARD_ASCII
     platforms: [windowsphone]
-  - name: KEYBOARD_TYPE_DECIMAL_PAD
+  - name: KEYBOARD_DECIMAL_PAD
     platforms: [windowsphone]
-  - name: KEYBOARD_TYPE_DEFAULT
+  - name: KEYBOARD_DEFAULT
     platforms: [windowsphone]
-  - name: KEYBOARD_TYPE_EMAIL
+  - name: KEYBOARD_EMAIL
     platforms: [windowsphone]
-  - name: KEYBOARD_TYPE_NAMEPHONE_PAD
+  - name: KEYBOARD_NAMEPHONE_PAD
     platforms: [windowsphone]
-  - name: KEYBOARD_TYPE_NUMBERS_PUNCTUATION
+  - name: KEYBOARD_NUMBERS_PUNCTUATION
     platforms: [windowsphone]
-  - name: KEYBOARD_TYPE_NUMBER_PAD
+  - name: KEYBOARD_NUMBER_PAD
     platforms: [windowsphone]
-  - name: KEYBOARD_TYPE_PHONE_PAD
+  - name: KEYBOARD_PHONE_PAD
     platforms: [windowsphone]
-  - name: KEYBOARD_TYPE_URL
+  - name: KEYBOARD_URL
     platforms: [windowsphone]
   - name: LANDSCAPE_LEFT
     platforms: [windowsphone]
@@ -379,5 +383,7 @@ methods:
   - name: getCurrentTab
     platforms: [windowsphone]
   - name: setCurrentTab
+    platforms: [windowsphone]
+  - name: getCurrentWindow
     platforms: [windowsphone]
 

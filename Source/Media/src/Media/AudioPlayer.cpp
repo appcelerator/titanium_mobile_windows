@@ -9,6 +9,7 @@
 #include "TitaniumWindows/Utility.hpp"
 #include "Titanium/detail/TiImpl.hpp"
 #include "TitaniumWindows/WindowsMacros.hpp"
+#include "Titanium/MediaModule.hpp"
 
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
@@ -49,6 +50,10 @@ namespace TitaniumWindows
 				waiting__ = (get_state() == Titanium::Media::AudioState::Buffering);
 
 				const auto ctx = get_context();
+				
+				const auto media =  static_cast<JSObject>(ctx.JSEvaluateScript("Ti.Media")).GetPrivate<Titanium::MediaModule>();
+				media->set_audioPlaying(playing__);
+
 				auto event_arg = ctx.CreateObject();
 				event_arg.SetProperty("state", js_get_state());
 				fireEvent("change", event_arg);

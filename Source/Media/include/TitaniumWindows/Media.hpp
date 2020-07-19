@@ -42,11 +42,14 @@ namespace TitaniumWindows
 	{
 	public:
 
+		TITANIUM_PROPERTY_UNIMPLEMENTED(systemMusicPlayer);
+		TITANIUM_PROPERTY_UNIMPLEMENTED(overrideAudioRoute);
+		TITANIUM_PROPERTY_UNIMPLEMENTED(currentRoute);
 		TITANIUM_FUNCTION_UNIMPLEMENTED(hideMusicLibrary);
-		TITANIUM_FUNCTION_UNIMPLEMENTED(previewImage);
-		TITANIUM_FUNCTION_UNIMPLEMENTED(setOverrideAudioRoute);
-		TITANIUM_FUNCTION_UNIMPLEMENTED(switchCamera);
+		TITANIUM_FUNCTION_UNIMPLEMENTED(previewImage)
 		TITANIUM_FUNCTION_UNIMPLEMENTED(queryMusicLibrary);
+		TITANIUM_FUNCTION_UNIMPLEMENTED(takeScreenshot);
+		TITANIUM_FUNCTION_UNIMPLEMENTED(vibrate);
 
 		/*!
 		  @method
@@ -118,6 +121,13 @@ namespace TitaniumWindows
 
 		/*!
 		  @method
+		  @abstract switchCamera
+		  @discussion Switches between front and rear-facing cameras.
+		*/
+		virtual void switchCamera(const Titanium::Media::CameraOption& camera) TITANIUM_NOEXCEPT override;
+
+		/*!
+		  @method
 		  @abstract takePicture
 		  @discussion Uses the device camera to capture a photo.
 		*/
@@ -139,24 +149,31 @@ namespace TitaniumWindows
 
 		/*!
 		  @method
-		  @abstract takeScreenshot
-		  @discussion Takes a screen shot of the visible UI on the device.
-		*/
-		virtual void takeScreenshot(JSValue callback) TITANIUM_NOEXCEPT override;
-
-		/*!
-		  @method
-		  @abstract vibrate
-		  @discussion Makes the device vibrate.
-		*/
-		virtual void vibrate(std::vector<std::chrono::milliseconds> pattern) TITANIUM_NOEXCEPT override;
-
-		/*!
-		  @method
 		  @abstract hasCameraPermissions
 		  @discussion Returns true if the app has camera access.
 		*/
 		virtual bool hasCameraPermissions() TITANIUM_NOEXCEPT override;
+
+		/*!
+		@method
+		@abstract hasAudioRecorderPermissions
+		@discussion Returns true if the app has audio access.
+		*/
+		virtual bool hasAudioRecorderPermissions() TITANIUM_NOEXCEPT override;
+
+		/*!
+		  @method
+		  @abstract hasMusicLibraryPermissions
+		  @discussion Returns true if the app has music library access.
+		*/
+		virtual bool hasMusicLibraryPermissions() TITANIUM_NOEXCEPT override;
+
+		/*!
+		  @method
+		  @abstract hasPhotoGalleryPermissions
+		  @discussion Returns true if the app has photo gallery access.
+		*/
+		virtual bool hasPhotoGalleryPermissions() TITANIUM_NOEXCEPT override;
 
 		/*!
 		  @method
@@ -164,6 +181,27 @@ namespace TitaniumWindows
 		  @discussion Requests for camera access.
 		*/
 		virtual void requestCameraPermissions(JSValue callback) TITANIUM_NOEXCEPT override;
+
+		/*!
+		  @method
+		  @abstract requestAudioRecorderPermissions
+		  @discussion Request the user's permission for audio recording.
+		*/
+		virtual void requestAudioRecorderPermissions(JSValue callback) TITANIUM_NOEXCEPT override;
+
+		/*!
+		  @method
+		  @abstract requestMusicLibraryPermissions
+		  @discussion Requests for music library access.
+		*/
+		virtual void requestMusicLibraryPermissions(JSValue callback) TITANIUM_NOEXCEPT override;
+
+		/*!
+		  @method
+		  @abstract requestPhotoGalleryPermissions
+		  @discussion Requests for photo gallery access.
+		*/
+		virtual void requestPhotoGalleryPermissions(JSValue callback) TITANIUM_NOEXCEPT override;
 
 		MediaModule(const JSContext&) TITANIUM_NOEXCEPT;
 
@@ -180,7 +218,7 @@ namespace TitaniumWindows
 		virtual void enableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
 		virtual void disableEvent(const std::string& event_name) TITANIUM_NOEXCEPT override final;
 
-		void fireMediaVolumeEvent(const Windows::Media::SoundLevel& level);
+		void fireMediaVolumeEvent();
 
 		TITANIUM_FUNCTION_DEF(_postOpenPhotoGallery);
 		TITANIUM_FUNCTION_DEF(_postOpenMusicLibrary);
@@ -191,19 +229,20 @@ namespace TitaniumWindows
 		JSFunction createFileOpenForMusicLibraryFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT;
 		JSFunction createFileOpenForPhotoGalleryFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT;
 		JSFunction createBeepFunction(const JSContext& js_context) const TITANIUM_NOEXCEPT;
-		void takeScreenshotDone(JSObject callback, const std::string& file = "", const bool& hasError = true);
-		void clearScreenshotResources();
-		void takeScreenshotToFile(JSObject callback);
 
 		void focus(const Titanium::Media::CameraOptionsType&, const bool& reportError = true) TITANIUM_NOEXCEPT;
 
 		void showDefaultCamera(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT;
 		void updatePreviewOrientation();
-		void findCameraDevices();
+		void checkCameraDevices() TITANIUM_NOEXCEPT;
+		void checkAudioDevices() TITANIUM_NOEXCEPT;
+		void checkCapabilities() TITANIUM_NOEXCEPT;
 		Windows::Storage::FileProperties::PhotoOrientation toPhotoOrientation();
 		std::uint32_t orientationToDegrees();
 
 		std::vector<std::shared_ptr<Titanium::Media::Item>> getMusicProperties(const std::vector<std::string>& files);
+
+		bool isWindowsDesktop() TITANIUM_NOEXCEPT;
 
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -216,17 +255,20 @@ namespace TitaniumWindows
 		JSFunction js_beep__;
 		Windows::Devices::Enumeration::DeviceInformationCollection^ cameraDevices__{ nullptr };
 		Titanium::Media::CameraOptionsType cameraOptionsState__;
-		bool screenCaptureStarted__{ false };
 		bool cameraPreviewStarted__ { false };
 		bool shouldRemoveRotationEvent__{ false };
 		JSFunction fileOpenForMusicLibraryCallback__;
 		JSFunction fileOpenForPhotoGalleryCallback__;
 		::Platform::Agile<Windows::Media::Capture::MediaCapture> mediaCapture__;
-		::Platform::Collections::Vector<Windows::UI::Xaml::DispatcherTimer^>^ vibrate_timers__;
 		Windows::UI::Xaml::Controls::CaptureElement^ captureElement__;
 		Windows::Foundation::EventRegistrationToken camera_navigated_event__;
 		Windows::Foundation::EventRegistrationToken camera_orientation_event__;
 		TakingPictureState^ takingPictureState__;
+		bool hasAudioRecorderPermissions__{ false };
+		bool hasCameraPermissions__{ false };
+		bool hasMusicLibraryPermissions__{ false };
+		bool hasPhotoGalleryPermissions__{ false };
+		double last_volume__{ 0 };
 #pragma warning(pop)
 	};
 

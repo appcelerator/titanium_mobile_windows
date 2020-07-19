@@ -25,20 +25,27 @@
 #include "TitaniumWindows/UIModule.hpp"
 #include "TitaniumWindows/UI/Window.hpp"
 
-#define GET_TITANIUM_APP(VARNAME) \
-  const auto ctx = get_context(); \
-  JSValue Titanium_property = ctx.get_global_object().GetProperty("Titanium"); \
-  TITANIUM_ASSERT(Titanium_property.IsObject()); \
-  JSObject Titanium = static_cast<JSObject>(Titanium_property); \
-  JSValue App_property = Titanium.GetProperty("App"); \
-  TITANIUM_ASSERT(App_property.IsObject()); \
-  std::shared_ptr<TitaniumWindows::AppModule> VARNAME = static_cast<JSObject>(App_property).GetPrivate<TitaniumWindows::AppModule>();
-
 #define GENERATE_TI_ERROR_RESPONSE(MESSAGE, VARNAME) \
 Titanium::ErrorResponse VARNAME; \
 VARNAME.code = -1; \
 VARNAME.error = MESSAGE; \
 VARNAME.success = false;
+
+#define CALLBACK_PERMISSIONS(NAME, CAPABILITY) \
+	const auto ctx = get_context(); \
+	JSObject response = ctx.CreateObject(); \
+	if (has##NAME##Permissions()) { \
+		response.SetProperty("code", ctx.CreateNumber(0)); \
+		response.SetProperty("error", ctx.CreateString()); \
+		response.SetProperty("success", ctx.CreateBoolean(true)); \
+	} else { \
+		response.SetProperty("code", ctx.CreateNumber(-1)); \
+		response.SetProperty("error", ctx.CreateString(#CAPABILITY " DeviceCapability not set in tiapp.xml")); \
+		response.SetProperty("success", ctx.CreateBoolean(false)); \
+	} \
+	auto cb = static_cast<JSObject>(callback); \
+	TITANIUM_ASSERT(cb.IsFunction()); \
+	cb({ response }, get_object());
 
 namespace TitaniumWindows
 {
@@ -302,13 +309,42 @@ namespace TitaniumWindows
 		waitingForOpenPhotoGallery__ = false;
 	}
 
-	void MediaModule::findCameraDevices()
+	void MediaModule::checkAudioDevices()
 	{
-		if (cameraDevices__ == nullptr) {
+		if (hasAudioRecorderPermissions()) {
+			concurrency::event event;
+			task<DeviceInformationCollection^>(DeviceInformation::FindAllAsync(DeviceClass::AudioCapture)).then([this, &event](task<DeviceInformationCollection^> task) {
+				try {
+					canRecord__ = task.get()->Size > 0;
+				} catch (Platform::Exception^ ex) {
+					TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
+				} catch (...) {
+					TITANIUM_LOG_DEBUG("Unknown error while findAudioDevices");
+				}
+				event.set();
+			}, concurrency::task_continuation_context::use_arbitrary());
+			event.wait();
+		}
+	}
+
+	void MediaModule::checkCameraDevices() TITANIUM_NOEXCEPT
+	{
+		if (hasCameraPermissions()) {
 			concurrency::event event;
 			task<DeviceInformationCollection^>(DeviceInformation::FindAllAsync(DeviceClass::VideoCapture)).then([this, &event](task<DeviceInformationCollection^> task) {
 				try {
 					cameraDevices__ = task.get();
+					isCameraSupported__ = cameraDevices__->Size > 0;
+					for (auto camera : cameraDevices__) {
+						const auto name = TitaniumWindows::Utility::ConvertString(camera->Name);
+						const auto isFrontCamera = name.find("Front") != std::string::npos;
+						const auto isBackCamera = name.find("Back") != std::string::npos;
+						if (isFrontCamera) {
+							availableCameras__.push_back(Titanium::Media::CameraOption::Front);
+						} else if (isBackCamera) {
+							availableCameras__.push_back(Titanium::Media::CameraOption::Rear);
+						}
+					}
 				} catch (Platform::Exception^ ex) {
 					TITANIUM_LOG_WARN(TitaniumWindows::Utility::ConvertString(ex->Message));
 				} catch (...) {
@@ -317,22 +353,22 @@ namespace TitaniumWindows
 				event.set();
 			}, concurrency::task_continuation_context::use_arbitrary());
 			event.wait();
+
+			if (availableCameras__.size() > 0) {
+				availablePhotoGalleryMediaTypes__.push_back(Titanium::Media::MediaType::Photo);
+				availablePhotoMediaTypes__.push_back(Titanium::Media::MediaType::Photo);
+				availableCameraMediaTypes__.push_back(Titanium::Media::MediaType::Photo);
+				availableCameraMediaTypes__.push_back(Titanium::Media::MediaType::Video);
+			}
+
 		}
 	}
 
 	bool MediaModule::isMediaTypeSupported(const std::string& source, const Titanium::Media::MediaType& type) TITANIUM_NOEXCEPT
 	{
-		if (source == "camera") {
-			findCameraDevices();
-
-			// Looks like there's no difference between "video" and "camera" in DeviceInformation...
-			// Assuming "VideoCapture" device supports both camera and video. 
-			return cameraDevices__->Size > 0;
-		} else if (source == "photo") {
-			// Does Photo Library support both picture and video? There's no way to query that.
-			return true;
-		}
-		return false;
+		// Looks like there's no difference between "video" and "camera" in DeviceInformation...
+		// Assuming "VideoCapture" device supports both camera and video. 
+		return isCameraSupported__;
 	}
 
 
@@ -422,6 +458,9 @@ namespace TitaniumWindows
 	{
 		TITANIUM_ASSERT_AND_THROW(cameraPreviewStarted__, "Camera is not visiable. Use showCamera() to show camera.");
 		if (!cameraPreviewStarted__) {
+			if (callback) {
+				callback();
+			}
 			return;
 		}
 		concurrency::create_task(mediaCapture__->StopPreviewAsync()).then([this, callback](concurrency::task<void> stopTask) {
@@ -464,25 +503,28 @@ namespace TitaniumWindows
 
 				ui_ptr->get_currentWindow()->close(nullptr);
 
-				if (callback) {
-					callback();
-				}
+				// Clear showCamera state
+				cameraOptionsState__ = Titanium::Media::create_empty_CameraOptionsType(get_context());
+
+				cameraPreviewStarted__ = false;
+				takingPictureState__ = nullptr;
+
+				captureElement__->Source = nullptr;
+				delete(mediaCapture__.Get());
 
 				// Clear showCamera state
 				cameraOptionsState__ = Titanium::Media::create_empty_CameraOptionsType(get_context());
 
-				takingPictureState__ = nullptr;
-
-				captureElement__->Source = nullptr;
-				cameraPreviewStarted__ = false;
-				delete(mediaCapture__.Get());
+				if (callback) {
+					callback();
+				}
 			});
 		});
 	}
 
 	FileProperties::PhotoOrientation MediaModule::toPhotoOrientation()
 	{
-		if (isFrontCameraSelected__) {
+		if (isFrontCameraSelected__ && !isWindowsDesktop()) {
 			switch (DisplayInformation::GetForCurrentView()->CurrentOrientation)
 			{
 			case DisplayOrientations::Portrait:
@@ -537,7 +579,7 @@ namespace TitaniumWindows
 
 	void MediaModule::showDefaultCamera(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT
 	{
-		auto cameraCaptureUI = ref new CameraCaptureUI();
+		const auto cameraCaptureUI = ref new CameraCaptureUI();
 
 		const auto isVideoSelected = std::find(options.mediaTypes.begin(), options.mediaTypes.end(), Titanium::Media::MediaType::Video) != options.mediaTypes.end();
 		CameraCaptureUIMode captureMode;
@@ -565,6 +607,8 @@ namespace TitaniumWindows
 			captureMode = CameraCaptureUIMode::Photo;
 		}
 
+		// CameraCaptureUI is ready
+		fireEvent("cameraready");
 		concurrency::create_task(cameraCaptureUI->CaptureFileAsync(captureMode)).then([options, isVideoSelected, this](concurrency::task<StorageFile^> task) {
 			try {
 				auto fromFile = task.get();
@@ -647,9 +691,23 @@ namespace TitaniumWindows
 		});
 	}
 
+	bool MediaModule::isWindowsDesktop() TITANIUM_NOEXCEPT
+	{
+		return Windows::System::Profile::AnalyticsInfo::VersionInfo->DeviceFamily->Equals("Windows.Desktop");
+	}
+
+	void MediaModule::switchCamera(const Titanium::Media::CameraOption& camera) TITANIUM_NOEXCEPT
+	{
+		// Just change the whichCamera property and restart camera
+		auto options = cameraOptionsState__;
+		options.whichCamera = camera;
+		hideCamera([this, options]() {
+			showCamera(options);
+		});
+	}
+
 	void MediaModule::showCamera(const Titanium::Media::CameraOptionsType& options) TITANIUM_NOEXCEPT
 	{
-
 		cameraOptionsState__ = options;
 		// If There's no overlay on Windows 10 (Mobile), let's use CameraCaptureUI.
 		if (options.overlay == nullptr) {
@@ -662,11 +720,8 @@ namespace TitaniumWindows
 			return;
 		}
 
-		TITANIUM_ASSERT_AND_THROW(!screenCaptureStarted__, "Can't be used during screen capture.");
-
 		const auto isVideoSelected = std::find(options.mediaTypes.begin(), options.mediaTypes.end(), Titanium::Media::MediaType::Video) != options.mediaTypes.end();
 
-		findCameraDevices();
 		mediaCapture__ = ref new MediaCapture();
 		auto settings = ref new MediaCaptureInitializationSettings();
 		// If not capturing video, don't require audio. This way we don't need "microphone" capability to take a picture
@@ -723,12 +778,32 @@ namespace TitaniumWindows
 		concurrency::create_task(mediaCapture__->InitializeAsync(settings)).then([options, this](concurrency::task<void> initTask) {
 			try {
 				initTask.get();
-				auto mediaCapture = mediaCapture__.Get();
+				const auto mediaCapture = mediaCapture__.Get();
 				captureElement__->Source = mediaCapture;
 				this->cameraPreviewStarted__ = true;
 
-				if (isFrontCameraSelected__) {
+				if (isFrontCameraSelected__ && !isWindowsDesktop()) {
 					mediaCapture__->SetPreviewRotation(VideoRotation::Clockwise180Degrees);
+				}
+
+				if (isFrontCameraSelected__) {
+					captureElement__->FlowDirection = FlowDirection::RightToLeft;
+				} else {
+					captureElement__->FlowDirection = FlowDirection::LeftToRight;
+				}
+
+				const auto flashControl = mediaCapture__->VideoDeviceController->FlashControl;
+				if (flashControl->Supported) {
+					if (cameraFlashMode__ == Titanium::Media::CameraOption::FlashAuto) {
+						flashControl->Auto = true;
+						flashControl->Enabled = true;
+					} else if (cameraFlashMode__ == Titanium::Media::CameraOption::FlashOn) {
+						flashControl->Auto = false;
+						flashControl->Enabled = true;
+					} else if (cameraFlashMode__ == Titanium::Media::CameraOption::FlashOff) {
+						flashControl->Auto = false;
+						flashControl->Enabled = false;
+					}
 				}
 
 				concurrency::create_task(mediaCapture->StartPreviewAsync()).then([options, this](concurrency::task<void> previewTask) {
@@ -736,6 +811,8 @@ namespace TitaniumWindows
 						updatePreviewOrientation();
 
 						previewTask.get();
+
+						fireEvent("cameraready");
 					} catch (Platform::Exception^ e) {
 						GENERATE_TI_ERROR_RESPONSE("Ti.Media.showCamera() failed to start preview: " + TitaniumWindows::Utility::ConvertString(e->Message), error);
 						options.callbacks.onerror(error);
@@ -791,27 +868,20 @@ namespace TitaniumWindows
 		}
 	}
 
-	void MediaModule::fireMediaVolumeEvent(const SoundLevel& level) 
+	void MediaModule::fireMediaVolumeEvent() 
 	{
-		// There's only three level on Windows: Muted, Low and Full.
-		// TODO: Find reasonable number for volume. Right now it's mapped to Muted=0, Low=0.5 and Full=1.
 		const auto ctx = get_context();
 		auto obj = ctx.CreateObject();
-		switch (level) {
-		case SoundLevel::Muted:
-			obj.SetProperty("volume", ctx.CreateNumber(0));
-			break;
-		case SoundLevel::Low:
-			obj.SetProperty("volume", ctx.CreateNumber(0.5));
-			break;
-		case SoundLevel::Full:
-			obj.SetProperty("volume", ctx.CreateNumber(1));
-			break;
-		default:
-			TITANIUM_MODULE_LOG_WARN("MediaModule: Unknown volume");
-			obj.SetProperty("volume", ctx.CreateNumber(0));
-			break;
+
+		if (mediaCapture__ != nullptr) {
+			// VolumePercent ranges from 0.0 (silent) to 100.0 (full volume).
+			volume__ = mediaCapture__->AudioDeviceController->VolumePercent * 0.01;
+			peakMicrophonePower__ = std::fmax(peakMicrophonePower__, volume__);
+			averageMicrophonePower__ = last_volume__ > 0 ? (last_volume__ + volume__) * 0.5 : volume__;
+			last_volume__ = volume__;
 		}
+
+		obj.SetProperty("volume", ctx.CreateNumber(volume__));
 		fireEvent("volume", obj);
 	}
 
@@ -821,7 +891,7 @@ namespace TitaniumWindows
 		audioMonitoring_token__ = systemMediaControls->PropertyChanged += ref new TypedEventHandler<SystemMediaTransportControls^, SystemMediaTransportControlsPropertyChangedEventArgs^>([this](SystemMediaTransportControls^ sender, SystemMediaTransportControlsPropertyChangedEventArgs^ e) {
 			switch (e->Property) {
 			case SystemMediaTransportControlsProperty::SoundLevel:
-				fireMediaVolumeEvent(sender->SoundLevel);
+				fireMediaVolumeEvent();
 				break;
 			default:
 				break;
@@ -882,13 +952,14 @@ namespace TitaniumWindows
 				// autohide
 				if (cameraOptionsState__.autohide) {
 					// make sure to fire success callback after camera window is closed
-					this->hideCamera([this, media_filename]() {
-						if (cameraOptionsState__.callbacks.success.IsObject()) {
+					const auto options = cameraOptionsState__;
+					this->hideCamera([this, media_filename, options]() {
+						if (options.callbacks.success.IsObject()) {
 							Titanium::Media::CameraMediaItemType item;
 							item.mediaType = Titanium::Media::MediaType::Photo;
 							item.media_filename = TitaniumWindows::Utility::ConvertUTF8String(media_filename);
 
-							cameraOptionsState__.callbacks.onsuccess(item);
+							options.callbacks.onsuccess(item);
 						}
 					});
 				} else  if (cameraOptionsState__.callbacks.success.IsObject()) {
@@ -958,127 +1029,92 @@ namespace TitaniumWindows
 		});
 	}
 
-	void MediaModule::takeScreenshotDone(JSObject callback, const std::string& file, const bool& hasError)
-	{
-		clearScreenshotResources();
-
-		const auto ctx = get_context();
-		auto eventArg = ctx.CreateObject();
-		if (hasError) {
-			eventArg.SetProperty("media", ctx.CreateNull());
-		} else {
-			// read file and get blob.
-			eventArg.SetProperty("media", TitaniumWindows::Utility::GetTiBlobForFile(ctx, file));
-		}
-		callback({ eventArg }, get_object());
-	}
-
-	void MediaModule::clearScreenshotResources()
-	{
-		if (screenCaptureStarted__) {
-			delete(mediaCapture__.Get());
-			screenCaptureStarted__ = false;
-		}
-	}
-
-	// Create new storage and start capturing!
-	void MediaModule::takeScreenshotToFile(JSObject callback)
-	{
-		// CreationCollisionOption::GenerateUniqueName generates unique name such as "TiMediaScreenCapture (2).jpg"
-		concurrency::task<StorageFile^>(KnownFolders::PicturesLibrary->CreateFileAsync("TiMediaScreenCapture.jpg", CreationCollisionOption::GenerateUniqueName)).then([this, callback](concurrency::task<StorageFile^> fileTask) {
-			try {
-				auto file = fileTask.get();
-
-				// TODO: Provide an API to customize capture settings
-				ImageEncodingProperties^ properties = ImageEncodingProperties::CreateJpeg();
-				concurrency::create_task(mediaCapture__->CapturePhotoToStorageFileAsync(properties, file)).then([this, file, callback](concurrency::task<void> recordTask) {
-					try {
-						recordTask.get();
-						takeScreenshotDone(callback, TitaniumWindows::Utility::ConvertString(file->Path), false);
-					} catch (Platform::Exception^ e) {
-						const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-						TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start capturing screen: ", message);
-						takeScreenshotDone(callback);
-					} catch (...) {
-						TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start capturing screen");
-						takeScreenshotDone(callback);
-					}
-				});
-			} catch (Platform::Exception^ e) {
-				const auto message = TitaniumWindows::Utility::ConvertString(e->Message);
-				TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start capturing screen: ", message);
-				takeScreenshotDone(callback);
-			} catch (...) {
-				TITANIUM_MODULE_LOG_WARN("MediaModule: Failure on start capturing screen");
-				takeScreenshotDone(callback);
-			}
-		});
-	}
-
-	void MediaModule::takeScreenshot(JSValue callback_value) TITANIUM_NOEXCEPT
-	{
-		TITANIUM_MODULE_LOG_WARN("MediaModule::takeScreenshot: Unimplemented");
-	}
-
-	void MediaModule::vibrate(std::vector<std::chrono::milliseconds> pattern) TITANIUM_NOEXCEPT
-	{
-		TITANIUM_MODULE_LOG_WARN("MediaModule::vibrate: Not supported");
-	}
-
 	bool MediaModule::hasCameraPermissions() TITANIUM_NOEXCEPT
 	{
-		bool result = false;
+		return hasCameraPermissions__;
+	}
+
+	bool MediaModule::hasAudioRecorderPermissions() TITANIUM_NOEXCEPT
+	{
+		return hasAudioRecorderPermissions__;
+	}
+
+	bool MediaModule::hasMusicLibraryPermissions() TITANIUM_NOEXCEPT
+	{
+		return hasMusicLibraryPermissions__;
+	}
+
+	bool MediaModule::hasPhotoGalleryPermissions() TITANIUM_NOEXCEPT
+	{
+		return hasPhotoGalleryPermissions__;
+	}
+
+	void MediaModule::checkCapabilities() TITANIUM_NOEXCEPT
+	{
 		using namespace Windows::Data::Xml::Dom;
 
 		concurrency::event event;
-		task<StorageFile^>(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync("AppxManifest.xml")).then([&event, &result, this](task<StorageFile^> fileTask) {
+		task<StorageFile^>(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync("AppxManifest.xml")).then([&event, this](task<StorageFile^> fileTask) {
 			try {
-				task<XmlDocument^>(XmlDocument::LoadFromFileAsync(fileTask.get())).then([&event, &result, this](task<XmlDocument^> docTask) {
+				task<XmlDocument^>(XmlDocument::LoadFromFileAsync(fileTask.get())).then([&event, this](task<XmlDocument^> docTask) {
 					try {
 						const auto doc = docTask.get();
 						const auto items = doc->GetElementsByTagName("DeviceCapability");
 						for (unsigned int i = 0; i < items->Length; i++) {
 							const auto node = items->GetAt(i);
 							const auto name = static_cast<Platform::String^>(node->Attributes->GetNamedItem("Name")->NodeValue);
-							if (name == "webcam") {
-								result = true;
-								break;
+							if (name->Equals("webcam")) {
+								hasCameraPermissions__ = true;
+								cameraAuthorization__ = Titanium::Media::CameraAuthorization::Authorized;
+							} else if (name->Equals("microphone")) {
+								hasAudioRecorderPermissions__ = true;
+							} else if (name->Equals("musicLibrary")) {
+								hasMusicLibraryPermissions__ = true;
+							} else if (name->Equals("picturesLibrary")) {
+								hasPhotoGalleryPermissions__ = true;
 							}
 						}
+						// If we can't find webcam permission, it means camera authorization is "denied"
+						if (cameraAuthorization__ == Titanium::Media::CameraAuthorization::Unknown) {
+							cameraAuthorization__ = Titanium::Media::CameraAuthorization::Denied;
+						}
 					} catch (...) {
+						TITANIUM_LOG_WARN("Failed to retrieve Capabilities");
 					}
 					event.set();
 				}, concurrency::task_continuation_context::use_arbitrary());
 			} catch (...) {
-				result = true;
 				event.set();
 			}
 		}, concurrency::task_continuation_context::use_arbitrary());
 		event.wait();
-
-		return result;
 	}
 
 	void MediaModule::requestCameraPermissions(JSValue callback) TITANIUM_NOEXCEPT
 	{
-		// not compatible with Windows 8.1/10
-		// currently, it is not possible to request camera permissions
-		const auto ctx = get_context();
-		JSObject response = ctx.CreateObject();
+		// It is not possible to request permissions at runtime on Windows.
+		// webcam capability should be set in AppxManifest beforehand.
+		CALLBACK_PERMISSIONS(Camera, webcam);
+	}
+	void MediaModule::requestAudioRecorderPermissions(JSValue callback) TITANIUM_NOEXCEPT
+	{
+		// It is not possible to request permissions at runtime on Windows.
+		// microphone capability should be set in AppxManifest beforehand.
+		CALLBACK_PERMISSIONS(AudioRecorder, microphone);
+	}
 
-		if (hasCameraPermissions()) {
-			response.SetProperty("code", ctx.CreateNumber(0));
-			response.SetProperty("error", ctx.CreateString());
-			response.SetProperty("success", ctx.CreateBoolean(true));
-		} else {
-			response.SetProperty("code", ctx.CreateNumber(-1));
-			response.SetProperty("error", ctx.CreateString(TitaniumWindows::Utility::ConvertString("webcam DeviceCapability not set in tiapp.xml")));
-			response.SetProperty("success", ctx.CreateBoolean(false));
-		}
+	void MediaModule::requestMusicLibraryPermissions(JSValue callback) TITANIUM_NOEXCEPT
+	{
+		// It is not possible to request permissions at runtime on Windows.
+		// musicLibrary capability should be set in AppxManifest beforehand.
+		CALLBACK_PERMISSIONS(MusicLibrary, musicLibrary);
+	}
 
-		auto cb = static_cast<JSObject>(callback);
-		TITANIUM_ASSERT(cb.IsFunction());
-		cb({ response }, get_object());
+	void MediaModule::requestPhotoGalleryPermissions(JSValue callback) TITANIUM_NOEXCEPT
+	{
+		// It is not possible to request permissions at runtime on Windows.
+		// picturesLibrary capability should be set in AppxManifest beforehand.
+		CALLBACK_PERMISSIONS(PhotoGallery, picturesLibrary);
 	}
 
 	MediaModule::MediaModule(const JSContext& js_context) TITANIUM_NOEXCEPT
@@ -1091,9 +1127,11 @@ namespace TitaniumWindows
 		, openMusicLibraryOptionsState__(Titanium::Media::create_empty_MusicLibraryOptionsType(js_context))
 	{
 		TITANIUM_LOG_DEBUG("TitaniumWindows::MediaModule::ctor Initialize");
-		vibrate_timers__ = ref new Vector<DispatcherTimer^>();
 		captureElement__ = ref new CaptureElement();
 		captureElement__->Stretch = Media::Stretch::Fill;
+		checkCapabilities();
+		checkAudioDevices();
+		checkCameraDevices();
 	}
 
 	MediaModule::~MediaModule()

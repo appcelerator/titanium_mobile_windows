@@ -75,12 +75,17 @@ namespace Titanium
 			USBAudio
 		};
 		
-		enum class CameraOption
+		enum class CameraAuthorization
 		{
 			Authorized,
 			Denied,
-			NotDetermined,
 			Restricted,
+			Unknown
+		};
+
+		enum class CameraOption
+		{
+			NotDetermined,
 			Front,
 			Rear,
 			FlashAuto,
@@ -152,7 +157,9 @@ namespace Titanium
 		{
 			High,
 			Low,
-			Medium
+			Medium,
+			IFrame_1280x720,
+			IFrame_960x540,
 		};
 		
 		enum class Error

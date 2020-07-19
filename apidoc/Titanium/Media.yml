@@ -75,6 +75,14 @@ properties:
     platforms: [windowsphone]
   - name: AUDIO_SESSION_PORT_CARAUDIO
     platforms: [windowsphone]
+  - name: CAMERA_AUTHORIZATION_AUTHORIZED
+    platforms: [windowsphone]
+  - name: CAMERA_AUTHORIZATION_DENIED
+    platforms: [windowsphone]
+  - name: CAMERA_AUTHORIZATION_RESTRICTED
+    platforms: [windowsphone]
+  - name: CAMERA_AUTHORIZATION_UNKNOWN
+    platforms: [windowsphone]
   - name: CAMERA_FLASH_AUTO
     platforms: [windowsphone]
   - name: CAMERA_FLASH_OFF
@@ -154,6 +162,10 @@ properties:
   - name: QUALITY_LOW
     platforms: [windowsphone]
   - name: QUALITY_MEDIUM
+    platforms: [windowsphone]
+  - name: QUALITY_IFRAME_1280x720
+    platforms: [windowsphone]
+  - name: QUALITY_IFRAME_960x540
     platforms: [windowsphone]
   - name: UNKNOWN_ERROR
     platforms: [windowsphone]
@@ -243,6 +255,8 @@ properties:
     platforms: [windowsphone]
   - name: averageMicrophonePower
     platforms: [windowsphone]
+  - name: cameraAuthorization
+    platforms: [windowsphone]
   - name: cameraFlashMode
     platforms: [windowsphone]
   - name: canRecord
@@ -296,11 +310,15 @@ methods:
     platforms: [windowsphone]
   - name: vibrate
     platforms: [windowsphone]
-  - name: requestAuthorization
-    platforms: [windowsphone]
   - name: requestAudioRecorderPermissions
     platforms: [windowsphone]
   - name: hasCameraPermissions
+    platforms: [windowsphone]
+  - name: hasAudioRecorderPermissions
+    platforms: [windowsphone]
+  - name: hasMusicLibraryPermissions
+    platforms: [windowsphone]
+  - name: hasPhotoGalleryPermissions
     platforms: [windowsphone]
   - name: requestCameraPermissions
     platforms: [windowsphone]
@@ -337,6 +355,10 @@ methods:
   - name: getAverageMicrophonePower
     platforms: [windowsphone]
   - name: setAverageMicrophonePower
+    platforms: [windowsphone]
+  - name: getCameraAuthorization
+    platforms: [windowsphone]
+  - name: setCameraAuthorization
     platforms: [windowsphone]
   - name: getCameraFlashMode
     platforms: [windowsphone]

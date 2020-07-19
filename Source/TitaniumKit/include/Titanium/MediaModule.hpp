@@ -50,7 +50,7 @@ namespace Titanium
 		  @abstract audioPlaying
 		  @discussion Returns `true` if the device is playing audio.
 		*/
-		TITANIUM_PROPERTY_IMPL_READONLY_DEF(bool, audioPlaying);
+		TITANIUM_PROPERTY_IMPL_DEF(bool, audioPlaying);
 
 		/*!
 		  @property
@@ -93,6 +93,13 @@ namespace Titanium
 		  @discussion Current average microphone level in dB or -1 if microphone monitoring is disabled.
 		*/
 		TITANIUM_PROPERTY_IMPL_DEF(double, averageMicrophonePower);
+
+		/*!
+		  @property
+		  @abstract cameraAuthorization
+		  @discussion Returns the authorization status for the camera
+		*/
+		TITANIUM_PROPERTY_IMPL_DEF(Media::CameraAuthorization, cameraAuthorization);
 
 		/*!
 		  @property
@@ -272,10 +279,10 @@ namespace Titanium
 
 		/*!
 		  @method
-		  @abstract requestAuthorization
+		  @abstract requestAudioRecorderPermissions
 		  @discussion Request the user's permission for audio recording.
 		*/
-		virtual void requestAuthorization(JSValue callback) TITANIUM_NOEXCEPT;
+		virtual void requestAudioRecorderPermissions(JSValue callback) TITANIUM_NOEXCEPT;
 
 		/*!
 		  @method
@@ -286,10 +293,45 @@ namespace Titanium
 
 		/*!
 		  @method
+		  @abstract hasAudioRecorderPermissions
+		  @discussion Returns true if the app has audio access.
+		*/
+		virtual bool hasAudioRecorderPermissions() TITANIUM_NOEXCEPT;
+
+		/*!
+		  @method
+		  @abstract hasMusicLibraryPermissions
+		  @discussion Returns true if the app has music library access.
+		*/
+		virtual bool hasMusicLibraryPermissions() TITANIUM_NOEXCEPT;
+
+		/*!
+		  @method
+		  @abstract hasPhotoGalleryPermissions
+		  @discussion Returns true if the app has photo gallery access.
+		*/
+		virtual bool hasPhotoGalleryPermissions() TITANIUM_NOEXCEPT;
+
+		/*!
+		  @method
 		  @abstract requestCameraPermissions
 		  @discussion Requests for camera access.
 		*/
 		virtual void requestCameraPermissions(JSValue callback) TITANIUM_NOEXCEPT;
+
+		/*!
+		  @method
+		  @abstract requestMusicLibraryPermissions
+		  @discussion Requests for music library access.
+		*/
+		virtual void requestMusicLibraryPermissions(JSValue callback) TITANIUM_NOEXCEPT;
+
+		/*!
+		  @method
+		  @abstract requestPhotoGalleryPermissions
+		  @discussion Requests for photo gallery access.
+		*/
+		virtual void requestPhotoGalleryPermissions(JSValue callback) TITANIUM_NOEXCEPT;
 
 		MediaModule(const JSContext&) TITANIUM_NOEXCEPT;
 		virtual ~MediaModule()                     = default;
@@ -345,6 +387,10 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(AUDIO_SESSION_PORT_USBAUDIO);
 		TITANIUM_PROPERTY_READONLY_DEF(AUDIO_SESSION_PORT_BLUETOOTHLE);
 		TITANIUM_PROPERTY_READONLY_DEF(AUDIO_SESSION_PORT_CARAUDIO);
+		TITANIUM_PROPERTY_READONLY_DEF(CAMERA_AUTHORIZATION_AUTHORIZED);
+		TITANIUM_PROPERTY_READONLY_DEF(CAMERA_AUTHORIZATION_DENIED);
+		TITANIUM_PROPERTY_READONLY_DEF(CAMERA_AUTHORIZATION_RESTRICTED);
+		TITANIUM_PROPERTY_READONLY_DEF(CAMERA_AUTHORIZATION_UNKNOWN);
 		TITANIUM_PROPERTY_READONLY_DEF(CAMERA_FLASH_AUTO);
 		TITANIUM_PROPERTY_READONLY_DEF(CAMERA_FLASH_OFF);
 		TITANIUM_PROPERTY_READONLY_DEF(CAMERA_FLASH_ON);
@@ -385,6 +431,8 @@ namespace Titanium
 		TITANIUM_PROPERTY_READONLY_DEF(QUALITY_HIGH);
 		TITANIUM_PROPERTY_READONLY_DEF(QUALITY_LOW);
 		TITANIUM_PROPERTY_READONLY_DEF(QUALITY_MEDIUM);
+		TITANIUM_PROPERTY_READONLY_DEF(QUALITY_IFRAME_1280x720);
+		TITANIUM_PROPERTY_READONLY_DEF(QUALITY_IFRAME_960x540);
 		TITANIUM_PROPERTY_READONLY_DEF(UNKNOWN_ERROR);
 		TITANIUM_PROPERTY_READONLY_DEF(VIDEO_CONTROL_DEFAULT);
 		TITANIUM_PROPERTY_READONLY_DEF(VIDEO_CONTROL_EMBEDDED);
@@ -432,6 +480,7 @@ namespace Titanium
 		TITANIUM_PROPERTY_DEF(availablePhotoGalleryMediaTypes);
 		TITANIUM_PROPERTY_DEF(availablePhotoMediaTypes);
 		TITANIUM_PROPERTY_DEF(averageMicrophonePower);
+		TITANIUM_PROPERTY_DEF(cameraAuthorization);
 		TITANIUM_PROPERTY_DEF(cameraFlashMode);
 		TITANIUM_PROPERTY_READONLY_DEF(canRecord);
 		TITANIUM_PROPERTY_READONLY_DEF(currentRoute);
@@ -459,10 +508,12 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(switchCamera);
 		TITANIUM_FUNCTION_DEF(takeScreenshot);
 		TITANIUM_FUNCTION_DEF(vibrate);
-		TITANIUM_FUNCTION_DEF(requestAuthorization);
-		TITANIUM_FUNCTION_DEF(requestAudioRecorderPermissions);
 		TITANIUM_FUNCTION_DEF(hasCameraPermissions);
+		TITANIUM_FUNCTION_DEF(hasAudioRecorderPermissions);
+		TITANIUM_FUNCTION_DEF(hasMusicLibraryPermissions);
+		TITANIUM_FUNCTION_DEF(hasPhotoGalleryPermissions);
 		TITANIUM_FUNCTION_DEF(requestCameraPermissions);
+		TITANIUM_FUNCTION_DEF(requestAudioRecorderPermissions);
 		TITANIUM_FUNCTION_DEF(createAudioPlayer);
 		TITANIUM_FUNCTION_DEF(createAudioRecorder);
 		TITANIUM_FUNCTION_DEF(createSound);
@@ -480,6 +531,8 @@ namespace Titanium
 		TITANIUM_FUNCTION_DEF(setAvailablePhotoMediaTypes);
 		TITANIUM_FUNCTION_DEF(getAverageMicrophonePower);
 		TITANIUM_FUNCTION_DEF(setAverageMicrophonePower);
+		TITANIUM_FUNCTION_DEF(getCameraAuthorization);
+		TITANIUM_FUNCTION_DEF(setCameraAuthorization);
 		TITANIUM_FUNCTION_DEF(getCameraFlashMode);
 		TITANIUM_FUNCTION_DEF(setCameraFlashMode);
 		TITANIUM_FUNCTION_DEF(getCanRecord);
@@ -512,6 +565,7 @@ namespace Titanium
 		std::vector<Media::MediaType> availablePhotoGalleryMediaTypes__;
 		std::vector<Media::MediaType> availablePhotoMediaTypes__;
 		double averageMicrophonePower__;
+		Media::CameraAuthorization cameraAuthorization__;
 		Media::CameraOption cameraFlashMode__;
 		bool canRecord__;
 		Media::RouteDescription currentRoute__;

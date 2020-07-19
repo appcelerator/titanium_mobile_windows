@@ -43,17 +43,18 @@ namespace Titanium
 		, appMusicPlayer__(get_context().CreateNull())
 		, audioPlaying__(false)
 		, audioSessionCategory__(Media::AudioSessionCategory::Playback)
-		, averageMicrophonePower__(0)
+		, averageMicrophonePower__(-1)
+		, cameraAuthorization__(Media::CameraAuthorization::Unknown)
 		, cameraFlashMode__(Media::CameraOption::FlashAuto)
 		, canRecord__(false)
 		, isCameraSupported__(false)
-		, peakMicrophonePower__(0)
+		, peakMicrophonePower__(-1)
 		, systemMusicPlayer__(get_context().CreateNull())
 		, volume__(0)
 	{
 	}
 
-	TITANIUM_PROPERTY_READ(MediaModule, bool, audioPlaying)
+	TITANIUM_PROPERTY_READWRITE(MediaModule, bool, audioPlaying)
 	TITANIUM_PROPERTY_READWRITE(MediaModule, Media::AudioSessionCategory, audioSessionCategory)
 	TITANIUM_PROPERTY_READ(MediaModule, std::vector<Media::CameraOption>, availableCameras)
 	TITANIUM_PROPERTY_READWRITE(MediaModule, std::vector<Media::MediaType>, availableCameraMediaTypes)
@@ -61,6 +62,7 @@ namespace Titanium
 	TITANIUM_PROPERTY_READWRITE(MediaModule, std::vector<Media::MediaType>, availablePhotoMediaTypes)
 	TITANIUM_PROPERTY_READWRITE(MediaModule, double, averageMicrophonePower)
 	TITANIUM_PROPERTY_READ(MediaModule, double, peakMicrophonePower)
+	TITANIUM_PROPERTY_READWRITE(MediaModule, Media::CameraAuthorization, cameraAuthorization)
 	TITANIUM_PROPERTY_READWRITE(MediaModule, Media::CameraOption, cameraFlashMode)
 	TITANIUM_PROPERTY_READ(MediaModule, bool, canRecord)
 	TITANIUM_PROPERTY_READ(MediaModule, Media::RouteDescription, currentRoute)
@@ -169,9 +171,9 @@ namespace Titanium
 		TITANIUM_LOG_WARN("MediaModule::vibrate: Unimplemented");
 	}
 
-	void MediaModule::requestAuthorization(JSValue callback) TITANIUM_NOEXCEPT
+	void MediaModule::requestAudioRecorderPermissions(JSValue callback) TITANIUM_NOEXCEPT
 	{
-		TITANIUM_LOG_WARN("MediaModule::requestAuthorization: Unimplemented");
+		TITANIUM_LOG_WARN("MediaModule::requestAudioRecorderPermissions: Unimplemented");
 	}
 
 	bool MediaModule::hasCameraPermissions() TITANIUM_NOEXCEPT
@@ -180,9 +182,37 @@ namespace Titanium
 		return false;
 	}
 
+	bool MediaModule::hasAudioRecorderPermissions() TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_WARN("MediaModule::hasAudioRecorderPermissions: Unimplemented");
+		return false;
+	}
+
+	bool MediaModule::hasMusicLibraryPermissions() TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_WARN("MediaModule::hasMusicLibraryPermissions: Unimplemented");
+		return false;
+	}
+
+	bool MediaModule::hasPhotoGalleryPermissions() TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_WARN("MediaModule::hasPhotoGalleryPermissions: Unimplemented");
+		return false;
+	}
+
 	void MediaModule::requestCameraPermissions(JSValue callback) TITANIUM_NOEXCEPT
 	{
 		TITANIUM_LOG_WARN("MediaModule::requestCameraPermissions: Unimplemented");
+	}
+
+	void MediaModule::requestMusicLibraryPermissions(JSValue callback) TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_WARN("MediaModule::requestMusicLibraryPermissions: Unimplemented");
+	}
+
+	void MediaModule::requestPhotoGalleryPermissions(JSValue callback) TITANIUM_NOEXCEPT
+	{
+		TITANIUM_LOG_WARN("MediaModule::requestPhotoGalleryPermissions: Unimplemented");
 	}
 
 	void MediaModule::JSExportInitialize()
@@ -233,6 +263,10 @@ namespace Titanium
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_USBAUDIO);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_BLUETOOTHLE);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, AUDIO_SESSION_PORT_CARAUDIO);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_AUTHORIZATION_AUTHORIZED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_AUTHORIZATION_DENIED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_AUTHORIZATION_RESTRICTED);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_AUTHORIZATION_UNKNOWN);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_FLASH_AUTO);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_FLASH_OFF);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, CAMERA_FLASH_ON);
@@ -273,6 +307,8 @@ namespace Titanium
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, QUALITY_HIGH);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, QUALITY_LOW);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, QUALITY_MEDIUM);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, QUALITY_IFRAME_1280x720);
+		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, QUALITY_IFRAME_960x540);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, UNKNOWN_ERROR);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_CONTROL_DEFAULT);
 		TITANIUM_ADD_CONSTANT_PROPERTY(MediaModule, VIDEO_CONTROL_EMBEDDED);
@@ -320,6 +356,7 @@ namespace Titanium
 		TITANIUM_ADD_PROPERTY(MediaModule, availablePhotoGalleryMediaTypes);
 		TITANIUM_ADD_PROPERTY(MediaModule, availablePhotoMediaTypes);
 		TITANIUM_ADD_PROPERTY(MediaModule, averageMicrophonePower);
+		TITANIUM_ADD_PROPERTY(MediaModule, cameraAuthorization);
 		TITANIUM_ADD_PROPERTY(MediaModule, cameraFlashMode);
 		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, canRecord);
 		TITANIUM_ADD_PROPERTY_READONLY(MediaModule, currentRoute);
@@ -347,9 +384,11 @@ namespace Titanium
 		TITANIUM_ADD_FUNCTION(MediaModule, switchCamera);
 		TITANIUM_ADD_FUNCTION(MediaModule, takeScreenshot);
 		TITANIUM_ADD_FUNCTION(MediaModule, vibrate);
-		TITANIUM_ADD_FUNCTION(MediaModule, requestAuthorization);
 		TITANIUM_ADD_FUNCTION(MediaModule, requestAudioRecorderPermissions);
 		TITANIUM_ADD_FUNCTION(MediaModule, hasCameraPermissions);
+		TITANIUM_ADD_FUNCTION(MediaModule, hasAudioRecorderPermissions);
+		TITANIUM_ADD_FUNCTION(MediaModule, hasMusicLibraryPermissions);
+		TITANIUM_ADD_FUNCTION(MediaModule, hasPhotoGalleryPermissions);
 		TITANIUM_ADD_FUNCTION(MediaModule, requestCameraPermissions);
 		TITANIUM_ADD_FUNCTION(MediaModule, createAudioPlayer);
 		TITANIUM_ADD_FUNCTION(MediaModule, createAudioRecorder);
@@ -368,6 +407,8 @@ namespace Titanium
 		TITANIUM_ADD_FUNCTION(MediaModule, setAvailablePhotoMediaTypes);
 		TITANIUM_ADD_FUNCTION(MediaModule, getAverageMicrophonePower);
 		TITANIUM_ADD_FUNCTION(MediaModule, setAverageMicrophonePower);
+		TITANIUM_ADD_FUNCTION(MediaModule, getCameraAuthorization);
+		TITANIUM_ADD_FUNCTION(MediaModule, setCameraAuthorization);
 		TITANIUM_ADD_FUNCTION(MediaModule, getCameraFlashMode);
 		TITANIUM_ADD_FUNCTION(MediaModule, setCameraFlashMode);
 		TITANIUM_ADD_FUNCTION(MediaModule, getCanRecord);
@@ -561,6 +602,26 @@ namespace Titanium
 	TITANIUM_PROPERTY_GETTER(MediaModule, AUDIO_SESSION_PORT_CARAUDIO)
 	{
 		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::AudioSessionPort::CarAudio));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_AUTHORIZATION_AUTHORIZED)
+	{
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::CameraAuthorization::Authorized));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_AUTHORIZATION_DENIED)
+	{
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::CameraAuthorization::Denied));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_AUTHORIZATION_RESTRICTED)
+	{
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::CameraAuthorization::Restricted));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_AUTHORIZATION_UNKNOWN)
+	{
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::CameraAuthorization::Unknown));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, CAMERA_FLASH_AUTO)
@@ -761,6 +822,16 @@ namespace Titanium
 	TITANIUM_PROPERTY_GETTER(MediaModule, QUALITY_MEDIUM)
 	{
 		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::Quality::Medium));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, QUALITY_IFRAME_1280x720)
+	{
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::Quality::IFrame_1280x720));
+	}
+
+	TITANIUM_PROPERTY_GETTER(MediaModule, QUALITY_IFRAME_960x540)
+	{
+		return get_context().CreateNumber(static_cast<std::uint32_t>(Media::Quality::IFrame_960x540));
 	}
 
 	TITANIUM_PROPERTY_GETTER(MediaModule, UNKNOWN_ERROR)
@@ -1113,6 +1184,8 @@ namespace Titanium
 
 	TITANIUM_PROPERTY_GETTER_DOUBLE(MediaModule, averageMicrophonePower)
 	TITANIUM_PROPERTY_SETTER_DOUBLE(MediaModule, averageMicrophonePower)
+	TITANIUM_PROPERTY_GETTER_ENUM(MediaModule, cameraAuthorization)
+	TITANIUM_PROPERTY_SETTER_ENUM(MediaModule, cameraAuthorization, Media::CameraAuthorization)
 	TITANIUM_PROPERTY_GETTER_ENUM(MediaModule, cameraFlashMode)
 	TITANIUM_PROPERTY_SETTER_ENUM(MediaModule, cameraFlashMode, Media::CameraOption)
 	TITANIUM_PROPERTY_GETTER_BOOL(MediaModule, canRecord)
@@ -1288,23 +1361,31 @@ namespace Titanium
 		return get_context().CreateUndefined();
 	}
 
-	TITANIUM_FUNCTION(MediaModule, requestAuthorization)
-	{
-		ENSURE_OBJECT_AT_INDEX(callback, 0);
-		requestAuthorization(callback);
-		return get_context().CreateUndefined();
-	}
-
 	TITANIUM_FUNCTION(MediaModule, requestAudioRecorderPermissions)
 	{
 		ENSURE_OBJECT_AT_INDEX(callback, 0);
-		requestAuthorization(callback);
+		requestAudioRecorderPermissions(callback);
 		return get_context().CreateUndefined();
 	}
 
 	TITANIUM_FUNCTION(MediaModule, hasCameraPermissions)
 	{
 		return get_context().CreateBoolean(hasCameraPermissions());
+	}
+
+	TITANIUM_FUNCTION(MediaModule, hasAudioRecorderPermissions)
+	{
+		return get_context().CreateBoolean(hasAudioRecorderPermissions());
+	}
+
+	TITANIUM_FUNCTION(MediaModule, hasMusicLibraryPermissions)
+	{
+		return get_context().CreateBoolean(hasMusicLibraryPermissions());
+	}
+
+	TITANIUM_FUNCTION(MediaModule, hasPhotoGalleryPermissions)
+	{
+		return get_context().CreateBoolean(hasPhotoGalleryPermissions());
 	}
 
 	TITANIUM_FUNCTION(MediaModule, requestCameraPermissions)
@@ -1351,6 +1432,8 @@ namespace Titanium
 	TITANIUM_FUNCTION_AS_SETTER(MediaModule, setAvailablePhotoMediaTypes, availablePhotoMediaTypes)
 	TITANIUM_FUNCTION_AS_GETTER(MediaModule, getAverageMicrophonePower, averageMicrophonePower)
 	TITANIUM_FUNCTION_AS_SETTER(MediaModule, setAverageMicrophonePower, averageMicrophonePower)
+	TITANIUM_FUNCTION_AS_GETTER(MediaModule, getCameraAuthorization, cameraAuthorization)
+	TITANIUM_FUNCTION_AS_SETTER(MediaModule, setCameraAuthorization, cameraAuthorization)
 	TITANIUM_FUNCTION_AS_GETTER(MediaModule, getCameraFlashMode, cameraFlashMode)
 	TITANIUM_FUNCTION_AS_SETTER(MediaModule, setCameraFlashMode, cameraFlashMode)
 	TITANIUM_FUNCTION_AS_GETTER(MediaModule, getCanRecord, canRecord)
