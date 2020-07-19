@@ -33,6 +33,10 @@ module.exports = function configOptionSDK(order) {
 		callback: function (value) {
 			// target various Windows 10.0.X SDKs
 			if (value.startsWith('10.0.')) {
+				var min =  this.cli.tiapp.windows['TargetPlatformMinVersion']
+				if (min && appc.version.lt(value, min)) {
+					throw new Error(__('The target version "%s" must be greater than or equal to the TargetPlatformMinVersion value.', value));
+				}
 				this.targetPlatformSdkVersion = value;
 				this.cli.argv['win-sdk'] = '10.0';
 			}
